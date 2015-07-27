@@ -2,7 +2,7 @@
 <html lang="us">
 <head>
 	<meta charset="utf-8">
-	<title>Odontolinux!</title>
+	<title>Chopin - Contabilit&agrave;</title>
 	<link href="../jquery/jquery-ui.css" rel="stylesheet">
 	<style type="text/css" media="screen">
 	
@@ -15,26 +15,36 @@
 	<div id="body">
 	
 		<div id="menu-accordion">
-			<h3>Pazienti</h3>
+			<h3>Prima Nota</h3>
 			<div>
-				<li><a href="../src/paziente/ricercaPazienteFacade.class.php?modo=start" target="corpo">Ricerca Paziente</a></li>
+				<ul>
+					<li><a href="../src/primanota/creaRegistrazioneFacade.class.php?modo=start" target="corpo">Nuova Registrazione</a></li>
+					<li><a href="../src/primanota/ricercaRegistrazioneFacade.class.php?modo=start" target="corpo">Ricerca Registrazione</a></li>
+					<li><a href="../src/primanota/ricercaScadenziarioFacade.class.php?modo=start" target="corpo">Scadenziario</a></li>
+				</ul>
 			</div>
-			<h3>Impostazioni</h3>
+			<h3>Anagrafica</h3>
 			<div>
-				<li><a href="../src/impostazioni/ricercaCategoriaFacade.class.php?modo=start" target="corpo">Voci</a></li>
-				<li><a href="../src/impostazioni/ricercaListinoFacade.class.php?modo=start" target="corpo">Listini</a></li>
+				<ul>
+					<li><a href="../src/anagrafica/ricercaClientiFacade.class.php?modo=start" target="corpo">Clienti</a></li>
+					<li><a href="../src/anagrafica/ricercaFornitoriFacade.class.php?modo=start" target="corpo">Fornitori</a></li>
+				</ul>
 			</div>
-			<h3>Preferenze</h3>
+			<h3>Configurazioni di Base</h3>
 			<div>
-				<li><a href="../src/utility/modificaConfigFacade.class.php?modo=start" target="corpo">Sistema</a></li>
-				<li><a href="../src/utility/modificaConfigPreventivoFacade.class.php?modo=start" target="corpo">Preventivi</a></li>
+				<ul>
+					<li><a href="../src/configurazioni/ricercaPianocontiFacade.class.php?modo=start" target="corpo">Piano dei Conti</a></li>
+					<li><a href="../src/configurazioni/ricercaCausaliFacade.class.php?modo=start" target="corpo">Causali</a></li>
+				</ul>
 			</div>
-			<h3>Strumenti</h3>
+			<h3>Reportistica</h3>
 			<div>
-				<li><a href="../src/strumenti/ricercaConfigurazioneFacade.class.php?modo=start" target="corpo">Configurazioni</a></li>
-				<li><a href="../src/strumenti/importaDatiFacade.class.php?modo=start" target="corpo">Importa Dati</a></li>
+				<ul>
+					<li><a href="../src/reportistica/ricercaMastrinoFornitoriFacade.class.php?modo=start" target="corpo">Mastrino fornitori</a></li>
+				</ul>
 			</div>
 		</div>
+	</div>
 		
 	
 <script src="../jquery/external/jquery/jquery.js"></script>

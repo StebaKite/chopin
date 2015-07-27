@@ -1,6 +1,6 @@
 <?php
 
-abstract class ellipseAbstract {
+abstract class chopinAbstract {
 
 	public static $root;
 	public static $testata;
@@ -10,12 +10,14 @@ abstract class ellipseAbstract {
 	public static $azione;
 	public static $testoAzione;
 	public static $titoloPagina;
-
-	public static $dentiDecidui = array("51","52","53","54","55","61","62","63","64","65","71","72","73","74","75","81","82","83","84","85");	
+	public static $confermaTip;
 	
-	public static $queryAggiornaPaziente = "/paziente/aggiornaPaziente.sql";
-	public static $queryCreaPreventivo = "/preventivo/creaPreventivo.sql";
-	public static $queryCreaCartellaClinica = "/cartellaclinica/creaCartellaClinica.sql";
+	// Query ------------------------------------------------------------------------------
+
+	
+	
+	
+	// Costruttore ------------------------------------------------------------------------
 	
 	function __construct() {
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
@@ -44,8 +46,8 @@ abstract class ellipseAbstract {
 	public function setTitoloPagina($titoloPagina) {
 		self::$titoloPagina = $titoloPagina;
 	}
-	public function setSid($sid) {
-		self::$sid = $sid;
+	public function setConfermaTip($tip) {
+		self::$confermaTip = $tip;
 	}
 	
 	// Getters -----------------------------------------------------------------------------
@@ -71,8 +73,8 @@ abstract class ellipseAbstract {
 	public function getTitoloPagina() {
 		return self::$titoloPagina;
 	}
-	public function getSid() {
-		return self::$sid;
+	public function getConfermaTip() {
+		return self::$confermaTip;
 	}
 	
 	// Start e Go funzione ----------------------------------------------------------------
@@ -80,66 +82,20 @@ abstract class ellipseAbstract {
 	public function start() { }
 			
 	public function go() { }
-	
-	public function aggiornaPaziente($db, $idPaziente, $root) {
-		
-		$utility = new utility();
-		$array = $utility->getConfig();
-			
-		$replace = array(
-			'%idpaziente%' => $idPaziente
-		);
-		
-		$sqlTemplate = $root . $array['query'] . self::$queryAggiornaPaziente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
 
-		return $result;	
-	}	
+	// Metodi per aggiornamenti e creazioni su DB  ----------------------------------------
+	
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @return il result ottenuto dalla creazione del preventivo
-	 */
-	public function creaPreventivo($db, $root) {
 	
-		$utility = new utility();
-		$array = $utility->getConfig();
 	
-		$replace = array('%idpaziente%' => $_SESSION['idPaziente']);
 	
-		$sqlTemplate = $root . $array['query'] . self::$queryCreaPreventivo;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
 	
-		return $result;
-	}
-
-	/**
-	 * 
-	 * @param unknown $db
-	 * @param unknown $idPreventivo
-	 * @param unknown $idPaziente
-	 * @return unknown
-	 */
-	public function creaCartellaClinica($db, $idPreventivo, $idPaziente, $root) {
 	
-		$utility = new utility();
-		$array = $utility->getConfig();
 	
-		$replace = array(
-				'%idpaziente%' => $idPaziente,
-				'%idpreventivo%' => $idPreventivo				
-		);
 	
-		$sqlTemplate = $root . $array['query'] . self::$queryCreaCartellaClinica;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
 	
-		return $result;
-	}
-
+	// Altri metodi di utilità ------------------------------------------------------------
+	
 	/**
 	 * 
 	 * @param unknown $data
