@@ -26,14 +26,14 @@ class creaRegistrazione extends primanotaAbstract {
 	
 	public function start() {
 	
-		require_once 'registrazione.template.php';
+		require_once 'creaRegistrazione.template.php';
 	
-		$registrazioneTemplate = new registrazioneTemplate();
-		$this->preparaPagina($registrazioneTemplate);
+		$creaRegistrazioneTemplate = new creaRegistrazioneTemplate();
+		$this->preparaPagina($creaRegistrazioneTemplate);
 	
 		// Compone la pagina
 		include(self::$testata);
-		$registrazioneTemplate->displayPagina();
+		$creaRegistrazioneTemplate->displayPagina();
 		include(self::$piede);
 	}
 	
@@ -50,11 +50,26 @@ class creaRegistrazione extends primanotaAbstract {
 	
 	
 
-	public function preparaPagina($registrazioneTemplate) {
+	public function preparaPagina($creaRegistrazioneTemplate) {
 	
-		$registrazioneTemplate->setAzione(self::$azioneCreaRegistrazione);
-		$registrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
-		$registrazioneTemplate->setTitoloPagina("%ml.creaNuovoRegistrazione%");
+		$creaRegistrazioneTemplate->setAzione(self::$azioneCreaRegistrazione);
+		$creaRegistrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
+		$creaRegistrazioneTemplate->setTitoloPagina("%ml.creaNuovaRegistrazione%");
+		
+		//-------------------------------------------------------------
+		$sql = "select idListino, descrizioneListino from paziente.listino";
+		$result = $db->getData($sql);
+		while ($row = pg_fetch_row($result)) {
+			if ($paziente->getListino() == $row[0])
+				$listino = $listino . "<option value='$row[0]' selected>$row[1]";
+			else
+				$listino = $listino . "<option value='$row[0]'>$row[1]";
+		}
+		
+		
+		
+		
+		
 	}	
 }
 ?>

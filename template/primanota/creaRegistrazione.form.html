@@ -1,0 +1,43 @@
+<body>
+	
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate">
+				<tbody>
+					<tr>
+						<td class="td">%ml.datascad% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datascad" title="%ml.datascadTip%" size="10" maxlength="10" ></td>
+					</tr>
+					<tr>
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip"><input type="text" name="numfatt" title="%ml.numfattTip%" required size="30" maxlength="35" ></td>
+					</tr>
+					<tr>
+						<td>%ml.descreg% :</td>
+						<td class="tooltip"><input type="text" name="descreg" title="%ml.descregTip%" required size="80" maxlength="200" ></td>
+					</tr>
+					<tr>
+						<td>%ml.codcau% :</td>
+						<td class="tooltip" title="%ml.codcauTip%">
+							<select class="selectmenu" name="causale" >
+								%elenco_causali%
+							</select>
+						</td>
+					</tr>					
+					
+										
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="6" align="right" class="tooltip"><button class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+					</tr>
+				</tfoot>
+			</table>
+			<br/>
+		</form>
+	</div>
+</div>
+<br/>

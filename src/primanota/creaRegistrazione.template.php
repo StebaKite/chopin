@@ -2,9 +2,9 @@
 
 require_once 'primanota.abstract.class.php';
 
-class registrazioneTemplate extends primanotaAbstract {
+class creaRegistrazioneTemplate extends primanotaAbstract {
 	
-	private static $pagina = "/primanota/registrazione.form.html";
+	private static $pagina = "/primanota/creaRegistrazione.form.html";
 	
 	//-----------------------------------------------------------------------------
 
