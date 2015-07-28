@@ -1,8 +1,8 @@
 <?php
 
-require_once 'ellipse.abstract.class.php';
+require_once 'chopin.abstract.class.php';
 
-class menubanner extends ellipseAbstract {
+class menubanner extends chopinAbstract {
 
 	private static $messaggio;
 	private static $queryTotaliProgressivi = "/main/totaliProgressivi.sql";
@@ -10,7 +10,7 @@ class menubanner extends ellipseAbstract {
 	function __construct() {
 		
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
-		$pathToInclude = self::$root . "/ellipse/src/main:" . self::$root . "/ellipse/src/utility";  
+		$pathToInclude = self::$root . "/chopin/src/main:" . self::$root . "/chopin/src/utility";  
 		error_log($pathToInclude);
 		set_include_path($pathToInclude);
 	}
@@ -24,32 +24,26 @@ class menubanner extends ellipseAbstract {
 		require_once 'database.class.php';
 
 		error_log("<<<<<<< Start >>>>>>> " . $_SERVER['PHP_SELF']);
-
-		/**
-		 * Scrivo in sessione un securecode che tutte le funzioni facade devono riconoscere
-		 */
-				
-		$_SESSION['secureCode'] = '4406105963138001';
 		
-		// Template
-		$utility = new utility();
-		$db = new database();
+// 		// Template
+// 		$utility = new utility();
+// 		$db = new database();
 
-		$array = $utility->getConfig();
+// 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];		
+// 		$testata = self::$root . $array['testataPagina'];
+// 		$piede = self::$root . $array['piedePagina'];		
 
-		$menubannerTemplate = new menubannerTemplate();
+// 		$menubannerTemplate = new menubannerTemplate();
 		
-		//-------------------------------------------------------------
+// 		//-------------------------------------------------------------
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryTotaliProgressivi;
-		$sql = $utility->getTemplate($sqlTemplate);
-		$result = $db->getData($sql);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryTotaliProgressivi;
+// 		$sql = $utility->getTemplate($sqlTemplate);
+// 		$result = $db->getData($sql);
 			
-		if ($result) $menubannerTemplate->setTotaliProgressivi(pg_fetch_all($result));
-		else $menubannerTemplate->setTotaliProgressivi("");
+// 		if ($result) $menubannerTemplate->setTotaliProgressivi(pg_fetch_all($result));
+// 		else $menubannerTemplate->setTotaliProgressivi("");
 		
 		// compone la pagina
 		include($testata);

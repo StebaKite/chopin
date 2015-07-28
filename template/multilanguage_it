@@ -19,6 +19,7 @@ numfattTip = Il numero dalla fattura
 descregTip = Una descrizione significativa della registrazione
 salvaTip = Salva sul database i dati immessi
 codcauTip = La causale della registrazione
+selezionare = Selezionare...
 
 
 ;
@@ -42,6 +43,7 @@ datascad = Data scadenza
 numfatt = Numero fattura
 descreg = Descrizione
 codcau = Causale
+codforn = Fornitore
 
 
 

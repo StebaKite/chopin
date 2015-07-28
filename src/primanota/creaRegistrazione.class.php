@@ -52,19 +52,51 @@ class creaRegistrazione extends primanotaAbstract {
 
 	public function preparaPagina($creaRegistrazioneTemplate) {
 	
+		require_once 'database.class.php';
+		require_once 'utility.class.php';	
+		
 		$creaRegistrazioneTemplate->setAzione(self::$azioneCreaRegistrazione);
 		$creaRegistrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
 		$creaRegistrazioneTemplate->setTitoloPagina("%ml.creaNuovaRegistrazione%");
 		
-		//-------------------------------------------------------------
-		$sql = "select idListino, descrizioneListino from paziente.listino";
+		$db = new database();
+		$utility = new utility();
+		
+		// Prelievo delle causali  -------------------------------------------------------------
+		
+		$array = $utility->getConfig();
+
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausali;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
+		
 		while ($row = pg_fetch_row($result)) {
-			if ($paziente->getListino() == $row[0])
-				$listino = $listino . "<option value='$row[0]' selected>$row[1]";
+			if ($_SESSION['cod_causale'] == $row[0])
+				$elenco_causali = $elenco_causali . "<option value='$row[0]' selected>$row[0] - $row[1]";
 			else
-				$listino = $listino . "<option value='$row[0]'>$row[1]";
+				$elenco_causali = $elenco_causali . "<option value='$row[0]'>$row[0] - $row[1]";
 		}
+		
+		$_SESSION['elenco_causali'] = $elenco_causali;
+
+		// Prelievo dei fornitori  -------------------------------------------------------------
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitori;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		while ($row = pg_fetch_row($result)) {
+			if ($_SESSION['cod_fornitore'] == $row[0])
+				$elenco_fornitori = $elenco_fornitori . "<option value='$row[0]' selected>$row[1] - $row[2]";
+			else
+				$elenco_fornitori = $elenco_fornitori . "<option value='$row[0]'>$row[1] - $row[2]";
+		}
+		
+		$_SESSION['elenco_fornitori'] = $elenco_fornitori;
+		
+		
+		
+		
 		
 		
 		

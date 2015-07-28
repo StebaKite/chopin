@@ -5,25 +5,32 @@
 		<h2>%titoloPagina%</h2>
 
 		<form method="post" action="%azione%" >
-			<table class="datiCreate">
+			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
 						<td class="td">%ml.datascad% :</td>
 						<td class="tooltip"><input class="datepicker" type="text" name="datascad" title="%ml.datascadTip%" size="10" maxlength="10" ></td>
-					</tr>
-					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" title="%ml.numfattTip%" required size="30" maxlength="35" ></td>
+						<td class="tooltip"><input type="text" name="numfatt" title="%ml.numfattTip%" size="35" maxlength="35" ></td>
 					</tr>
 					<tr>
 						<td>%ml.descreg% :</td>
-						<td class="tooltip"><input type="text" name="descreg" title="%ml.descregTip%" required size="80" maxlength="200" ></td>
-					</tr>
+						<td colspan="4" class="tooltip"><input type="text" name="descreg" title="%ml.descregTip%" required size="80" maxlength="200" ></td>
+					</tr>					
 					<tr>
 						<td>%ml.codcau% :</td>
 						<td class="tooltip" title="%ml.codcauTip%">
 							<select class="selectmenu" name="causale" >
+								<option value="">%ml.selezionare%</option>
 								%elenco_causali%
+							</select>
+						</td>
+						
+						<td>%ml.codforn% :</td>
+						<td class="tooltip" title="%ml.codfornTip%">
+							<select class="selectmenu" name="fornitore" >
+								<option value="">%ml.selezionare%</option>
+								%elenco_fornitori%
 							</select>
 						</td>
 					</tr>					

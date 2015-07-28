@@ -57,7 +57,9 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 		$replace = array(
 			'%titoloPagina%' => $this->getTitoloPagina(),
 			'%azione%' => $this->getAzione(),
-			'%confermaTip%' => $this->getConfermaTip()
+			'%confermaTip%' => $this->getConfermaTip(),
+			'%elenco_causali%' => $_SESSION['elenco_causali'],
+			'%elenco_fornitori%' => $_SESSION['elenco_fornitori']
 		);
 
 		$utility = new utility();
