@@ -17,7 +17,7 @@ class menubanner extends chopinAbstract {
 
 	public function start() {
 
-		session_start();
+		if (session_start()) error_log("Ok, session started...");		
 			
 		require_once 'menubanner.template.php';
 		require_once 'utility.class.php';

@@ -233,6 +233,20 @@
 	.result, .ricerca, .dettaglio, .datiCreate {
 		border: 7px solid #ececec;
 	}
+	.datiCreateSottile {
+		border: 2px solid #ececec;
+	}
+	.datiCreateSottile th {
+		font-weight: bolder;
+		background-color: #666666;
+		color: white;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.datiCreateSottile tr {
+		background-color: #ECECEC;
+	}
+	
 	.result tfoot, .result_alt tfoot, .ricerca tfoot, .dettaglio tfoot, .datiCreate tfoot {
 		text-align: right;
 	}
@@ -301,65 +315,6 @@
 		font-weight: bolder;
 		text-decoration: none;
 	}	
-	.buttonDente {
-		position: relative;
-		line-height: normal;
-		margin: 0px;
-		padding: 0px;
-		width: 25px;
-		height: 20px;
-		text-align: center;
-		font-size: 8px;
-		color: #3399FF;
-		cursor: pointer;
-		vertical-align: middle;
-		text-align: center;
-		overflow: visible; /* removes extra width in IE */
-
-	}
-	.buttonDenteDeciduo {
-		position: relative;
-		line-height: normal;
-		margin: 0px;
-		padding: 0px;
-		width: 25px;
-		height: 20px;
-		text-align: center;
-		font-size: 8px;
-		color: #f6a828;
-		cursor: pointer;
-		vertical-align: middle;
-		text-align: center;
-		overflow: visible; /* removes extra width in IE */
-
-	}
-
-	.buttonDenteDeciduoVuoto {
-		position: relative;
-		line-height: normal;
-		margin: 0px;
-		padding: 0px;
-		width: 25px;
-		height: 20px;
-		text-align: center;
-		font-size: 8px;
-		background-color: #ffffff;
-		border: none;
-		vertical-align: middle;
-		text-align: center;
-		overflow: visible; /* removes extra width in IE */
-
-	}
-	.buttonDente:hover {
-		color: #f6a828;
-		font-weight: bolder;
-		text-decoration: none;
-	}
-	.buttonDenteDeciduo:hover {
-		color: #3399ff;
-		font-weight: bolder;
-		text-decoration: none;
-	}
 	table.expandible {
 		border-collapse:collapse; 
 		border: 7px solid #ececec;

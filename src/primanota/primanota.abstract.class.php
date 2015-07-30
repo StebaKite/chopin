@@ -11,8 +11,8 @@ abstract class primanotaAbstract extends chopinAbstract {
 	
 	// Query --------------------------------------------------------------- 
 	
-	public static $queryRicercaCausali = "/primanota/ricercaCausali.sql";	
-	public static $queryRicercaFornitori = "/primanota/ricercaFornitori.sql";
+
+	
 	
 	// Getters e Setters ---------------------------------------------------
 

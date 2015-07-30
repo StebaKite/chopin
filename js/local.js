@@ -6,19 +6,20 @@ $( "#menu-accordion" ).accordion({
 var formatDateJQ="dd/mm/yy";
 
 $( ".button" ).button();
-$( ".radioset" ).buttonset();
 
+$( ".radioset" ).buttonset();
 
 $( ".tabs" ).tabs({ width: 400 });
 
-
-$( "#dialog" ).dialog({
+$( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
-	width: 400,
+	width: 500,
+	height: 400,
 	buttons: [
 		{
 			text: "Ok",
 			click: function() {
+				aggiungiDettaglio();
 				$( this ).dialog( "close" );
 			}
 		},
@@ -32,11 +33,10 @@ $( "#dialog" ).dialog({
 });
 
 // Link to open the dialog
-$( ".dialog-link" ).click(function( event ) {
-	$( "#dialog" ).dialog( "open" );
+$( "#nuovo-dett" ).click(function( event ) {
+	$( "#nuovo-dettaglio-form" ).dialog( "open" );
 	event.preventDefault();
 });
-
 
 
 $( ".datepicker" ).datepicker({
@@ -92,51 +92,21 @@ function impostaProgressBarFuoriPiano(valore) {
 	});
 }
 
-
 $( ".spinner" ).spinner();
-
-
 
 $( "#menu" ).menu();
 
-
-
 $( ".tooltip" ).tooltip();
 
-
-
-$( ".selectmenu" ).selectmenu();
+$( ".selectmenu" )
+	.selectmenu()
+	.selectmenu("menuWidget")
+	.addClass("overflow");
 
 $( "#selectmenu1" )
 	.selectmenu()
 	.selectmenu("menuWidget")
 	.addClass("overflow");
-
-$( "#selectmenu2" )
-	.selectmenu()
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( "#selectmenu3" )
-	.selectmenu()
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( "#selectmenu4" )
-	.selectmenu()
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( "#selectmenu5" )
-	.selectmenu()
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( "#selectmenu6" )
-	.selectmenu()
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
 
 $( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 $( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
@@ -152,10 +122,8 @@ $( "#dialog-link, #icons li" ).hover(
 	}
 );
 
-var vociListino = ["  "];	
-
-$( ".autocomplete" ).autocomplete({
-	source: vociListino
+$( "#conti" ).autocomplete({
+	source: conti
 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');

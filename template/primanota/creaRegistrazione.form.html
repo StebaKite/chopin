@@ -1,4 +1,43 @@
 <body>
+
+<script type="text/javascript">
+
+var conti = [ %elenco_conti% ];
+
+function aggiungiDettaglio() {
+	
+	var rowCount = $('#dettagli tr').length;
+	
+	if (rowCount == 0) {
+		$( "#dettagli thead" ).append("<tr>" + 
+			"<th width='350' align='left'>Conto</th>" + 
+			"<th width='100' align='right'>Importo</th>" + 
+			"<th width='50' align='center'>D/A</th>" +
+			"<th>&nbsp;</th>" +
+			"</tr>");
+		$( "#dettagli" ).addClass("datiCreateSottile");
+	}
+	
+	if($('#dare').is(':checked')) { var D_A = $("#dare").val(); }
+	if($('#avere').is(':checked')) { var D_A = $("#avere").val(); }
+
+	var c = $("#conti").val();
+	var conto = c.substring(0, 6).replace(".", "");
+	
+	$( "#dettagli tbody" ).append( "<tr id='" + conto + "'>" +
+        "<td align='left'>" + $("#conti").val() + "</td>" +
+        "<td align='right'>" + $("#importo").val() + "</td>" +
+        "<td align='center'>" + D_A + "</td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" + conto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+      "</tr>" );
+}
+
+function cancellaDettaglio(conto) {
+
+	$('#' + conto).remove();
+}
+
+</script>
 	
 <div id="body">
 	<div id="main">
@@ -9,42 +48,85 @@
 				<tbody>
 					<tr>
 						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datascad" title="%ml.datascadTip%" size="10" maxlength="10" ></td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datascad" size="10" maxlength="10" ></td>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" title="%ml.numfattTip%" size="35" maxlength="35" ></td>
+						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" ></td>
 					</tr>
 					<tr>
 						<td>%ml.descreg% :</td>
-						<td colspan="4" class="tooltip"><input type="text" name="descreg" title="%ml.descregTip%" required size="80" maxlength="200" ></td>
+						<td colspan="4" class="tooltip"><input type="text" name="descreg" required size="80" maxlength="200" ></td>
 					</tr>					
 					<tr>
 						<td>%ml.codcau% :</td>
-						<td class="tooltip" title="%ml.codcauTip%">
+						<td class="tooltip">
 							<select class="selectmenu" name="causale" >
-								<option value="">%ml.selezionare%</option>
+								<option value=""></option>
 								%elenco_causali%
 							</select>
 						</td>
-						
+					</tr>
+					<tr>
 						<td>%ml.codforn% :</td>
-						<td class="tooltip" title="%ml.codfornTip%">
+						<td class="tooltip">
 							<select class="selectmenu" name="fornitore" >
-								<option value="">%ml.selezionare%</option>
+								<option value=""></option>
 								%elenco_fornitori%
 							</select>
 						</td>
+						
+						<td>%ml.codclie% :</td>
+						<td class="tooltip">
+							<select class="selectmenu" name="cliente" >
+								<option value=""></option>
+								%elenco_clienti%
+							</select>
+						</td>
 					</tr>					
-					
-										
+					<tr>
+						<td colspan="4">
+							<table id="dettagli">
+							    <thead>
+							    </thead>
+							    <tbody>
+							    </tbody>
+							</table>			
+						</td>
+					</tr>										
 				</tbody>
 				<tfoot>
 					<tr>
+						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
 						<td colspan="6" align="right" class="tooltip"><button class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
 					</tr>
 				</tfoot>
 			</table>
-			<br/>
 		</form>
 	</div>
 </div>
+
+<div id="nuovo-dettaglio-form" title="Nuovo Dettaglio"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input class="spinner" id="importo" name="importo" required size="30" maxlength="30" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.conto% :</td>
+					<td><input type="text" id="conti" name="conti" size="40" maxlength="40" ></td>
+				</tr>					
+				<tr>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="dare" name="dareavere" value="D" ><label for="dare">%ml.dare%</label>
+							<input type="radio" id="avere" name="dareavere" value="A" ><label for="avere">%ml.avere%</label>
+						</div>
+					</td>					
+				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
 <br/>

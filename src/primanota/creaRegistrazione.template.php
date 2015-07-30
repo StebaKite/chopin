@@ -36,30 +36,15 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 		$array = $utility->getConfig();
 
  		$form = self::$root . $array['template'] . self::$pagina;
-
-// 		$db = new database();
-
-// 		$listino = "<option value=''>";
-// 		$medico = "<option value=''>";
-// 		$laboratorio = "<option value=''>";
-
-// 		//-------------------------------------------------------------
-// 		$sql = "select idListino, descrizioneListino from paziente.listino";
-// 		$result = $db->getData($sql);
-// 		while ($row = pg_fetch_row($result)) {
-// 			if ($paziente->getListino() == $row[0])
-// 				$listino = $listino . "<option value='$row[0]' selected>$row[1]";
-// 			else
-// 				$listino = $listino . "<option value='$row[0]'>$row[1]";
-// 		}
-		//-------------------------------------------------------------
 		
 		$replace = array(
 			'%titoloPagina%' => $this->getTitoloPagina(),
 			'%azione%' => $this->getAzione(),
 			'%confermaTip%' => $this->getConfermaTip(),
 			'%elenco_causali%' => $_SESSION['elenco_causali'],
-			'%elenco_fornitori%' => $_SESSION['elenco_fornitori']
+			'%elenco_fornitori%' => $_SESSION['elenco_fornitori'],
+			'%elenco_clienti%' => $_SESSION['elenco_clienti'],
+			'%elenco_conti%' => $_SESSION['elenco_conti']
 		);
 
 		$utility = new utility();

@@ -63,43 +63,28 @@ class creaRegistrazione extends primanotaAbstract {
 		$utility = new utility();
 		
 		// Prelievo delle causali  -------------------------------------------------------------
-		
-		$array = $utility->getConfig();
 
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausali;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		
-		while ($row = pg_fetch_row($result)) {
-			if ($_SESSION['cod_causale'] == $row[0])
-				$elenco_causali = $elenco_causali . "<option value='$row[0]' selected>$row[0] - $row[1]";
-			else
-				$elenco_causali = $elenco_causali . "<option value='$row[0]'>$row[0] - $row[1]";
+		if (!isset($_SESSION['elenco_causali'])) {
+			$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
 		}
-		
-		$_SESSION['elenco_causali'] = $elenco_causali;
 
 		// Prelievo dei fornitori  -------------------------------------------------------------
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitori;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+		if (!isset($_SESSION['elenco_fornitori'])) {
+			$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
+		}
+
+		// Prelievo dei clienti  -------------------------------------------------------------
 		
-		while ($row = pg_fetch_row($result)) {
-			if ($_SESSION['cod_fornitore'] == $row[0])
-				$elenco_fornitori = $elenco_fornitori . "<option value='$row[0]' selected>$row[1] - $row[2]";
-			else
-				$elenco_fornitori = $elenco_fornitori . "<option value='$row[0]'>$row[1] - $row[2]";
+		if (!isset($_SESSION['elenco_clienti'])) {
+			$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
 		}
 		
-		$_SESSION['elenco_fornitori'] = $elenco_fornitori;
-		
-		
-		
-		
-		
-		
-		
+		// Prelievo dei conti ------------------------------------------------------------------
+
+		if (!isset($_SESSION['elenco_conti'])) {
+			$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
+		}
 		
 		
 	}	

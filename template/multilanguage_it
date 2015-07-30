@@ -7,18 +7,17 @@
 ; Bottoni ------------------------------
 ;
 salva = Salva
-
+nuovoDett = Nuovo Dettaglio
+dare = Dare
+avere = Avere
 
 
 
 ;
 ; Tips ---------------------------------
 ;
-datascadTip = La data di scadenza della fattura
-numfattTip = Il numero dalla fattura
-descregTip = Una descrizione significativa della registrazione
 salvaTip = Salva sul database i dati immessi
-codcauTip = La causale della registrazione
+nuovoDettTip = Inserisce un nuovo dettaglio per la registrazione
 selezionare = Selezionare...
 
 
@@ -44,6 +43,8 @@ numfatt = Numero fattura
 descreg = Descrizione
 codcau = Causale
 codforn = Fornitore
-
+codclie = Cliente
+importo = Importo
+conto = Conto
 
 
