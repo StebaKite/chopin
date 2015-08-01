@@ -11,6 +11,27 @@ $( ".radioset" ).buttonset();
 
 $( ".tabs" ).tabs({ width: 400 });
 
+
+$( "#msg" ).dialog({
+	autoOpen: false,
+	width: 500,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiDettaglio();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
 	width: 500,
@@ -64,34 +85,6 @@ $( "#slider" ).slider({
 	values: [ 17, 67 ]
 });
 
-function impostaProgressBarPagamento(pagato, daPagare, fuoriPiano) {
-
-	impostaProgressBarPagato(pagato);
-	impostaProgressBarDaPagare(daPagare);
-	impostaProgressBarFuoriPiano(fuoriPiano);
-}
-
-function impostaProgressBarPagato(valore) {
-	$( "#preventivoPagato" ).height(10);
-	$( "#preventivoPagato" ).progressbar({
-		value: valore
-	});
-}
-
-function impostaProgressBarDaPagare(valore) {
-	$( "#preventivoDaPagare" ).height(10);
-	$( "#preventivoDaPagare" ).progressbar({
-		value: valore
-	});
-}
-
-function impostaProgressBarFuoriPiano(valore) {
-	$( "#preventivoFuoriPiano" ).height(10);
-	$( "#preventivoFuoriPiano" ).progressbar({
-		value: valore
-	});
-}
-
 $( ".spinner" ).spinner();
 
 $( "#menu" ).menu();
@@ -127,7 +120,7 @@ $( "#conti" ).autocomplete({
 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
-$("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("pulsate", 3500).fadeOut('slow');
+$("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');
 
 
 

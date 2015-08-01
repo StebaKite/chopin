@@ -25,6 +25,18 @@ abstract class primanotaAbstract extends chopinAbstract {
 	public function getMessaggio() {
 		return self::$messaggio;
 	}	
+	
+	// Metodi comuni di utilita della prima note ---------------------------
+	
+	public function creaRegistrazione() {
+		return TRUE;
+	}
+	
+	public function creaDettaglioRegistrazione() {
+		return TRUE;
+	}
+	
+	
 }
 
 ?>

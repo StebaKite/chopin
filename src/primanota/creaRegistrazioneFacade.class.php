@@ -6,6 +6,17 @@ require_once 'creaRegistrazione.class.php';
 $creaRegistrazione = new creaRegistrazione();
 
 if ($_GET["modo"] == "start") $creaRegistrazione->start();
-if ($_GET["modo"] == "go") $creaRegistrazione->go();
+if ($_GET["modo"] == "go") {
+
+	$_SESSION["descreg"] = $_POST["descreg"];
+	$_SESSION["datascad"] = $_POST["datascad"];
+	$_SESSION["numfatt"] = $_POST["numfatt"];
+	$_SESSION["causale"] = $_POST["causale"];
+	$_SESSION["fornitore"] = $_POST["fornitore"];
+	$_SESSION["cliente"] = $_POST["cliente"];	
+	$_SESSION["dettInseriti"] = $_POST["dettInseriti"];	
+	
+	$creaRegistrazione->go();
+}
 
 ?>

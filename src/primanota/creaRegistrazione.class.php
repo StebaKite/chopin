@@ -3,7 +3,7 @@
 require_once 'primanota.abstract.class.php';
 
 class creaRegistrazione extends primanotaAbstract {
-
+	
 	public static $azioneCreaRegistrazione = "../primanota/creaRegistrazioneFacade.class.php?modo=go";
 	
 	function __construct() {
@@ -18,8 +18,7 @@ class creaRegistrazione extends primanotaAbstract {
 		self::$testata = self::$root . $array['testataPagina'];
 		self::$piede = self::$root . $array['piedePagina'];
 		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	
+		self::$messaggioInfo = self::$root . $array['messaggioInfo'];	
 	}
 	
 	// ------------------------------------------------
@@ -38,17 +37,48 @@ class creaRegistrazione extends primanotaAbstract {
 	}
 	
 	public function go() {
+
+		require_once 'creaRegistrazione.template.php';
+		require_once 'utility.class.php';
+
+		$utility = new utility();
 		
+		$creaRegistrazioneTemplate = new creaRegistrazioneTemplate();
+		$this->preparaPagina($creaRegistrazioneTemplate);
 		
-		
-		
-		
-		
-		
-		
+		if ($creaRegistrazioneTemplate->controlliLogici()) {
+
+			// Aggiornamento del DB ------------------------------
+			
+			if ($this->creaRegistrazione()) {
+				
+				if ($this->creaDettaglioRegistrazione()) {
+
+					$_SESSION["messaggio"] = "Registrazione salvata con successo";
+
+					include(self::$testata);
+					$creaRegistrazioneTemplate->displayPagina();
+					
+					self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+					echo $utility->tailTemplate($template);
+						
+					include(self::$piede);					
+				}
+			}
+		}
+		else {
+			
+			include(self::$testata);			
+			$creaRegistrazioneTemplate->displayPagina();
+				
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);			
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
+
+			include(self::$piede);				
+		}		
 	}
-	
-	
 
 	public function preparaPagina($creaRegistrazioneTemplate) {
 	

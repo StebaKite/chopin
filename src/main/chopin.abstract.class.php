@@ -11,6 +11,12 @@ abstract class chopinAbstract {
 	public static $testoAzione;
 	public static $titoloPagina;
 	public static $confermaTip;
+
+	public static $replace;
+	public static $elenco_causali;
+	public static $elenco_fornitori;
+	public static $elenco_clienti;
+	public static $elenco_conti;
 	
 	// Query ------------------------------------------------------------------------------
 
@@ -35,12 +41,12 @@ abstract class chopinAbstract {
 	public function setPiede($piede) {
 		self::$piede = $piede;
 	}
-	public function setMessaggioInfo($messaggioInfo) {
-		self::$messaggioInfo = $messaggioInfo;
-	}
-	public function setMessaggioErrore($messaggioErrore) {
-		self::$messaggioErrore = $messaggioErrore;
-	}
+// 	public function setMessaggioInfo($messaggioInfo) {
+// 		self::$messaggioInfo = $messaggioInfo;
+// 	}
+// 	public function setMessaggioErrore($messaggioErrore) {
+// 		self::$messaggioErrore = $messaggioErrore;
+// 	}
 	public function setAzione($azione) {
 		self::$azione = $azione;
 	}
@@ -62,12 +68,12 @@ abstract class chopinAbstract {
 	public function getPiede() {
 		return self::$piede;
 	}
-	public function getMessaggioInfo() {
-		return self::$messaggioInfo;
-	}
-	public function getMessaggioErrore() {
-		return self::$messaggioErrore;
-	}
+// 	public function getMessaggioInfo() {
+// 		return self::$messaggioInfo;
+// 	}
+// 	public function getMessaggioErrore() {
+// 		return self::$messaggioErrore;
+// 	}
 	public function getAzione() {
 		return self::$azione;
 	}
@@ -124,16 +130,18 @@ abstract class chopinAbstract {
 		$array = $utility->getConfig();
 		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausali;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 		
 		while ($row = pg_fetch_row($result)) {
-			if ($_SESSION['cod_causale'] == $row[0])
-				$elenco_causali = $elenco_causali . "<option value='$row[0]' selected>$row[0] - $row[1]";
-			else
-				$elenco_causali = $elenco_causali . "<option value='$row[0]'>$row[0] - $row[1]";
+			if ($row[0] == $_SESSION["causale"]) {
+				self::$elenco_causali = self::$elenco_causali . "<option value='$row[0]' selected >$row[0] - $row[1]";
+			}
+			else {
+				self::$elenco_causali = self::$elenco_causali . "<option value='$row[0]'>$row[0] - $row[1]";
+			}
 		}		
-		return $elenco_causali;
+		return self::$elenco_causali;
 	}
 
 	/**
@@ -147,13 +155,18 @@ abstract class chopinAbstract {
 		$array = $utility->getConfig();
 		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitori;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 		
 		while ($row = pg_fetch_row($result)) {
-			$elenco_fornitori = $elenco_fornitori . "<option value='$row[0]'>$row[1] - $row[2]";
+			if ($row[0] == $_SESSION["fornitore"]) {
+				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='$row[0]' selected >$row[1] - $row[2]";
+			}
+			else {
+				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='$row[0]'>$row[1] - $row[2]";				
+			}
 		}
-		return $elenco_fornitori;		
+		return self::$elenco_fornitori;		
 	}
 
 	/**
@@ -167,13 +180,18 @@ abstract class chopinAbstract {
 		$array = $utility->getConfig();
 	
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaClienti;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 	
 		while ($row = pg_fetch_row($result)) {
-			$elenco_clienti = $elenco_clienti . "<option value='$row[0]'>$row[1] - $row[2]";
+			if ($row[0] == $_SESSION["cliente"]) {
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='$row[0]' selected >$row[1] - $row[2]";	
+			}
+			else {
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='$row[0]'>$row[1] - $row[2]";
+			}
 		}
-		return $elenco_clienti;
+		return self::$elenco_clienti;
 	}
 	
 	/**
@@ -187,13 +205,13 @@ abstract class chopinAbstract {
 		$array = $utility->getConfig();
 	
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConti;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 	
 		while ($row = pg_fetch_row($result)) {
-			$elenco_conti = $elenco_conti . "'" . $row[0] . "." . $row[1] . " - " . $row[2] . "',";
+			self::$elenco_conti = self::$elenco_conti . "'" . $row[0] . "." . $row[1] . " - " . $row[2] . "',";
 		}
-		return $elenco_conti;
+		return self::$elenco_conti;
 	}
 	
 }

@@ -4,6 +4,9 @@
 
 var conti = [ %elenco_conti% ];
 
+var dett = [];
+var dettInseriti = [];
+
 function aggiungiDettaglio() {
 	
 	var rowCount = $('#dettagli tr').length;
@@ -30,12 +33,24 @@ function aggiungiDettaglio() {
         "<td align='center'>" + D_A + "</td>" +
     	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" + conto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
+	
+	var elemento = $("#conti").val() + "#" + $("#importo").val() + "#" + D_A;
+	addDett(elemento);
 }
 
 function cancellaDettaglio(conto) {
-
 	$('#' + conto).remove();
 }
+
+function addDett(dettaglio) {
+
+	dettInseriti.push(dettaglio);
+
+	var str = "<input type='text' size='150' name='dettInseriti' id='dettInseriti' value='";
+    var inpHidden = str.concat(dettInseriti,"'/>");
+	$("#dettagliInseriti").html(inpHidden);
+}
+
 
 </script>
 	
@@ -48,13 +63,13 @@ function cancellaDettaglio(conto) {
 				<tbody>
 					<tr>
 						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datascad" size="10" maxlength="10" ></td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datascad" size="10" maxlength="10" value='%datascad%' ></td>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" ></td>
+						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' ></td>
 					</tr>
 					<tr>
 						<td>%ml.descreg% :</td>
-						<td colspan="4" class="tooltip"><input type="text" name="descreg" required size="80" maxlength="200" ></td>
+						<td colspan="4" class="tooltip"><input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' ></td>
 					</tr>					
 					<tr>
 						<td>%ml.codcau% :</td>
@@ -84,11 +99,9 @@ function cancellaDettaglio(conto) {
 					</tr>					
 					<tr>
 						<td colspan="4">
-							<table id="dettagli">
-							    <thead>
-							    </thead>
-							    <tbody>
-							    </tbody>
+							<table id="dettagli" class="%class_dettagli%">
+							    <thead>%thead_dettagli%</thead>
+							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
 						</td>
 					</tr>										
@@ -96,10 +109,11 @@ function cancellaDettaglio(conto) {
 				<tfoot>
 					<tr>
 						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
-						<td colspan="6" align="right" class="tooltip"><button class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
 					</tr>
 				</tfoot>
 			</table>
+			<p id="dettagliInseriti">
 		</form>
 	</div>
 </div>
