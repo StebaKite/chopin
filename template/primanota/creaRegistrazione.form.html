@@ -4,8 +4,8 @@
 
 var conti = [ %elenco_conti% ];
 
-var dett = [];
-var dettInseriti = [];
+var indexDettInseriti = [%arrayIndexDettagliInseriti%];
+var dettInseriti = [%arrayDettagliInseriti%];
 
 function aggiungiDettaglio() {
 	
@@ -39,17 +39,46 @@ function aggiungiDettaglio() {
 }
 
 function cancellaDettaglio(conto) {
-	$('#' + conto).remove();
+	
+	$('#' + conto).remove();	
+	
+	var index = indexDettInseriti.indexOf(conto);
+
+	if (index > -1) {
+ 		indexDettInseriti.splice(index, 1);
+ 		aggiornaDettaglioInseriti(dettInseriti);
+
+ 		dettInseriti.splice(index, 1);				
+ 		aggiornaDettaglioInseriti(dettInseriti);
+	}
 }
 
 function addDett(dettaglio) {
-
+	
 	dettInseriti.push(dettaglio);
 
-	var str = "<input type='text' size='150' name='dettInseriti' id='dettInseriti' value='";
+	aggiornaDettaglioInseriti(dettInseriti);
+
+	var conto = dettaglio.substring(0, 6).replace(".", "");
+	indexDettInseriti.push(conto);
+
+	aggiornaIndexDettaglioInseriti(indexDettInseriti);
+}
+
+function aggiornaDettaglioInseriti(dettInseriti) {
+
+	var str = "<input type='hidden' size='150' name='dettagliInseriti' id='dettagliInseriti' value='";
     var inpHidden = str.concat(dettInseriti,"'/>");
 	$("#dettagliInseriti").html(inpHidden);
 }
+
+function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
+
+	var str1 = "<input type='hidden' size='150' name='indexDettagliInseriti' id='indexDettagliInseriti' value='";
+    var inpHidden = str1.concat(indexDettInseriti,"'/>");
+	$("#indexDettagliInseriti").html(inpHidden);
+}
+
 
 
 </script>
@@ -113,7 +142,8 @@ function addDett(dettaglio) {
 					</tr>
 				</tfoot>
 			</table>
-			<p id="dettagliInseriti">
+			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
+			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
 		</form>
 	</div>
 </div>

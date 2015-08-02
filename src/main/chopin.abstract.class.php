@@ -18,6 +18,8 @@ abstract class chopinAbstract {
 	public static $elenco_clienti;
 	public static $elenco_conti;
 	
+	public static $errorStyle = "border-color:#ff0000; border-width:1px;";
+	
 	// Query ------------------------------------------------------------------------------
 
 	public static $queryRicercaCausali = "/primanota/ricercaCausali.sql";

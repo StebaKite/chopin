@@ -24,8 +24,12 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 		$esito = TRUE;
 		$msg = "<br>";
 		
+		/**
+		 * Controllo presenza dati obbligatori 
+		 */
+		
 		if ($_SESSION["descreg"] == "") {			
-			$msg = $msg . "<br>&ndash; Manca la descrizione"; 			
+			$msg = $msg . "<br>&ndash; Manca la descrizione";
 			$esito = FALSE;
 		}
 		
@@ -34,10 +38,64 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 			$esito = FALSE;
 		}		
 		
-		if ($_SESSION["dettInseriti"] == "") {
+		/**
+		 * Se è stato immesso un numero fattura allora deve esserci un fornitore o cliente
+		 */
+		if ($_SESSION["numfatt"] != "") {
+			if (($_SESSION["fornitore"] == "") && ($_SESSION["cliente"] == "")) {
+				$msg = $msg . "<br>&ndash; Col numero fattura presente devi inserire il fornitore o il cliente";
+				$esito = FALSE;
+			}
+		}
+		
+		/**
+		 * Controllo di mutua presenza del fornitore o cliente
+		 */
+		if (($_SESSION["fornitore"] != "") && ($_SESSION["cliente"] != "")) {
+			$msg = $msg . "<br>&ndash; Il fornitore e il cliente sono mutualmente esclusivi";
+			$esito = FALSE;
+		}
+
+		/**
+		 * Se è stato immesso un fornitore o un cliente deve esserci un numero fattura
+		 */
+		if (($_SESSION["fornitore"] != "") || ($_SESSION["cliente"] != "")) {
+			if ($_SESSION["numfatt"] == "") {
+				$msg = $msg . "<br>&ndash; In presenza di un fornitore o cliente deve esserci in numero di fattura";
+				$esito = FALSE;	
+			}
+		}
+		
+		/**
+		 * Controllo di validità degli importi sui dettagli
+		 */
+		if ($_SESSION["dettagliInseriti"] == "") {
 			$msg = $msg . "<br>&ndash; Mancano i dettagli della registrazione";
 			$esito = FALSE;
 		}
+		else {
+			
+			$d = explode(",", $_SESSION['dettagliInseriti']);
+			$tot_dare = 0;
+			$tot_avere = 0;
+				
+			foreach($d as $ele) {
+					
+				$e = explode("#",$ele);
+				if ($e[2] == "D") {	$tot_dare = $tot_dare + $e[1]; }
+				if ($e[2] == "A") {	$tot_avere = $tot_avere + $e[1]; }
+			}
+
+			$totale = $tot_dare - $tot_avere;
+			
+			if ($totale  != 0 ) {
+				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . $totale . " &euro;";
+				$esito = FALSE;
+			}
+			else {
+				$_SESSION["totaleDare"] = $tot_dare;
+			}
+		} 
 		
 		// ----------------------------------------------		
 		
@@ -63,7 +121,11 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 
  		$form = self::$root . $array['template'] . self::$pagina;
 		
- 		if ($_SESSION['dettInseriti'] != "") {
+ 		/**
+ 		 * Prepara la tabella dei dettagli inseriti
+ 		 */
+ 		
+ 		if ($_SESSION['dettagliInseriti'] != "") {
  			
  			$class_dettagli = "datiCreateSottile";
  			
@@ -77,22 +139,30 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 
 
  			$tbody_dettagli = "";
+ 			$d_x_array = "";
  			
- 			$d = explode(",", $_SESSION['dettInseriti']);
+ 			$d = explode(",", $_SESSION['dettagliInseriti']);
 			
 			foreach($d as $ele) {
 				
 				$e = explode("#",$ele);
+				$c = substr($e[0], 0, 6);
+				$conto = str_replace(".", "", $c);
 				
 				$dettaglio = 								
-					"<tr id='" . $e[0] . "'>" .
+					"<tr id='" . $conto . "'>" .
 					"<td align='left'>" . $e[0] . "</td>" .
 					"<td align='right'>" . $e[1] . "</td>" .
 					"<td align='center'>" . $e[2] . "</td>" .
-					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $e[0] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $conto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 					"</tr>";
 				
 				$tbody_dettagli = $tbody_dettagli . $dettaglio;
+
+				/**
+				 * Prepara la valorizzazione dell'array di pagina per i dettagli inseriti
+				 */				
+				$d_x_array = $d_x_array . "'" . $ele . "',";				
 			}
  		}
  		
@@ -105,7 +175,10 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 				'%numfatt%' => $_SESSION['numfatt'],
 				'%class_dettagli%' => $class_dettagli,	
 				'%thead_dettagli%' => $thead_dettagli,	
-				'%tbody_dettagli%' => $tbody_dettagli,	
+				'%tbody_dettagli%' => $tbody_dettagli,
+				'%arrayDettagliInseriti%' => $d_x_array,
+				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
+				'%dettagliInseriti%' => $_SESSION['dettagliInseriti'],
 				'%elenco_causali%' => $_SESSION['elenco_causali'],
 				'%elenco_fornitori%' => $_SESSION['elenco_fornitori'],
 				'%elenco_clienti%' => $_SESSION['elenco_clienti'],

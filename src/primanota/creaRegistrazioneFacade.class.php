@@ -14,7 +14,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["causale"] = $_POST["causale"];
 	$_SESSION["fornitore"] = $_POST["fornitore"];
 	$_SESSION["cliente"] = $_POST["cliente"];	
-	$_SESSION["dettInseriti"] = $_POST["dettInseriti"];	
+	$_SESSION["dettagliInseriti"] = $_POST["dettagliInseriti"];	
+	$_SESSION["indexDettagliInseriti"] = $_POST["indexDettagliInseriti"];
 	
 	$creaRegistrazione->go();
 }
