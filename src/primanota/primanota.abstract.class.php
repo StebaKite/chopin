@@ -2,8 +2,10 @@
 
 require_once 'chopin.abstract.class.php';
 
-abstract class primanotaAbstract extends chopinAbstract {
+abstract class PrimanotaAbstract extends ChopinAbstract {
 
+	private static $_instance = null;
+	
 	public static $messaggio;
 
 	
@@ -15,7 +17,24 @@ abstract class primanotaAbstract extends chopinAbstract {
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
 	
+
+	function __construct() {
+	}
 	
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+	
+			self::$_instance = new PrimanotaAbstract();
+	
+		return self::$_instance;
+	}
 	
 	// Getters e Setters ---------------------------------------------------
 
@@ -43,12 +62,13 @@ abstract class primanotaAbstract extends chopinAbstract {
 	 * @param unknown $cliente
 	 * @return unknown
 	 */
-	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $numfatt, $causale, $fornitore, $cliente) {
+	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente) {
 		
 		$array = $utility->getConfig();	
 		$replace = array(
 				'%des_registrazione%' => trim($descreg),
 				'%dat_scadenza%' => trim($datascad),
+				'%dat_registrazione%' => trim($datareg),
 				'%num_fattura%' => trim($numfatt),
 				'%cod_causale%' => $causale,
 				'%id_fornitore%' => $fornitore,

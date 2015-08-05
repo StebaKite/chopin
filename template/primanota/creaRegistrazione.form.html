@@ -2,8 +2,6 @@
 
 <script type="text/javascript">
 
-var conti = [ %elenco_conti% ];
-
 var indexDettInseriti = [%arrayIndexDettagliInseriti%];
 var dettInseriti = [%arrayDettagliInseriti%];
 
@@ -24,29 +22,37 @@ function aggiungiDettaglio() {
 	if($('#dare').is(':checked')) { var D_A = $("#dare").val(); }
 	if($('#avere').is(':checked')) { var D_A = $("#avere").val(); }
 
-	var c = $("#conti").val();
-	var conto = c.substring(0, 6).replace(".", "");
+	var conto = $("#conti").val();	
+	var idconto = conto.substring(0, 5);
+	var importo = $("#importo").val();
 	
-	$( "#dettagli tbody" ).append( "<tr id='" + conto + "'>" +
-        "<td align='left'>" + $("#conti").val() + "</td>" +
-        "<td align='right'>" + $("#importo").val() + "</td>" +
+	$( "#dettagli tbody" ).append( "<tr id='" + idconto + "'>" +
+        "<td align='left'>" + conto + "</td>" +
+        "<td align='right'>" + importo + "</td>" +
         "<td align='center'>" + D_A + "</td>" +
-    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" + conto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" + idconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = $("#conti").val() + "#" + $("#importo").val() + "#" + D_A;
+	var elemento = conto + "#" + importo + "#" + D_A;
 	addDett(elemento);
 }
 
-function cancellaDettaglio(conto) {
+function cancellaDettaglio(idconto) {
 	
-	$('#' + conto).remove();	
+	$('#' + idconto).remove();	
 	
-	var index = indexDettInseriti.indexOf(conto);
+	var rowCount = $('#dettagli tbody tr').length;
+	
+	if (rowCount == 0) {
+		$('#dettagli thead tr').remove();		
+		$( "#dettagli" ).removeClass("datiCreateSottile");
+	}
+	
+	var index = jQuery.inArray(idconto,indexDettInseriti);
 
 	if (index > -1) {
  		indexDettInseriti.splice(index, 1);
- 		aggiornaDettaglioInseriti(dettInseriti);
+ 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
 
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
@@ -56,12 +62,10 @@ function cancellaDettaglio(conto) {
 function addDett(dettaglio) {
 	
 	dettInseriti.push(dettaglio);
-
 	aggiornaDettaglioInseriti(dettInseriti);
 
-	var conto = dettaglio.substring(0, 6).replace(".", "");
+	var conto = dettaglio.substring(0, 5);
 	indexDettInseriti.push(conto);
-
 	aggiornaIndexDettaglioInseriti(indexDettInseriti);
 }
 
@@ -91,28 +95,31 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datascad" size="10" maxlength="10" value='%datascad%' ></td>
-						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' ></td>
-					</tr>
-					<tr>
-						<td>%ml.descreg% :</td>
-						<td colspan="4" class="tooltip"><input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' ></td>
-					</tr>					
-					<tr>
+						<td class="td">%ml.datareg% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg" size="10" maxlength="10" value='%datareg%' ></td>
+
 						<td>%ml.codcau% :</td>
 						<td class="tooltip">
-							<select class="selectmenu" name="causale" >
+							<select class="selectmenuCausale" name="causale" >
 								<option value=""></option>
 								%elenco_causali%
 							</select>
 						</td>
 					</tr>
 					<tr>
+						<td>%ml.descreg% :</td>
+						<td colspan="4" class="tooltip"><input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' ></td>
+					</tr>					
+					<tr>
+						<td class="td">%ml.datascad% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datascad" size="10" maxlength="10" value='%datascad%' ></td>
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' ></td>
+					</tr>
+					<tr>
 						<td>%ml.codforn% :</td>
 						<td class="tooltip">
-							<select class="selectmenu" name="fornitore" >
+							<select class="selectmenuFornitore" name="fornitore" >
 								<option value=""></option>
 								%elenco_fornitori%
 							</select>
@@ -120,7 +127,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 						
 						<td>%ml.codclie% :</td>
 						<td class="tooltip">
-							<select class="selectmenu" name="cliente" >
+							<select class="selectmenuCliente" name="cliente" >
 								<option value=""></option>
 								%elenco_clienti%
 							</select>
@@ -154,16 +161,21 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 			<tbody>
 				<tr>
 					<td>%ml.importo% :</td>
-					<td class="tooltip"><input class="spinner" id="importo" name="importo" required size="30" maxlength="30" ></td>
+					<td class="tooltip"><input class="spinner" id="importo" name="importo" required size="20" maxlength="20" ></td>
 				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>
-					<td><input type="text" id="conti" name="conti" size="40" maxlength="40" ></td>
+					<td>
+						<select class="selectmenuConto" id="conti" name="conti">
+							<option value=""></option>
+							%elenco_conti%
+						</select>
+					</td>
 				</tr>					
 				<tr>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="dare" name="dareavere" value="D" ><label for="dare">%ml.dare%</label>
+							<input type="radio" id="dare" name="dareavere" value="D" checked ><label for="dare">%ml.dare%</label>
 							<input type="radio" id="avere" name="dareavere" value="A" ><label for="avere">%ml.avere%</label>
 						</div>
 					</td>					

@@ -1,11 +1,13 @@
 <?php
 
-class utility {
+class Utility {
 
 	private static $root;
 	private static $languageReplace;
 	private static $configuration;
 
+	private static $_instance = null;
+	
 	private static $configFile = "/chopin/config/chopin.config.ini";
 
 	// Setters -----------------------
@@ -29,6 +31,23 @@ class utility {
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+				
+			self::$_instance = new Utility();
+	
+		return self::$_instance;
+	}
+
+	
+	
 	public function tailFile($template, $replacement) {
 		return str_replace(array_keys($replacement), array_values($replacement), $template);
 	}

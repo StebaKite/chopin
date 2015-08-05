@@ -1,6 +1,6 @@
 <?php
 
-abstract class chopinAbstract {
+abstract class ChopinAbstract {
 
 	public static $root;
 	public static $testata;
@@ -35,6 +35,21 @@ abstract class chopinAbstract {
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+	
+			self::$_instance = new ChopinAbstract();
+	
+		return self::$_instance;
+	}
+	
 	// Setters -----------------------------------------------------------------------------
 	
 	public function setTestata($testata) {
@@ -43,12 +58,6 @@ abstract class chopinAbstract {
 	public function setPiede($piede) {
 		self::$piede = $piede;
 	}
-// 	public function setMessaggioInfo($messaggioInfo) {
-// 		self::$messaggioInfo = $messaggioInfo;
-// 	}
-// 	public function setMessaggioErrore($messaggioErrore) {
-// 		self::$messaggioErrore = $messaggioErrore;
-// 	}
 	public function setAzione($azione) {
 		self::$azione = $azione;
 	}
@@ -70,12 +79,6 @@ abstract class chopinAbstract {
 	public function getPiede() {
 		return self::$piede;
 	}
-// 	public function getMessaggioInfo() {
-// 		return self::$messaggioInfo;
-// 	}
-// 	public function getMessaggioErrore() {
-// 		return self::$messaggioErrore;
-// 	}
 	public function getAzione() {
 		return self::$azione;
 	}
@@ -187,10 +190,10 @@ abstract class chopinAbstract {
 	
 		while ($row = pg_fetch_row($result)) {
 			if ($row[0] == $_SESSION["cliente"]) {
-				self::$elenco_clienti = self::$elenco_clienti . "<option value='$row[0]' selected >$row[1] - $row[2]";	
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "' selected >" . $row[1] . " - " .  $row[2] ;	
 			}
 			else {
-				self::$elenco_clienti = self::$elenco_clienti . "<option value='$row[0]'>$row[1] - $row[2]";
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "'>" . $row[1] . " - " . $row[2] ;
 			}
 		}
 		return self::$elenco_clienti;
@@ -211,7 +214,7 @@ abstract class chopinAbstract {
 		$result = $db->getData($sql);
 	
 		while ($row = pg_fetch_row($result)) {
-			self::$elenco_conti = self::$elenco_conti . "'" . $row[0] . "." . $row[1] . " - " . $row[2] . "',";
+			self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . $row[1] . " - " . $row[2] . "'>" . $row[2] ;
 		}
 		return self::$elenco_conti;
 	}

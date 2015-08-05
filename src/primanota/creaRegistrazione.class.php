@@ -2,7 +2,9 @@
 
 require_once 'primanota.abstract.class.php';
 
-class creaRegistrazione extends primanotaAbstract {
+class CreaRegistrazione extends primanotaAbstract {
+
+	private static $_instance = null;
 	
 	public static $azioneCreaRegistrazione = "../primanota/creaRegistrazioneFacade.class.php?modo=go";
 	
@@ -12,13 +14,28 @@ class creaRegistrazione extends primanotaAbstract {
 	
 		require_once 'utility.class.php';
 	
-		$utility = new utility();
+		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
 		self::$testata = self::$root . $array['testataPagina'];
 		self::$piede = self::$root . $array['piedePagina'];
 		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
 		self::$messaggioInfo = self::$root . $array['messaggioInfo'];	
+	}
+
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+	
+			self::$_instance = new CreaRegistrazione();
+	
+		return self::$_instance;
 	}
 	
 	// ------------------------------------------------
@@ -27,9 +44,13 @@ class creaRegistrazione extends primanotaAbstract {
 	
 		require_once 'creaRegistrazione.template.php';
 	
-		$creaRegistrazioneTemplate = new creaRegistrazioneTemplate();
+		$creaRegistrazioneTemplate = CreaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($creaRegistrazioneTemplate);
-	
+
+		// Data del giorno preimpostata solo in entrata -------------------------
+		
+		$_SESSION["datareg"] = date("d-m-Y");
+		
 		// Compone la pagina
 		include(self::$testata);
 		$creaRegistrazioneTemplate->displayPagina();
@@ -41,9 +62,9 @@ class creaRegistrazione extends primanotaAbstract {
 		require_once 'creaRegistrazione.template.php';
 		require_once 'utility.class.php';
 
-		$utility = new utility();
+		$utility = Utility::getInstance();
 		
-		$creaRegistrazioneTemplate = new creaRegistrazioneTemplate();
+		$creaRegistrazioneTemplate = CreaRegistrazioneTemplate::getInstance();
 		
 		if ($creaRegistrazioneTemplate->controlliLogici()) {
 
@@ -51,7 +72,8 @@ class creaRegistrazione extends primanotaAbstract {
 			
 			if ($this->creaRegistrazione($utility)) {
 				
-				$_SESSION["messaggio"] = "Registrazione salvata con successo";
+				$_SESSION["messaggio"] = "Registrazione salvata con successo";				
+				$_SESSION["datareg"] = date("d-m-Y");
 				
 				unset($_SESSION["descreg"]);
 				unset($_SESSION["datascad"]);
@@ -92,8 +114,8 @@ class creaRegistrazione extends primanotaAbstract {
 	public function creaRegistrazione($utility) {
 
 		require_once 'database.class.php';
-		
-		$db = new database();
+				
+		$db = Database::getInstance();
 		$db->beginTransaction();
 
 		/**
@@ -102,12 +124,13 @@ class creaRegistrazione extends primanotaAbstract {
 		
 		$descreg = $_SESSION["descreg"];
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
+		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
 		
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $numfatt, $causale, $fornitore, $cliente)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente)) {
 
  			$d = explode(",", $_SESSION['dettagliInseriti']);
 
@@ -116,7 +139,7 @@ class creaRegistrazione extends primanotaAbstract {
 				$e = explode("#",$ele);
 				
 				$conto = substr($e[0], 0, 3);
-				$sottoConto = substr($e[0], 4, 2);
+				$sottoConto = substr($e[0], 3, 2);
 				$importo = $e[1];
 				$d_a = $e[2];
 								
@@ -145,8 +168,8 @@ class creaRegistrazione extends primanotaAbstract {
 		$creaRegistrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
 		$creaRegistrazioneTemplate->setTitoloPagina("%ml.creaNuovaRegistrazione%");
 		
-		$db = new database();
-		$utility = new utility();
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
 		
 		// Prelievo delle causali  -------------------------------------------------------------
 

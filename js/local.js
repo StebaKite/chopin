@@ -91,15 +91,30 @@ $( "#menu" ).menu();
 
 $( ".tooltip" ).tooltip();
 
-$( ".selectmenu" )
+$( ".selectmenuCausale" )
 	.selectmenu()
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( "#selectmenu1" )
+$( ".selectmenuFornitore" )
 	.selectmenu()
 	.selectmenu("menuWidget")
 	.addClass("overflow");
+
+$( ".selectmenuCliente" )
+	.selectmenu()
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuConto" )
+	.selectmenu({width: 200})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuConto" ).selectmenu({ width: 300 });
+$( ".selectmenuCausale" ).selectmenu({ width: 300 });
+$( ".selectmenuFornitore" ).selectmenu({ width: 300 });
+$( ".selectmenuCliente" ).selectmenu({ width: 300 });
 
 $( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 $( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );

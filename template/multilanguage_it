@@ -10,6 +10,7 @@ salva = Salva
 nuovoDett = Nuovo Dettaglio
 dare = Dare
 avere = Avere
+cerca = Ricerca
 
 
 
@@ -19,13 +20,14 @@ avere = Avere
 salvaTip = Salva sul database i dati immessi
 nuovoDettTip = Inserisce un nuovo dettaglio per la registrazione
 selezionare = Selezionare...
+cercaTip = Avvia la ricerca con i filtri impostati
 
 
 ;
 ; Funzioni -----------------------------
 ;
 creaNuovaRegistrazione = Nuova Registrazione
-
+ricercaRegistrazione = Ricerca Registrazione
 
 
 ;
@@ -46,5 +48,9 @@ codforn = Fornitore
 codclie = Cliente
 importo = Importo
 conto = Conto
-
-
+datareg = Data registrazione
+da = Dalla data
+a = Alla data
+idReg = ID Reg.
+desReg = Descrizione
+datReg = Data Reg,

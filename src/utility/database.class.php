@@ -1,17 +1,35 @@
 <?php
 
-Class database {
+Class Database {
 
 	private static $root;
 	private static $dblink;
 	private static $lastIdUsed;
 	private static $numrows;
 
+	private static $_instance = null;
+	
 	function __construct() {
 		
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
+	private function  __clone() { }
+
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+
+		if( !is_object(self::$_instance) )
+			
+			self::$_instance = new Database();
+		
+		return self::$_instance;
+	}	
+	
+	
 	public function getDbLink() {
 		return self::$dblink;
 	}

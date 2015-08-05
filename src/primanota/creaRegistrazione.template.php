@@ -2,7 +2,9 @@
 
 require_once 'primanota.abstract.class.php';
 
-class creaRegistrazioneTemplate extends primanotaAbstract {
+class CreaRegistrazioneTemplate extends PrimanotaAbstract {
+
+	private static $_instance = null;
 	
 	private static $pagina = "/primanota/creaRegistrazione.form.html";
 	
@@ -12,9 +14,21 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	// Setters & Getters  ----------------------------------------------------------
-
-
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+	
+			self::$_instance = new CreaRegistrazioneTemplate();
+	
+		return self::$_instance;
+	}
+	
 	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
@@ -111,12 +125,11 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 	
 	public function displayPagina() {
 
-		require_once 'database.class.php';
 		require_once 'utility.class.php';
 		
 		// Template --------------------------------------------------------------
 
-		$utility = new utility();
+		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
  		$form = self::$root . $array['template'] . self::$pagina;
@@ -146,15 +159,14 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 			foreach($d as $ele) {
 				
 				$e = explode("#",$ele);
-				$c = substr($e[0], 0, 6);
-				$conto = str_replace(".", "", $c);
+				$idconto = substr($e[0], 0, 5);
 				
 				$dettaglio = 								
-					"<tr id='" . $conto . "'>" .
+					"<tr id='" . $idconto . "'>" .
 					"<td align='left'>" . $e[0] . "</td>" .
 					"<td align='right'>" . $e[1] . "</td>" .
 					"<td align='center'>" . $e[2] . "</td>" .
-					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $conto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $idconto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 					"</tr>";
 				
 				$tbody_dettagli = $tbody_dettagli . $dettaglio;
@@ -172,6 +184,7 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%descreg%' => $_SESSION["descreg"],
 				'%datascad%' => $_SESSION["datascad"],
+				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION['numfatt'],
 				'%class_dettagli%' => $class_dettagli,	
 				'%thead_dettagli%' => $thead_dettagli,	
@@ -185,7 +198,7 @@ class creaRegistrazioneTemplate extends primanotaAbstract {
 				'%elenco_conti%' => $_SESSION['elenco_conti']
 		);
 
-		$utility = new utility();
+		$utility = Utility::getInstance();
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);		
