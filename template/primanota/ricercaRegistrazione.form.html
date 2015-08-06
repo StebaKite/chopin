@@ -1,0 +1,27 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.datareg% &ndash; %ml.da% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+						<td class="td">%ml.a% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip"><input type="text" name="numfatt" size="10" maxlength="20" value='%numfatt%' ></td>						
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%

@@ -120,6 +120,19 @@ $( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 $( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 
+$("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
+$("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');
+
+$(function() {
+	$('tr.parent') 
+		.css("cursor","pointer") 
+		.attr("title","Click per espandere/collassare") 
+		.click(function(){
+			$(this).siblings('.child-'+this.id).toggle();
+		});
+	$('tr[@class^=child-]').hide().children('td');
+});
+
 // Hover states on the static widgets
 $( "#dialog-link, #icons li" ).hover(
 	function() {
@@ -132,19 +145,4 @@ $( "#dialog-link, #icons li" ).hover(
 
 $( "#conti" ).autocomplete({
 	source: conti
-});
-
-$("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
-$("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');
-
-
-
-$(function() {
-	$('tr.parent') 
-		.css("cursor","pointer") 
-		.attr("title","Click per espandere/collassare") 
-		.click(function(){
-			$(this).siblings('.child-'+this.id).toggle();
-		});
-	$('tr[@class^=child-]').hide().children('td');
 });
