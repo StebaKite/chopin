@@ -67,6 +67,10 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 
 		
 		
+		
+		
+		
+		
 
 		// ----------------------------------------------
 		
