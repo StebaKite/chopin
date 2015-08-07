@@ -87,10 +87,16 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 				include(self::$testata);
 				$ricercaRegistrazioneTemplate->displayPagina();
 
-				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni" ;
-				
+				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				
+				if ($_SESSION['numRegTrovate'] > 0) {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);						
+				}
+				else {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);						
+				}
+				
 				echo $utility->tailTemplate($template);
 			
 				include(self::$piede);
@@ -153,7 +159,13 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$db = Database::getInstance();
 		$result = $db->getData($sql);
 		
-		$_SESSION['registrazioniTrovate'] = $result;
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['registrazioniTrovate'] = $result;
+		}
+		else {
+			unset($_SESSION['registrazioniTrovate']);
+			$_SESSION['numRegTrovate'] = 0;
+		}
 		
 		return $result;
 	}

@@ -110,8 +110,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 			
 			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
 			$numReg = 0;			
-			
-			
+						
 			foreach(pg_fetch_all($registrazioniTrovate) as $row) {
 
 				if (trim($row['tipo']) == 'R') {
@@ -146,6 +145,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 			}
 			$_SESSION['numRegTrovate'] = $numReg;
 			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";			
+		}
+		else {
+			
 		}
 			
 		$replace = array(
