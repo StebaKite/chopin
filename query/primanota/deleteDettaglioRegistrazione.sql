@@ -1,0 +1,2 @@
+DELETE FROM  contabilita.dettaglio_registrazione
+WHERE id_dettaglio_registrazione=%id_dettaglio_registrazione%

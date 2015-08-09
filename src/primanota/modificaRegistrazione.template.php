@@ -154,7 +154,7 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 					"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
 					"<td align='right'>" . $row["imp_registrazione"] . "</td>" .
 					"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
-					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . idconto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $row["id_dettaglio_registrazione"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		}
 		

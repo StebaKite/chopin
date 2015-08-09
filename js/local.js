@@ -87,6 +87,27 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//Modifica registrazione : cancella dettaglio
+$( "#cancella-dettaglio-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#cancellaDettaglio").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
 	changeYear: true,
@@ -184,6 +205,12 @@ $( "#dialog-link, #icons li" ).hover(
 		$( this ).removeClass( "ui-state-hover" );
 	}
 );
+
+function cancellaDettaglio(idconto) {
+	
+	$( "#idDettaglioRegistrazione" ).val(idconto);
+	$( "#cancella-dettaglio-modificareg-form" ).dialog( "open" );
+}
 
 $( "#conti" ).autocomplete({
 	source: conti

@@ -19,7 +19,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryUpdateRegistrazione = "/primanota/updateRegistrazione.sql";
 	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
-	
+	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
 
 	function __construct() {
 	}
@@ -242,6 +242,18 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		}
 		return FALSE;
 	}
+	
+	public function cancellaDettaglioRegistrazione($db, $utility, $id_dettaglioregistrazione) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_dettaglio_registrazione%' => trim($id_dettaglioregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteDettaglioRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
 }
 
 ?>

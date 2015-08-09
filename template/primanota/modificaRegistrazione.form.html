@@ -1,8 +1,5 @@
 <body>
 
-<script type="text/javascript">
-</script>
-
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -115,4 +112,12 @@
 		</table> 	 
   </form>
 </div>
+
+<div id="cancella-dettaglio-modificareg-form" title="Cancella Dettaglio"> 
+	<form method="post" id="cancellaDettaglio" action="../primanota/cancellaDettaglioRegistrazioneFacade.class.php?modo=go" >
+		<p>Elimino il dettaglio della registrazione ?</p>
+		<input type="hidden" id="idDettaglioRegistrazione" name="idDettaglioRegistrazione">
+  </form>
+</div>
+
 <br/>
