@@ -140,10 +140,10 @@ abstract class ChopinAbstract {
 		
 		while ($row = pg_fetch_row($result)) {
 			if ($row[0] == $_SESSION["causale"]) {
-				self::$elenco_causali = self::$elenco_causali . "<option value='$row[0]' selected >$row[0] - $row[1]";
+				self::$elenco_causali = self::$elenco_causali . "<option value='" . $row[0] . "' selected >" . $row[0] . " - " . $row[1] . "</option>";
 			}
 			else {
-				self::$elenco_causali = self::$elenco_causali . "<option value='$row[0]'>$row[0] - $row[1]";
+				self::$elenco_causali = self::$elenco_causali . "<option value='" . $row[0] . "'>" . $row[0] . " - " . $row[1] . "</option>";
 			}
 		}		
 		return self::$elenco_causali;
@@ -165,10 +165,10 @@ abstract class ChopinAbstract {
 		
 		while ($row = pg_fetch_row($result)) {
 			if ($row[0] == $_SESSION["fornitore"]) {
-				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='$row[0]' selected >$row[1] - $row[2]";
+				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='" . $row[0] . "' selected >" . $row[1] . " - " . $row[2] . "</option>";
 			}
 			else {
-				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='$row[0]'>$row[1] - $row[2]";				
+				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='" . $row[0] . "' >" . $row[1] . " - " . $row[2] . "</option>";
 			}
 		}
 		return self::$elenco_fornitori;		
@@ -190,10 +190,10 @@ abstract class ChopinAbstract {
 	
 		while ($row = pg_fetch_row($result)) {
 			if ($row[0] == $_SESSION["cliente"]) {
-				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "' selected >" . $row[1] . " - " .  $row[2] ;	
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "' selected >" . $row[1] . " - " . $row[2] . "</option>";
 			}
 			else {
-				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "'>" . $row[1] . " - " . $row[2] ;
+				self::$elenco_clienti = self::$elenco_clienti . "<option value='" . $row[0] . "'>" . $row[1] . " - " . $row[2] . "</option>";
 			}
 		}
 		return self::$elenco_clienti;

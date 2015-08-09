@@ -59,6 +59,33 @@ $( "#nuovo-dett" ).click(function( event ) {
 	event.preventDefault();
 });
 
+// Modifica registrazione : aggiunta nuovo dettaglio
+$( "#nuovo-dettaglio-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+                $("#nuovoDettaglio").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-dett-modificareg" ).click(function( event ) {
+	$( "#nuovo-dettaglio-modificareg-form" ).dialog( "open" );
+	event.preventDefault();
+});
 
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
@@ -130,6 +157,21 @@ $(function() {
 		.click(function(){
 			$(this).siblings('.child-'+this.id).toggle();
 		});
+	
+	$('tr.parentAperto') 
+		.css("cursor","pointer") 
+		.attr("title","Click per espandere/collassare") 
+		.click(function(){
+		$(this).siblings('.child-'+this.id).toggle();
+	});
+	
+	$('tr.parentErrato') 
+		.css("cursor","pointer") 
+		.attr("title","Click per espandere/collassare") 
+		.click(function(){
+		$(this).siblings('.child-'+this.id).toggle();
+	});
+	
 	$('tr[@class^=child-]').hide().children('td');
 });
 

@@ -11,7 +11,7 @@ nuovoDett = Nuovo Dettaglio
 dare = Dare
 avere = Avere
 cerca = Ricerca
-
+indietro = Indietro
 
 
 ;
@@ -21,13 +21,16 @@ salvaTip = Salva sul database i dati immessi
 nuovoDettTip = Inserisce un nuovo dettaglio per la registrazione
 selezionare = Selezionare...
 cercaTip = Avvia la ricerca con i filtri impostati
-
-
+visualizza = Visualizza il dettaglio
+modifica = Modifica
+cancella = Cancella
+indietroTip = Torna alla funzione precedente
 ;
 ; Funzioni -----------------------------
 ;
 creaNuovaRegistrazione = Nuova Registrazione
 ricercaRegistrazione = Ricerca Registrazione
+modificaRegistrazione = Modifica Registrazione
 
 
 ;
@@ -40,6 +43,7 @@ ricercaRegistrazione = Ricerca Registrazione
 ;
 ; Campi form ---------------------------
 ;
+azioni = Azioni
 datascad = Data scadenza
 numfatt = Numero fattura
 descreg = Descrizione
@@ -51,6 +55,6 @@ conto = Conto
 datareg = Data registrazione
 da = Dalla data
 a = Alla data
-idReg = ID Reg.
+idReg = ID
 desReg = Descrizione
-datReg = Data Reg,
+datReg = Data Reg.

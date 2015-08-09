@@ -327,12 +327,17 @@
 		color: #3399FF;
 		background-color: #ececec;
 	}
-	table.expandible tr.parentAccettato {
+	table.expandible tr.parentAperto {
 		font-weight: bolder;
 		color: green;
 		background-color: #ececec;
 	}
-	table.expandible #childAccettato {
+	table.expandible tr.parentErrato {
+		font-weight: bolder;
+		color: red;
+		background-color: #ececec;
+	}
+	table.expandible #childAperto {
 		color: green;
 	}
 	table.expandible #child {

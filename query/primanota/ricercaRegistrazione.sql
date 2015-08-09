@@ -3,7 +3,7 @@ select t1.*
 	select
 		'R' as tipo,
 		reg.id_registrazione,
-		reg.dat_registrazione,
+		to_char(reg.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
 		reg.des_registrazione,
 		reg.cod_causale,
 		reg.num_fattura,

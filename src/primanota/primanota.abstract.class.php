@@ -7,15 +7,18 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	private static $_instance = null;
 	
 	public static $messaggio;
-
-	
-	
 	
 	// Query --------------------------------------------------------------- 
 	
 	public static $queryCreaRegistrazione = "/primanota/creaRegistrazione.sql";
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
+	
+	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
+	public static $queryLeggiDettagliRegistrazione = "/primanota/leggiDettagliRegistrazione.sql";
+	public static $queryUpdateRegistrazione = "/primanota/updateRegistrazione.sql";
+	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
+	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
 	
 
 	function __construct() {
@@ -148,6 +151,97 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
+	public function leggiRegistrazione($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
+	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiDettagliRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	public function updateStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($id_registrazione),
+				'%sta_registrazione%' => trim($stareg)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);		
+	}	
+	
+	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($id_registrazione),
+				'%des_registrazione%' => trim($descreg),
+				'%dat_scadenza%' => trim($datascad),
+				'%dat_registrazione%' => trim($datareg),
+				'%sta_registrazione%' => trim($stareg),
+				'%num_fattura%' => trim($numfatt),
+				'%cod_causale%' => $causale,
+				'%id_fornitore%' => $fornitore,
+				'%id_cliente%' => $cliente
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		/**
+		 * Se l'aggiornamentoa della registrazione è andata bene cancello la data scadenza e vedo se inserirla 
+		 */
+		if ($result) {
+			$replace = array(
+					'%id_registrazione%' => trim($id_registrazione)
+			);
+			$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenza;
+			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+			$result = $db->execSql($sql);
+			
+			$oggi = date("d-m-Y");
+			$dataOggi = strtotime($oggi);
+			$dt = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+			$dataScadenza = strtotime(str_replace('/', '-', $dt));	// cambio i separatori altrimenti la strtotime non funziona
+		
+			if (($fornitore != "") && ($dataScadenza > $dataOggi)) {
+				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare, $descreg);
+			}
+			return TRUE;
+		}
+		return FALSE;
+	}
 }
 
 ?>

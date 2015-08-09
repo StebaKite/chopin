@@ -3,6 +3,8 @@
 set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/primanota:/var/www/html/chopin/src/utility');
 require_once 'ricercaRegistrazione.class.php';
 
+session_start();
+
 $ricercaRegistrazione = RicercaRegistrazione::getInstance();
 
 if ($_GET["modo"] == "start") $ricercaRegistrazione->start();

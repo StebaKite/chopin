@@ -5,4 +5,4 @@ VALUES
 	%dat_scadenza%,
 	%imp_in_scadenza%,
 	'%nota_in_scadenza%'
-	) RETURNING id_scadenza
+	)
