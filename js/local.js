@@ -211,7 +211,3 @@ function cancellaDettaglio(idconto) {
 	$( "#idDettaglioRegistrazione" ).val(idconto);
 	$( "#cancella-dettaglio-modificareg-form" ).dialog( "open" );
 }
-
-$( "#conti" ).autocomplete({
-	source: conti
-});

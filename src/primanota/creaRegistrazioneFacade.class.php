@@ -7,7 +7,11 @@ session_start();
 
 $creaRegistrazione = CreaRegistrazione::getInstance();
 
-if ($_GET["modo"] == "start") $creaRegistrazione->start();
+if ($_GET["modo"] == "start") {
+	session_unset();
+	$creaRegistrazione->start();
+}
+
 if ($_GET["modo"] == "go") {
 
 	$_SESSION["descreg"] = $_POST["descreg"];

@@ -25,26 +25,32 @@ function aggiungiDettaglio() {
 	var conto = $("#conti").val();	
 	var idconto = conto.substring(0, 5);
 	var importo = $("#importo").val();
+	var importoNormalizzato = importo.trim().replace(",", ".");
 	
 	$( "#dettagli tbody" ).append( "<tr id='" + idconto + "'>" +
         "<td align='left'>" + conto + "</td>" +
-        "<td align='right'>" + importo + "</td>" +
+        "<td align='right'>" + importoNormalizzato + "</td>" +
         "<td align='center'>" + D_A + "</td>" +
-    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" + idconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" + idconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = conto + "#" + importo + "#" + D_A;
+	var elemento = conto + "#" + importoNormalizzato + "#" + D_A;
 	addDett(elemento);
+	
+	$("#importo").val("");
+	$('#conti').prop("selectedIndex",0).selectmenu('refresh');
+	$('#dare').attr('checked', true);
+	
 }
 
-function cancellaDettaglio(idconto) {
+function cancellaDettaglioPagina(idconto) {
 	
-	$('#' + idconto).remove();	
+	$("#" + idconto).remove();	
 	
-	var rowCount = $('#dettagli tbody tr').length;
+ 	var rowCount = $("#dettagli tbody tr").length;
 	
 	if (rowCount == 0) {
-		$('#dettagli thead tr').remove();		
+		$( "#dettagli thead tr" ).remove();		
 		$( "#dettagli" ).removeClass("datiCreateSottile");
 	}
 	

@@ -71,18 +71,10 @@ class CreaRegistrazione extends primanotaAbstract {
 			// Aggiornamento del DB ------------------------------
 			
 			if ($this->creaRegistrazione($utility)) {
-				
+
+				session_unset();
 				$_SESSION["messaggio"] = "Registrazione salvata con successo";				
 				$_SESSION["datareg"] = date("d-m-Y");
-				
-				unset($_SESSION["descreg"]);
-				unset($_SESSION["datascad"]);
-				unset($_SESSION["numfatt"]);
-				unset($_SESSION["causale"]);
-				unset($_SESSION["fornitore"]);
-				unset($_SESSION["cliente"]);
-				unset($_SESSION["dettagliInseriti"]);				
-				unset($_SESSION["indexDettagliInseriti"]);
 				
 				$this->preparaPagina($creaRegistrazioneTemplate);
 				
@@ -171,31 +163,12 @@ class CreaRegistrazione extends primanotaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		
-		// Prelievo delle causali  -------------------------------------------------------------
+		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
 
-		if (!isset($_SESSION['elenco_causali'])) {
-			$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
-		}
-
-		// Prelievo dei fornitori  -------------------------------------------------------------
-		
-		if (!isset($_SESSION['elenco_fornitori'])) {
-			$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
-		}
-
-		// Prelievo dei clienti  -------------------------------------------------------------
-		
-		if (!isset($_SESSION['elenco_clienti'])) {
-			$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-		}
-		
-		// Prelievo dei conti ------------------------------------------------------------------
-
-		if (!isset($_SESSION['elenco_conti'])) {
-			$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
-		}
-		
-		
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
+		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
+		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);		
 	}	
 }
 ?>
