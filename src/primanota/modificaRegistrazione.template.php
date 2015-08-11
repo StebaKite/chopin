@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'primanota.abstract.class.php';
 
 class ModificaRegistrazioneTemplate extends PrimanotaAbstract {

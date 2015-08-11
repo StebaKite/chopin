@@ -43,28 +43,6 @@ function aggiungiDettaglio() {
 	
 }
 
-function cancellaDettaglioPagina(idconto) {
-	
-	$("#" + idconto).remove();	
-	
- 	var rowCount = $("#dettagli tbody tr").length;
-	
-	if (rowCount == 0) {
-		$( "#dettagli thead tr" ).remove();		
-		$( "#dettagli" ).removeClass("datiCreateSottile");
-	}
-	
-	var index = jQuery.inArray(idconto,indexDettInseriti);
-
-	if (index > -1) {
- 		indexDettInseriti.splice(index, 1);
- 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
-
- 		dettInseriti.splice(index, 1);				
- 		aggiornaDettaglioInseriti(dettInseriti);
-	}
-}
-
 function addDett(dettaglio) {
 	
 	dettInseriti.push(dettaglio);
@@ -77,16 +55,18 @@ function addDett(dettaglio) {
 
 function aggiornaDettaglioInseriti(dettInseriti) {
 
-	var str = "<input type='hidden' size='150' name='dettagliInseriti' id='dettagliInseriti' value='";
+/* 	var str = "<input type='text' size='150' name='dettagliInseriti' id='dettagliInseriti' value='";
     var inpHidden = str.concat(dettInseriti,"'/>");
-	$("#dettagliInseriti").html(inpHidden);
+ */
+ $("#dettagliInseriti").val(dettInseriti);
 }
 
 function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 
-	var str1 = "<input type='hidden' size='150' name='indexDettagliInseriti' id='indexDettagliInseriti' value='";
+/* 	var str1 = "<input type='text' size='150' name='indexDettagliInseriti' id='indexDettagliInseriti' value='";
     var inpHidden = str1.concat(indexDettInseriti,"'/>");
-	$("#indexDettagliInseriti").html(inpHidden);
+ */    
+	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
 
 
@@ -155,8 +135,8 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 					</tr>
 				</tfoot>
 			</table>
-			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
-			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
+			<input type="text" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
+			<input type="text" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
 		</form>
 	</div>
 </div>

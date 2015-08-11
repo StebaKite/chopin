@@ -211,3 +211,30 @@ function cancellaDettaglio(idconto) {
 	$( "#idDettaglioRegistrazione" ).val(idconto);
 	$( "#cancella-dettaglio-modificareg-form" ).dialog( "open" );
 }
+
+function cancellaDettaglioPagina(idconto) {
+	
+	$("#" + idconto).remove();	
+	
+ 	var rowCount = $("#dettagli tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#dettagli thead tr" ).remove();		
+		$( "#dettagli" ).removeClass("datiCreateSottile");
+	}
+	
+	var c = parseInt(idconto.toString());
+	var index = jQuery.inArray(c,indexDettInseriti);
+	if (index == -1) {
+		var cc = idconto.toString();
+		var index = jQuery.inArray(cc,indexDettInseriti);
+	}	
+	
+	if (index > -1) {
+ 		indexDettInseriti.splice(index, 1);
+ 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
+
+ 		dettInseriti.splice(index, 1);				
+ 		aggiornaDettaglioInseriti(dettInseriti);
+	}
+}

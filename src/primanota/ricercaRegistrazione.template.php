@@ -63,14 +63,6 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 				$esito = FALSE;				
 			}
 		}
-		
-
-		
-		
-		
-		
-		
-		
 
 		// ----------------------------------------------
 		
@@ -149,7 +141,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 					"	<td width='105'  align='center'>" . trim($row['num_fattura']) . "</td>" .
 					"	<td width='410' align='left'>" . trim($row['des_registrazione']) . "</td>" .
 					"	<td width='290'  align='left'>" . trim($row['cod_causale']) . " - " . trim($row['des_causale']) . "</td>" .
-					"	<td width='30' id='icons'><a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
+					"	<td width='30' id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
 					"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";						

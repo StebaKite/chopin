@@ -212,29 +212,12 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 	
-		// Prelievo delle causali  -------------------------------------------------------------
+		// Prelievo dei dati per i combo --------------------------------------------------------
 	
-		if (!isset($_SESSION['elenco_causali'])) {
-			$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
-		}
-	
-		// Prelievo dei fornitori  -------------------------------------------------------------
-	
-		if (!isset($_SESSION['elenco_fornitori'])) {
-			$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
-		}
-	
-		// Prelievo dei clienti  -------------------------------------------------------------
-	
-		if (!isset($_SESSION['elenco_clienti'])) {
-			$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-		}
-	
-		// Prelievo dei conti ------------------------------------------------------------------
-	
-		if (!isset($_SESSION['elenco_conti'])) {
-			$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
-		}
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
+		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
+		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
 	}
 }	
 
