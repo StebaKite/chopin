@@ -108,6 +108,27 @@ $( "#cancella-dettaglio-modificareg-form" ).dialog({
 	]
 });
 
+//Cancella registrazione
+$( "#cancella-registrazione-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+           $("#cancellaRegistrazione").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
 	changeYear: true,
@@ -238,3 +259,10 @@ function cancellaDettaglioPagina(idconto) {
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
 }
+
+function cancellaRegistrazione(idreg) {
+	
+	$( "#idRegistrazione" ).val(idreg);
+	$( "#cancella-registrazione-form" ).dialog( "open" );
+}
+

@@ -20,6 +20,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
+	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 
 	function __construct() {
 	}
@@ -188,7 +189,14 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	}
-	
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_registrazione
+	 * @param unknown $stareg
+	 */
 	public function updateStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
 
 		$array = $utility->getConfig();
@@ -200,7 +208,23 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);		
 	}	
-	
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_registrazione
+	 * @param unknown $totaleDare
+	 * @param unknown $descreg
+	 * @param unknown $datascad
+	 * @param unknown $datareg
+	 * @param unknown $numfatt
+	 * @param unknown $causale
+	 * @param unknown $fornitore
+	 * @param unknown $cliente
+	 * @param unknown $stareg
+	 * @return boolean
+	 */
 	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg) {
 
 		$array = $utility->getConfig();
@@ -242,7 +266,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		}
 		return FALSE;
 	}
-	
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_dettaglioregistrazione
+	 */
 	public function cancellaDettaglioRegistrazione($db, $utility, $id_dettaglioregistrazione) {
 
 		$array = $utility->getConfig();
@@ -250,6 +280,23 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%id_dettaglio_registrazione%' => trim($id_dettaglioregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteDettaglioRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_dettaglioregistrazione
+	 */
+	public function cancellaRegistrazione($db, $utility, $id_registrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($id_registrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}

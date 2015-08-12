@@ -88,7 +88,17 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 				include(self::$testata);
 				$ricercaRegistrazioneTemplate->displayPagina();
 
-				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";
+				/**
+				 * Gestione del messaggio proveniente dalla cancellazione
+				 */
+				if (isset($_SESSION["messaggioCancellazione"])) {
+					$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";
+					unset($_SESSION["messaggioCancellazione"]);
+				}
+				else {
+					$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";
+				}
+				
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 				
 				if ($_SESSION['numRegTrovate'] > 0) {
