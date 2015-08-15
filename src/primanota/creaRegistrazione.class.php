@@ -131,7 +131,7 @@ class CreaRegistrazione extends primanotaAbstract {
 				$e = explode("#",$ele);
 				
 				$conto = substr($e[0], 0, 3);
-				$sottoConto = substr($e[0], 3, 2);
+				$sottoConto = substr($e[0], 3);
 				$importo = $e[1];
 				$d_a = $e[2];
 								
