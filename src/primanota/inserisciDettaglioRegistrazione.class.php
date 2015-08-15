@@ -50,8 +50,11 @@ class InserisciDettaglioRegistrazione extends primanotaAbstract {
 		$db->beginTransaction();
 		
 		$importo = $_SESSION["importo"];
-		$conto = substr($_SESSION["conti"], 0, 3);
-		$sottoconto = substr($_SESSION["conti"], 3, 2);
+		
+		$cc = explode(" - ", $_SESSION["conti"]);
+		
+		$conto = substr(trim($cc[0]), 0, 3);
+		$sottoconto = substr(trim($cc[0]), 3);
 		$d_a = $_SESSION["dareavere"];
 		
 		if ($this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $conto, $sottoconto, $importo, $d_a)) {
