@@ -159,7 +159,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 			foreach($d as $ele) {
 				
 				$e = explode("#",$ele);
-				$idconto = substr($e[0], 0, 5);
+				$idconto = substr($e[0], 0, 6);
 				
 				$dettaglio = 								
 					"<tr id='" . $idconto . "'>" .

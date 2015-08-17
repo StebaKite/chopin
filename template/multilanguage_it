@@ -8,11 +8,13 @@
 ;
 salva = Salva
 nuovoDett = Nuovo Dettaglio
+nuovoSottoconto = Nuovo Sottoconto
 dare = Dare
 avere = Avere
 cerca = Ricerca
 indietro = Indietro
-
+contoeco = Conto Economico
+contopat = Stato Patrimoniale
 
 ;
 ; Tips ---------------------------------
@@ -25,6 +27,10 @@ visualizza = Visualizza il dettaglio
 modifica = Modifica
 cancella = Cancella
 indietroTip = Torna alla funzione precedente
+nuovoSottocontoTip = Inserisce un nuovo sottoconto
+
+
+
 ;
 ; Funzioni -----------------------------
 ;
@@ -32,8 +38,8 @@ creaNuovaRegistrazione = Nuova Registrazione
 ricercaRegistrazione = Ricerca Registrazione
 modificaRegistrazione = Modifica Registrazione
 visualizzaRegistrazione = Visualizza Registrazione
-
-
+ricercaConto = Ricerca Conto
+creaNuovoConto = Nuovo Conto
 ;
 ; Messaggi -----------------------------
 ;
@@ -59,3 +65,8 @@ a = Alla data
 idReg = ID
 desReg = Descrizione
 datReg = Data Reg.
+desconto = Descrizione conto
+catconto = Categoria
+tipconto = Tipo conto
+codsottoconto = Codice Sottoconto
+dessottoconto = Descrizione sottoconto

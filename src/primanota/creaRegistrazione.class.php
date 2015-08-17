@@ -7,6 +7,7 @@ class CreaRegistrazione extends primanotaAbstract {
 	private static $_instance = null;
 	
 	public static $azioneCreaRegistrazione = "../primanota/creaRegistrazioneFacade.class.php?modo=go";
+
 	
 	function __construct() {
 	

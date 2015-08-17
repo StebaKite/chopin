@@ -23,7 +23,7 @@ function aggiungiDettaglio() {
 	if($('#avere').is(':checked')) { var D_A = $("#avere").val(); }
 
 	var conto = $("#conti").val();	
-	var idconto = conto.substring(0, 5);
+	var idconto = conto.substring(0, 6);
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	
@@ -48,7 +48,7 @@ function addDett(dettaglio) {
 	dettInseriti.push(dettaglio);
 	aggiornaDettaglioInseriti(dettInseriti);
 
-	var conto = dettaglio.substring(0, 5);
+	var conto = dettaglio.substring(0, 6);
 	indexDettInseriti.push(conto);
 	aggiornaIndexDettaglioInseriti(indexDettInseriti);
 }
@@ -68,8 +68,6 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
  */    
 	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
-
-
 
 </script>
 	
@@ -147,7 +145,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 			<tbody>
 				<tr>
 					<td>%ml.importo% :</td>
-					<td class="tooltip"><input class="spinner" id="importo" name="importo" required size="20" maxlength="20" ></td>
+					<td class="tooltip"><input class="spinner" id="importo" name="importo" size="20" maxlength="20" ></td>
 				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>

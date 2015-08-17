@@ -129,6 +129,33 @@ $( "#cancella-registrazione-form" ).dialog({
 	]
 });
 
+$( "#nuovo-sottoconto-form" ).dialog({
+	autoOpen: false,
+	width: 600,
+	height: 200,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiSottoconto();
+				$( this ).dialog( "close" );					
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-sottoconto" ).click(function( event ) {
+	$( "#nuovo-sottoconto-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
 	changeYear: true,
@@ -180,6 +207,18 @@ $( ".selectmenuConto" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuCategoria" )
+	.selectmenu({width: 150})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuTipoConto" )
+	.selectmenu({width: 100})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
+$( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuCausale" ).selectmenu({ width: 300 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 300 });
@@ -227,6 +266,19 @@ $( "#dialog-link, #icons li" ).hover(
 	}
 );
 
+//---------------------------------------------------------------
+// Funzioni comuni
+//---------------------------------------------------------------
+
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+// ---------------------------------------------------------------
+// Funzioni per la registrazione e i dettagli
+// ---------------------------------------------------------------
+
 function cancellaDettaglio(idconto) {
 	
 	$( "#idDettaglioRegistrazione" ).val(idconto);
@@ -264,5 +316,48 @@ function cancellaRegistrazione(idreg) {
 	
 	$( "#idRegistrazione" ).val(idreg);
 	$( "#cancella-registrazione-form" ).dialog( "open" );
+}
+
+//---------------------------------------------------------------
+//Funzioni per i conti e sottoconti
+//---------------------------------------------------------------
+
+function cancellaSottocontoPagina(codsottoconto) {
+
+	$("#" + codsottoconto).remove();	
+	
+	var rowCount = $("#sottoconti tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#sottoconti thead tr" ).remove();		
+		$( "#sottoconti" ).removeClass("datiCreateSottile");
+	}
+	
+	var c = parseInt(codsottoconto.toString());
+	var index = jQuery.inArray(c,indexSottocontiInseriti);
+	if (index == -1) {
+		var cc = codsottoconto.toString();
+		var index = jQuery.inArray(cc,indexSottocontiInseriti);
+	}	
+	
+	if (index > -1) {
+		indexSottocontiInseriti.splice(index, 1);
+		aggiornaIndexSottocontiInseriti(indexSottocontiInseriti);
+
+		sottocontiInseriti.splice(index, 1);				
+		aggiornaSottocontiInseriti(sottocontiInseriti);
+	}
+}
+
+function cancellaSottoconto(codsottoconto) {
+	
+	$( "#cod-sottoconto" ).val(codsottoconto);
+	$( "#cancella-sottoconto-modificaconto-form" ).dialog( "open" );
+}
+
+function cancellaConto(codconto) {
+	
+	$( "#codconto" ).val(codconto);
+	$( "#cancella-conto-form" ).dialog( "open" );
 }
 
