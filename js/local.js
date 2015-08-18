@@ -108,6 +108,55 @@ $( "#cancella-dettaglio-modificareg-form" ).dialog({
 	]
 });
 
+//Modifica conto : cancella sottoconto
+$( "#cancella-sottoconto-modificaconto-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+           $("#cancellaSottoconto").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Modifica conto : aggiunta nuovo sottoconto
+$( "#nuovo-sottoconto-modificaconto-form" ).dialog({
+	autoOpen: false,
+	width: 600,
+	height: 200,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#nuovoSottoconto").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-sottoconto-modificaconto" ).click(function( event ) {
+	$( "#nuovo-sottoconto-modificaconto-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 //Cancella registrazione
 $( "#cancella-registrazione-form" ).dialog({
 	autoOpen: false,
@@ -351,7 +400,7 @@ function cancellaSottocontoPagina(codsottoconto) {
 
 function cancellaSottoconto(codsottoconto) {
 	
-	$( "#cod-sottoconto" ).val(codsottoconto);
+	$( "#codsottoconto" ).val(codsottoconto);
 	$( "#cancella-sottoconto-modificaconto-form" ).dialog( "open" );
 }
 

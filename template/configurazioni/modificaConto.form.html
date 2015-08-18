@@ -1,0 +1,92 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="categoria" value='%categoria%' >			
+			<input type="hidden" name="tipoconto" value='%tipoconto%' >			
+		</form>
+		<br>
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.conto% :</td>
+						<td class="tooltip"><input type="text" id="codconto" name="codconto" size="5" maxlength="3" value='%codconto%' disabled="disabled" ></td>
+					</tr>
+					<tr>
+						<td>%ml.desconto% :</td>
+						<td class="tooltip"><input type="text" id="desconto" name="desconto" size="70" maxlength="100" value='%desconto%' ></td>
+					</tr>			
+					<tr>
+						<td colspan="2">
+							<div class="radioset" >
+								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" %contoeco_checked% ><label for="contoeco">%ml.contoeco%</label>
+								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" %contopat_checked% ><label for="contopat">%ml.contopat%</label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="radioset" >
+								<input type="radio" id="dare" name="dareavere" value="Dare" %dare_checked% ><label for="dare">%ml.dare%</label>
+								<input type="radio" id="avere" name="dareavere" value="Avere" %avere_checked% ><label for="avere">%ml.avere%</label>
+							</div>
+						</td>					
+					</tr>
+					<tr>
+						<td colspan="4">
+							<table id="sottoconti" class="datiCreateSottile">
+							    <thead>
+									<tr>
+										<th width='100' align='center'>Sottoconto</th>
+										<th width='400' align='left'>Descrizione</th>
+										<th>&nbsp;</th>
+									</tr>
+							    </thead>
+							    <tbody>%tbody_sottoconti%</tbody>
+							</table>			
+						</td>
+					</tr>										
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="6" align="right" class="tooltip"><button id="nuovo-sottoconto-modificaconto" class="button" title="%ml.nuovoSottocontoTip%" >%ml.nuovoSottoconto%</button></td>
+						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<input type="hidden" name="codconto" value='%codconto%' >
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+</div>
+
+<div id="nuovo-sottoconto-modificaconto-form" title="Nuovo Sottoconto"> 
+	<form method="post" id="nuovoSottoconto" action="../configurazioni/inserisciSottocontoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.codsottoconto% :</td>
+					<td class="tooltip"><input id="codsottoconto" name="codsottoconto" size="5" maxlength="3" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.dessottoconto% :</td>
+					<td class="tooltip"><input id="dessottoconto" name="dessottoconto" size="50" maxlength="100" ></td>
+				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+<div id="cancella-sottoconto-modificaconto-form" title="Cancella Sottoconto"> 
+	<form method="post" id="cancellaSottoconto" action="../configurazioni/cancellaSottocontoFacade.class.php?modo=go" >
+		<p>Elimino il sottoconto ?</p>
+		<input type="hidden" id="codconto" name="codconto">
+		<input type="hidden" id="codsottoconto" name="codsottoconto">
+  </form>
+</div>
+
+<br/>

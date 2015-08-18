@@ -56,7 +56,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			"		<th width='400'>%ml.desconto%</th>" .
 			"		<th width='150'>%ml.catconto%</th>" .
 			"		<th width='100'>%ml.tipconto%</th>" .
-			"		<th width='83' colspan='3'>%ml.azioni%</th>" .
+			"		<th width='48' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-conti'>" .
@@ -70,23 +70,17 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 
 				if (trim($row['tipo']) == 'C') {
 
-					switch ($row['sta_conto']) {
-						case ("00"): {
-							$class = "class='parentAperto'";
-							$bottoneModifica = "&nbsp;";
-							$bottoneCancella = "&nbsp;";
-// 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-// 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
-							break;
-						}
-						default: {
-							$class = "class='parent'";
-							$bottoneModifica = "&nbsp;";
-							$bottoneCancella = "&nbsp;";
-							break;
-						}
+					if ($row['tot_registrazioni_conto'] == 0) {
+						$class = "class='parentAperto'";
+						$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaContoFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+						$bottoneCancella = "<a class='tooltip' onclick='cancellaConto(" . trim($row['cod_conto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";						
 					}
-						
+					else {
+						$class = "class='parent'";
+						$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaContoFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+						$bottoneCancella = "&nbsp;";
+					}
+
 					$numConti ++;
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr " . $class . " id='" . trim($row['cod_conto']) . "'>" .
@@ -94,7 +88,6 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					"	<td width='410' align='left'>" . trim($row['des_conto']) . "</td>" .
 					"	<td width='155' align='center'>" . trim($row['cat_conto']) . "</td>" .
 					"	<td width='110' align='center'>" . trim($row['tip_conto']) . "</td>" .
-					"	<td width='30' id='icons'><a class='tooltip' href='../configurazioni/visualizzaContoFacade.class.php?modo=start&codConto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
 					"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
@@ -108,7 +101,8 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr " . $class . " " . $id . " >" .
 					"	<td class='tooltip' align='right'>" . trim($row['cod_sottoconto']) . "</td>" .
-					"	<td colspan='6' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td colspan='3' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td colspan='3' align='right'><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
 					"</tr>";
 				}
 
@@ -122,7 +116,9 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 
 		if ($_SESSION["categoria"] == "Conto Economico") $contoEconomicoSelected = "selected";
 		if ($_SESSION["categoria"] == "Stato Patrimoniale") $statoPatrimonialeSelected = "selected";
-		
+
+		if ($_SESSION["tipoconto"] == "Dare") $dareSelected = "selected";
+		if ($_SESSION["tipoconto"] == "Avere") $avereSelected = "selected";
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
@@ -130,6 +126,8 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%contoeconomicoselected%' => $contoEconomicoSelected,
 				'%statopatrimonialeselected%' => $statoPatrimonialeSelected,
+				'%dareselected%' => $dareSelected,
+				'%avereselected%' => $avereSelected,
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

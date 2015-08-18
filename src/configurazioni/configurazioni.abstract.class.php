@@ -12,7 +12,10 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 
 	public static $queryCreaConto = "/configurazioni/creaConto.sql";
 	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
-	
+	public static $queryLeggiConto = "/configurazioni/leggiConto.sql";
+	public static $queryLeggiSottoconti = "/configurazioni/leggiSottoconti.sql";
+	public static $queryUpdateConto = "/configurazioni/updateConto.sql";
+	public static $queryDeleteSottoconto = "/configurazioni/deleteSottoconto.sql";
 	
 	
 	function __construct() {
@@ -85,8 +88,57 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function leggiConto($db, $utility, $codconto) {
 	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiConto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	public function leggiSottoconti($db, $utility, $codconto) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiSottoconti;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	public function updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto) {
 		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%des_conto%' => trim($desconto),
+				'%cat_conto%' => trim($catconto),
+				'%tip_conto%' => trim($tipconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateConto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	public function cancellaSottoconto($db, $utility, $codconto, $codsottoconto) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteSottoconto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
 	
 	
 	
