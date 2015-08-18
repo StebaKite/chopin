@@ -108,6 +108,27 @@ $( "#cancella-dettaglio-modificareg-form" ).dialog({
 	]
 });
 
+//Cancella conto
+$( "#cancella-conto-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+         $("#cancellaConto").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 //Modifica conto : cancella sottoconto
 $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
