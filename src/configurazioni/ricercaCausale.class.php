@@ -2,12 +2,12 @@
 
 require_once 'configurazioni.abstract.class.php';
 
-class RicercaConto extends ConfigurazioniAbstract {
+class RicercaCausale extends ConfigurazioniAbstract {
 
 	private static $_instance = null;
 
-	public static $azioneRicercaConto = "../configurazioni/ricercaContoFacade.class.php?modo=go";
-	public static $queryRicercaConto = "/configurazioni/ricercaConto.sql";
+	public static $azioneRicercaCausale = "../configurazioni/ricercaCausaleFacade.class.php?modo=go";
+	public static $queryRicercaCausale = "/configurazioni/ricercaCausale.sql";
 
 	function __construct() {
 
@@ -34,37 +34,38 @@ class RicercaConto extends ConfigurazioniAbstract {
 
 		if( !is_object(self::$_instance) )
 
-			self::$_instance = new RicercaConto();
+			self::$_instance = new RicercaCausale();
 
 		return self::$_instance;
 	}
 
 	public function start() {
 
-		require_once 'ricercaConto.template.php';
+		require_once 'ricercaCausale.template.php';
 		require_once 'utility.class.php';
-		
+
 		// Template
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
-		
-		unset($_SESSION["contiTrovati"]);
-		
-		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
-		$this->preparaPagina($ricercaContoTemplate);
-		
+
+		unset($_SESSION["causaliTrovate"]);
+		$_SESSION["codcausale"] = "";
+
+		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
+		$this->preparaPagina($ricercaCausaleTemplate);
+
 		// compone la pagina
 		include($testata);
-		$ricercaContoTemplate->displayPagina();
+		$ricercaCausaleTemplate->displayPagina();
 		include($piede);
 	}
 
 	public function go() {
 
-		require_once 'ricercaConto.template.php';
+		require_once 'ricercaCausale.template.php';
 		require_once 'utility.class.php';
 		
 		// Template
@@ -74,106 +75,100 @@ class RicercaConto extends ConfigurazioniAbstract {
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
 		
-		unset($_SESSION["contiTrovati"]);
+		unset($_SESSION["causaliTrovate"]);
 		
-		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
+		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
 		
 		if ($this->ricercaDati($utility)) {
-			
-			$this->preparaPagina($ricercaContoTemplate);
-			
-			include($testata);
-			$ricercaContoTemplate->displayPagina();
 				
+			$this->preparaPagina($ricercaCausaleTemplate);
+				
+			include($testata);
+			$ricercaCausaleTemplate->displayPagina();
+		
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
-			 */
+			*/
 			if (isset($_SESSION["messaggioCancellazione"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovati " . $_SESSION['numContiTrovati'] . " conti";
+				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovate " . $_SESSION['numCausaliTrovate'] . " causali";
 				unset($_SESSION["messaggioCancellazione"]);
 			}
 			else {
-				$_SESSION["messaggio"] = "Trovati " . $_SESSION['numContiTrovati'] . " conti";
+				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numCausaliTrovate'] . " causali";
 			}
-			
+				
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			
-			if ($_SESSION['numContiTrovati'] > 0) {
+				
+			if ($_SESSION['numCausaliTrovate'] > 0) {
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 			}
 			else {
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
 			}
-				
+		
 			echo $utility->tailTemplate($template);
-
-			include($piede);	
+		
+			include($piede);
 		}
 		else {
-
-			$this->preparaPagina($ricercaContoTemplate);
-				
+		
+			$this->preparaPagina($ricercaCausaleTemplate);
+		
 			include(self::$testata);
-			$ricercaContoTemplate->displayPagina();
-			
-			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei conti" ;
-			
+			$ricercaCausaleTemplate->displayPagina();
+				
+			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle causali" ;
+				
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-				
+		
 			include(self::$piede);
-		}
+		}		
 	}
-	
+
 	public function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
+
+		$codCausale = "";
 		
-		$categoriaCond = "";
-		$tipcontoCond = "";
-		
-		if ($_SESSION["categoria"] != "") {
-			$categoriaCond = "and cat_conto = '" . $_SESSION["categoria"] . "'";   
-		}
-		if ($_SESSION["tipoconto"] != "") {
-			$tipcontoCond = "and tip_conto = '" . $_SESSION["tipoconto"] . "'";
+		if ($_SESSION['codcausale'] != "") {
+			$codCausale = "WHERE cod_causale = '" . $_SESSION['codcausale'] . "'";
 		}
 		
 		$replace = array(
-				'%categoria%' => $categoriaCond,
-				'%tipconto%' => $tipcontoCond
+				'%cod_causale%' => $codCausale
 		);
-	
+		
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConto;
-	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausale;
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-	
+		
 		// esegue la query
-	
+		
 		$db = Database::getInstance();
 		$result = $db->getData($sql);
-	
+		
 		if (pg_num_rows($result) > 0) {
-			$_SESSION['contiTrovati'] = $result;
+			$_SESSION['causaliTrovate'] = $result;
 		}
 		else {
-			unset($_SESSION['contiTrovati']);
-			$_SESSION['numContiTrovati'] = 0;
-		}
-	
+			unset($_SESSION['causaliTrovate']);
+			$_SESSION['numCausaliTrovate'] = 0;
+		}		
 		return $result;
 	}
-	
-	public function preparaPagina($ricercaContoTemplate) {
+
+	public function preparaPagina($ricercaCausaleTemplate) {
 	
 		require_once 'utility.class.php';
 	
-		$_SESSION["azione"] = self::$azioneRicercaConto;
+		$_SESSION["azione"] = self::$azioneRicercaCausale;
 		$_SESSION["confermaTip"] = "%ml.cercaTip%";
-		$_SESSION["titoloPagina"] = "%ml.ricercaConto%";
-	}		
-}	
-		
+		$_SESSION["titoloPagina"] = "%ml.ricercaCausale%";
+	}
+}
+
 ?>

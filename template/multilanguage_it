@@ -28,7 +28,7 @@ modifica = Modifica
 cancella = Cancella
 indietroTip = Torna alla funzione precedente
 nuovoSottocontoTip = Inserisce un nuovo sottoconto
-
+configura = Configura
 
 
 ;
@@ -41,6 +41,7 @@ visualizzaRegistrazione = Visualizza Registrazione
 ricercaConto = Ricerca Conto
 creaNuovoConto = Nuovo Conto
 modificaConto = Modifica Conto
+ricercaCausale = Ricerca Causale
 ;
 ; Messaggi -----------------------------
 ;
@@ -71,3 +72,7 @@ catconto = Categoria
 tipconto = Tipo conto
 codsottoconto = Codice Sottoconto
 dessottoconto = Descrizione sottoconto
+codcausale = Codice causale
+descausale = Descrizione causale
+qtareg = Qta. Reg.
+qtaconti = Qta. Conti

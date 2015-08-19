@@ -170,7 +170,7 @@ class CreaRegistrazione extends primanotaAbstract {
 		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
 		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);		
 	}	
 }
+
 ?>

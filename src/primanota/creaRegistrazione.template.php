@@ -194,8 +194,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%dettagliInseriti%' => $_SESSION['dettagliInseriti'],
 				'%elenco_causali%' => $_SESSION['elenco_causali'],
 				'%elenco_fornitori%' => $_SESSION['elenco_fornitori'],
-				'%elenco_clienti%' => $_SESSION['elenco_clienti'],
-				'%elenco_conti%' => $_SESSION['elenco_conti']
+				'%elenco_clienti%' => $_SESSION['elenco_clienti']
 		);
 
 		$utility = Utility::getInstance();

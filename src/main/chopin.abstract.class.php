@@ -208,7 +208,10 @@ abstract class ChopinAbstract {
 	public function caricaConti($utility, $db) {
 	
 		$array = $utility->getConfig();
-	
+		self::$replace = array(
+				'%cod_causale%' => trim($_SESSION["causale"])
+		);
+		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConti;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);

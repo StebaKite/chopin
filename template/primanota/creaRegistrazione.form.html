@@ -84,7 +84,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 
 						<td>%ml.codcau% :</td>
 						<td class="tooltip">
-							<select class="selectmenuCausale" name="causale" >
+							<select class="selectmenuCausale" id="causale" name="causale" >
 								<option value=""></option>
 								%elenco_causali%
 							</select>
@@ -150,12 +150,9 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 				<tr>
 					<td>%ml.conto% :</td>
 					<td>
-						<select class="selectmenuConto" id="conti" name="conti">
-							<option value=""></option>
-							%elenco_conti%
-						</select>
+						<select class='selectmenuConto' id="conti"></select>
 					</td>
-				</tr>					
+				</tr>	
 				<tr>
 					<td>
 						<div class="radioset" >

@@ -129,6 +129,27 @@ $( "#cancella-conto-form" ).dialog({
 	]
 });
 
+//Cancella causale
+$( "#cancella-causale-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+       $("#cancellaCausale").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 //Modifica conto : cancella sottoconto
 $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
@@ -258,17 +279,32 @@ $( "#menu" ).menu();
 $( ".tooltip" ).tooltip();
 
 $( ".selectmenuCausale" )
-	.selectmenu()
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#conti" ).html(xmlhttp.responseText);
+	                $( "#conti" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 150})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
 $( ".selectmenuFornitore" )
-	.selectmenu()
+	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
 $( ".selectmenuCliente" )
-	.selectmenu()
+	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
@@ -296,7 +332,6 @@ $( ".selectmenuCliente" ).selectmenu({ width: 300 });
 
 $( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 $( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
 $("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');

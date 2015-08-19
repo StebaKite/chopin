@@ -1,0 +1,31 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.codcausale% :</td>
+						<td class="tooltip"><input type="text" name="codcausale" size="6" maxlength="4" value='%codcausale%' ></td>
+						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%		
+		
+<div id="cancella-causale-form" title="Cancella Causale"> 
+	<form method="post" id="cancellaCausale" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
+		<p>Elimino la causale e tutte le sue configurazioni ?</p>
+		<input type="hidden" id="codcausale" name="codcausale">
+  </form>
+</div>
+		
