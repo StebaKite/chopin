@@ -131,14 +131,14 @@ class RicercaCausale extends ConfigurazioniAbstract {
 	
 		require_once 'database.class.php';
 
-		$codCausale = "";
+		$causale = "";
 		
-		if ($_SESSION['codcausale'] != "") {
-			$codCausale = "WHERE cod_causale = '" . $_SESSION['codcausale'] . "'";
+		if ($_SESSION['causale'] != "") {
+			$causale = "WHERE causale.cod_causale = '" . $_SESSION['causale'] . "'";
 		}
 		
 		$replace = array(
-				'%cod_causale%' => $codCausale
+				'%cod_causale%' => $causale
 		);
 		
 		$array = $utility->getConfig();

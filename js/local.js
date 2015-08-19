@@ -466,3 +466,9 @@ function cancellaConto(codconto) {
 	$( "#cancella-conto-form" ).dialog( "open" );
 }
 
+function cancellaCausale(codcausale) {
+	
+	$( "#codcausale" ).val(codcausale);
+	$( "#cancella-causale-form" ).dialog( "open" );
+}
+

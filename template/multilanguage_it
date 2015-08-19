@@ -42,6 +42,8 @@ ricercaConto = Ricerca Conto
 creaNuovoConto = Nuovo Conto
 modificaConto = Modifica Conto
 ricercaCausale = Ricerca Causale
+creaNuovaCausale = Nuova Causale
+modificaCausale = Modifica Causale
 ;
 ; Messaggi -----------------------------
 ;

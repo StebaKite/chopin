@@ -52,32 +52,37 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 			$risultato_ricerca =
 			"<table class='result'>" .
 			"	<thead>" .
-			"		<th width='70'>%ml.codcausale%</th>" .
-			"		<th width='400'>%ml.descausale%</th>" .
-			"		<th width='50'>%ml.qtareg%</th>" .
-			"		<th width='50'>%ml.qtaconti%</th>" .
-			"		<th width='83' colspan='3'>%ml.azioni%</th>" .
+			"		<th width='72'>%ml.codcausale%</th>" .
+			"		<th width='402'>%ml.descausale%</th>" .
+			"		<th width='47'>%ml.qtareg%</th>" .
+			"		<th width='52'>%ml.qtaconti%</th>" .
+			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-causali'>" .
-			"	<table class='expandible'>" .
+			"	<table class='result'>" .
 			"		<tbody>";
 	
 			$causaliTrovate = $_SESSION["causaliTrovate"];
 			$numCausali = 0;
 	
 			foreach(pg_fetch_all($causaliTrovate) as $row) {
-	
-				if ($row['tot_registrazioni_causale'] == 0) {
-					$class = "class=''";
-					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
-					$bottoneCancella = "<a class='tooltip' onclick='cancellaConto(" . trim($row['cod_conto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+				
+				if ($row['tot_conti_causale'] == 0) {
+					$class = "class='errato'";
 				}
 				else {
 					$class = "class=''";
-					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
+				}				
+				
+				if ($row['tot_registrazioni_causale'] == 0) {
+					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
+					$bottoneCancella = "<a class='tooltip' onclick='cancellaCausale(" . trim($row['cod_causale']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+				}
+				else {
+					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codconto=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 
@@ -103,7 +108,7 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
-				'%codcausale%' => $_SESSION["codcausale"],
+				'%causale%' => $_SESSION["causale"],
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);

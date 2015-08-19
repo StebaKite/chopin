@@ -10,7 +10,7 @@ $ricercaCausale = RicercaCausale::getInstance();
 if ($_GET["modo"] == "start") $ricercaCausale->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codcausale"] = $_POST["codcausale"];
+	$_SESSION["causale"] = $_POST["causale"];
 
 	$ricercaCausale->go();
 }

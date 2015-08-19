@@ -1,0 +1,44 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" id="back" action="../configurazioni/ricercaCausaleFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="causale" value='%causale%' >
+		</form>
+		<br>
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codcausale% :</td>
+						<td class="tooltip"><input type="text" id="codcausale" name="codcausale" size="6" maxlength="4" value='%codcausale%' disabled="disabled" ></td>
+					</tr>
+					<tr>
+						<td>%ml.descausale% :</td>
+						<td class="tooltip"><input type="text" id="descausale" name="descausale" size="70" maxlength="100" value='%descausale%' ></td>
+					</tr>			
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2" align="right" class="tooltip">
+							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
+							<input type="hidden" id="codcausale" name="codcausale" value='%codcausale%' />
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+</div>
+
+<div id="cancella-causale-form" title="Cancella Causale"> 
+	<form method="post" id="cancellaCausale" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
+		<p>Elimino la causale con tutte le sue configurazioni ?</p>
+		<input type="hidden" id="codcausale" name="codcausale">
+	</form>
+</div>
+
+<br/>
