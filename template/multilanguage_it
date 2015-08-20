@@ -15,7 +15,6 @@ cerca = Ricerca
 indietro = Indietro
 contoeco = Conto Economico
 contopat = Stato Patrimoniale
-
 ;
 ; Tips ---------------------------------
 ;
@@ -29,8 +28,8 @@ cancella = Cancella
 indietroTip = Torna alla funzione precedente
 nuovoSottocontoTip = Inserisce un nuovo sottoconto
 configura = Configura
-
-
+escludiContoTip = Esclude il conto dalla causale
+includiContoTip = Include il conto nella causale
 ;
 ; Funzioni -----------------------------
 ;
@@ -44,6 +43,9 @@ modificaConto = Modifica Conto
 ricercaCausale = Ricerca Causale
 creaNuovaCausale = Nuova Causale
 modificaCausale = Modifica Causale
+configuraCausale = Configura Causale
+contiInclusi = Conti Inclusi
+contiDisponibili = Conti Disponibili
 ;
 ; Messaggi -----------------------------
 ;

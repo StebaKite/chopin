@@ -133,6 +133,11 @@
 		height: 400px;
 		overflow: auto;	
 	}	
+	div.scroll-config-causali {
+		width: 476px;
+		height: 350px;
+		overflow: auto;	
+	}	
 	div.scroll-causali {
 		width: 800px;
 		height: 400px;

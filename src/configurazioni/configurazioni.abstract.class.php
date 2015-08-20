@@ -21,6 +21,10 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 	public static $queryLeggiCausale = "/configurazioni/leggiCausale.sql";
 	public static $queryUpdateCausale = "/configurazioni/updateCausale.sql";
 	public static $queryDeleteCausale = "/configurazioni/deleteCausale.sql";	
+	public static $queryLeggiContiCausale = "/configurazioni/leggiContiCausale.sql";
+	public static $queryLeggiContiDisponibili = "/configurazioni/leggiContiDisponibili.sql";
+	public static $queryCreaConfigurazioneCausale = "/configurazioni/creaConfigurazioneCausale.sql";
+	public static $queryDeleteConfigurazioneCausale = "/configurazioni/deleteConfigurazioneCausale.sql";
 	
 	function __construct() {
 	}
@@ -166,7 +170,6 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
-		
 	}
 	
 	public function leggiCausale($db, $utility, $codcausale) {
@@ -204,9 +207,56 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
+
+	public function leggiContiCausale($db, $utility, $codcausale) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_causale%' => trim($codcausale)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiCausale;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
 	
+	public function leggiContiDisponibili($db, $utility, $codcausale) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_causale%' => trim($codcausale)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiDisponibili;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	public function creaConfigurazioneCausale($db, $utility, $codcausale, $codconto) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_causale%' => trim($codcausale),
+				'%cod_conto%' => trim($codconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaConfigurazioneCausale;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 	
-	
+	public function deleteConfigurazioneCausale($db, $utility, $codcausale, $codconto) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_causale%' => trim($codcausale),
+				'%cod_conto%' => trim($codconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteConfigurazioneCausale;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}	
 }
 	
 ?>
