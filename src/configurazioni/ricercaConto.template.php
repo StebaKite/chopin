@@ -56,7 +56,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			"		<th width='400'>%ml.desconto%</th>" .
 			"		<th width='150'>%ml.catconto%</th>" .
 			"		<th width='100'>%ml.tipconto%</th>" .
-			"		<th width='48' colspan='2'>%ml.azioni%</th>" .
+			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-conti'>" .
@@ -88,8 +88,8 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					"	<td width='410' align='left'>" . trim($row['des_conto']) . "</td>" .
 					"	<td width='155' align='center'>" . trim($row['cat_conto']) . "</td>" .
 					"	<td width='110' align='center'>" . trim($row['tip_conto']) . "</td>" .
-					"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+					"	<td width='25' id='icons'>" . $bottoneModifica . "</td>" .
+					"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
 						
 				}

@@ -58,6 +58,7 @@ contiDisponibili = Conti Disponibili
 ;
 azioni = Azioni
 datascad = Data scadenza
+desscad = Nota scadenza
 numfatt = Numero fattura
 descreg = Descrizione
 codcau = Causale

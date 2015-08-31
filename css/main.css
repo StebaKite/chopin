@@ -16,7 +16,7 @@
 	}
 	
 	.totali {
-		margin-left: 20px;
+		margin-left: 20px;de
 		margin-right: 20px;
 	}
 	
@@ -128,6 +128,11 @@
 		height: 400px;
 		overflow: auto;	
 	}	
+	div.scroll-main {
+		width: 100%;
+		height: 450px;
+		overflow: auto;	
+	}	
 	div.scroll-conti {
 		width: 855px;
 		height: 400px;
@@ -219,6 +224,9 @@
 	}
 	.result .on, .dettaglio .on {
 		background-color: #ECECEC;
+	}
+	.result .off, .dettaglio .off {
+		background-color: #FFFFFF;
 	}
 	.result .modifiedOn {
 		background-color: #ECECEC;

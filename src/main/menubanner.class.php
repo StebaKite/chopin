@@ -2,28 +2,54 @@
 
 require_once 'chopin.abstract.class.php';
 
-class menubanner extends chopinAbstract {
+class Menubanner extends ChopinAbstract {
 
 	private static $messaggio;
 	private static $queryTotaliProgressivi = "/main/totaliProgressivi.sql";
-
+	
+	private static $_instance = null;
+	
 	function __construct() {
-		
+	
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
-		$pathToInclude = self::$root . "/chopin/src/main:" . self::$root . "/chopin/src/utility";  
-		error_log($pathToInclude);
-		set_include_path($pathToInclude);
+	
+		require_once 'utility.class.php';
+	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+	
+		self::$testata = self::$root . $array['testataPagina'];
+		self::$piede = self::$root . $array['piedePagina'];
+		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
+		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
 	}
+	
+	private function  __clone() { }
+	
+	/**
+	 * Singleton Pattern
+	 */
+	
+	public static function getInstance() {
+	
+		if( !is_object(self::$_instance) )
+	
+			self::$_instance = new Menubanner();
+	
+		return self::$_instance;
+	}
+	
+	// ------------------------------------------------
 
 	public function start() {
-
-		if (session_start()) error_log("Ok, session started...");		
 			
 		require_once 'menubanner.template.php';
 		require_once 'utility.class.php';
 		require_once 'database.class.php';
 
 		error_log("<<<<<<< Start >>>>>>> " . $_SERVER['PHP_SELF']);
+		
+		$menubannerTemplate = MenubannerTemplate::getInstance();
 		
 // 		// Template
 // 		$utility = new utility();

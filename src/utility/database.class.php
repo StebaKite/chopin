@@ -57,7 +57,19 @@ Class Database {
 		$utility = new utility();
 		$array = $utility->getConfig();
 
-		$dsn = "host=" . $array['hostname'] . " port=" . $array['portnum'] . " dbname=" . $array['dbname'] . " user=" . $array['username'] . " password=" . $array['password']; 
+		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
+		
+		/**
+		 * Il comando shell_exec restituice l'output del comando come stringa
+		 * In questo caso tutti gli utenti loggati. Se fra questi c'è l'utente definito come utente di produzione nel
+		 * file di configurazione, la connessione viene aperta contro il db di produzione
+		 */
+		if (strpos($users, $array['usernameProdLogin']) === false) {
+			$dsn = "host=" . $array['hostname'] . " port=" . $array['portnum'] . " dbname=" . $array['dbnameTest'] . " user=" . $array['username'] . " password=" . $array['password'];				
+		}		
+		else {
+			$dsn = "host=" . $array['hostname'] . " port=" . $array['portnum'] . " dbname=" . $array['dbnameProd'] . " user=" . $array['username'] . " password=" . $array['password'];				
+		}		
 
 		// Create connection
 		$dblink = pg_connect("$dsn") or die('Connection failed');
