@@ -47,6 +47,7 @@ class CorpoTemplate extends ChopinAbstract {
 		require_once 'utility.class.php';
 		
 		$tabellaScadenze = "";
+		$tabellaAgenda = "Nessun impegno in agenda";
 		
 		// Template --------------------------------------------------------------
 
@@ -74,9 +75,13 @@ class CorpoTemplate extends ChopinAbstract {
 	
 			$tabellaScadenze .= "</tbody></table>";
 		}
+		else {
+			$tabellaScadenze = "Nessuna scadenza nel mese corrente";
+		}
 		
 		$replace = array(
-				'%risultato_scadenze%' => $tabellaScadenze
+				'%risultato_scadenze%' => $tabellaScadenze,
+				'%risultato_agenda%' => $tabellaAgenda
 		);
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

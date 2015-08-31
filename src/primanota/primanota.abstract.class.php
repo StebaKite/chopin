@@ -21,7 +21,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
-
+	
 	function __construct() {
 	}
 	

@@ -7,7 +7,6 @@ class CreaRegistrazione extends primanotaAbstract {
 	private static $_instance = null;
 	
 	public static $azioneCreaRegistrazione = "../primanota/creaRegistrazioneFacade.class.php?modo=go";
-
 	
 	function __construct() {
 	
@@ -170,6 +169,12 @@ class CreaRegistrazione extends primanotaAbstract {
 		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
 		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
+		
+		/**
+		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
+		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
+		 */
+		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
 	}	
 }
 

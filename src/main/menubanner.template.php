@@ -64,7 +64,6 @@ class MenubannerTemplate extends ChopinAbstract {
 		else {
 			$amb = "Ambiente di PRODUZIONE";				
 			$who = "User connesso: " . ucfirst($array['usernameProdLogin']);
-			$oggi = "Oggi non ci sono impegni in agenda";
 		} 
 		
 		$form = self::$root . $array['template'] . self::$pagina;
@@ -86,7 +85,6 @@ class MenubannerTemplate extends ChopinAbstract {
 		$replace = array(
 				'%amb%' => $amb,
 				'%who%' => $who,
-				'%oggi%' => $oggi
 		);
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
