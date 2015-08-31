@@ -1,0 +1,31 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.codfornitore% :</td>
+						<td class="tooltip"><input type="text" name="codfornitore" size="12" maxlength="10" value='%codfornitore%'></td>
+						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%		
+		
+<div id="cancella-fornitore-form" title="Cancella Fornitore"> 
+	<form method="post" id="cancellaFornitore" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=go" >
+		<p>Elimino il fornitore ?</p>
+		<input type="hidden" id="idfornitore" name="idfornitore">
+  </form>
+</div>
+		

@@ -46,6 +46,7 @@ modificaCausale = Modifica Causale
 configuraCausale = Configura Causale
 contiInclusi = Conti Inclusi
 contiDisponibili = Conti Disponibili
+ricercaFornitore = Ricerca Fornitore
 ;
 ; Messaggi -----------------------------
 ;
@@ -81,3 +82,10 @@ codcausale = Codice causale
 descausale = Descrizione causale
 qtareg = Qta. Reg.
 qtaconti = Qta. Conti
+codfornitore = Codice fornitore
+desfornitore = Ragione sociale
+desindirizzofornitore = Indirizzo
+descittafornitore = Citt&agrave;
+capfornitore = CAP
+tipaddebito = Tipo addebito
+
