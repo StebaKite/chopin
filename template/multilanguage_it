@@ -15,6 +15,8 @@ cerca = Ricerca
 indietro = Indietro
 contoeco = Conto Economico
 contopat = Stato Patrimoniale
+bonifico = Bonifico
+assegno = Assegno
 ;
 ; Tips ---------------------------------
 ;
@@ -47,6 +49,7 @@ configuraCausale = Configura Causale
 contiInclusi = Conti Inclusi
 contiDisponibili = Conti Disponibili
 ricercaFornitore = Ricerca Fornitore
+creaNuovoFornitore = Nuovo Fornitore
 ;
 ; Messaggi -----------------------------
 ;
@@ -88,4 +91,5 @@ desindirizzofornitore = Indirizzo
 descittafornitore = Citt&agrave;
 capfornitore = CAP
 tipaddebito = Tipo addebito
-
+indfornitore = Indirizzo fornitore
+cittafornitore = Citt&agrave; fornitore

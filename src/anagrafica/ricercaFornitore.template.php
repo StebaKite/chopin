@@ -53,8 +53,8 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 			"<table class='result'>" .
 			"	<thead>" .
 			"		<th width='70'>%ml.codfornitore%</th>" .
-			"		<th width='200'>%ml.desfornitore%</th>" .
-			"		<th width='200'>%ml.desindirizzofornitore%</th>" .
+			"		<th width='250'>%ml.desfornitore%</th>" .
+			"		<th width='250'>%ml.desindirizzofornitore%</th>" .
 			"		<th width='150'>%ml.descittafornitore%</th>" .
 			"		<th width='50'>%ml.capfornitore%</th>" .
 			"		<th width='50'>%ml.tipaddebito%</th>" .
@@ -91,8 +91,8 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . " id='" . trim($row['id_fornitore']) . "'>" .
 				"	<td width='78' class='tooltip' align='center'>" . trim($row['cod_fornitore']) . "</td>" .
-				"	<td width='208' align='left'>" . trim($row['des_fornitore']) . "</td>" .
-				"	<td width='208' align='left'>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
+				"	<td width='258' align='left'>" . trim($row['des_fornitore']) . "</td>" .
+				"	<td width='258' align='left'>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
 				"	<td width='158' align='left'>" . trim($row['des_citta_fornitore']) . "</td>" .				
 				"	<td width='58' align='left'>" . trim($row['cap_fornitore']) . "</td>" .
 				"	<td width='58' align='left'>" . trim($row['tip_addebito']) . "</td>" .

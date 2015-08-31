@@ -11,6 +11,9 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	// Query ---------------------------------------------------------------
 	
 	public static $queryLeggiFornitore = "/anagrafica/leggiFornitore.sql";
+	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
+	
+	
 	
 	function __construct() {
 	}
@@ -56,6 +59,25 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	public function inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_fornitore%' => trim($codfornitore),
+				'%des_fornitore%' => trim($desfornitore),
+				'%des_indirizzo_fornitore%' => trim($indfornitore),
+				'%des_citta_fornitore%' => trim($cittafornitore),
+				'%cap_fornitore%' => trim($capfornitore),
+				'%tip_addebito%' => trim($tipoaddebito)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+		
+		
+		
+	}
 	
 	
 	

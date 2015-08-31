@@ -1,0 +1,50 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codfornitore% :</td>
+						<td class="tooltip"><input type="text" id="codfornitore" name="codfornitore" size="12" maxlength="10" value='%codfornitore%' ></td>
+					</tr>
+					<tr>
+						<td>%ml.desfornitore% :</td>
+						<td class="tooltip"><input type="text" id="desfornitore" name="desfornitore" size="70" maxlength="100" value='%desfornitore%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.indfornitore% :</td>
+						<td class="tooltip"><input type="text" id="indfornitore" name="indfornitore" size="70" maxlength="200" value='%indfornitore%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.cittafornitore% :</td>
+						<td class="tooltip"><input type="text" id="cittafornitore" name="cittafornitore" size="70" maxlength="100" value='%cittafornitore%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.capfornitore% :</td>
+						<td class="tooltip"><input type="text" id="capfornitore" name="capfornitore" size="7" maxlength="5" value='%capfornitore%' ></td>
+					</tr>	
+					<tr>
+						<td>%ml.tipaddebito% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">%ml.bonifico%</label>
+								<input type="radio" id="assegno" name="tipoaddebito" value="ASSEGNO" ><label for="assegno">%ml.assegno%</label>
+							</div>
+						</td>					
+					</tr>					
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+</div>
+
+<br/>
