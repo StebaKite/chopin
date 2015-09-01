@@ -3,7 +3,11 @@
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
-
+		
+		<form method="post" id="back" action="../anagrafica/ricercaFornitoreFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+		</form>
+		<br>
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
@@ -31,11 +35,11 @@
 						<td>%ml.tipaddebito% :</td>						
 						<td>
 							<div class="radioset" >
-								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">%ml.bonifico%</label>
-								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" ><label for="riba">%ml.riba%</label>
-								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" ><label for="rimdiretta">%ml.rimdiretta%</label>
-								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" ><label for="assegnobancario">%ml.assegnobancario%</label>
-								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" ><label for="addebitodiretto">%ml.addebitodiretto%</label>
+								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" %bonifico_checked% ><label for="bonifico">%ml.bonifico%</label>
+								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" %riba_checked% ><label for="riba">%ml.riba%</label>
+								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" %rimdiretta_checked% ><label for="rimdiretta">%ml.rimdiretta%</label>
+								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" %assegnobancario_checked% ><label for="assegnobancario">%ml.assegnobancario%</label>
+								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" %addebitodiretto_checked% ><label for="addebitodiretto">%ml.addebitodiretto%</label>
 							</div>
 						</td>					
 					</tr>					

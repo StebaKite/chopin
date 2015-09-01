@@ -11,7 +11,10 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	// Query ---------------------------------------------------------------
 	
 	public static $queryLeggiFornitore = "/anagrafica/leggiFornitore.sql";
+	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
 	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
+	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
+	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
 	
 	
 	
@@ -74,12 +77,48 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
-		
-		
-		
+	}
+
+	public function cancellaFornitore($db, $utility, $idfornitore) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
 	}
 	
-	
+	public function leggiIdFornitore($db, $utility, $idfornitore) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	public function updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore),
+				'%cod_fornitore%' => trim($codfornitore),
+				'%des_fornitore%' => trim($desfornitore),
+				'%des_indirizzo_fornitore%' => trim($indfornitore),
+				'%des_citta_fornitore%' => trim($cittafornitore),
+				'%cap_fornitore%' => trim($capfornitore),
+				'%tip_addebito%' => trim($tipoaddebito)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 	
 }
 	

@@ -77,12 +77,12 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 				
 				if ($row['tot_registrazioni_causale'] == 0) {
 					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
+					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaCausale(" . trim($row['cod_causale']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 				}
 				else {
 					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-gear'></span></li></a>";
+					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 

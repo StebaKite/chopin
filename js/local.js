@@ -493,3 +493,10 @@ function cancellaCausale(codcausale) {
 	$( "#cancella-causale-form" ).dialog( "open" );
 }
 
+function cancellaFornitore(idfornitore, codfornitore) {
+	
+	$( "#idfornitore" ).val(idfornitore);
+	$( "#codfornitoreselezionato" ).val(codfornitore);
+	$( "#cancella-fornitore-form" ).dialog( "open" );
+}
+

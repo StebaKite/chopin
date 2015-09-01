@@ -16,7 +16,10 @@ indietro = Indietro
 contoeco = Conto Economico
 contopat = Stato Patrimoniale
 bonifico = Bonifico
-assegno = Assegno
+assegnobancario = Assegno Bancario
+riba = Ri.Ba
+rimdiretta = Rimessa Diretta
+addebitodiretto = Addebito Diretto c/c
 ;
 ; Tips ---------------------------------
 ;
@@ -32,6 +35,7 @@ nuovoSottocontoTip = Inserisce un nuovo sottoconto
 configura = Configura
 escludiContoTip = Esclude il conto dalla causale
 includiContoTip = Include il conto nella causale
+mastrino = Genera il mastrino
 ;
 ; Funzioni -----------------------------
 ;
@@ -50,6 +54,7 @@ contiInclusi = Conti Inclusi
 contiDisponibili = Conti Disponibili
 ricercaFornitore = Ricerca Fornitore
 creaNuovoFornitore = Nuovo Fornitore
+modificaFornitore = Modifica Fornitore
 ;
 ; Messaggi -----------------------------
 ;
