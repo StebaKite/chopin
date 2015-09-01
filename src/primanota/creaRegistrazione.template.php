@@ -162,11 +162,11 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				$idconto = substr($e[0], 0, 6);
 				
 				$dettaglio = 								
-					"<tr id='" . $idconto . "'>" .
+					"<tr id='" . trim($idconto) . "'>" .
 					"<td align='left'>" . $e[0] . "</td>" .
 					"<td align='right'>" . $e[1] . "</td>" .
 					"<td align='center'>" . $e[2] . "</td>" .
-					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . $idconto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($idconto) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 					"</tr>";
 				
 				$tbody_dettagli = $tbody_dettagli . $dettaglio;

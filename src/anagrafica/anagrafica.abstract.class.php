@@ -15,6 +15,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
 	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
 	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
+	public static $queryCreaCliente = "/anagrafica/creaCliente.sql";
 	
 	
 	
@@ -119,7 +120,23 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
+	public function inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_cliente%' => trim($codcliente),
+				'%des_cliente%' => trim($descliente),
+				'%des_indirizzo_cliente%' => trim($indcliente),
+				'%des_citta_cliente%' => trim($cittacliente),
+				'%cap_cliente%' => trim($capcliente),
+				'%tip_addebito%' => trim($tipoaddebito)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 }
 	
 ?>

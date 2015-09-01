@@ -55,6 +55,8 @@ contiDisponibili = Conti Disponibili
 ricercaFornitore = Ricerca Fornitore
 creaNuovoFornitore = Nuovo Fornitore
 modificaFornitore = Modifica Fornitore
+ricercaCliente = Ricerca Cliente
+creaNuovoCliente = Nuovo Cliente
 ;
 ; Messaggi -----------------------------
 ;
@@ -98,3 +100,9 @@ capfornitore = CAP
 tipaddebito = Tipo addebito
 indfornitore = Indirizzo fornitore
 cittafornitore = Citt&agrave; fornitore
+codcliente = Codice Cliente
+descliente = Ragione Sociale
+desindirizzocliente = Indirizzo
+descittacliente = Citt&agrave;
+capcliente = CAP
+

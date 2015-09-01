@@ -159,7 +159,28 @@ $( "#cancella-fornitore-form" ).dialog({
 			text: "Ok",
 			click: function() {
 				$(this).dialog('close');
-     $("#cancellaFornitore").submit();				
+				$("#cancellaFornitore").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Cancella cliente
+$( "#cancella-cliente-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#cancellaCliente").submit();				
 			}
 		},
 		{
@@ -498,5 +519,12 @@ function cancellaFornitore(idfornitore, codfornitore) {
 	$( "#idfornitore" ).val(idfornitore);
 	$( "#codfornitoreselezionato" ).val(codfornitore);
 	$( "#cancella-fornitore-form" ).dialog( "open" );
+}
+
+function cancellaCliente(idcliente, codcliente) {
+	
+	$( "#idcliente" ).val(idcliente);
+	$( "#codclienteselezionato" ).val(codcliente);
+	$( "#cancella-cliente-form" ).dialog( "open" );
 }
 

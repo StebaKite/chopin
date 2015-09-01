@@ -27,7 +27,7 @@ function aggiungiDettaglio() {
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	
-	$( "#dettagli tbody" ).append( "<tr id='" + idconto + "'>" +
+	$( "#dettagli tbody" ).append( "<tr id='" + idconto.trim() + "'>" +
         "<td align='left'>" + conto + "</td>" +
         "<td align='right'>" + importoNormalizzato + "</td>" +
         "<td align='center'>" + D_A + "</td>" +
@@ -48,7 +48,7 @@ function addDett(dettaglio) {
 	dettInseriti.push(dettaglio);
 	aggiornaDettaglioInseriti(dettInseriti);
 
-	var conto = dettaglio.substring(0, 6);
+	var conto = dettaglio.substring(0, 6).trim();
 	indexDettInseriti.push(conto);
 	aggiornaIndexDettaglioInseriti(indexDettInseriti);
 }

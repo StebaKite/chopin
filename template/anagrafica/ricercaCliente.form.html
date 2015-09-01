@@ -1,0 +1,32 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.codcliente% :</td>
+						<td class="tooltip"><input type="text" name="codcliente" size="12" maxlength="10" value='%codcliente%'></td>
+						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%		
+		
+<div id="cancella-cliente-form" title="Cancella Cliente"> 
+	<form method="post" id="cancellaCliente" action="../anagrafica/cancellaClienteFacade.class.php?modo=go" >
+		<p>Elimino il cliente ?</p>
+		<input type="hidden" id="idcliente" name="idcliente">
+		<input type="hidden" id="codclienteselezionato" name="codclienteselezionato">
+  </form>
+</div>
+		

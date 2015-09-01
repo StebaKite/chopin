@@ -2,11 +2,11 @@
 
 require_once 'anagrafica.abstract.class.php';
 
-class CreaFornitore extends AnagraficaAbstract {
+class CreaCliente extends AnagraficaAbstract {
 
 	public static $_instance = null;
 
-	public static $azioneCreaFornitore = "../anagrafica/creaFornitoreFacade.class.php?modo=go";
+	public static $azioneCreaCliente = "../anagrafica/creaClienteFacade.class.php?modo=go";
 
 	function __construct() {
 
@@ -33,7 +33,7 @@ class CreaFornitore extends AnagraficaAbstract {
 
 		if( !is_object(self::$_instance) )
 
-			self::$_instance = new CreaFornitore();
+			self::$_instance = new CreaCliente();
 
 		return self::$_instance;
 	}
@@ -42,46 +42,46 @@ class CreaFornitore extends AnagraficaAbstract {
 
 	public function start() {
 
-		require_once 'creaFornitore.template.php';
-		
-		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
-		$this->preparaPagina($creaFornitoreTemplate);
-		
-		$_SESSION["codfornitore"] = "";
-		$_SESSION["desfornitore"] = "";
-		$_SESSION["indfornitore"] = "";
-		$_SESSION["cittafornitore"] = "";
-		$_SESSION["capfornitore"] = "";
-		
+		require_once 'creaCliente.template.php';
+
+		$creaClienteTemplate = CreaClienteTemplate::getInstance();
+		$this->preparaPagina($creaClienteTemplate);
+
+		$_SESSION["codcliente"] = "";
+		$_SESSION["descliente"] = "";
+		$_SESSION["indcliente"] = "";
+		$_SESSION["cittacliente"] = "";
+		$_SESSION["capcliente"] = "";
+
 		// Compone la pagina
 		include(self::$testata);
-		$creaFornitoreTemplate->displayPagina();
+		$creaClienteTemplate->displayPagina();
 		include(self::$piede);
 	}
-	
+
 	public function go() {
-	
-		require_once 'creaFornitore.template.php';
+
+		require_once 'creaCliente.template.php';
 		require_once 'utility.class.php';
-	
+
 		$utility = Utility::getInstance();
 
-		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
-		
-		if ($creaFornitoreTemplate->controlliLogici()) {
-		
+		$creaClienteTemplate = CreaClienteTemplate::getInstance();
+
+		if ($creaClienteTemplate->controlliLogici()) {
+
 			// Aggiornamento del DB ------------------------------
-		
-			if ($this->creaFornitore($utility)) {
-		
+
+			if ($this->creaCliente($utility)) {
+
 				session_unset();
-				$_SESSION["messaggio"] = "Fornitore salvato con successo";
-		
-				$this->preparaPagina($creaFornitoreTemplate);
-		
+				$_SESSION["messaggio"] = "Cliente salvato con successo";
+
+				$this->preparaPagina($creaClienteTemplate);
+
 				include(self::$testata);
-				$creaFornitoreTemplate->displayPagina();
-		
+				$creaClienteTemplate->displayPagina();
+
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 				echo $utility->tailTemplate($template);
@@ -89,68 +89,68 @@ class CreaFornitore extends AnagraficaAbstract {
 				include(self::$piede);
 			}
 			else {
-		
-				$this->preparaPagina($creaFornitoreTemplate);
-		
+
+				$this->preparaPagina($creaClienteTemplate);
+
 				include(self::$testata);
-				$creaFornitoreTemplate->displayPagina();
-		
+				$creaClienteTemplate->displayPagina();
+
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
 				echo $utility->tailTemplate($template);
-		
+
 				include(self::$piede);
 			}
 		}
 		else {
-		
-			$this->preparaPagina($creaFornitoreTemplate);
-		
+
+			$this->preparaPagina($creaClienteTemplate);
+
 			include(self::$testata);
-			$creaFornitoreTemplate->displayPagina();
-		
+			$creaClienteTemplate->displayPagina();
+
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-		
+
 			include(self::$piede);
 		}
 	}
 
-	public function creaFornitore($utility) {
-	
+	public function creaCliente($utility) {
+
 		require_once 'database.class.php';
-	
+
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-	
-		$codfornitore = $_SESSION["codfornitore"];
-		$desfornitore = $_SESSION["desfornitore"];
-		$indfornitore = $_SESSION["indfornitore"];
-		$cittafornitore = $_SESSION["cittafornitore"];
-		$capfornitore = $_SESSION["capfornitore"];
+
+
+		$codcliente = $_SESSION["codcliente"];
+		$descliente = $_SESSION["descliente"];
+		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . $_SESSION["indcliente"] . "'" : "null"; 
+		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . $_SESSION["cittacliente"] . "'" : "null";
+		$capcliente = ($_SESSION["capcliente"] != "") ? "'" . $_SESSION["capcliente"] . "'" : "null";
 		$tipoaddebito = $_SESSION["tipoaddebito"];
-		
-		if ($this->inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito)) {
-	
+
+		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito)) {
+
 			$db->commitTransaction();
 			return TRUE;
 		}
 		$db->rollbackTransaction();
-		error_log("Errore inserimento fornitore, eseguito Rollback");
-		$_SESSION["messaggio"] = "Fornitore già esistente, inserimento fallito";
+		error_log("Errore inserimento cliente, eseguito Rollback");
+		$_SESSION["messaggio"] = "Cliente già esistente, inserimento fallito";
 		return FALSE;
 	}
-	
-	public function preparaPagina($creaFornitoreTemplate) {
-	
+
+	public function preparaPagina($creaClienteTemplate) {
+
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-	
-		$creaFornitoreTemplate->setAzione(self::$azioneCreaFornitore);
-		$creaFornitoreTemplate->setConfermaTip("%ml.confermaCreaFornitore%");
-		$creaFornitoreTemplate->setTitoloPagina("%ml.creaNuovoFornitore%");
+
+		$creaClienteTemplate->setAzione(self::$azioneCreaCliente);
+		$creaClienteTemplate->setConfermaTip("%ml.confermaCreaCliente%");
+		$creaClienteTemplate->setTitoloPagina("%ml.creaNuovoCliente%");
 	}
 }
 
