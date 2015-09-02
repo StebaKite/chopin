@@ -134,7 +134,7 @@
 		overflow: auto;	
 	}	
 	div.scroll-conti {
-		width: 855px;
+		width: 860px;
 		height: 400px;
 		overflow: auto;	
 	}	
@@ -151,6 +151,11 @@
 	div.scroll-fornitori {
 		width: 1050px;
 		height: 400px;
+		overflow: auto;	
+	}	
+	div.scroll-mastrino {
+		width: 900px;
+		height: 300px;
 		overflow: auto;	
 	}	
 	div.scroll-clienti {

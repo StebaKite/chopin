@@ -58,6 +58,7 @@ modificaFornitore = Modifica Fornitore
 ricercaCliente = Ricerca Cliente
 creaNuovoCliente = Nuovo Cliente
 modificaCliente = Modifica Cliente
+mastrinoConto = Mastrino Conto
 ;
 ; Messaggi -----------------------------
 ;
@@ -106,4 +107,4 @@ descliente = Ragione Sociale
 desindirizzocliente = Indirizzo
 descittacliente = Citt&agrave;
 capcliente = CAP
-
+saldoprogressivo = Saldo

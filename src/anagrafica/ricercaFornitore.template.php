@@ -80,12 +80,12 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 		
 				if ($row['tot_registrazioni_fornitore'] == 0) {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "<a class='tooltip' href='../anagrafica/creaMastrinoFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
+					$bottoneMastrino = "&nbsp;";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaFornitore(" . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 				}
 				else {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "<a class='tooltip' href='../anagrafica/creaMastrinoFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
+					$bottoneMastrino = "<a class='tooltip' onclick='generaMastrinoFornitore(" . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 		

@@ -1,0 +1,34 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+		</form>
+		<br>		
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.conto% :</td>
+						<td>
+							<input type="text" id="codcontogenera" name="codcontogenera" value="%codconto%" readonly >
+							&nbsp;&nbsp;&nbsp;%ml.codsottoconto% : <input type="text" id="codsottocontogenera" name="codsottocontogenera" value="%codsottoconto%" readonly >
+						</td>
+					</tr>
+					<tr>
+						<td class="td">%ml.da% :</td>
+						<td class="tooltip">
+							<input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' >
+							&nbsp;&nbsp;&nbsp;%ml.a% : <input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' >
+						</td>
+						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>					
+				</tbody>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%		
+				

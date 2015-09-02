@@ -56,7 +56,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			"		<th width='400'>%ml.desconto%</th>" .
 			"		<th width='150'>%ml.catconto%</th>" .
 			"		<th width='100'>%ml.tipconto%</th>" .
-			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
+			"		<th width='53' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-conti'>" .
@@ -85,24 +85,32 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr " . $class . " id='" . trim($row['cod_conto']) . "'>" .
 					"	<td width='80' class='tooltip' align='center'>" . trim($row['cod_conto']) . "</td>" .
-					"	<td width='410' align='left'>" . trim($row['des_conto']) . "</td>" .
+					"	<td width='408' align='left'>" . trim($row['des_conto']) . "</td>" .
 					"	<td width='155' align='center'>" . trim($row['cat_conto']) . "</td>" .
 					"	<td width='110' align='center'>" . trim($row['tip_conto']) . "</td>" .
-					"	<td width='25' id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
+					"	<td height='28' width='25' id='icons'>" . $bottoneModifica . "</td>" .
+					"	<td height='28' width='25' id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
 						
 				}
 				elseif (trim($row['tipo']) == 'S') {
 
+					if ($row['tot_registrazioni_sottoconto'] > 0) {
+						$bottoneMastrino = "<a class='tooltip' onclick='generaMastrino(" . trim($row['cod_conto']) . "," . trim($row['cod_sottoconto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
+					}
+					else {
+						$bottoneMastrino = "&nbsp;";
+					}
+					
 					$class = "class='child-" . trim($row['cod_conto']) . "'";
 					$id = "id='child'";
 
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr " . $class . " " . $id . " >" .
 					"	<td class='tooltip' align='right'>" . trim($row['cod_sottoconto']) . "</td>" .
-					"	<td colspan='3' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .
-					"	<td colspan='3' align='right'><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
+					"	<td colspan='2' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td colspan='2' align='right'><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
+					"	<td height='28' width='25' id='icons'>" . $bottoneMastrino . "</td>" .
 					"</tr>";
 				}
 
@@ -124,6 +132,8 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
 				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%datareg_da%' => "",
+				'%datareg_a%' => "",
 				'%contoeconomicoselected%' => $contoEconomicoSelected,
 				'%statopatrimonialeselected%' => $statoPatrimonialeSelected,
 				'%dareselected%' => $dareSelected,

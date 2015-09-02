@@ -43,3 +43,29 @@
   </form>
 </div>
 		
+<div id="generaMastrino-form" title="Genera Mastrino"> 
+	<form method="post" id="generaMastrino" action="../configurazioni/generaMastrinoContoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<thead>
+				<tr>
+					<td class="td">%ml.conto% :</td>
+					<td><input type="text" id="codcontogenera" name="codcontogenera" readonly ></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.codsottoconto% :</td>
+					<td><input type="text" id="codsottocontogenera" name="codsottocontogenera" readonly ></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="td">%ml.da% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+					<td class="td">%ml.a% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+				</tr>
+			</tbody>
+		</table>	
+  </form>
+</div>
+
+		

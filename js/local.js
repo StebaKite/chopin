@@ -235,6 +235,27 @@ $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 	]
 });
 
+// Genera mastrino fornitore
+$( "#generaMastrino-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#generaMastrino").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 //Link to open the dialog
 $( "#nuovo-sottoconto-modificaconto" ).click(function( event ) {
 	$( "#nuovo-sottoconto-modificaconto-form" ).dialog( "open" );
@@ -526,5 +547,12 @@ function cancellaCliente(idcliente, codcliente) {
 	$( "#idcliente" ).val(idcliente);
 	$( "#codclienteselezionato" ).val(codcliente);
 	$( "#cancella-cliente-form" ).dialog( "open" );
+}
+
+function generaMastrino(codconto, codsottoconto) {
+	
+	$( "#codcontogenera" ).val(codconto);
+	$( "#codsottocontogenera" ).val(codsottoconto);
+	$( "#generaMastrino-form" ).dialog( "open" );
 }
 
