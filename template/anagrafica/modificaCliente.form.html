@@ -1,0 +1,57 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form method="post" id="back" action="../anagrafica/ricercaClienteFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+		</form>
+		<br>
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codcliente% :</td>
+						<td class="tooltip"><input type="text" id="codcliente" name="codcliente" size="12" maxlength="10" value='%codcliente%' ></td>
+					</tr>
+					<tr>
+						<td>%ml.descliente% :</td>
+						<td class="tooltip"><input type="text" id="descliente" name="descliente" size="70" maxlength="100" value='%descliente%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.desindirizzocliente% :</td>
+						<td class="tooltip"><input type="text" id="indcliente" name="indcliente" size="70" maxlength="200" value='%indcliente%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.descittacliente% :</td>
+						<td class="tooltip"><input type="text" id="cittacliente" name="cittacliente" size="70" maxlength="100" value='%cittacliente%' ></td>
+					</tr>			
+					<tr>
+						<td>%ml.capcliente% :</td>
+						<td class="tooltip"><input type="text" id="capcliente" name="capcliente" size="7" maxlength="5" value='%capcliente%' ></td>
+					</tr>	
+					<tr>
+						<td>%ml.tipaddebito% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" %bonifico_checked% ><label for="bonifico">%ml.bonifico%</label>
+								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" %riba_checked% ><label for="riba">%ml.riba%</label>
+								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" %rimdiretta_checked% ><label for="rimdiretta">%ml.rimdiretta%</label>
+								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" %assegnobancario_checked% ><label for="assegnobancario">%ml.assegnobancario%</label>
+								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" %addebitodiretto_checked% ><label for="addebitodiretto">%ml.addebitodiretto%</label>
+							</div>
+						</td>					
+					</tr>					
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+</div>
+
+<br/>

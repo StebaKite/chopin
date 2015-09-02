@@ -15,9 +15,11 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
 	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
 	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
+
 	public static $queryCreaCliente = "/anagrafica/creaCliente.sql";
-	
-	
+	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
+	public static $queryUpdateCliente = "/anagrafica/updateCliente.sql";
+	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
 	
 	function __construct() {
 	}
@@ -137,6 +139,48 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function cancellaCliente($db, $utility, $idcliente) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
+	public function leggiIdCliente($db, $utility, $idcliente) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	public function updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente),
+				'%cod_cliente%' => trim($codcliente),
+				'%des_cliente%' => trim($descliente),
+				'%des_indirizzo_cliente%' => trim($indcliente),
+				'%des_citta_cliente%' => trim($cittacliente),
+				'%cap_cliente%' => trim($capcliente),
+				'%tip_addebito%' => trim($tipoaddebito)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
 }
 	
 ?>

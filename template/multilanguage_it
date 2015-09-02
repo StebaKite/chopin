@@ -57,6 +57,7 @@ creaNuovoFornitore = Nuovo Fornitore
 modificaFornitore = Modifica Fornitore
 ricercaCliente = Ricerca Cliente
 creaNuovoCliente = Nuovo Cliente
+modificaCliente = Modifica Cliente
 ;
 ; Messaggi -----------------------------
 ;
