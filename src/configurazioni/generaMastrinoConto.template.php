@@ -82,8 +82,13 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 					$impDare = "";
 					$impAvere = $row['imp_registrazione'];
 				}
-				
-				$saldo = $totaleDare - $totaleAvere;
+
+				if (trim($row['tip_conto']) == "Dare") {
+					$saldo = $totaleDare - $totaleAvere;						
+				}
+				elseif (trim($row['tip_conto']) == "Avere") {
+					$saldo = $totaleAvere - $totaleDare;
+				}
 				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . ">" .
@@ -95,6 +100,8 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				"</tr>";
 			}
 			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$des_conto = trim($row['des_conto']);
+			$cat_conto = trim($row['cat_conto']);
 		}
 		else {
 
@@ -108,6 +115,8 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%desconto%' => $des_conto,
+				'%catconto%' => $cat_conto,  
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

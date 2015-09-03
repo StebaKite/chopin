@@ -98,19 +98,6 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 			$bottoneCancella .
 			"</tr>";
 		}
-
-		if (trim($_SESSION["catconto"]) == "Conto Economico") {
-			$contoecoChecked = "checked";
-		}
-		if (trim($_SESSION["catconto"]) == "Stato Patrimoniale") {
-			$contopatChecked = "checked";
-		}
-		if (trim($_SESSION["tipconto"]) == "Dare") {
-			$dareChecked = "checked";
-		}
-		if (trim($_SESSION["tipconto"]) == "Avere") {
-			$avereChecked = "checked";
-		}
 		
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
@@ -118,10 +105,10 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codconto%' => $_SESSION["codconto"],
 				'%desconto%' => $_SESSION["desconto"],
-				'%contoeco_checked%' => $contoecoChecked,
-				'%contopat_checked%' => $contopatChecked,
-				'%dare_checked%' => $dareChecked,
-				'%evere_checked%' => $avereChecked,
+				'%contoeco_checked%' => (trim($_SESSION["catconto"]) == "Conto Economico") ? "checked" : "",
+				'%contopat_checked%' => (trim($_SESSION["catconto"]) == "Stato Patrimoniale") ? "checked" : "",
+				'%dare_checked%' => (trim($_SESSION["tipconto"]) == "Dare") ? "checked" : "",
+				'%avere_checked%' => (trim($_SESSION["tipconto"]) == "Avere") ? "checked" : "",
 				'%categoria%' => $_SESSION["categoria"],
 				'%tipoconto%' => $_SESSION["tipoconto"],
 				'%tbody_sottoconti%' => $tbodySottoconti
