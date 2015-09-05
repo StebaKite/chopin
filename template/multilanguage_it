@@ -59,6 +59,7 @@ ricercaCliente = Ricerca Cliente
 creaNuovoCliente = Nuovo Cliente
 modificaCliente = Modifica Cliente
 mastrinoConto = Mastrino Conto
+ricercaScadenze = Ricerca Scadenze
 ;
 ; Messaggi -----------------------------
 ;
@@ -108,3 +109,6 @@ desindirizzocliente = Indirizzo
 descittacliente = Citt&agrave;
 capcliente = CAP
 saldoprogressivo = Saldo
+datscadenza = Data Scadenza
+notascadenza = Nota
+impscadenza = Importo in scadenza

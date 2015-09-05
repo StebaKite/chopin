@@ -60,13 +60,16 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 			$tbodyDettagli = $tbodyDettagli .
 			"<tr id='" . $row["id_dettaglio_registrazione"] . "'>" .
 			"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-			"<td align='right'>" . $row["imp_registrazione"] . "</td>" .
+			"<td align='right'>&euro;" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
 			"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
 			"</tr>";
 		}
 	
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
+				'%referer%' => $_SERVER["HTTP_REFERER"],
+				'%datascad_da%' => $_SESSION["datascad_da"],
+				'%datascad_a%' => $_SESSION["datascad_a"],
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%idregistrazione%' => $_SESSION["idRegistrazione"],
 				'%descreg%' => $_SESSION["descreg"],

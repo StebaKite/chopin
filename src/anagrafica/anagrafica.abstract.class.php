@@ -11,7 +11,6 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	// Query ---------------------------------------------------------------
 	
 	public static $queryLeggiFornitore = "/anagrafica/leggiFornitore.sql";
-	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
 	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
 	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
 	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
@@ -91,18 +90,6 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	}
-	
-	public function leggiIdFornitore($db, $utility, $idfornitore) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
 	}
 
 	public function updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito) {

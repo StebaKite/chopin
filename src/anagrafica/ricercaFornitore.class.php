@@ -161,7 +161,7 @@ class RicercaFornitore extends AnagraficaAbstract {
 		return $result;
 	}
 	
-	public function preparaPagina($ricercaCausaleTemplate) {
+	public function preparaPagina() {
 	
 		require_once 'utility.class.php';
 	

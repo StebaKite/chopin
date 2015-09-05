@@ -26,8 +26,7 @@ abstract class ChopinAbstract {
 	public static $queryRicercaFornitori = "/primanota/ricercaFornitori.sql";
 	public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
 	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
-	
-	
+	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -220,6 +219,25 @@ abstract class ChopinAbstract {
 			self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . $row[1] . " - " . $row[2] . "'>" . $row[2] ;
 		}
 		return self::$elenco_conti;
+	}
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @return unknown
+	 */
+	public function leggiIdFornitore($db, $utility, $idfornitore) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
 	}
 	
 }

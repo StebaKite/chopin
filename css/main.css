@@ -148,6 +148,11 @@
 		height: 400px;
 		overflow: auto;	
 	}	
+	div.scroll-scadenze {
+		width: 670px;
+		height: 400px;
+		overflow: auto;	
+	}	
 	div.scroll-fornitori {
 		width: 1050px;
 		height: 400px;
