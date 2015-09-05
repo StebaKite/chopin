@@ -112,10 +112,10 @@ abstract class ChopinAbstract {
 	
 	/**
 	 * 
-	 * @param unknown $data
-	 * @param unknown $carattereSeparatore
-	 * @param unknown $gioniDaSommare
-	 * @return unknown una data in formatto d-m-Y aumentata di N giorni
+	 * @param $data
+	 * @param $carattereSeparatore
+	 * @param $gioniDaSommare
+	 * @return una data in formatto d-m-Y aumentata di N giorni
 	 */
 	public function sommaGiorniData($data, $carattereSeparatore, $giorniDaSommare) {
 		
@@ -237,6 +237,25 @@ abstract class ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @return unknown
+	 */
+	public function prelevaIdFornitore($db, $utility, $idfornitore) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
 		return $result;
 	}
 	

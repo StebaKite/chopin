@@ -64,7 +64,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		return $result;
 	}
 
-	public function inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito) {
+	public function inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -73,7 +73,8 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%des_indirizzo_fornitore%' => trim($indfornitore),
 				'%des_citta_fornitore%' => trim($cittafornitore),
 				'%cap_fornitore%' => trim($capfornitore),
-				'%tip_addebito%' => trim($tipoaddebito)
+				'%tip_addebito%' => trim($tipoaddebito),
+				'%num_gg_scadenza_fattura%' => trim ($numggscadenzafattura)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -92,7 +93,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 	}
 
-	public function updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito) {
+	public function updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -102,7 +103,8 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%des_indirizzo_fornitore%' => trim($indfornitore),
 				'%des_citta_fornitore%' => trim($cittafornitore),
 				'%cap_fornitore%' => trim($capfornitore),
-				'%tip_addebito%' => trim($tipoaddebito)
+				'%tip_addebito%' => trim($tipoaddebito),
+				'%num_gg_scadenza_fattura%' => trim($numggscadenzafattura)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

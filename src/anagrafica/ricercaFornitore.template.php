@@ -53,11 +53,12 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 			"<table class='result'>" .
 			"	<thead>" .
 			"		<th width='60'>%ml.codfornitore%</th>" .
-			"		<th width='250'>%ml.desfornitore%</th>" .
-			"		<th width='200'>%ml.desindirizzofornitore%</th>" .
+			"		<th width='240'>%ml.desfornitore%</th>" .
+			"		<th width='170'>%ml.desindirizzofornitore%</th>" .
 			"		<th width='150'>%ml.descittafornitore%</th>" .
-			"		<th width='50'>%ml.capfornitore%</th>" .
+			"		<th width='40'>%ml.capfornitore%</th>" .
 			"		<th width='60'>%ml.tipaddebito%</th>" .
+			"		<th width='60'>%ml.numggscafatt%</th>" .
 			"		<th width='47'>%ml.qtareg%</th>" .
 			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
 			"	</thead>" .
@@ -93,11 +94,12 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . " id='" . trim($row['id_fornitore']) . "'>" .
 				"	<td width='68' class='tooltip' align='center'>" . trim($row['cod_fornitore']) . "</td>" .
-				"	<td width='258' align='left'>" . trim($row['des_fornitore']) . "</td>" .
-				"	<td width='208' align='left'>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
+				"	<td width='248' align='left'>" . trim($row['des_fornitore']) . "</td>" .
+				"	<td width='178' align='left'>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
 				"	<td width='158' align='left'>" . trim($row['des_citta_fornitore']) . "</td>" .				
-				"	<td width='58' align='center'>" . trim($row['cap_fornitore']) . "</td>" .
+				"	<td width='48' align='center'>" . trim($row['cap_fornitore']) . "</td>" .
 				"	<td width='68' align='center'>" . trim($row['tip_addebito']) . "</td>" .
+				"	<td width='68' align='center'>" . trim($row['num_gg_scadenza_fattura']) . "</td>" .
 				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_fornitore']) . "</td>" .
 				"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
 				"	<td width='30' id='icons'>" . $bottoneMastrino . "</td>" .

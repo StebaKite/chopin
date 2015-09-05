@@ -7,6 +7,7 @@ SELECT
 	fornitore.cap_fornitore,
 	fornitore.tip_addebito,
 	fornitore.dat_creazione,
+	fornitore.num_gg_scadenza_fattura,
 	coalesce(t1.totale, 0) as tot_registrazioni_fornitore
 FROM contabilita.fornitore as fornitore
 	LEFT OUTER JOIN

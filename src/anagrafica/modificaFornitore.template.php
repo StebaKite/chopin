@@ -88,7 +88,8 @@ class ModificaFornitoreTemplate extends AnagraficaAbstract {
 				'%riba_checked%' => (trim($_SESSION["tipoaddebito"]) == "RIBA") ? "checked" : "",
 				'%rimdiretta_checked%' => (trim($_SESSION["tipoaddebito"]) == "RIM_DIR") ? "checked" : "",
 				'%assegnobancario_checked%' => (trim($_SESSION["tipoaddebito"]) == "ASS_BAN") ? "checked" : "",
-				'%addebitodiretto_checked%' => (trim($_SESSION["tipoaddebito"]) == "ADD_DIR") ? "checked" : ""
+				'%addebitodiretto_checked%' => (trim($_SESSION["tipoaddebito"]) == "ADD_DIR") ? "checked" : "",
+				'%numggscadenzafattura%' => $_SESSION["numggscadenzafattura"]
 		);
 	
 		$utility = Utility::getInstance();

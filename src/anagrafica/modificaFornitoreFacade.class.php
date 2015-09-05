@@ -22,6 +22,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["cittafornitore"] = $_POST["cittafornitore"];
 	$_SESSION["capfornitore"] = $_POST["capfornitore"];
 	$_SESSION["tipoaddebito"] = $_POST["tipoaddebito"];
+	$_SESSION["numggscadenzafattura"] = $_POST["numggscadenzafattura"];
 
 	$modificaFornitore->go();
 }

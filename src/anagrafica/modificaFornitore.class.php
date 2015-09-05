@@ -106,7 +106,7 @@ class ModificaFornitore extends AnagraficaAbstract {
 	
 		$db = Database::getInstance();
 	
-		$result = $this->leggiIdFornitore($db, $utility, $_SESSION["idfornitore"]);
+		$result = $this->prelevaIdFornitore($db, $utility, $_SESSION["idfornitore"]);
 	
 		if ($result) {
 	
@@ -119,6 +119,7 @@ class ModificaFornitore extends AnagraficaAbstract {
 				$_SESSION["cittafornitore"] = $row["des_citta_fornitore"];
 				$_SESSION["capfornitore"] = $row["cap_fornitore"];
 				$_SESSION["tipoaddebito"] = $row["tip_addebito"];
+				$_SESSION["numggscadenzafattura"] = $row["num_gg_scadenza_fattura"];
 			}
 		}
 		else {
@@ -140,8 +141,9 @@ class ModificaFornitore extends AnagraficaAbstract {
 		$cittafornitore = ($_SESSION["cittafornitore"] != "") ? "'" . $_SESSION["cittafornitore"] . "'" : "null" ;
 		$capfornitore = ($_SESSION["capfornitore"] != "") ? "'" . $_SESSION["capfornitore"] . "'" : "null" ;
 		$tipoaddebito = $_SESSION["tipoaddebito"];
+		$numggscadenzafattura = $_SESSION["numggscadenzafattura"];
 	
-		if ($this->updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito)) {
+		if ($this->updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura)) {
 	 
 			$db->commitTransaction();
 			return TRUE;

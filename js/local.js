@@ -329,10 +329,22 @@ $( ".data" ).datepicker({
 	constrainInput: true
 });
 
+$(function() {
+    $( "#slider-gg-scadenza-fattura" ).slider({
+      range: "max",
+      min: 1,
+      max: 120,
+      value: 30,
+      slide: function( event, ui ) {
+        $( "#numggscadenzafattura" ).val( ui.value );
+      }
+    });
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
+  });
 
 $( "#slider" ).slider({
 	range: true,
-	values: [ 17, 67 ]
+	values: [ 5, 10 ]
 });
 
 $( ".spinner" ).spinner();
@@ -362,6 +374,20 @@ $( ".selectmenuCausale" )
 	.addClass("overflow");
 
 $( ".selectmenuFornitore" )
+	.selectmenu({change:
+		function(){
+			var idfornitore = $("#fornitore").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#datascad" ).val(xmlhttp.responseText);
+	            }
+	        }
+	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore, true);
+	        xmlhttp.send();			
+		}
+	})
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
 	.addClass("overflow");

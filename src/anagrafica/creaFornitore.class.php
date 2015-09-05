@@ -131,8 +131,9 @@ class CreaFornitore extends AnagraficaAbstract {
 		$cittafornitore = $_SESSION["cittafornitore"];
 		$capfornitore = $_SESSION["capfornitore"];
 		$tipoaddebito = $_SESSION["tipoaddebito"];
+		$numggscadenzafattura = $_SESSION["numggscadenzafattura"];
 		
-		if ($this->inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito)) {
+		if ($this->inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura)) {
 	
 			$db->commitTransaction();
 			return TRUE;
