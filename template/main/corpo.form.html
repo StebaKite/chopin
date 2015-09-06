@@ -15,16 +15,52 @@
 <div id="main">
 
 <br>		
-<table class="datiCreateSottile" cellpadding="5px">
-	<tbody>
-		<tr>
-			<td width="1000" valign="top">
-				<h2>Agenda della settimana</h2>							
-				<div class='scroll-main'>%risultato_agenda%</div>			
-			</td>
-		</tr>
-	</tbody>
-</table>
+
+<form method="post" id="elencoEventi" action="../main/corpoFacade.class.php?modo=start">
+	<table class="datiCreateSottile">
+		<thead>
+			<tr>
+				<th width="500"><h2>E v e n t i</h2></th>
+				<th align="center">
+					<button id="nuovo-evento" class="button" title="%ml.nuovoEvento%" >%ml.nuovoEvento%</button>
+				</th>
+				<th>
+					<div class="radioset" >
+						<input type="radio" id="aperti" name="statoeventi" value="00" %aperti_checked% ><label for="aperti">%ml.eventiAperti%</label>
+						<input type="radio" id="chiusi" name="statoeventi" value="01" %chiusi_checked% ><label for="chiusi">%ml.eventiChiusi%</label>
+						<input type="radio" id="tutti"  name="statoeventi" value=""   %tutti_checked%  ><label for="tutti">%ml.eventiTutti%</label>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td width="1000" colspan="3" valign="top">
+					<div class='scroll-main'>%risultato_eventi%</div>			
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
 </div>
+
+<div id="nuovo-evento-form" title="Nuovo Evento">
+	<form method="post" id="nuovoEvento" action="../main/inserisciEventoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.notaevento% :</td>
+					<td><textarea id="notaevento" name="notaevento" rows="4" cols="50"></textarea></td>
+				</tr>					
+				<tr>
+					<td>%ml.dataevento% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" id="dataevento" name="dataevento" size="10" maxlength="10" value='%dataevento%'></td>
+				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+
 </body>
 </html>

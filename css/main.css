@@ -248,12 +248,13 @@
 	.result .off, .dettaglio .off {
 		background-color: #FFFFFF;
 	}
-	.result .modifiedOn {
-		background-color: #ECECEC;
+	.result .eventoOff {
 		font-weight: bolder;
+		color: #3399FF;
+		background-color: #FFFFFF;
 	}
-	.result .modifiedOff {
-		font-weight: bolder;
+	.result .eventoOn {
+		background-color: #FFFFFF;
 	}
 	.result .error {
 		background-color: #aa0433;

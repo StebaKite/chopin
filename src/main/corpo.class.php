@@ -5,7 +5,7 @@ require_once 'chopin.abstract.class.php';
 class Corpo extends ChopinAbstract {
 
 	private static $messaggio;
-	private static $queryScadenzeMeseCorrente = "/main/scadenzeMeseCorrente.sql";
+	private static $queryEventi = "/main/eventi.sql";
 
 	private static $_instance = null;
 
@@ -61,18 +61,30 @@ class Corpo extends ChopinAbstract {
 
 		//-------------------------------------------------------------
 
-		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzeMeseCorrente;
-		$sql = $utility->getTemplate($sqlTemplate);
+		$filtroEventi = "";
+		
+		if ($_SESSION["statoeventi"] != "") {
+			$filtroEventi = "WHERE sta_evento = '" . $_SESSION["statoeventi"] . "'"; 			
+		} 
+		
+		$replace = array(
+				'%filtro_eventi%' => $filtroEventi
+		);
+		
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryEventi;
+		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if ($result) $_SESSION["scadenzeMese"] = pg_fetch_all($result);
-		else $_SESSION["scadenzeMese"] = "";
+		if ($result) $_SESSION["eventi"] = pg_fetch_all($result);
+		else $_SESSION["eventi"] = "";
 		
 		// compone la pagina
 		include($testata);
 		$corpoTemplate->displayPagina();
 		include($piede);
-	}		
+	}	
 }
 
 ?>

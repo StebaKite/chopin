@@ -7,7 +7,16 @@ session_start();
 
 $corpo = Corpo::getInstance();
 
-if ($_GET["modo"] == "start") $corpo->start();
-if ($_GET["modo"] == "go") $corpo->go();
+if ($_GET["modo"] == "start") {
+	
+	if (!isset($_SESSION["statoeventi"])) {
+		$_SESSION["statoeventi"] = "00";
+	}
+	else {
+		$_SESSION["statoeventi"] = $_REQUEST["statoeventi"];
+	}
+	
+	$corpo->start();
+}
 
 ?>

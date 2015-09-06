@@ -46,8 +46,7 @@ class CorpoTemplate extends ChopinAbstract {
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 		
-		$tabellaScadenze = "";
-		$tabellaAgenda = "Nessun impegno in agenda";
+		$tabellaEventi = "";
 		
 		// Template --------------------------------------------------------------
 
@@ -56,32 +55,42 @@ class CorpoTemplate extends ChopinAbstract {
 		$array = $utility->getConfig();		
 		$form = self::$root . $array['template'] . self::$pagina;
 		
-		if ($_SESSION["scadenzeMese"] != "") {
+		if ($_SESSION["eventi"] != "") {
 	
-			$tabellaScadenze .= "<table class='result' id='resultTable'>";
-			$tabellaScadenze .= "<thead>";
-			$tabellaScadenze .= "<th nowrap>%ml.datascad%</th>";
-			$tabellaScadenze .= "<th>%ml.desscad%</th>";
-			$tabellaScadenze .= "<th>%ml.importo%</th>";
-			$tabellaScadenze .= "</thead><tbody>";
+			$tabellaEventi .= "<table class='result' id='resultTable' cellpadding='5'>";
+			$tabellaEventi .= "<tbody>";
+
 				
-			foreach($_SESSION["scadenzeMese"] as $row) {
-				$tabellaScadenze .= "<tr class='off'>";
-				$tabellaScadenze .= "<td width='50' align='center'>" . $row['dat_scadenza'] . "</td>";
-				$tabellaScadenze .= "<td width='400' align='left'>" . $row['nota_scadenza'] . "</td>";
-				$tabellaScadenze .= "<td width='100' align='right'>&euro;" . $row['imp_in_scadenza'] . "</td>";
-				$tabellaScadenze .= "</tr>";
+			foreach($_SESSION["eventi"] as $row) {
+				
+				if ($row['sta_evento'] == '00') {
+					$class = "class='eventoOn'";
+					$bottoneChiudi = "<a class='tooltip' href='../main/chiudiEventoFacade.class.php?modo=go&idevento=" . trim($row['id_evento']) . "&staevento=01" . "'><li class='ui-state-default ui-corner-all' title='%ml.chiudiEvento%'><span class='ui-icon ui-icon-check'></span></li></a>";
+				}
+				else {
+					$class = "class='eventoOff'";
+					$bottoneChiudi = "&nbsp;";						
+				}
+				
+				$tabellaEventi .= "<tr " . $class . " height='40'>";
+				$tabellaEventi .= "<td width='50' align='center'>" . $row['dat_evento'] . "</td>";
+				$tabellaEventi .= "<td width='780' align='left'>" . $row['nota_evento'] . "</td>";
+				$tabellaEventi .= "<td width='50' align='center'>" . $row['dat_cambio_stato'] . "</td>";
+				$tabellaEventi .= "<td width='30' id='icons'>" . $bottoneChiudi . "</td>";
+				$tabellaEventi .= "</tr>";
 			}
 	
-			$tabellaScadenze .= "</tbody></table>";
+			$tabellaEventi .= "</tbody></table>";
 		}
 		else {
-			$tabellaScadenze = "Nessuna scadenza nel mese corrente";
+			$tabellaEventi = "<br>Nessun evento trovato" ;
 		}
 		
 		$replace = array(
-				'%risultato_scadenze%' => $tabellaScadenze,
-				'%risultato_agenda%' => $tabellaAgenda
+				'%aperti_checked%' => ($_SESSION["statoeventi"] == "00") ? "checked" : "",
+				'%chiusi_checked%' => ($_SESSION["statoeventi"] == "01") ? "checked" : "",
+				'%tutti_checked%'  => ($_SESSION["statoeventi"] == "")   ? "checked" : "",
+				'%risultato_eventi%' => $tabellaEventi
 		);
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

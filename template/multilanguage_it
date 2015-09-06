@@ -20,6 +20,10 @@ assegnobancario = Assegno Bancario
 riba = Ri.Ba
 rimdiretta = Rimessa Diretta
 addebitodiretto = Addebito Diretto c/c
+nuovoEvento = Nuovo Evento
+eventiTutti = Tutti
+eventiAperti = Aperti
+eventiChiusi = Chiusi
 ;
 ; Tips ---------------------------------
 ;
@@ -36,6 +40,7 @@ configura = Configura
 escludiContoTip = Esclude il conto dalla causale
 includiContoTip = Include il conto nella causale
 mastrino = Genera il mastrino
+chiudiEvento = Chiude questo evento
 ;
 ; Funzioni -----------------------------
 ;
@@ -113,3 +118,5 @@ datscadenza = Data Scadenza
 notascadenza = Nota
 impscadenza = Importo in scadenza
 numggscafatt = Giorni scadenza fattura
+dataevento = Data
+notaevento = Nota

@@ -27,6 +27,8 @@ abstract class ChopinAbstract {
 	public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
 	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
 	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
+	public static $queryCreaEvento = "/main/creaEvento.sql";
+	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -259,6 +261,32 @@ abstract class ChopinAbstract {
 		return $result;
 	}
 	
+	public function inserisciEvento($db, $utility, $datevento, $notaevento) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%dat_evento%' => trim($datevento),
+				'%nota_evento%' => trim($notaevento)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaEvento;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;		
+	}
+
+	public function chiudiEvento($db, $utility, $idevento, $staevento) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_evento%' => trim($idevento),
+				'%sta_evento%' => trim($staevento),
+				'%dat_cambio_stato%' => date("d/m/Y")
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryChiudiEvento;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 }
 
 ?>

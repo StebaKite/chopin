@@ -81,9 +81,39 @@ $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	]
 });
 
-// Link to open the dialog
+//Link to open the dialog
 $( "#nuovo-dett-modificareg" ).click(function( event ) {
 	$( "#nuovo-dettaglio-modificareg-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+// Nuovo evento
+$( "#nuovo-evento-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 250,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#nuovoEvento").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-evento" ).click(function( event ) {
+	$( "#dataevento" ).val("");
+	$( "#notaevento" ).val("");	
+	$( "#nuovo-evento-form" ).dialog( "open" );
 	event.preventDefault();
 });
 
@@ -310,6 +340,26 @@ $( "#nuovo-sottoconto" ).click(function( event ) {
 	event.preventDefault();
 });
 
+// ----------------------------------------------------
+// Link per la sottomissione del form elenco eventi
+
+$( "#aperti" ).click(function( event ) {
+    $("#elencoEventi").submit();				
+	event.preventDefault();
+});
+
+$( "#chiusi" ).click(function( event ) {
+	$("#elencoEventi").submit();				
+	event.preventDefault();
+});
+
+$( "#tutti" ).click(function( event ) {
+	$("#elencoEventi").submit();				
+	event.preventDefault();
+});
+//----------------------------------------------------
+
+
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
 	changeYear: true,
@@ -341,6 +391,7 @@ $(function() {
     });
     $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
   });
+
 
 $( "#slider" ).slider({
 	range: true,
