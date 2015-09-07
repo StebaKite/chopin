@@ -63,7 +63,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 				'8' => '31',
 				'9' => '30',
 				'10' => '31',
-				'11' => '31',
+				'11' => '30',
 				'12' => '31',
 		);
 		
