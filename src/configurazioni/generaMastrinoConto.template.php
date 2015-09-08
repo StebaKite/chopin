@@ -90,6 +90,13 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 					$saldo = $totaleAvere - $totaleDare;
 				}
 				
+				/**
+				 * Evidenzia la riga se il saldo è negativo
+				 */
+				if ($saldo < 0) {
+					$class = "class='error'";
+				}
+				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . ">" .
 				"	<td width='108' class='tooltip' align='center'>" . trim($row['dat_registrazione']) . "</td>" .
