@@ -257,7 +257,7 @@
 		background-color: #FFFFFF;
 	}
 	.result .error {
-		background-color: #aa0433;
+		background-color: red;
 		color: white; 
 		font-weight: bolder;
 	}
