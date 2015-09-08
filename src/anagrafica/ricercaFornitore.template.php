@@ -60,7 +60,7 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 			"		<th width='60'>%ml.tipaddebito%</th>" .
 			"		<th width='60'>%ml.numggscafatt%</th>" .
 			"		<th width='47'>%ml.qtareg%</th>" .
-			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
+			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-fornitori'>" .
@@ -81,12 +81,10 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 		
 				if ($row['tot_registrazioni_fornitore'] == 0) {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "&nbsp;";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaFornitore(" . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 				}
 				else {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "<a class='tooltip' onclick='generaMastrinoFornitore(" . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 		
@@ -101,9 +99,8 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 				"	<td width='68' align='center'>" . trim($row['tip_addebito']) . "</td>" .
 				"	<td width='68' align='center'>" . trim($row['num_gg_scadenza_fattura']) . "</td>" .
 				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_fornitore']) . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneMastrino . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td width='25' id='icons'>" . $bottoneModifica . "</td>" .
+				"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$_SESSION['numFornitoriTrovati'] = $numFornitori;

@@ -59,7 +59,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 			"		<th width='50'>%ml.capcliente%</th>" .
 			"		<th width='60'>%ml.tipaddebito%</th>" .
 			"		<th width='47'>%ml.qtareg%</th>" .
-			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
+			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-clienti'>" .
@@ -80,12 +80,10 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 
 				if ($row['tot_registrazioni_cliente'] == 0) {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "<a class='tooltip' href='../anagrafica/creaMastrinoClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaCliente(" . trim($row['id_cliente']) . "," . trim($row['cod_cliente']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 				}
 				else {
 					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneMastrino = "<a class='tooltip' href='../anagrafica/creaMastrinoClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 
@@ -99,9 +97,8 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 				"	<td width='58' align='center'>" . trim($row['cap_cliente']) . "</td>" .
 				"	<td width='68' align='center'>" . trim($row['tip_addebito']) . "</td>" .
 				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_cliente']) . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneMastrino . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td width='25' id='icons'>" . $bottoneModifica . "</td>" .
+				"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$_SESSION['numClientiTrovati'] = $numClienti;
