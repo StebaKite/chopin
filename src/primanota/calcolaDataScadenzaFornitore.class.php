@@ -4,6 +4,21 @@ require_once 'primanota.abstract.class.php';
 
 class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 
+	public static $ggMese = array(
+			'01' => '31',
+			'02' => '28',
+			'03' => '31',
+			'04' => '30',
+			'05' => '31',
+			'06' => '30',
+			'07' => '31',
+			'08' => '31',
+			'09' => '30',
+			'10' => '31',
+			'11' => '30',
+			'12' => '31',
+	);	
+	
 	public static $replace;
 
 	private static $_instance = null;
@@ -49,28 +64,25 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 		}
 
 		/**
-		 * Le data odierna viene aumentata dei giorni configurati per il fornitore, alla data ottenuta viene sostituito il
-		 * giorno con l'ultimo giorno del mese corrispondente
+		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza 
 		 */
-		$ggMese = array(
-				'1' => '31',
-				'2' => '28',
-				'3' => '31',
-				'4' => '30',
-				'5' => '31',
-				'6' => '30',
-				'7' => '31',
-				'8' => '31',
-				'9' => '30',
-				'10' => '31',
-				'11' => '30',
-				'12' => '31',
-		);
-		
-		$dataScadenza = $this->sommaGiorniData(date("d/m/Y"), "/", $num_gg_scadenza_fattura);
-		$mese = substr($dataScadenza, 3, 2);
-				
-		echo $ggMese[$mese].substr($dataScadenza,2);
+		if ($num_gg_scadenza_fattura > 0) {
+			/**
+			 * Le data odierna viene aumentata dei giorni configurati per il fornitore, alla data ottenuta viene sostituito il
+			 * giorno con l'ultimo giorno del mese corrispondente
+			 */
+			
+			$dataScadenza = $this->sommaGiorniData(date("d/m/Y"), "/", $num_gg_scadenza_fattura);
+			
+			$data = explode("/",$dataScadenza);
+			$mese = $data[1];
+			$anno = $data[2];
+			
+			echo SELF::$ggMese[$mese]."/".$mese."/".$anno;				
+		}
+		else {
+			echo "";
+		}
 	}
 }
 				

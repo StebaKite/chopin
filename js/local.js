@@ -9,6 +9,32 @@ $( ".button" ).button();
 
 $( ".radioset" ).buttonset();
 
+
+$( "#bonifico" ).click(function( event ) {
+	$( "#slider-gg-scadenza-fattura" ).show();
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );	
+});
+
+$( "#riba" ).click(function( event ) {
+	$( "#slider-gg-scadenza-fattura" ).show();
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );	
+});
+
+$( "#rimdiretta" ).click(function( event ) {
+	$( "#slider-gg-scadenza-fattura" ).show();
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );	
+});
+
+$( "#assegnobancario" ).click(function( event ) {
+	$( "#slider-gg-scadenza-fattura" ).show();
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );	
+});
+
+$( "#addebitodiretto" ).click(function( event ) {
+	$( "#slider-gg-scadenza-fattura" ).hide();
+    $( "#numggscadenzafattura" ).val( 0 );
+});
+
 $( ".tabs" ).tabs({ width: 400 });
 
 
@@ -382,9 +408,10 @@ $( ".data" ).datepicker({
 $(function() {
     $( "#slider-gg-scadenza-fattura" ).slider({
       range: "max",
-      min: 1,
+      min: 0,
       max: 120,
       value: 30,
+      step: 10,
       slide: function( event, ui ) {
         $( "#numggscadenzafattura" ).val( ui.value );
       }
