@@ -75,13 +75,17 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%descreg%' => $_SESSION["descreg"],
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
-				'%numfatt%' => $_SESSION['numfatt'],
+				'%numfatt%' => $_SESSION["numfatt"],
+				'%codneg_sel%' => $_SESSION["codneg_sel"],
+				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
+				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
+				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%elenco_causali%' => $_SESSION['elenco_causali'],
-				'%elenco_fornitori%' => $_SESSION['elenco_fornitori'],
-				'%elenco_clienti%' => $_SESSION['elenco_clienti'],
-				'%elenco_conti%' => $_SESSION['elenco_conti'],
+				'%elenco_causali%' => $_SESSION["elenco_causali"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
+				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
+				'%elenco_conti%' => $_SESSION["elenco_conti"],
 				'%tbody_dettagli%' => $tbodyDettagli
 		);
 	

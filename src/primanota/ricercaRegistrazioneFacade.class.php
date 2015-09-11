@@ -10,9 +10,10 @@ $ricercaRegistrazione = RicercaRegistrazione::getInstance();
 if ($_GET["modo"] == "start") $ricercaRegistrazione->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["datareg_da"] = $_POST["datareg_da"];
-	$_SESSION["datareg_a"] = $_POST["datareg_a"];
-	$_SESSION["numfatt"] = $_POST["numfatt"];
+	$_SESSION["datareg_da"] = $_REQUEST["datareg_da"];
+	$_SESSION["datareg_a"] = $_REQUEST["datareg_a"];
+	$_SESSION["numfatt"] = $_REQUEST["numfatt"];
+	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
 	
 	$ricercaRegistrazione->go();
 }

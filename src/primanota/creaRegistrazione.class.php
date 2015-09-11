@@ -50,6 +50,7 @@ class CreaRegistrazione extends primanotaAbstract {
 		// Data del giorno preimpostata solo in entrata -------------------------
 		
 		$_SESSION["datareg"] = date("d-m-Y");
+		$_SESSION["codneg"] = "VIL";
 		
 		// Compone la pagina
 		include(self::$testata);
@@ -75,6 +76,7 @@ class CreaRegistrazione extends primanotaAbstract {
 				session_unset();
 				$_SESSION["messaggio"] = "Registrazione salvata con successo";				
 				$_SESSION["datareg"] = date("d-m-Y");
+				$_SESSION["codneg"] = "VIL";
 				
 				$this->preparaPagina($creaRegistrazioneTemplate);
 				
@@ -118,11 +120,13 @@ class CreaRegistrazione extends primanotaAbstract {
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
+		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
+		$stareg = "00";
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
 		
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
 
  			$d = explode(",", $_SESSION['dettagliInseriti']);
 

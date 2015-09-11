@@ -152,6 +152,9 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		if ($_SESSION["numfatt"] != "") {
 			$filtriRegistrazione = "and reg.num_fattura like '" . $_SESSION["numfatt"] . "%'";
 		}
+		if ($_SESSION["codneg_sel"] != "") {
+			$filtriRegistrazione = "and reg.cod_negozio = '" . $_SESSION["codneg_sel"] . "'";
+		}		
 		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],

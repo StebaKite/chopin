@@ -5,6 +5,7 @@ SET dat_scadenza=%dat_scadenza%,
 	id_cliente=%id_cliente%,
 	cod_causale='%cod_causale%',
 	num_fattura=%num_fattura%,
+	cod_negozio=%cod_negozio%,
 	dat_registrazione=%dat_registrazione%,
 	sta_registrazione='%sta_registrazione%'
 WHERE id_registrazione=%id_registrazione%

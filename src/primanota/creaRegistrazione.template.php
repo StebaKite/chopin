@@ -185,17 +185,20 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%descreg%' => $_SESSION["descreg"],
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
-				'%numfatt%' => $_SESSION['numfatt'],
+				'%numfatt%' => $_SESSION["numfatt"],
+				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
+				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
+				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
 				'%class_dettagli%' => $class_dettagli,	
 				'%thead_dettagli%' => $thead_dettagli,	
 				'%tbody_dettagli%' => $tbody_dettagli,
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
-				'%dettagliInseriti%' => $_SESSION['dettagliInseriti'],
-				'%elenco_causali%' => $_SESSION['elenco_causali'],
-				'%elenco_fornitori%' => $_SESSION['elenco_fornitori'],
-				'%elenco_clienti%' => $_SESSION['elenco_clienti'],
-				'%elenco_conti%' => $_SESSION['elenco_conti']
+				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
+				'%elenco_causali%' => $_SESSION["elenco_causali"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
+				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
+				'%elenco_conti%' => $_SESSION["elenco_conti"]
 		);
 
 		$utility = Utility::getInstance();

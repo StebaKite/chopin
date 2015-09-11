@@ -73,6 +73,7 @@ class VisualizzaRegistrazione extends primanotaAbstract {
 				$_SESSION["datascad"] = $row["dat_scadenza"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
 				$_SESSION["numfatt"] = $row["num_fattura"];
+				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
 				$_SESSION["fornitore"] = $row["id_fornitore"];
 				$_SESSION["cliente"] = $row["id_cliente"];

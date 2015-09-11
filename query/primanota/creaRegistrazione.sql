@@ -7,5 +7,8 @@ VALUES
 	%id_cliente%,
 	'%cod_causale%',
 	%num_fattura%,
-	%dat_registrazione%
+	%dat_registrazione%,
+	'%dat_inserimento%',
+	'%sta_registrazione%',
+	%cod_negozio%
 	) RETURNING id_registrazione

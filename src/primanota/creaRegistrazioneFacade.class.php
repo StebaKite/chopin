@@ -14,15 +14,16 @@ if ($_GET["modo"] == "start") {
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["descreg"] = $_POST["descreg"];
-	$_SESSION["datascad"] = $_POST["datascad"];
-	$_SESSION["datareg"] = $_POST["datareg"];
-	$_SESSION["numfatt"] = $_POST["numfatt"];
-	$_SESSION["causale"] = $_POST["causale"];
-	$_SESSION["fornitore"] = $_POST["fornitore"];
-	$_SESSION["cliente"] = $_POST["cliente"];	
-	$_SESSION["dettagliInseriti"] = $_POST["dettagliInseriti"];	
-	$_SESSION["indexDettagliInseriti"] = $_POST["indexDettagliInseriti"];
+	$_SESSION["descreg"] = $_REQUEST["descreg"];
+	$_SESSION["datascad"] = $_REQUEST["datascad"];
+	$_SESSION["datareg"] = $_REQUEST["datareg"];
+	$_SESSION["numfatt"] = $_REQUEST["numfatt"];
+	$_SESSION["codneg"] = $_REQUEST["codneg"];
+	$_SESSION["causale"] = $_REQUEST["causale"];
+	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
+	$_SESSION["cliente"] = $_REQUEST["cliente"];	
+	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];	
+	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	
 	$creaRegistrazione->go();
 }

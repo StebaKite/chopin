@@ -8,6 +8,7 @@
 			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
 			<input type="hidden" name="datareg_da" value='%datareg_da%' >
 			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
 		</form>
 		<br>
 		<form method="post" action="%azione%" >
@@ -19,6 +20,7 @@
 							<input class="datepicker" type="text" name="datareg" size="10" maxlength="10" value='%datareg%' >
 							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' >
 						</td>
+					</tr>	
 					<tr>
 						<td>%ml.codcau% :</td>
 						<td class="tooltip">
@@ -27,6 +29,14 @@
 								%elenco_causali%
 							</select>
 						</td>
+						<td>%ml.negozio% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% ><label for="villa">%ml.villa%</label>
+								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% ><label for="brembate">%ml.brembate%</label>
+								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% ><label for="trezzo">%ml.trezzo%</label>
+							</div>
+						</td>					
 					</tr>
 					<tr>
 						<td>%ml.codforn% :</td>

@@ -66,17 +66,20 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $cliente
 	 * @return unknown
 	 */
-	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente) {
+	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg) {
 		
 		$array = $utility->getConfig();	
 		$replace = array(
 				'%des_registrazione%' => trim($descreg),
 				'%dat_scadenza%' => trim($datascad),
 				'%dat_registrazione%' => trim($datareg),
+				'%dat_inserimento%' => date("Y-m-d H:i:s"),
 				'%num_fattura%' => trim($numfatt),
 				'%cod_causale%' => $causale,
 				'%id_fornitore%' => $fornitore,
-				'%id_cliente%' => $cliente
+				'%id_cliente%' => $cliente,
+				'%sta_registrazione%' => $stareg,				
+				'%cod_negozio%' => $codneg
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -233,7 +236,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $stareg
 	 * @return boolean
 	 */
-	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg) {
+	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -243,6 +246,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%dat_registrazione%' => trim($datareg),
 				'%sta_registrazione%' => trim($stareg),
 				'%num_fattura%' => trim($numfatt),
+				'%cod_negozio%' => $codneg,
 				'%cod_causale%' => $causale,
 				'%id_fornitore%' => $fornitore,
 				'%id_cliente%' => $cliente

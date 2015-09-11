@@ -8,14 +8,19 @@
 			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
 			<input type="hidden" name="datareg_da" value='%datareg_da%' >
 			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
 		</form>
 		<br>
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>
 				<tr>
 					<td class="td">%ml.datareg% :</td>
-					<td class="tooltip"><input type="text" name="datareg" size="10" maxlength="10" value='%datareg%' disabled="disabled"></td>
-
+					<td colspan="4" class="tooltip">
+						<input type="text" name="datareg" size="10" maxlength="10" value='%datareg%' disabled="disabled">
+						&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' disabled="disabled"> 
+					</td>
+				</tr>
+				<tr>
 					<td>%ml.codcau% :</td>
 					<td class="tooltip">
 						<select class="selectmenuCausale" id="causale" name="causale" disabled="disabled">
@@ -23,16 +28,14 @@
 							%elenco_causali%
 						</select>
 					</td>
-				</tr>
-				<tr>
-					<td>%ml.descreg% :</td>
-					<td colspan="4" class="tooltip"><input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' disabled="disabled"></td>
-				</tr>					
-				<tr>
-					<td class="td">%ml.datascad% :</td>
-					<td class="tooltip"><input type="text" name="datascad" size="10" maxlength="10" value='%datascad%' disabled="disabled" ></td>
-					<td>%ml.numfatt% :</td>
-					<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' disabled="disabled"></td>
+						<td>%ml.negozio% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% disabled="disabled" ><label for="villa">%ml.villa%</label>
+								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% disabled="disabled" ><label for="brembate">%ml.brembate%</label>
+								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% disabled="disabled" ><label for="trezzo">%ml.trezzo%</label>
+							</div>
+						</td>					
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
@@ -51,6 +54,14 @@
 						</select>
 					</td>
 				</tr>					
+				<tr>
+					<td class="td">%ml.datascad% :</td>
+					<td class="tooltip"><input type="text" name="datascad" size="10" maxlength="10" value='%datascad%' disabled="disabled" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.numfatt% :</td>
+					<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' disabled="disabled"></td>
+				</tr>
 				<tr>
 					<td colspan="4">
 						<table id="dettagli" class="datiCreateSottile">

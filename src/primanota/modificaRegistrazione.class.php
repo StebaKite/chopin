@@ -134,6 +134,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				$_SESSION["datascad"] = $row["dat_scadenza"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
 				$_SESSION["numfatt"] = $row["num_fattura"];
+				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
 				$_SESSION["fornitore"] = $row["id_fornitore"];
 				$_SESSION["cliente"] = $row["id_cliente"];				
@@ -184,11 +185,12 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$stareg = $_SESSION["stareg"];
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
+		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;		
 	
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg)) {
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg)) {
 	
 			$db->commitTransaction();
 			return TRUE;

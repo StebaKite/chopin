@@ -7,6 +7,7 @@
 ; Bottoni ------------------------------
 ;
 salva = Salva
+tutti = Tutti
 nuovoDett = Nuovo Dettaglio
 nuovoSottoconto = Nuovo Sottoconto
 dare = Dare
@@ -24,6 +25,9 @@ nuovoEvento = Nuovo Evento
 eventiTutti = Tutti
 eventiAperti = Aperti
 eventiChiusi = Chiusi
+villa = Villa D.
+brembate = Brembate
+trezzo = Trezzo
 ;
 ; Tips ---------------------------------
 ;
@@ -120,3 +124,4 @@ impscadenza = Importo in scadenza
 numggscafatt = Giorni scadenza fattura
 dataevento = Data
 notaevento = Nota
+negozio = Negozio
