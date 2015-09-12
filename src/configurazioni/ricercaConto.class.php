@@ -88,9 +88,14 @@ class RicercaConto extends ConfigurazioniAbstract {
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
 			 */
+			
 			if (isset($_SESSION["messaggioCancellazione"])) {
 				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovati " . $_SESSION['numContiTrovati'] . " conti";
 				unset($_SESSION["messaggioCancellazione"]);
+			}
+			elseif (isset($_SESSION["messaggioGeneraMastrino"])) {
+				$_SESSION["messaggio"] = $_SESSION["messaggioGeneraMastrino"] . "<br>" . "Trovati " . $_SESSION['numContiTrovati'] . " conti";
+				unset($_SESSION["messaggioGeneraMastrino"]);
 			}
 			else {
 				$_SESSION["messaggio"] = "Trovati " . $_SESSION['numContiTrovati'] . " conti";

@@ -44,6 +44,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 	public function go() {
 	
 		require_once 'generaMastrinoConto.template.php';
+		require_once 'ricercaConto.class.php';
 		require_once 'utility.class.php';
 	
 		// Template
@@ -59,18 +60,28 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 	
 		if ($this->ricercaDati($utility)) {
 	
-			$this->preparaPagina($generaMastrinoContoTemplate);
-	
-			include($testata);
-			$generaMastrinoContoTemplate->displayPagina();
+			if (isset($_SESSION['registrazioniTrovate'])) {
+				
+				$this->preparaPagina($generaMastrinoContoTemplate);
+				
+				include($testata);
+				$generaMastrinoContoTemplate->displayPagina();
+				
+				$_SESSION["messaggio"] = "Mastrino del Conto generato!";
+				
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				echo $utility->tailTemplate($template);
+				
+				include($piede);				
+			}
+			else {
 
-			$_SESSION["messaggio"] = "Mastrino del Conto generato!";
-	
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-			echo $utility->tailTemplate($template);
-	
-			include($piede);
+				$_SESSION["messaggioGeneraMastrino"] = "Nessuna registrazione trovata!";
+				
+				$ricercaConto = RicercaConto::getInstance();
+				$ricercaConto->go();
+			}
 		}
 		else {
 	
@@ -98,7 +109,11 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
 			$filtro = "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
 		}
-	
+
+		if ($_SESSION['codneg_sel'] != "") {
+			$filtro = "AND registrazione.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+		}
+		
 		$replace = array(
 				'%cod_conto%' => trim($_SESSION["codconto"]),
 				'%cod_sottoconto%' => trim($_SESSION["codsottoconto"]),

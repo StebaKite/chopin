@@ -122,6 +122,9 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
+				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
+				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
 				'%desconto%' => $des_conto,
 				'%catconto%' => $cat_conto,  
 				'%risultato_ricerca%' => $risultato_ricerca
