@@ -31,8 +31,12 @@ class Pdf extends FPDF {
 		$this->SetFont('Arial','B',15);
 		$this->Cell(40);
 		$this->Cell(30, 10, utf8_decode($_SESSION["title"]), 0, 1);
+
+		$this->SetFont('Arial','I',15);
+		$this->Cell(65);
+		$this->Cell(10, 10, utf8_decode($_SESSION["title1"]), 0, 1);
 		
-		$this->Ln(20);
+		$this->Ln(10);
 	}
 
 	public function Footer() {

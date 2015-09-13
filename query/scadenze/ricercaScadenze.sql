@@ -6,5 +6,6 @@ SELECT
 	nota_scadenza,
 	tip_addebito
 FROM contabilita.scadenza
-WHERE dat_scadenza between '%dat_scadenza_da%' and '%dat_scadenza_a%'
+WHERE 1 = 1
+%filtro_date%
 ORDER BY dat_scadenza

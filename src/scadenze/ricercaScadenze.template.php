@@ -128,6 +128,9 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				'%azione%' => $_SESSION["azione"],
 				'%datascad_da%' => $_SESSION["datascad_da"],
 				'%datascad_a%' => $_SESSION["datascad_a"],
+				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
+				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
+				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca

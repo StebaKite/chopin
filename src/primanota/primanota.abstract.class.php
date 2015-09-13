@@ -104,7 +104,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 					$tipAddebito_fornitore = $row['tip_addebito'];
 				}				
 				
-				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], $descreg, $tipAddebito_fornitore);
+				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], $descreg, $tipAddebito_fornitore, $codneg);
 			} 
 		}
 		return $result;		
@@ -147,7 +147,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $descreg
 	 * @return unknown
 	 */
-	public function inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito) {
+	public function inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -155,7 +155,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%dat_scadenza%' => trim($datascad),
 				'%imp_in_scadenza%' => trim($importo),
 				'%nota_in_scadenza%' => trim($descreg),
-				'%tip_addebito%' => trim($tipaddebito)
+				'%tip_addebito%' => trim($tipaddebito),
+				'%cod_negozio%' => trim($codneg)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenza;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -272,7 +273,12 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$dataScadenza = strtotime(str_replace('/', '-', $dt));	// cambio i separatori altrimenti la strtotime non funziona
 		
 			if (($fornitore != "") && ($dataScadenza > $dataOggi)) {
-				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare, $descreg);
+
+				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+				foreach(pg_fetch_all($result_fornitore) as $row) {
+					$tipAddebito_fornitore = $row['tip_addebito'];
+				}				
+				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare, $descreg, $tipAddebito_fornitore, $codneg);
 			}
 			return TRUE;
 		}

@@ -66,7 +66,14 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 	public function generaSezioneIntestazione($pdf) {
 			
 		$_SESSION["title"] = "Scadenze dal " . $_SESSION["datascad_da"] . " al " . $_SESSION["datascad_a"];
-	
+
+		$negozio = "";
+		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
+		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
+		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+		
+		$_SESSION["title1"] = "Negozio di " . $negozio;
+		
 		return $pdf;
 	}
 	
@@ -86,12 +93,19 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 		require_once 'database.class.php';
 	
 		$filtro = "";
-	
+		
+		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
+			$filtro = "AND scadenza.dat_scadenza between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
+		}
+		
+		if ($_SESSION['codneg_sel'] != "") {
+			$filtro .= " AND scadenza.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+		}
+		
 		$replace = array(
-				'%dat_scadenza_da%' => $_SESSION["datascad_da"],
-				'%dat_scadenza_a%' => $_SESSION["datascad_a"]
+				'%filtro_date%' => $filtro
 		);
-	
+			
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaScadenze;
 	

@@ -111,7 +111,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		}
 
 		if ($_SESSION['codneg_sel'] != "") {
-			$filtro = "AND registrazione.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+			$filtro .= " AND registrazione.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
 		}
 		
 		$replace = array(
