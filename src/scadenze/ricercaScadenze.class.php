@@ -54,6 +54,7 @@ class RicercaScadenze extends ScadenzeAbstract {
 		$_SESSION["datascad_da"] = date("d/m/Y");
 		$_SESSION["datascad_a"] = date("d/m/Y");
 		unset($_SESSION["scadenzeTrovate"]);
+		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
 		$this->preparaPagina($ricercaScadenzeTemplate);
@@ -85,7 +86,7 @@ class RicercaScadenze extends ScadenzeAbstract {
 					
 				$this->preparaPagina($ricercaScadenzeTemplate);
 					
-				include(self::$testata);
+				include(self::$testata);				
 				$ricercaScadenzeTemplate->displayPagina();
 	
 				/**
@@ -166,10 +167,12 @@ class RicercaScadenze extends ScadenzeAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['scadenzeTrovate'] = $result;
+			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";			
 		}
 		else {
 			unset($_SESSION['scadenzeTrovate']);
 			$_SESSION['numScadenzeTrovate'] = 0;
+			unset($_SESSION['bottoneEstraiPdf']);			
 		}
 		return $result;
 	}

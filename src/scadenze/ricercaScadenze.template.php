@@ -129,6 +129,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				'%datascad_da%' => $_SESSION["datascad_da"],
 				'%datascad_a%' => $_SESSION["datascad_a"],
 				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 		

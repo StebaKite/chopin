@@ -28,6 +28,7 @@ eventiChiusi = Chiusi
 villa = Villa D.
 brembate = Brembate
 trezzo = Trezzo
+pdf = Estrai in PDF
 ;
 ; Tips ---------------------------------
 ;
@@ -45,6 +46,7 @@ escludiContoTip = Esclude il conto dalla causale
 includiContoTip = Include il conto nella causale
 mastrino = Genera il mastrino
 chiudiEvento = Chiude questo evento
+estraipdfTip = Estrae la tabella su un documento PDF
 ;
 ; Funzioni -----------------------------
 ;
