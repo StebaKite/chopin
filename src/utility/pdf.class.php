@@ -145,7 +145,7 @@ class Pdf extends FPDF {
 	    $this->SetFont('','B',10);
 	    
 	    // Header
-	    $w = array(20, 110, 30, 30);
+	    $w = array(55, 17, 70, 25, 25);
 	    for($i=0;$i<count($header);$i++)
 	        $this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 	    $this->Ln();
@@ -154,18 +154,82 @@ class Pdf extends FPDF {
 	    $this->SetFillColor(224,235,255);
 	    $this->SetTextColor(0);
 	    $this->SetFont('');
-	    
+	    $this->SetFont('','',8);
+	     
 	    // Data
+	    
+	    $idfornitore_break = "";
+	    $datscadenza_break = "";
+	    $totale_fornitore = 0;
+	    $totale_scadenze = 0;	     
+	    
 	    $fill = false;
-	    foreach($data as $row)
-	    {
-	        $this->Cell($w[0],6,utf8_decode($row['dat_scadenza']),'LR',0,'L',$fill);
-	    	$this->Cell($w[1],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
-	    	$this->Cell($w[2],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
-	    	$this->Cell($w[3],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);
+	    foreach($data as $row) {
+	    	
+	    	if (($idfornitore_break == "") && ($datscadenza_break == "")) {
+	    		$idfornitore_break = trim($row['id_fornitore']);
+	    		$datscadenza_break = trim($row['dat_scadenza']);
+	    		$desfornitore = trim($row['des_fornitore']);
+	    		$datscadenza  = trim($row['dat_scadenza']);
+	    	}
+	    	
+	    	if ((trim($row['id_fornitore']) != $idfornitore_break) | (trim($row['dat_scadenza']) != $datscadenza_break)) {
+	    		
+	    		$this->SetFont('','B',10);
+	    		$this->Cell($w[0],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[1],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
+	    		$this->Cell($w[3],6,'','LR',0,'C',$fill);
+	    		$this->Cell($w[4],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
+	    		$this->Ln();
+	    		$fill = !$fill;
+
+	    		$desfornitore = trim($row['des_fornitore']);
+	    		$datscadenza  = trim($row['dat_scadenza']);
+	    		$idfornitore_break = trim($row['id_fornitore']);
+	    		$datscadenza_break = trim($row['dat_scadenza']);
+	    		
+	    		$totale_scadenze += $totale_fornitore;
+	    		$totale_fornitore = 0;
+	    	}
+	    	
+		    $this->SetFillColor(224,235,255);
+		    $this->SetTextColor(0);
+	    	$this->SetFont('','',8);
+	    	$this->Cell($w[0],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
+	    	$this->Cell($w[1],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
+	    	$this->Cell($w[2],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
+	    	$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
+	    	$this->Cell($w[4],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);
 	        $this->Ln();
 	        $fill = !$fill;
+	        
+	        $desfornitore = "";
+	        $datscadenza = "";
+	        $totale_fornitore += trim($row['imp_in_scadenza']);	        
 	    }
+	    
+	    $this->SetFont('','B',10);
+	    $this->Cell($w[0],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[1],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
+	    $this->Cell($w[3],6,'','LR',0,'C',$fill);
+	    $this->Cell($w[4],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
+	    $this->Ln();
+	    $fill = !$fill;
+
+	    $totale_scadenze += $totale_fornitore;
+
+		$this->SetFillColor(102,102,102);
+		$this->SetTextColor(255);
+	    $this->SetFont('','B',10);
+	    $this->Cell($w[0],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[1],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[2],6,'Totale Scadenze','LR',0,'R',$fill);
+	    $this->Cell($w[3],6,'','LR',0,'C',$fill);
+	    $this->Cell($w[4],6, EURO . number_format($totale_scadenze, 2, ',', '.'),'LR',0,'R',$fill);
+	    $this->Ln();
+	    $fill = !$fill;
 	    
    	    $this->Cell(array_sum($w),0,'','T');	  
 	}

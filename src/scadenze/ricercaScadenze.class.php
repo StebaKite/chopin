@@ -149,8 +149,8 @@ class RicercaScadenze extends ScadenzeAbstract {
 		require_once 'database.class.php';
 
 		$filtro = "";
-		
-		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
+
+		if (($_SESSION['datascad_da'] != "") & ($_SESSION['datascad_a'] != "")) {
 			$filtro = "AND scadenza.dat_scadenza between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
 		}
 		

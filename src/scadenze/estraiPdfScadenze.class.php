@@ -81,7 +81,7 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 
 		$pdf->AddPage();
 		
-		$header = array("Data", "Descrizione", "Tipo Addebito", "Importo");
+		$header = array("Fornitore", "Data", "Descrizione", "Tipo Addebito", "Importo");
 		$pdf->SetFont('Arial','',9);
 		$pdf->ScadenzeTable($header, $this->ricercaDati($utility));
 		
@@ -94,7 +94,7 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 	
 		$filtro = "";
 		
-		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
+		if (($_SESSION['datascad_da'] != "") & ($_SESSION['datascad_a'] != "")) {
 			$filtro = "AND scadenza.dat_scadenza between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
 		}
 		

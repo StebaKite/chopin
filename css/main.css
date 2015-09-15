@@ -149,7 +149,7 @@
 		overflow: auto;	
 	}	
 	div.scroll-scadenze {
-		width: 670px;
+		width: 900px;
 		height: 330px;
 		overflow: auto;	
 	}	
@@ -256,6 +256,18 @@
 	.result .eventoOn {
 		background-color: #FFFFFF;
 	}
+	.result .subtotale {
+		font-weight: bolder;
+		color: #000000;
+		background-color: #ECECEC;
+		height: 30px;		
+	}	
+	.result .totale {
+		font-weight: bolder;
+		color: #3399FF;
+		background-color: #ECECEC;
+		height: 30px;		
+	}	
 	.result .error {
 		background-color: red;
 		color: white; 
