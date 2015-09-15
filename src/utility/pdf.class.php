@@ -193,8 +193,6 @@ class Pdf extends FPDF {
 	    		$totale_fornitore = 0;
 	    	}
 	    	
-		    $this->SetFillColor(224,235,255);
-		    $this->SetTextColor(0);
 	    	$this->SetFont('','',8);
 	    	$this->Cell($w[0],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
 	    	$this->Cell($w[1],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
@@ -220,8 +218,6 @@ class Pdf extends FPDF {
 
 	    $totale_scadenze += $totale_fornitore;
 
-		$this->SetFillColor(102,102,102);
-		$this->SetTextColor(255);
 	    $this->SetFont('','B',10);
 	    $this->Cell($w[0],6,'','LR',0,'L',$fill);
 	    $this->Cell($w[1],6,'','LR',0,'L',$fill);
