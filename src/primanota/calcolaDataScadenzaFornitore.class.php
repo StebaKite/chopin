@@ -68,11 +68,11 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 		 */
 		if ($num_gg_scadenza_fattura > 0) {
 			/**
-			 * Le data odierna viene aumentata dei giorni configurati per il fornitore, alla data ottenuta viene sostituito il
+			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore, alla data ottenuta viene sostituito il
 			 * giorno con l'ultimo giorno del mese corrispondente
 			 */
 			
-			$dataScadenza = $this->sommaGiorniData(date("d/m/Y"), "/", $num_gg_scadenza_fattura);
+			$dataScadenza = $this->sommaGiorniData($_SESSION["datareg"], "/", $num_gg_scadenza_fattura);
 			
 			$data = explode("/",$dataScadenza);
 			$mese = $data[1];

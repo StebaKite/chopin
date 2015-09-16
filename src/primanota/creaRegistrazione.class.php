@@ -49,7 +49,7 @@ class CreaRegistrazione extends primanotaAbstract {
 
 		// Data del giorno preimpostata solo in entrata -------------------------
 		
-		$_SESSION["datareg"] = date("d-m-Y");
+		$_SESSION["datareg"] = date("d/m/Y");
 		$_SESSION["codneg"] = "VIL";
 		
 		// Compone la pagina
@@ -75,7 +75,7 @@ class CreaRegistrazione extends primanotaAbstract {
 
 				session_unset();
 				$_SESSION["messaggio"] = "Registrazione salvata con successo";				
-				$_SESSION["datareg"] = date("d-m-Y");
+				$_SESSION["datareg"] = date("d/m/Y");
 				$_SESSION["codneg"] = "VIL";
 				
 				$this->preparaPagina($creaRegistrazioneTemplate);

@@ -455,6 +455,7 @@ $( ".selectmenuFornitore" )
 	.selectmenu({change:
 		function(){
 			var idfornitore = $("#fornitore").val();
+			var datareg = $("#datareg").val();
 		
 			var xmlhttp = new XMLHttpRequest();
 	        xmlhttp.onreadystatechange = function() {
@@ -462,7 +463,7 @@ $( ".selectmenuFornitore" )
 	                $( "#datascad" ).val(xmlhttp.responseText);
 	            }
 	        }
-	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore, true);
+	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore + "&datareg=" + datareg, true);
 	        xmlhttp.send();			
 		}
 	})
