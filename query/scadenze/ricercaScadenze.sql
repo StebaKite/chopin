@@ -15,4 +15,4 @@ FROM contabilita.scadenza
 		ON fornitore.id_fornitore = registrazione.id_fornitore
 WHERE 1 = 1
 %filtro_date%
-ORDER BY registrazione.id_fornitore, dat_scadenza_originale
+ORDER BY dat_scadenza_originale, registrazione.id_fornitore

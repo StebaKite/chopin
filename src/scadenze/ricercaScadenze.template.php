@@ -81,8 +81,8 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			$risultato_ricerca =
 			"<table class='result'>" .
 			"	<thead>" .
-			"		<th width='200'>%ml.codforn%</th>" .
 			"		<th width='100'>%ml.datscadenza%</th>" .
+			"		<th width='200'>%ml.codforn%</th>" .
 			"		<th width='250'>%ml.notascadenza%</th>" .
 			"		<th width='100'>%ml.tipaddebito%</th>" .
 			"		<th width='100'>%ml.impscadenza%</th>" .
@@ -140,8 +140,8 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . " id='" . trim($row['id_scadenza']) . "'>" .
-				"	<td width='208' align='left'>" . $desfornitore . "</td>" .
 				"	<td width='108' align='center'>" . trim($row['dat_scadenza']) . "</td>" .
+				"	<td width='208' align='left'>" . $desfornitore . "</td>" .
 				"	<td width='258' align='left'>" . $notascadenza . "</td>" .
 				"	<td width='108' align='center'>" . $tipaddebito . "</td>" .
 				"	<td width='108' align='right'>&euro;" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
