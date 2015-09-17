@@ -145,7 +145,7 @@ class Pdf extends FPDF {
 	    $this->SetFont('','B',10);
 	    
 	    // Header
-	    $w = array(55, 17, 70, 25, 25);
+	    $w = array(17, 55, 70, 25, 25);
 	    for($i=0;$i<count($header);$i++)
 	        $this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 	    $this->Ln();
@@ -194,8 +194,8 @@ class Pdf extends FPDF {
 	    	}
 	    	
 	    	$this->SetFont('','',8);
-	    	$this->Cell($w[0],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
-	    	$this->Cell($w[1],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
+	    	$this->Cell($w[0],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
+	    	$this->Cell($w[1],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
 	    	$this->Cell($w[2],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
 	    	$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
 	    	$this->Cell($w[4],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);

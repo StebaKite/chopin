@@ -12,13 +12,6 @@
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td class="td">%ml.conto% :</td>
-						<td>
-							<input type="text" id="codcontogenera" name="codcontogenera" value="%codconto%" readonly >
-							&nbsp;&nbsp;&nbsp;%ml.codsottoconto% : <input type="text" id="codsottocontogenera" name="codsottocontogenera" value="%codsottoconto%" readonly >
-						</td>
-					</tr>
-					<tr>
 						<td>%ml.negozio% :</td>
 						<td class="tooltip">
 							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
@@ -28,18 +21,30 @@
 								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
 							</select>
 						</td>
-					</tr>
-					<tr>
+						<td class="td">%ml.conto% :</td>
+						<td>
+							<input type="text" size="8" maxlength="6" id="codcontogenera" name="codcontogenera" value="%codconto%" readonly >
+							&nbsp;&nbsp;&nbsp;%ml.codsottoconto% : <input type="text" size="8" maxlength="6" id="codsottocontogenera" name="codsottocontogenera" value="%codsottoconto%" readonly >
+						</td>
 						<td class="td">%ml.da% :</td>
 						<td class="tooltip">
 							<input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' >
 							&nbsp;&nbsp;&nbsp;%ml.a% : <input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' >
 						</td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>					
+						<td class="tooltip" align="right"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
 				</tbody>
 			</table>
 		</form>
 		<br>
 		%risultato_ricerca%		
+		<br>
+		<form class="tooltip" method="post" id="estraipdf" action="../configurazioni/estraiPdfMastrinoContoFacade.class.php?modo=start" >
+			%bottoneEstraiPdf%
+			<input type="hidden" name="datareg_da" value='%datareg_da%' >
+			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="codcontogenera" value='%codcontogenera%' >
+			<input type="hidden" name="codsottocontogenera" value='%codsottocontogenera%' >
+			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
+		</form>
 				

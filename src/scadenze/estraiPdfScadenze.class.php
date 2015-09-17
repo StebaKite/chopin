@@ -81,7 +81,7 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 
 		$pdf->AddPage();
 		
-		$header = array("Fornitore", "Data", "Descrizione", "Tipo Addebito", "Importo");
+		$header = array("Data", "Fornitore", "Descrizione", "Tipo Addebito", "Importo");
 		$pdf->SetFont('Arial','',9);
 		$pdf->ScadenzeTable($header, $this->ricercaDati($utility));
 		

@@ -107,6 +107,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					$idfornitore_break = trim($row['id_fornitore']);
 					$datscadenza_break = trim($row['dat_scadenza']);
 					$desfornitore = trim($row['des_fornitore']);
+					$datscadenza  = trim($row['dat_scadenza']);
 				}
 				
 				$class = "class=''";
@@ -140,7 +141,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . " id='" . trim($row['id_scadenza']) . "'>" .
-				"	<td width='108' align='center'>" . trim($row['dat_scadenza']) . "</td>" .
+				"	<td width='108' align='center'>" . $datscadenza . "</td>" .
 				"	<td width='208' align='left'>" . $desfornitore . "</td>" .
 				"	<td width='258' align='left'>" . $notascadenza . "</td>" .
 				"	<td width='108' align='center'>" . $tipaddebito . "</td>" .

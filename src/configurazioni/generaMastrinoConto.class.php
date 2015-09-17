@@ -55,6 +55,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		$piede = self::$root . $array['piedePagina'];
 	
 		unset($_SESSION["registrazioniTrovate"]);
+		unset($_SESSION['bottoneEstraiPdf']);
 	
 		$generaMastrinoContoTemplate = GeneraMastrinoContoTemplate::getInstance();
 	
@@ -132,9 +133,11 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['registrazioniTrovate'] = $result;
+			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";				
 		}
 		else {
 			unset($_SESSION['registrazioniTrovate']);
+			unset($_SESSION['bottoneEstraiPdf']);			
 		}
 		return $result;
 	}
