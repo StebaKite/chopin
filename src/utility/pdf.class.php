@@ -29,12 +29,19 @@ class Pdf extends FPDF {
 		$this->Image($_SESSION["logo"],5,5,20);		
 
 		$this->SetFont('Arial','B',15);
-		$this->Cell(40);
-		$this->Cell(30, 10, utf8_decode($_SESSION["title"]), 0, 1);
-
+		$this->Cell(0,10,utf8_decode($_SESSION["title"]),0,0,'C');
+		$this->Ln();
+		
 		$this->SetFont('Arial','I',15);
-		$this->Cell(65);
-		$this->Cell(10, 10, utf8_decode($_SESSION["title1"]), 0, 1);
+		$this->Cell(0,10,utf8_decode($_SESSION["title1"]),0,0,'C');
+		$this->Ln();
+		
+		if (isset($_SESSION["title2"])) {
+
+			$this->SetFont('Arial','I',12);
+			$this->Cell(0,10,utf8_decode($_SESSION["title2"]),0,0,'C');
+			$this->Ln();
+		}		
 		
 		$this->Ln(10);
 	}
@@ -131,12 +138,103 @@ class Pdf extends FPDF {
 		}
 	}
 	
+	/**
+	 * Tabella per stampa mastrino conto
+	 */
+	public function MastrinoContoTable($header, $data) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','B',10);
+		 
+		// Header
+		$w = array(17, 110, 20, 20, 20);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		$this->Ln();
+					 
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('');
+		$this->SetFont('','',8);
+		
+		// Data
+		$totaleDare = 0;
+		$totaleAvere = 0;
+		$saldo = 0;
+		 
+		$fill = false;
+		foreach($data as $row) {
+
+			if ($row['ind_dareavere'] == 'D') {
+				$totaleDare = $totaleDare + $row['imp_registrazione'];
+				$impDare = $row['imp_registrazione'];
+				$euroDare = EURO;
+				$euroAvere = "";
+				$impAvere = "";
+			}
+			elseif ($row['ind_dareavere'] == 'A') {
+				$totaleAvere = $totaleAvere + $row['imp_registrazione'];
+				$impDare = "";
+				$impAvere = $row['imp_registrazione'];
+				$euroDare = "";
+				$euroAvere = EURO;
+			}
+			
+			if (trim($row['tip_conto']) == "Dare") {
+				$saldo = $totaleDare - $totaleAvere;
+			}
+			elseif (trim($row['tip_conto']) == "Avere") {
+				$saldo = $totaleAvere - $totaleDare;
+			}
+	
+			$this->SetFont('','',8);
+			
+			if ($saldo < 0) {
+				$this->SetFillColor(255,0,0);
+				$this->SetTextColor(255);
+				$fill = !$fill;			
+			}	
+			else {
+				$this->SetFillColor(224,235,255);
+				$this->SetTextColor(0);				
+				$fill = !$fill;			
+			}
+			
+			$this->Cell($w[0],6,utf8_decode(trim($row['dat_registrazione'])),'LR',0,'L',$fill);
+			$this->Cell($w[1],6,utf8_decode(trim($row['des_registrazione'])),'LR',0,'L',$fill);
+			$this->Cell($w[2],6, $euroDare . number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[3],6, $euroAvere . number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[4],6, EURO . number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Ln();
+			$fill = !$fill;			
+		}
+		
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$fill = !$fill;
+		
+		$this->SetFont('','B',10);
+		$this->Cell($w[0],6,'','LR',0,'L',$fill);
+		$this->Cell($w[1],6,'Saldo Finale','LR',0,'R',$fill);
+		$this->Cell($w[2],6,'','LR',0,'R',$fill);
+		$this->Cell($w[3],6,'','LR',0,'C',$fill);
+		$this->Cell($w[4],6, EURO . number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		$fill = !$fill;		
+		
+		$this->Cell(array_sum($w),0,'','T');
+	}
 	
 	/**
 	 * Tabella per stampa scadenziario
 	 */
-	public function ScadenzeTable($header, $data)
-	{
+	public function ScadenzeTable($header, $data) {
+		
 	    // Colors, line width and bold font
 	    $this->SetFillColor(28,148,196);
 	    $this->SetTextColor(255);

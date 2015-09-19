@@ -74,13 +74,13 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 
 				if ($row['ind_dareavere'] == 'D') {
 					$totaleDare = $totaleDare + $row['imp_registrazione'];
-					$impDare = $row['imp_registrazione'];
+					$impDare = "&euro;" . $row['imp_registrazione'];
 					$impAvere = "";
 				}
 				elseif ($row['ind_dareavere'] == 'A') {
 					$totaleAvere = $totaleAvere + $row['imp_registrazione'];
 					$impDare = "";
-					$impAvere = $row['imp_registrazione'];
+					$impAvere = "&euro;" . $row['imp_registrazione'];
 				}
 
 				if (trim($row['tip_conto']) == "Dare") {
@@ -103,12 +103,13 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				"	<td width='358' align='left'>" . trim($row['des_registrazione']) . "</td>" .
 				"	<td width='108' align='right'>" . $impDare . "</td>" .
 				"	<td width='108' align='right'>" . $impAvere . "</td>" .
-				"	<td width='108' align='right'>" . $saldo . "</td>" .
+				"	<td width='108' align='right'>&euro;" . $saldo . "</td>" .
 				"</tr>";
 			}
 			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
-			$des_conto = trim($row['des_conto']);
-			$cat_conto = trim($row['cat_conto']);
+			$des_conto = trim($row["des_conto"]);
+			$cat_conto = trim($row["cat_conto"]);
+			$des_sottoconto = trim($row["des_sottoconto"]);
 		}
 		else {
 
@@ -125,8 +126,10 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
+				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%desconto%' => $des_conto,
 				'%catconto%' => $cat_conto,  
+				'%dessottoconto%' => $des_sottoconto,
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);

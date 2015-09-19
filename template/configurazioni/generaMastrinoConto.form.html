@@ -2,7 +2,7 @@
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina% &ndash; %catconto% &ndash; %desconto%</h2>
+		<h2>%titoloPagina% %catconto% &ndash; %desconto% / %dessottoconto%</h2>
 
 		<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
 			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
@@ -43,8 +43,11 @@
 			%bottoneEstraiPdf%
 			<input type="hidden" name="datareg_da" value='%datareg_da%' >
 			<input type="hidden" name="datareg_a" value='%datareg_a%' >
-			<input type="hidden" name="codcontogenera" value='%codcontogenera%' >
-			<input type="hidden" name="codsottocontogenera" value='%codsottocontogenera%' >
+			<input type="hidden" name="codconto" value='%codconto%' >
+			<input type="hidden" name="codsottoconto" value='%codsottoconto%' >
 			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
+			<input type="hidden" name="catconto" value='%catconto%' >
+			<input type="hidden" name="desconto" value='%desconto%' >
+			<input type="hidden" name="dessottoconto" value='%dessottoconto%' >
 		</form>
 				
