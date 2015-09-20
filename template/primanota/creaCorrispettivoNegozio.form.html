@@ -9,8 +9,8 @@ function aggiungiDettaglio() {
 
 	// Metti qui i due conti sui quali inserire gli importi del corrispettivo
 	// -----------------------------------------------------------------
-	var contoErario = "%conto_erario_negozio%";
-	var contoCassaBanca = "%conto_cassabanca_negozio%";
+	var contoErario = "%conto_erario%";
+	var contoCorrispettivo = "%conto_corrispettivo%";
 	// -----------------------------------------------------------------	
 	
 	var rowCount = $('#dettagli tr').length;
@@ -62,7 +62,7 @@ function aggiungiDettaglio() {
 	
 	var imponibile = $("#imponibile").val();
 	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
-	var conto = contoCassaBanca; 
+	var conto = contoCorrispettivo; 
 	var D_A = "A";
 	
 	$( "#dettagli tbody" ).append( "<tr>" +
