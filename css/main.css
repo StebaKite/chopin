@@ -263,6 +263,21 @@
 	.result .eventoOn {
 		background-color: #FFFFFF;
 	}
+	.result .eventoUrgente {
+		font-weight: bolder;
+		color: #FFFFFF;
+		background-color: red;
+	}
+	.result .eventoAttenzione {
+		font-weight: bolder;
+		color: #FFFFFF;
+		background-color: orange;
+	}
+	.result .eventoGuarda {
+		font-weight: bolder;
+		color: #FFFFFF;
+		background-color: green;
+	}
 	.result .subtotale {
 		font-weight: bolder;
 		color: #000000;
