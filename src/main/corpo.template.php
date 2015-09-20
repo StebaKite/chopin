@@ -71,7 +71,7 @@ class CorpoTemplate extends ChopinAbstract {
 					$class = "class='eventoOn'";
 					$bottoneChiudi = "<a class='tooltip' href='../main/chiudiEventoFacade.class.php?modo=go&idevento=" . trim($row['id_evento']) . "&staevento=01" . "'><li class='ui-state-default ui-corner-all' title='%ml.chiudiEvento%'><span class='ui-icon ui-icon-check'></span></li></a>";
 
-					if ($row['dat_evento'] == $oggi) $class = "class='eventoUrgente'";
+					if ($row['dat_evento'] <= $oggi) $class = "class='eventoUrgente'";
 					
 					if (($row['dat_evento'] <= $oggi_piu_2gg) && ($row['dat_evento'] > $oggi)) {
 						$class = "class='eventoAttenzione'";
