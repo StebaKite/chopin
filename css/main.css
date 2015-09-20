@@ -266,17 +266,17 @@
 	.result .eventoUrgente {
 		font-weight: bolder;
 		color: #FFFFFF;
-		background-color: red;
+		background-color: #fe3e3e;
 	}
 	.result .eventoAttenzione {
-		font-weight: bolder;
-		color: #FFFFFF;
-		background-color: orange;
+		font-weight: normal;
+		color: #000000;
+		background-color: #ffc353;
 	}
 	.result .eventoGuarda {
-		font-weight: bolder;
-		color: #FFFFFF;
-		background-color: green;
+		font-weight: normal;
+		color: #000000;
+		background-color: #5cfa5c;
 	}
 	.result .subtotale {
 		font-weight: bolder;
