@@ -29,6 +29,8 @@ villa = Villa D.
 brembate = Brembate
 trezzo = Trezzo
 pdf = Estrai in PDF
+aliquota10 = Iva 10%
+aliquota22 = Iva 22%
 ;
 ; Tips ---------------------------------
 ;
@@ -54,6 +56,8 @@ creaNuovaRegistrazione = Nuova Registrazione
 ricercaRegistrazione = Ricerca Registrazione
 modificaRegistrazione = Modifica Registrazione
 visualizzaRegistrazione = Visualizza Registrazione
+creaNuovoCorrispettivoNegozio = Nuovo Corrispettivo Negozio
+
 ricercaConto = Ricerca Conto
 creaNuovoConto = Nuovo Conto
 modificaConto = Modifica Conto
@@ -90,6 +94,8 @@ codcau = Causale
 codforn = Fornitore
 codclie = Cliente
 importo = Importo
+imponibile = Imponibile
+iva = IVA
 conto = Conto
 datareg = Data registrazione
 da = Dalla data

@@ -90,6 +90,13 @@
 		font-size: 1.2em;
 		color: #3399FF;
 	}
+	h5 {
+		text-align: left;
+		margin-top: 0;
+		margin-bottom: 0;
+		font-size: 1em;
+		color: #3399FF;
+	}
 	hr { 
 		display: block;
 		margin-top: 0.5em;
