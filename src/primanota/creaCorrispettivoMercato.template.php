@@ -75,11 +75,11 @@ class CreaCorrispettivoMercatoTemplate extends PrimanotaAbstract {
 			$totale = number_format($tot_dare, 2) - number_format($tot_avere, 2);
 
 			if ($totale  != 0 ) {
-				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . $totale . " &euro;";
-				$esito = FALSE;
+				$_SESSION["stareg"] = '02';
 			}
 			else {
 				$_SESSION["totaleDare"] = $tot_dare;
+				$_SESSION["stareg"] = '00';
 			}
 		}
 

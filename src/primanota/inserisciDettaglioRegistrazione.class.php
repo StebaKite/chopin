@@ -49,7 +49,7 @@ class InserisciDettaglioRegistrazione extends primanotaAbstract {
 		
 		$db->beginTransaction();
 		
-		$importo = $_SESSION["importo"];
+		$importo = str_replace(",",".",$_SESSION["importo"]);
 		
 		$cc = explode(" - ", $_SESSION["conti"]);
 		

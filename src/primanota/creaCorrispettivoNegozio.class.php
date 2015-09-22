@@ -127,7 +127,7 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		$numfatt = "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
-		$stareg = "00";
+		$stareg = $_SESSION["stareg"];
 		$fornitore = "null" ;
 		$cliente = "null" ;
 	

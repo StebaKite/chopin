@@ -120,7 +120,7 @@ function calcolaImponibile() {
 	var sommaImportiCalcolati = parseFloat(imponibileArrotondato) + parseFloat(ivaArrotondata);
 	var sommaImportiCalcolatiArrotondato = sommaImportiCalcolati.toFixed(2);
 	
-	var importoSquadratura = importo - parseFloat(sommaImportiCalcolatiArrotondato);
+	var importoSquadratura = importoNormalizzato - parseFloat(sommaImportiCalcolatiArrotondato);
 	
 	if (importoSquadratura != 0) {
 		$("#msgquad").html("ATTENZIONE, squadratura di &euro; " + importoSquadratura.toFixed(2) + " Correggi manualmente");
