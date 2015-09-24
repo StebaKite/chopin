@@ -532,7 +532,10 @@ $(function() {
 	});
 	
 	$('tr[@class^=child-]').hide().children('td');
+
 });
+
+$(".numfatt-multiple").select2();
 
 // Hover states on the static widgets
 $( "#dialog-link, #icons li" ).hover(
