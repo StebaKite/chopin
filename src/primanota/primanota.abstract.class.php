@@ -96,6 +96,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$dt = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
 			$dataScadenza = strtotime(str_replace('/', '-', $dt));	// cambio i separatori altrimenti la strtotime non funziona
 			$tipAddebito_fornitore = "";
+			$staScadenza = "00"; 	// aperta
 									
 			if (($fornitore != "") && ($dataScadenza > $dataOggi)) {
 				
@@ -104,7 +105,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 					$tipAddebito_fornitore = $row['tip_addebito'];
 				}				
 				
-				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], $descreg, $tipAddebito_fornitore, $codneg);
+				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], 
+						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 			} 
 		}
 		return $result;		
@@ -147,7 +149,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $descreg
 	 * @return unknown
 	 */
-	public function inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg) {
+	public function inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, 
+			$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -156,7 +159,10 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%imp_in_scadenza%' => trim($importo),
 				'%nota_in_scadenza%' => trim($descreg),
 				'%tip_addebito%' => trim($tipaddebito),
-				'%cod_negozio%' => trim($codneg)
+				'%cod_negozio%' => trim($codneg),
+				'%id_fornitore%' => $fornitore,
+				'%num_fattura%' => trim($numfatt),
+				'%sta_scadenza%' => trim($staScadenza)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenza;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -237,8 +243,10 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $stareg
 	 * @return boolean
 	 */
-	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg) {
-
+	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, 
+			$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
+			$codneg, $fornitore, $numfatt, $staScadenza) {
+		
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_registrazione%' => trim($id_registrazione),
@@ -257,7 +265,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 
 		/**
-		 * Se l'aggiornamentoa della registrazione è andata bene cancello la data scadenza e vedo se inserirla 
+		 * Se l'aggiornamento della registrazione è andata bene cancello la data scadenza e vedo se inserirla 
 		 */
 		if ($result) {
 			$replace = array(
@@ -278,7 +286,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				foreach(pg_fetch_all($result_fornitore) as $row) {
 					$tipAddebito_fornitore = $row['tip_addebito'];
 				}				
-				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare, $descreg, $tipAddebito_fornitore, $codneg);
+				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare,
+						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 			}
 			return TRUE;
 		}

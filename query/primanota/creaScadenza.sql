@@ -1,4 +1,15 @@
 INSERT INTO contabilita.scadenza
+	(id_scadenza,
+	id_registrazione,
+	dat_scadenza,
+	imp_in_scadenza,
+	nota_scadenza,
+	tip_addebito,
+	cod_negozio,
+	id_fornitore,
+	num_fattura,
+	sta_scadenza,
+	id_pagamento)
 VALUES
 	(nextval('contabilita.scadenza_id_scadenza_seq'),
 	%id_registrazione%,
@@ -6,5 +17,9 @@ VALUES
 	%imp_in_scadenza%,
 	'%nota_in_scadenza%',
 	'%tip_addebito%',
-	%cod_negozio%
+	%cod_negozio%,
+	%id_fornitore%,
+	%num_fattura%,
+	'%sta_scadenza%',
+	null
 	)
