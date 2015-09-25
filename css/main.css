@@ -117,6 +117,12 @@
 		border-radius: 4px;
 		background-image: linear-gradient(to top, #eee 0%, #fff 50%);
 	}
+		
+	input:focus {
+		border: 1px solid #5897fb;
+		-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+			box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+	}
 	
 	.smallNote {
 		font-size: 0.8em;
