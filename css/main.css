@@ -108,7 +108,7 @@
 	} 
 	
 	input[type="text"], textarea {
-		height: 30px;
+		height: 26px;
 		padding: 0 0 0 8px;
 		border: 1px solid #aaa;
 		line-height: 26px;
@@ -229,6 +229,8 @@
 	.result, .ricerca, .dettaglio, .datiCreate {
 		border-collapse:collapse; 
 		border: 7px solid #ececec;
+		border-radius: 4px;
+		
 	}
 	.datiCreateSottile {
 		border: 2px solid #ececec;
@@ -242,6 +244,8 @@
 	}
 	.datiCreateSottile tr {
 		background-color: #ECECEC;
+		border-radius: 4px;
+		
 	}
 	
 	.result tfoot, .result_alt tfoot, .ricerca tfoot, .dettaglio tfoot, .datiCreate tfoot {
