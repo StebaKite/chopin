@@ -108,7 +108,20 @@
 	} 
 	
 	input[type="text"], textarea {
-		border: 1px solid #515151;
+		height: 26px;
+		padding: 0 0 0 8px;
+		border: 1px solid #aaa;
+		line-height: 26px;
+		color: #444;
+		text-decoration: none;
+		border-radius: 4px;
+		background-image: linear-gradient(to top, #eee 0%, #fff 50%);
+	}
+		
+	input:focus {
+		border: 1px solid #5897fb;
+		-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+			box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 	}
 	
 	.smallNote {
@@ -216,6 +229,8 @@
 	.result, .ricerca, .dettaglio, .datiCreate {
 		border-collapse:collapse; 
 		border: 7px solid #ececec;
+		border-radius: 4px;
+		
 	}
 	.datiCreateSottile {
 		border: 2px solid #ececec;
@@ -229,6 +244,8 @@
 	}
 	.datiCreateSottile tr {
 		background-color: #ECECEC;
+		border-radius: 4px;
+		
 	}
 	
 	.result tfoot, .result_alt tfoot, .ricerca tfoot, .dettaglio tfoot, .datiCreate tfoot {
