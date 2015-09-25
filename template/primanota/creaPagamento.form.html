@@ -69,13 +69,20 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
 
+function doSubmit() {
+	
+	var selectfatt = $("#select2").val();
+	$("#numfatt").val(selectfatt);
+	$("#mainform").submit();
+}
+
 </script>
 	
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
 
-		<form method="post" action="%azione%" >
+		<form method="post" id="mainform" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
@@ -114,7 +121,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 					<tr>
 						<td>%ml.numfatt% :</td>
 						<td>
-							<select class="numfatt-multiple" multiple="multiple" style="width: 300px" name="numfatt">
+							<select class="numfatt-multiple" multiple="multiple" style="width: 300px" id="select2">
 								<option value="1000">1000</option>
 								<option value="1001">1001</option>
 								<option value="1002">1002</option>
@@ -134,7 +141,8 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 				<tfoot>
 					<tr>
 						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
-						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<input type="hidden" id="numfatt" name="numfatt" />
 					</tr>
 				</tfoot>
 			</table>
