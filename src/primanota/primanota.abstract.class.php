@@ -22,6 +22,9 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
+	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
+	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
+	
 	function __construct() {
 	}
 	
@@ -87,7 +90,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		/**
 		 * Se la creazione della registrazione è andata bene vedo se inserire la scadenza
 		*/
-		if ($result) {
+		if (($result) && $dataScadenza != "null" ) {
 
 			$_SESSION['idRegistrazione'] = $db->getLastIdUsed();
 				
@@ -109,7 +112,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 			} 
 		}
-		return $result;		
+		return $result;
 	}
 	
 	/**
@@ -327,6 +330,31 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
+
+	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	} 
+	
+	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => (int)$idfornitore,
+				'%num_fattura%' => trim($numeroFattura),
+				'%sta_scadenza%' => trim($statoScadenza)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+	}					
 	
 }
 

@@ -471,6 +471,26 @@ $( ".selectmenuFornitore" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".scadenzeAperteFornitore" )
+	.selectmenu({change:
+		function(){
+			var idfornitore = $("#fornitore").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#select2" ).html(xmlhttp.responseText);
+	                $( "#select2" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 200})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCliente" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")

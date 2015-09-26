@@ -112,7 +112,7 @@ function doSubmit() {
 					<tr>
 						<td>%ml.codforn% :</td>
 						<td class="tooltip">
-							<select class="selectmenuFornitore" id="fornitore" name="fornitore" >
+							<select class="scadenzeAperteFornitore" id="fornitore" name="fornitore" >
 								<option value=""></option>
 								%elenco_fornitori%
 							</select>
@@ -121,12 +121,7 @@ function doSubmit() {
 					<tr>
 						<td>%ml.numfatt% :</td>
 						<td>
-							<select class="numfatt-multiple" multiple="multiple" style="width: 300px" id="select2">
-								<option value="1000">1000</option>
-								<option value="1001">1001</option>
-								<option value="1002">1002</option>
-								<option value="1003">1003</option>
-							</select>						
+							<select class="numfatt-multiple" multiple="multiple" style="width: 300px" id="select2"></select>						
 						</td>	
 					</tr>
 					<tr>
@@ -158,7 +153,7 @@ function doSubmit() {
 			<tbody>
 				<tr>
 					<td>%ml.importo% :</td>
-					<td class="tooltip"><input class="spinner" id="importo" name="importo" size="20" maxlength="20" ></td>
+					<td class="tooltip"><input type="text" id="importo" name="importo" size="20" maxlength="20" ></td>
 				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>
