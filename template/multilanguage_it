@@ -39,6 +39,8 @@ nuovoDettTip = Inserisce un nuovo dettaglio per la registrazione
 selezionare = Selezionare...
 cercaTip = Avvia la ricerca con i filtri impostati
 visualizza = Visualizza il dettaglio
+visualizzaFattura = Visualizza la registrazione della fattura
+visualizzaPagamento = Visualizza la registrazione del pagamento
 modifica = Modifica
 cancella = Cancella
 indietroTip = Torna alla funzione precedente
@@ -76,6 +78,7 @@ creaNuovoCliente = Nuovo Cliente
 modificaCliente = Modifica Cliente
 mastrinoConto = Mastrino Conto
 ricercaScadenze = Ricerca Scadenze
+creaNuovoPagamento = Nuovo Pagamento
 ;
 ; Messaggi -----------------------------
 ;
@@ -130,7 +133,11 @@ saldoprogressivo = Saldo
 datscadenza = Data Scadenza
 notascadenza = Nota
 impscadenza = Importo in scadenza
+stascadenza = Stato scadenza
 numggscafatt = Giorni scadenza fattura
 dataevento = Data
 notaevento = Nota
 negozio = Negozio
+dapagare = Da pagare
+pagato = Pagato
+shift = Posticipati

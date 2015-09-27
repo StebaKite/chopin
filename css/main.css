@@ -4,8 +4,7 @@
 		background-color: #ffffff;
 		font-family: Arial, Helvetica, sans-serif;
 		font-size: 12px;
-		background-color: #ffffff;
-		background-repeat: repeat-x;
+		background-color: #ffc55b;
 		color: #515151;
 	}
 	
@@ -169,7 +168,7 @@
 		overflow: auto;	
 	}	
 	div.scroll-scadenze {
-		width: 900px;
+		width: 1000px;
 		height: 330px;
 		overflow: auto;	
 	}	
@@ -230,7 +229,7 @@
 		border-collapse:collapse; 
 		border: 7px solid #ececec;
 		border-radius: 4px;
-		
+		background-color: #ffffff;		
 	}
 	.datiCreateSottile {
 		border: 2px solid #ececec;
@@ -333,6 +332,21 @@
 		font-weight: bolder;
 		color: green;
 	}
+	.result td.ok {
+		font-size: 14px;
+		font-weight: bolder;
+		color: green;
+	}
+	.result td.ko {
+		font-size: 14px;
+		font-weight: bolder;
+		color: red;
+	}
+	.result td.mark {
+		font-size: 14px;
+		font-weight: bolder;
+		color: #3399FF;
+	}
 	.insert .field_label {
 		text-align: right;
 	}
@@ -352,6 +366,7 @@
 	table.expandible {
 		border-collapse:collapse; 
 		border: 7px solid #ececec;
+		background-color: #ffffff;		
 	}
 	table.expandible td {
 		border: 2px solid #ececec;

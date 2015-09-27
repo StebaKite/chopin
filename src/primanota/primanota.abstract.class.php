@@ -343,13 +343,14 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	} 
 	
-	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza) {
+	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_fornitore%' => (int)$idfornitore,
 				'%num_fattura%' => trim($numeroFattura),
-				'%sta_scadenza%' => trim($statoScadenza)
+				'%sta_scadenza%' => trim($statoScadenza),
+				'%id_registrazione%' => trim($idregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

@@ -53,8 +53,7 @@ class Pdf extends FPDF {
 		$this->Cell(0,10,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');	// Page number
 		
 		$this->SetY(-10);												// Position at 1 cm from bottom		
-		$this->Cell(60);
-		$this->Cell(0, 10, utf8_decode("Generato dal database di Nexus6 il " . date("d/m/Y")), 0, 1);
+		$this->Cell(0, 10, utf8_decode("Generato dal database di Nexus6 il " . date("d/m/Y")),0,1,'C');
 		
 		
 	}
@@ -243,7 +242,7 @@ class Pdf extends FPDF {
 	    $this->SetFont('','B',10);
 	    
 	    // Header
-	    $w = array(17, 55, 70, 25, 25);
+	    $w = array(17, 60, 120, 25, 25, 25);
 	    for($i=0;$i<count($header);$i++)
 	        $this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 	    $this->Ln();
@@ -277,8 +276,9 @@ class Pdf extends FPDF {
 	    		$this->Cell($w[0],6,'','LR',0,'L',$fill);
 	    		$this->Cell($w[1],6,'','LR',0,'L',$fill);
 	    		$this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
-	    		$this->Cell($w[3],6,'','LR',0,'C',$fill);
-	    		$this->Cell($w[4],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
+	    		$this->Cell($w[3],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[4],6,'','LR',0,'C',$fill);
+	    		$this->Cell($w[5],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
 	    		$this->Ln();
 	    		$fill = !$fill;
 
@@ -291,12 +291,36 @@ class Pdf extends FPDF {
 	    		$totale_fornitore = 0;
 	    	}
 	    	
+	    	if (trim($row['sta_scadenza']) == "00") {
+	    		$stascadenza = "Da Pagare";
+	    		$c1 = "255";
+	    		$c2 = "0";
+	    		$c3 = "0";
+	    	}	    	
+	    	if (trim($row['sta_scadenza']) == "10") {
+	    		$stascadenza = "Pagato";
+	    		$c1 = "0";
+	    		$c2 = "128";
+	    		$c3 = "0";
+	    	}   	
+	    	if (trim($row['sta_scadenza']) == "02") {
+	    		$stascadenza = "Posticipato";
+	    		$c1 = "51";
+	    		$c2 = "153";
+	    		$c3 = "255";
+	    	}	    	
+	    	
 	    	$this->SetFont('','',8);
 	    	$this->Cell($w[0],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
 	    	$this->Cell($w[1],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
 	    	$this->Cell($w[2],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
 	    	$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
-	    	$this->Cell($w[4],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);
+	    	$this->SetFont('','B',10);	    	
+	    	$this->SetTextColor($c1, $c2, $c3);
+	    	$this->Cell($w[4],6,utf8_decode($stascadenza),'LR',0,'C',$fill);
+	    	$this->Cell($w[5],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);
+	    	$this->SetFont('','B',8);
+	    	$this->SetTextColor(0);
 	        $this->Ln();
 	        $fill = !$fill;
 	        
@@ -309,8 +333,9 @@ class Pdf extends FPDF {
 	    $this->Cell($w[0],6,'','LR',0,'L',$fill);
 	    $this->Cell($w[1],6,'','LR',0,'L',$fill);
 	    $this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
-	    $this->Cell($w[3],6,'','LR',0,'C',$fill);
-	    $this->Cell($w[4],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
+	    $this->Cell($w[3],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[4],6,'','LR',0,'C',$fill);
+	    $this->Cell($w[5],6, EURO . number_format($totale_fornitore, 2, ',', '.'),'LR',0,'R',$fill);
 	    $this->Ln();
 	    $fill = !$fill;
 
@@ -320,8 +345,9 @@ class Pdf extends FPDF {
 	    $this->Cell($w[0],6,'','LR',0,'L',$fill);
 	    $this->Cell($w[1],6,'','LR',0,'L',$fill);
 	    $this->Cell($w[2],6,'Totale Scadenze','LR',0,'R',$fill);
-	    $this->Cell($w[3],6,'','LR',0,'C',$fill);
-	    $this->Cell($w[4],6, EURO . number_format($totale_scadenze, 2, ',', '.'),'LR',0,'R',$fill);
+	    $this->Cell($w[3],6,'','LR',0,'L',$fill);
+	    $this->Cell($w[4],6,'','LR',0,'C',$fill);
+	    $this->Cell($w[5],6, EURO . number_format($totale_scadenze, 2, ',', '.'),'LR',0,'R',$fill);
 	    $this->Ln();
 	    $fill = !$fill;
 	    

@@ -53,6 +53,8 @@ class RicercaScadenze extends ScadenzeAbstract {
 		
 		$_SESSION["datascad_da"] = date("d/m/Y");
 		$_SESSION["datascad_a"] = date("d/m/Y");
+		$_SESSION["codneg_sel"] = "VIL";
+		
 		unset($_SESSION["scadenzeTrovate"]);
 		unset($_SESSION['bottoneEstraiPdf']);
 		
@@ -156,6 +158,10 @@ class RicercaScadenze extends ScadenzeAbstract {
 		
 		if ($_SESSION['codneg_sel'] != "") {
 			$filtro .= " AND scadenza.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+		}
+
+		if ($_SESSION['statoscad_sel'] != "") {
+			$filtro .= " AND scadenza.sta_scadenza = '" . $_SESSION['statoscad_sel'] . "'" ;
 		}
 		
 		$replace = array(

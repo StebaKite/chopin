@@ -7,7 +7,10 @@ SELECT
 	scadenza.dat_scadenza as dat_scadenza_originale,
 	scadenza.imp_in_scadenza,
 	scadenza.nota_scadenza,
-	scadenza.tip_addebito
+	scadenza.tip_addebito,
+	scadenza.num_fattura,
+	scadenza.sta_scadenza,
+	scadenza.id_pagamento
 FROM contabilita.scadenza
 	INNER JOIN contabilita.registrazione
 		ON registrazione.id_registrazione = scadenza.id_registrazione

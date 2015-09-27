@@ -54,6 +54,7 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["numfatt"] = "";
+		$_SESSION["codneg_sel"] = "VIL";
 		unset($_SESSION["registrazioniTrovate"]);
 		
 		$ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();

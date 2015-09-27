@@ -81,12 +81,14 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			$risultato_ricerca =
 			"<table class='result'>" .
 			"	<thead>" .
-			"		<th width='100'>%ml.datscadenza%</th>" .
+			"		<th width='70'>%ml.datscadenza%</th>" .
 			"		<th width='200'>%ml.codforn%</th>" .
 			"		<th width='250'>%ml.notascadenza%</th>" .
-			"		<th width='100'>%ml.tipaddebito%</th>" .
-			"		<th width='100'>%ml.impscadenza%</th>" .
-			"		<th width='25'>%ml.azioni%</th>" .
+			"		<th width='50'>%ml.numfatt%</th>" .
+			"		<th width='90'>%ml.tipaddebito%</th>" .
+			"		<th width='80'>%ml.stascadenza%</th>" .
+			"		<th width='90'>%ml.impscadenza%</th>" .
+			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll-scadenze'>" .
@@ -111,13 +113,33 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				}
 				
 				$class = "class=''";
-				$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-		
+				$bottoneVisualizzaRegistrazione = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-search'></span></li></a>";
+				
 				if (trim($row['nota_scadenza']) != "") {$notascadenza = trim($row['nota_scadenza']);}
 				else {$notascadenza = "&ndash;&ndash;&ndash;";} 
 
 				if (trim($row['tip_addebito']) != "") {$tipaddebito = trim($row['tip_addebito']);}
 				else {$tipaddebito = "&ndash;&ndash;&ndash;";}
+
+				if (trim($row['sta_scadenza']) == "00") {
+					$stascadenza = "Da Pagare";
+					$tdclass = "class='ko'";
+					$bottoneVisualizzaPagamento = "";
+				}
+				
+				if (trim($row['sta_scadenza']) == "10") {
+					$stascadenza = "Pagato";
+					$tdclass = "class='ok'";
+					$bottoneVisualizzaPagamento = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+				}
+
+				if (trim($row['sta_scadenza']) == "02") {
+					$stascadenza = "Posticipato";
+					$tdclass = "class='mark'";
+					$bottoneVisualizzaPagamento = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+				}
+				
+				$numfatt = trim($row['num_fattura']);
 				
 				$numScadenze ++;
 				
@@ -125,9 +147,9 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr class='subtotale'>" .
-					"	<td colspan='3' align='right'><i>Totale</i></td>" .
+					"	<td colspan='5' align='right'><i>Totale</i></td>" .
 					"	<td colspan='2' align='right'>&euro;" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-					"	<td width='45' id='icons'>&nbsp;</td>" .
+					"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
 					"</tr>";
 					
 					$desfornitore = trim($row['des_fornitore']);
@@ -141,12 +163,15 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr " . $class . " id='" . trim($row['id_scadenza']) . "'>" .
-				"	<td width='108' align='center'>" . $datscadenza . "</td>" .
+				"	<td width='78' align='center'>" . $datscadenza . "</td>" .
 				"	<td width='208' align='left'>" . $desfornitore . "</td>" .
 				"	<td width='258' align='left'>" . $notascadenza . "</td>" .
-				"	<td width='108' align='center'>" . $tipaddebito . "</td>" .
-				"	<td width='108' align='right'>&euro;" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
-				"	<td width='45' id='icons'>" . $bottoneVisualizza . "</td>" .
+				"	<td width='58' align='center'>" . $numfatt . "</td>" .
+				"	<td width='98' align='center'>" . $tipaddebito . "</td>" .
+				"	<td width='88' align='center'" . $tdclass . ">" . $stascadenza . "</td>" .
+				"	<td width='98' align='right'>&euro;" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
+				"	<td width='30' id='icons'>" . $bottoneVisualizzaRegistrazione . "</td>" .
+				"	<td width='30' id='icons'>" . $bottoneVisualizzaPagamento . "</td>" .
 				"</tr>";
 
 				$desfornitore = "";
@@ -156,18 +181,18 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			
 			$risultato_ricerca = $risultato_ricerca .
 			"<tr class='subtotale'>" .
-			"	<td colspan='3' align='right'><i>Totale</i></td>" .
+			"	<td colspan='5' align='right'><i>Totale</i></td>" .
 			"	<td colspan='2' align='right'>&euro;" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons'>&nbsp;</td>" .
+			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
 			"</tr>";				
 
 			$totale_scadenze += $totale_fornitore;
 
 			$risultato_ricerca = $risultato_ricerca .
 			"<tr class='totale'>" .
-			"	<td colspan='3' align='right'><i>Totale Scadenze</i></td>" .
-			"	<td colspan='2' align='right'>&euro;" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons'>&nbsp;</td>" .
+			"	<td class='mark' colspan='5' align='right'>Totale Scadenze</td>" .
+			"	<td class='mark' colspan='2' align='right'>&euro;" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
+			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
 			"</tr>";
 			
 			$_SESSION['numScadenzeTrovate'] = $numScadenze;
@@ -186,6 +211,9 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
+				'%00-selected%' => ($_SESSION["statoscad_sel"] == "00") ? "selected" : "",
+				'%10-selected%' => ($_SESSION["statoscad_sel"] == "10") ? "selected" : "",
+				'%02-selected%' => ($_SESSION["statoscad_sel"] == "02") ? "selected" : "",
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca

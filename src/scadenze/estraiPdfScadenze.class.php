@@ -79,9 +79,9 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 	
 	public function generaSezioneTabellaScadenze($pdf, $utility) {
 
-		$pdf->AddPage();
+		$pdf->AddPage('L');
 		
-		$header = array("Data", "Fornitore", "Descrizione", "Tipo Addebito", "Importo");
+		$header = array("Data", "Fornitore", "Nota", "Tipo Addebito", "Stato", "Importo");
 		$pdf->SetFont('Arial','',9);
 		$pdf->ScadenzeTable($header, $this->ricercaDati($utility));
 		
@@ -100,6 +100,10 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 		
 		if ($_SESSION['codneg_sel'] != "") {
 			$filtro .= " AND scadenza.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+		}
+
+		if ($_SESSION['statoscad_sel'] != "") {
+			$filtro .= " AND scadenza.sta_scadenza = '" . $_SESSION['statoscad_sel'] . "'" ;
 		}
 		
 		$replace = array(

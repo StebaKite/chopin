@@ -100,7 +100,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				if ($e[2] == "A") {	$tot_avere = $tot_avere + $e[1]; }
 			}
 
-			$totale = number_format($tot_dare, 2) - number_format($tot_avere, 2);
+			$totale = round($tot_dare, 2) - round($tot_avere, 2);
 			
 			if ($totale  != 0 ) {
 				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . $totale . " &euro;";

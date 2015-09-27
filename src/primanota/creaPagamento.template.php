@@ -92,7 +92,7 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 				if ($e[2] == "A") {	$tot_avere = $tot_avere + $e[1]; }
 			}
 
-			$totale = number_format($tot_dare, 2) - number_format($tot_avere, 2);
+			$totale = round($tot_dare, 2) - round($tot_avere, 2);
 				
 			if ($totale  != 0 ) {
 				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . $totale . " &euro;";
@@ -188,7 +188,8 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
 				'%elenco_causali%' => $_SESSION["elenco_causali"],
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
-				'%elenco_conti%' => $_SESSION["elenco_conti"]
+				'%elenco_conti%' => $_SESSION["elenco_conti"],
+				'%elenco_scadenze_fornitore%' => $_SESSION["elenco_scadenze_fornitore"]
 		);
 
 		$utility = Utility::getInstance();

@@ -152,7 +152,7 @@ class CreaPagamento extends primanotaAbstract {
 	
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10');					
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idRegistrazione']);					
 			}
 	
 			$db->commitTransaction();
@@ -172,7 +172,7 @@ class CreaPagamento extends primanotaAbstract {
 	
 		$creaPagamentoTemplate->setAzione(self::$azioneCreaPagamento);
 		$creaPagamentoTemplate->setConfermaTip("%ml.confermaCreaPagamento%");
-		$creaPagamentoTemplate->setTitoloPagina("%ml.creaNuovaPagamento%");
+		$creaPagamentoTemplate->setTitoloPagina("%ml.creaNuovoPagamento%");
 	
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
@@ -187,7 +187,44 @@ class CreaPagamento extends primanotaAbstract {
 		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
 		*/
 		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
+
+		/**
+		 * Prepara il selectmenu delle scadenze aperte.
+		 * Come per i conti, l'ajax non interviene se c'è un errore logico e la pagina viene ripresentata
+		 */
+		if (isset($_SESSION["idfornitore"])) {
+			$db = Database::getInstance();
+			$utility = Utility::getInstance();
+			
+			$options = '';
+			
+			$result_scadenze_fornitore = $this->prelevaScadenzeAperteFornitore($db, $utility, $_SESSION["idfornitore"]);
+			
+			$d = explode(",", $_SESSION["numfatt"]);
+				
+			foreach(pg_fetch_all($result_scadenze_fornitore) as $row) {
+				$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $this->setFatturaSelezionata($d, trim($row['num_fattura'])) . ' >' . trim($row['num_fattura']) . '</option>';
+			}
+			
+			$_SESSION["elenco_scadenze_fornitore"] = $options;
+		}
+		else {
+			$_SESSION["elenco_scadenze_fornitore"] = "";
+		}		
 	}
+	
+	public function setFatturaSelezionata($fattureSelezionate, $numFatt) {
+		
+		$selected = "";
+		
+		foreach($fattureSelezionate as $numeroFattura) {
+			if ($numeroFattura == $numFatt) {
+				$selected = "selected";
+				break;
+			}
+		}
+		return $selected;		
+	}	
 }
 	
 ?>	

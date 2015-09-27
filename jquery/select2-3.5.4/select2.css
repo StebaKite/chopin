@@ -392,7 +392,9 @@ html[dir="rtl"] .select2-results {
 .select2-results-dept-7 .select2-result-label { padding-left: 120px }
 
 .select2-results .select2-highlighted {
-    background: #3875d7;
+	border: 1px solid #e78f08;
+	background: #f6a828;
+	font-weight: bold;	
     color: #fff;
 }
 
