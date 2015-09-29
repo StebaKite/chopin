@@ -94,14 +94,16 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 
 			$_SESSION['idRegistrazione'] = $db->getLastIdUsed();
 				
-			$oggi = date("d-m-Y");
-			$dataOggi = strtotime($oggi);
-			$dt = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $dt));	// cambio i separatori altrimenti la strtotime non funziona
+			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+			
+			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+			
 			$tipAddebito_fornitore = "";
 			$staScadenza = "00"; 	// aperta
 									
-			if (($fornitore != "") && ($dataScadenza > $dataOggi)) {
+			if (($fornitore != "") && ($dataScadenza > $dataRegistrazione)) {
 				
 				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
 				foreach(pg_fetch_all($result_fornitore) as $row) {
@@ -278,12 +280,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 			$result = $db->execSql($sql);
 			
-			$oggi = date("d-m-Y");
-			$dataOggi = strtotime($oggi);
-			$dt = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $dt));	// cambio i separatori altrimenti la strtotime non funziona
-		
-			if (($fornitore != "") && ($dataScadenza > $dataOggi)) {
+			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+			
+			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+				
+			if (($fornitore != "") && ($dataScadenza > $dataRegistrazione)) {
 
 				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
 				foreach(pg_fetch_all($result_fornitore) as $row) {
