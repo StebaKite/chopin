@@ -392,8 +392,7 @@ $( ".datepicker" ).datepicker({
 	bgiframe: true,
 	dateFormat: formatDateJQ,
 	constrainInput: true,
-	maxDate: "10y",
-	minDate: "-50y"
+	numberOfMonths: 3
 });
 
 $( ".data" ).datepicker({
