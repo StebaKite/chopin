@@ -18,4 +18,4 @@ FROM contabilita.fornitore as fornitore
 		on t1.id_fornitore = fornitore.id_fornitore
 WHERE 1 = 1
 %filtri_fornitore%
-ORDER BY des_fornitore
+ORDER BY cod_fornitore

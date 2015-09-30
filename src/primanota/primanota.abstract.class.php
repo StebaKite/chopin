@@ -23,6 +23,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
 	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
+	public static $queryLeggiScadenzeFornitore = "/primanota/ricercaScadenzeFornitore.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	
 	function __construct() {
@@ -193,7 +194,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	}
-
+	
 	/**
 	 * 
 	 * @param unknown $db
@@ -345,6 +346,18 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	} 
+
+	public function prelevaScadenzeFornitore($db, $utility, $idfornitore) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
 	
 	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
 

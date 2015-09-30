@@ -17,4 +17,4 @@ FROM contabilita.cliente as cliente
 		on t1.id_cliente = cliente.id_cliente
 WHERE 1 = 1
 %filtri_cliente%
-ORDER BY des_cliente
+ORDER BY cod_cliente
