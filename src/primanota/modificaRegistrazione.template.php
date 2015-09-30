@@ -159,6 +159,9 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
+				'%referer%' => $_SERVER["HTTP_REFERER"],
+				'%datascad_da%' => $_SESSION["datascad_da"],
+				'%datascad_a%' => $_SESSION["datascad_a"],				
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%idregistrazione%' => $_SESSION["idRegistrazione"],

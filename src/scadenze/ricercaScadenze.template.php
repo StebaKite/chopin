@@ -113,7 +113,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				}
 				
 				$class = "class=''";
-				$bottoneVisualizzaRegistrazione = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-search'></span></li></a>";
+				$bottoneVisualizzaRegistrazione = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 				
 				if (trim($row['nota_scadenza']) != "") {$notascadenza = trim($row['nota_scadenza']);}
 				else {$notascadenza = "&ndash;&ndash;&ndash;";} 
