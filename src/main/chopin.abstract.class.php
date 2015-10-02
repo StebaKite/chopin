@@ -124,6 +124,19 @@ abstract class ChopinAbstract {
 		list($giorno, $mese, $anno) = explode($carattereSeparatore, $data);		
 		return date("d/m/Y",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
 	}
+
+	/**
+	 * 
+	 * @param unknown $data
+	 * @param unknown $carattereSeparatore
+	 * @param unknown $giorniDaSommare
+	 * @return string
+	 */
+	public function sommaGiorniDataYMD($data, $carattereSeparatore, $giorniDaSommare) {
+	
+		list($anno, $mese, $giorno) = explode($carattereSeparatore, $data);
+		return date("Y/m/d",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
+	}
 	
 	/**
 	 * 
@@ -266,7 +279,7 @@ abstract class ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%dat_evento%' => trim($datevento),
-				'%nota_evento%' => trim($notaevento)
+				'%nota_evento%' => str_replace("'", "''", trim($notaevento))
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaEvento;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

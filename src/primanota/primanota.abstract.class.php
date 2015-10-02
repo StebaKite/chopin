@@ -347,11 +347,12 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	} 
 
-	public function prelevaScadenzeFornitore($db, $utility, $idfornitore) {
+	public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
+				'%id_fornitore%' => trim($idfornitore),
+				'%id_pagamento%' => trim($idregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -372,7 +373,6 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 	}					
-	
 }
 
 ?>

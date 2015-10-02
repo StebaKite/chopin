@@ -103,7 +103,6 @@ class ModificaPagamento extends primanotaAbstract {
 		}
 		else {
 				
-			$this->aggiornaStatoPagamento($utility);			// mette il pagamento in stato 02 (Errato)
 			$this->preparaPagina($modificaPagamentoTemplate);
 		
 			include(self::$testata);
@@ -133,9 +132,11 @@ class ModificaPagamento extends primanotaAbstract {
 				$_SESSION["descreg"] = $row["des_registrazione"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
 				$_SESSION["numfatt"] = $row["num_fattura"];
+				$_SESSION["numfatt_old"] = $row["num_fattura"];
 				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
 				$_SESSION["fornitore"] = $row["id_fornitore"];
+				$_SESSION["fornitore_old"] = $row["id_fornitore"];
 			}
 		}
 		else {
@@ -158,14 +159,6 @@ class ModificaPagamento extends primanotaAbstract {
 			error_log(">>>>>> Errore prelievo dati pagamento (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
 		}
 	}
-
-	public function aggiornaStatoPagamento($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-		$this->updateStatoPagamento($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["stareg"]);
-	}
 	
 	public function aggiornaPagamento($utility) {
 	
@@ -180,15 +173,15 @@ class ModificaPagamento extends primanotaAbstract {
 		 * valorizzo a null anche l'id_pagamento 
 		*/
 	
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		if (($_SESSION["fornitore"] != $_SESSION["fornitore_old"]) || ($_SESSION["numfatt"] != $_SESSION["numfatt_old"])) {
+
+			$d = explode(",", $_SESSION["numfatt"]);
+			
+			foreach($d as $numeroFattura) {
+				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '00', 'null');
+			}
+		}
 		
 		/**
 		 * Aggiornamento del pagamento
@@ -202,13 +195,24 @@ class ModificaPagamento extends primanotaAbstract {
 		$causale = $_SESSION["causale"];
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$staScadenza = "10";   // pagata
-	
-		if ($this->updatePagamento($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"],
-			$descreg, $datareg, $numfatt, $causale, $fornitore, $stareg,
+		
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"],
+			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
 			$codneg, $fornitore, $numfatt, $staScadenza)) {
-					
-				$db->commitTransaction();
-				return TRUE;
+
+			/**
+			 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
+			 */
+				
+			$d = explode(",", $_SESSION["numfatt"]);
+			
+			foreach($d as $numeroFattura) {
+				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idRegistrazione']);
+			}
+				
+			$db->commitTransaction();
+			return TRUE;
 		}
 		else {
 			$db->rollbackTransaction();
@@ -245,7 +249,7 @@ class ModificaPagamento extends primanotaAbstract {
 				
 			$options = '';
 				
-			$result_scadenze_fornitore = $this->prelevaScadenzeFornitore($db, $utility, $_SESSION["fornitore"]);
+			$result_scadenze_fornitore = $this->prelevaScadenzeFornitore($db, $utility, $_SESSION["fornitore"], $_SESSION["idRegistrazione"]);
 				
 			$d = explode(",", $_SESSION["numfatt"]);
 		

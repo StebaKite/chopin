@@ -60,9 +60,9 @@ class CorpoTemplate extends ChopinAbstract {
 			$tabellaEventi .= "<table class='result' id='resultTable' cellpadding='5'>";
 			$tabellaEventi .= "<tbody>";
 
-			$oggi = date("d/m/Y");
-			$oggi_piu_2gg = $this->sommaGiorniData($oggi, "/", 2);
-			$oggi_piu_5gg = $this->sommaGiorniData($oggi, "/", 5);
+			$oggi = date("Y/m/d");
+			$oggi_piu_2gg = $this->sommaGiorniDataYMD($oggi, "/", 2);
+			$oggi_piu_5gg = $this->sommaGiorniDataYMD($oggi, "/", 5);
 				
 				
 			foreach($_SESSION["eventi"] as $row) {
@@ -70,21 +70,26 @@ class CorpoTemplate extends ChopinAbstract {
 				if ($row['sta_evento'] == '00') {
 					$class = "class='eventoOn'";
 					$bottoneChiudi = "<a class='tooltip' href='../main/chiudiEventoFacade.class.php?modo=go&idevento=" . trim($row['id_evento']) . "&staevento=01" . "'><li class='ui-state-default ui-corner-all' title='%ml.chiudiEvento%'><span class='ui-icon ui-icon-check'></span></li></a>";
-
-					if ($row['dat_evento'] <= $oggi) $class = "class='eventoUrgente'";
 					
-					if (($row['dat_evento'] <= $oggi_piu_2gg) && ($row['dat_evento'] > $oggi)) {
-						$class = "class='eventoAttenzione'";
-					}
+					$dataEvento = (string)$row['dataev'];
 					
-					if (($row['dat_evento'] <= $oggi_piu_5gg) && ($row['dat_evento'] > $oggi_piu_2gg) ) {
-						$class = "class='eventoGuarda'";
+					if (strtotime($dataEvento) <= strtotime($oggi)) {
+						$class = "class='eventoUrgente'";
 					}
-						
+					else {
+						if ((strtotime($dataEvento) <= strtotime($oggi_piu_2gg)) && (strtotime($dataEvento) >= strtotime($oggi))) {
+							$class = "class='eventoAttenzione'";
+						}
+						else {
+							if ((strtotime($dataEvento) <= strtotime($oggi_piu_5gg)) && (strtotime($dataEvento) >= strtotime($oggi_piu_2gg))) {
+								$class = "class='eventoGuarda'";
+							}
+						}
+					}
 				}
 				else {
 					$class = "class='eventoOff'";
-					$bottoneChiudi = "&nbsp;";						
+					$bottoneChiudi = "&nbsp;";
 				}
 				
 				$tabellaEventi .= "<tr " . $class . " height='40'>";
