@@ -251,7 +251,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 */
 	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, 
 			$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
-			$codneg, $fornitore, $numfatt, $staScadenza) {
+			$codneg, $staScadenza) {
 		
 		$array = $utility->getConfig();
 		$replace = array(

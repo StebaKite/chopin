@@ -193,7 +193,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 
 				$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
-				$codneg, $fornitore, $numfatt, $staScadenza)) {
+				$codneg, $staScadenza)) {
 					
 			$db->commitTransaction();
 			return TRUE;

@@ -124,7 +124,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				if (trim($row['sta_scadenza']) == "00") {
 					$stascadenza = "Da Pagare";
 					$tdclass = "class='ko'";
-					$bottoneVisualizzaPagamento = "";
+					$bottoneModificaPagamento = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "10") {

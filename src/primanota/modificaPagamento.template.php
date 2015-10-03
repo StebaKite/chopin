@@ -145,7 +145,7 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 			"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
 			"<td align='right'>&euro;" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
 			"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
-			"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $row["id_dettaglio_registrazione"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+			"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagamento(" . $row["id_dettaglio_registrazione"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 			"</tr>";
 		}
 	

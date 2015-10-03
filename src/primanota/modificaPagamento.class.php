@@ -175,11 +175,11 @@ class ModificaPagamento extends primanotaAbstract {
 	
 		if (($_SESSION["fornitore"] != $_SESSION["fornitore_old"]) || ($_SESSION["numfatt"] != $_SESSION["numfatt_old"])) {
 
-			$d = explode(",", $_SESSION["numfatt"]);
+			$d = explode(",", $_SESSION["numfatt_old"]);
 			
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '00', 'null');
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore_old"], $numfatt, '00', 'null');
 			}
 		}
 		
@@ -198,7 +198,7 @@ class ModificaPagamento extends primanotaAbstract {
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"],
 			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
-			$codneg, $fornitore, $numfatt, $staScadenza)) {
+			$codneg, $staScadenza)) {
 
 			/**
 			 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
