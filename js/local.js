@@ -113,6 +113,34 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//Modifica registrazione : aggiunta nuovo dettaglio
+$( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#nuovoDettaglioPagamento").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-modifica-pagamento" ).click(function( event ) {
+	$( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 // Nuovo evento
 $( "#nuovo-evento-form" ).dialog({
 	autoOpen: false,
@@ -490,6 +518,11 @@ $( ".scadenzeAperteFornitore" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenu" )
+	.selectmenu({width: 200})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCliente" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
@@ -653,35 +686,6 @@ function cancellaDettaglioPagamento(idconto) {
 	$( "#idDettaglioRegistrazione" ).val(idconto);
 	$( "#cancella-dettaglio-modificapag-form" ).dialog( "open" );
 }
-
-//Modifica pagamento : aggiunta nuovo dettaglio
-$( "#nuovo-dettaglio-modificapag-form" ).dialog({
-	autoOpen: false,
-	width: 500,
-	height: 400,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-             $("#nuovoDettaglioPagamento").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-//Link to open the dialog
-$( "#nuovo-dett-modificapag" ).click(function( event ) {
-	$( "#nuovo-dettaglio-modificapag-form" ).dialog( "open" );
-	event.preventDefault();
-});
-
 
 //---------------------------------------------------------------
 //Funzioni per i conti e sottoconti
