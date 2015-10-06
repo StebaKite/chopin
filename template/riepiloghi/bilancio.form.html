@@ -1,0 +1,44 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.negozio% :</td>
+						<td class="tooltip">
+							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
+								<option value="">%ml.tutti%</option>
+								<option value="VIL" %villa-selected% >%ml.villa%</option>
+								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
+								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+							</select>
+						</td>
+						
+						<td class="td">%ml.da% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+						<td class="td">%ml.a% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+						
+						<td>%ml.catconto% :</td>
+						<td class="tooltip">
+							<select class="selectCategoriaConti" id="catconto_sel" name="catconto_sel" >
+								<option value="Conto Economico" %contoeco-selected% >%ml.contoeco%</option>
+								<option value="Stato Patrimoniale" %statopat-selected% >%ml.contopat%</option>
+							</select>
+						</td>
+						<td width="55"></td>						
+						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%

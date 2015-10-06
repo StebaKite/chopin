@@ -332,6 +332,13 @@
 		font-weight: bolder;
 		color: green;
 	}
+	.result td.totbilancio {
+		font-size: 14px;
+		font-weight: bolder;
+		color: #3399FF;
+		background-color: #ECECEC;
+		height: 40px;		
+	}
 	.result td.ok {
 		font-size: 14px;
 		font-weight: bolder;

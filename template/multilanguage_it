@@ -80,6 +80,7 @@ mastrinoConto = Mastrino Conto
 ricercaScadenze = Ricerca Scadenze
 creaNuovoPagamento = Nuovo Pagamento
 modificaPagamento = Modifica Pagamento
+bilancio = Bilancio Esercizio
 ;
 ; Messaggi -----------------------------
 ;
@@ -142,3 +143,5 @@ negozio = Negozio
 dapagare = Da pagare
 pagato = Pagato
 shift = Posticipati
+costi = Costi
+ricavi = Ricavi

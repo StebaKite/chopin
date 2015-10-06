@@ -68,11 +68,103 @@ class Bilancio extends RiepiloghiAbstract {
 	}
 
 	public function go() {
+
+		require_once 'bilancio.template.php';
+		require_once 'utility.class.php';
 		
+		// Template
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$testata = self::$root . $array['testataPagina'];
+		$piede = self::$root . $array['piedePagina'];
+		
+		$bilancioTemplate = BilancioTemplate::getInstance();
+		
+		if ($bilancioTemplate->controlliLogici()) {
+				
+			if ($this->ricercaDati($utility)) {
+					
+				$this->preparaPagina($bilancioTemplate);
+					
+				include(self::$testata);
+				$bilancioTemplate->displayPagina();
+		
+				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " voci";
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+		
+				if ($_SESSION['numRegTrovate'] > 0) {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				}
+				else {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				}
+		
+				echo $utility->tailTemplate($template);
+					
+				include(self::$piede);
+			}
+			else {
+					
+				$this->preparaPagina($bilancioTemplate);
+					
+				include(self::$testata);
+				$bilancioTemplate->displayPagina();
+		
+				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
+		
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				echo $utility->tailTemplate($template);
+					
+				include(self::$piede);
+			}
+		}
+		else {
+		
+			$this->preparaPagina($bilancioTemplate);
+		
+			include(self::$testata);
+			$bilancioTemplate->displayPagina();
+		
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
+		
+			include(self::$piede);
+		}
 	}
 
 	public function ricercaDati($utility) {
+
+		require_once 'database.class.php';
+				
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%catconto%' => $_SESSION["catconto_sel"],
+				'%codnegozio%' => $_SESSION["codneg_sel"]
+		);
 		
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryBilancio;
+		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		
+		// esegue la query
+		
+		$db = Database::getInstance();
+		$result = $db->getData($sql);
+		
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['registrazioniTrovate'] = $result;
+		}
+		else {
+			unset($_SESSION['registrazioniTrovate']);
+			$_SESSION['numRegTrovate'] = 0;
+		}
+		
+		return $result;
 	}
 
 	public function preparaPagina($bilancioTemplate) {
@@ -82,8 +174,7 @@ class Bilancio extends RiepiloghiAbstract {
 		$_SESSION["azione"] = self::$azioneBilancio;
 		$_SESSION["confermaTip"] = "%ml.confermaEstraiBilancio%";
 		$_SESSION["titoloPagina"] = "%ml.bilancio%";
-	}
-	
+	}	
 }
 
 ?>

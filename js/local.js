@@ -553,6 +553,11 @@ $( ".selectmenuStato" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectCategoriaConti" )
+	.selectmenu({width: 150})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
