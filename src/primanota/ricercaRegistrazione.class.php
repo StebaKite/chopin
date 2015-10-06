@@ -150,6 +150,10 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		
 		$filtriRegistrazione = "";
 		$filtriDettaglio = "";
+		
+		if ($_SESSION["cod_causale"] != "") {
+			$filtriRegistrazione .= "and reg.cod_causale != '" . $_SESSION["cod_causale"] . "'";
+		}
 		if ($_SESSION["numfatt"] != "") {
 			$filtriRegistrazione .= "and reg.num_fattura like '" . $_SESSION["numfatt"] . "%'";
 		}
