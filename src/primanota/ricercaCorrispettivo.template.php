@@ -96,8 +96,8 @@ class RicercaCorrispettivoTemplate extends PrimanotaAbstract {
 			"		<th width='30'>%ml.idReg%</th>" .
 			"		<th width='72'>%ml.datReg%</th>" .
 			"		<th width='100'>%ml.numfatt%</th>" .
-			"		<th width='670'>%ml.desReg%</th>" .
-			"		<th width='100' colspan='3'>%ml.azioni%</th>" .
+			"		<th width='710'>%ml.desReg%</th>" .
+			"		<th width='48' colspan='2'>%ml.azioni%</th>" .
 			"	</thead>" .
 			"</table>" .
 			"<div class='scroll'>" .
@@ -114,19 +114,16 @@ class RicercaCorrispettivoTemplate extends PrimanotaAbstract {
 					switch ($row['sta_registrazione']) {
 						case ("00"): {
 							$class = "class='parentAperto'";
-							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+							$bottoneCancella = "<a class='tooltip' onclick='cancellaCorrispettivo(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						case ("02"): {
 							$class = "class='parentErrato'";
-							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+							$bottoneCancella = "<a class='tooltip' onclick='cancellaCorrispettivo(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						default: {
 							$class = "class='parent'";
-							$bottoneModifica = "&nbsp;";
 							$bottoneCancella = "&nbsp;";								
 							break;
 						}
@@ -138,10 +135,9 @@ class RicercaCorrispettivoTemplate extends PrimanotaAbstract {
 					"	<td width='40' class='tooltip' align='center'>" . trim($row['id_registrazione']) . "</td>" .
 					"	<td width='80'  align='center'>" . trim($row['dat_registrazione']) . "</td>" .
 					"	<td width='105'  align='center'>" . trim($row['num_fattura']) . "</td>" .
-					"	<td width='700' align='left'>" . trim($row['des_registrazione']) . "</td>" .
-					"	<td width='30' id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
-					"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+					"	<td width='718' align='left'>" . trim($row['des_registrazione']) . "</td>" .
+					"	<td width='25' id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
+					"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";						
 					
 				}
