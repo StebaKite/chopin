@@ -111,7 +111,13 @@ function calcolaImponibile() {
 	
 	$("#imponibile").val(imponibileArrotondato);
 	
-	var iva = imponibileArrotondato * 0.1;
+	if (aliquota == "1.10") {
+		var iva = imponibileArrotondato * 0.1;		
+	}
+	else {
+		var iva = imponibileArrotondato * 0.22;
+	}
+	
 	var ivaArrotondata = iva.toFixed(2);
 	$("#iva").val(ivaArrotondata); 
 	

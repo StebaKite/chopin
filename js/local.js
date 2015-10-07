@@ -369,6 +369,27 @@ $( "#cancella-registrazione-form" ).dialog({
 	]
 });
 
+//Cancella corrispettivo
+$( "#cancella-corrispettivo-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+         $("#cancellaCorrispettivo").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 $( "#nuovo-sottoconto-form" ).dialog({
 	autoOpen: false,
 	width: 600,
@@ -658,6 +679,12 @@ function cancellaRegistrazione(idreg) {
 	
 	$( "#idRegistrazione" ).val(idreg);
 	$( "#cancella-registrazione-form" ).dialog( "open" );
+}
+
+function cancellaCorrispettivo(idreg) {
+	
+	$( "#idRegistrazione" ).val(idreg);
+	$( "#cancella-corrispettivo-form" ).dialog( "open" );
 }
 
 //---------------------------------------------------------------
