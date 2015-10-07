@@ -45,85 +45,129 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		$array = $utility->getConfig();
 		
 		$form = self::$root . $array['template'] . self::$pagina;
-		$risultato_ricerca = "";
+		$risultato_costi = "";
+		$risultato_ricavi = "";
+		$risultato_esercizio = "";
 		
-		if (isset($_SESSION["registrazioniTrovate"])) {
+		/** ******************************************************
+		 * Costruzione della tabella costi
+		 */
+		
+		if (isset($_SESSION["costiBilancio"])) {
 
-			$risultato_ricerca =
+			$risultato_costi =
 			"<table class='result'>" .
 			"	<thead>" .
-			"		<th width='650'>%ml.desconto%</th>" .
-			"		<th width='100'>%ml.costi%</th>" .
-			"		<th width='100'>%ml.ricavi%</th>" .
+			"		<th width='300'>%ml.desconto%</th>" .
+			"		<th width='550'>%ml.dessottoconto%</th>" .
+			"		<th width='100'>%ml.importo%</th>" .
 			"	</thead>" .
 			"</table>" .
-			"<div class='scroll'>" .
+			"<div class='scroll-bilancio'>" .
 			"	<table class='result'>" .
 			"		<tbody>";
 				
-			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
+			$costiBilancio = $_SESSION["costiBilancio"];
 			$numReg = 0;
-			$totimpdare = 0;
-			$totimpavere = 0;
+			$totaleCosti = 0;
 			$desconto_break = "";
 			
-			foreach(pg_fetch_all($registrazioniTrovate) as $row) {
+			foreach(pg_fetch_all($costiBilancio) as $row) {
 
-				if ($desconto_break == "") {$desconto_break = trim($row['des_conto']); }
-				
-				if (trim($row['des_conto']) == $desconto_break ) {
+				$totaleSottoconto = trim($row['tot_conto']);
+				$totaleCosti += $totaleSottoconto;
 					
-					if ($row['ind_dareavere'] == "D") {
-						$impdare = trim($row['tot_conto']);
-						$totimpdare += $impdare;
-					}
-					else {
-						$impavere = trim($row['tot_conto']);
-						$totimpavere += $impavere;
-					}
+				$numReg ++;
+					
+				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+
+				if (trim($row['des_conto']) != $desconto_break ) {
+					
+					$risultato_costi = $risultato_costi .
+					"<tr>" .
+					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+					"	<td width='108' align='right'>" . $importo . "</td>" .
+					"</tr>";
+
+					$desconto_break = trim($row['des_conto']);
 				}
 				else {
 					
-					$numReg ++;
-					
-					$dare = ($impdare > 0) ? number_format($impdare, 2, ',', '.') : "";
-					$avere = ($impavere > 0) ? number_format($impavere, 2, ',', '.') : "";
-					
-					$risultato_ricerca = $risultato_ricerca .
+					$risultato_costi = $risultato_costi .
 					"<tr>" .
-					"	<td width='658' align='left'>" . $desconto_break . "</td>" .
-					"	<td width='108' align='right'>" . $dare . "</td>" .
-					"	<td width='108' align='right'>" . $avere . "</td>" .
+					"	<td width='308' align='left'></td>" .
+					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+					"	<td width='108' align='right'>" . $importo . "</td>" .
 					"</tr>";
-						
-					$desconto_break = trim($row['des_conto']);
-					$impdare = 0;
-					$impavere = 0;
-					
-					if ($row['ind_dareavere'] == "D") {
-						$impdare = trim($row['tot_conto']);
-						$totimpdare += $impdare;
-					}
-					else {
-						$impavere = trim($row['tot_conto']);
-						$totimpavere += $impavere;
-					}						
-				}				
-			}
-			$_SESSION['numRegTrovate'] = $numReg;
-			$risultato_ricerca = $risultato_ricerca . "</tbody><tfoot>";
-
-			$risultato_ricerca = $risultato_ricerca .
-			"<tr>" .
-			"	<td width='608' align='right' class='totbilancio'>Totale</td>" .
-			"	<td width='108' align='right' class='totbilancio'>" . number_format($totimpdare, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='totbilancio'>" . number_format($totimpavere, 2, ',', '.')  . "</td>" .
-			"</tr>";				
-
-			$risultato_ricerca = $risultato_ricerca . "</tfoot></table></div>";
-		}
-		else {
+				}
 				
+					
+			}
+			$_SESSION['numCostiTrovati'] = $numReg;
+			$risultato_costi = $risultato_costi . "</tbody>";
+
+			$risultato_costi = $risultato_costi . "</table></div>";
+		}
+
+		/** ******************************************************
+		 * Costruzione della tabella ricavi
+		 */
+
+		if (isset($_SESSION["ricaviBilancio"])) {
+		
+			$risultato_ricavi =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>%ml.desconto%</th>" .
+			"		<th width='550'>%ml.dessottoconto%</th>" .
+			"		<th width='100'>%ml.importo%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+		
+			$ricaviBilancio = $_SESSION["ricaviBilancio"];
+			$numReg = 0;
+			$totaleRicavi = 0;
+			$desconto_break = "";
+				
+			foreach(pg_fetch_all($ricaviBilancio) as $row) {
+					
+				$totaleSottoconto = trim($row['tot_conto']);
+				$totaleRicavi += $totaleSottoconto;
+					
+				$numReg ++;
+					
+				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+
+				if (trim($row['des_conto']) != $desconto_break ) {
+
+					$risultato_ricavi = $risultato_ricavi .
+					"<tr>" .
+					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+					"	<td width='108' align='right'>" . $importo . "</td>" .
+					"</tr>";
+
+					$desconto_break = trim($row['des_conto']);
+				}
+				else {
+					
+					$risultato_ricavi = $risultato_ricavi .
+					"<tr>" .
+					"	<td width='308' align='left'></td>" .
+					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+					"	<td width='108' align='right'>" . $importo . "</td>" .
+					"</tr>";						
+				}
+					
+			}
+			$_SESSION['numRicaviTrovati'] = $numReg;
+			$risultato_ricavi = $risultato_ricavi . "</tbody>";
+		
+			$risultato_ricavi = $risultato_ricavi . "</table></div>";
 		}
 				
 		$replace = array(
@@ -137,7 +181,10 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%risultato_ricerca%' => $risultato_ricerca
+				'%risultato_costi%' => $risultato_costi,
+				'%risultato_ricavi%' => $risultato_ricavi,
+				'%nome-tab-totali%' => strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)),
+				'%risultato_esercizio%' => $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti)
 		);
 		
 		$utility = Utility::getInstance();
@@ -145,6 +192,110 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
+	
+	public function nomeTabTotali($totaleRicavi, $totaleCosti) {
+
+		if ($totaleRicavi > $totaleCosti) {
+			$nomeTabTotali = "Utile";
+		}
+		elseif ($totaleRicavi < $totaleCosti) {
+			$nomeTabTotali = "Perdita";
+		}
+		else {
+			$nomeTabTotali = "Pareggio";
+		}
+		return $nomeTabTotali;
+	}
+
+	public function tabellaTotali($tipoTotale, $totaleRicavi, $totaleCosti) {
+	
+		if ($tipoTotale == "Utile") {
+			
+			$risultato_esercizio = "<table class='result'><tbody>";
+			
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totaleCosti, 2, ',', '.') . "</td>" .
+			"</tr>";
+			
+			$utile = $totaleRicavi - $totaleCosti;
+			
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($utile, 2, ',', '.') . "</td>" .
+			"</tr>";
+			
+			$totalePareggio = $totaleCosti + $utile;
+			
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"</tr>";
+			
+			$risultato_esercizio .= "</tbody></table>" ;
+		}
+		elseif ($tipoTotale == "Perdita") {
+			
+			$risultato_esercizio = "<table class='result'><tbody>";
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totaleRicavi, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$perdita = $totaleCosti - $totaleRicavi;
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Perdita del Periodo</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($perdita, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$totalePareggio = $totaleRicavi + $perdita;
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$risultato_esercizio .= "</tbody></table>" ;
+		
+		}
+		else {
+			
+			$risultato_esercizio = "<table class='result'><tbody>";
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totaleCosti, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$pareggio = $totaleRicavi - $totaleCosti;
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($pareggio, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$totalePareggio = $totaleCosti + $pareggio;
+				
+			$risultato_esercizio .=
+			"<tr height='30'>" .
+			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"</tr>";
+				
+			$risultato_esercizio .= "</tbody></table>" ;
+		}
+		return $risultato_esercizio;
+	}	
 }	
 	
 ?>

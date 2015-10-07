@@ -7,8 +7,9 @@ class Bilancio extends RiepiloghiAbstract {
 	private static $_instance = null;
 
 	public static $azioneBilancio = "../riepiloghi/bilancioFacade.class.php?modo=go";
-	public static $queryBilancio = "/riepiloghi/estraiRegistrazioniBilancio.sql";
-
+	public static $queryCosti = "/riepiloghi/costi.sql";
+	public static $queryRicavi = "/riepiloghi/ricavi.sql";
+	
 	function __construct() {
 
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
@@ -89,11 +90,14 @@ class Bilancio extends RiepiloghiAbstract {
 					
 				include(self::$testata);
 				$bilancioTemplate->displayPagina();
-		
-				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " voci";
+
+				$totVoci = $_SESSION['numCostiTrovati'] + $_SESSION['numRicaviTrovati'];
+				
+				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-		
-				if ($_SESSION['numRegTrovate'] > 0) {
+
+				
+				if ($totVoci > 0) {
 					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 				}
 				else {
@@ -136,9 +140,9 @@ class Bilancio extends RiepiloghiAbstract {
 	}
 
 	public function ricercaDati($utility) {
-
+	
 		require_once 'database.class.php';
-				
+	
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
@@ -146,27 +150,50 @@ class Bilancio extends RiepiloghiAbstract {
 				'%codnegozio%' => $_SESSION["codneg_sel"]
 		);
 		
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryBilancio;
-		
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
-		// esegue la query
-		
 		$db = Database::getInstance();
+		
+		if ($this->ricercaCosti($utility, $db, $replace)) {
+			if ($this->ricercaRicavi($utility, $db, $replace)) {
+				return TRUE;
+			}				
+		}
+		return FALSE;
+	}
+	
+	public function ricercaCosti($utility, $db, $replace) {
+		
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCosti;		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);		
 		$result = $db->getData($sql);
 		
 		if (pg_num_rows($result) > 0) {
-			$_SESSION['registrazioniTrovate'] = $result;
+			$_SESSION['costiBilancio'] = $result;
 		}
 		else {
-			unset($_SESSION['registrazioniTrovate']);
-			$_SESSION['numRegTrovate'] = 0;
-		}
-		
+			unset($_SESSION['costiBilancio']);
+			$_SESSION['numCostiTrovati'] = 0;
+		}		
 		return $result;
 	}
 
+	public function ricercaRicavi($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicavi;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['ricaviBilancio'] = $result;
+		}
+		else {
+			unset($_SESSION['costiBilancio']);
+			$_SESSION['numRicaviTrovati'] = 0;
+		}
+		return $result;
+	}
+	
 	public function preparaPagina($bilancioTemplate) {
 	
 		require_once 'utility.class.php';

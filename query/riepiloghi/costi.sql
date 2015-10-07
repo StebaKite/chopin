@@ -1,6 +1,6 @@
 select
 	t3.des_conto,
-	t2.ind_dareavere,
+	t1.des_sottoconto,
 	sum(t2.imp_registrazione) as tot_conto
   from contabilita.sottoconto as t1
 		inner join contabilita.conto as t3
@@ -13,5 +13,6 @@ select
   where t4.dat_registrazione between '%datareg_da%' and '%datareg_a%'
   and   t4.cod_negozio = '%codnegozio%'
   and   t3.cat_conto = '%catconto%'
-group by t3.des_conto, t2.ind_dareavere
-order by t3.des_conto, t2.ind_dareavere
+  and   t2.ind_dareavere = 'D' 
+group by t3.des_conto, t1.des_sottoconto
+order by t3.des_conto, t1.des_sottoconto

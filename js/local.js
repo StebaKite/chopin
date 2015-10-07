@@ -9,6 +9,10 @@ $( ".button" ).button();
 
 $( ".radioset" ).buttonset();
 
+$( ".tabs" ).tabs();
+
+$( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+$( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 $( "#bonifico" ).click(function( event ) {
 	$( "#slider-gg-scadenza-fattura" ).show();
@@ -34,8 +38,6 @@ $( "#addebitodiretto" ).click(function( event ) {
 	$( "#slider-gg-scadenza-fattura" ).hide();
     $( "#numggscadenzafattura" ).val( 0 );
 });
-
-$( ".tabs" ).tabs({ width: 400 });
 
 
 $( "#msg" ).dialog({
@@ -564,9 +566,6 @@ $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuCausale" ).selectmenu({ width: 300 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 300 });
 $( ".selectmenuCliente" ).selectmenu({ width: 300 });
-
-$( "#vtabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-$( "#vtabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
 $("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');
