@@ -783,8 +783,10 @@ function cancellaCliente(idcliente, codcliente) {
 
 function generaMastrino(codconto, codsottoconto) {
 	
+	var codSottoconto = pad(codsottoconto, 2);
+	
 	$( "#codcontogenera" ).val(codconto);
-	$( "#codsottocontogenera" ).val(codsottoconto);
+	$( "#codsottocontogenera" ).val(codSottoconto);
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 

@@ -57,7 +57,8 @@ class Bilancio extends RiepiloghiAbstract {
 		$_SESSION["codneg_sel"] = "VIL";
 		$_SESSION["catconto"] = "Conto Economico";
 		
-		unset($_SESSION["registrazioniTrovate"]);
+		unset($_SESSION["costiBilancio"]);
+		unset($_SESSION["ricaviBilancio"]);
 		
 		$bilancioTemplate = BilancioTemplate::getInstance();
 		$this->preparaPagina($bilancioTemplate);

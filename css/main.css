@@ -358,6 +358,7 @@
 		font-size: 14px;
 		font-weight: bolder;
 		color: #3399FF;
+		height: 30px;		
 	}
 	.insert .field_label {
 		text-align: right;

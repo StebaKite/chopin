@@ -48,6 +48,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		$risultato_costi = "";
 		$risultato_ricavi = "";
 		$risultato_esercizio = "";
+		$tabs = "";
 		
 		/** ******************************************************
 		 * Costruzione della tabella costi
@@ -71,19 +72,33 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$numReg = 0;
 			$totaleCosti = 0;
 			$desconto_break = "";
+			$totaleConto = 0;
 			
 			foreach(pg_fetch_all($costiBilancio) as $row) {
 
 				$totaleSottoconto = trim($row['tot_conto']);
 				$totaleCosti += $totaleSottoconto;
-					
+				
 				$numReg ++;
 					
 				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
 
 				if (trim($row['des_conto']) != $desconto_break ) {
-					
-					$risultato_costi = $risultato_costi .
+
+					if ($desconto_break != "") {
+						
+						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+						
+						$risultato_costi .=
+						"<tr>" .
+						"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+						"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+						"</tr>";
+						
+						$totaleConto = 0;
+					}					
+						
+					$risultato_costi .=
 					"<tr>" .
 					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
 					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
@@ -94,16 +109,24 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				}
 				else {
 					
-					$risultato_costi = $risultato_costi .
+					$risultato_costi .=
 					"<tr>" .
 					"	<td width='308' align='left'></td>" .
 					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
 					"	<td width='108' align='right'>" . $importo . "</td>" .
 					"</tr>";
 				}
-				
-					
+				$totaleConto += $totaleSottoconto;
 			}
+
+			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+			
+			$risultato_costi .=
+			"<tr>" .
+			"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+			"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+			"</tr>";				
+			
 			$_SESSION['numCostiTrovati'] = $numReg;
 			$risultato_costi = $risultato_costi . "</tbody>";
 
@@ -132,19 +155,33 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$numReg = 0;
 			$totaleRicavi = 0;
 			$desconto_break = "";
+			$totaleConto = 0;
 				
 			foreach(pg_fetch_all($ricaviBilancio) as $row) {
 					
 				$totaleSottoconto = trim($row['tot_conto']);
 				$totaleRicavi += $totaleSottoconto;
-					
+				
 				$numReg ++;
 					
 				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
 
 				if (trim($row['des_conto']) != $desconto_break ) {
-
-					$risultato_ricavi = $risultato_ricavi .
+					
+					if ($desconto_break != "") {
+					
+						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+					
+						$risultato_ricavi .=
+						"<tr>" .
+						"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+						"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+						"</tr>";
+					
+						$totaleConto = 0;
+					}
+						
+					$risultato_ricavi .=
 					"<tr>" .
 					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
 					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
@@ -155,21 +192,48 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				}
 				else {
 					
-					$risultato_ricavi = $risultato_ricavi .
+					$risultato_ricavi .=
 					"<tr>" .
 					"	<td width='308' align='left'></td>" .
 					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
 					"	<td width='108' align='right'>" . $importo . "</td>" .
 					"</tr>";						
 				}
-					
+				$totaleConto += $totaleSottoconto;				
 			}
+			
+			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+				
+			$risultato_ricavi .=
+			"<tr>" .
+			"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+			"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+			"</tr>";
+			
 			$_SESSION['numRicaviTrovati'] = $numReg;
 			$risultato_ricavi = $risultato_ricavi . "</tbody>";
 		
 			$risultato_ricavi = $risultato_ricavi . "</table></div>";
 		}
 				
+		/** ******************************************
+		 * Costruzione delle tabs
+		 */
+		
+		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_esercizio = "")) {
+			
+			$tabs  = "	<div class='tabs'>";
+			$tabs .= "		<ul>";
+			$tabs .= "			<li><a href='#tabs-1'>Costi</a></li>";
+			$tabs .= "			<li><a href='#tabs-2'>Ricavi</a></li>";
+			$tabs .= "			<li><a href='#tabs-3'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
+			$tabs .= "		</ul>";
+			$tabs .= "		<div id='tabs-1'>" . $risultato_costi . "</div>";
+			$tabs .= "		<div id='tabs-2'>" . $risultato_ricavi . "</div>";
+			$tabs .= "		<div id='tabs-3'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
+			$tabs .= "	</div>";
+		}
+		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
@@ -181,10 +245,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%risultato_costi%' => $risultato_costi,
-				'%risultato_ricavi%' => $risultato_ricavi,
-				'%nome-tab-totali%' => strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)),
-				'%risultato_esercizio%' => $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti)
+				'%tabs%' => $tabs
 		);
 		
 		$utility = Utility::getInstance();

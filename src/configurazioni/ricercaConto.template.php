@@ -96,7 +96,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 				elseif (trim($row['tipo']) == 'S') {
 
 					if ($row['tot_registrazioni_sottoconto'] > 0) {
-						$bottoneMastrino = "<a class='tooltip' onclick='generaMastrino(" . trim($row['cod_conto']) . "," . trim($row['cod_sottoconto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
+						$bottoneMastrino = "<a class='tooltip' onclick='generaMastrino(" . trim($row['cod_conto']) . "," . (string)trim($row['cod_sottoconto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 					}
 					else {
 						$bottoneMastrino = "&nbsp;";
