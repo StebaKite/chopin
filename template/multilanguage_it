@@ -80,7 +80,8 @@ mastrinoConto = Mastrino Conto
 ricercaScadenze = Ricerca Scadenze
 creaNuovoPagamento = Nuovo Pagamento
 modificaPagamento = Modifica Pagamento
-bilancio = Bilancio Esercizio
+bilancioEsercizio = Bilancio Esercizio
+bilancio = Bilancio Movimenti
 ricercaCorrispettivo = Ricerca Corrispettivo
 ;
 ; Messaggi -----------------------------

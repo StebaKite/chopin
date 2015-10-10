@@ -32,7 +32,7 @@ class Pdf extends FPDF {
 		$this->Cell(0,10,utf8_decode($_SESSION["title"]),0,0,'C');
 		$this->Ln();
 		
-		$this->SetFont('Arial','I',15);
+		$this->SetFont('Arial','B',14);
 		$this->Cell(0,10,utf8_decode($_SESSION["title1"]),0,0,'C');
 		$this->Ln();
 		
@@ -70,8 +70,8 @@ class Pdf extends FPDF {
 	}
 	
 	// Better table
-	public function ImprovedTable($header, $data)
-	{
+	public function ImprovedTable($header, $data) {
+		
 	    // Column widths
 	    $w = array(40, 35, 40, 45);
 	    // Header
@@ -353,6 +353,67 @@ class Pdf extends FPDF {
 	    
    	    $this->Cell(array_sum($w),0,'','T');	  
 	}
+	
+	public function BilancioTable($data) {
+		
+		// Column widths
+		$w = array(150, 25);
+
+		$desconto_break = ""; 
+		$totaleConto = 0;
+		
+		// Data
+		foreach($data as $row) {
+			
+			$totaleSottoconto = trim($row['tot_conto']);
+				
+			$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+			
+			if (trim($row['des_conto']) != $desconto_break ) {
+			
+				if ($desconto_break != "") {
+			
+					$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+
+	    			$this->SetFont('','B',12);
+	    			$this->Cell($w[0],15,"       Totale",0,'R');
+					$this->Cell($w[1],15,$totconto,0,'R');
+					$this->Ln();
+					$this->SetFont('','',11);
+						
+					$totaleConto = 0;
+				}
+				
+	    		$this->SetFont('','B',12);	    	
+				$this->Cell($w[0],6,$row['des_conto'],0,'L');
+				$this->Cell($w[1],6,"",0,'R');
+				$this->Ln();
+				
+	    		$this->SetFont('','I',11);	    	
+				$this->Cell($w[0],6,"       " . $row['des_sottoconto'],0,'L');
+				$this->Cell($w[1],6,$importo,0,'R');
+				$this->Ln();
+			
+				$desconto_break = trim($row['des_conto']);
+			}
+			else {
+
+	    		$this->SetFont('','I',11);	    	
+				$this->Cell($w[0],6,"       " . $row['des_sottoconto'],0,'L');
+				$this->Cell($w[1],6,$importo,0,'R');
+				$this->Ln();
+			}
+			$totaleConto += $totaleSottoconto;
+		}
+			
+		$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+
+	    $this->SetFont('','B',12);
+		$this->Cell($w[0],15,"       Totale",0,'R');
+		$this->Cell($w[1],15,$totconto,0,'R');
+		$this->Ln();
+		$this->SetFont('','',11);
+	} 	
 }
 
 ?>

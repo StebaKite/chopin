@@ -240,12 +240,15 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codneg_sel%' => $_SESSION["codneg_sel"],
+				'%catconto_sel%' => $_SESSION["catconto_sel"],				
 				'%contoeco-selected%' => ($_SESSION["catconto_sel"] == "Conto Economico") ? "selected" : "",
 				'%statopat-selected%' => ($_SESSION["catconto_sel"] == "Stato Patrimoniale") ? "selected" : "",
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%tabs%' => $tabs
+				'%tabs%' => $tabs,
+				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf']
 		);
 		
 		$utility = Utility::getInstance();

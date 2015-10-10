@@ -59,6 +59,7 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		unset($_SESSION["costiBilancio"]);
 		unset($_SESSION["ricaviBilancio"]);
+		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$bilancioTemplate = BilancioTemplate::getInstance();
 		$this->preparaPagina($bilancioTemplate);
@@ -155,6 +156,7 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		if ($this->ricercaCosti($utility, $db, $replace)) {
 			if ($this->ricercaRicavi($utility, $db, $replace)) {
+				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";				
 				return TRUE;
 			}				
 		}
