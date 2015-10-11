@@ -215,9 +215,15 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		
 			$risultato_ricavi = $risultato_ricavi . "</table></div>";
 		}
-				
+
+		/**
+		 * Metto in sessione i totali ricavi e costi perchè serviranno all'estrazione in PDF per stampare la tabella dei totali
+		 */
+		$_SESSION['totaleRicavi'] = $totaleRicavi;
+		$_SESSION['totaleCosti'] = $totaleCosti;
+		
 		/** ******************************************
-		 * Costruzione delle tabs
+		 * Costruisco il box delle tabs
 		 */
 		
 		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_esercizio = "")) {

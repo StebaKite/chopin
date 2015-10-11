@@ -66,15 +66,12 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 
 	public function generaSezioneIntestazione($pdf) {
 
-		$_SESSION["title"] = "BILANCIO";
-		$_SESSION["title1"] = "Movimenti Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];		
-
 		$negozio = "";
 		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
 
-		$_SESSION["title2"] = "Conto Economico - Negozio di " . $negozio;
+		$_SESSION["title2"] = $_SESSION["catconto_sel"] . " - Negozio di " . $negozio;
 		
 		return $pdf;
 	}
@@ -100,6 +97,13 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioTable($this->ricercaCosti($utility, $db, $replace));
+
+		/**
+		 * Totali x Utile
+		 */
+		if ($_SESSION['totaleRicavi'] >= $_SESSION['totaleCosti']) {
+			$pdf->BilancioCostiTable($_SESSION['totaleRicavi'], $_SESSION['totaleCosti']);
+		}
 		
 		$pdf->AddPage();		
 		$pdf->SetFont('','B',12);
@@ -108,6 +112,13 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->Ln();
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioTable($this->ricercaRicavi($utility, $db, $replace));
+
+		/**
+		 * Totali x Perdita
+		 */
+		if ($_SESSION['totaleRicavi'] < $_SESSION['totaleCosti']) {
+			$pdf->BilancioRicaviTable($_SESSION['totaleRicavi'], $_SESSION['totaleCosti']);
+		}
 		
 		return $pdf;
 	}
