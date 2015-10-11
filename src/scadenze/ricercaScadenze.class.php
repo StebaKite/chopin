@@ -92,11 +92,15 @@ class RicercaScadenze extends ScadenzeAbstract {
 				$ricercaScadenzeTemplate->displayPagina();
 	
 				/**
-				 * Gestione del messaggio proveniente dalla cancellazione
+				 * Gestione del messaggio proveniente da altre funzioni
 				*/
 				if (isset($_SESSION["messaggioCancellazione"])) {
 					$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovate " . $_SESSION['numScadenzeTrovate'] . " scadenze";
 					unset($_SESSION["messaggioCancellazione"]);
+				}
+				elseif (isset($_SESSION["messaggioModifica"])) {
+					$_SESSION["messaggio"] = $_SESSION["messaggioModifica"] . "<br>" . "Trovate " . $_SESSION['numScadenzeTrovate'] . " scadenze";
+					unset($_SESSION["messaggioModifica"]);
 				}
 				else {
 					$_SESSION["messaggio"] = "Trovate " . $_SESSION['numScadenzeTrovate'] . " scadenze";

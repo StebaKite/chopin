@@ -48,6 +48,18 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$this->prelevaDatiRegistrazione($utility);
 		$this->prelevaDatiDettagliRegistrazione($utility);
+
+		/**
+		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la 
+		 * quale redirigere l'utente dopo la modifica 
+		 */
+		$referer = $_SERVER['HTTP_REFERER'];
+		$referer_temp1 = str_replace ("//", " ", $referer);
+		$referer_temp2 = str_replace ("/", " ", $referer_temp1);
+		$referer_temp3 = str_replace ("?", " ", $referer_temp2);
+		
+		$ref = explode(" ",$referer_temp3);
+		$_SESSION['referer_function_name'] = $ref[5];
 		
 		$modificaRegistrazioneTemplate = ModificaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($modificaRegistrazioneTemplate);
@@ -61,6 +73,8 @@ class ModificaRegistrazione extends primanotaAbstract {
 	public function go() {
 	
 		require_once 'modificaRegistrazione.template.php';
+		require_once 'ricercaRegistrazione.class.php';
+		require_once 'ricercaScadenze.class.php';
 		require_once 'utility.class.php';
 	
 		/**
@@ -87,18 +101,19 @@ class ModificaRegistrazione extends primanotaAbstract {
 				
 			if ($this->aggiornaRegistrazione($utility)) {
 				
-				$_SESSION["messaggio"] = "Registrazione salvata con successo";
+				$_SESSION["messaggioModifica"] = "Registrazione salvata con successo";
 
-				$this->preparaPagina($modificaRegistrazioneTemplate);
-				
-				include(self::$testata);
-				$modificaRegistrazioneTemplate->displayPagina();
-				
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
+				$fileClass = $_SESSION['referer_function_name'];
+
+				if (strrpos($fileClass,"Registrazione") > 0) {
+					$ricercaRegistrazione = RicercaRegistrazione::getInstance();
+					unset($_SESSION["numfatt"]);
+					$ricercaRegistrazione->go();						
+				}
+				elseif (strrpos($fileClass,"Scadenze") > 0) {
+					$ricercaScadenze = RicercaScadenze::getInstance();
+					$ricercaScadenze->go();
+				}
 			}
 		}
 		else {

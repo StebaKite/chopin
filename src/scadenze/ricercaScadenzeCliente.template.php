@@ -42,12 +42,12 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 		
-		if ($_SESSION["datascad_da"] == "") {
+		if ($_SESSION["datareg_da"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la data di inizio ricerca";
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["datascad_a"] == "") {
+		if ($_SESSION["datareg_a"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la data di fine ricerca";
 			$esito = FALSE;
 		}

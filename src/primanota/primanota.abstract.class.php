@@ -20,6 +20,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryUpdateRegistrazione = "/primanota/updateRegistrazione.sql";
 	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
+	public static $queryDeleteScadenzaCliente = "/primanota/deleteScadenzaCliente.sql";
+	
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
@@ -319,32 +321,62 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
-		/**
-		 * Se l'aggiornamento della registrazione è andata bene cancello la data scadenza e vedo se inserirla 
-		 */
 		if ($result) {
-			$replace = array(
-					'%id_registrazione%' => trim($id_registrazione)
-			);
-			$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenza;
-			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-			$result = $db->execSql($sql);
 			
-			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
-			
-			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-				
-			if (($fornitore != "") && ($dataScadenza > $dataRegistrazione)) {
+			/**
+			 * Se l'aggiornamento della registrazione è andata bene cancello la data scadenza del fornitore
+			 * e vedo se inserirla
+			 */
+					
+			if (($fornitore != "") && ($fornitore != "null")) {
 
-				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-				foreach(pg_fetch_all($result_fornitore) as $row) {
-					$tipAddebito_fornitore = $row['tip_addebito'];
+				$replace = array(
+						'%id_registrazione%' => trim($id_registrazione)
+				);
+				$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenza;
+				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+				$result = $db->execSql($sql);
+					
+				$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+				$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+					
+				$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+				$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+				
+				if ($dataScadenza > $dataRegistrazione) {
+				
+					$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+					foreach(pg_fetch_all($result_fornitore) as $row) {
+						$tipAddebito_fornitore = $row['tip_addebito'];
+					}
+					$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare,
+							$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 				}				
-				$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare,
-						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
-			}
+			}			
+			else {
+				
+				if (($cliente != "") && ($cliente != "null")) {
+
+					/**
+					 * Se è un cliente cancello la scadenza cliente e la ricreo.
+					 */
+					
+					$replace = array(
+							'%id_registrazione%' => trim($id_registrazione)
+					);
+					$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaCliente;
+					$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+					$result = $db->execSql($sql);
+					
+					$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+					foreach(pg_fetch_all($result_cliente) as $row) {
+						$tipAddebito_cliente = $row['tip_addebito'];
+					}
+			
+					$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
+							$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
+				}
+			}				
 			return TRUE;
 		}
 		return FALSE;
