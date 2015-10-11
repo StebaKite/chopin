@@ -27,6 +27,7 @@ abstract class ChopinAbstract {
 	public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
 	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
 	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
+	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
 	public static $queryCreaEvento = "/main/creaEvento.sql";
 	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
 	
@@ -255,6 +256,25 @@ abstract class ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idcliente
+	 * @return unknown
+	 */
+	public function leggiIdCliente($db, $utility, $idcliente) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
 	/**
 	 *
 	 * @param unknown $db
