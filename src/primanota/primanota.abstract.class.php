@@ -13,6 +13,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryCreaRegistrazione = "/primanota/creaRegistrazione.sql";
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
+	public static $queryCreaScadenzaCliente = "/primanota/creaScadenzaCliente.sql";
 	
 	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
 	public static $queryLeggiDettagliRegistrazione = "/primanota/leggiDettagliRegistrazione.sql";
@@ -89,7 +90,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);	
 		/**
-		 * Se la creazione della registrazione è andata bene vedo se inserire la scadenza
+		 * Se la creazione della registrazione è andata bene vedo se inserire la scadenza per il fornitore o per il cliente
 		*/
 		if (($result) && $dataScadenza != "null" ) {
 
@@ -113,7 +114,19 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				
 				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], 
 						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
-			} 
+			}
+			else {
+				if ($cliente != "") {
+
+					$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+					foreach(pg_fetch_all($result_cliente) as $row) {
+						$tipAddebito_cliente = $row['tip_addebito'];
+					}
+
+					$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
+							$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
+				}
+			}
 		}
 		return $result;
 	}
@@ -171,6 +184,42 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%sta_scadenza%' => trim($staScadenza)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenza;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idRegistrazione
+	 * @param unknown $datareg
+	 * @param unknown $importo
+	 * @param unknown $descreg
+	 * @param unknown $tipaddebito
+	 * @param unknown $codneg
+	 * @param unknown $cliente
+	 * @param unknown $numfatt
+	 * @param unknown $staScadenza
+	 * @return unknown
+	 */
+	public function inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datareg, $importo,
+			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idRegistrazione),
+				'%dat_registrazione%' => trim($datareg),
+				'%imp_registrazione%' => trim($importo),
+				'%nota%' => trim($descreg),
+				'%tip_addebito%' => trim($tipaddebito),
+				'%cod_negozio%' => trim($codneg),
+				'%id_cliente%' => $cliente,
+				'%num_fattura%' => trim($numfatt),
+				'%sta_scadenza%' => trim($staScadenza)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenzaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
