@@ -78,6 +78,8 @@ creaNuovoCliente = Nuovo Cliente
 modificaCliente = Modifica Cliente
 mastrinoConto = Mastrino Conto
 ricercaScadenze = Ricerca Scadenze
+ricercaScadenzeCliente = Ricerca Scadenze Cliente
+
 creaNuovoPagamento = Nuovo Pagamento
 modificaPagamento = Modifica Pagamento
 bilancioEsercizio = Bilancio Esercizio
@@ -147,3 +149,4 @@ pagato = Pagato
 shift = Posticipati
 costi = Costi
 ricavi = Ricavi
+datregistrazione = Reg.
