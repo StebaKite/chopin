@@ -26,8 +26,10 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
 	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
+	public static $queryLeggiScadenzeAperteCliente = "/primanota/ricercaScadenzeAperteCliente.sql";
 	public static $queryLeggiScadenzeFornitore = "/primanota/ricercaScadenzeFornitore.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
+	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
 	
 	function __construct() {
 	}
@@ -94,37 +96,46 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		/**
 		 * Se la creazione della registrazione è andata bene vedo se inserire la scadenza per il fornitore o per il cliente
 		*/
-		if (($result) && $dataScadenza != "null" ) {
+		if ($result) {
 
 			$_SESSION['idRegistrazione'] = $db->getLastIdUsed();
-				
-			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
 			
-			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-			
-			$tipAddebito_fornitore = "";
-			$staScadenza = "00"; 	// aperta
-									
-			if (($fornitore != "") && ($dataScadenza > $dataRegistrazione)) {
+			if ($fornitore != "null") {
 				
-				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-				foreach(pg_fetch_all($result_fornitore) as $row) {
-					$tipAddebito_fornitore = $row['tip_addebito'];
-				}				
+				if ($datascad != "null") {
 				
-				$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"], 
-						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+						
+					$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+					$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+						
+					$tipAddebito_fornitore = "";
+					$staScadenza = "00"; 	// aperta
+						
+					if ($dataScadenza > $dataRegistrazione) {
+				
+						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+						foreach(pg_fetch_all($result_fornitore) as $row) {
+							$tipAddebito_fornitore = $row['tip_addebito'];
+						}
+				
+						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"],
+								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+					}
+				}
 			}
 			else {
-				if ($cliente != "") {
+				if ($cliente != "null") {
 
+					$tipAddebito_cliente = "";
+					$staScadenza = "00"; 	// aperta
+								
 					$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
 					foreach(pg_fetch_all($result_cliente) as $row) {
 						$tipAddebito_cliente = $row['tip_addebito'];
 					}
-
+								
 					$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
 							$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
 				}
@@ -416,6 +427,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @return unknown
+	 */
 	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
 
 		$array = $utility->getConfig();
@@ -428,6 +446,33 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	} 
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idcliente
+	 * @return unknown
+	 */
+	public function prelevaScadenzeAperteCliente($db, $utility, $idcliente) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
 	public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
 	
 		$array = $utility->getConfig();
@@ -441,6 +486,15 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @param unknown $numeroFattura
+	 * @param unknown $statoScadenza
+	 * @param unknown $idregistrazione\
+	 */
 	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
 
 		$array = $utility->getConfig();
@@ -453,7 +507,22 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-	}					
+	}
+						
+	public function cambiaStatoScadenzaCliente($db, $utility, $idcliente, $numeroFattura, $statoScadenza, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => (int)$idcliente,
+				'%num_fattura%' => trim($numeroFattura),
+				'%sta_scadenza%' => trim($statoScadenza),
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenzaCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+	}
+	
 }
 
 ?>

@@ -82,7 +82,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"<table class='result'>" .
 			"	<thead>" .
 			"		<th width='70'>%ml.datregistrazione%</th>" .
-			"		<th width='200'>%ml.codcli%</th>" .
+			"		<th width='200'>%ml.codcliente%</th>" .
 			"		<th width='250'>%ml.notascadenza%</th>" .
 			"		<th width='50'>%ml.numfatt%</th>" .
 			"		<th width='90'>%ml.tipaddebito%</th>" .
@@ -122,21 +122,21 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				else {$tipaddebito = "&ndash;&ndash;&ndash;";}
 
 				if (trim($row['sta_scadenza']) == "00") {
-					$stascadenza = "Da Pagare";
+					$stascadenza = "Da Incassare";
 					$tdclass = "class='ko'";
 					$bottoneModificaIncasso = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "10") {
-					$stascadenza = "Pagato";
+					$stascadenza = "Incassato";
 					$tdclass = "class='ok'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='mark'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
 				$numfatt = trim($row['num_fattura']);

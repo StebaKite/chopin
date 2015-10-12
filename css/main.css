@@ -46,11 +46,12 @@
 	}
 	#menu-accordion li a {
 		color: #515151;
-		font-weight: bolder;
+		font-weight: normal;
 		text-decoration: none;
 	}
 	#menu-accordion li a:hover {
-		color: #85010f;
+		font-weight: bolder;
+		color: #FF9933;
 	}
 	.overflow{
 		height: 200px;

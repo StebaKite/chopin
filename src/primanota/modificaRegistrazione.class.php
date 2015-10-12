@@ -53,13 +53,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la 
 		 * quale redirigere l'utente dopo la modifica 
 		 */
-		$referer = $_SERVER['HTTP_REFERER'];
-		$referer_temp1 = str_replace ("//", " ", $referer);
-		$referer_temp2 = str_replace ("/", " ", $referer_temp1);
-		$referer_temp3 = str_replace ("?", " ", $referer_temp2);
-		
-		$ref = explode(" ",$referer_temp3);
-		$_SESSION['referer_function_name'] = $ref[5];
+		$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
 		
 		$modificaRegistrazioneTemplate = ModificaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($modificaRegistrazioneTemplate);

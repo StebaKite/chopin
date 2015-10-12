@@ -48,6 +48,12 @@ class ModificaPagamento extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$this->prelevaDatiPagamento($utility);
 		$this->prelevaDatiDettagliPagamento($utility);
+
+		/**
+		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la
+		 * quale redirigere l'utente dopo la modifica
+		 */
+		$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
 		
 		$modificaPagamentoTemplate = ModificaPagamentoTemplate::getInstance();
 		$this->preparaPagina($modificaPagamentoTemplate);
@@ -61,6 +67,7 @@ class ModificaPagamento extends primanotaAbstract {
 	public function go() {
 
 		require_once 'modificaPagamento.template.php';
+		require_once 'ricercaScadenze.class.php';
 		require_once 'utility.class.php';
 		
 		/**
@@ -87,18 +94,14 @@ class ModificaPagamento extends primanotaAbstract {
 		
 			if ($this->aggiornaPagamento($utility)) {
 		
-				$_SESSION["messaggio"] = "Pagamento salvato con successo";
-		
-				$this->preparaPagina($modificaPagamentoTemplate);
-		
-				include(self::$testata);
-				$modificaPagamentoTemplate->displayPagina();
-		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
+				$_SESSION["messaggioModifica"] = "Pagamento salvato con successo";
+
+				$fileClass = $_SESSION['referer_function_name'];
+				
+				if (strrpos($fileClass,"Scadenze") > 0) {
+					$ricercaScadenze = RicercaScadenze::getInstance();
+					$ricercaScadenze->go();
+				}
 			}
 		}
 		else {

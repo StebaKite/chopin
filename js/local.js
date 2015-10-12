@@ -541,6 +541,26 @@ $( ".scadenzeAperteFornitore" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".scadenzeAperteCliente" )
+	.selectmenu({change:
+		function(){
+			var idcliente = $("#cliente").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#select2" ).html(xmlhttp.responseText);
+	                $( "#select2" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&idcliente=" + idcliente, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 200})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenu" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
@@ -618,6 +638,7 @@ $(function() {
 });
 
 $(".numfatt-multiple").select2();
+$(".numfatt-cliente-multiple").select2();
 
 // Hover states on the static widgets
 $( "#dialog-link, #icons li" ).hover(
