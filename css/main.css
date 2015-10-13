@@ -46,7 +46,7 @@
 	}
 	#menu-accordion li a {
 		color: #515151;
-		font-weight: normal;
+		font-weight: bolder;
 		text-decoration: none;
 	}
 	#menu-accordion li a:hover {

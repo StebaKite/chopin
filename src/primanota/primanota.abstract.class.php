@@ -28,6 +28,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
 	public static $queryLeggiScadenzeAperteCliente = "/primanota/ricercaScadenzeAperteCliente.sql";
 	public static $queryLeggiScadenzeFornitore = "/primanota/ricercaScadenzeFornitore.sql";
+	public static $queryLeggiScadenzeCliente = "/primanota/ricercaScadenzeCliente.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
 	
@@ -481,6 +482,19 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%id_pagamento%' => trim($idregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	public function prelevaScadenzeCliente($db, $utility, $idcliente, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente),
+				'%id_incasso%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		return $result;

@@ -10,7 +10,7 @@ SELECT
 	scadenza_cliente.tip_addebito,
 	scadenza_cliente.num_fattura,
 	scadenza_cliente.sta_scadenza,
-	scadenza_cliente.id_pagamento
+	scadenza_cliente.id_incasso
 FROM contabilita.scadenza_cliente
 	INNER JOIN contabilita.registrazione
 		ON registrazione.id_registrazione = scadenza_cliente.id_registrazione

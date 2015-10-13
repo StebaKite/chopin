@@ -143,6 +143,34 @@ $( "#nuovo-dett-modifica-pagamento" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//Modifica registrazione : aggiunta nuovo dettaglio
+$( "#nuovo-dettaglio-modifica-incasso-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+           $("#nuovoDettaglioIncasso").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-modifica-incasso" ).click(function( event ) {
+	$( "#nuovo-dettaglio-modifica-incasso-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 // Nuovo evento
 $( "#nuovo-evento-form" ).dialog({
 	autoOpen: false,
@@ -737,6 +765,37 @@ function cancellaDettaglioPagamento(idconto) {
 	
 	$( "#idDettaglioRegistrazione" ).val(idconto);
 	$( "#cancella-dettaglio-modificapag-form" ).dialog( "open" );
+}
+
+//---------------------------------------------------------------
+// Funzioni per incassi
+//---------------------------------------------------------------
+
+//Modifica incasso : cancella dettaglio
+$( "#cancella-dettaglio-modificainc-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#cancellaDettaglioIncasso").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+function cancellaDettaglioIncasso(idconto) {
+	
+	$( "#idDettaglioRegistrazione" ).val(idconto);
+	$( "#cancella-dettaglio-modificainc-form" ).dialog( "open" );
 }
 
 //---------------------------------------------------------------

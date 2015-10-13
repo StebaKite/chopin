@@ -1,0 +1,138 @@
+<body>
+
+<script type="text/javascript">
+
+function doSubmit() {
+	
+	var selectfatt = $("#select2").val();
+	$("#numfatt").val(selectfatt);
+	$("#mainform").submit();
+}
+
+</script>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" id="back" action="../scadenze/ricercaScadenzeClienteFacade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="datareg_da" value='%datareg_da%' >
+			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
+		</form>
+		<br>
+		<form method="post" id="mainform" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.datareg% :</td>
+						<td colspan="4" class="tooltip">
+							<input class="datepicker" type="text" name="datareg" size="10" maxlength="10" value='%datareg%' >
+							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' >
+						</td>
+					</tr>	
+					<tr>
+						<td>%ml.codcau% :</td>
+						<td class="tooltip">
+							<select class="selectmenuCausale" id="causale" name="causale" >
+								<option value=""></option>
+								%elenco_causali%
+							</select>
+						</td>
+						<td>%ml.negozio% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% ><label for="villa">%ml.villa%</label>
+								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% ><label for="brembate">%ml.brembate%</label>
+								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% ><label for="trezzo">%ml.trezzo%</label>
+							</div>
+						</td>					
+					</tr>
+					<tr>
+						<td>%ml.codclie% :</td>
+						<td class="tooltip">
+							<select class="scadenzeAperteCliente" id="cliente" name="cliente" >
+								<option value=""></option>
+								%elenco_clienti%
+							</select>
+						</td>
+					</tr>					
+					<tr>
+						<td>%ml.numfatt% :</td>
+						<td>
+							<select class="numfatt-multiple" multiple="multiple" style="width: 300px" name="numfatt" id="select2">
+							%elenco_scadenze_cliente%
+							</select>						
+						</td>	
+					</tr>
+					<tr>
+						<td colspan="4">
+							<table id="dettagli" class="datiCreateSottile">
+							    <thead>
+									<tr> 
+										<th width="350" align="left">Conto</th>
+										<th width="100" align="right">Importo</th> 
+										<th width="50" align="center">D/A</th>
+										<th>&nbsp;</th>
+									</tr>
+							    </thead>
+							    <tbody>%tbody_dettagli%</tbody>
+							</table>			
+						</td>
+					</tr>										
+				</tbody>
+				<tfoot>
+					<tr>						
+						<td colspan="4" align="right" class="tooltip">
+							<button id="nuovo-dett-modifica-incasso" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button>
+							<input type="hidden" id="numfatt" name="numfatt" />
+						</td>
+						<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+</div>
+
+<div id="nuovo-dettaglio-modifica-incasso-form" title="Nuovo Dettaglio"> 
+	<form method="post" id="nuovoDettaglioIncasso" action="../primanota/inserisciDettaglioIncassoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importo" name="importo" required size="20" maxlength="20" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.conto% :</td>
+					<td>
+						<select class="selectmenuConto" id="conti" name="conti">
+							<option value=""></option>
+							%elenco_conti%
+						</select>
+					</td>
+				</tr>					
+				<tr>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="dare" name="dareavere" value="D" checked ><label for="dare">%ml.dare%</label>
+							<input type="radio" id="avere" name="dareavere" value="A" ><label for="avere">%ml.avere%</label>
+							<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
+						</div>
+					</td>					
+				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+<div id="cancella-dettaglio-modificainc-form" title="Cancella Dettaglio"> 
+	<form method="post" id="cancellaDettaglioIncasso" action="../primanota/cancellaDettaglioINcassoFacade.class.php?modo=go" >
+		<p>Elimino il dettaglio dell'incasso ?</p>
+		<input type="hidden" id="idDettaglioRegistrazione" name="idDettaglioRegistrazione">
+  </form>
+</div>
+
+<br/>

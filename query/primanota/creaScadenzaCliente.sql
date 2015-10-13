@@ -9,7 +9,7 @@ INSERT INTO contabilita.scadenza_cliente
 	id_cliente,
 	num_fattura,
 	sta_scadenza,
-	id_pagamento)
+	id_incasso)
 VALUES
 	(nextval('contabilita.scadenza_cliente_id_scadenza_seq'),
 	%id_registrazione%,

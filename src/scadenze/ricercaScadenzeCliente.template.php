@@ -130,13 +130,13 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Incassato";
 					$tdclass = "class='ok'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='mark'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
 				$numfatt = trim($row['num_fattura']);
