@@ -340,7 +340,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			 * e vedo se inserirla
 			 */
 					
-			if (($fornitore != "") && ($fornitore != "null")) {
+			if ($fornitore != "null") {
 
 				$replace = array(
 						'%id_registrazione%' => trim($id_registrazione)
@@ -367,7 +367,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			}			
 			else {
 				
-				if (($cliente != "") && ($cliente != "null")) {
+				if ($cliente != "null") {
 
 					/**
 					 * Se è un cliente cancello la scadenza cliente e la ricreo.
