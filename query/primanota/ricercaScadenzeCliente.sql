@@ -2,7 +2,7 @@ select t1.*
   from (
 		select num_fattura 
 		from contabilita.scadenza_cliente
-		where id_incasso = %id_incasso%
+		where id_registrazione = %id_registrazione%
 		
 		union
 		

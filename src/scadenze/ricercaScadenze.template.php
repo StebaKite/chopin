@@ -130,13 +130,13 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Pagato";
 					$tdclass = "class='ok'";
-					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='mark'";
-					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
 				$numfatt = trim($row['num_fattura']);

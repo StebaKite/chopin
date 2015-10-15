@@ -154,6 +154,7 @@ class ModificaIncassoTemplate extends PrimanotaAbstract {
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%idregistrazione%' => $_SESSION["idRegistrazione"],
+				'%idincasso%' => $_SESSION["idIncasso"],
 				'%descreg%' => $_SESSION["descreg"],
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],

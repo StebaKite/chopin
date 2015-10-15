@@ -2,7 +2,7 @@ select t1.*
   from (
 		select num_fattura 
 		from contabilita.scadenza
-		where id_pagamento = %id_pagamento%
+		where id_registrazione = %id_registrazione%
 		
 		union
 		

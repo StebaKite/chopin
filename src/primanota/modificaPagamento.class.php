@@ -125,7 +125,7 @@ class ModificaPagamento extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 	
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idPagamento"]);
 	
 		if ($result) {
 	
@@ -143,7 +143,7 @@ class ModificaPagamento extends primanotaAbstract {
 			}
 		}
 		else {
-			error_log(">>>>>> Errore prelievo dati pagamento : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+			error_log(">>>>>> Errore prelievo dati pagamento : " . $_SESSION["idPagamento"] . " <<<<<<<<" );
 		}
 	}
 	
@@ -153,13 +153,13 @@ class ModificaPagamento extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 	
-		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idPagamento"]);
 	
 		if ($result) {
 			$_SESSION["elencoDettagliPagamento"] = $result;
 		}
 		else {
-			error_log(">>>>>> Errore prelievo dati pagamento (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+			error_log(">>>>>> Errore prelievo dati pagamento (dettagli) : " . $_SESSION["idPagamento"] . " <<<<<<<<" );
 		}
 	}
 	
@@ -199,7 +199,7 @@ class ModificaPagamento extends primanotaAbstract {
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$staScadenza = "10";   // pagata
 		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"],
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idPagamento"], $_SESSION["totaleDare"],
 			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
 			$codneg, $staScadenza)) {
 
@@ -211,7 +211,7 @@ class ModificaPagamento extends primanotaAbstract {
 			
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idRegistrazione']);
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idPagamento']);
 			}
 				
 			$db->commitTransaction();

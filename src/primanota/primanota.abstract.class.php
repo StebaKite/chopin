@@ -479,7 +479,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_fornitore%' => trim($idfornitore),
-				'%id_pagamento%' => trim($idregistrazione)
+				'%id_registrazione%' => trim($idregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -492,7 +492,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_cliente%' => trim($idcliente),
-				'%id_incasso%' => trim($idregistrazione)
+				'%id_registrazione%' => trim($idregistrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

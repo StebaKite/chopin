@@ -10,13 +10,15 @@ $modificaIncasso = ModificaIncasso::getInstance();
 if ($_GET["modo"] == "start") {
 
 	$_SESSION["idRegistrazione"] = $_REQUEST["idRegistrazione"];
+	$_SESSION["idIncasso"] = $_REQUEST["idIncasso"];
 	
 	$modificaIncasso->start();
 }
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["idRegistrazione"] = $_POST["idRegistrazione"];
+	$_SESSION["idRegistrazione"] = $_REQUEST["idRegistrazione"];
+	$_SESSION["idIncasso"] = $_REQUEST["idIncasso"];
 	$_SESSION["descreg"] = $_REQUEST["descreg"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];

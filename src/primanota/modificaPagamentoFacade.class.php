@@ -10,6 +10,7 @@ $modificaPagamento = ModificaPagamento::getInstance();
 if ($_GET["modo"] == "start") {
 
 	$_SESSION["idRegistrazione"] = $_REQUEST["idRegistrazione"];
+	$_SESSION["idPagamento"] = $_REQUEST["idPagamento"];
 	
 	$modificaPagamento->start();
 }
@@ -17,6 +18,7 @@ if ($_GET["modo"] == "start") {
 if ($_GET["modo"] == "go") {
 
 	$_SESSION["idRegistrazione"] = $_POST["idRegistrazione"];
+	$_SESSION["idPagamento"] = $_POST["idPagamento"];
 	$_SESSION["descreg"] = $_REQUEST["descreg"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];

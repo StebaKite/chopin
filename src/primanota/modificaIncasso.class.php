@@ -125,7 +125,7 @@ class ModificaIncasso extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 	
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idIncasso"]);
 	
 		if ($result) {
 	
@@ -143,7 +143,7 @@ class ModificaIncasso extends primanotaAbstract {
 			}
 		}
 		else {
-			error_log(">>>>>> Errore prelievo dati incasso : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+			error_log(">>>>>> Errore prelievo dati incasso : " . $_SESSION["idIncasso"] . " <<<<<<<<" );
 		}
 	}
 	
@@ -153,13 +153,13 @@ class ModificaIncasso extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 	
-		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idIncasso"]);
 	
 		if ($result) {
 			$_SESSION["elencoDettagliIncasso"] = $result;
 		}
 		else {
-			error_log(">>>>>> Errore prelievo dati incasso (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+			error_log(">>>>>> Errore prelievo dati incasso (dettagli) : " . $_SESSION["idIncasso"] . " <<<<<<<<" );
 		}
 	}
 	
@@ -211,7 +211,7 @@ class ModificaIncasso extends primanotaAbstract {
 			
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idRegistrazione']);
+				$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idIncasso']);
 			}
 				
 			$db->commitTransaction();
