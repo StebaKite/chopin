@@ -632,9 +632,10 @@ $( ".selectCategoriaConti" )
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
-$( ".selectmenuCausale" ).selectmenu({ width: 300 });
-$( ".selectmenuFornitore" ).selectmenu({ width: 300 });
-$( ".selectmenuCliente" ).selectmenu({ width: 300 });
+$( ".selectmenuCausale" ).selectmenu({ width: 400 });
+$( ".selectmenuFornitore" ).selectmenu({ width: 400 });
+$( ".selectmenuCliente" ).selectmenu({ width: 400 });
+$( ".scadenzeAperteCliente" ).selectmenu({ width: 400 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
 $("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');

@@ -98,6 +98,10 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 					$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovate " . $_SESSION['numScadenzeClienteTrovate'] . " scadenze";
 					unset($_SESSION["messaggioCancellazione"]);
 				}
+				elseif (isset($_SESSION["messaggioModifica"])) {
+					$_SESSION["messaggio"] = $_SESSION["messaggioModifica"] . "<br>" . "Trovate " . $_SESSION['numScadenzeClienteTrovate'] . " scadenze";
+					unset($_SESSION["messaggioModifica"]);
+				}				
 				else {
 					$_SESSION["messaggio"] = "Trovate " . $_SESSION['numScadenzeClienteTrovate'] . " scadenze";
 				}

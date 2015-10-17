@@ -112,8 +112,14 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$datregistrazione  = trim($row['dat_registrazione']);
 				}
 				
-				$class = "class=''";
-				$bottoneVisualizzaRegistrazione = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+				if (trim($row['sta_registrazione']) == "00") {
+					$class = "class=''";
+					$bottoneModificaRegistrazione = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaFattura%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+				}
+				else {
+					$class = "class=''";
+					$bottoneModificaRegistrazione = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-search'></span></li></a>";
+				}
 				
 				if (trim($row['nota']) != "") {$nota = trim($row['nota']);}
 				else {$nota = "&ndash;&ndash;&ndash;";} 
@@ -130,13 +136,13 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Incassato";
 					$tdclass = "class='ok'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='mark'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
 				$numfatt = trim($row['num_fattura']);
@@ -170,7 +176,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				"	<td width='98' align='center'>" . $tipaddebito . "</td>" .
 				"	<td width='88' align='center'" . $tdclass . ">" . $stascadenza . "</td>" .
 				"	<td width='98' align='right'>&euro;" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneVisualizzaRegistrazione . "</td>" .
+				"	<td width='30' id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
 				"	<td width='30' id='icons'>" . $bottoneModificaIncasso . "</td>" .
 				"</tr>";
 

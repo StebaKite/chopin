@@ -128,6 +128,58 @@ class CreaRegistrazione extends primanotaAbstract {
 		
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
 
+			/**
+			 * Se l'aggiornamento della registrazione è andata bene creo le scadenze fornitore o cliente
+			 */
+					
+			if ($fornitore != "null") {
+			
+				if ($datascad != "null") {
+						
+					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+			
+					$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+					$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+			
+					$tipAddebito_fornitore = "";
+					$staScadenza = "00"; 	// aperta
+			
+					if ($dataScadenza > $dataRegistrazione) {
+			
+						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+						foreach(pg_fetch_all($result_fornitore) as $row) {
+							$tipAddebito_fornitore = $row['tip_addebito'];
+						}
+			
+						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"],
+								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+					}
+				}
+			}
+			else {
+				if ($cliente != "null") {
+			
+					if ($datascad == "null") {			// per i clienti la data scadenza non c'è
+			
+						$tipAddebito_cliente = "";
+						$staScadenza = "00"; 	// aperta
+			
+						$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+						foreach(pg_fetch_all($result_cliente) as $row) {
+							$tipAddebito_cliente = $row['tip_addebito'];
+						}
+			
+						$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
+								$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
+					}
+				}
+			}
+			
+			/**
+			 * Creo i dettagli della registrazione passati dalla pagina
+			 */
+			
  			$d = explode(",", $_SESSION['dettagliInseriti']);
 
 			foreach($d as $ele) {

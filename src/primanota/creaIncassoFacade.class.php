@@ -8,6 +8,15 @@ session_start();
 $creaIncasso = CreaIncasso::getInstance();
 
 if ($_GET["modo"] == "start") {
+	
+	unset($_SESSION["descreg"]);
+	unset($_SESSION["datareg"]);
+	unset($_SESSION["numfatt"]);
+	unset($_SESSION["codneg"]);
+	unset($_SESSION["causale"]);
+	unset($_SESSION["cliente"]);
+	unset($_SESSION["dettagliInseriti"]);
+	unset($_SESSION["indexDettagliInseriti"]);
 	$creaIncasso->start();
 }
 

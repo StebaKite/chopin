@@ -169,25 +169,9 @@ class ModificaIncasso extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-		/**
-		 * Controllo se sono cambiati il codice del cliente o i numeri di fattura
-		 * Se sono cambiati, prima di aggiornare cambio lo stato alle fatture incassate: da "10" a "00"
-		 * valorizzo a null anche l'id_incasso 
-		*/
-	
-		if (($_SESSION["cliente"] != $_SESSION["cliente_old"]) || ($_SESSION["numfatt"] != $_SESSION["numfatt_old"])) {
-
-			$d = explode(",", $_SESSION["numfatt_old"]);
-			
-			foreach($d as $numeroFattura) {
-				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaCliente($db, $utility, $_SESSION["cliente_old"], $numfatt, '00', 'null');
-			}
-		}
 		
 		/**
-		 * Aggiornamento del pagamento
+		 * Aggiornamento della registrazione di incasso
 		 */		
 		
 		$descreg = $_SESSION["descreg"];
@@ -199,21 +183,55 @@ class ModificaIncasso extends primanotaAbstract {
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
 		$staScadenza = "10";   // pagata
 		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"],
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idIncasso"], $_SESSION["totaleDare"],
 			$descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $stareg,
 			$codneg, $staScadenza)) {
 
 			/**
-			 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
+			 * Se sono cambiati il codice cliente o i numeri fattura, cambio lo stato alle fatture incassate: da "10" a "00"
+			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_incasso
 			 */
-				
-			$d = explode(",", $_SESSION["numfatt"]);
 			
-			foreach($d as $numeroFattura) {
-				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idIncasso']);
-			}
+			if ((trim($_SESSION["cliente"]) != trim($_SESSION["cliente_old"])) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"]))) {
+			
+				$d = explode(",", $_SESSION["numfatt_old"]);
+					
+				foreach($d as $numeroFattura) {
+					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
+					$this->cambiaStatoScadenzaCliente($db, $utility, $_SESSION["cliente_old"], $numfatt, '00', 'null');
+					
+					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $_SESSION["cliente_old"], $numfatt);
+					
+					if ($result_idReg) {
+					
+						foreach(pg_fetch_all($result_idReg) as $row) {
+							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
+						}					
+						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '00');
+					}
+				}
 				
+				/**
+				 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
+				 */
+				
+				$d = explode(",", $_SESSION["numfatt"]);
+					
+				foreach($d as $numeroFattura) {
+					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
+					$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idIncasso']);
+
+					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $_SESSION["cliente"], $numfatt);
+						
+					if ($result_idReg) {
+							
+						foreach(pg_fetch_all($result_idReg) as $row) {
+							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
+						}
+						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');
+					}
+				}
+			}
 			$db->commitTransaction();
 			return TRUE;
 		}

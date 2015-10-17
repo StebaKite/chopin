@@ -7,7 +7,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 	private static $_instance = null;
 
 	public static $azioneModificaRegistrazione = "../primanota/modificaRegistrazioneFacade.class.php?modo=go";
-	
+		
 	function __construct() {
 
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
@@ -69,6 +69,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		require_once 'modificaRegistrazione.template.php';
 		require_once 'ricercaRegistrazione.class.php';
 		require_once 'ricercaScadenze.class.php';
+		require_once 'ricercaScadenzeCliente.class.php';
 		require_once 'utility.class.php';
 	
 		/**
@@ -99,14 +100,18 @@ class ModificaRegistrazione extends primanotaAbstract {
 
 				$fileClass = $_SESSION['referer_function_name'];
 
-				if (strrpos($fileClass,"Registrazione") > 0) {
+				if (strrpos($fileClass,"ScadenzeCliente") > 0) {	// scadenze clienti
+					$ricercaScadenzeCliente = RicercaScadenzeCliente::getInstance();
+					$ricercaScadenzeCliente->go();
+				}
+				elseif (strrpos($fileClass,"Scadenze") > 0) {			// scadenze fornitori
+					$ricercaScadenze = RicercaScadenze::getInstance();
+					$ricercaScadenze->go();
+				}
+				elseif (strrpos($fileClass,"Registrazione") > 0) {
 					$ricercaRegistrazione = RicercaRegistrazione::getInstance();
 					unset($_SESSION["numfatt"]);
 					$ricercaRegistrazione->go();						
-				}
-				elseif (strrpos($fileClass,"Scadenze") > 0) {
-					$ricercaScadenze = RicercaScadenze::getInstance();
-					$ricercaScadenze->go();
 				}
 			}
 		}
@@ -147,6 +152,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				$_SESSION["causale"] = $row["cod_causale"];
 				$_SESSION["fornitore"] = $row["id_fornitore"];
 				$_SESSION["cliente"] = $row["id_cliente"];				
+				$_SESSION["stascad"] = $row["sta_scadenza"];
 			}
 		}
 		else {
@@ -185,10 +191,6 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$db = Database::getInstance();
 		$db->beginTransaction();
 	
-		/**
-		 * Crea la registrazione e tutti i suoi dettagli
-		*/
-		
 		$descreg = $_SESSION["descreg"];
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
@@ -198,15 +200,54 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$causale = $_SESSION["causale"];
 		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;		
-		$staScadenza = "00";   // aperta
+		$staScadenza = "00"; 
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 
-				$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
-				$codneg, $staScadenza)) {
+			$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
+			$codneg, $staScadenza)) {
+							
+			/**
+			 * Se l'aggiornamento della registrazione è andata bene ricreo le scadenze fornitore o cliente
+			 */
+				
+			if ($fornitore != "null") {
+		
+				$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
 					
+				$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+				$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+					
+				$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+				$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+		
+				if ($dataScadenza > $dataRegistrazione) {
+		
+					$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+					foreach(pg_fetch_all($result_fornitore) as $row) {
+						$tipAddebito_fornitore = $row['tip_addebito'];
+					}
+					$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare,
+							$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+				}
+			}
+			else {
+		
+				if ($cliente != "null") {
+		
+					if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
+						
+						$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+						foreach(pg_fetch_all($result_cliente) as $row) {
+							$tipAddebito_cliente = $row['tip_addebito'];
+						}
+						$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
+								$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);						
+					}						
+				}
+			}
 			$db->commitTransaction();
-			return TRUE;
-		}
+			return TRUE;				
+		}		
 		else {
 			$db->rollbackTransaction();
 			error_log("Errore inserimento registrazione, eseguito Rollback");
