@@ -28,7 +28,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryLeggiScadenzeFornitore = "/primanota/ricercaScadenzeFornitore.sql";
 	public static $queryLeggiScadenzeCliente = "/primanota/ricercaScadenzeCliente.sql";
 	public static $queryPrelevaScadenzaCliente = "/primanota/leggiScadenzaCliente.sql";
-	public static $queryPrelevaScadenzaFornitore = "primanota/leggiScadenzaFornitore.sql";
+	public static $queryPrelevaScadenzaFornitore = "/primanota/leggiScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
 

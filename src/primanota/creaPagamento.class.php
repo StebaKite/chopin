@@ -51,7 +51,14 @@ class CreaPagamento extends primanotaAbstract {
 	
 		$_SESSION["datareg"] = date("d/m/Y");
 		$_SESSION["codneg"] = "VIL";
-	
+		unset($_SESSION["descreg"]);
+		unset($_SESSION["causale"]);
+		unset($_SESSION["numfatt"]);
+		unset($_SESSION["fornitore"]);
+		unset($_SESSION["dettagliInseriti"]);
+		unset($_SESSION["indexDettagliInseriti"]);
+		unset($_SESSION["elenco_scadenze_cliente"]);
+		
 		// Compone la pagina
 		include(self::$testata);
 		$creaPagamentoTemplate->displayPagina();
@@ -154,7 +161,23 @@ class CreaPagamento extends primanotaAbstract {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
 				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idRegistrazione']);					
 			}
-	
+
+			/**
+			 * Chiudo la registrazione della fattura emessa.
+			 * In sessione ho l'ID del pagamento appena inserito (idRegistrazione), devo recuperare l'ID della
+			 * registrazione della fattura originale, lo prendo dalla scadenza che ho appena chiuso
+			 */
+			
+			$result_scadenza_fornitore = $this->leggiScadenzaFornitore($db, $utility, $fornitore, $_SESSION['idRegistrazione']);
+			
+			if ($result_scadenza_fornitore) {
+			
+				foreach(pg_fetch_all($result_scadenza_fornitore) as $row) {
+					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
+				}
+				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK
+			}
+			
 			$db->commitTransaction();
 			return TRUE;
 		}

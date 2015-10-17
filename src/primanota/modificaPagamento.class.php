@@ -169,22 +169,6 @@ class ModificaPagamento extends primanotaAbstract {
 	
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-		/**
-		 * Controllo se sono cambiati il codice del fornitore o i numeri di fattura
-		 * Se sono cambiati, prima di aggiornare cambio lo stato alle fatture pagate: da "10" a "00"
-		 * valorizzo a null anche l'id_pagamento 
-		*/
-	
-		if (($_SESSION["fornitore"] != $_SESSION["fornitore_old"]) || ($_SESSION["numfatt"] != $_SESSION["numfatt_old"])) {
-
-			$d = explode(",", $_SESSION["numfatt_old"]);
-			
-			foreach($d as $numeroFattura) {
-				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore_old"], $numfatt, '00', 'null');
-			}
-		}
 		
 		/**
 		 * Aggiornamento del pagamento
@@ -204,6 +188,31 @@ class ModificaPagamento extends primanotaAbstract {
 			$codneg, $staScadenza)) {
 
 			/**
+			 * Se sono cambiati il codice fornitore o i numeri fattura, cambio lo stato alle fatture pagate: da "10" a "00"
+			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_pagamento
+			 */
+			
+			if ((trim($_SESSION["fornitore"]) != trim($_SESSION["fornitore_old"]) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"])))) {
+			
+				$d = explode(",", $_SESSION["numfatt_old"]);
+					
+				foreach($d as $numeroFattura) {
+					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
+					$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore_old"], $numfatt, '00', 'null');
+
+					$result_idReg = $this->prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $_SESSION["fornitore_old"], $numfatt);
+						
+					if ($result_idReg) {
+							
+						foreach(pg_fetch_all($result_idReg) as $row) {
+							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
+						}
+						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '00');
+					}						
+				}
+			}
+				
+			/**
 			 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
 			 */
 				
@@ -211,9 +220,18 @@ class ModificaPagamento extends primanotaAbstract {
 			
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idPagamento']);
-			}
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore"], $numfatt, '10', $_SESSION['idPagamento']);
+
+				$result_idReg = $this->prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $_SESSION["fornitore"], $numfatt);
 				
+				if ($result_idReg) {
+						
+					foreach(pg_fetch_all($result_idReg) as $row) {
+						$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
+					}
+					$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');
+				}				
+			}				
 			$db->commitTransaction();
 			return TRUE;
 		}
