@@ -57,7 +57,7 @@ class InserisciDettaglioPagamento extends primanotaAbstract {
 		$sottoconto = substr(trim($cc[0]), 3);
 		$d_a = $_SESSION["dareavere"];
 
-		if ($this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $conto, $sottoconto, $importo, $d_a)) {
+		if ($this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION["idPagamento"], $conto, $sottoconto, $importo, $d_a)) {
 
 			$db->commitTransaction();
 		}
