@@ -184,6 +184,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
+				'%elenco_causali%' => $_SESSION["elenco_causali"],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 	

@@ -352,7 +352,7 @@ $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 // Genera mastrino fornitore
 $( "#generaMastrino-form" ).dialog({
 	autoOpen: false,
-	width: 500,
+	width: 400,
 	buttons: [
 		{
 			text: "Ok",
@@ -632,7 +632,7 @@ $( ".selectCategoriaConti" )
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
-$( ".selectmenuCausale" ).selectmenu({ width: 350 });
+$( ".selectmenuCausale" ).selectmenu({ width: 300 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });

@@ -155,8 +155,8 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$filtriRegistrazione = "";
 		$filtriDettaglio = "";
 		
-		if ($_SESSION["cod_causale"] != "") {
-			$filtriRegistrazione .= "and reg.cod_causale != '" . $_SESSION["cod_causale"] . "'";
+		if ($_SESSION["causale"] != "") {
+			$filtriRegistrazione .= "and reg.cod_causale = '" . $_SESSION["causale"] . "'";
 		}
 		if ($_SESSION["numfatt"] != "") {
 			$filtriRegistrazione .= "and reg.num_fattura like '" . $_SESSION["numfatt"] . "%'";
@@ -194,12 +194,20 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 	}
 	
 	public function preparaPagina($ricercaRegistrazioneTemplate) {
-		
+
+		require_once 'database.class.php';
 		require_once 'utility.class.php';
-		
+
 		$_SESSION["azione"] = self::$azioneRicercaRegistrazione;
 		$_SESSION["confermaTip"] = "%ml.confermaRicercaRegistrazione%";
-		$_SESSION["titoloPagina"] = "%ml.ricercaRegistrazione%";				
+		$_SESSION["titoloPagina"] = "%ml.ricercaRegistrazione%";
+		
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+
+		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
+		
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
 	}
 }	
 ?>
