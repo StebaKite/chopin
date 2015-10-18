@@ -824,8 +824,8 @@ function cancellaSottocontoPagina(codsottoconto) {
 	var rowCount = $("#sottoconti tbody tr").length;
 	
 	if (rowCount == 0) {
-		$( "#sottoconti thead tr" ).remove();		
-		$( "#sottoconti" ).removeClass("datiCreateSottile");
+		$( "#sottoconti-head thead tr" ).remove();		
+		$( "#sottoconti-head" ).removeClass("datiCreateSottile");
 	}
 	
 	var c = parseInt(codsottoconto.toString());

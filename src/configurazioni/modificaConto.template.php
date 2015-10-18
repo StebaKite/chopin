@@ -85,16 +85,16 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 	
 		foreach ($elencoSottoconti as $row) {
 	
-			$bottoneCancella = "<td align='right'>" . $row["totale_registrazioni_sottoconto"] . "</td>";
+			$bottoneCancella = "<td width='28' align='right'>" . $row["totale_registrazioni_sottoconto"] . "</td>";
 			
 			if ($row["totale_registrazioni_sottoconto"] == 0) {
-				$bottoneCancella = "<td id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
+				$bottoneCancella = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
 			}
 			
 			$tbodySottoconti = $tbodySottoconti .
 			"<tr id='" . $row["cod_conto"] . "'>" .
-			"<td align='center'>" . $row["cod_sottoconto"] . "</td>" .
-			"<td align='left'>" . $row["des_sottoconto"] . "</td>" .			
+			"<td width='110' align='center'>" . $row["cod_sottoconto"] . "</td>" .
+			"<td width='408' align='left'>" . $row["des_sottoconto"] . "</td>" .			
 			$bottoneCancella .
 			"</tr>";
 		}

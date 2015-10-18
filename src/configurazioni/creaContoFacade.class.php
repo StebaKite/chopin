@@ -9,6 +9,16 @@ $creaConto = CreaConto::getInstance();
 
 if ($_GET["modo"] == "start") {
 
+	unset($_SESSION["codconto"]);
+	unset($_SESSION["desconto"]);
+	unset($_SESSION["catconto"]);
+	unset($_SESSION["tipconto"]);
+	unset($_SESSION["indpresenza"]);
+	unset($_SESSION["indvissottoconti"]);
+	unset($_SESSION["numrigabilancio"]);
+	unset($_SESSION["sottocontiInseriti"]);
+	unset($_SESSION["indexSottocontiInseriti"]);
+	
 	$creaConto->start();
 }
 

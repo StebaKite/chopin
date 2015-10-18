@@ -71,16 +71,20 @@ function setNumeroRigaBilancio(nn) {
 					</tr>
 					<tr>
 						<td colspan="4">
-							<table id="sottoconti" class="datiCreateSottile">
+							<table class='result'>
 							    <thead>
 									<tr>
 										<th width='100' align='center'>Sottoconto</th>
 										<th width='400' align='left'>Descrizione</th>
-										<th>&nbsp;</th>
+										<th width='16'>&nbsp;</th>
 									</tr>
 							    </thead>
-							    <tbody>%tbody_sottoconti%</tbody>
-							</table>			
+							</table>
+							<div class='scroll-sottoconti'>
+								<table id="sottoconti" class="datiCreateSottile">
+								    <tbody>%tbody_sottoconti%</tbody>
+								</table>			
+							</div>	
 						</td>
 					</tr>										
 				</tbody>
