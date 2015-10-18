@@ -230,7 +230,7 @@ class Pdf extends FPDF {
 	}
 	
 	/**
-	 * Tabella per stampa scadenziario
+	 * Tabella per stampa scadenziario Fornitori
 	 */
 	public function ScadenzeTable($header, $data) {
 		
@@ -352,6 +352,131 @@ class Pdf extends FPDF {
 	    $fill = !$fill;
 	    
    	    $this->Cell(array_sum($w),0,'','T');	  
+	}
+
+	/**
+	 * Tabella per stampa scadenziario Clienti
+	 */
+	public function ScadenzeClientiTable($header, $data) {
+	
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','B',10);
+		 
+		// Header
+		$w = array(17, 60, 120, 25, 25, 25);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+			$this->Ln();
+		  
+			// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('');
+		$this->SetFont('','',8);
+	
+		// Data
+		 
+		$idcliente_break = "";
+		$datregistrazione_break = "";
+		$totale_cliente = 0;
+		$totale_scadenze = 0;
+		 
+		$fill = false;
+		foreach($data as $row) {
+	
+			if (($idfornitore_break == "") && ($datregistrazione_break == "")) {
+				$idcliente_break = trim($row['id_cliente']);
+				$datregistrazione_break = trim($row['dat_registrazione']);
+				$descliente = trim($row['des_cliente']);
+				$datregistrazione  = trim($row['dat_registrazione']);
+			}
+		
+			if ((trim($row['id_cliente']) != $idcliente_break) | (trim($row['dat_registrazione']) != $datregistrazione_break)) {
+			 
+				$this->SetFont('','B',10);
+				$this->Cell($w[0],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[1],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
+	    		$this->Cell($w[3],6,'','LR',0,'L',$fill);
+	    		$this->Cell($w[4],6,'','LR',0,'C',$fill);
+	    		$this->Cell($w[5],6, EURO . number_format($totale_cliente, 2, ',', '.'),'LR',0,'R',$fill);
+	    		$this->Ln();
+	    		$fill = !$fill;
+	
+	    		$descliente = trim($row['des_cliente']);
+	    		$datregistrazione  = trim($row['dat_registrazione']);
+	    		$idcliente_break = trim($row['id_cliente']);
+	    		$datregistrazione_break = trim($row['dat_registrazione']);
+		    		 
+	    		$totale_scadenze += $totale_cliente;
+	    		$totale_cliente = 0;
+			}
+		
+			if (trim($row['sta_scadenza']) == "00") {
+				$stascadenza = "Da Pagare";
+				$c1 = "255";
+				$c2 = "0";
+				$c3 = "0";
+			}
+			if (trim($row['sta_scadenza']) == "10") {
+				$stascadenza = "Pagato";
+				$c1 = "0";
+				$c2 = "128";
+				$c3 = "0";
+			}
+			if (trim($row['sta_scadenza']) == "02") {
+				$stascadenza = "Posticipato";
+				$c1 = "51";
+				$c2 = "153";
+				$c3 = "255";
+			}
+		
+			$this->SetFont('','',8);
+			$this->Cell($w[0],6,utf8_decode($datregistrazione),'LR',0,'L',$fill);
+			$this->Cell($w[1],6,utf8_decode($descliente),'LR',0,'L',$fill);
+	    	$this->Cell($w[2],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
+			$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
+			$this->SetFont('','B',10);
+			$this->SetTextColor($c1, $c2, $c3);
+			$this->Cell($w[4],6,utf8_decode($stascadenza),'LR',0,'C',$fill);
+			$this->Cell($w[5],6, EURO . number_format($row['imp_registrazione'], 2, ',', '.'),'LR',0,'R',$fill);
+	    	$this->SetFont('','B',8);
+	    	$this->SetTextColor(0);
+	    	$this->Ln();
+	    	$fill = !$fill;
+	    	 
+	    	$descliente = "";
+	    	$datregistrazione = "";
+	    	$totale_cliente += trim($row['imp_registrazione']);
+		}
+		 
+		$this->SetFont('','B',10);
+		$this->Cell($w[0],6,'','LR',0,'L',$fill);
+		$this->Cell($w[1],6,'','LR',0,'L',$fill);
+		$this->Cell($w[2],6,'Totale','LR',0,'R',$fill);
+		$this->Cell($w[3],6,'','LR',0,'L',$fill);
+		$this->Cell($w[4],6,'','LR',0,'C',$fill);
+		$this->Cell($w[5],6, EURO . number_format($totale_cliente, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		$fill = !$fill;
+	
+		$totale_scadenze += $totale_cliente;
+	
+		$this->SetFont('','B',10);
+		$this->Cell($w[0],6,'','LR',0,'L',$fill);
+		$this->Cell($w[1],6,'','LR',0,'L',$fill);
+		$this->Cell($w[2],6,'Totale Incassi','LR',0,'R',$fill);
+		$this->Cell($w[3],6,'','LR',0,'L',$fill);
+		$this->Cell($w[4],6,'','LR',0,'C',$fill);
+	    $this->Cell($w[5],6, EURO . number_format($totale_scadenze, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		$fill = !$fill;
+				 
+		$this->Cell(array_sum($w),0,'','T');
 	}
 	
 	public function BilancioTable($data) {
