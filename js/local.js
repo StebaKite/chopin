@@ -497,6 +497,20 @@ $(function() {
     $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
   });
 
+$(function() {
+    $( "#slider-posizione-bilancio" ).slider({
+      range: "max",
+      min: 0,
+      max: 50,
+      value: 1,
+      step: 1,
+      slide: function( event, ui ) {
+        $( "#numrigabilancio" ).val( ui.value );
+      }
+    });
+    $( "#numrigabilancio" ).val( $( "#slider-posizione-bilancio" ).slider( "value" ) );
+  });
+
 
 $( "#slider" ).slider({
 	range: true,

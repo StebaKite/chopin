@@ -109,6 +109,11 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%contopat_checked%' => (trim($_SESSION["catconto"]) == "Stato Patrimoniale") ? "checked" : "",
 				'%dare_checked%' => (trim($_SESSION["tipconto"]) == "Dare") ? "checked" : "",
 				'%avere_checked%' => (trim($_SESSION["tipconto"]) == "Avere") ? "checked" : "",
+				'%presenzaSi_checked%' => (trim($_SESSION["indpresenza"]) == "S") ? "checked" : "",
+				'%presenzaNo_checked%' => (trim($_SESSION["indpresenza"]) == "N") ? "checked" : "",
+				'%sottocontiSi_checked%' => (trim($_SESSION["indvissottoconti"]) == "S") ? "checked" : "",
+				'%sottocontiNo_checked%' => (trim($_SESSION["indvissottoconti"]) == "N") ? "checked" : "",
+				'%numrigabilancio%' => ($_SESSION["numrigabilancio"] != "") ? $_SESSION["numrigabilancio"] : 0,
 				'%categoria%' => $_SESSION["categoria"],
 				'%tipoconto%' => $_SESSION["tipoconto"],
 				'%tbody_sottoconti%' => $tbodySottoconti

@@ -132,6 +132,9 @@ class ModificaConto extends ConfigurazioniAbstract {
 				$_SESSION["desconto"] = $row["des_conto"];
 				$_SESSION["catconto"] = $row["cat_conto"];
 				$_SESSION["tipconto"] = $row["tip_conto"];
+				$_SESSION["indpresenza"] = $row["ind_presenza_in_bilancio"];
+				$_SESSION["indvissottoconti"] = $row["ind_visibilita_sottoconti"];
+				$_SESSION["numrigabilancio"] = $row["num_riga_bilancio"];
 			}
 		}
 		else {
@@ -161,12 +164,17 @@ class ModificaConto extends ConfigurazioniAbstract {
 		
 		$db = Database::getInstance();
 		$db->beginTransaction();
-		
+
+		$codconto = $_SESSION["codconto"];
 		$desconto = $_SESSION["desconto"];
 		$catconto = $_SESSION["catconto"];
 		$tipconto = $_SESSION["tipconto"];
+		$indpresenza = $_SESSION["indpresenza"];
+		$indvissottoconti = $_SESSION["indvissottoconti"];
+		$numrigabilancio = $_SESSION["numrigabilancio"];
+		
 
-		if ($this->updateConto($db, $utility, $_SESSION["codconto"], $_SESSION["desconto"], $_SESSION["catconto"], $_SESSION["tipconto"])) {
+		if ($this->updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvissottoconti, $numrigabilancio)) {
 		
 			$db->commitTransaction();
 			return TRUE;

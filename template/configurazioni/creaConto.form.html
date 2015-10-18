@@ -78,16 +78,43 @@ function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
 							<div class="radioset" >
 								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" checked ><label for="contoeco">%ml.contoeco%</label>
 								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" ><label for="contopat">%ml.contopat%</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" id="dare" name="dareavere" value="Dare" checked ><label for="dare">%ml.dare%</label>
+								<input type="radio" id="avere" name="dareavere" value="Avere" ><label for="avere">%ml.avere%</label>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="dare" name="dareavere" value="Dare" checked ><label for="dare">%ml.dare%</label>
-								<input type="radio" id="avere" name="dareavere" value="Avere" ><label for="avere">%ml.avere%</label>
-							</div>
-						</td>					
+						<td colspan="4">
+						
+							<h2>Opzioni di bilancio</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="presenzaSi" name="indpresenza" value="S" checked ><label for="presenzaSi">%ml.presenteInBilancio%</label>
+												<input type="radio" id="presenzaNo" name="indpresenza" value="N" ><label for="presenzaNo">%ml.assenteInBilancio%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="sottocontiSi" name="indvissottoconti" value="S" checked ><label for="sottocontiSi">%ml.presenzaSottoconti%</label>
+												<input type="radio" id="sottocontiNo" name="indvissottoconti" value="N" ><label for="sottocontiNo">%ml.assenzaSottoconti%</label>
+											</div>
+										</td>				
+									</tr>
+									<tr>
+										<td>
+											<label for="amount">%ml.numrigabilancio% :</label>
+											<input type="text" id="numrigabilancio" name="numrigabilancio" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">												
+										</td>
+										<td colspan="2"><div id="slider-posizione-bilancio"></div>
+									</tr>				
+								</tbody>								
+							</table>
+						
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4">

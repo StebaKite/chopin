@@ -9,17 +9,20 @@ $modificaConto = ModificaConto::getInstance();
 
 if ($_GET["modo"] == "start") {
 
-	$_SESSION["codconto"] = $_GET["codconto"];
+	$_SESSION["codconto"] = $_REQUEST["codconto"];
 
 	$modificaConto->start();
 }
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codconto"] = $_POST["codconto"];
-	$_SESSION["desconto"] = $_POST["desconto"];
-	$_SESSION["catconto"] = $_POST["categoria"];
-	$_SESSION["tipconto"] = $_POST["dareavere"];
+	$_SESSION["codconto"] = $_REQUEST["codconto"];
+	$_SESSION["desconto"] = $_REQUEST["desconto"];
+	$_SESSION["catconto"] = $_REQUEST["categoria"];
+	$_SESSION["tipconto"] = $_REQUEST["dareavere"];
+	$_SESSION["indpresenza"] = $_REQUEST["indpresenza"];
+	$_SESSION["indvissottoconti"] = $_REQUEST["indvissottoconti"];
+	$_SESSION["numrigabilancio"] = $_REQUEST["numrigabilancio"];
 	
 	$modificaConto->go();
 }

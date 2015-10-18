@@ -1,4 +1,11 @@
-<body>
+<script>
+function setNumeroRigaBilancio(nn) {
+	$( "#slider-posizione-bilancio" ).slider( "value", nn );	
+    $( "#numrigabilancio" ).val( $( "#slider-posizione-bilancio" ).slider( "value" ) );
+}
+</script>
+
+<body onload=setNumeroRigaBilancio(%numrigabilancio%)>
 
 <div id="body">
 	<div id="main">
@@ -14,28 +21,53 @@
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td>%ml.conto% :</td>
-						<td class="tooltip"><input type="text" id="codconto" name="codconto" size="5" maxlength="3" value='%codconto%' disabled="disabled" ></td>
-					</tr>
-					<tr>
-						<td>%ml.desconto% :</td>
-						<td class="tooltip"><input type="text" id="desconto" name="desconto" size="70" maxlength="100" value='%desconto%' ></td>
-					</tr>			
-					<tr>
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" %contoeco_checked% ><label for="contoeco">%ml.contoeco%</label>
-								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" %contopat_checked% ><label for="contopat">%ml.contopat%</label>
-							</div>
+						<td class="tooltip">%ml.conto% :
+							<input type="text" id="codconto" name="codconto" size="5" maxlength="3" value='%codconto%' disabled="disabled" >
+							<input type="text" id="desconto" name="desconto" size="70" maxlength="100" value='%desconto%' >
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td >
 							<div class="radioset" >
+								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" %contoeco_checked% ><label for="contoeco">%ml.contoeco%</label>
+								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" %contopat_checked% ><label for="contopat">%ml.contopat%</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<input type="radio" id="dare" name="dareavere" value="Dare" %dare_checked% ><label for="dare">%ml.dare%</label>
 								<input type="radio" id="avere" name="dareavere" value="Avere" %avere_checked% ><label for="avere">%ml.avere%</label>
 							</div>
-						</td>					
+						</td>						
+					</tr>
+					<tr>
+						<td colspan="4">
+						
+							<h2>Opzioni di bilancio</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="presenzaSi" name="indpresenza" value="S" %presenzaSi_checked% ><label for="presenzaSi">%ml.presenteInBilancio%</label>
+												<input type="radio" id="presenzaNo" name="indpresenza" value="N" %presenzaNo_checked% ><label for="presenzaNo">%ml.assenteInBilancio%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="sottocontiSi" name="indvissottoconti" value="S" %sottocontiSi_checked% ><label for="sottocontiSi">%ml.presenzaSottoconti%</label>
+												<input type="radio" id="sottocontiNo" name="indvissottoconti" value="N" %sottocontiNo_checked%><label for="sottocontiNo">%ml.assenzaSottoconti%</label>
+											</div>
+										</td>				
+									</tr>
+									<tr>
+										<td>
+											<label for="amount">%ml.numrigabilancio% :</label>
+											<input type="text" id="numrigabilancio" name="numrigabilancio" size="3" readonly value='%numrigabilancio%' style="border:0; color:#f6931f; font-weight:bold;">												
+										</td>
+										<td colspan="2"><div id="slider-posizione-bilancio"></div>
+									</tr>				
+								</tbody>								
+							</table>
+						
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4">
