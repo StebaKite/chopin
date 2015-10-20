@@ -191,7 +191,7 @@ class Bilancio extends RiepiloghiAbstract {
 			$_SESSION['ricaviBilancio'] = $result;
 		}
 		else {
-			unset($_SESSION['costiBilancio']);
+			unset($_SESSION['ricaviBilancio']);
 			$_SESSION['numRicaviTrovati'] = 0;
 		}
 		return $result;

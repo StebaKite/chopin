@@ -72,6 +72,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$numReg = 0;
 			$totaleCosti = 0;
 			$desconto_break = "";
+			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 			
 			foreach(pg_fetch_all($costiBilancio) as $row) {
@@ -89,44 +90,69 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						
 						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 						
-						$risultato_costi .=
-						"<tr>" .
-						"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-						"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
-						"</tr>";
+						if ($ind_visibilita_sottoconti_break == 'S') {
+							$risultato_costi .=
+							"<tr>" .
+							"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+							"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+							"</tr>";
+						}
+						else {
+							$risultato_costi .=
+							"<tr>" .
+							"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td width='558' align='left'></td>" .
+							"	<td width='108' align='right'>" . $totconto . "</td>" .
+							"</tr>";
+						}
 						
 						$totaleConto = 0;
 					}					
-						
-					$risultato_costi .=
-					"<tr>" .
-					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>" . $importo . "</td>" .
-					"</tr>";
+
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_costi .=
+						"<tr>" .
+						"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"</tr>";
+					}
 
 					$desconto_break = trim($row['des_conto']);
+					$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 				}
 				else {
-					
-					$risultato_costi .=
-					"<tr>" .
-					"	<td width='308' align='left'></td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>" . $importo . "</td>" .
-					"</tr>";
+
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_costi .=
+						"<tr>" .
+						"	<td width='308' align='left'></td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"</tr>";
+					}
 				}
 				$totaleConto += $totaleSottoconto;
 			}
 
 			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 			
-			$risultato_costi .=
-			"<tr>" .
-			"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-			"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
-			"</tr>";				
-			
+			if ($ind_visibilita_sottoconti_break == 'S') {
+				$risultato_costi .=
+				"<tr>" .
+				"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+				"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+				"</tr>";
+			}
+			else {
+				$risultato_costi .=
+				"<tr>" .
+				"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td width='558' align='left'></td>" .
+				"	<td width='108' align='right'>" . $totconto . "</td>" .
+				"</tr>";
+			}
+				
 			$_SESSION['numCostiTrovati'] = $numReg;
 			$risultato_costi = $risultato_costi . "</tbody>";
 
@@ -155,6 +181,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$numReg = 0;
 			$totaleRicavi = 0;
 			$desconto_break = "";
+			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 				
 			foreach(pg_fetch_all($ricaviBilancio) as $row) {
@@ -172,44 +199,69 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					
 						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 					
-						$risultato_ricavi .=
-						"<tr>" .
-						"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-						"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
-						"</tr>";
+						if ($ind_visibilita_sottoconti_break == 'S') {
+							$risultato_ricavi .=
+							"<tr>" .
+							"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+							"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+							"</tr>";
+						}
+						else {
+							$risultato_ricavi .=
+							"<tr>" .
+							"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td width='558' align='left'></td>" .
+							"	<td width='108' align='right'>" . $totconto . "</td>" .
+							"</tr>";
+						}
 					
 						$totaleConto = 0;
 					}
 						
-					$risultato_ricavi .=
-					"<tr>" .
-					"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>" . $importo . "</td>" .
-					"</tr>";
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_ricavi .=
+						"<tr>" .
+						"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"</tr>";
+					}
 
 					$desconto_break = trim($row['des_conto']);
+					$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 				}
 				else {
 					
-					$risultato_ricavi .=
-					"<tr>" .
-					"	<td width='308' align='left'></td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>" . $importo . "</td>" .
-					"</tr>";						
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_ricavi .=
+						"<tr>" .
+						"	<td width='308' align='left'></td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"</tr>";
+					}
 				}
 				$totaleConto += $totaleSottoconto;				
 			}
 			
 			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 				
-			$risultato_ricavi .=
-			"<tr>" .
-			"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-			"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
-			"</tr>";
-			
+			if ($ind_visibilita_sottoconti_break == 'S') {
+				$risultato_ricavi .=
+				"<tr>" .
+				"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
+				"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+				"</tr>";
+			}
+			else {
+				$risultato_ricavi .=
+				"<tr>" .
+				"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td width='558' align='left'></td>" .
+				"	<td width='108' align='right'>" . $totconto . "</td>" .
+				"</tr>";
+			}
+				
 			$_SESSION['numRicaviTrovati'] = $numReg;
 			$risultato_ricavi = $risultato_ricavi . "</tbody>";
 		
