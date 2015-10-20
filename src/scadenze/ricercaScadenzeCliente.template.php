@@ -154,7 +154,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr class='subtotale'>" .
 					"	<td colspan='5' align='right'><i>Totale</i></td>" .
-					"	<td colspan='2' align='right'>&euro;" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
+					"	<td colspan='2' align='right'>&euro;" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
 					"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
 					"</tr>";
 					

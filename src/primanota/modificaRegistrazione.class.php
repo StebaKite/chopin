@@ -226,7 +226,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 					foreach(pg_fetch_all($result_fornitore) as $row) {
 						$tipAddebito_fornitore = $row['tip_addebito'];
 					}
-					$this->inserisciScadenza($db, $utility, $id_registrazione, $datascad, $totaleDare,
+					$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $_SESSION["totaleDare"],
 							$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 				}
 			}
