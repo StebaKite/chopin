@@ -92,7 +92,7 @@ creaNuovoPagamento = Nuovo Pagamento
 creaNuovoIncasso = Nuovo Incasso
 modificaPagamento = Modifica Pagamento
 bilancioEsercizio = Bilancio Esercizio
-bilancio = Bilancio Movimenti Periodico
+bilancioPeriodico = Bilancio Movimenti Periodico
 ricercaCorrispettivo = Ricerca Corrispettivo
 modificaIncasso = Modifica Incasso
 ;

@@ -6,9 +6,11 @@ class Bilancio extends RiepiloghiAbstract {
 
 	private static $_instance = null;
 
-	public static $azioneBilancio = "../riepiloghi/bilancioFacade.class.php?modo=go";
+	public static $azioneBilancioPeriodico = "../riepiloghi/bilancioFacade.class.php?modo=go";
+	public static $azioneBilancioEsercizio = "../riepiloghi/bilancioEsercizioFacade.class.php?modo=go";
 	public static $queryCosti = "/riepiloghi/costi.sql";
 	public static $queryRicavi = "/riepiloghi/ricavi.sql";
+	public static $querySaldi = "/riepiloghi/saldi.sql";
 	
 	function __construct() {
 
@@ -59,6 +61,7 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		unset($_SESSION["costiBilancio"]);
 		unset($_SESSION["ricaviBilancio"]);
+		unset($_SESSION["saldiBilancio"]);
 		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$bilancioTemplate = BilancioTemplate::getInstance();
@@ -154,12 +157,20 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		$db = Database::getInstance();
 		
-		if ($this->ricercaCosti($utility, $db, $replace)) {
-			if ($this->ricercaRicavi($utility, $db, $replace)) {
-				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";				
-				return TRUE;
+		if ($_SESSION["tipoBilancio"] == "Periodico") {
+			if ($this->ricercaCosti($utility, $db, $replace)) {
+				if ($this->ricercaRicavi($utility, $db, $replace)) {
+					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+					return TRUE;
+				}
 			}				
 		}
+		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			if ($this->ricercaSaldi($utility, $db, $replace)) {
+				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+				return TRUE;
+			}
+		}		
 		return FALSE;
 	}
 	
@@ -196,14 +207,39 @@ class Bilancio extends RiepiloghiAbstract {
 		}
 		return $result;
 	}
+
+	public function ricercaSaldi($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$querySaldi;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['saldiBilancio'] = $result;
+		}
+		else {
+			unset($_SESSION['saldiBilancio']);
+			$_SESSION['numSaldiTrovati'] = 0;
+		}
+		return $result;
+	}
 	
 	public function preparaPagina($bilancioTemplate) {
 	
 		require_once 'utility.class.php';
 	
-		$_SESSION["azione"] = self::$azioneBilancio;
 		$_SESSION["confermaTip"] = "%ml.confermaEstraiBilancio%";
-		$_SESSION["titoloPagina"] = "%ml.bilancio%";
+		
+		if ($_SESSION["tipoBilancio"] == "Periodico") {
+			$_SESSION["azione"] = self::$azioneBilancioPeriodico;
+			$_SESSION["titoloPagina"] = "%ml.bilancioPeriodico%";
+		}
+		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			$_SESSION["azione"] = self::$azioneBilancioEsercizio;
+			$_SESSION["titoloPagina"] = "%ml.bilancioEsercizio%";
+		}
+		
 	}	
 }
 

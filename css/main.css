@@ -363,7 +363,11 @@
 	.result td.mark {
 		font-size: 14px;
 		font-weight: bolder;
-		color: #3399FF;
+		height: 30px;		
+	}
+	.result td.enlarge {
+		font-size: 14px;
+		font-weight: bolder;
 		height: 30px;		
 	}
 	.insert .field_label {

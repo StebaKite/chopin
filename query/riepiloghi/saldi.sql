@@ -3,7 +3,7 @@ select
 	t4.ind_visibilita_sottoconti,
 	t4.des_conto,
 	t4.des_sottoconto,
-	sum(t4.tot_conto * t4.ind_dareavere)
+	sum(t4.tot_conto * t4.ind_dareavere) as tot_conto
   from (	
 		select
 				t3.num_riga_bilancio,

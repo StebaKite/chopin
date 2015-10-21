@@ -6,8 +6,9 @@ class BilancioTemplate extends RiepiloghiAbstract {
 
 	private static $_instance = null;
 
-	private static $pagina = "/riepiloghi/bilancio.form.html";
-
+	private static $paginaPeriodico = "/riepiloghi/bilancioPeriodico.form.html";
+	private static $paginaEsercizio = "/riepiloghi/bilancioEsercizio.form.html";
+	
 	//-----------------------------------------------------------------------------
 
 	function __construct() {
@@ -44,7 +45,13 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$form = self::$root . $array['template'] . self::$pagina;
+		if ($_SESSION["tipoBilancio"] == "Periodico") {
+			$form = self::$root . $array['template'] . self::$paginaPeriodico;
+		}
+		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			$form = self::$root . $array['template'] . self::$paginaEsercizio;
+		}
+
 		$risultato_costi = "";
 		$risultato_ricavi = "";
 		$risultato_esercizio = "";
@@ -93,16 +100,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						if ($ind_visibilita_sottoconti_break == 'S') {
 							$risultato_costi .=
 							"<tr>" .
-							"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-							"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+							"	<td class='mark' colspan='2' align='right'></td>" .
+							"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 							"</tr>";
 						}
 						else {
 							$risultato_costi .=
 							"<tr>" .
-							"	<td width='308' align='left'>" . $desconto_break . "</td>" .
-							"	<td width='558' align='left'></td>" .
-							"	<td width='108' align='right'>" . $totconto . "</td>" .
+							"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td class='enlarge' width='558' align='left'></td>" .
+							"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
 							"</tr>";
 						}
 						
@@ -112,9 +119,9 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					if ($row['ind_visibilita_sottoconti'] == 'S') {
 						$risultato_costi .=
 						"<tr>" .
-						"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
 						"</tr>";
 					}
 
@@ -128,7 +135,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						"<tr>" .
 						"	<td width='308' align='left'></td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
 						"</tr>";
 					}
 				}
@@ -140,16 +147,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_costi .=
 				"<tr>" .
-				"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-				"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+				"	<td class='mark' colspan='2' align='right'></td>" .
+				"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 				"</tr>";
 			}
 			else {
 				$risultato_costi .=
 				"<tr>" .
-				"	<td width='308' align='left'>" . $desconto_break . "</td>" .
-				"	<td width='558' align='left'></td>" .
-				"	<td width='108' align='right'>" . $totconto . "</td>" .
+				"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td class='enlarge' width='558' align='left'></td>" .
+				"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
 				"</tr>";
 			}
 				
@@ -157,6 +164,11 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_costi = $risultato_costi . "</tbody>";
 
 			$risultato_costi = $risultato_costi . "</table></div>";
+
+			/**
+			 * Metto in sessione il totale costi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
+			 */
+			$_SESSION['totaleCosti'] = $totaleCosti;
 		}
 
 		/** ******************************************************
@@ -202,16 +214,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						if ($ind_visibilita_sottoconti_break == 'S') {
 							$risultato_ricavi .=
 							"<tr>" .
-							"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-							"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+							"	<td class='mark' colspan='2' align='right'></td>" .
+							"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 							"</tr>";
 						}
 						else {
 							$risultato_ricavi .=
 							"<tr>" .
-							"	<td width='308' align='left'>" . $desconto_break . "</td>" .
-							"	<td width='558' align='left'></td>" .
-							"	<td width='108' align='right'>" . $totconto . "</td>" .
+							"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td class='enlarge' width='558' align='left'></td>" .
+							"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
 							"</tr>";
 						}
 					
@@ -221,9 +233,9 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					if ($row['ind_visibilita_sottoconti'] == 'S') {
 						$risultato_ricavi .=
 						"<tr>" .
-						"	<td width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
 						"</tr>";
 					}
 
@@ -237,7 +249,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						"<tr>" .
 						"	<td width='308' align='left'></td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-						"	<td width='108' align='right'>" . $importo . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
 						"</tr>";
 					}
 				}
@@ -249,16 +261,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_ricavi .=
 				"<tr>" .
-				"	<td class='mark' colspan='2' align='right'>Totale " . $desconto_break . "</td>" .
-				"	<td class='mark' width='108' align='right'>" . $totconto . "</td>" .
+				"	<td class='mark' colspan='2' align='right'></td>" .
+				"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 				"</tr>";
 			}
 			else {
 				$risultato_ricavi .=
 				"<tr>" .
-				"	<td width='308' align='left'>" . $desconto_break . "</td>" .
-				"	<td width='558' align='left'></td>" .
-				"	<td width='108' align='right'>" . $totconto . "</td>" .
+				"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td class='enlarge' width='558' align='left'></td>" .
+				"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
 				"</tr>";
 			}
 				
@@ -266,13 +278,126 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_ricavi = $risultato_ricavi . "</tbody>";
 		
 			$risultato_ricavi = $risultato_ricavi . "</table></div>";
+			
+			/**
+			 * Metto in sessione il totale ricavi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
+			 */
+			$_SESSION['totaleRicavi'] = $totaleRicavi;				
 		}
 
-		/**
-		 * Metto in sessione i totali ricavi e costi perchè serviranno all'estrazione in PDF per stampare la tabella dei totali
+		/** ******************************************************
+		 * Costruzione della tabella saldi
 		 */
-		$_SESSION['totaleRicavi'] = $totaleRicavi;
-		$_SESSION['totaleCosti'] = $totaleCosti;
+		
+		if (isset($_SESSION["saldiBilancio"])) {
+		
+			$risultato_saldi =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>%ml.desconto%</th>" .
+			"		<th width='550'>%ml.dessottoconto%</th>" .
+			"		<th width='100'>%ml.importo%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+		
+			$saldiBilancio = $_SESSION["saldiBilancio"];
+			$numReg = 0;
+			$totaleSaldi = 0;
+			$desconto_break = "";
+			$ind_visibilita_sottoconti_break = "";
+			$totaleConto = 0;
+		
+			foreach(pg_fetch_all($saldiBilancio) as $row) {
+					
+				$totaleSottoconto = trim($row['tot_conto']);
+				$totaleSaldi += $totaleSottoconto;
+		
+				$numReg ++;
+					
+				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+		
+				if (trim($row['des_conto']) != $desconto_break ) {
+						
+					if ($desconto_break != "") {
+							
+						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+							
+						if ($ind_visibilita_sottoconti_break == 'S') {
+							$risultato_saldi .=
+							"<tr>" .
+							"	<td class='mark' colspan='2' align='right'></td>" .
+							"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
+							"</tr>";
+						}
+						else {
+							$risultato_saldi .=
+							"<tr>" .
+							"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td class='enlarge' width='558' align='left'></td>" .
+							"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
+							"</tr>";
+						}
+							
+						$totaleConto = 0;
+					}
+		
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_saldi .=
+						"<tr>" .
+						"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
+						"</tr>";
+					}
+		
+					$desconto_break = trim($row['des_conto']);
+					$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
+				}
+				else {
+						
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_saldi .=
+						"<tr>" .
+						"	<td width='308' align='left'></td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
+						"</tr>";
+					}
+				}
+				$totaleConto += $totaleSottoconto;
+			}
+				
+			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+		
+			if ($ind_visibilita_sottoconti_break == 'S') {
+				$risultato_saldi .=
+				"<tr>" .
+				"	<td class='mark' colspan='2' align='right'></td>" .
+				"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
+				"</tr>";
+			}
+			else {
+				$risultato_saldi .=
+				"<tr>" .
+				"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td class='enlarge' width='558' align='left'></td>" .
+				"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
+				"</tr>";
+			}
+		
+			$_SESSION['numRicaviTrovati'] = $numReg;
+			$risultato_saldi = $risultato_saldi . "</tbody>";
+		
+			$risultato_saldi = $risultato_saldi . "</table></div>";
+				
+			/**
+			 * Metto in sessione il totale saldi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
+			 */
+			$_SESSION['totaleSaldi'] = $totaleSaldi;
+		}
 		
 		/** ******************************************
 		 * Costruisco il box delle tabs
@@ -290,6 +415,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$tabs .= "		<div id='tabs-2'>" . $risultato_ricavi . "</div>";
 			$tabs .= "		<div id='tabs-3'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
 			$tabs .= "	</div>";
+		}
+		else {
+			if ($risultato_saldi != "") {
+				$tabs  = "	<div class='tabs'>";
+				$tabs .= "		<ul>";
+				$tabs .= "			<li><a href='#tabs-1'>Saldi</a></li>";
+				$tabs .= "		</ul>";
+				$tabs .= "		<div id='tabs-1'>" . $risultato_saldi . "</div>";
+				$tabs .= "	</div>";				
+			}			
 		}
 		
 		$replace = array(
@@ -338,7 +473,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totaleCosti, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totaleCosti, 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$utile = $totaleRicavi - $totaleCosti;
@@ -346,7 +481,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($utile, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($utile, 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$totalePareggio = $totaleCosti + $utile;
@@ -354,7 +489,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totalePareggio, 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$risultato_esercizio .= "</tbody></table>" ;
@@ -366,7 +501,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totaleRicavi, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totaleRicavi, 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$perdita = $totaleCosti - $totaleRicavi;
@@ -374,7 +509,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Perdita del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($perdita, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($perdita, 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$totalePareggio = $totaleRicavi + $perdita;
@@ -382,7 +517,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totalePareggio, 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$risultato_esercizio .= "</tbody></table>" ;
