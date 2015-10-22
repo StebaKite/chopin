@@ -113,6 +113,8 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%presenzaNo_checked%' => (trim($_SESSION["indpresenza"]) == "N") ? "checked" : "",
 				'%sottocontiSi_checked%' => (trim($_SESSION["indvissottoconti"]) == "S") ? "checked" : "",
 				'%sottocontiNo_checked%' => (trim($_SESSION["indvissottoconti"]) == "N") ? "checked" : "",
+				'%attivo_checked%' => (trim($_SESSION["indclassificazione"]) == "A") ? "checked" : "",
+				'%passivo_checked%' => (trim($_SESSION["indclassificazione"]) == "P") ? "checked" : "",
 				'%numrigabilancio%' => ($_SESSION["numrigabilancio"] != "") ? $_SESSION["numrigabilancio"] : 0,
 				'%categoria%' => $_SESSION["categoria"],
 				'%tipoconto%' => $_SESSION["tipoconto"],

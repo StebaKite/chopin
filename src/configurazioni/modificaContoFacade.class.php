@@ -21,6 +21,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["catconto"] = $_REQUEST["categoria"];
 	$_SESSION["tipconto"] = $_REQUEST["dareavere"];
 	$_SESSION["indpresenza"] = $_REQUEST["indpresenza"];
+	$_SESSION["indclassificazione"] = $_REQUEST["indclassificazione"];
+	
 	$_SESSION["indvissottoconti"] = $_REQUEST["indvissottoconti"];
 	$_SESSION["numrigabilancio"] = $_REQUEST["numrigabilancio"];
 	

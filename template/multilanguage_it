@@ -36,6 +36,8 @@ assenteInBilancio = Escluso
 presenzaSottoconti = Sottoconti visibili
 assenzaSottoconti = Non visibili
 anteprima = Anteprima
+attivo = Attivo
+passivo = Passivo
 ;
 ; Tips ---------------------------------
 ;

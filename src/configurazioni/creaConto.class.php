@@ -131,9 +131,10 @@ class CreaConto extends ConfigurazioniAbstract {
 		$tipconto = $_SESSION["tipconto"];
 		$indpresenza = $_SESSION["indpresenza"];
 		$indvisibilitasottoconti = $_SESSION["indvissottoconti"];
+		$indclassificazioneconto = $_SESSION["indclassificazione"];
 		$numrigabilancio = $_SESSION["numrigabilancio"];
 			
-		if ($this->inserisciConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $numrigabilancio)) {
+		if ($this->inserisciConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $indclassificazioneconto, $numrigabilancio)) {
 	
 			$d = explode(",", $_SESSION['sottocontiInseriti']);
 	

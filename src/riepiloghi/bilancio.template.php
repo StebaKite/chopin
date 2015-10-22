@@ -286,12 +286,12 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		}
 
 		/** ******************************************************
-		 * Costruzione della tabella saldi
+		 * Costruzione della tabella Attivo
 		 */
 		
-		if (isset($_SESSION["saldiBilancio"])) {
+		if (isset($_SESSION["attivoBilancio"])) {
 		
-			$risultato_saldi =
+			$risultato_attivo =
 			"<table class='result'>" .
 			"	<thead>" .
 			"		<th width='300'>%ml.desconto%</th>" .
@@ -303,37 +303,37 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"	<table class='result'>" .
 			"		<tbody>";
 		
-			$saldiBilancio = $_SESSION["saldiBilancio"];
+			$attivoBilancio = $_SESSION["attivoBilancio"];
 			$numReg = 0;
-			$totaleSaldi = 0;
+			$totaleAttivo = 0;
 			$desconto_break = "";
 			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 		
-			foreach(pg_fetch_all($saldiBilancio) as $row) {
+			foreach(pg_fetch_all($attivoBilancio) as $row) {
 					
 				$totaleSottoconto = trim($row['tot_conto']);
-				$totaleSaldi += $totaleSottoconto;
+				$totaleAttivo += $totaleSottoconto;
 		
 				$numReg ++;
 					
-				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 		
 				if (trim($row['des_conto']) != $desconto_break ) {
 						
 					if ($desconto_break != "") {
 							
-						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+						$totconto = number_format(abs($totaleConto), 2, ',', '.');
 							
 						if ($ind_visibilita_sottoconti_break == 'S') {
-							$risultato_saldi .=
+							$risultato_attivo .=
 							"<tr>" .
 							"	<td class='mark' colspan='2' align='right'></td>" .
 							"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 							"</tr>";
 						}
 						else {
-							$risultato_saldi .=
+							$risultato_attivo .=
 							"<tr>" .
 							"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
 							"	<td class='enlarge' width='558' align='left'></td>" .
@@ -345,7 +345,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					}
 		
 					if ($row['ind_visibilita_sottoconti'] == 'S') {
-						$risultato_saldi .=
+						$risultato_attivo .=
 						"<tr>" .
 						"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
@@ -359,7 +359,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				else {
 						
 					if ($row['ind_visibilita_sottoconti'] == 'S') {
-						$risultato_saldi .=
+						$risultato_attivo .=
 						"<tr>" .
 						"	<td width='308' align='left'></td>" .
 						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
@@ -370,17 +370,17 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$totaleConto += $totaleSottoconto;
 			}
 				
-			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+			$totconto = number_format(abs($totaleConto), 2, ',', '.');
 		
 			if ($ind_visibilita_sottoconti_break == 'S') {
-				$risultato_saldi .=
+				$risultato_attivo .=
 				"<tr>" .
 				"	<td class='mark' colspan='2' align='right'></td>" .
 				"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
 				"</tr>";
 			}
 			else {
-				$risultato_saldi .=
+				$risultato_attivo .=
 				"<tr>" .
 				"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
 				"	<td class='enlarge' width='558' align='left'></td>" .
@@ -388,15 +388,129 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				"</tr>";
 			}
 		
-			$_SESSION['numRicaviTrovati'] = $numReg;
-			$risultato_saldi = $risultato_saldi . "</tbody>";
+			$_SESSION['numAttivoTrovati'] = $numReg;
+			$risultato_attivo = $risultato_attivo . "</tbody>";
 		
-			$risultato_saldi = $risultato_saldi . "</table></div>";
+			$risultato_attivo = $risultato_attivo . "</table></div>";
 				
 			/**
 			 * Metto in sessione il totale saldi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
 			 */
-			$_SESSION['totaleSaldi'] = $totaleSaldi;
+			$_SESSION['totaleAttivo'] = $totaleAttivo;
+		}
+
+		/** ******************************************************
+		 * Costruzione della tabella Passivo
+		 */
+		
+		if (isset($_SESSION["passivoBilancio"])) {
+		
+			$risultato_passivo =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>%ml.desconto%</th>" .
+			"		<th width='550'>%ml.dessottoconto%</th>" .
+			"		<th width='100'>%ml.importo%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+		
+			$passivoBilancio = $_SESSION["passivoBilancio"];
+			$numReg = 0;
+			$totalePassivo = 0;
+			$desconto_break = "";
+			$ind_visibilita_sottoconti_break = "";
+			$totaleConto = 0;
+		
+			foreach(pg_fetch_all($passivoBilancio) as $row) {
+					
+				$totaleSottoconto = trim($row['tot_conto']);
+				$totalePassivo += $totaleSottoconto;
+		
+				$numReg ++;
+					
+				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+		
+				if (trim($row['des_conto']) != $desconto_break ) {
+		
+					if ($desconto_break != "") {
+							
+						$totconto = number_format(abs($totaleConto), 2, ',', '.');
+							
+						if ($ind_visibilita_sottoconti_break == 'S') {
+							$risultato_passivo .=
+							"<tr>" .
+							"	<td class='mark' colspan='2' align='right'></td>" .
+							"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
+							"</tr>";
+						}
+						else {
+							$risultato_passivo .=
+							"<tr>" .
+							"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+							"	<td class='enlarge' width='558' align='left'></td>" .
+							"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
+							"</tr>";
+						}
+							
+						$totaleConto = 0;
+					}
+		
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_passivo .=
+						"<tr>" .
+						"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
+						"</tr>";
+					}
+		
+					$desconto_break = trim($row['des_conto']);
+					$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
+				}
+				else {
+		
+					if ($row['ind_visibilita_sottoconti'] == 'S') {
+						$risultato_passivo .=
+						"<tr>" .
+						"	<td width='308' align='left'></td>" .
+						"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
+						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
+						"</tr>";
+					}
+				}
+				$totaleConto += $totaleSottoconto;
+			}
+		
+			$totconto = number_format(abs($totaleConto), 2, ',', '.');
+		
+			if ($ind_visibilita_sottoconti_break == 'S') {
+				$risultato_passivo .=
+				"<tr>" .
+				"	<td class='mark' colspan='2' align='right'></td>" .
+				"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
+				"</tr>";
+			}
+			else {
+				$risultato_passivo .=
+				"<tr>" .
+				"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
+				"	<td class='enlarge' width='558' align='left'></td>" .
+				"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
+				"</tr>";
+			}
+		
+			$_SESSION['numPassivoTrovati'] = $numReg;
+			$risultato_passivo = $risultato_passivo . "</tbody>";
+		
+			$risultato_passivo = $risultato_passivo . "</table></div>";
+		
+			/**
+			 * Metto in sessione il totale saldi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
+			 */
+			$_SESSION['totalePassivo'] = $totalePassivo;
 		}
 		
 		/** ******************************************
@@ -417,12 +531,14 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$tabs .= "	</div>";
 		}
 		else {
-			if ($risultato_saldi != "") {
+			if (($risultato_attivo != "") || ($risultato_passivo != "") ) {
 				$tabs  = "	<div class='tabs'>";
 				$tabs .= "		<ul>";
-				$tabs .= "			<li><a href='#tabs-1'>Saldi</a></li>";
+				$tabs .= "			<li><a href='#tabs-1'>Attivo</a></li>";
+				$tabs .= "			<li><a href='#tabs-2'>Passivo</a></li>";
 				$tabs .= "		</ul>";
-				$tabs .= "		<div id='tabs-1'>" . $risultato_saldi . "</div>";
+				$tabs .= "		<div id='tabs-1'>" . $risultato_attivo . "</div>";
+				$tabs .= "		<div id='tabs-2'>" . $risultato_passivo . "</div>";
 				$tabs .= "	</div>";				
 			}			
 		}

@@ -3,7 +3,7 @@ select
 	t3.ind_visibilita_sottoconti,
 	t3.des_conto,
 	t1.des_sottoconto,
-	sum(t2.imp_registrazione) as tot_conto
+	coalesce(sum(t2.imp_registrazione),0) as tot_conto
   from contabilita.sottoconto as t1
 		inner join contabilita.conto as t3
 			on t3.cod_conto = t1.cod_conto 
