@@ -646,7 +646,7 @@ $( ".selectCategoriaConti" )
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
-$( ".selectmenuCausale" ).selectmenu({ width: 300 });
+$( ".selectmenuCausale" ).selectmenu({ width: 270 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
