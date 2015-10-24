@@ -438,6 +438,91 @@ class Pdf extends FPDF {
 			$this->SetFont('','',11);
 		}
 	} 	
+
+	public function BilancioEsercizioTable($data) {
+	
+		// Column widths
+		$w = array(150, 25);
+	
+		$desconto_break = "";
+		$ind_visibilita_sottoconti_break = "";
+		$totaleConto = 0;
+	
+		// Data
+		foreach($data as $row) {
+				
+			$totaleSottoconto = trim($row['tot_conto']);
+	
+			$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+				
+			if (trim($row['des_conto']) != $desconto_break ) {
+					
+				if ($desconto_break != "") {
+						
+					$totconto = number_format(abs($totaleConto), 2, ',', '.');
+	
+					if ($ind_visibilita_sottoconti_break == 'S') {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],6,'','',0,'R');
+						$this->Cell($w[1],6,EURO . '  ' . $totconto,'',0,'R');
+						$this->SetFont('','',11);
+					}
+					else {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],10,$desconto_break,'',0,'L');
+						$this->Cell($w[1],10,EURO . '  ' . $totconto,'',0,'R');
+						$this->SetFont('','',11);
+					}
+	
+					$totaleConto = 0;
+				}
+	
+				if ($row['ind_visibilita_sottoconti'] == 'S') {
+					$this->Ln();
+					$this->SetFont('','B',12);
+					$this->Cell($w[0],6,$row['des_conto'],'',0,'L');
+					$this->Cell($w[1],6,'','',0,'R');
+						
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,'       ' . $row['des_sottoconto'],'',0,'L');
+					$this->Cell($w[1],6,EURO . '  ' . $importo,'',0,'R');
+				}
+					
+				$desconto_break = trim($row['des_conto']);
+				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
+			}
+			else {
+	
+				if ($ind_visibilita_sottoconti_break == 'S') {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,'       ' . $row['des_sottoconto'],'',0,'L');
+					$this->Cell($w[1],6,EURO . '  ' . $importo,'',0,'R');
+				}
+			}
+			$totaleConto += $totaleSottoconto;
+		}
+			
+		$totconto = number_format(abs($totaleConto), 2, ',', '.');
+	
+		if ($ind_visibilita_sottoconti_break == 'S') {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],6,'','',0,'R');
+			$this->Cell($w[1],6,EURO . '  ' . $totconto,'',0,'R');
+			$this->SetFont('','',11);
+		}
+		else {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],10,$desconto_break,'',0,'L');
+			$this->Cell($w[1],10,EURO . '  ' . $totconto,'',0,'R');
+			$this->SetFont('','',11);
+		}
+	}
 	
 	public function BilancioCostiTable($totaleRicavi, $totaleCosti) {
 

@@ -98,7 +98,12 @@ class Bilancio extends RiepiloghiAbstract {
 				include(self::$testata);
 				$bilancioTemplate->displayPagina();
 
-				$totVoci = $_SESSION['numCostiTrovati'] + $_SESSION['numRicaviTrovati'];
+				if ($_SESSION["tipoBilancio"] == "Periodico") {
+					$totVoci = $_SESSION['numCostiTrovati'] + $_SESSION['numRicaviTrovati'];
+				}
+				elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+					$totVoci = $_SESSION['numAttivoTrovati'] + $_SESSION['numPassivoTrovati'];
+				}				
 				
 				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -187,6 +192,7 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['costiBilancio'] = $result;
+			$_SESSION['numCostiTrovati'] = pg_num_rows($result);
 		}
 		else {
 			unset($_SESSION['costiBilancio']);
@@ -204,6 +210,7 @@ class Bilancio extends RiepiloghiAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['ricaviBilancio'] = $result;
+			$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
 		}
 		else {
 			unset($_SESSION['ricaviBilancio']);
@@ -221,6 +228,7 @@ class Bilancio extends RiepiloghiAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['attivoBilancio'] = $result;
+			$_SESSION['numAttivoTrovati'] = pg_num_rows($result);
 		}
 		else {
 			unset($_SESSION['attivoBilancio']);
@@ -238,6 +246,7 @@ class Bilancio extends RiepiloghiAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['passivoBilancio'] = $result;
+			$_SESSION['numPassivoTrovati'] = pg_num_rows($result);
 		}
 		else {
 			unset($_SESSION['passivoBilancio']);
