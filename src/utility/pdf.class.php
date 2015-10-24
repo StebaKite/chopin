@@ -378,18 +378,23 @@ class Pdf extends FPDF {
 			
 					$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 
-					$this->Ln();
-					$this->SetFont('','B',12);
-					$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
-					$this->Cell($w[1],6,$totconto,'',0,'R');
+					if ($totconto > 0) {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[1],6,$totconto,'',0,'R');		
+					}
 					
 					if ($ind_visibilita_sottoconti_break == 'S') {
 						
 						foreach($sottoconti as $sottoconto) {
-							$this->Ln();
-							$this->SetFont('','',11);
-							$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
-							$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+							
+							if ($sottoconto['importo'] > 0) {
+								$this->Ln();
+								$this->SetFont('','',11);
+								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');								
+							}
 						}
 					}
 						
@@ -415,18 +420,23 @@ class Pdf extends FPDF {
 		 */		
 		$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 		
-		$this->Ln();
-		$this->SetFont('','B',12);
-		$this->Cell($w[0],6,$desconto_break,'',0,'L');
-		$this->Cell($w[1],6,$totconto,'',0,'R');
+		if ($totconto > 0) {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],6,$desconto_break,'',0,'L');
+			$this->Cell($w[1],6,$totconto,'',0,'R');
+		}
 		
 		if ($ind_visibilita_sottoconti_break == 'S') {
 		
 			foreach($sottoconti as $sottoconto) {
-				$this->Ln();
-				$this->SetFont('','',11);
-				$this->Cell($w[0],6,str_repeat(' ',7) . $sottoconto['descrizione'],'',0,'L');
-				$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+				
+				if ($sottoconto['importo'] > 0) {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,str_repeat(' ',7) . $sottoconto['descrizione'],'',0,'L');
+					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+				}
 			}
 		}
 	} 	
@@ -454,19 +464,24 @@ class Pdf extends FPDF {
 				if ($desconto_break != "") {
 						
 					$totconto = number_format(abs($totaleConto), 2, ',', '.');
-					
-					$this->Ln();
-					$this->SetFont('','B',12);
-					$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
-					$this->Cell($w[1],6,$totconto,'',0,'R');
+
+					if ($totconto > 0) {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[1],6,$totconto,'',0,'R');						
+					}
 						
 					if ($ind_visibilita_sottoconti_break == 'S') {
 					
 						foreach($sottoconti as $sottoconto) {
-							$this->Ln();
-							$this->SetFont('','',11);
-							$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
-							$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+							
+							if ($sottoconto['importo'] > 0) {
+								$this->Ln();
+								$this->SetFont('','',11);
+								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+							}
 						}
 					}					
 					$this->Ln();
@@ -490,19 +505,24 @@ class Pdf extends FPDF {
 		 * Ultimo totale di fine ciclo
 		 */
 		$totconto = number_format(abs($totaleConto), 2, ',', '.');
-		
-		$this->Ln();
-		$this->SetFont('','B',12);
-		$this->Cell($w[0],6,$desconto_break,'',0,'L');
-		$this->Cell($w[1],6,$totconto,'',0,'R');
+
+		if ($totconto > 0) {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],6,$desconto_break,'',0,'L');
+			$this->Cell($w[1],6,$totconto,'',0,'R');
+		}
 		
 		if ($ind_visibilita_sottoconti_break == 'S') {
 		
 			foreach($sottoconti as $sottoconto) {
-				$this->Ln();
-				$this->SetFont('','',11);
-				$this->Cell($w[0],6,'       ' . $sottoconto['descrizione'],'',0,'L');
-				$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+				
+				if ($sottoconto['importo'] > 0) {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,'       ' . $sottoconto['descrizione'],'',0,'L');
+					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');						
+				}
 			}
 		}
 	}

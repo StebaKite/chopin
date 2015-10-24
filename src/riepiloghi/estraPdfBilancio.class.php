@@ -98,9 +98,15 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		
 		$db = Database::getInstance();
 		
+		/**
+		 * Costi
+		 */
+		$fill = true;		
+		
 		$pdf->AddPage();
 		$pdf->SetFont('','B',12);
-		$pdf->Cell($w[0],6,'COSTI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,0,'R');
+		$pdf->SetFillColor(171,224,245);
+		$pdf->Cell($w[0],6,'COSTI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
 		$pdf->Ln();
 		$pdf->Ln();
 		
@@ -116,7 +122,8 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		
 		$pdf->AddPage();		
 		$pdf->SetFont('','B',12);
-		$pdf->Cell($w[0],6,'RICAVI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,0,'R');
+		$pdf->SetFillColor(171,224,245);
+		$pdf->Cell($w[0],6,'RICAVI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
 		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->SetFont('Arial','',11);
@@ -148,10 +155,12 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		/**
 		 * Attivo
 		 */
+		$fill = true;	
+			
 		$pdf->AddPage();
 		$pdf->SetFont('','B',12);
-	    $pdf->SetFillColor(28,148,196);
-		$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,0,'R');
+	    $pdf->SetFillColor(171,224,245);
+		$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
 		$pdf->Ln();
 		$pdf->Ln();
 
@@ -164,8 +173,8 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		 */
 		$pdf->AddPage();
 		$pdf->SetFont('','B',12);
-		$pdf->SetFillColor(28,148,196);		
-		$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,0,'R');
+		$pdf->SetFillColor(171,224,245);		
+		$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
 		$pdf->Ln();
 		$pdf->Ln();
 		
