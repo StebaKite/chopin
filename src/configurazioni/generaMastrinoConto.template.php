@@ -128,7 +128,9 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%desconto%' => $des_conto,
-				'%catconto%' => $cat_conto,  
+				'%catconto%' => $cat_conto,
+				'%tipoconto%' => $_SESSION["tipoconto"],
+				'%categoria%' => $_SESSION["categoria"],
 				'%dessottoconto%' => $des_sottoconto,
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca

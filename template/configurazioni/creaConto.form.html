@@ -14,18 +14,18 @@ function aggiungiSottoconto() {
 		var rowCount = $('#sottoconti tr').length;
 		
 		if (rowCount == 0) {
-			$( "#sottoconti thead" ).append("<tr>" + 
+			$( "#sottoconti-head thead" ).append("<tr>" + 
 				"<th width='100' align='center'>Sottoconto</th>" + 
 				"<th width='400' align='left'>Descrizione</th>" + 
-				"<th>&nbsp;</th>" +
+				"<th width='23'>&nbsp;</th>" +
 				"</tr>");
-			$( "#sottoconti" ).addClass("datiCreateSottile");
+			$( "#sottoconti-head" ).addClass("datiCreateSottile");
 		}
 			
 		$( "#sottoconti tbody" ).append( "<tr id='" + codsottoconto + "'>" +
-	        "<td align='center'>" + codsottoconto + "</td>" +
-	        "<td align='left'>" + dessottoconto + "</td>" +
-	    	"<td id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" + codsottoconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+	        "<td width='107' align='center'>" + codsottoconto + "</td>" +
+	        "<td width='407' align='left'>" + dessottoconto + "</td>" +
+	    	"<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" + codsottoconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
 	      "</tr>" );
 		
 		var elemento = codsottoconto + "#" + dessottoconto;
@@ -78,23 +78,60 @@ function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
 							<div class="radioset" >
 								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" checked ><label for="contoeco">%ml.contoeco%</label>
 								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" ><label for="contopat">%ml.contopat%</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" id="dare" name="dareavere" value="Dare" checked ><label for="dare">%ml.dare%</label>
+								<input type="radio" id="avere" name="dareavere" value="Avere" ><label for="avere">%ml.avere%</label>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="dare" name="dareavere" value="Dare" checked ><label for="dare">%ml.dare%</label>
-								<input type="radio" id="avere" name="dareavere" value="Avere" ><label for="avere">%ml.avere%</label>
-							</div>
-						</td>					
+						<td colspan="4">
+						
+							<h2>Opzioni di bilancio</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="presenzaSi" name="indpresenza" value="S" checked ><label for="presenzaSi">%ml.presenteInBilancio%</label>
+												<input type="radio" id="presenzaNo" name="indpresenza" value="N" ><label for="presenzaNo">%ml.assenteInBilancio%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="sottocontiSi" name="indvissottoconti" value="S" checked ><label for="sottocontiSi">%ml.presenzaSottoconti%</label>
+												<input type="radio" id="sottocontiNo" name="indvissottoconti" value="N" ><label for="sottocontiNo">%ml.assenzaSottoconti%</label>
+											</div>
+										</td>				
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="attivo" name="indclassificazione" value="A" checked ><label for="attivo">%ml.attivo%</label>
+												<input type="radio" id="passivo" name="indclassificazione" value="P" ><label for="passivo">%ml.passivo%</label>
+											</div>
+										</td>				
+									</tr>
+									<tr>
+										<td>
+											<label for="amount">%ml.numrigabilancio% :</label>
+											<input type="text" id="numrigabilancio" name="numrigabilancio" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">												
+										</td>
+										<td colspan="2"><div id="slider-posizione-bilancio"></div>
+									</tr>				
+								</tbody>								
+							</table>
+						
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4">
-							<table id="sottoconti" class="%class_dettagli%">
+							<table id="sottoconti-head" class='result'>
 							    <thead>%thead_sottoconti%</thead>
-							    <tbody>%tbody_sottoconti%</tbody>
-							</table>			
+							</table>
+							<div class='scroll-sottoconti'>
+								<table id="sottoconti" class="datiCreateSottile">
+								    <tbody>%tbody_sottoconti%</tbody>
+								</table>			
+							</div>	
 						</td>
 					</tr>										
 				</tbody>

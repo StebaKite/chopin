@@ -481,7 +481,10 @@ class Pdf extends FPDF {
 		$w = array(150, 25);
 
 		$desconto_break = ""; 
+		$ind_visibilita_sottoconti_break = "";
 		$totaleConto = 0;
+		
+		$sottoconti = array();
 		
 		// Data
 		foreach($data as $row) {
@@ -496,45 +499,154 @@ class Pdf extends FPDF {
 			
 					$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
 
-					$this->Ln();
-					$this->SetFont('','B',12);
-	    			$this->Cell($w[0],6,'Totale','',0,'R');
-					$this->Cell($w[1],6,EURO . '  ' . $totconto,'',0,'R');
-					$this->SetFont('','',11);
+					if ($totconto > 0) {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[1],6,$totconto,'',0,'R');		
+					}
+					
+					if ($ind_visibilita_sottoconti_break == 'S') {
 						
+						foreach($sottoconti as $sottoconto) {
+							
+							if ($sottoconto['importo'] > 0) {
+								$this->Ln();
+								$this->SetFont('','',11);
+								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');								
+							}
+						}
+					}
+						
+					$this->Ln();
+					$i=0;
 					$totaleConto = 0;
+					$sottoconti = array();	
 				}
-				
-				$this->Ln();
-				$this->SetFont('','B',12);	    	
-				$this->Cell($w[0],6,$row['des_conto'],'',0,'L');
-				$this->Cell($w[1],6,'','',0,'R');
-				
-				$this->Ln();
-				$this->SetFont('','I',11);	    	
-				$this->Cell($w[0],6,'       ' . $row['des_sottoconto'],'',0,'L');
-				$this->Cell($w[1],6,EURO . '  ' . $importo,'',0,'R');
+
+				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));				
 			
 				$desconto_break = trim($row['des_conto']);
+				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 			}
 			else {
+				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));				
+			}
+			$totaleConto += $totaleSottoconto;
+		}
 
-				$this->Ln();
-				$this->SetFont('','I',11);	    	
-				$this->Cell($w[0],6,'       ' . $row['des_sottoconto'],'',0,'L');
-				$this->Cell($w[1],6,EURO . '  ' . $importo,'',0,'R');
+		/**
+		 * Ultimo totale di fine ciclo
+		 */		
+		$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+		
+		if ($totconto > 0) {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],6,$desconto_break,'',0,'L');
+			$this->Cell($w[1],6,$totconto,'',0,'R');
+		}
+		
+		if ($ind_visibilita_sottoconti_break == 'S') {
+		
+			foreach($sottoconti as $sottoconto) {
+				
+				if ($sottoconto['importo'] > 0) {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,str_repeat(' ',7) . $sottoconto['descrizione'],'',0,'L');
+					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+				}
+			}
+		}
+	} 	
+
+	public function BilancioEsercizioTable($data) {
+	
+		// Column widths
+		$w = array(150, 25);
+	
+		$desconto_break = "";
+		$ind_visibilita_sottoconti_break = "";
+		$totaleConto = 0;
+
+		$sottoconti = array();
+		
+		// Data
+		foreach($data as $row) {
+				
+			$totaleSottoconto = trim($row['tot_conto']);
+	
+			$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+				
+			if (trim($row['des_conto']) != $desconto_break ) {
+					
+				if ($desconto_break != "") {
+						
+					$totconto = number_format(abs($totaleConto), 2, ',', '.');
+
+					if ($totconto > 0) {
+						$this->Ln();
+						$this->SetFont('','B',12);
+						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[1],6,$totconto,'',0,'R');						
+					}
+						
+					if ($ind_visibilita_sottoconti_break == 'S') {
+					
+						foreach($sottoconti as $sottoconto) {
+							
+							if ($sottoconto['importo'] > 0) {
+								$this->Ln();
+								$this->SetFont('','',11);
+								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+							}
+						}
+					}					
+					$this->Ln();
+					$i=0;
+					$totaleConto = 0;
+					$sottoconti = array();					
+				}
+
+				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));
+					
+				$desconto_break = trim($row['des_conto']);
+				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
+			}
+			else {
+				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));
 			}
 			$totaleConto += $totaleSottoconto;
 		}
 			
-		$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+		/**
+		 * Ultimo totale di fine ciclo
+		 */
+		$totconto = number_format(abs($totaleConto), 2, ',', '.');
 
-		$this->Ln();
-		$this->SetFont('','B',12);
-		$this->Cell($w[0],6,'Totale','',0,'R');
-		$this->Cell($w[1],6,EURO . '  ' . $totconto,'',0,'R');
-		$this->SetFont('','',11);
-	} 	
+		if ($totconto > 0) {
+			$this->Ln();
+			$this->SetFont('','B',12);
+			$this->Cell($w[0],6,$desconto_break,'',0,'L');
+			$this->Cell($w[1],6,$totconto,'',0,'R');
+		}
+		
+		if ($ind_visibilita_sottoconti_break == 'S') {
+		
+			foreach($sottoconti as $sottoconto) {
+				
+				if ($sottoconto['importo'] > 0) {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,'       ' . $sottoconto['descrizione'],'',0,'L');
+					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');						
+				}
+			}
+		}
+	}
 	
 	public function BilancioCostiTable($totaleRicavi, $totaleCosti) {
 
@@ -581,21 +693,21 @@ class Pdf extends FPDF {
 	
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($totaleRicavi, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($totaleRicavi, 2, ',', '.'),'',0,'R');
 	
 		$perdita = $totaleCosti - $totaleRicavi;
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Perdita del periodo','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($perdita, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($perdita, 2, ',', '.'),'',0,'R');
 	
 		$totalePareggio = $totaleRicavi + $perdita;
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale a Pareggio','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($totalePareggio, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($totalePareggio, 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);
 	}

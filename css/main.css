@@ -163,6 +163,11 @@
 		height: 400px;
 		overflow: auto;	
 	}	
+	div.scroll-sottoconti {
+		width: 585px;
+		height: 150px;
+		overflow: auto;	
+	}	
 	div.scroll-config-causali {
 		width: 476px;
 		height: 350px;
@@ -358,7 +363,11 @@
 	.result td.mark {
 		font-size: 14px;
 		font-weight: bolder;
-		color: #3399FF;
+		height: 30px;		
+	}
+	.result td.enlarge {
+		font-size: 14px;
+		font-weight: bolder;
 		height: 30px;		
 	}
 	.insert .field_label {

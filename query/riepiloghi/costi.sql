@@ -1,7 +1,9 @@
 select
+	t3.num_riga_bilancio,
+	t3.ind_visibilita_sottoconti,
 	t3.des_conto,
 	t1.des_sottoconto,
-	sum(t2.imp_registrazione) as tot_conto
+	coalesce(sum(t2.imp_registrazione),0) as tot_conto
   from contabilita.sottoconto as t1
 		inner join contabilita.conto as t3
 			on t3.cod_conto = t1.cod_conto 
@@ -13,6 +15,7 @@ select
   where t4.dat_registrazione between '%datareg_da%' and '%datareg_a%'
   and   t4.cod_negozio = '%codnegozio%'
   and   t3.cat_conto = '%catconto%'
+  and   t3.ind_presenza_in_bilancio = 'S'
   and   t2.ind_dareavere = 'D' 
-group by t3.des_conto, t1.des_sottoconto
-order by t3.des_conto, t1.des_sottoconto
+group by t3.num_riga_bilancio, t3.ind_visibilita_sottoconti, t3.des_conto, t1.des_sottoconto
+order by t3.num_riga_bilancio, t3.des_conto, t1.des_sottoconto

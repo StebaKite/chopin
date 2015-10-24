@@ -497,6 +497,20 @@ $(function() {
     $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
   });
 
+$(function() {
+    $( "#slider-posizione-bilancio" ).slider({
+      range: "max",
+      min: 0,
+      max: 50,
+      value: 1,
+      step: 1,
+      slide: function( event, ui ) {
+        $( "#numrigabilancio" ).val( ui.value );
+      }
+    });
+    $( "#numrigabilancio" ).val( $( "#slider-posizione-bilancio" ).slider( "value" ) );
+  });
+
 
 $( "#slider" ).slider({
 	range: true,
@@ -635,6 +649,7 @@ $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuCausale" ).selectmenu({ width: 300 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
+$( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
@@ -810,8 +825,8 @@ function cancellaSottocontoPagina(codsottoconto) {
 	var rowCount = $("#sottoconti tbody tr").length;
 	
 	if (rowCount == 0) {
-		$( "#sottoconti thead tr" ).remove();		
-		$( "#sottoconti" ).removeClass("datiCreateSottile");
+		$( "#sottoconti-head thead tr" ).remove();		
+		$( "#sottoconti-head" ).removeClass("datiCreateSottile");
 	}
 	
 	var c = parseInt(codsottoconto.toString());

@@ -104,7 +104,7 @@ class CreaContoTemplate extends ConfigurazioniAbstract {
 			"<tr>" .
 			"<th width='100' align='center'>Sottoconto</th>" .
 			"<th width='400' align='left'>Descrizione</th>" .
-			"<th>&nbsp;</th>" .
+			"<th width='18' >&nbsp;</th>" .
 			"</tr>";
 	
 	
@@ -120,9 +120,9 @@ class CreaContoTemplate extends ConfigurazioniAbstract {
 	
 				$sottoconto =
 				"<tr id='" . $codsottoconto . "'>" .
-				"<td align='center'>" . $e[0] . "</td>" .
-				"<td align='left'>" . $e[1] . "</td>" .
-				"<td id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" . $codsottoconto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+				"<td width='110' align='center'>" . $e[0] . "</td>" .
+				"<td width='409' align='left'>" . $e[1] . "</td>" .
+				"<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" . $codsottoconto . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 	
 				$tbody_sottoconti = $tbody_sottoconti . $sottoconto;

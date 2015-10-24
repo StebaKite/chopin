@@ -10,8 +10,8 @@ $ricercaConto = RicercaConto::getInstance();
 if ($_GET["modo"] == "start") $ricercaConto->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["categoria"] = $_POST["categoria"];
-	$_SESSION["tipoconto"] = $_POST["tipoconto"];
+	$_SESSION["categoria"] = $_REQUEST["categoria"];
+	$_SESSION["tipoconto"] = $_REQUEST["tipoconto"];
 
 	$ricercaConto->go();
 }

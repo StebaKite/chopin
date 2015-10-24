@@ -31,6 +31,13 @@ trezzo = Trezzo
 pdf = Estrai in PDF
 aliquota10 = Iva 10%
 aliquota22 = Iva 22%
+presenteInBilancio = Incluso in Bilancio
+assenteInBilancio = Escluso
+presenzaSottoconti = Sottoconti visibili
+assenzaSottoconti = Non visibili
+anteprima = Anteprima
+attivo = Attivo
+passivo = Passivo
 ;
 ; Tips ---------------------------------
 ;
@@ -53,6 +60,7 @@ includiContoTip = Include il conto nella causale
 mastrino = Genera il mastrino
 chiudiEvento = Chiude questo evento
 estraipdfTip = Estrae la tabella su un documento PDF
+anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
 ;
 ; Funzioni -----------------------------
 ;
@@ -86,7 +94,7 @@ creaNuovoPagamento = Nuovo Pagamento
 creaNuovoIncasso = Nuovo Incasso
 modificaPagamento = Modifica Pagamento
 bilancioEsercizio = Bilancio Esercizio
-bilancio = Bilancio Movimenti Periodico
+bilancioPeriodico = Bilancio Periodico
 ricercaCorrispettivo = Ricerca Corrispettivo
 modificaIncasso = Modifica Incasso
 ;
@@ -153,3 +161,5 @@ shift = Posticipati
 costi = Costi
 ricavi = Ricavi
 datregistrazione = Reg.
+numrigabilancio = Riga di bilancio
+anno = Anno

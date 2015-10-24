@@ -6,9 +6,12 @@ class Bilancio extends RiepiloghiAbstract {
 
 	private static $_instance = null;
 
-	public static $azioneBilancio = "../riepiloghi/bilancioFacade.class.php?modo=go";
+	public static $azioneBilancioPeriodico = "../riepiloghi/bilancioFacade.class.php?modo=go";
+	public static $azioneBilancioEsercizio = "../riepiloghi/bilancioEsercizioFacade.class.php?modo=go";
 	public static $queryCosti = "/riepiloghi/costi.sql";
 	public static $queryRicavi = "/riepiloghi/ricavi.sql";
+	public static $queryAttivo = "/riepiloghi/attivo.sql";
+	public static $queryPassivo = "/riepiloghi/passivo.sql";
 	
 	function __construct() {
 
@@ -59,6 +62,8 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		unset($_SESSION["costiBilancio"]);
 		unset($_SESSION["ricaviBilancio"]);
+		unset($_SESSION["attivoBilancio"]);
+		unset($_SESSION["passivoBilancio"]);
 		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$bilancioTemplate = BilancioTemplate::getInstance();
@@ -93,7 +98,12 @@ class Bilancio extends RiepiloghiAbstract {
 				include(self::$testata);
 				$bilancioTemplate->displayPagina();
 
-				$totVoci = $_SESSION['numCostiTrovati'] + $_SESSION['numRicaviTrovati'];
+				if ($_SESSION["tipoBilancio"] == "Periodico") {
+					$totVoci = $_SESSION['numCostiTrovati'] + $_SESSION['numRicaviTrovati'];
+				}
+				elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+					$totVoci = $_SESSION['numAttivoTrovati'] + $_SESSION['numPassivoTrovati'];
+				}				
 				
 				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -154,12 +164,22 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		$db = Database::getInstance();
 		
-		if ($this->ricercaCosti($utility, $db, $replace)) {
-			if ($this->ricercaRicavi($utility, $db, $replace)) {
-				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";				
-				return TRUE;
+		if ($_SESSION["tipoBilancio"] == "Periodico") {
+			if ($this->ricercaCosti($utility, $db, $replace)) {
+				if ($this->ricercaRicavi($utility, $db, $replace)) {
+					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+					return TRUE;
+				}
 			}				
 		}
+		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			if ($this->ricercaAttivo($utility, $db, $replace)) {
+				if ($this->ricercaPassivo($utility, $db, $replace)) {
+					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+					return TRUE;
+				}
+			}
+		}		
 		return FALSE;
 	}
 	
@@ -172,6 +192,7 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['costiBilancio'] = $result;
+			$_SESSION['numCostiTrovati'] = pg_num_rows($result);
 		}
 		else {
 			unset($_SESSION['costiBilancio']);
@@ -189,10 +210,47 @@ class Bilancio extends RiepiloghiAbstract {
 	
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['ricaviBilancio'] = $result;
+			$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
 		}
 		else {
-			unset($_SESSION['costiBilancio']);
+			unset($_SESSION['ricaviBilancio']);
 			$_SESSION['numRicaviTrovati'] = 0;
+		}
+		return $result;
+	}
+
+	public function ricercaAttivo($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAttivo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['attivoBilancio'] = $result;
+			$_SESSION['numAttivoTrovati'] = pg_num_rows($result);
+		}
+		else {
+			unset($_SESSION['attivoBilancio']);
+			$_SESSION['numAttivoTrovati'] = 0;
+		}
+		return $result;
+	}
+
+	public function ricercaPassivo($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryPassivo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['passivoBilancio'] = $result;
+			$_SESSION['numPassivoTrovati'] = pg_num_rows($result);
+		}
+		else {
+			unset($_SESSION['passivoBilancio']);
+			$_SESSION['numPassivoTrovati'] = 0;
 		}
 		return $result;
 	}
@@ -201,9 +259,16 @@ class Bilancio extends RiepiloghiAbstract {
 	
 		require_once 'utility.class.php';
 	
-		$_SESSION["azione"] = self::$azioneBilancio;
 		$_SESSION["confermaTip"] = "%ml.confermaEstraiBilancio%";
-		$_SESSION["titoloPagina"] = "%ml.bilancio%";
+		
+		if ($_SESSION["tipoBilancio"] == "Periodico") {
+			$_SESSION["azione"] = self::$azioneBilancioPeriodico;
+			$_SESSION["titoloPagina"] = "%ml.bilancioPeriodico%";
+		}
+		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			$_SESSION["azione"] = self::$azioneBilancioEsercizio;
+			$_SESSION["titoloPagina"] = "%ml.bilancioEsercizio%";
+		}
 	}	
 }
 

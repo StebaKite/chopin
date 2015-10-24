@@ -17,9 +17,14 @@ if ($_GET["modo"] == "start") {
 	/**
 	 * Intestazione documento
 	 */
-	$_SESSION["title"] = "BILANCIO";
-	$_SESSION["title1"] = "Movimenti Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
-	
+	if ($_SESSION["tipoBilancio"] == "Periodico") {
+		$_SESSION["title"] = "BILANCIO PERIODICO";
+		$_SESSION["title1"] = "Movimenti Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
+	}
+	elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+		$_SESSION["title"] = "BILANCIO ESERCIZIO";
+		$_SESSION["title1"] = "Anno " . $_SESSION["anno_eserczio_sel"];
+	}	
 	$estraiPdfBilancio->start();
 }
 

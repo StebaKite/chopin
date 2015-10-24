@@ -85,16 +85,16 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 	
 		foreach ($elencoSottoconti as $row) {
 	
-			$bottoneCancella = "<td align='right'>" . $row["totale_registrazioni_sottoconto"] . "</td>";
+			$bottoneCancella = "<td width='28' align='right'>" . $row["totale_registrazioni_sottoconto"] . "</td>";
 			
 			if ($row["totale_registrazioni_sottoconto"] == 0) {
-				$bottoneCancella = "<td id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
+				$bottoneCancella = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
 			}
 			
 			$tbodySottoconti = $tbodySottoconti .
 			"<tr id='" . $row["cod_conto"] . "'>" .
-			"<td align='center'>" . $row["cod_sottoconto"] . "</td>" .
-			"<td align='left'>" . $row["des_sottoconto"] . "</td>" .			
+			"<td width='110' align='center'>" . $row["cod_sottoconto"] . "</td>" .
+			"<td width='408' align='left'>" . $row["des_sottoconto"] . "</td>" .			
 			$bottoneCancella .
 			"</tr>";
 		}
@@ -109,6 +109,13 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%contopat_checked%' => (trim($_SESSION["catconto"]) == "Stato Patrimoniale") ? "checked" : "",
 				'%dare_checked%' => (trim($_SESSION["tipconto"]) == "Dare") ? "checked" : "",
 				'%avere_checked%' => (trim($_SESSION["tipconto"]) == "Avere") ? "checked" : "",
+				'%presenzaSi_checked%' => (trim($_SESSION["indpresenza"]) == "S") ? "checked" : "",
+				'%presenzaNo_checked%' => (trim($_SESSION["indpresenza"]) == "N") ? "checked" : "",
+				'%sottocontiSi_checked%' => (trim($_SESSION["indvissottoconti"]) == "S") ? "checked" : "",
+				'%sottocontiNo_checked%' => (trim($_SESSION["indvissottoconti"]) == "N") ? "checked" : "",
+				'%attivo_checked%' => (trim($_SESSION["indclassificazione"]) == "A") ? "checked" : "",
+				'%passivo_checked%' => (trim($_SESSION["indclassificazione"]) == "P") ? "checked" : "",
+				'%numrigabilancio%' => ($_SESSION["numrigabilancio"] != "") ? $_SESSION["numrigabilancio"] : 0,
 				'%categoria%' => $_SESSION["categoria"],
 				'%tipoconto%' => $_SESSION["tipoconto"],
 				'%tbody_sottoconti%' => $tbodySottoconti
