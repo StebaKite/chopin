@@ -557,7 +557,11 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
 				'%tabs%' => $tabs,
-				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf']
+				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
+				'%ml.anno_esercizio_corrente%' => date("Y"),
+				'%ml.anno_esercizio_menouno%' => date("Y")-1,
+				'%ml.anno_esercizio_menodue%' => date("Y")-2,
+				'%ml.anno_esercizio_menotre%' => date("Y")-3
 		);
 		
 		$utility = Utility::getInstance();

@@ -649,6 +649,7 @@ $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuCausale" ).selectmenu({ width: 350 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
+$( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');

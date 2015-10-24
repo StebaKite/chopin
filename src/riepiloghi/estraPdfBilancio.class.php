@@ -150,10 +150,12 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		 */
 		$pdf->AddPage();
 		$pdf->SetFont('','B',12);
-		$pdf->Cell($w[0],6,"ATTIVITA'",0,'R');
+	    $pdf->SetFillColor(28,148,196);
+		$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,0,'R');
 		$pdf->Ln();
 		$pdf->Ln();
 
+		$pdf->SetFillColor(224,235,255);
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioEsercizioTable($this->ricercaAttivo($utility, $db, $replace));
 		
@@ -162,13 +164,15 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		 */
 		$pdf->AddPage();
 		$pdf->SetFont('','B',12);
-		$pdf->Cell($w[0],6,"PASSIVITA'",0,'R');
+		$pdf->SetFillColor(28,148,196);		
+		$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,0,'R');
 		$pdf->Ln();
 		$pdf->Ln();
+		
+		$pdf->SetFillColor(224,235,255);
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioEsercizioTable($this->ricercaPassivo($utility, $db, $replace));
 		
-
 		return $pdf;
 	}
 	

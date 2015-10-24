@@ -23,10 +23,8 @@ if ($_GET["modo"] == "start") {
 	}
 	elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
 		$_SESSION["title"] = "BILANCIO ESERCIZIO";
-		$_SESSION["title1"] = "Movimenti Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
-	}
-	
-	
+		$_SESSION["title1"] = "Anno " . $_SESSION["anno_eserczio_sel"];
+	}	
 	$estraiPdfBilancio->start();
 }
 
