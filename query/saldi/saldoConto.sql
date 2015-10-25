@@ -19,10 +19,10 @@ SELECT
 		  	   		AND t2.cod_sottoconto = t1.cod_sottoconto
 		  		LEFT OUTER JOIN contabilita.registrazione as t4
 		  			ON  t4.id_registrazione = t2.id_registrazione
-		  WHERE t4.dat_registrazione BETWEEN '01/07/2015' AND '31/07/2015'
-		  AND   t4.cod_negozio = 'VIL'
-		  AND   t3.cod_conto = '100'
-		  AND   t1.cod_sottoconto = '10'
+		  WHERE t4.dat_registrazione between '%datareg_da%' and '%datareg_a%'
+		  AND   t4.cod_negozio = '%codnegozio%'
+		  AND   t3.cod_conto = '%codconto%'
+		  AND   t1.cod_sottoconto = '%codsottoconto%'
 		GROUP BY t3.cod_conto, t1.cod_sottoconto, tip_conto
 	) AS t4	
 GROUP BY t4.cod_conto, t4.cod_sottoconto

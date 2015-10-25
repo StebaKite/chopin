@@ -30,6 +30,7 @@ abstract class ChopinAbstract {
 	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
 	public static $queryCreaEvento = "/main/creaEvento.sql";
 	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
+	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -320,6 +321,24 @@ abstract class ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_negozio%' => $codnegozio,
+				'%cod_conto%' => $codconto,
+				'%cod_sottoconto%' => $codsottoconto,
+				'%dat_saldo%' => $datsaldo,
+				'%des_saldo%' => $dessaldo,
+				'%imp_saldo%' => $impsaldo,
+				'%ind_dareavere%' => $inddareavere
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}	
 }
 
 ?>

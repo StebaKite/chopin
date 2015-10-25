@@ -8,6 +8,5 @@ session_start();
 $riportoSaldoPeriodico = RiportoSaldoPeriodico::getInstance();
 
 if ($_GET["modo"] == "start") $riportoSaldoPeriodico->start();
-if ($_GET["modo"] == "go") $riportoSaldoPeriodico->go();
 
 ?>

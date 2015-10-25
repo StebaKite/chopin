@@ -46,8 +46,6 @@ class Menubanner extends ChopinAbstract {
 		require_once 'menubanner.template.php';
 		require_once 'utility.class.php';
 		require_once 'database.class.php';
-
-		error_log("<<<<<<< Start >>>>>>> " . $_SERVER['PHP_SELF']);
 		
 		$menubannerTemplate = MenubannerTemplate::getInstance();
 		
@@ -60,6 +58,10 @@ class Menubanner extends ChopinAbstract {
 		 *  	imposta un messaggio "Prossimo: " <nomelavoro> " il " <data> 
 		 */
 		 
+		require_once 'riportoSaldoPeriodico.class.php';
+		$riportoSaldoPeriodico = RiportoSaldoPeriodico::getInstance();
+		$riportoSaldoPeriodico->start();
+
 		
 		
 		
