@@ -26,7 +26,7 @@ SELECT
 		  AND   t2.ind_dareavere = 'A' 
 		GROUP BY t3.num_riga_bilancio, t3.ind_visibilita_sottoconti, t3.des_conto, t1.des_sottoconto
 
-		UNION
+		UNION ALL
 		
 		SELECT
 			conto.num_riga_bilancio,

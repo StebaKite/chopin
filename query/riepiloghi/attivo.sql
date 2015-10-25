@@ -39,7 +39,7 @@ SELECT
 			) AS t4	
 		GROUP BY t4.num_riga_bilancio, t4.ind_visibilita_sottoconti, t4.des_conto, t4.des_sottoconto
 
-		UNION
+		UNION ALL
 		
 		SELECT
 			conto.num_riga_bilancio,
