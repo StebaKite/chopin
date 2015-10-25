@@ -51,6 +51,18 @@ class Menubanner extends ChopinAbstract {
 		
 		$menubannerTemplate = MenubannerTemplate::getInstance();
 		
+		/**
+		 *  qui ci metto la gestione dei lavori in piano
+		 *  se ci sono lavori da eseguire pianificati in una data =< alla data odierna
+		 *  	allora vengono eseguiti uno alla volta
+		 *  	e imposta un messaggio: <nomelavoro> " Eseguito con successo"
+		 *  altrimenti
+		 *  	imposta un messaggio "Prossimo: " <nomelavoro> " il " <data> 
+		 */
+		 
+		
+		
+		
 // 		// Template
 // 		$utility = new utility();
 // 		$db = new database();

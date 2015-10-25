@@ -21,7 +21,7 @@ SELECT T1.*
 		  AND dettaglio.cod_sottoconto = '%cod_sottoconto%'
 		%filtro_date%
   
-		UNION
+		UNION ALL
 		
 		SELECT
 			to_char(saldo.dat_saldo, 'DD/MM/YYYY') as dat_registrazione,
