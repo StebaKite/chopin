@@ -78,7 +78,6 @@ class Utility {
 	public function getTemplate($fileName) {
 
 		if (file_exists($fileName)) {
-			error_log("Template file " . $fileName . " loaded...");
 			
 			$temp = fopen($fileName,"r");
 			$template = fread($temp,filesize($fileName));
@@ -116,7 +115,6 @@ class Utility {
 			}
 			fclose($lan);
 			$this->setLanguageReplace($languageReplace);
-			error_log("Multilanguage file " . $multiLanguageFile . " loaded...");
 		}
 		return $this->getLanguageReplace();
 	}	
@@ -130,7 +128,6 @@ class Utility {
 			if (file_exists($configFile)) {
 
 				// viene ritornata una mappa
-				error_log("Config file " . $configFile . " loaded...");
 				$this->setConfiguration(parse_ini_file($configFile));
 			}
 			else {

@@ -6,6 +6,9 @@ class Menubanner extends ChopinAbstract {
 
 	private static $messaggio;
 	private static $queryTotaliProgressivi = "/main/totaliProgressivi.sql";
+	private static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
+	
+	public static $sourceFolder = "/chopin/src/saldi/";
 	
 	private static $_instance = null;
 	
@@ -48,48 +51,87 @@ class Menubanner extends ChopinAbstract {
 		require_once 'database.class.php';
 		
 		$menubannerTemplate = MenubannerTemplate::getInstance();
-		
-		/**
-		 *  qui ci metto la gestione dei lavori in piano
-		 *  se ci sono lavori da eseguire pianificati in una data =< alla data odierna
-		 *  	allora vengono eseguiti uno alla volta
-		 *  	e imposta un messaggio: <nomelavoro> " Eseguito con successo"
-		 *  altrimenti
-		 *  	imposta un messaggio "Prossimo: " <nomelavoro> " il " <data> 
-		 */
-		 
-		require_once 'riportoSaldoPeriodico.class.php';
-		$riportoSaldoPeriodico = RiportoSaldoPeriodico::getInstance();
-		$riportoSaldoPeriodico->start();
 
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
 		
+		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
 		
-		
-// 		// Template
-// 		$utility = new utility();
-// 		$db = new database();
-
-// 		$array = $utility->getConfig();
-
-// 		$testata = self::$root . $array['testataPagina'];
-// 		$piede = self::$root . $array['piedePagina'];		
-
-// 		$menubannerTemplate = new menubannerTemplate();
-		
-// 		//-------------------------------------------------------------
-		
-// 		$sqlTemplate = self::$root . $array['query'] . self::$queryTotaliProgressivi;
-// 		$sql = $utility->getTemplate($sqlTemplate);
-// 		$result = $db->getData($sql);
+		if ($lavoriPianificati) {				
+			$rows = pg_fetch_all($lavoriPianificati);		
 			
-// 		if ($result) $menubannerTemplate->setTotaliProgressivi(pg_fetch_all($result));
-// 		else $menubannerTemplate->setTotaliProgressivi("");
+			$oggi = date("Y/m/d");
+				
+			foreach($rows as $row) {
+				
+				if (($row['dat_lavoro'] <= $oggi) && ($row['sta_lavoro'] == "00")) {
+					if ($this->eseguiLavoro($row)) {
+						error_log($row['des_lavoro'] . " eseguito");
+					}
+				}
+			}
+		}
+		 
+// 		require_once 'riportoSaldoPeriodico.class.php';
+// 		$riportoSaldoPeriodico = RiportoSaldoPeriodico::getInstance();
+// 		$_SESSION["dataEsecuzioneLavoro"] = "01/10/2015";
+// 		$riportoSaldoPeriodico->start();
 		
 		// compone la pagina
 		include($testata);
 		$menubannerTemplate->displayPagina();
 		include($piede);
 	}
+	
+	public function leggiLavoriPianificati($db, $utility) {
+	
+		$dataLavoroDa = '01/' . str_pad(date("m")-1, 2, "0", STR_PAD_LEFT) . '/' . date("Y"); 
+		$dataLavoroA = '01/' . str_pad(date("m")+1, 2, "0", STR_PAD_LEFT) . '/' . date("Y");
+		
+		$replace = array(
+				'%datalavoro_da%' => $dataLavoroDa,
+				'%datalavoro_a%' => $dataLavoroA
+		);
+		
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLavoriPianificati;
+	
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		return $result;
+	}	
+
+	public function eseguiLavoro($row) {
+
+		$className = trim($row['cla_esecuzione_lavoro']);
+		$fileClass = self::$root . self::$sourceFolder . trim($row['fil_esecuzione_lavoro']) . '.class.php';
+	
+		if (file_exists($fileClass)) {
+				
+			require_once trim($row['fil_esecuzione_lavoro']) . '.class.php';
+				
+			if (class_exists($className)) {
+				$instance = new $className();
+				$_SESSION["dataEsecuzioneLavoro"] = str_replace("-", "/", $row["dat_lavoro"]);
+				
+				if ($instance->start()) {
+					return TRUE;
+				}
+				else {
+					return FALSE;
+				}
+			}
+			else {
+				error_log("Il nome classe '" . $className . "' non &egrave; definita, lavoro non eseguito");
+				return FALSE;
+			}
+		}
+		else {
+			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
+			return FALSE;
+		}
+	}		
 }
 
 ?>

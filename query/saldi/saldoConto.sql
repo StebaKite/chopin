@@ -1,6 +1,7 @@
 SELECT
 	t4.cod_conto,
 	t4.cod_sottoconto,
+	t4.tip_conto,
 	COALESCE(sum(t4.tot_conto * t4.tip_conto),0) as tot_conto
   FROM (	
 		SELECT
@@ -25,4 +26,4 @@ SELECT
 		  AND   t1.cod_sottoconto = '%codsottoconto%'
 		GROUP BY t3.cod_conto, t1.cod_sottoconto, tip_conto
 	) AS t4	
-GROUP BY t4.cod_conto, t4.cod_sottoconto
+GROUP BY t4.cod_conto, t4.cod_sottoconto, t4.tip_conto

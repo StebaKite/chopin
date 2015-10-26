@@ -20,7 +20,22 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 			'09' => '30',
 			'10' => '31',
 			'11' => '30',
-			'12' => '31',
+			'12' => '31'
+	);
+
+	public static $mese = array(
+			'01' => 'gennaio',
+			'02' => 'febbraio',
+			'03' => 'marzo',
+			'04' => 'aprile',
+			'05' => 'maggio',
+			'06' => 'giugno',
+			'07' => 'luglio',
+			'08' => 'agosto',
+			'09' => 'settembre',
+			'10' => 'ottobre',
+			'11' => 'novembre',
+			'12' => 'dicembre'
 	);
 	
 	public static $negozi = array('VIL','BRE','TRE');
@@ -70,20 +85,25 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 		 */
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
+
+		$db->beginTransaction();
 				
 		$array = $utility->getConfig();
 		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConto;
 		$sql = $utility->getTemplate($sqlTemplate);
-		$result = $db->getData($sql);
+		$result = $db->execSql($sql);
 
 		if ($result) {
 
 			$conti = pg_fetch_all($result);
+
+			$dataLavoro = explode("/", $_SESSION["dataEsecuzioneLavoro"]);
 						
-			$mesePrecedente = str_pad(date("m") - 1, 2, "0", STR_PAD_LEFT);
-			$dataGenerazioneSaldo = '01/' . date("m") . '/' . date("Y");
-			$descrizioneSaldo = "Riporto saldo mese precedente";
+			
+			$mesePrecedente = str_pad($dataLavoro[1] - 1, 2, "0", STR_PAD_LEFT);
+			$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
+			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 			
 			foreach($conti as $conto) {
 			
@@ -101,15 +121,19 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 					$sqlTemplate = self::$root . $array['query'] . self::$querySaldoCondo;
 						
 					$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-					$result = $db->getData($sql);
+					$result = $db->execSql($sql);
 
 					$saldo = pg_fetch_all($result);					
 					
 					if (result) {
-						$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, $saldo["tot_conto"], $inddareavere);						
+						foreach($saldo as $row) {
+							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, $row['tot_conto'], $dareAvere);								
+						}
 					}
 				}
-			}				
+			}
+			$db->commitTransaction();				
 		}
 	}
 }
