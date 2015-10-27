@@ -58,33 +58,43 @@ class MenubannerTemplate extends ChopinAbstract {
 		
 		if (strpos($users, $array['usernameProdLogin']) === false) {
 			$amb = "Ambiente di TEST";				
-			$who = "";
 			$oggi = "";
 		}
 		else {
 			$amb = "Ambiente di PRODUZIONE";				
-			$who = "User connesso: " . ucfirst($array['usernameProdLogin']);
 		} 
 		
 		$form = self::$root . $array['template'] . self::$pagina;
 
 		$utility = new utility();
 		
-// 		if ($this->getTotaliProgressivi() != "") {
+		if (isset($_SESSION["lavoriPianificati"])) {
 			
-// 			$tabellaTotali .= "<table class='result' id='resultTable'>";
-// 			$tabellaTotali .= "<thead><th>%ml.oggetto%</th><th>%ml.totale%</th></thead><tbody>";
+			$rows = $_SESSION["lavoriPianificati"];
 			
-// 			foreach($this->getTotaliProgressivi() as $row) {
-// 				$tabellaTotali .= "<tr class='on'> <td width='150'>" . $row['entita'] . "</td><td width='50' align='right'>" . $row['totale'] . "</td></tr>";
-// 			}
+			$tabellaLavoriPianificati .= "<table class='result'>";
+			$tabellaLavoriPianificati .= "<thead><th width='60'>%ml.datlavoro%</th>";
+			$tabellaLavoriPianificati .= "<th width='110'>%ml.deslavoro%</th>";
+			$tabellaLavoriPianificati .= "<th width='20'>%ml.stalavoro%</th></thead><tbody></table>";			
+			$tabellaLavoriPianificati .= "<div class='scroll-lavori'><table class='result'><tbody>";
 			
-// 			$tabellaTotali .= "</tbody></table>";			
-// 		}
+			foreach($rows as $row) {
+				
+				$stato = ($row['sta_lavoro'] == '10') ? "Ok" : " ";
+				$class = ($row['sta_lavoro'] == '10') ? "class='done'" : "class='todo'";
+				$tabellaLavoriPianificati .= "<tr " . $class . " >";
+				$tabellaLavoriPianificati .= "<td width='60'>" . $row['dat_lavoro'] . "</td>";
+				$tabellaLavoriPianificati .= "<td width='110' nowrap align='left'>" . $row['des_lavoro'] . "</td>";
+				$tabellaLavoriPianificati .= "<td width='37' align='center'>" . $stato . "</td>";
+				$tabellaLavoriPianificati .= "</tr>";
+			}
+	
+			$tabellaLavoriPianificati .= "</tbody></table>";			
+		}
 
 		$replace = array(
 				'%amb%' => $amb,
-				'%who%' => $who,
+				'%tabellaLavoriPianificati%' => $tabellaLavoriPianificati
 		);
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

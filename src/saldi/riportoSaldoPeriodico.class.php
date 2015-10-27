@@ -85,8 +85,6 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 		 */
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-
-		$db->beginTransaction();
 				
 		$array = $utility->getConfig();
 		
@@ -133,8 +131,8 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 					}
 				}
 			}
-			$db->commitTransaction();				
 		}
+		return TRUE;
 	}
 }
 
