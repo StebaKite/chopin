@@ -356,7 +356,9 @@ abstract class ChopinAbstract {
 	 */
 	public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
 	
-		if ($this->leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo)) {
+		$result = $this->leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo);
+
+		if (pg_num_rows($result) > 0) {
 			$array = $utility->getConfig();
 			$replace = array(
 					'%cod_negozio%' => $codnegozio,
@@ -370,7 +372,6 @@ abstract class ChopinAbstract {
 			$sqlTemplate = self::$root . $array['query'] . self::$queryAggiornaSaldo;
 		}
 		else {
-
 			$array = $utility->getConfig();
 			$replace = array(
 					'%cod_negozio%' => $codnegozio,
