@@ -80,7 +80,6 @@ Class Database {
 
 	public function getData($sql) {
 
-		error_log("ESEGUO LA QUERY : " . $sql);
 		$dblink = $this->getLink();
 		$result = pg_query($dblink, $sql);
 		pg_close($dblink); 
@@ -129,7 +128,6 @@ Class Database {
 			// Esegue la query e se sulla INSERT e' impostata la clausola RETURNING, salva l'ID usato
 			// Salva il numero di righe risultato della query
 			
-			error_log("ESEGUO LA QUERY : " . $sql);
 			$result = pg_query($this->getDbLink(), $sql);
 			
 			$row = pg_fetch_row($result);			

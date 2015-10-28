@@ -72,10 +72,6 @@ class MenubannerTemplate extends ChopinAbstract {
 			
 			$rows = $_SESSION["lavoriPianificati"];
 			
-			$tabellaLavoriPianificati .= "<table class='result'>";
-			$tabellaLavoriPianificati .= "<thead><th width='60'>%ml.datlavoro%</th>";
-			$tabellaLavoriPianificati .= "<th width='110'>%ml.deslavoro%</th>";
-			$tabellaLavoriPianificati .= "<th width='20'>%ml.stalavoro%</th></thead><tbody></table>";			
 			$tabellaLavoriPianificati .= "<div class='scroll-lavori'><table class='result'><tbody>";
 			
 			foreach($rows as $row) {

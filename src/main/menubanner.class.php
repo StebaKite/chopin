@@ -7,7 +7,6 @@ class Menubanner extends ChopinAbstract {
 	private static $messaggio;
 	private static $queryTotaliProgressivi = "/main/totaliProgressivi.sql";
 	private static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
-	private static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	
 	public static $sourceFolder = "/chopin/src/saldi/";
 	
@@ -74,20 +73,27 @@ class Menubanner extends ChopinAbstract {
 				foreach($rows as $row) {
 			
 					if ((strtotime($row['dat_lavoro']) <= strtotime($oggi)) && ($row['sta_lavoro'] == "00")) {
-						if ($this->eseguiLavoro($row)) {
-							$this->cambioStatoLavoroPianificato($db, $utility, $row['pk_lavoro_pianificato'], '10');								
+						
+						if ($this->eseguiLavoro($db, $row)) {
 							error_log($row['des_lavoro'] . " eseguito");
-							
-							$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
-							$_SESSION["lavoriPianificati"] = pg_fetch_all($lavoriPianificati);
+						}
+						else {
+							error_log("ATTENZIONE: Lavori pianificati non eseguiti!!");
 						}
 					}
 				}
+
+				/**
+				 * Refresh della tabellina in sessione dei lavori pianificati e commit della transazione.
+				 * Attenzione che la transazione rimane aperta per tutti i lavori pianificati
+				 */
+				$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
+				$_SESSION["lavoriPianificati"] = pg_fetch_all($lavoriPianificati);								
+				$db->commitTransaction();
 			}
 			else {
 				unset($_SESSION["lavoriPianificati"]);
 			}
-			$db->commitTransaction();
 		}
 		else {
 			error_log("Lavori pianificati non attivi!!");
@@ -116,31 +122,14 @@ class Menubanner extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLavoriPianificati;
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+		$result = $db->execSql($sql);
 	
 		return $result;
 	}	
-
-	public function cambioStatoLavoroPianificato($db, $utility, $pklavoro, $stato) {
-	
-	
-		$replace = array(
-				'%sta_lavoro%' => $stato,
-				'%pk_lavoro_pianificato%' => $pklavoro
-		);
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	
-		return $result;
-	}
 	
 	
 	
-	public function eseguiLavoro($row) {
+	public function eseguiLavoro($db, $row) {
 
 		$className = trim($row['cla_esecuzione_lavoro']);
 		$fileClass = self::$root . self::$sourceFolder . trim($row['fil_esecuzione_lavoro']) . '.class.php';
@@ -152,8 +141,11 @@ class Menubanner extends ChopinAbstract {
 			if (class_exists($className)) {
 				$instance = new $className();
 				$_SESSION["dataEsecuzioneLavoro"] = str_replace("-", "/", $row["dat_lavoro"]);				
-				if ($instance->start()) {					
+				if ($instance->start($db, $row['pk_lavoro_pianificato'])) {					
 					return TRUE;
+				}
+				else {
+					return FALSE;
 				}
 			}
 			else {

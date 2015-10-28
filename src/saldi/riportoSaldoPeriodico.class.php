@@ -6,7 +6,7 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 
 	private static $messaggio;
 	private static $queryRicercaConto = "/saldi/ricercaConto.sql";
-	private static $querySaldoCondo = "/saldi/saldoConto.sql";
+	private static $querySaldoConto = "/saldi/saldoConto.sql";
 
 	public static $ggMese = array(
 			'01' => '31',
@@ -74,21 +74,19 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 
 	// ------------------------------------------------
 
-	public function start() {
+	public function start($db, $pklavoro) {
 
 		require_once 'menubanner.template.php';
 		require_once 'utility.class.php';
-		require_once 'database.class.php';
 		
 		/**
 		 * Prelevo tutti i conti
 		 */
-		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-				
-		$array = $utility->getConfig();
 		
+		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConto;
+		
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->execSql($sql);
 
@@ -97,12 +95,11 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 			$conti = pg_fetch_all($result);
 
 			$dataLavoro = explode("/", $_SESSION["dataEsecuzioneLavoro"]);
-						
 			
 			$mesePrecedente = str_pad($dataLavoro[1] - 1, 2, "0", STR_PAD_LEFT);
 			$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
 			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
-			
+				
 			foreach($conti as $conto) {
 			
 				foreach(SELF::$negozi as $negozio){
@@ -116,7 +113,7 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 					);
 			
 					$array = $utility->getConfig();
-					$sqlTemplate = self::$root . $array['query'] . self::$querySaldoCondo;
+					$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
 						
 					$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 					$result = $db->execSql($sql);
@@ -131,9 +128,11 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 					}
 				}
 			}
+			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');			
+			return TRUE;				
 		}
-		return TRUE;
-	}
+		return FALSE;
+	}	
 }
 
 ?>

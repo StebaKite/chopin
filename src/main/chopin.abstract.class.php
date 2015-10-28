@@ -31,6 +31,9 @@ abstract class ChopinAbstract {
 	public static $queryCreaEvento = "/main/creaEvento.sql";
 	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
+	public static $queryAggiornaSaldo = "/saldi/aggiornaSaldo.sql";
+	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
+	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -294,7 +297,15 @@ abstract class ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	}
-	
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $datevento
+	 * @param unknown $notaevento
+	 * @return unknown
+	 */
 	public function inserisciEvento($db, $utility, $datevento, $notaevento) {
 		
 		$array = $utility->getConfig();
@@ -308,6 +319,14 @@ abstract class ChopinAbstract {
 		return $result;		
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idevento
+	 * @param unknown $staevento
+	 * @return unknown
+	 */
 	public function chiudiEvento($db, $utility, $idevento, $staevento) {
 		
 		$array = $utility->getConfig();
@@ -322,21 +341,100 @@ abstract class ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Se il saldo c'è già sulla tabella viene aggiornato altrimenti viene inserito
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codnegozio
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $datsaldo
+	 * @param unknown $dessaldo
+	 * @param unknown $impsaldo
+	 * @param unknown $inddareavere
+	 * @return unknown
+	 */
 	public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
+	
+		if ($this->leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo)) {
+			$array = $utility->getConfig();
+			$replace = array(
+					'%cod_negozio%' => $codnegozio,
+					'%cod_conto%' => $codconto,
+					'%cod_sottoconto%' => $codsottoconto,
+					'%dat_saldo%' => $datsaldo,
+					'%des_saldo%' => $dessaldo,
+					'%imp_saldo%' => $impsaldo,
+					'%ind_dareavere%' => $inddareavere
+			);
+			$sqlTemplate = self::$root . $array['query'] . self::$queryAggiornaSaldo;
+		}
+		else {
+
+			$array = $utility->getConfig();
+			$replace = array(
+					'%cod_negozio%' => $codnegozio,
+					'%cod_conto%' => $codconto,
+					'%cod_sottoconto%' => $codsottoconto,
+					'%dat_saldo%' => $datsaldo,
+					'%des_saldo%' => $dessaldo,
+					'%imp_saldo%' => $impsaldo,
+					'%ind_dareavere%' => $inddareavere
+			);
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+		}
+		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;		
+	}	
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codnegozio
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $datsaldo
+	 * @return unknown
+	 */
+	public function leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_negozio%' => $codnegozio,
 				'%cod_conto%' => $codconto,
 				'%cod_sottoconto%' => $codsottoconto,
-				'%dat_saldo%' => $datsaldo,
-				'%des_saldo%' => $dessaldo,
-				'%imp_saldo%' => $impsaldo,
-				'%ind_dareavere%' => $inddareavere
+				'%dat_saldo%' => $datsaldo
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiSaldo;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $pklavoro
+	 * @param unknown $stato
+	 * @return unknown
+	 */
+	public function cambioStatoLavoroPianificato($db, $utility, $pklavoro, $stato) {
+	
+		$replace = array(
+				'%sta_lavoro%' => $stato,
+				'%pk_lavoro_pianificato%' => $pklavoro
+		);
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
+	
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+	
 		return $result;
 	}	
 }
