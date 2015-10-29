@@ -352,6 +352,11 @@
 		font-weight: normal;
 		color: green;
 	}
+	.result tr.donetoday {
+		font-weight: normal;
+		background-color: #84f184;
+		color: green;
+	}
 	.result tr.todo {
 		font-weight: normal;
 		color: #7f7f7f;

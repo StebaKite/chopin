@@ -70,6 +70,7 @@ class MenubannerTemplate extends ChopinAbstract {
 		
 		if (isset($_SESSION["lavoriPianificati"])) {
 			
+			$oggi = strtotime(date("Y-m-d"));
 			$rows = $_SESSION["lavoriPianificati"];
 			
 			$tabellaLavoriPianificati .= "<div class='scroll-lavori'><table class='result'><tbody>";
@@ -77,9 +78,15 @@ class MenubannerTemplate extends ChopinAbstract {
 			foreach($rows as $row) {
 				
 				$stato = ($row['sta_lavoro'] == '10') ? "Ok" : " ";
-				$class = ($row['sta_lavoro'] == '10') ? "class='done'" : "class='todo'";
+				if ($row['sta_lavoro'] == '00') {
+					$class = "class='todo'";
+				}
+				else {
+					$class = (strtotime($row['tms_esecuzione']) != $oggi) ? "class='done'" : "class='donetoday'";
+				}
+				
 				$tabellaLavoriPianificati .= "<tr " . $class . " >";
-				$tabellaLavoriPianificati .= "<td width='60'>" . $row['dat_lavoro'] . "</td>";
+				$tabellaLavoriPianificati .= "<td width='60'>" . date("d/m/Y",strtotime($row['dat_lavoro'])) . "</td>";
 				$tabellaLavoriPianificati .= "<td width='110' nowrap align='left'>" . $row['des_lavoro'] . "</td>";
 				$tabellaLavoriPianificati .= "<td width='37' align='center'>" . $stato . "</td>";
 				$tabellaLavoriPianificati .= "</tr>";
