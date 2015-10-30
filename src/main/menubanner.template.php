@@ -51,23 +51,11 @@ class MenubannerTemplate extends ChopinAbstract {
 		
 		// Template --------------------------------------------------------------
 		
-		$utility = new utility();
+		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
-		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
-		
-		if (strpos($users, $array['usernameProdLogin']) === false) {
-			$amb = "Ambiente di TEST";				
-			$oggi = "";
-		}
-		else {
-			$amb = "Ambiente di PRODUZIONE";				
-		} 
 		
 		$form = self::$root . $array['template'] . self::$pagina;
 
-		$utility = new utility();
-		
 		if (isset($_SESSION["lavoriPianificati"])) {
 			
 			$oggi = strtotime(date("Y-m-d"));
