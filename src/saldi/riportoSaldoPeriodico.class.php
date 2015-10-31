@@ -1,12 +1,10 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'saldi.abstract.class.php';
 
-class RiportoSaldoPeriodico extends ChopinAbstract {
+class RiportoSaldoPeriodico extends SaldiAbstract {
 
 	private static $messaggio;
-	private static $queryRicercaConto = "/saldi/ricercaConto.sql";
-	private static $querySaldoConto = "/saldi/saldoConto.sql";
 
 	public static $ggMese = array(
 			'01' => '31',
@@ -80,15 +78,9 @@ class RiportoSaldoPeriodico extends ChopinAbstract {
 		require_once 'utility.class.php';
 		
 		/**
-		 * Prelevo tutti i conti
+		 * Prelevo tutti i conti, se ci sono conti faccio il riporto altrimenti esco
 		 */
-		$utility = Utility::getInstance();
-		
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConto;
-		
-		$sql = $utility->getTemplate($sqlTemplate);
-		$result = $db->execSql($sql);
+		$result = prelevaConti($db, $utility);
 
 		if ($result) {
 
