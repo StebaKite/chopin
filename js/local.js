@@ -650,6 +650,7 @@ $( ".selectmenuCausale" ).selectmenu({ width: 270 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
+$( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');

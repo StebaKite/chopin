@@ -12,8 +12,8 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	
 	private static $queryRicercaConto = "/saldi/ricercaConto.sql";
 	private static $querySaldoConto = "/saldi/saldoConto.sql";
-	
-	
+	private static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
+	private static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
 	
 	
 	function __construct() {
@@ -159,6 +159,50 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	public function caricaDateRiportoSaldo($utility, $db) {
+	
+		$array = $utility->getConfig();
+	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaDateRiportoSaldi;
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->getData($sql);
+
+		foreach(pg_fetch_all($result) as $row) {
+		
+			if ($row['dat_saldo'] == $_SESSION["datarip_saldo"]) {
+				$elencoDateRiportoSaldi .= "<option value='" . $row['dat_saldo'] . "' selected >" . date("d/m/Y",strtotime($row['dat_saldo'])) . "</option>";
+			}
+			else {
+				$elencoDateRiportoSaldi .= "<option value='" . $row['dat_saldo'] . "'>" . date("d/m/Y",strtotime($row['dat_saldo'])) . "</option>";
+			}
+		}
+		return $elencoDateRiportoSaldi;
+	}
+	
+	public function leggiSaldi($db, $utility, $codneg, $datarip) {
+	
+		$replace = array(
+				'%cod_negozio%' => $codneg,
+				'%dat_saldo%' => $datarip
+		);
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiSaldi;
+	
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		
+		$result = $db->getData($sql);
+		
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['saldiTrovati'] = $result;
+			$_SESSION['numSaldiTrovati'] = pg_num_rows($result);
+		}
+		else {
+			unset($_SESSION['saldiTrovati']);
+			$_SESSION['numSaldiTrovati'] = 0;
+		}	
+		return $result;
+	}
 	
 	
 	

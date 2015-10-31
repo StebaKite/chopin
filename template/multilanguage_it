@@ -97,6 +97,8 @@ bilancioEsercizio = Bilancio Esercizio
 bilancioPeriodico = Bilancio Periodico
 ricercaCorrispettivo = Ricerca Corrispettivo
 modificaIncasso = Modifica Incasso
+
+ricercaSaldi = Ricerca Saldi
 ;
 ; Messaggi -----------------------------
 ;
@@ -166,3 +168,4 @@ anno = Anno
 datlavoro = Data
 deslavoro = Lavoro
 stalavoro = Stato
+dataRipSaldo = Data riporto saldo

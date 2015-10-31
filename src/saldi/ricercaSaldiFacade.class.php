@@ -1,19 +1,19 @@
 <?php
 
 set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility');
-require_once 'ricercaSaldo.class.php';
+require_once 'ricercaSaldi.class.php';
 
 session_start();
 
-$ricercaSaldo = RicercaSaldo::getInstance();
+$ricercaSaldi = RicercaSaldi::getInstance();
 
-if ($_GET["modo"] == "start") $ricercaSaldo->start();
+if ($_GET["modo"] == "start") $ricercaSaldi->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["datarrip_saldo"] = $_REQUEST["datarrip_saldo"];
+	$_SESSION["datarip_saldo"] = $_REQUEST["datarip_saldo"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
 
-	$ricercaSaldo->go();
+	$ricercaSaldi->go();
 }
 
 ?>
