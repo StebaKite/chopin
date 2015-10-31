@@ -10,11 +10,12 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	
 	// Query --------------------------------------------------------------- 
 	
-	private static $queryRicercaConto = "/saldi/ricercaConto.sql";
-	private static $querySaldoConto = "/saldi/saldoConto.sql";
-	private static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
-	private static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
-	
+	public static $queryRicercaConto = "/saldi/ricercaConto.sql";
+	public static $querySaldoConto = "/saldi/saldoConto.sql";
+	public static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
+	public static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
+	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";	
+	public static $queryPrelevaTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	
 	function __construct() {
 	}
@@ -204,19 +205,47 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	public function creaNuovoSaldo($db, $utility, $codneg, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $dareavere) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_negozio%' => trim($codneg),
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto),
+				'%dat_saldo%' => trim($datsaldo),
+				'%des_saldo%' => trim($dessaldo),
+				'%imp_saldo%' => trim($impsaldo),
+				'%ind_dareavere%' => trim($dareavere)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	public function caricaTuttiConti($utility, $db) {
+	
+		$array = $utility->getConfig();
+	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaTuttiConti;
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->getData($sql);
+	
+		foreach(pg_fetch_all($result) as $row) {
+			
+			$conto = $row['cod_conto'] . '-' . $row['cod_sottoconto'];
+			
+			if ($conto == $_SESSION["codconto"]) {
+				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "' selected >" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "</option>" ;
+			}
+			else {
+				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "'>" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "</option>" ;
+			}
+		}
+		return $elenco_conti;
+	}
 	
 	
-	
-	
-	
-
-
-
-
-
-
-
-
 }
 
 ?>

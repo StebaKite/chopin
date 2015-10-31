@@ -99,6 +99,7 @@ ricercaCorrispettivo = Ricerca Corrispettivo
 modificaIncasso = Modifica Incasso
 
 ricercaSaldi = Ricerca Saldi
+creaNuovoSaldo = Nuovo Saldo
 ;
 ; Messaggi -----------------------------
 ;
@@ -169,3 +170,4 @@ datlavoro = Data
 deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
+dessaldo = Descrizione riporto saldo
