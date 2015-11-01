@@ -72,9 +72,9 @@ class CreaSaldo extends SaldiAbstract {
 
 			if ($this->creaSaldo($utility)) {
 
-				session_unset();
 				$_SESSION["messaggio"] = "Saldo salvato con successo";
-				$_SESSION["codneg"] = "VIL";
+				unset($_SESSION["codconto"]);
+				unset($_SESSION["impsaldo"]);
 
 				$this->preparaPagina($creaSaldoTemplate);
 
@@ -120,15 +120,15 @@ class CreaSaldo extends SaldiAbstract {
 		$dessaldo = str_replace("'","''",$_SESSION["dessaldo"]);
 		$impsaldo = str_replace(",",".",$_SESSION["impsaldo"]);
 		$dareavere = $_SESSION["dareavere"];
+			
+		if ($this->inserisciSaldo($db, $utility, $codneg, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $dareavere)) {
 		
-		if ($this->creaNuovoSaldo($db, $utility, $codneg, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $dareavere)) {
-
 			$db->commitTransaction();
 			return TRUE;
 		}
 		$db->rollbackTransaction();
 		error_log("Errore inserimento saldo, eseguito Rollback");
-		return FALSE;
+		return FALSE;				
 	}
 
 	public function preparaPagina($creaSaldoTemplate) {

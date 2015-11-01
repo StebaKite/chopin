@@ -236,10 +236,10 @@ abstract class SaldiAbstract extends ChopinAbstract {
 			$conto = $row['cod_conto'] . '-' . $row['cod_sottoconto'];
 			
 			if ($conto == $_SESSION["codconto"]) {
-				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "' selected >" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "</option>" ;
+				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "' selected >" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . ' : ' . $row['des_conto'] . ' - ' . $row['des_sottoconto'] . "</option>" ;
 			}
 			else {
-				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "'>" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "</option>" ;
+				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "'>" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . ' : ' . $row['des_conto'] . ' - ' . $row['des_sottoconto'] . "</option>" ;
 			}
 		}
 		return $elenco_conti;

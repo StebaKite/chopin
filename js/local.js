@@ -644,7 +644,7 @@ $( ".selectCategoriaConti" )
 	.addClass("overflow");
 
 $( ".selectmenuConti" )
-	.selectmenu({ width: 100 })
+	.selectmenu({ width: 500 })
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
