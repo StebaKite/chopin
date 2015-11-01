@@ -523,6 +523,10 @@ $( "#menu" ).menu();
 
 $( ".tooltip" ).tooltip();
 
+// -------------------------------------------------
+// Ajax su select menu
+// -------------------------------------------------
+
 $( ".selectmenuCausale" )
 	.selectmenu({change:
 		function(){
@@ -658,6 +662,25 @@ $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
+
+// -----------------------------------------------------------------
+// Ajax su campi di input
+// -----------------------------------------------------------------
+
+$('#numeroFatturaFornitore').change(function() {
+	var fornitore = $("#fornitore").val();
+	var numfatt = $("#numfatt").val();
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
+        }
+    } 
+    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
+    xmlhttp.send();				
+});
+
 
 
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');

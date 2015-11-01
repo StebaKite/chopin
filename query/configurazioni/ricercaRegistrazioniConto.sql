@@ -1,7 +1,7 @@
 SELECT T1.*
   FROM (
 		SELECT
-			to_char(registrazione.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
+			registrazione.dat_registrazione,
 			registrazione.des_registrazione,
 			dettaglio.imp_registrazione,
 			dettaglio.ind_dareavere,
@@ -24,7 +24,7 @@ SELECT T1.*
 		UNION ALL
 		
 		SELECT
-			to_char(saldo.dat_saldo, 'DD/MM/YYYY') as dat_registrazione,
+			saldo.dat_saldo as dat_registrazione,
 			saldo.des_saldo as des_registrazione,
 			saldo.imp_saldo as imp_registrazione,
 			saldo.ind_dareavere as ind_dareavere,

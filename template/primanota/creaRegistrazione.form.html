@@ -69,6 +69,37 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
 
+function controllaNumeroFattura() {
+
+	var fornitore = $("#fornitore").val();
+	var cliente = $("#cliente").val();
+	var numfatt = $("#numfatt").val();
+
+	if ((fornitore != "") && (numfatt != "")) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
+	            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
+	    xmlhttp.send();		
+	}	
+	else if ((cliente != "") && (numfatt != "")) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
+	            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&idcliente=" + cliente + "&numfatt=" + numfatt, true);
+	    xmlhttp.send();		
+	}
+}
+
+
 </script>
 	
 <div id="body">
@@ -113,7 +144,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 						
 						<td>%ml.codclie% :</td>
 						<td class="tooltip">
-							<select class="selectmenuCliente" name="cliente" >
+							<select class="selectmenuCliente" id="cliente" name="cliente" >
 								<option value=""></option>
 								%elenco_clienti%
 							</select>
@@ -125,7 +156,9 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 					</tr>
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' ></td>
+						<td class="tooltip"><input type="text" id="numfatt" name="numfatt" size="35" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura();" ></td>
+						<td colspan="3"><i><p id="esitoControlloNumeroFattura">&nbsp;</p></i></td>						
+						
 					</tr>
 					<tr>
 						<td colspan="4">
@@ -145,6 +178,7 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 			</table>
 			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
 			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
+			<input type="hidden" id="esitoNumeroFattura" name="esitoNumeroFattura" />
 		</form>
 	</div>
 </div>

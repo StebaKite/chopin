@@ -51,6 +51,12 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 			$msg = $msg . "<br>&ndash; Manca la causale";
 			$esito = FALSE;
 		}		
+
+		if ($_SESSION["esitoNumeroFattura"] != "Numero fattura Ok!") {
+			$msg = $msg . "<br>&ndash; Il numero fattura &egrave; gi&agrave; esistente";
+			unset($_SESSION["numfatt"]);
+			$esito = FALSE;
+		}		
 		
 		/**
 		 * Se è stato immesso un numero fattura allora deve esserci un fornitore o cliente
