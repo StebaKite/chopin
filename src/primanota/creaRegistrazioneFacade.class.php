@@ -21,7 +21,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
-	$_SESSION["cliente"] = $_REQUEST["cliente"];	
+	$_SESSION["cliente"] = $_REQUEST["cliente"];
+	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];	
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	

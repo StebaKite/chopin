@@ -31,6 +31,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryPrelevaScadenzaFornitore = "/primanota/leggiScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
+	public static $queryLeggiFatturaFornitore = "/primanota/ricercaFatturaFornitore.sql";
 
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
 	public static $queryDeleteScadenzaCliente = "/primanota/deleteScadenzaCliente.sql";
@@ -581,6 +582,18 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaRegistrazioneOriginaleFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		return $db->execSql($sql);
+	}
+	
+	public function cercaFatturaFornitore($db, $utility, $id_fornitore, $num_fattura) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($id_fornitore),
+				'%num_fattura%' => trim($num_fattura)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		return $db->getData($sql);
 	}
 }
 
