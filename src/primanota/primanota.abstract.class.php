@@ -32,6 +32,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
 	public static $queryLeggiFatturaFornitore = "/primanota/ricercaFatturaFornitore.sql";
+	public static $queryLeggiFatturaCliente = "/primanota/ricercaFatturaCliente.sql";
 
 	public static $queryDeleteScadenza = "/primanota/deleteScadenza.sql";
 	public static $queryDeleteScadenzaCliente = "/primanota/deleteScadenzaCliente.sql";
@@ -584,6 +585,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $db->execSql($sql);
 	}
 	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_fornitore
+	 * @param unknown $num_fattura
+	 */
 	public function cercaFatturaFornitore($db, $utility, $id_fornitore, $num_fattura) {
 
 		$array = $utility->getConfig();
@@ -594,6 +602,25 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		return $db->getData($sql);
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idcliente
+	 * @param unknown $numfatt
+	 */
+	public function cercaFatturaCliente($db, $utility, $id_cliente, $num_fattura) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($id_cliente),
+				'%num_fattura%' => trim($num_fattura)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		return $db->getData($sql);		
 	}
 }
 
