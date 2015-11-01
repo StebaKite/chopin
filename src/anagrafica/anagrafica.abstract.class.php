@@ -10,7 +10,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 
 	// Query ---------------------------------------------------------------
 	
-	public static $queryLeggiFornitore = "/anagrafica/leggiFornitore.sql";
+	public static $queryLeggiFornitore = "/anagrafica/ricercaCodiceFornitore.sql";
 	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
 	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
 	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
@@ -52,7 +52,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	
 	// Metodi comuni di utilita della prima note ---------------------------
 	
-	public function leggiFornitori($db, $utility, $codfornitore) {
+	public function cercaCodiceFornitore($db, $utility, $codfornitore) {
 	
 		$array = $utility->getConfig();
 		$replace = array(

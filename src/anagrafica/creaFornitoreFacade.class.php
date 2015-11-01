@@ -14,13 +14,14 @@ if ($_GET["modo"] == "start") {
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codfornitore"] = $_POST["codfornitore"];
-	$_SESSION["desfornitore"] = $_POST["desfornitore"];
-	$_SESSION["indfornitore"] = $_POST["indfornitore"];
-	$_SESSION["cittafornitore"] = $_POST["cittafornitore"];
-	$_SESSION["capfornitore"] = $_POST["capfornitore"];
-	$_SESSION["tipoaddebito"] = $_POST["tipoaddebito"];
-	$_SESSION["numggscadenzafattura"] = $_POST["numggscadenzafattura"];
+	$_SESSION["codfornitore"] = $_REQUEST["codfornitore"];
+	$_SESSION["desfornitore"] = $_REQUEST["desfornitore"];
+	$_SESSION["indfornitore"] = $_REQUEST["indfornitore"];
+	$_SESSION["cittafornitore"] = $_REQUEST["cittafornitore"];
+	$_SESSION["capfornitore"] = $_REQUEST["capfornitore"];
+	$_SESSION["tipoaddebito"] = $_REQUEST["tipoaddebito"];
+	$_SESSION["numggscadenzafattura"] = $_REQUEST["numggscadenzafattura"];
+	$_SESSION["esitoCodiceFornitore"] = $_REQUEST["esitoCodiceFornitore"];
 	
 	$creaFornitore->go();
 }

@@ -47,6 +47,12 @@ class CreaFornitoreTemplate extends AnagraficaAbstract {
 			$esito = FALSE;
 		}
 
+		if ($_SESSION["esitoCodiceFornitore"] != "Codice fornitore Ok!") {
+			$msg = $msg . "<br>&ndash; Codice fornitore gi&agrave; esistente";
+			unset($_SESSION["codfornitore"]);
+			$esito = FALSE;
+		}
+		
 		if ($_SESSION["desfornitore"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la descrizione del fornitore";
 			$esito = FALSE;
