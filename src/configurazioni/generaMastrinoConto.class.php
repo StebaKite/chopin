@@ -109,8 +109,8 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		$filtroSaldo = "";
 	
 		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
-			$filtro = "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
-			$filtroSaldo = "AND saldo.dat_saldo = '" . $_SESSION['datareg_da'] . "'" ;
+			$filtro .= "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
+			$filtroSaldo .= "AND saldo.dat_saldo = '" . $_SESSION['datareg_da'] . "'" ;
 		}
 
 		if ($_SESSION['codneg_sel'] != "") {

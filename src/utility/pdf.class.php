@@ -150,7 +150,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','B',10);
 		 
 		// Header
-		$w = array(17, 110, 20, 20, 20);
+		$w = array(20, 110, 20, 20, 20);
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 		$this->Ln();
@@ -194,7 +194,7 @@ class Pdf extends FPDF {
 			$this->SetFont('','',10);
 			$fill = !$fill;
 				
-			$this->Cell($w[0],6,utf8_decode(trim($row['dat_registrazione'])),'LR',0,'L',$fill);
+			$this->Cell($w[0],6,utf8_decode(date("d/m/Y",strtotime($row['dat_registrazione']))),'LR',0,'L',$fill);
 			$this->Cell($w[1],6,utf8_decode(trim($row['des_registrazione'])),'LR',0,'L',$fill);
 			$this->Cell($w[2],6, $euroDare . number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
 			$this->Cell($w[3],6, $euroAvere . number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);

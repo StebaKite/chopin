@@ -94,19 +94,23 @@ class EstraiPdfMastrinoConto extends ConfigurazioniAbstract {
 		require_once 'database.class.php';
 
 		$filtro = "";
+		$filtroSaldo = "";		
 
 		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
-			$filtro = "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
+			$filtro .= "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
+			$filtroSaldo .= "AND saldo.dat_saldo = '" . $_SESSION['datareg_da'] . "'" ;
 		}
 
 		if ($_SESSION['codneg_sel'] != "") {
 			$filtro .= " AND registrazione.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
+			$filtroSaldo .= " AND saldo.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
 		}
 		
 		$replace = array(
 				'%cod_conto%' => trim($_SESSION["codconto"]),
 				'%cod_sottoconto%' => trim($_SESSION["codsottoconto"]),
-				'%filtro_date%' => $filtro
+				'%filtro_date%' => $filtro,
+				'%filtro_date_saldo%' => $filtroSaldo
 		);
 					
 		$array = $utility->getConfig();

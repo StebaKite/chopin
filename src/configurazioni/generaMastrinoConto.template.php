@@ -99,7 +99,7 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td width='108' class='tooltip' align='center'>" . trim($row['dat_registrazione']) . "</td>" .
+				"	<td width='108' class='tooltip' align='center'>" . date("d/m/Y",strtotime($row['dat_registrazione'])) . "</td>" .
 				"	<td width='358' align='left'>" . trim($row['des_registrazione']) . "</td>" .
 				"	<td width='108' align='right'>" . $impDare . "</td>" .
 				"	<td width='108' align='right'>" . $impAvere . "</td>" .
