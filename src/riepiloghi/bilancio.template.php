@@ -89,13 +89,13 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				
 				$numReg ++;
 					
-				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 
 				if (trim($row['des_conto']) != $desconto_break ) {
 
 					if ($desconto_break != "") {
 						
-						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+						$totconto = number_format(abs($totaleConto), 2, ',', '.');
 						
 						if ($ind_visibilita_sottoconti_break == 'S') {
 							$risultato_costi .=
@@ -142,7 +142,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$totaleConto += $totaleSottoconto;
 			}
 
-			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+			$totconto = number_format(abs($totaleConto), 2, ',', '.');
 			
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_costi .=
@@ -203,13 +203,13 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				
 				$numReg ++;
 					
-				$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 
 				if (trim($row['des_conto']) != $desconto_break ) {
 					
 					if ($desconto_break != "") {
 					
-						$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+						$totconto = number_format(abs($totaleConto), 2, ',', '.');
 					
 						if ($ind_visibilita_sottoconti_break == 'S') {
 							$risultato_ricavi .=
@@ -256,7 +256,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$totaleConto += $totaleSottoconto;				
 			}
 			
-			$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+			$totconto = number_format(abs($totaleConto), 2, ',', '.');
 				
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_ricavi .=
@@ -516,32 +516,25 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		/** ******************************************
 		 * Costruisco il box delle tabs
 		 */
+					
+		$tabs  = "	<div class='tabs'>";
+		$tabs .= "		<ul>";
 		
-		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_esercizio = "")) {
-			
-			$tabs  = "	<div class='tabs'>";
-			$tabs .= "		<ul>";
-			$tabs .= "			<li><a href='#tabs-1'>Costi</a></li>";
-			$tabs .= "			<li><a href='#tabs-2'>Ricavi</a></li>";
-			$tabs .= "			<li><a href='#tabs-3'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
-			$tabs .= "		</ul>";
-			$tabs .= "		<div id='tabs-1'>" . $risultato_costi . "</div>";
-			$tabs .= "		<div id='tabs-2'>" . $risultato_ricavi . "</div>";
-			$tabs .= "		<div id='tabs-3'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
-			$tabs .= "	</div>";
-		}
-		else {
-			if (($risultato_attivo != "") || ($risultato_passivo != "") ) {
-				$tabs  = "	<div class='tabs'>";
-				$tabs .= "		<ul>";
-				$tabs .= "			<li><a href='#tabs-1'>Attivo</a></li>";
-				$tabs .= "			<li><a href='#tabs-2'>Passivo</a></li>";
-				$tabs .= "		</ul>";
-				$tabs .= "		<div id='tabs-1'>" . $risultato_attivo . "</div>";
-				$tabs .= "		<div id='tabs-2'>" . $risultato_passivo . "</div>";
-				$tabs .= "	</div>";				
-			}			
-		}
+		if ($risultato_costi != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
+		if ($risultato_ricavi != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
+		if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
+		if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
+		
+		$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
+		$tabs .= "</ul>";
+		
+		if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
+		if ($risultato_ricavi != "")  { $tabs .= "<div id='tabs-2'>" . $risultato_ricavi . "</div>"; }
+		if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
+		if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
+
+		$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
+		$tabs .= "</div>";
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],

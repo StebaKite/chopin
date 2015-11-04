@@ -9,7 +9,7 @@ $bilancio = Bilancio::getInstance();
 
 if ($_GET["modo"] == "start") {
 
-	$_SESSION["tipoBilancio"] = "Esercizio";
+//	$_SESSION["tipoBilancio"] = "Esercizio";
 	$bilancio->start();
 }
 if ($_GET["modo"] == "go") {
@@ -18,7 +18,6 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["datareg_a"] = "31/12/" . $_REQUEST["anno_eserczio_sel"];
 	$_SESSION["anno_eserczio_sel"] = $_REQUEST["anno_eserczio_sel"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
-	$_SESSION["catconto_sel"] = "Stato Patrimoniale";
 	
 	$bilancio->go();
 }

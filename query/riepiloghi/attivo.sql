@@ -32,9 +32,9 @@ SELECT
 				  			ON  t4.id_registrazione = t2.id_registrazione
 				  WHERE t4.dat_registrazione between '%datareg_da%' and '%datareg_a%'
 				  AND   t4.cod_negozio = '%codnegozio%'
-				  AND   t3.cat_conto = '%catconto%'
+				  AND   t3.cat_conto = 'Stato Patrimoniale'
 				  AND   t3.ind_presenza_in_bilancio = 'S'
-				  AND   t3.ind_classificazione_conto = 'A'
+				  AND   t3.tip_conto = 'Dare'
 				GROUP BY t3.num_riga_bilancio, t3.ind_visibilita_sottoconti, t3.des_conto, t1.des_sottoconto, t2.ind_dareavere
 			) AS t4	
 		GROUP BY t4.num_riga_bilancio, t4.ind_visibilita_sottoconti, t4.des_conto, t4.des_sottoconto
@@ -56,7 +56,7 @@ SELECT
 		 WHERE saldo.dat_saldo = '%datareg_da%'
 		  AND saldo.cod_negozio = '%codnegozio%'		  
 		  AND saldo.ind_dareavere = 'D'
-		  AND conto.cat_conto = '%catconto%'
+		  AND conto.cat_conto = 'Stato Patrimoniale'
 		  AND conto.ind_presenza_in_bilancio = 'S'
 	) t5 
 GROUP BY t5.num_riga_bilancio, t5.ind_visibilita_sottoconti, t5.des_conto, t5.des_sottoconto	

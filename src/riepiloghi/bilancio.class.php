@@ -164,22 +164,30 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		$db = Database::getInstance();
 		
-		if ($_SESSION["tipoBilancio"] == "Periodico") {
-			if ($this->ricercaCosti($utility, $db, $replace)) {
-				if ($this->ricercaRicavi($utility, $db, $replace)) {
-					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-					return TRUE;
-				}
-			}				
-		}
-		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
-			if ($this->ricercaAttivo($utility, $db, $replace)) {
-				if ($this->ricercaPassivo($utility, $db, $replace)) {
-					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-					return TRUE;
+//		if ($_SESSION["tipoBilancio"] == "Periodico") {
+
+		if ($this->ricercaCosti($utility, $db, $replace)) {
+			if ($this->ricercaRicavi($utility, $db, $replace)) {
+				if ($this->ricercaAttivo($utility, $db, $replace)) {
+					if ($this->ricercaPassivo($utility, $db, $replace)) {
+						$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+						return TRUE;
+					}
 				}
 			}
-		}		
+		}				
+			
+// 		}
+// 		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+			
+// 			if ($this->ricercaAttivo($utility, $db, $replace)) {
+// 				if ($this->ricercaPassivo($utility, $db, $replace)) {
+// 					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+// 					return TRUE;
+// 				}
+// 			}
+// 		}		
+
 		return FALSE;
 	}
 	
