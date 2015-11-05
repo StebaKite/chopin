@@ -60,14 +60,21 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		/**
 		 * Generazione del documento
 		*/
-		if ($_SESSION["tipoBilancio"] == "Periodico") {
-			$pdf = $this->generaSezioneIntestazione($pdf);
-			$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
-		}
-		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
-			$pdf = $this->generaSezioneIntestazione($pdf);
-			$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
-		}
+		$pdf = $this->generaSezioneIntestazione($pdf);
+		$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
+		$pdf = $this->generaSezioneIntestazione($pdf);
+		$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
+		
+		
+		
+// 		if ($_SESSION["tipoBilancio"] == "Periodico") {
+// 			$pdf = $this->generaSezioneIntestazione($pdf);
+// 			$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
+// 		}
+// 		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
+// 			$pdf = $this->generaSezioneIntestazione($pdf);
+// 			$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
+// 		}
 		
 
 		$pdf->Output();

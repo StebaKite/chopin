@@ -491,19 +491,19 @@ class Pdf extends FPDF {
 			
 			$totaleSottoconto = trim($row['tot_conto']);
 				
-			$importo = ($totaleSottoconto > 0) ? number_format($totaleSottoconto, 2, ',', '.') : "";
+			$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 			
 			if (trim($row['des_conto']) != $desconto_break ) {
 			
 				if ($desconto_break != "") {
 			
-					$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+					$totconto = number_format(abs($totaleConto), 2, ',', '.');
 
 					if ($totconto > 0) {
 						$this->Ln();
 						$this->SetFont('','B',12);
 						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
-						$this->Cell($w[1],6,$totconto,'',0,'R');		
+						$this->Cell($w[1],6,$totconto,'',0,'R');
 					}
 					
 					if ($ind_visibilita_sottoconti_break == 'S') {
@@ -539,7 +539,7 @@ class Pdf extends FPDF {
 		/**
 		 * Ultimo totale di fine ciclo
 		 */		
-		$totconto = ($totaleConto > 0) ? number_format($totaleConto, 2, ',', '.') : "";
+		$totconto = number_format(abs($totaleConto), 2, ',', '.');
 		
 		if ($totconto > 0) {
 			$this->Ln();
@@ -589,7 +589,7 @@ class Pdf extends FPDF {
 					if ($totconto > 0) {
 						$this->Ln();
 						$this->SetFont('','B',12);
-						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[0],6, iconv('UTF-8', 'CP1252', $desconto_break),'',0,'L');
 						$this->Cell($w[1],6,$totconto,'',0,'R');						
 					}
 						
@@ -600,7 +600,7 @@ class Pdf extends FPDF {
 							if ($sottoconto['importo'] > 0) {
 								$this->Ln();
 								$this->SetFont('','',11);
-								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'CP1252', $sottoconto['descrizione']),'',0,'L');
 								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
 							}
 						}
@@ -630,7 +630,7 @@ class Pdf extends FPDF {
 		if ($totconto > 0) {
 			$this->Ln();
 			$this->SetFont('','B',12);
-			$this->Cell($w[0],6,$desconto_break,'',0,'L');
+			$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
 			$this->Cell($w[1],6,$totconto,'',0,'R');
 		}
 		
@@ -661,21 +661,21 @@ class Pdf extends FPDF {
 		
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Costi','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($totaleCosti, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
 
 		$utile = $totaleRicavi - $totaleCosti;
 		
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Utile del periodo','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($utile, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($utile), 2, ',', '.'),'',0,'R');
 		
 		$totalePareggio = $totaleCosti + $utile;
 
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale a Pareggio','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($totalePareggio, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totalePareggio), 2, ',', '.'),'',0,'R');
 		
 		$this->SetTextColor(0);
 	}
@@ -693,21 +693,21 @@ class Pdf extends FPDF {
 	
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
-		$this->Cell($w[2],8,number_format($totaleRicavi, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
 	
 		$perdita = $totaleCosti - $totaleRicavi;
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Perdita del periodo','',0,'L');
-		$this->Cell($w[2],8,number_format($perdita, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format(abs($perdita), 2, ',', '.'),'',0,'R');
 	
 		$totalePareggio = $totaleRicavi + $perdita;
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale a Pareggio','',0,'L');
-		$this->Cell($w[2],8,number_format($totalePareggio, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format(abs($totalePareggio), 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);
 	}

@@ -9,7 +9,7 @@ $bilancio = Bilancio::getInstance();
 
 if ($_GET["modo"] == "start") {
 	
-//	$_SESSION["tipoBilancio"] = "Periodico";
+	$_SESSION["tipoBilancio"] = "Periodico";
 	$bilancio->start();	
 }
 if ($_GET["modo"] == "go") {

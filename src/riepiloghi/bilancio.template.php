@@ -517,24 +517,28 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		 * Costruisco il box delle tabs
 		 */
 					
-		$tabs  = "	<div class='tabs'>";
-		$tabs .= "		<ul>";
-		
-		if ($risultato_costi != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
-		if ($risultato_ricavi != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
-		if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
-		if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
-		
-		$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
-		$tabs .= "</ul>";
-		
-		if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
-		if ($risultato_ricavi != "")  { $tabs .= "<div id='tabs-2'>" . $risultato_ricavi . "</div>"; }
-		if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
-		if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
-
-		$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
-		$tabs .= "</div>";
+		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_attivo != "") || ($risultato_passivo != "")) {
+			
+			$tabs  = "	<div class='tabs'>";
+			$tabs .= "		<ul>";
+			
+			if ($risultato_costi != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
+			if ($risultato_ricavi != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
+			if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
+			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
+			
+			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
+			$tabs .= "</ul>";
+			
+			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
+			if ($risultato_ricavi != "")  { $tabs .= "<div id='tabs-2'>" . $risultato_ricavi . "</div>"; }
+			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
+			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
+			
+			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
+			$tabs .= "</div>";
+				
+		}
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
@@ -586,7 +590,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totaleCosti, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$utile = $totaleRicavi - $totaleCosti;
@@ -594,7 +598,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($utile, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($utile), 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$totalePareggio = $totaleCosti + $utile;
@@ -602,7 +606,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totalePareggio), 2, ',', '.') . "</td>" .
 			"</tr>";
 			
 			$risultato_esercizio .= "</tbody></table>" ;
@@ -614,7 +618,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totaleRicavi, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$perdita = $totaleCosti - $totaleRicavi;
@@ -622,7 +626,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Perdita del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($perdita, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($perdita), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$totalePareggio = $totaleRicavi + $perdita;
@@ -630,7 +634,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totalePareggio), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$risultato_esercizio .= "</tbody></table>" ;
@@ -643,7 +647,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totaleCosti, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$pareggio = $totaleRicavi - $totaleCosti;
@@ -651,7 +655,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($pareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format(abs($pareggio), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$totalePareggio = $totaleCosti + $pareggio;
@@ -659,7 +663,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale a Pareggio</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($totalePareggio, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format(abs($totalePareggio), 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$risultato_esercizio .= "</tbody></table>" ;
