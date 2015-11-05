@@ -19,7 +19,7 @@ if ($_GET["modo"] == "start") {
 	 */
 	if ($_SESSION["tipoBilancio"] == "Periodico") {
 		$_SESSION["title"] = "BILANCIO PERIODICO";
-		$_SESSION["title1"] = "Movimenti Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
+		$_SESSION["title1"] = "Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
 	}
 	elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
 		$_SESSION["title"] = "BILANCIO ESERCIZIO";
