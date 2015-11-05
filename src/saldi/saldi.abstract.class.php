@@ -11,7 +11,6 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	// Query --------------------------------------------------------------- 
 	
 	public static $queryRicercaConto = "/saldi/ricercaConto.sql";
-	public static $querySaldoConto = "/saldi/saldoConto.sql";
 	public static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
 	public static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";	

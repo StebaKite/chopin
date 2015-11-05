@@ -4,8 +4,9 @@ require_once 'saldi.abstract.class.php';
 
 class RiportoSaldoPeriodico extends SaldiAbstract {
 
-	private static $messaggio;
-
+	public static $messaggio;
+	public static $querySaldoConto = "/saldi/saldoConto.sql";
+	
 	public static $ggMese = array(
 			'01' => '31',
 			'02' => '28',
@@ -80,7 +81,9 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		/**
 		 * Prelevo tutti i conti, se ci sono conti faccio il riporto altrimenti esco
 		 */
-		$result = prelevaConti($db, $utility);
+		$utility = Utility::getInstance();
+		
+		$result = $this->prelevaConti($db, $utility);
 
 		if ($result) {
 
