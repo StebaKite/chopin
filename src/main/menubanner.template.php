@@ -59,6 +59,7 @@ class MenubannerTemplate extends ChopinAbstract {
 		if (isset($_SESSION["lavoriPianificati"])) {
 			
 			$oggi = strtotime(date("Y-m-d"));
+			$anno = date("Y");
 			$rows = $_SESSION["lavoriPianificati"];
 			
 			$tabellaLavoriPianificati .= "<div class='scroll-lavori'><table class='result'><tbody>";
@@ -85,6 +86,7 @@ class MenubannerTemplate extends ChopinAbstract {
 
 		$replace = array(
 				'%amb%' => $amb,
+				'%anno%' => $anno,
 				'%tabellaLavoriPianificati%' => $tabellaLavoriPianificati
 		);
 

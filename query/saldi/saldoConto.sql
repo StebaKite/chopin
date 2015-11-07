@@ -1,4 +1,4 @@
-SELECT
+select
 	t5.cod_conto,
 	t5.cod_sottoconto,
 	t5.tip_conto,
@@ -7,16 +7,20 @@ SELECT
 		SELECT
 			t4.cod_conto,
 			t4.cod_sottoconto,
-			t4.tip_conto,
-			COALESCE(sum(t4.tot_conto * t4.tip_conto),0) as tot_conto
+			CASE 
+				WHEN t4.tip_conto = 'Dare' then 1
+				WHEN t4.tip_conto = 'Avere' then -1
+			END tip_conto,	
+			COALESCE(sum(t4.tot_conto * t4.ind_dareavere),0) as tot_conto
 		  FROM (	
 				SELECT
 						t3.cod_conto,
+						t3.tip_conto,
 						t1.cod_sottoconto,
 						CASE 
-							WHEN t3.tip_conto = 'Dare' then 1
-							WHEN t3.tip_conto = 'Avere' then -1
-						END AS tip_conto,	
+							WHEN t2.ind_dareavere = 'D' then 1
+							WHEN t2.ind_dareavere = 'A' then -1
+						END ind_dareavere,	
 						SUM(t2.imp_registrazione) as tot_conto
 				  FROM contabilita.sottoconto as t1
 						INNER JOIN contabilita.conto as t3
@@ -30,7 +34,7 @@ SELECT
 				  AND   t4.cod_negozio = '%codnegozio%'
 				  AND   t3.cod_conto = '%codconto%'
 				  AND   t1.cod_sottoconto = '%codsottoconto%'
-				GROUP BY t3.cod_conto, t1.cod_sottoconto, tip_conto
+				GROUP BY t3.cod_conto, t3.tip_conto, t1.cod_sottoconto, t2.ind_dareavere
 				) AS t4	
 			GROUP BY t4.cod_conto, t4.cod_sottoconto, t4.tip_conto
 		
@@ -50,4 +54,4 @@ SELECT
 		  AND saldo.cod_conto = '%codconto%'
 		  AND saldo.cod_sottoconto = '%codsottoconto%'
 		) t5 
-	GROUP BY t5.cod_conto, t5.cod_sottoconto, t5.tip_conto	
+	GROUP BY t5.cod_conto, t5.cod_sottoconto, t5.tip_conto

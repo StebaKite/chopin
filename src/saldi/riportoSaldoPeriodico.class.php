@@ -89,10 +89,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 			$conti = pg_fetch_all($result);
 
-			$dataLavoro = explode("/", $_SESSION["dataEsecuzioneLavoro"]);
+			$dataGenerazioneSaldo = date($_SESSION["dataEsecuzioneLavoro"], strtotime('-1 months'));
 			
-			$mesePrecedente = str_pad($dataLavoro[1] - 1, 2, "0", STR_PAD_LEFT);
-			$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
+			$dataLavoro = explode("/", $dataGenerazioneSaldo);
+			$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
 			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 				
 			foreach($conti as $conto) {
@@ -118,7 +118,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					if (result) {
 						foreach($saldo as $row) {
 							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
-							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, $row['tot_conto'], $dareAvere);								
+							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);								
 						}
 					}
 				}
