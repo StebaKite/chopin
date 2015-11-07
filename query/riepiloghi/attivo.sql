@@ -18,8 +18,8 @@ SELECT
 						t3.des_conto,
 						t1.des_sottoconto,
 						CASE 
-							WHEN t2.ind_dareavere = 'D' then -1
-							WHEN t2.ind_dareavere = 'A' then  1
+							WHEN t2.ind_dareavere = 'D' then 1
+							WHEN t2.ind_dareavere = 'A' then -1
 						END AS ind_dareavere,	
 						SUM(t2.imp_registrazione) as tot_conto
 				  FROM contabilita.sottoconto as t1
