@@ -519,6 +519,16 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					
 		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_attivo != "") || ($risultato_passivo != "")) {
 			
+			/**
+			 * Annotazione provvisoria per 2015, con il 2016 puoi buttarla via con la tab-6
+			 */
+			$nota = "<p>Il bilancio di esercizio, <b>per il 2015</b>, non si può utilizzare perchè manca il saldo all'<b>1/1/2015</b> e " .
+					"tutta la movimentazione sui conti dall'<b>1/1/2015</b> sino al primo saldo disponibile.</p>" .
+					"<p>Il primo saldo disponibile per quest'anno è quello riportato manualmente del <b>1/7/2015</b>, pertanto tutte le estrazioni " .
+					"non possono avere, come data inizio estrazione, una data inferiore a quella.</p>" .
+					"<p>Il bilancio periodico invece è funzionante e può essere estratto sempre tenendo presente la data del primo saldo o le " .
+					"eventuali successive.</p>";
+			
 			$tabs  = "	<div class='tabs'>";
 			$tabs .= "		<ul>";
 			
@@ -528,6 +538,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
+			$tabs .= "<li><a href='#tabs-6'>Nota importante</a></li>";
 			$tabs .= "</ul>";
 			
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -536,8 +547,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
-			$tabs .= "</div>";
-				
+			$tabs .= "<div id='tabs-6'>" . $nota . "</div>";
+			$tabs .= "</div>";				
 		}
 		
 		$replace = array(
