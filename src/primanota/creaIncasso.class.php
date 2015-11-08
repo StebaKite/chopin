@@ -185,7 +185,7 @@ class CreaIncasso extends primanotaAbstract {
 			$array = $utility->getConfig();
 			
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
-				$this->rigenerazioneSaldi($db, $utility, strtotime(str_replace('/', '-', $datareg)));
+				$this->rigenerazioneSaldi($db, $utility, strtotime(str_replace('/', '-', str_replace("'", "", $datareg))));
 			}
 			
 			$db->commitTransaction();
