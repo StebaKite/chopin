@@ -205,34 +205,10 @@ class CreaRegistrazione extends primanotaAbstract {
 				}
 			}
 
-			/**
-			 * Se la registrazione ha una data di registrazione che cade all'interno di un mese per il quale è già
-			 * stato riportato il saldo allora devo aggiornare tutti i riporti da quella data riporto in poi
-			 */			
-
 			$array = $utility->getConfig();
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
-				
-				$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
-				
-				if ($lavoriPianificati) {
-					$rows = pg_fetch_all($lavoriPianificati);
-					  
-					foreach($rows as $row) {
-							
-						if ((strtotime($row['dat_lavoro']) >= $dataRegistrazione) && ($row['sta_lavoro'] == "10")) {
-							$this->cambioStatoLavoroPianificato($db, $utility, $row['pk_lavoro_pianificato'], '00');
-						}								
-					}
-				}				
-				/**						
-				 * Riestrazione dei lavori pianificati a valle della verifica e aggiornamento stati ed riesecuzione dei lavori
-				 * Attenzione che vengono rieseguiti tutti i lavori pianificati anche quelli che non riguardano l'aggiornamento
-				 * dei saldi. E' importante che i lavori pianificabili siano rieseguibili. 
-				 */
-				$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);				
-				$this->eseguiLavoriPianificati($db, $lavoriPianificati);				
+				$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);
 			}
 			
 			$db->commitTransaction();
