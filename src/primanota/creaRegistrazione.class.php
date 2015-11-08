@@ -205,6 +205,9 @@ class CreaRegistrazione extends primanotaAbstract {
 				}
 			}
 
+			/**
+			 * Rigenerazione dei saldi
+			 */
 			$array = $utility->getConfig();
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {

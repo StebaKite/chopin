@@ -344,6 +344,12 @@ abstract class ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+	 */
 	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione) {
 
 		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);

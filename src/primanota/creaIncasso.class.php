@@ -178,6 +178,15 @@ class CreaIncasso extends primanotaAbstract {
 				
 				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK				
 			}
+
+			/**
+			 * Rigenerazione dei saldi
+			 */
+			$array = $utility->getConfig();
+			
+			if ($array['lavoriPianificatiAttivati'] == "Si") {
+				$this->rigenerazioneSaldi($db, $utility, strtotime(str_replace('/', '-', $datareg)));
+			}
 			
 			$db->commitTransaction();
 			return TRUE;
