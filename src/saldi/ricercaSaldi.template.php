@@ -98,13 +98,15 @@ class RicercaSaldiTemplate extends SaldiAbstract {
 			$numReg = 0;			
 						
 			foreach(pg_fetch_all($saldiTrovati) as $row) {
-					
+
+				$impSaldo = "&euro;" . number_format(round($row['imp_saldo'],2), 2, ',', '.');
+				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
 				"	<td width='58' class='tooltip' align='center'>" . trim($row['cod_negozio']) . "</td>" .
 				"	<td width='108' align='center'>" . trim($row['cod_conto']) . ' - ' . trim($row['cod_sottoconto']) . "</td>" .
 				"	<td width='608' align='left'>" . trim($row['des_conto']) . ' - ' . trim($row['des_sottoconto']) . "</td>" .
-				"	<td width='108' align='right'>" . trim($row['imp_saldo']) . "</td>" .
+				"	<td width='108' align='right'>" . $impSaldo . "</td>" .
 				"	<td width='88' align='center'>" . trim($row['ind_dareavere']) . "</td>" .
 				"</tr>";						
 					

@@ -47,8 +47,6 @@ class Corpo extends ChopinAbstract {
 		require_once 'utility.class.php';
 		require_once 'database.class.php';
 		
-		error_log("<<<<<<< Start >>>>>>> " . $_SERVER['PHP_SELF']);
-		
 		$corpoTemplate = CorpoTemplate::getInstance();
 		
 		$utility = new utility();

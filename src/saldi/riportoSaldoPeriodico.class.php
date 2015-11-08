@@ -2,6 +2,12 @@
 
 require_once 'saldi.abstract.class.php';
 
+/**
+ * Questa classe è rieseguibile.
+ * Se un saldo per un conto e una data c'è già in tabella viene aggiornato altrimenti viene inserito
+ * @author stefano
+ *
+ */
 class RiportoSaldoPeriodico extends SaldiAbstract {
 
 	public static $messaggio;
@@ -89,9 +95,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 			$conti = pg_fetch_all($result);
 
-			$dataGenerazioneSaldo = date($_SESSION["dataEsecuzioneLavoro"], strtotime('-1 months'));
-			
-			$dataLavoro = explode("/", $dataGenerazioneSaldo);
+			$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
+			$dataEstrazioneRegistrazioni = date("Y/m/d", strtotime('-1 month', strtotime($_SESSION["dataEsecuzioneLavoro"])));
+				
+			$dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
 			$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
 			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 				
@@ -106,7 +113,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 							'%codconto%' => $conto['cod_conto'],
 							'%codsottoconto%' => $conto['cod_sottoconto']
 					);
-			
+					
 					$array = $utility->getConfig();
 					$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
 						
@@ -117,12 +124,23 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 					if (result) {
 						foreach($saldo as $row) {
+							
+							/**
+							 * tip_conto =  1 > Dare
+							 * tip_conto = -1 > Avere
+							 */
 							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
 							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);								
 						}
 					}
 				}
 			}
+
+			$da = '01/' . $mesePrecedente . '/' . date("Y");
+			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . date("Y");
+			error_log("Riporto saldo periodo : " . $da . " - " . $a);
+			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
+				
 			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');			
 			return TRUE;				
 		}

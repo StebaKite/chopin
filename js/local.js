@@ -681,8 +681,6 @@ $('#numeroFatturaFornitore').change(function() {
     xmlhttp.send();				
 });
 
-
-
 $("#messaggioInfo").animate({opacity: 1.0}, 5000).effect("fade", 3500).fadeOut('slow');
 $("#messaggioErrore").animate({opacity: 1.0}, 5000).effect("fade", 6000).fadeOut('slow');
 

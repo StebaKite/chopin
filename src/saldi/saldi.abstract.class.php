@@ -123,30 +123,6 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $pklavoro
-	 * @param unknown $stato
-	 * @return unknown
-	 */
-	public function cambioStatoLavoroPianificato($db, $utility, $pklavoro, $stato) {
-	
-		$replace = array(
-				'%sta_lavoro%' => $stato,
-				'%pk_lavoro_pianificato%' => $pklavoro
-		);
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-	
-		return $result;
-	}
 
 	public function prelevaConti($db, $utility) {
 	
