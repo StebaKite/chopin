@@ -134,6 +134,7 @@ class ModificaPagamento extends primanotaAbstract {
 	
 				$_SESSION["descreg"] = $row["des_registrazione"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
+				$_SESSION["datareg_old"] = $row["dat_registrazione"];
 				$_SESSION["numfatt"] = $row["num_fattura"];
 				$_SESSION["numfatt_old"] = $row["num_fattura"];
 				$_SESSION["codneg"] = $row["cod_negozio"];
@@ -232,6 +233,27 @@ class ModificaPagamento extends primanotaAbstract {
 					$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');
 				}				
 			}				
+
+			/**
+			 * Rigenerazione dei saldi
+			 */
+			$array = $utility->getConfig();
+				
+			if ($array['lavoriPianificatiAttivati'] == "Si") {
+					
+				/**
+				 * Se è cambiata la data di registrazione devo rigenerare i saldi due volte per le due date altrimenti
+				 * i riporti dei saldi potrebbero contenere l'importo due volte
+				 * Questo potrebbe accadere se la data registrazione viene portata da un mese all'altro
+				 */
+				$datareg_new = strtotime(str_replace('/', '-', str_replace("'", "", $datareg)));
+				$datareg_old = strtotime(str_replace('/', '-', $_SESSION["datareg_old"]));
+				if ($datareg_new != $datareg_old) {
+					$this->rigenerazioneSaldi($db, $utility, $datareg_old);
+				}
+				$this->rigenerazioneSaldi($db, $utility, $datareg_new);
+			}
+				
 			$db->commitTransaction();
 			return TRUE;
 		}
