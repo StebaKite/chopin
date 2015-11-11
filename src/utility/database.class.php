@@ -92,7 +92,6 @@ Class Database {
 		$result = pg_query($dblink, "BEGIN");
 		
 		if ($result) {
-			error_log("BEGIN TRANSACTION");
 			$this->setDbLink($dblink);
 		}
 	}
@@ -102,7 +101,6 @@ Class Database {
 		$result = pg_query($this->getDbLink(), "COMMIT");
 		
 		if ($result) {
-			error_log("COMMIT TRANSACTION");
 			pg_close($this->getDbLink()); 
 		}		
 	}
@@ -112,7 +110,6 @@ Class Database {
 		$result = pg_query($this->getDbLink(), "ROLLBACK");
 		
 		if ($result) {
-			error_log("ROLLBACK TRANSACTION");
 			pg_close($this->getDbLink()); 
 		}		
 	}

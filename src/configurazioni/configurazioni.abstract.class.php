@@ -68,7 +68,7 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 	 * @param unknown $tipconto
 	 * @return unknown
 	 */
-	public function inserisciConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $indclassificazioneconto, $numrigabilancio) {
+	public function inserisciConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $numrigabilancio) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -78,7 +78,6 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 				'%tip_conto%' => trim($tipconto),
 				'%ind_presenza_in_bilancio%' => trim($indpresenza),
 				'%ind_visibilita_sottoconti%' => trim($indvisibilitasottoconti),
-				'%ind_classificazione_conto%' => trim($indclassificazioneconto),
 				'%num_riga_bilancio%' => trim($numrigabilancio)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaConto;
@@ -125,7 +124,7 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
-	public function updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $indclassificazioneconto, $numrigabilancio) {
+	public function updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $numrigabilancio) {
 		
 		$array = $utility->getConfig();
 		$replace = array(
@@ -135,7 +134,6 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 				'%tip_conto%' => trim($tipconto),
 				'%ind_presenza_in_bilancio%' => trim($indpresenza),
 				'%ind_visibilita_sottoconti%' => trim($indvisibilitasottoconti),
-				'%ind_classificazione_conto%' => trim($indclassificazioneconto),
 				'%num_riga_bilancio%' => trim($numrigabilancio)				
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateConto;

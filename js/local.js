@@ -501,7 +501,7 @@ $(function() {
     $( "#slider-posizione-bilancio" ).slider({
       range: "max",
       min: 0,
-      max: 50,
+      max: 100,
       value: 1,
       step: 1,
       slide: function( event, ui ) {
