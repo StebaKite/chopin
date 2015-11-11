@@ -161,10 +161,10 @@ class Bilancio extends RiepiloghiAbstract {
 				'%catconto%' => $_SESSION["catconto_sel"],
 				'%codnegozio%' => $_SESSION["codneg_sel"]
 		);
+
+		error_log("Estrazione bilancio esercizio : " . $_SESSION["datareg_da"] . " - " . $_SESSION["datareg_a"]);
 		
 		$db = Database::getInstance();
-		
-//		if ($_SESSION["tipoBilancio"] == "Periodico") {
 
 		if ($this->ricercaCosti($utility, $db, $replace)) {
 			if ($this->ricercaRicavi($utility, $db, $replace)) {
@@ -175,19 +175,7 @@ class Bilancio extends RiepiloghiAbstract {
 					}
 				}
 			}
-		}				
-			
-// 		}
-// 		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
-			
-// 			if ($this->ricercaAttivo($utility, $db, $replace)) {
-// 				if ($this->ricercaPassivo($utility, $db, $replace)) {
-// 					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-// 					return TRUE;
-// 				}
-// 			}
-// 		}		
-
+		}
 		return FALSE;
 	}
 	
