@@ -50,7 +50,7 @@ class CancellaSottoconto extends ConfigurazioniAbstract {
 		$this->cancellaSottoconto($db, $utility, $_SESSION["codconto"], $_SESSION["codsottoconto"]);
 		
 		$modificaConto = ModificaConto::getInstance();
-		$modificaConto->go();
+		$modificaConto->start();
 	}
 }
 

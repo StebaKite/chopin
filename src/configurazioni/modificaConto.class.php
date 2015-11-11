@@ -134,7 +134,6 @@ class ModificaConto extends ConfigurazioniAbstract {
 				$_SESSION["tipconto"] = $row["tip_conto"];
 				$_SESSION["indpresenza"] = $row["ind_presenza_in_bilancio"];
 				$_SESSION["indvissottoconti"] = $row["ind_visibilita_sottoconti"];
-				$_SESSION["indclassificazione"] = $row["ind_classificazione_conto"];
 				$_SESSION["numrigabilancio"] = $row["num_riga_bilancio"];
 			}
 		}
@@ -172,11 +171,10 @@ class ModificaConto extends ConfigurazioniAbstract {
 		$tipconto = $_SESSION["tipconto"];
 		$indpresenza = $_SESSION["indpresenza"];
 		$indvissottoconti = $_SESSION["indvissottoconti"];
-		$indclassificazioneconto = $_SESSION["indclassificazione"];
 		$numrigabilancio = $_SESSION["numrigabilancio"];
 		
 
-		if ($this->updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvissottoconti, $indclassificazioneconto, $numrigabilancio)) {
+		if ($this->updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvissottoconti, $numrigabilancio)) {
 		
 			$db->commitTransaction();
 			return TRUE;

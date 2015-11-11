@@ -6,8 +6,7 @@ INSERT INTO contabilita.conto (
 	dat_creazione_conto,
 	ind_presenza_in_bilancio,
 	num_riga_bilancio,
-	ind_visibilita_sottoconti,
-	ind_classificazione_conto
+	ind_visibilita_sottoconti
 	)
 VALUES(
 	'%cod_conto%',
@@ -17,6 +16,5 @@ VALUES(
 	now(),
 	'%ind_presenza_in_bilancio%',
 	%num_riga_bilancio%,
-	'%ind_visibilita_sottoconti%',
-	'%ind_classificazione_conto%'
+	'%ind_visibilita_sottoconti%'
 	)

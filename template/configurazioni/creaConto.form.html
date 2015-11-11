@@ -66,12 +66,10 @@ function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td>%ml.conto% :</td>
-						<td class="tooltip"><input type="text" id="codconto" name="codconto" size="5" maxlength="3" value='%codconto%' ></td>
-					</tr>
-					<tr>
-						<td>%ml.desconto% :</td>
-						<td class="tooltip"><input type="text" id="desconto" name="desconto" size="70" maxlength="100" value='%desconto%' ></td>
+						<td class="tooltip">%ml.conto% :
+							<input type="text" id="codconto" name="codconto" size="5" maxlength="3" value='%codconto%' />
+							<input type="text" id="desconto" name="desconto" size="70" maxlength="100" value='%desconto%' />
+						</td>
 					</tr>			
 					<tr>
 						<td colspan="2">
@@ -101,12 +99,6 @@ function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
 											<div class="radioset" >
 												<input type="radio" id="sottocontiSi" name="indvissottoconti" value="S" checked ><label for="sottocontiSi">%ml.presenzaSottoconti%</label>
 												<input type="radio" id="sottocontiNo" name="indvissottoconti" value="N" ><label for="sottocontiNo">%ml.assenzaSottoconti%</label>
-											</div>
-										</td>				
-										<td>
-											<div class="radioset" >
-												<input type="radio" id="attivo" name="indclassificazione" value="A" checked ><label for="attivo">%ml.attivo%</label>
-												<input type="radio" id="passivo" name="indclassificazione" value="P" ><label for="passivo">%ml.passivo%</label>
 											</div>
 										</td>				
 									</tr>
