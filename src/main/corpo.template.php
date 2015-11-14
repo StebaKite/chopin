@@ -7,6 +7,21 @@ class CorpoTemplate extends ChopinAbstract {
 	public static $root;
 	public static $pagina = "/main/corpo.form.html";
 
+	public static $mese = array(
+			'1' => 'gennaio',
+			'2' => 'febbraio',
+			'3' => 'marzo',
+			'4' => 'aprile',
+			'5' => 'maggio',
+			'6' => 'giugno',
+			'7' => 'luglio',
+			'8' => 'agosto',
+			'9' => 'settembre',
+			'10' => 'ottobre',
+			'11' => 'novembre',
+			'12' => 'dicembre'
+	);	
+	
 	private static $_instance = null;
 
 	function __construct() {
@@ -110,21 +125,23 @@ class CorpoTemplate extends ChopinAbstract {
 		// Box trends ------------------------------------------------		
 
 		$trendPagamenti = $_SESSION["trendPagamentiVIL"];
-		
 		foreach(pg_fetch_all($trendPagamenti) as $row) {
 			$elencoQuantitaPagamentiVIL .= trim($row['qtapag']) . ",";
 		}
 
 		$trendPagamenti = $_SESSION["trendPagamentiBRE"];
-		
 		foreach(pg_fetch_all($trendPagamenti) as $row) {
 			$elencoQuantitaPagamentiBRE .= trim($row['qtapag']) . ",";
 		}
 
-		$trendPagamenti = $_SESSION["trendPagamentiTRE"];
-		
+		$trendPagamenti = $_SESSION["trendPagamentiTRE"];		
 		foreach(pg_fetch_all($trendPagamenti) as $row) {
 			$elencoQuantitaPagamentiTRE .= trim($row['qtapag']) . ",";
+		}
+
+		$mesiPagamenti = $_SESSION["mesiPagamenti"];
+		foreach(pg_fetch_all($mesiPagamenti) as $row) {
+			$elencoMesi .= '"' . SELF::$mese[$row['mese']] . '",';
 		}
 		
 		// Pagina -----------------------------------------------------
@@ -135,6 +152,7 @@ class CorpoTemplate extends ChopinAbstract {
 				'%tutti_checked%'  => ($_SESSION["statoeventi"] == "")   ? "checked" : "",
 				'%risultato_eventi%' => $tabellaEventi,
 				'%elencoPagamentiVil%' => $elencoQuantitaPagamentiVIL,
+				'%elencoMesi%' => $elencoMesi,
 				'%elencoPagamentiBre%' => $elencoQuantitaPagamentiBRE,
 				'%elencoPagamentiTre%' => $elencoQuantitaPagamentiTRE
 		);
