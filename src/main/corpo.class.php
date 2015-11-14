@@ -4,8 +4,9 @@ require_once 'chopin.abstract.class.php';
 
 class Corpo extends ChopinAbstract {
 
-	private static $messaggio;
-	private static $queryEventi = "/main/eventi.sql";
+	public static $messaggio;
+	public static $queryEventi = "/main/eventi.sql";
+	public static $queryTrendPagamenti = "/riepiloghi/trendPagamenti.sql";
 
 	private static $_instance = null;
 
@@ -49,15 +50,15 @@ class Corpo extends ChopinAbstract {
 		
 		$corpoTemplate = CorpoTemplate::getInstance();
 		
-		$utility = new utility();
-		$db = new database();
+		$utility = Utility::getInstance();
+		$db = Database::getInstance();
 		
 		$array = $utility->getConfig();
 
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
 
-		//-------------------------------------------------------------
+		//- Box degli eventi ------------------------------------------------------------
 
 		$filtroEventi = "";
 		
@@ -77,12 +78,49 @@ class Corpo extends ChopinAbstract {
 	
 		if ($result) $_SESSION["eventi"] = pg_fetch_all($result);
 		else $_SESSION["eventi"] = "";
+
+		//- Box trends ------------------------------------------------------------
+
+		if ($array['primoSaldoDisponibile'] != "") { $_SESSION["datareg_da"] = $array['primoSaldoDisponibile']; }
+		else { $_SESSION["datareg_da"] = "01/01/" . date("Y"); }
+		
+		if ($array['ultimoSaldoDisponibile'] != "") { $_SESSION["datareg_a"] = $array['ultimoSaldoDisponibile']; }
+		else { $_SESSION["datareg_a"] = "31/12/" . date("Y"); }
+		
+		$this->ricercaPagamenti($utility, $db, "VIL");
+		$this->ricercaPagamenti($utility, $db, "BRE");
+		$this->ricercaPagamenti($utility, $db, "TRE");
 		
 		// compone la pagina
 		include($testata);
 		$corpoTemplate->displayPagina();
 		include($piede);
 	}	
+
+	public function ricercaPagamenti($utility, $db, $negozio) {
+	
+		$array = $utility->getConfig();
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => $negozio
+		);
+	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrendPagamenti;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		$dati = "trendPagamenti" . $negozio;
+		
+		if (pg_num_rows($result) > 0) {
+			$_SESSION[$dati] = $result;
+		}
+		else {
+			unset($_SESSION[$dati]);
+		}
+		return $result;
+	}
 }
 
 ?>

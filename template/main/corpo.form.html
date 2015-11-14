@@ -9,39 +9,99 @@
 		@import url("../../css/main.css");
 		@import url("../../css/jquery.css");
 		
-	</style>
+	</style>	
 </head>
 
+<script>
+
+	var lineChartData = {
+		labels : ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],
+		datasets : [
+			{
+				label: "Vil",
+				fillColor : "rgba(151,187,205,0.2)",
+				strokeColor : "rgba(151,187,205,1)",
+				pointColor : "rgba(151,187,205,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [%elencoPagamentiVil%]
+			},
+			{
+				label: "Bre",
+				fillColor : "rgba(166,166,166,0.2)",
+				strokeColor : "rgba(166,166,166,1)",
+				pointColor : "rgba(166,166,166,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(166,166,166,1)",
+				data : [%elencoPagamentiBre%]
+			},
+			{
+				label: "Tre",
+				fillColor : "rgba(170,170,170,0.2)",
+				strokeColor : "rgba(170,170,170,1)",
+				pointColor : "rgba(170,170,170,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(170,170,170,1)",
+				data : [%elencoPagamentiTre%]
+			}
+		]
+
+	}
+	window.onload = function(){
+		var ctx = document.getElementById("canvas").getContext("2d");
+		window.myBar = new Chart(ctx).Line(lineChartData, {
+			responsive : true
+		});
+	}
+
+</script>
+
 <div id="main">
-
-<br>		
-
-<form method="post" id="elencoEventi" action="../main/corpoFacade.class.php?modo=start">
-	<table class="datiCreateSottile">
-		<thead>
-			<tr>
-				<th width="500"><h2>E v e n t i</h2></th>
-				<th align="center">
-					<button id="nuovo-evento" class="button" title="%ml.nuovoEvento%" >%ml.nuovoEvento%</button>
-				</th>
-				<th>
-					<div class="radioset" >
-						<input type="radio" id="aperti" name="statoeventi" value="00" %aperti_checked% ><label for="aperti">%ml.eventiAperti%</label>
-						<input type="radio" id="chiusi" name="statoeventi" value="01" %chiusi_checked% ><label for="chiusi">%ml.eventiChiusi%</label>
-						<input type="radio" id="tutti"  name="statoeventi" value=""   %tutti_checked%  ><label for="tutti">%ml.eventiTutti%</label>
+<table>
+	<tbody>
+		<tr>
+			<td valign="top">
+				<div id="trends">
+					<canvas id="canvas" height="300" width="400"></canvas>
+				</div>
+			</td>
+			<td valign="top">
+				<form method="post" id="elencoEventi" action="../main/corpoFacade.class.php?modo=start">
+					<div id="eventi">
+						<table class="datiCreateSottile">
+							<thead>
+								<tr>
+									<th><h2>E v e n t i</h2></th>
+									<th align="center">
+										<button id="nuovo-evento" class="button" title="%ml.nuovoEvento%" >%ml.nuovoEvento%</button>
+									</th>
+									<th>
+										<div class="radioset" >
+											<input type="radio" id="aperti" name="statoeventi" value="00" %aperti_checked% ><label for="aperti">%ml.eventiAperti%</label>
+											<input type="radio" id="chiusi" name="statoeventi" value="01" %chiusi_checked% ><label for="chiusi">%ml.eventiChiusi%</label>
+											<input type="radio" id="tutti"  name="statoeventi" value=""   %tutti_checked%  ><label for="tutti">%ml.eventiTutti%</label>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="3" valign="top">
+										<div class='scroll-main'>%risultato_eventi%</div>			
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td width="1000" colspan="3" valign="top">
-					<div class='scroll-main'>%risultato_eventi%</div>			
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</form>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 </div>
 
 <div id="nuovo-evento-form" title="Nuovo Evento">

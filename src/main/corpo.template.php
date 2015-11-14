@@ -54,6 +54,8 @@ class CorpoTemplate extends ChopinAbstract {
 		
 		$array = $utility->getConfig();		
 		$form = self::$root . $array['template'] . self::$pagina;
+
+		// Box eventi ------------------------------------------------
 		
 		if ($_SESSION["eventi"] != "") {
 	
@@ -62,8 +64,7 @@ class CorpoTemplate extends ChopinAbstract {
 
 			$oggi = date("Y/m/d");
 			$oggi_piu_2gg = $this->sommaGiorniDataYMD($oggi, "/", 2);
-			$oggi_piu_5gg = $this->sommaGiorniDataYMD($oggi, "/", 5);
-				
+			$oggi_piu_5gg = $this->sommaGiorniDataYMD($oggi, "/", 5);				
 				
 			foreach($_SESSION["eventi"] as $row) {
 				
@@ -106,11 +107,36 @@ class CorpoTemplate extends ChopinAbstract {
 			$tabellaEventi = "<br>Nessun evento trovato" ;
 		}
 		
+		// Box trends ------------------------------------------------		
+
+		$trendPagamenti = $_SESSION["trendPagamentiVIL"];
+		
+		foreach(pg_fetch_all($trendPagamenti) as $row) {
+			$elencoQuantitaPagamentiVIL .= trim($row['qtapag']) . ",";
+		}
+
+		$trendPagamenti = $_SESSION["trendPagamentiBRE"];
+		
+		foreach(pg_fetch_all($trendPagamenti) as $row) {
+			$elencoQuantitaPagamentiBRE .= trim($row['qtapag']) . ",";
+		}
+
+		$trendPagamenti = $_SESSION["trendPagamentiTRE"];
+		
+		foreach(pg_fetch_all($trendPagamenti) as $row) {
+			$elencoQuantitaPagamentiTRE .= trim($row['qtapag']) . ",";
+		}
+		
+		// Pagina -----------------------------------------------------
+		
 		$replace = array(
 				'%aperti_checked%' => ($_SESSION["statoeventi"] == "00") ? "checked" : "",
 				'%chiusi_checked%' => ($_SESSION["statoeventi"] == "01") ? "checked" : "",
 				'%tutti_checked%'  => ($_SESSION["statoeventi"] == "")   ? "checked" : "",
-				'%risultato_eventi%' => $tabellaEventi
+				'%risultato_eventi%' => $tabellaEventi,
+				'%elencoPagamentiVil%' => $elencoQuantitaPagamentiVIL,
+				'%elencoPagamentiBre%' => $elencoQuantitaPagamentiBRE,
+				'%elencoPagamentiTre%' => $elencoQuantitaPagamentiTRE
 		);
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

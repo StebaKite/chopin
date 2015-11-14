@@ -3,9 +3,10 @@
 <script>
 
 	var barChartData = {
-		labels : ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Div"],
+		labels : ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],
 		datasets : [
 			{
+				legendText: "Pagamenti",
 				fillColor : "rgba(166,166,166,0.5)",
 				strokeColor : "rgba(166,166,166,0.8)",
 				highlightFill: "rgba(166,166,166,0.75)",
@@ -13,6 +14,7 @@
 				data : [%elencoPagamenti%]
 			},
 			{
+				legendText: "Incassi",
 				fillColor : "rgba(151,187,205,0.5)",
 				strokeColor : "rgba(151,187,205,0.8)",
 				highlightFill : "rgba(151,187,205,0.75)",
