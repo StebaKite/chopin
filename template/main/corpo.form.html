@@ -14,47 +14,75 @@
 
 <script>
 
-	var lineChartData = {
+	var pagamentiData = {
 		labels : [%elencoMesi%],
 		datasets : [
 			{
-				label: "Vil",
+				label: "Villa",
 				fillColor : "rgba(151,187,205,0.2)",
 				strokeColor : "rgba(151,187,205,1)",
 				pointColor : "rgba(151,187,205,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(151,187,205,1)",
 				data : [%elencoPagamentiVil%]
 			},
 			{
-				label: "Bre",
+				label: "Brembate",
 				fillColor : "rgba(166,166,166,0.2)",
 				strokeColor : "rgba(166,166,166,1)",
 				pointColor : "rgba(166,166,166,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(166,166,166,1)",
 				data : [%elencoPagamentiBre%]
 			},
 			{
-				label: "Tre",
+				label: "Trezzo",
 				fillColor : "rgba(255,184,77,0.2)",
 				strokeColor : "rgba(255,184,77,1)",
 				pointColor : "rgba(255,184,77,1)",
-				pointStrokeColor : "#fff",
-				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(255,184,77,1)",
 				data : [%elencoPagamentiTre%]
 			}
 		]
-
 	}
+
+	var incassiData = {
+		labels : [%elencoMesi%],
+		datasets : [
+			{
+				label: "Villa",
+				fillColor : "rgba(151,187,205,0.2)",
+				strokeColor : "rgba(151,187,205,1)",
+				pointColor : "rgba(151,187,205,1)",
+				pointHighlightStroke : "rgba(151,187,205,1)",
+				data : [%elencoIncassiVil%]
+			},
+			{
+				label: "Brembate",
+				fillColor : "rgba(166,166,166,0.2)",
+				strokeColor : "rgba(166,166,166,1)",
+				pointColor : "rgba(166,166,166,1)",
+				pointHighlightStroke : "rgba(166,166,166,1)",
+				data : [%elencoIncassiBre%]
+			},
+			{
+				label: "Trezzo",
+				fillColor : "rgba(255,184,77,0.2)",
+				strokeColor : "rgba(255,184,77,1)",
+				pointColor : "rgba(255,184,77,1)",
+				pointHighlightStroke : "rgba(255,184,77,1)",
+				data : [%elencoIncassiTre%]
+			}
+		]
+	}
+	
+	
 	window.onload = function(){
-		var ctx = document.getElementById("canvas").getContext("2d");
-		window.myBar = new Chart(ctx).Line(lineChartData, {
-			responsive : true
-		});
+		var ctx = document.getElementById("pagamenti").getContext("2d");
+		pagamenti = new Chart(ctx).Line(pagamentiData, { responsive : true });
+		
+		document.getElementById("legendDiv").innerHTML = pagamenti.generateLegend();
+
+		var ctx = document.getElementById("incassi").getContext("2d");
+		incassi = new Chart(ctx).Line(incassiData, { responsive : true });	
 	}
 
 </script>
@@ -65,8 +93,14 @@
 		<tr>
 			<td valign="top">
 				<div id="trends">
-					<canvas id="canvas" height="300" width="400"></canvas>
+					<h2>Pagamenti</h2>
+					<canvas id="pagamenti" height="230" width="400"></canvas>
 				</div>
+				<div id="trends">
+					<h2>Incassi</h2>
+					<canvas id="incassi" height="230" width="400"></canvas>
+				</div>
+				<div class="chart-legend" id="legendDiv"></div>
 			</td>
 			<td valign="top">
 				<form method="post" id="elencoEventi" action="../main/corpoFacade.class.php?modo=start">

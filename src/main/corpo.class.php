@@ -7,7 +7,8 @@ class Corpo extends ChopinAbstract {
 	public static $messaggio;
 	public static $queryEventi = "/main/eventi.sql";
 	public static $queryTrendPagamenti = "/riepiloghi/trendPagamenti.sql";
-	public static $queryMesiPagamenti = "/riepiloghi/mesiPagamenti.sql";
+	public static $queryTrendIncassi = "/riepiloghi/trendIncassi.sql";
+	public static $queryMesi = "/riepiloghi/mesi.sql";
 
 	private static $_instance = null;
 
@@ -91,7 +92,12 @@ class Corpo extends ChopinAbstract {
 		$this->ricercaPagamenti($utility, $db, "VIL");
 		$this->ricercaPagamenti($utility, $db, "BRE");
 		$this->ricercaPagamenti($utility, $db, "TRE");		
-		$this->ricercaMesiPagamenti($utility, $db);
+
+		$this->ricercaIncassi($utility, $db, "VIL");
+		$this->ricercaIncassi($utility, $db, "BRE");
+		$this->ricercaIncassi($utility, $db, "TRE");
+		
+		$this->ricercaMesi($utility, $db);
 				
 		// compone la pagina
 		include($testata);
@@ -124,24 +130,44 @@ class Corpo extends ChopinAbstract {
 		return $result;
 	}
 
-	public function ricercaMesiPagamenti($utility, $db) {
+	public function ricercaIncassi($utility, $db, $negozio) {
 	
 		$array = $utility->getConfig();
 	
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"]
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => $negozio
 		);
 	
-		$sqlTemplate = self::$root . $array['query'] . self::$queryMesiPagamenti;
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrendIncassi;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
+		$dati = "trendIncassi" . $negozio;
+	
 		if (pg_num_rows($result) > 0) {
-			$_SESSION["mesiPagamenti"] = $result;
+			$_SESSION[$dati] = $result;
 		}
 		else {
-			unset($_SESSION["mesiPagamenti"]);
+			unset($_SESSION[$dati]);
+		}
+		return $result;
+	}
+	
+	public function ricercaMesi($utility, $db) {
+	
+		$array = $utility->getConfig();
+	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryMesi;
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION["mesi"] = $result;
+		}
+		else {
+			unset($_SESSION["mesi"]);
 		}
 		return $result;
 	}	

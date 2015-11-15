@@ -6,21 +6,6 @@ class CorpoTemplate extends ChopinAbstract {
 
 	public static $root;
 	public static $pagina = "/main/corpo.form.html";
-
-	public static $mese = array(
-			'1' => 'gennaio',
-			'2' => 'febbraio',
-			'3' => 'marzo',
-			'4' => 'aprile',
-			'5' => 'maggio',
-			'6' => 'giugno',
-			'7' => 'luglio',
-			'8' => 'agosto',
-			'9' => 'settembre',
-			'10' => 'ottobre',
-			'11' => 'novembre',
-			'12' => 'dicembre'
-	);	
 	
 	private static $_instance = null;
 
@@ -124,6 +109,7 @@ class CorpoTemplate extends ChopinAbstract {
 		
 		// Box trends ------------------------------------------------		
 
+		// Pagamenti ------------
 		$trendPagamenti = $_SESSION["trendPagamentiVIL"];
 		foreach(pg_fetch_all($trendPagamenti) as $row) {
 			$elencoQuantitaPagamentiVIL .= trim($row['qtapag']) . ",";
@@ -139,9 +125,26 @@ class CorpoTemplate extends ChopinAbstract {
 			$elencoQuantitaPagamentiTRE .= trim($row['qtapag']) . ",";
 		}
 
-		$mesiPagamenti = $_SESSION["mesiPagamenti"];
-		foreach(pg_fetch_all($mesiPagamenti) as $row) {
-			$elencoMesi .= '"' . SELF::$mese[$row['mese']] . '",';
+		// Incassi ----------
+		$trendIncassi = $_SESSION["trendIncassiVIL"];
+		foreach(pg_fetch_all($trendIncassi) as $row) {
+			$elencoQuantitaIncassiVIL .= trim($row['qtapag']) . ",";
+		}
+		
+		$trendIncassi = $_SESSION["trendIncassiBRE"];
+		foreach(pg_fetch_all($trendIncassi) as $row) {
+			$elencoQuantitaIncassiBRE .= trim($row['qtapag']) . ",";
+		}
+		
+		$trendIncassi = $_SESSION["trendPagamentiTRE"];
+		foreach(pg_fetch_all($trendIncassi) as $row) {
+			$elencoQuantitaIncassiTRE .= trim($row['qtapag']) . ",";
+		}
+		
+		// Mesi ------------		
+		$mesi = $_SESSION["mesi"];
+		foreach(pg_fetch_all($mesi) as $row) {
+			$elencoMesi .= '"' . substr($row['des_mese'],0,3) . '",';
 		}
 		
 		// Pagina -----------------------------------------------------
@@ -151,10 +154,13 @@ class CorpoTemplate extends ChopinAbstract {
 				'%chiusi_checked%' => ($_SESSION["statoeventi"] == "01") ? "checked" : "",
 				'%tutti_checked%'  => ($_SESSION["statoeventi"] == "")   ? "checked" : "",
 				'%risultato_eventi%' => $tabellaEventi,
-				'%elencoPagamentiVil%' => $elencoQuantitaPagamentiVIL,
 				'%elencoMesi%' => $elencoMesi,
+				'%elencoPagamentiVil%' => $elencoQuantitaPagamentiVIL,
 				'%elencoPagamentiBre%' => $elencoQuantitaPagamentiBRE,
-				'%elencoPagamentiTre%' => $elencoQuantitaPagamentiTRE
+				'%elencoPagamentiTre%' => $elencoQuantitaPagamentiTRE,
+				'%elencoIncassiVil%' => $elencoQuantitaIncassiVIL,
+				'%elencoIncassiBre%' => $elencoQuantitaIncassiBRE,
+				'%elencoIncassiTre%' => $elencoQuantitaIncassiTRE
 		);
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
