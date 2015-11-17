@@ -43,20 +43,25 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		$result = $this->cercaFatturaFornitore($db, $utility, $_SESSION["idfornitore"], $_SESSION["numfatt"]); 
-		
-		if ($result){
-			if (pg_num_rows($result) > 0) {
-				foreach(pg_fetch_all($result) as $row) {
-					echo "Numero fattura gi&agrave; esistente: " . date("d/m/Y",strtotime($row['dat_registrazione'])) . " , " . $row['des_registrazione'];
+		if ($_SESSION["causale"] != "1100") {
+			$result = $this->cercaFatturaFornitore($db, $utility, $_SESSION["idfornitore"], $_SESSION["numfatt"]);
+			
+			if ($result){
+				if (pg_num_rows($result) > 0) {
+					foreach(pg_fetch_all($result) as $row) {
+						echo "Numero fattura gi&agrave; esistente: " . date("d/m/Y",strtotime($row['dat_registrazione'])) . " , " . $row['des_registrazione'];
+					}
+				}
+				else {
+					echo "Numero fattura Ok!";
 				}
 			}
 			else {
-				echo "Numero fattura Ok!";				
-			}
+				echo "Controllo numero fattura non eseguito!";
+			}				
 		}
 		else {
-			echo "Controllo numero fattura non eseguito!";				
+			echo "";
 		}
 	}
 }

@@ -670,6 +670,7 @@ $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 $('#numeroFatturaFornitore').change(function() {
 	var fornitore = $("#fornitore").val();
 	var numfatt = $("#numfatt").val();
+	var causale = $("#causale").val();
 	
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -677,7 +678,7 @@ $('#numeroFatturaFornitore').change(function() {
             $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
         }
     } 
-    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
+    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt + "&causale=" + causale, true);
     xmlhttp.send();				
 });
 
