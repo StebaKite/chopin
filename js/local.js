@@ -678,7 +678,7 @@ $('#numeroFatturaFornitore').change(function() {
             $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
         }
     } 
-    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt + "&causale=" + causale, true);
+    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
     xmlhttp.send();				
 });
 
