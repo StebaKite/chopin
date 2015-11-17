@@ -124,13 +124,19 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 					if (result) {
 						foreach($saldo as $row) {
-							
+
 							/**
-							 * tip_conto =  1 > Dare
-							 * tip_conto = -1 > Avere
+							 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
 							 */
-							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
-							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);								
+							if ($row['tot_conto'] != 0) {
+								
+								/**
+								 * tip_conto =  1 > Dare
+								 * tip_conto = -1 > Avere
+								 */
+								$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+								$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);								
+							}
 						}
 					}
 				}
