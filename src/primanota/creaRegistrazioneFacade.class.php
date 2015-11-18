@@ -25,6 +25,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];	
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
+	$_SESSION["scadenzeInserite"] = $_REQUEST["scadenzeInserite"];
+	$_SESSION["indexScadenzeInserite"] = $_REQUEST["indexScadenzeInserite"];
 	
 	$creaRegistrazione->go();
 }

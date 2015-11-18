@@ -87,6 +87,34 @@ $( "#nuovo-dett" ).click(function( event ) {
 	event.preventDefault();
 });
 
+
+$( "#nuova-data-scadenza-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 150,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiScadenzaSupplementare();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuova-data-scad" ).click(function( event ) {
+	$( "#nuova-data-scadenza-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 // Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,

@@ -5,6 +5,9 @@
 var indexDettInseriti = [%arrayIndexDettagliInseriti%];
 var dettInseriti = [%arrayDettagliInseriti%];
 
+var indexScadenzeInserite = [%arrayIndexScadenzeInserite%];
+var scadenzeInserite = [%arrayScadenzeInserite%];
+
 function aggiungiDettaglio() {
 	
 	var rowCount = $('#dettagli tr').length;
@@ -39,8 +42,7 @@ function aggiungiDettaglio() {
 	
 	$("#importo").val("");
 	$('#conti').prop("selectedIndex",0).selectmenu('refresh');
-	$('#dare').attr('checked', true);
-	
+	$('#dare').attr('checked', true);	
 }
 
 function addDett(dettaglio) {
@@ -68,6 +70,58 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
  */    
 	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
+
+//---------------------------------------------------------------------
+
+function aggiungiScadenzaSupplementare() {
+	
+	var rowCount = $('#scadenzesuppl tr').length;
+	
+	if (rowCount == 0) {
+		$( "#scadenzesuppl thead" ).append("<tr>" + 
+			"<th width='100' align='center'>Scadenza</th>" + 
+			"<th width='100' align='right'>Importo</th>" +
+			"<th>&nbsp;</th>" +
+			"</tr>");
+		$( "#scadenzesuppl" ).addClass("datiCreateSottile");
+	}
+
+	var scadenzasuppl = $("#datascadsuppl").val();
+	var importo = $("#importosuppl").val();
+	var importoNormalizzato = importo.trim().replace(",", ".");
+	
+	$( "#scadenzesuppl tbody" ).append( "<tr id='" + scadenzasuppl.trim() + "'>" +
+        "<td align='center'>" + scadenzasuppl + "</td>" +
+        "<td align='right'>" + importoNormalizzato + "</td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaScadenzaSupplementarePagina(" + scadenzasuppl + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+      "</tr>" );
+	
+	var elemento = scadenzasuppl + "#" + importoNormalizzato;
+	addScadenza(elemento);
+	
+	$("#importo").val("");
+	$("#scadenzesuppl").val("");	
+}
+
+function addScadenza(dettaglio) {
+	
+	scadenzeInserite.push(dettaglio);
+	aggiornaScadenzeInserite(scadenzeInserite);
+
+	var scadenzasuppl = dettaglio.substring(0, 10).trim();
+	indexScadenzeInserite.push(scadenzasuppl);
+	aggiornaIndexScadenzeInserite(indexScadenzeInserite);
+}
+
+function aggiornaScadenzeInserite(scadenzeInserite) {
+	$("#scadenzeInserite").val(scadenzeInserite);
+}
+
+function aggiornaIndexScadenzeInserite(indexScadenzeInserite) {
+	$("#indexScadenzeInserite").val(indexScadenzeInserite);
+}
+
+// ---------------------------------------------------------------------
 
 function controllaNumeroFattura() {
 
@@ -112,7 +166,7 @@ function controllaNumeroFattura() {
 						<td class="td">%ml.datareg% :</td>
 						<td colspan="4" class="tooltip">
 							<input class="datepicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%' >
-							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' >
+							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="85" maxlength="200" value='%descreg%' >
 						</td>
 					</tr>
 					<tr>
@@ -151,13 +205,25 @@ function controllaNumeroFattura() {
 					</tr>					
 					<tr>
 						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' ></td>
+						<td class="tooltip">
+							<input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' />
+							<button id="nuova-data-scad" class="button" title="%ml.nuovaDataScadTip%" >%ml.nuovaDataScad%</button>
+						</td>
+						
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip">
+							<input type="text" id="numfatt" name="numfatt" size="10" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura();" />&nbsp;&nbsp;
+							<i id="esitoControlloNumeroFattura">&nbsp;</i>												
+						</td>
 					</tr>
 					<tr>
-						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfatt" name="numfatt" size="35" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura();" ></td>
-						<td colspan="3"><i><p id="esitoControlloNumeroFattura">&nbsp;</p></i></td>												
-					</tr>
+						<td colspan="4">
+							<table id="scadenzesuppl" class="%class_scadenzesuppl%">
+							    <thead>%thead_scadenzesuppl%</thead>
+							    <tbody>%tbody_scadenzesuppl%</tbody>
+							</table>			
+						</td>
+					</tr>										
 					<tr>
 						<td colspan="4">
 							<table id="dettagli" class="%class_dettagli%">
@@ -169,13 +235,17 @@ function controllaNumeroFattura() {
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="4" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
-						<td colspan="4" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td colspan="4" align="right" class="tooltip">
+							<button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
+						</td>
 					</tr>
 				</tfoot>
 			</table>
 			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
 			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
+			<input type="hidden" size='150' id="scadenzeInserite" name="scadenzeInserite" value="%scadenzeInserite%" />
+			<input type="hidden" size='150' id="indexScadenzeInserite" name="indexScadenzeInserite" value="%arrayIndexScadenzeInserite%" />
 			<input type="hidden" id="esitoNumeroFattura" name="esitoNumeroFattura" />
 		</form>
 	</div>
@@ -203,6 +273,21 @@ function controllaNumeroFattura() {
 						</div>
 					</td>					
 				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+<div id="nuova-data-scadenza-form" title="Data scadenza supplementare"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td class="td">%ml.datascad% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" id="datascadsuppl" name="datascadsuppl" size="10" maxlength="10" /></td>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importosuppl" name="importosuppl" size="20" maxlength="20" ></td>
+				</tr>			
 			</tbody>
 		</table> 	 
   </form>

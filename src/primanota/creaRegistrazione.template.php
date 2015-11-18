@@ -148,6 +148,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
  		if ($_SESSION['dettagliInseriti'] != "") {
  			
  			$class_dettagli = "datiCreateSottile";
+ 			$class_scadenzesuppl = "datiCreateSottile";
  			
  			$thead_dettagli = 
  	 			"<tr>" .
@@ -199,6 +200,11 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%class_dettagli%' => $class_dettagli,	
 				'%thead_dettagli%' => $thead_dettagli,	
 				'%tbody_dettagli%' => $tbody_dettagli,
+				'%class_scadenzesuppl%' => $class_scadenzesuppl,
+				'%thead_scadenzesuppl%' => "",
+				'%tbody_scadenzesuppl%' => "",
+				'%arrayScadenzeInserite%' => "",
+				'%arrayIndexScadenzeInserite%' => "",
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
