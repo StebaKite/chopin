@@ -111,6 +111,7 @@ $( "#nuova-data-scadenza-form" ).dialog({
 
 // Link to open the dialog
 $( "#nuova-data-scad" ).click(function( event ) {
+	$( "#datascad" ).val("");	
 	$( "#nuova-data-scadenza-form" ).dialog( "open" );
 	event.preventDefault();
 });
@@ -795,6 +796,33 @@ function cancellaDettaglioPagina(idconto) {
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
+}
+
+function cancellaScadenzaSupplementarePagina(dataScadenza) {
+	
+	$("#" + dataScadenza).remove();	
+	
+ 	var rowCount = $("#scadenzesuppl tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#scadenzesuppl thead tr" ).remove();		
+		$( "#scadenzesuppl" ).removeClass("datiCreateSottile");
+	}
+
+	var c = parseInt(dataScadenza.toString());
+	var index = jQuery.inArray(c,indexScadenzeInserite);
+	if (index == -1) {
+		var cc = dataScadenza.toString();
+		var index = jQuery.inArray(cc,indexScadenzeInserite);
+	}	
+	
+	if (index > -1) {
+		indexScadenzeInserite.splice(index, 1);
+		aggiornaIndexScadenzeInserite(indexScadenzeInserite);
+
+		scadenzeInserite.splice(index, 1);				
+		aggiornaScadenzeInserite(scadenzeInserite);
+	}	
 }
 
 function cancellaRegistrazione(idreg) {

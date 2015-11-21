@@ -61,7 +61,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				$esito = FALSE;
 			}
 			else {
-				if ($_SESSION["esitoNumeroFattura"] != "Numero fattura Ok!") {
+				if (($_SESSION["esitoNumeroFattura"] != "Numero fattura Ok!") && ($_SESSION["esitoNumeroFattura"] != "")) {
 					$msg = $msg . "<br>&ndash; Il numero fattura &egrave; gi&agrave; esistente";
 					unset($_SESSION["numfatt"]);
 					$esito = FALSE;
@@ -117,6 +117,26 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				$_SESSION["totaleDare"] = $tot_dare;
 			}
 		} 
+
+		/**
+		 * Controllo di congruenza degli importi reteizzati con l'importo totale in dare 
+		 */
+		if ($_SESSION['scadenzeInserite'] != "") {
+
+			$d = explode(",", $_SESSION['scadenzeInserite']);
+			
+			foreach($d as $ele) {
+				$e = explode("#",$ele);
+				$tot_scadenze += $e[2];
+			}
+			
+			$totale = round($tot_dare, 2) - round($tot_scadenze, 2);
+				
+			if ($totale  != 0 ) {
+				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in dare &egrave; di " . $totale . " &euro;";
+				$esito = FALSE;
+			}
+		}
 		
 		// ----------------------------------------------		
 		
@@ -148,7 +168,6 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
  		if ($_SESSION['dettagliInseriti'] != "") {
  			
  			$class_dettagli = "datiCreateSottile";
- 			$class_scadenzesuppl = "datiCreateSottile";
  			
  			$thead_dettagli = 
  	 			"<tr>" .
@@ -186,6 +205,46 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 			}
  		}
  		
+ 		/**
+ 		 * Prepara la tabella delle multiscadenze
+ 		 */
+
+ 		if ($_SESSION['scadenzeInserite'] != "") {
+ 		
+ 			$class_scadenzesuppl = "datiCreateSottile";
+ 		
+ 			$thead_scadenze =
+ 			"<tr>" .
+ 			"<th width='100' align='center'>Scadenza</th>" .
+ 			"<th width='100' align='right'>Importo</th>" .
+ 			"<th>&nbsp;</th>" .
+ 			"</tr>";
+ 		
+ 			$tbody_scadenze = "";
+ 			$s_x_array = "";
+ 		
+ 			$d = explode(",", $_SESSION['scadenzeInserite']);
+ 				
+ 			foreach($d as $ele) {
+ 		
+ 				$e = explode("#",$ele);
+ 		
+ 				$dettaglio =
+ 				"<tr id=" . $e[0] . ">" .
+ 				"<td align='center'>" . $e[1] . "</td>" .
+ 				"<td align='right'>" . $e[2] . "</td>" .
+				"<td id='icons'><a class='tooltip' onclick='cancellaScadenzaSupplementarePagina(" . $e[0] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+				"</tr>";
+ 		
+ 				$tbody_scadenze = $tbody_scadenze . $dettaglio;
+ 		
+ 				/**
+ 				 * Prepara la valorizzazione dell'array di pagina per i dettagli inseriti
+ 				 */
+ 				$s_x_array = $s_x_array . "'" . $ele . "',";
+ 			}
+ 		}
+ 		
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
@@ -201,10 +260,11 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%thead_dettagli%' => $thead_dettagli,	
 				'%tbody_dettagli%' => $tbody_dettagli,
 				'%class_scadenzesuppl%' => $class_scadenzesuppl,
-				'%thead_scadenzesuppl%' => "",
-				'%tbody_scadenzesuppl%' => "",
-				'%arrayScadenzeInserite%' => "",
-				'%arrayIndexScadenzeInserite%' => "",
+				'%thead_scadenzesuppl%' => $thead_scadenze,
+				'%tbody_scadenzesuppl%' => $tbody_scadenze,
+				'%arrayScadenzeInserite%' => $s_x_array,
+				'%arrayIndexScadenzeInserite%' => $_SESSION["indexScadenzeInserite"],
+				'%scadenzeInserite%' => $_SESSION["scadenzeInserite"],
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],

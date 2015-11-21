@@ -56,18 +56,10 @@ function addDett(dettaglio) {
 }
 
 function aggiornaDettaglioInseriti(dettInseriti) {
-
-/* 	var str = "<input type='text' size='150' name='dettagliInseriti' id='dettagliInseriti' value='";
-    var inpHidden = str.concat(dettInseriti,"'/>");
- */
  $("#dettagliInseriti").val(dettInseriti);
 }
 
 function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
-
-/* 	var str1 = "<input type='text' size='150' name='indexDettagliInseriti' id='indexDettagliInseriti' value='";
-    var inpHidden = str1.concat(indexDettInseriti,"'/>");
- */    
 	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
 
@@ -87,16 +79,18 @@ function aggiungiScadenzaSupplementare() {
 	}
 
 	var scadenzasuppl = $("#datascadsuppl").val();
+	var data = (new Date(scadenzasuppl).getTime() / 1000).toFixed(0);
+	
 	var importo = $("#importosuppl").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	
-	$( "#scadenzesuppl tbody" ).append( "<tr id='" + scadenzasuppl.trim() + "'>" +
+	$( "#scadenzesuppl tbody" ).append( "<tr id=" + data + ">" +
         "<td align='center'>" + scadenzasuppl + "</td>" +
         "<td align='right'>" + importoNormalizzato + "</td>" +
-    	"<td id='icons'><a class='tooltip' onclick='cancellaScadenzaSupplementarePagina(" + scadenzasuppl + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaScadenzaSupplementarePagina(" + data + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = scadenzasuppl + "#" + importoNormalizzato;
+	var elemento = data + "#" + scadenzasuppl + "#" + importoNormalizzato;
 	addScadenza(elemento);
 	
 	$("#importo").val("");
@@ -108,8 +102,8 @@ function addScadenza(dettaglio) {
 	scadenzeInserite.push(dettaglio);
 	aggiornaScadenzeInserite(scadenzeInserite);
 
-	var scadenzasuppl = dettaglio.substring(0, 10).trim();
-	indexScadenzeInserite.push(scadenzasuppl);
+	var id = dettaglio.split("#");
+	indexScadenzeInserite.push(id[0]);
 	aggiornaIndexScadenzeInserite(indexScadenzeInserite);
 }
 
