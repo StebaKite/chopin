@@ -48,6 +48,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$this->prelevaDatiRegistrazione($utility);
 		$this->prelevaDatiDettagliRegistrazione($utility);
+		$this->prelevaDatiScadenzeRegistrazione($utility);
 
 		/**
 		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la 
@@ -177,6 +178,23 @@ class ModificaRegistrazione extends primanotaAbstract {
 		}		
 	}
 
+	public function prelevaDatiScadenzeRegistrazione($utility) {
+	
+		require_once 'database.class.php';
+	
+		$db = Database::getInstance();
+	
+		$result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+	
+		if ($result) {
+			$_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);
+			$_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);		
+		}
+		else {
+			error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+		}
+	}
+	
 	public function aggiornaStatoRegistrazione($utility) {
 		
 		require_once 'database.class.php';
@@ -188,7 +206,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 	public function aggiornaRegistrazione($utility) {
 	
 		require_once 'database.class.php';
-	
+		
 		$db = Database::getInstance();
 		$db->beginTransaction();
 	
@@ -211,24 +229,46 @@ class ModificaRegistrazione extends primanotaAbstract {
 			 * Se l'aggiornamento della registrazione è andata bene ricreo le scadenze fornitore o cliente
 			 */
 				
-			if ($fornitore != "null") {
-		
-				$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
+			if ($_SESSION["fornitore"] != "") {
+				
+				if ($_SESSION["numeroScadenzeRegistrazione"] = 0) {
+
+					$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
+						
+					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+						
+					$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+					$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 					
-				$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-				$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+					if ($dataScadenza > $dataRegistrazione) {
 					
-				$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-				$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-		
-				if ($dataScadenza > $dataRegistrazione) {
-		
-					$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-					foreach(pg_fetch_all($result_fornitore) as $row) {
-						$tipAddebito_fornitore = $row['tip_addebito'];
+						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+						foreach(pg_fetch_all($result_fornitore) as $row) {
+							$tipAddebito_fornitore = $row['tip_addebito'];
+						}
+						$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $_SESSION["totaleDare"],
+								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+					}						
+				}
+				else {
+						
+					$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
+					$progrFattura = 0;
+
+					/**
+					 * I dati da aggiornare sulle scadenza sono la nota e il numero fattura
+					 */
+					foreach ($scadenzeRegistrazione as $row) {
+						
+						$progrFattura += 1;
+						$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
+						$datascad = ($row["dat_scadenza"] != "") ? "'" . $row["dat_scadenza"] . "'" : "null" ;
+						$codneg = ($row["cod_negozio"] != "") ? "'" . $row["cod_negozio"] . "'" : "null" ;
+						
+						$this->aggiornaScadenza($db, $utility, $row["id_scadenza"], $_SESSION['idRegistrazione'], $datascad, $row["imp_in_scadenza"],
+								$descreg, $row["tip_addebito"], $codneg, $row["id_fornitore"], $numfatt_generato, $row["sta_scadenza"]);
 					}
-					$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $_SESSION["totaleDare"],
-							$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 				}
 			}
 			else {

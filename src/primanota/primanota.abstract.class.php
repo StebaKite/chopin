@@ -13,10 +13,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryCreaRegistrazione = "/primanota/creaRegistrazione.sql";
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
+	public static $queryUpdateScadenza = "/primanota/updateScadenza.sql";
+	public static $queryDeleteScadenzaRegistrazione = "/primanota/deleteScadenzaRegistrazione.sql";
 	public static $queryCreaScadenzaCliente = "/primanota/creaScadenzaCliente.sql";
 	
 	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
 	public static $queryLeggiDettagliRegistrazione = "/primanota/leggiDettagliRegistrazione.sql";
+	public static $queryLeggiScadenzeRegistrazione = "/primanota/leggiScadenzeRegistrazione.sql";
 	public static $queryUpdateRegistrazione = "/primanota/updateRegistrazione.sql";
 	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
 	
@@ -137,6 +140,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	}
 	
 	/**
+	 * Il metodo inserisce una scadenza per un fornitore
 	 * 
 	 * @param unknown $db
 	 * @param unknown $utility
@@ -168,6 +172,66 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	}
 
 	/**
+	 * Il metodo aggiorna i dati di una scadenza per un fornitore
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idScadenza
+	 * @param unknown $idRegistrazione
+	 * @param unknown $datascad
+	 * @param unknown $importo
+	 * @param unknown $descreg
+	 * @param unknown $tipaddebito
+	 * @param unknown $codneg
+	 * @param unknown $fornitore
+	 * @param unknown $numfatt
+	 * @param unknown $staScadenza
+	 * @return unknown
+	 */
+	public function aggiornaScadenza($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo,
+			$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_scadenza%' => trim($idScadenza),
+				'%id_registrazione%' => trim($idRegistrazione),
+				'%dat_scadenza%' => trim($datascad),
+				'%imp_in_scadenza%' => trim($importo),
+				'%nota_in_scadenza%' => trim($descreg),
+				'%tip_addebito%' => trim($tipaddebito),
+				'%cod_negozio%' => trim($codneg),
+				'%id_fornitore%' => $fornitore,
+				'%num_fattura%' => trim($numfatt),
+				'%sta_scadenza%' => trim($staScadenza)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenza;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	/**
+	 * Il metodo cancella una scadenza di una registrazione
+	 *  
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idScadenza
+	 * @return unknown
+	 */
+	public function cancellaScadenzaRegistrazione($db, $utility, $idScadenza) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_scadenza%' => trim($idScadenza),
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	/**
+	 * Il metodo inserisce una scadenza per il cliente
 	 * 
 	 * @param unknown $db
 	 * @param unknown $utility
@@ -241,6 +305,25 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
+	public function leggiScadenzeRegistrazione($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
 	/**
 	 * 
 	 * @param unknown $db

@@ -144,6 +144,35 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 	event.preventDefault();
 });
 
+
+//Modifica registrazione : aggiunta nuovo dettaglio
+$( "#nuova-scadenza-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 150,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#nuovaScadenza").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuova-scad-modificareg" ).click(function( event ) {
+	$( "#nuova-scadenza-modificareg-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 	autoOpen: false,
@@ -474,6 +503,28 @@ $( "#nuovo-sottoconto" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//Modifica registrazione : cancella scadenza
+$( "#cancella-scadenza-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+           $("#cancellaScadenza").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi
 
@@ -796,6 +847,12 @@ function cancellaDettaglioPagina(idconto) {
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
+}
+
+function cancellaScadenza(idscadenza) {
+	
+	$( "#idScadenzaRegistrazione" ).val(idscadenza);
+	$( "#cancella-scadenza-modificareg-form" ).dialog( "open" );
 }
 
 function cancellaScadenzaSupplementarePagina(dataScadenza) {

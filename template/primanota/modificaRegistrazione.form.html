@@ -57,12 +57,22 @@
 					</tr>					
 					<tr>
 						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' ></td>
+						<td class="tooltip">
+							<input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' />
+							<button id="nuova-scad-modificareg" class="button" title="%ml.nuovaDataScadTip%" >%ml.nuovaDataScad%</button>
+						</td>
+						
+						<td>%ml.numfatt% :</td>						
+						<td class="tooltip"><input type="text" name="numfatt" size="10" maxlength="35" value='%numfatt%' ></td>
 					</tr>
 					<tr>
-						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" name="numfatt" size="35" maxlength="35" value='%numfatt%' ></td>
-					</tr>
+						<td colspan="4">
+							<table id="scadenzesuppl" class="%class_scadenzesuppl%">
+							    <thead>%thead_scadenze%</thead>
+							    <tbody>%tbody_scadenze%</tbody>
+							</table>			
+						</td>
+					</tr>					
 					<tr>
 						<td colspan="4">
 							<table id="dettagli" class="datiCreateSottile">
@@ -128,6 +138,29 @@
 	<form method="post" id="cancellaDettaglio" action="../primanota/cancellaDettaglioRegistrazioneFacade.class.php?modo=go" >
 		<p>Elimino il dettaglio della registrazione ?</p>
 		<input type="hidden" id="idDettaglioRegistrazione" name="idDettaglioRegistrazione">
+  </form>
+</div>
+
+<div id="nuova-scadenza-modificareg-form" title="Data scadenza supplementare"> 
+	<form method="post" id="nuovaScadenza" action="../primanota/inserisciScadenzaRegistrazioneFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td class="td">%ml.datascad% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" id="datascadsuppl" name="datascadsuppl" size="10" maxlength="10" /></td>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importosuppl" name="importosuppl" size="20" maxlength="20" ></td>
+					<td><input type="hidden" name="idRegistrazione" value='%idregistrazione%' /></td>					
+				</tr>			
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+<div id="cancella-scadenza-modificareg-form" title="Cancella scadenza supplementare"> 
+	<form method="post" id="cancellaScadenza" action="../primanota/cancellaScadenzaRegistrazioneFacade.class.php?modo=go" >
+		<p>Elimino la scadenza della registrazione ?</p>
+		<input type="hidden" id="idScadenzaRegistrazione" name="idScadenzaRegistrazione">
   </form>
 </div>
 
