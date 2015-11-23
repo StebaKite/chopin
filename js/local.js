@@ -87,6 +87,35 @@ $( "#nuovo-dett" ).click(function( event ) {
 	event.preventDefault();
 });
 
+
+$( "#nuova-data-scadenza-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 150,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiScadenzaSupplementare();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuova-data-scad" ).click(function( event ) {
+	$( "#datascad" ).val("");	
+	$( "#nuova-data-scadenza-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 // Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
@@ -112,6 +141,35 @@ $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 //Link to open the dialog
 $( "#nuovo-dett-modificareg" ).click(function( event ) {
 	$( "#nuovo-dettaglio-modificareg-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+
+//Modifica registrazione : aggiunta nuovo dettaglio
+$( "#nuova-scadenza-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 150,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+             $("#nuovaScadenza").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuova-scad-modificareg" ).click(function( event ) {
+	$( "#nuova-scadenza-modificareg-form" ).dialog( "open" );
 	event.preventDefault();
 });
 
@@ -445,6 +503,28 @@ $( "#nuovo-sottoconto" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//Modifica registrazione : cancella scadenza
+$( "#cancella-scadenza-modificareg-form" ).dialog({
+	autoOpen: false,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+           $("#cancellaScadenza").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi
 
@@ -768,6 +848,39 @@ function cancellaDettaglioPagina(idconto) {
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
+}
+
+function cancellaScadenza(idscadenza) {
+	
+	$( "#idScadenzaRegistrazione" ).val(idscadenza);
+	$( "#cancella-scadenza-modificareg-form" ).dialog( "open" );
+}
+
+function cancellaScadenzaSupplementarePagina(dataScadenza) {
+	
+	$("#" + dataScadenza).remove();	
+	
+ 	var rowCount = $("#scadenzesuppl tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#scadenzesuppl thead tr" ).remove();		
+		$( "#scadenzesuppl" ).removeClass("datiCreateSottile");
+	}
+
+	var c = parseInt(dataScadenza.toString());
+	var index = jQuery.inArray(c,indexScadenzeInserite);
+	if (index == -1) {
+		var cc = dataScadenza.toString();
+		var index = jQuery.inArray(cc,indexScadenzeInserite);
+	}	
+	
+	if (index > -1) {
+		indexScadenzeInserite.splice(index, 1);
+		aggiornaIndexScadenzeInserite(indexScadenzeInserite);
+
+		scadenzeInserite.splice(index, 1);				
+		aggiornaScadenzeInserite(scadenzeInserite);
+	}	
 }
 
 function cancellaRegistrazione(idreg) {

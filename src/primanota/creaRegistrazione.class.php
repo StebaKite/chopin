@@ -124,6 +124,19 @@ class CreaRegistrazione extends primanotaAbstract {
 		
 		$descreg = $_SESSION["descreg"];
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
+
+		/**
+		 * Se ci sono più date scadenza inserite viene presa la prima per la registrazione
+		 */
+		if ($datascad == "null") {
+			
+			if ($_SESSION['scadenzeInserite'] != "") {
+				$d = explode(",", $_SESSION['scadenzeInserite']);
+				$e = explode("#",$d[0]);
+				$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
+			}
+		}
+		
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
@@ -138,9 +151,9 @@ class CreaRegistrazione extends primanotaAbstract {
 			 * Se l'aggiornamento della registrazione è andata bene creo le scadenze fornitore o cliente
 			 */
 					
-			if ($fornitore != "null") {
+			if ($_SESSION["fornitore"] != "") {
 			
-				if ($datascad != "null") {
+				if ($_SESSION["datascad"] != "") {
 						
 					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
 					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
@@ -160,6 +173,34 @@ class CreaRegistrazione extends primanotaAbstract {
 			
 						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"],
 								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
+					}
+				}
+				else {
+
+					if ($_SESSION['scadenzeInserite'] != "") {
+
+						$tipAddebito_fornitore = "";
+						$staScadenza = "00"; 	// aperta
+						
+						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+						foreach(pg_fetch_all($result_fornitore) as $row) {
+							$tipAddebito_fornitore = $row['tip_addebito'];
+						}
+						
+						$d = explode(",", $_SESSION['scadenzeInserite']);
+						$progrFattura = 0;
+						
+						foreach($d as $ele) {
+
+							$e = explode("#",$ele);
+							$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
+							$progrFattura += 1;
+							$numfatt_generato = "'" . $_SESSION["numfatt"] . "." . $progrFattura . "'"; 
+							$importo_scadenza = $e[2];
+							
+							$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_scadenza,
+									$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza);
+						}
 					}
 				}
 			}

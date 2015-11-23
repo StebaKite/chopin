@@ -38,6 +38,7 @@ assenzaSottoconti = Non visibili
 anteprima = Anteprima
 attivo = Attivo
 passivo = Passivo
+nuovaDataScad = Nuova Scadenza
 ;
 ; Tips ---------------------------------
 ;
@@ -61,6 +62,7 @@ mastrino = Genera il mastrino
 chiudiEvento = Chiude questo evento
 estraipdfTip = Estrae la tabella su un documento PDF
 anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
+nuovaDataScadTip = Aggiunge una data scadenza supplementare
 ;
 ; Funzioni -----------------------------
 ;
