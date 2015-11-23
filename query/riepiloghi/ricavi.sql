@@ -38,26 +38,6 @@ SELECT
 			GROUP BY t3.num_riga_bilancio, t3.ind_visibilita_sottoconti, t3.des_conto, t1.des_sottoconto, t2.ind_dareavere
 			) AS t6	
 		GROUP BY t6.num_riga_bilancio, t6.ind_visibilita_sottoconti, t6.des_conto, t6.des_sottoconto
-
-		UNION ALL
-		
-		SELECT
-			conto.num_riga_bilancio,
-			conto.ind_visibilita_sottoconti,
-			conto.des_conto,
-			sottoconto.des_sottoconto,
-			saldo.imp_saldo as tot_conto
-		 FROM contabilita.saldo  
-			INNER JOIN contabilita.conto as conto
-			  ON conto.cod_conto = saldo.cod_conto
-			INNER JOIN contabilita.sottoconto as sottoconto
-			  ON sottoconto.cod_conto = saldo.cod_conto	  
-			  AND sottoconto.cod_sottoconto = saldo.cod_sottoconto	  
-		 WHERE saldo.dat_saldo = '%datareg_da%'
-		  AND saldo.cod_negozio IN (%codnegozio%)		  
-		  AND saldo.ind_dareavere = 'A'
-		  AND conto.cat_conto = 'Conto Economico'
-		  AND conto.ind_presenza_in_bilancio = 'S'
 	) t5 
 GROUP BY t5.num_riga_bilancio, t5.ind_visibilita_sottoconti, t5.des_conto, t5.des_sottoconto	
 ORDER BY t5.num_riga_bilancio, t5.des_conto, t5.des_sottoconto
