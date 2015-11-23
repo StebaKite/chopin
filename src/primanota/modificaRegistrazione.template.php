@@ -116,23 +116,24 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 
 		/**
 		 * Controllo di congruenza degli importi reteizzati con l'importo totale in avere
+		 * Commentato perchè non deve essere bloccante. Va fatto un popup di avviso se squadra.
 		 */
-		if ($_SESSION["elencoScadenzeRegistrazione"] != "") {
+// 		if ($_SESSION["elencoScadenzeRegistrazione"] != "") {
 		
-			$d = $_SESSION["elencoScadenzeRegistrazione"];
+// 			$d = $_SESSION["elencoScadenzeRegistrazione"];
 				
-			foreach($d as $ele) {
-				$e = explode("#",$ele);
-				$tot_scadenze += $e[2];
-			}
+// 			foreach($d as $ele) {
+// 				$e = explode("#",$ele);
+// 				$tot_scadenze += $e[2];
+// 			}
 				
-			$totale = round($tot_avere, 2) - round($tot_scadenze, 2);
+// 			$totale = round($tot_avere, 2) - round($tot_scadenze, 2);
 		
-			if ($totale  != 0 ) {
-				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in avere &egrave; di " . $totale . " &euro;";
-				$esito = FALSE;
-			}
-		}
+// 			if ($totale  != 0 ) {
+// 				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in avere &egrave; di " . $totale . " &euro;";
+// 				$esito = FALSE;
+// 			}
+// 		}
 		
 		// ----------------------------------------------
 
