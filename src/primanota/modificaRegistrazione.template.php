@@ -185,7 +185,7 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		$theadScadenze = "";
 		$tbodyScadenze = "";
 		
-		if ($_SESSION["numeroScadenzeRegistrazione"] > 0) {
+		if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
 
 			$class_scadenzesuppl = "datiCreateSottile";
 				

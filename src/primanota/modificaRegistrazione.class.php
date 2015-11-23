@@ -187,8 +187,14 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
 	
 		if ($result) {
-			$_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);
-			$_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);		
+			if (pg_num_rows($result) > 1) {
+				$_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);
+				$_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);				
+			}
+			else {
+				unset($_SESSION["numeroScadenzeRegistrazione"]);
+				unset($_SESSION["elencoScadenzeRegistrazione"]);				
+			}
 		}
 		else {
 			error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
@@ -231,8 +237,33 @@ class ModificaRegistrazione extends primanotaAbstract {
 				
 			if ($_SESSION["fornitore"] != "") {
 				
-				if ($_SESSION["numeroScadenzeRegistrazione"] = 0) {
+				if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
 
+					$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
+					$progrFattura = 0;
+					
+					/**
+					 * I dati da aggiornare sulle scadenza sono : la nota, il numero fattura, il negozio
+					 */
+					foreach ($scadenzeRegistrazione as $row) {
+					
+						$progrFattura += 1;
+						$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
+						$datascad = ($row["dat_scadenza"] != "") ? "'" . $row["dat_scadenza"] . "'" : "null" ;
+						$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
+						$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;		
+						
+						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+						foreach(pg_fetch_all($result_fornitore) as $row) {
+							$tipAddebito_fornitore = $row['tip_addebito'];
+						}
+					
+						$this->aggiornaScadenza($db, $utility, $row["id_scadenza"], $_SESSION['idRegistrazione'], $datascad, $row["imp_in_scadenza"],
+								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $row["sta_scadenza"]);
+					}
+				}
+				else {
+				
 					$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
 						
 					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
@@ -250,25 +281,6 @@ class ModificaRegistrazione extends primanotaAbstract {
 						$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $_SESSION["totaleDare"],
 								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 					}						
-				}
-				else {
-						
-					$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
-					$progrFattura = 0;
-
-					/**
-					 * I dati da aggiornare sulle scadenza sono la nota e il numero fattura
-					 */
-					foreach ($scadenzeRegistrazione as $row) {
-						
-						$progrFattura += 1;
-						$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
-						$datascad = ($row["dat_scadenza"] != "") ? "'" . $row["dat_scadenza"] . "'" : "null" ;
-						$codneg = ($row["cod_negozio"] != "") ? "'" . $row["cod_negozio"] . "'" : "null" ;
-						
-						$this->aggiornaScadenza($db, $utility, $row["id_scadenza"], $_SESSION['idRegistrazione'], $datascad, $row["imp_in_scadenza"],
-								$descreg, $row["tip_addebito"], $codneg, $row["id_fornitore"], $numfatt_generato, $row["sta_scadenza"]);
-					}
 				}
 			}
 			else {
