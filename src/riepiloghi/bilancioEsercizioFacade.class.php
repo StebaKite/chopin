@@ -27,6 +27,7 @@ if ($_GET["modo"] == "go") {
 		
 	$_SESSION["anno_eserczio_sel"] = $_REQUEST["anno_eserczio_sel"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
+	$_SESSION["saldiInclusi"] = $_REQUEST["saldiInclusi"];
 	
 	$bilancio->go();
 }

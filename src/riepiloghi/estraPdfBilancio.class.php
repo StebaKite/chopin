@@ -8,7 +8,9 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 
 	public static $azioneEstraiPdfBilancio = "../riepiloghi/estraiPdfBilancioFacade.class.php?modo=go";
 	public static $queryCosti = "/riepiloghi/costi.sql";
+	public static $queryCostiConSaldi = "/riepiloghi/costiConSaldi.sql";
 	public static $queryRicavi = "/riepiloghi/ricavi.sql";
+	public static $queryRicaviConSaldi = "/riepiloghi/ricaviConSaldi.sql";
 	public static $queryAttivo = "/riepiloghi/attivo.sql";
 	public static $queryPassivo = "/riepiloghi/passivo.sql";
 
@@ -195,7 +197,14 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 	public function ricercaCosti($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCosti;
+		
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCosti;
+		}
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
@@ -212,7 +221,14 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 	public function ricercaRicavi($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicavi;
+
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicavi;
+		}
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	

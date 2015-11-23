@@ -13,7 +13,8 @@ if ($_GET["modo"] == "start") {
 	$_SESSION["datareg_a"] = $_REQUEST["datareg_a"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
 	$_SESSION["catconto_sel"] = $_REQUEST["catconto_sel"];
-
+	$_SESSION["saldiInclusi"] = $_REQUEST["saldiInclusi"];
+	
 	/**
 	 * Intestazione documento
 	 */
