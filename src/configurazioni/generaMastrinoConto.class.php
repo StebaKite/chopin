@@ -8,7 +8,8 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 
 	public static $azioneGeneraMastrinoConto = "../configurazioni/generaMastrinoContoFacade.class.php?modo=go";
 	public static $queryRicercaRegistrazioniConto = "/configurazioni/ricercaRegistrazioniConto.sql";
-
+	public static $queryRicercaRegistrazioniContoConSaldi = "/configurazioni/ricercaRegistrazioniContoConSaldi.sql";
+	
 	function __construct() {
 
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
@@ -126,7 +127,13 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		);
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniConto;
+		
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniContoConSaldi;				
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniConto;
+		}
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 	
