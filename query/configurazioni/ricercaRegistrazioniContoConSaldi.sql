@@ -20,5 +20,26 @@ SELECT T1.*
 		WHERE dettaglio.cod_conto = '%cod_conto%'
 		  AND dettaglio.cod_sottoconto = '%cod_sottoconto%'
 		%filtro_date%
+  
+		UNION ALL
+		
+		SELECT
+			saldo.dat_saldo as dat_registrazione,
+			saldo.des_saldo as des_registrazione,
+			saldo.imp_saldo as imp_registrazione,
+			saldo.ind_dareavere as ind_dareavere,
+			conto.des_conto,
+			conto.cat_conto,
+			conto.tip_conto,
+			sottoconto.des_sottoconto
+		 FROM contabilita.saldo  
+			INNER JOIN contabilita.conto as conto
+			  ON conto.cod_conto = saldo.cod_conto
+			INNER JOIN contabilita.sottoconto as sottoconto
+			  ON sottoconto.cod_conto = saldo.cod_conto	  
+			  AND sottoconto.cod_sottoconto = saldo.cod_sottoconto	  
+		WHERE saldo.cod_conto = '%cod_conto%'
+		  AND saldo.cod_sottoconto = '%cod_sottoconto%'
+  		%filtro_date_saldo%
 	) T1 
 ORDER BY T1.dat_registrazione
