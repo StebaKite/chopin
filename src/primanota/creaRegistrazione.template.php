@@ -119,7 +119,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 		} 
 
 		/**
-		 * Controllo di congruenza degli importi reteizzati con l'importo totale in dare 
+		 * Controllo di congruenza degli importi reteizzati con l'importo totale in avere
 		 */
 		if ($_SESSION['scadenzeInserite'] != "") {
 
@@ -130,10 +130,10 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				$tot_scadenze += $e[2];
 			}
 			
-			$totale = round($tot_dare, 2) - round($tot_scadenze, 2);
+			$totale = round($tot_avere, 2) - round($tot_scadenze, 2);
 				
 			if ($totale  != 0 ) {
-				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in dare &egrave; di " . $totale . " &euro;";
+				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in avere &egrave; di " . $totale . " &euro;";
 				$esito = FALSE;
 			}
 		}
