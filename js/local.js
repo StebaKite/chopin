@@ -670,6 +670,7 @@ $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 $('#numeroFatturaFornitore').change(function() {
 	var fornitore = $("#fornitore").val();
 	var numfatt = $("#numfatt").val();
+	var causale = $("#causale").val();
 	
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
