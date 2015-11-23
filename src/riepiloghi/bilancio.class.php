@@ -154,12 +154,12 @@ class Bilancio extends RiepiloghiAbstract {
 	public function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
-	
+		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%catconto%' => $_SESSION["catconto_sel"],
-				'%codnegozio%' => $_SESSION["codneg_sel"]
+				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
 		);
 
 		error_log("Estrazione bilancio esercizio : " . $_SESSION["datareg_da"] . " - " . $_SESSION["datareg_a"]);

@@ -100,7 +100,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%catconto%' => $_SESSION["catconto_sel"],
-				'%codnegozio%' => $_SESSION["codneg_sel"]
+				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
 		);
 		
 		$db = Database::getInstance();
@@ -154,7 +154,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%catconto%' => $_SESSION["catconto_sel"],
-				'%codnegozio%' => $_SESSION["codneg_sel"]
+				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
 		);
 		
 		$db = Database::getInstance();

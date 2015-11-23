@@ -31,7 +31,7 @@ SELECT
 				  		LEFT OUTER JOIN contabilita.registrazione as t4
 				  			ON  t4.id_registrazione = t2.id_registrazione
 				  WHERE t4.dat_registrazione between '%datareg_da%' and '%datareg_a%'
-				  AND   t4.cod_negozio = '%codnegozio%'
+				  AND   t4.cod_negozio IN (%codnegozio%)
 				  AND   t3.cat_conto = 'Stato Patrimoniale'
 				  AND   t3.ind_presenza_in_bilancio = 'S'
 				  AND   t3.tip_conto = 'Dare'
@@ -54,7 +54,7 @@ SELECT
 			  ON sottoconto.cod_conto = saldo.cod_conto	  
 			  AND sottoconto.cod_sottoconto = saldo.cod_sottoconto	  
 		 WHERE saldo.dat_saldo = '%datareg_da%'
-		  AND saldo.cod_negozio = '%codnegozio%'		  
+		  AND saldo.cod_negozio IN (%codnegozio%)		  
 		  AND saldo.ind_dareavere = 'D'
 		  AND conto.cat_conto = 'Stato Patrimoniale'
 		  AND conto.ind_presenza_in_bilancio = 'S'
