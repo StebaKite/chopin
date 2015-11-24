@@ -5,12 +5,12 @@ select
 from contabilita.mese
 	left outer join
 		(
-		select cast(extract(month from dat_registrazione) as char) as mese, count(*) as qtapag
+		select extract(month from dat_registrazione) as mese, count(*) as qtapag
 			from contabilita.registrazione
 			where dat_registrazione between '%datareg_da%' and '%datareg_a%'
 			and cod_causale in ('2035','2100')
 			and cod_negozio = '%codnegozio%'
 			group by mese				
 		) as registrazione
-		on registrazione.mese = mese.num_mese
+		on registrazione.mese = cast(mese.num_mese as smallint)
 order by num_mese
