@@ -57,6 +57,7 @@ class RicercaScadenze extends ScadenzeAbstract {
 		
 		unset($_SESSION["scadenzeTrovate"]);
 		unset($_SESSION['bottoneEstraiPdf']);
+		unset($_SESSION['referer_function_name']);
 		
 		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
 		$this->preparaPagina($ricercaScadenzeTemplate);

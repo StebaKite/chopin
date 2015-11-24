@@ -56,6 +56,7 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$_SESSION["numfatt"] = "";
 		$_SESSION["codneg_sel"] = "VIL";
 		unset($_SESSION["registrazioniTrovate"]);
+		unset($_SESSION['referer_function_name']);
 		
 		$ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($ricercaRegistrazioneTemplate);
