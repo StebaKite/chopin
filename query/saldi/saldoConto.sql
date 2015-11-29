@@ -11,7 +11,7 @@ select
 				WHEN t4.tip_conto = 'Dare' then 1
 				WHEN t4.tip_conto = 'Avere' then -1
 			END tip_conto,	
-			COALESCE(sum(t4.tot_conto * t4.ind_dareavere),0) as tot_conto
+			COALESCE(sum(t4.tot_conto),0) as tot_conto
 		  FROM (	
 				SELECT
 						t3.cod_conto,
