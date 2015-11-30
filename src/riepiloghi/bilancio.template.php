@@ -63,6 +63,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		
 		if (isset($_SESSION["costiBilancio"])) {
 
+			$sottocontiCostiVariabili = ($array['sottocontiCostiVariabili'] != "") ? explode(",", $array['sottocontiCostiVariabili']) : "";
+			
 			$risultato_costi =
 			"<table class='result'>" .
 			"	<thead>" .
@@ -82,6 +84,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 			
+			$totaleCosti_margineContribuzione = 0;
+			
 			foreach(pg_fetch_all($costiBilancio) as $row) {
 
 				$totaleSottoconto = trim($row['tot_conto']);
@@ -91,6 +95,12 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					
 				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 
+				if ($sottocontiCostiVariabili != "") {
+					if (in_array(trim($row['des_sottoconto']), $sottocontiCostiVariabili)) {
+						$totaleCosti_margineContribuzione += $totaleSottoconto;
+					}
+				}				
+				
 				if (trim($row['des_conto']) != $desconto_break ) {
 
 					if ($desconto_break != "") {
@@ -139,11 +149,12 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						"</tr>";
 					}
 				}
+				
 				$totaleConto += $totaleSottoconto;
 			}
 
 			$totconto = number_format(abs($totaleConto), 2, ',', '.');
-			
+				
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_costi .=
 				"<tr>" .
@@ -176,7 +187,9 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		 */
 
 		if (isset($_SESSION["ricaviBilancio"])) {
-		
+
+			$sottocontiRicavi = ($array['sottocontiRicavi'] != "") ? explode(",", $array['sottocontiRicavi']) : "";
+				
 			$risultato_ricavi =
 			"<table class='result'>" .
 			"	<thead>" .
@@ -196,13 +209,21 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 				
+			$totaleRicavi_margineContribuzione = 0;
+			
 			foreach(pg_fetch_all($ricaviBilancio) as $row) {
 					
 				$totaleSottoconto = trim($row['tot_conto']);
 				$totaleRicavi += $totaleSottoconto;
 				
 				$numReg ++;
-					
+
+				if ($sottocontiRicavi != "") {
+					if (in_array(trim($row['des_sottoconto']), $sottocontiRicavi)) {
+						$totaleRicavi_margineContribuzione += $totaleSottoconto;
+					}
+				}
+				
 				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 
 				if (trim($row['des_conto']) != $desconto_break ) {
@@ -528,6 +549,20 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					"<p>Il bilancio periodico invece è funzionante e può essere estratto sempre tenendo presente la data del primo saldo o le " .
 					"eventuali successive.</p>";
 			
+			$margineContribuzione =
+			"<table class='result'>" .
+			"	<tbody>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCosti_margineContribuzione), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Ricavi vendita prodotti</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi_margineContribuzione), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"   </tbody>" .				
+			"</table>" ;
+			
 			$tabs  = "	<div class='tabs'>";
 			$tabs .= "		<ul>";
 			
@@ -538,6 +573,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
 			$tabs .= "<li><a href='#tabs-6'>Nota importante</a></li>";
+			$tabs .= "<li><a href='#tabs-7'>Margine Contribuzione</a></li>";
 			$tabs .= "</ul>";
 			
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -547,6 +583,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
 			$tabs .= "<div id='tabs-6'>" . $nota . "</div>";
+			$tabs .= "<div id='tabs-7'>" . $margineContribuzione . "</div>";
 			$tabs .= "</div>";				
 		}
 		
