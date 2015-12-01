@@ -1,4 +1,4 @@
-select sum(imp_saldo) as totaleCostoVariabile
+select sum(imp_saldo) as totalecostovariabile
   from contabilita.saldo
  where cod_negozio IN (%codnegozio%)
    and cod_conto = '300'

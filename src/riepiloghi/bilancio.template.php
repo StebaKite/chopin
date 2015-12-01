@@ -538,6 +538,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			
 			$costoVariabile = $_SESSION['costoVariabile'];
 			$ricavoVendita  = $_SESSION['ricavoVenditaProdotti'];
+			$costoFisso     = $_SESSION['costoFisso'];
 			
 			foreach(pg_fetch_all($costoVariabile) as $row) {				
 				$totaleCosti_margineContribuzione = trim($row['totalecostovariabile']);
@@ -546,11 +547,23 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			foreach(pg_fetch_all($ricavoVendita) as $row) {
 				$totaleRicavi_margineContribuzione = trim($row['totalericavovendita']);
 			}
-			
+
+			foreach(pg_fetch_all($costoFisso) as $row) {
+				$totaleCostoFisso = trim($row['totalecostofisso']);
+			}
+				
 			$margineTotale = $totaleRicavi_margineContribuzione - $totaleCosti_margineContribuzione;
 			$marginePercentuale = ($margineTotale * 100 ) / $totaleRicavi_margineContribuzione;
 			
-			
+//			Questo calcolo è quello suggerito da Bruno
+//
+			$equilibrioCostiRicavi = $totaleCosti_margineContribuzione / $totaleRicavi_margineContribuzione;
+			$differenzaConUno = 1 - $equilibrioCostiRicavi;
+			$bep = $totaleCostoFisso / $differenzaConUno;
+
+// 			$margineGuadagno = $totaleRicavi_margineContribuzione - $totaleCosti_margineContribuzione;
+// 			$bep = $totaleCostoFisso / $margineGuadagno;
+				
 			$margineContribuzione =
 			"<table class='result'>" .
 			"	<tbody>" .
@@ -573,6 +586,28 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"   </tbody>" .				
 			"</table>" ;
 			
+			$tabellaBep =
+			"<table class='result'>" .
+			"	<tbody>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Costi fissi</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostoFisso), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Costi diviso Ricavi</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($equilibrioCostiRicavi), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>1 - Costi diviso Ricavi</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($differenzaConUno), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Break even point</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($bep), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"   </tbody>" .
+			"</table>" ;
+			
 			$tabs  = "	<div class='tabs'>";
 			$tabs .= "		<ul>";
 			
@@ -583,7 +618,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
 			$tabs .= "<li><a href='#tabs-6'>Margine Contribuzione</a></li>";
-			$tabs .= "<li><a href='#tabs-7'>Nota importante</a></li>";
+			$tabs .= "<li><a href='#tabs-7'>B.E.P.</a></li>";
+			$tabs .= "<li><a href='#tabs-8'>Nota importante</a></li>";
 			$tabs .= "</ul>";
 			
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -593,7 +629,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
 			$tabs .= "<div id='tabs-6'>" . $margineContribuzione . "</div>";
-			$tabs .= "<div id='tabs-7'>" . $nota . "</div>";
+			$tabs .= "<div id='tabs-7'>" . $tabellaBep . "</div>";
+			$tabs .= "<div id='tabs-8'>" . $nota . "</div>";
 			$tabs .= "</div>";				
 		}
 		

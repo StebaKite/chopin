@@ -16,6 +16,7 @@ class Bilancio extends RiepiloghiAbstract {
 	public static $queryPassivo = "/riepiloghi/passivo.sql";
 	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";	
 	public static $queryRicaviMargineContribuzione = "/riepiloghi/ricaviMargineContribuzione.sql";
+	public static $queryCostiFissi = "/riepiloghi/costiFissi.sql";
 	
 	function __construct() {
 
@@ -176,8 +177,10 @@ class Bilancio extends RiepiloghiAbstract {
 					if ($this->ricercaPassivo($utility, $db, $replace)) {
 						if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 							if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
-								$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-								return TRUE;
+								if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+									$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+									return TRUE;
+								}
 							}
 						}
 					}
@@ -301,6 +304,22 @@ class Bilancio extends RiepiloghiAbstract {
 		}
 		else {
 			unset($_SESSION['ricavoVenditaProdotti']);
+		}
+		return $result;
+	}
+
+	public function ricercaCostiFissi($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCostiFissi;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['costoFisso'] = $result;
+		}
+		else {
+			unset($_SESSION['costoFisso']);
 		}
 		return $result;
 	}
