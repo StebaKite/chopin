@@ -94,12 +94,6 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$numReg ++;
 					
 				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
-
-				if ($sottocontiCostiVariabili != "") {
-					if (in_array(trim($row['des_sottoconto']), $sottocontiCostiVariabili)) {
-						$totaleCosti_margineContribuzione += $totaleSottoconto;
-					}
-				}				
 				
 				if (trim($row['des_conto']) != $desconto_break ) {
 
@@ -148,8 +142,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 						"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
 						"</tr>";
 					}
-				}
-				
+				}				
 				$totaleConto += $totaleSottoconto;
 			}
 
@@ -217,12 +210,6 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$totaleRicavi += $totaleSottoconto;
 				
 				$numReg ++;
-
-				if ($sottocontiRicavi != "") {
-					if (in_array(trim($row['des_sottoconto']), $sottocontiRicavi)) {
-						$totaleRicavi_margineContribuzione += $totaleSottoconto;
-					}
-				}
 				
 				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 
@@ -549,6 +536,21 @@ class BilancioTemplate extends RiepiloghiAbstract {
 					"<p>Il bilancio periodico invece è funzionante e può essere estratto sempre tenendo presente la data del primo saldo o le " .
 					"eventuali successive.</p>";
 			
+			$costoVariabile = $_SESSION['costoVariabile'];
+			$ricavoVendita  = $_SESSION['ricavoVenditaProdotti'];
+			
+			foreach(pg_fetch_all($costoVariabile) as $row) {				
+				$totaleCosti_margineContribuzione = trim($row['totalecostovariabile']);
+			}
+
+			foreach(pg_fetch_all($ricavoVendita) as $row) {
+				$totaleRicavi_margineContribuzione = trim($row['totalericavovendita']);
+			}
+			
+			$margineTotale = $totaleRicavi_margineContribuzione - $totaleCosti_margineContribuzione;
+			$marginePercentuale = ($margineTotale * 100 ) / $totaleRicavi_margineContribuzione;
+			
+			
 			$margineContribuzione =
 			"<table class='result'>" .
 			"	<tbody>" .
@@ -559,6 +561,14 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Ricavi vendita prodotti</td>" .
 			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi_margineContribuzione), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Margine totale</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($margineTotale), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Margine percentuale</td>" .
+			"			<td width='108' align='right' class='mark'>" . number_format(abs($marginePercentuale), 2, ',', '.') . "&#37;</td>" .
 			"		</tr>" .
 			"   </tbody>" .				
 			"</table>" ;
@@ -572,8 +582,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali($totaleRicavi, $totaleCosti)) . "</a></li>";
-			$tabs .= "<li><a href='#tabs-6'>Nota importante</a></li>";
-			$tabs .= "<li><a href='#tabs-7'>Margine Contribuzione</a></li>";
+			$tabs .= "<li><a href='#tabs-6'>Margine Contribuzione</a></li>";
+			$tabs .= "<li><a href='#tabs-7'>Nota importante</a></li>";
 			$tabs .= "</ul>";
 			
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -582,8 +592,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali($totaleRicavi, $totaleCosti), $totaleRicavi, $totaleCosti) . "</div>";
-			$tabs .= "<div id='tabs-6'>" . $nota . "</div>";
-			$tabs .= "<div id='tabs-7'>" . $margineContribuzione . "</div>";
+			$tabs .= "<div id='tabs-6'>" . $margineContribuzione . "</div>";
+			$tabs .= "<div id='tabs-7'>" . $nota . "</div>";
 			$tabs .= "</div>";				
 		}
 		

@@ -14,6 +14,8 @@ class Bilancio extends RiepiloghiAbstract {
 	public static $queryRicaviConSaldi = "/riepiloghi/ricaviConSaldi.sql";
 	public static $queryAttivo = "/riepiloghi/attivo.sql";
 	public static $queryPassivo = "/riepiloghi/passivo.sql";
+	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";	
+	public static $queryRicaviMargineContribuzione = "/riepiloghi/ricaviMargineContribuzione.sql";
 	
 	function __construct() {
 
@@ -172,8 +174,12 @@ class Bilancio extends RiepiloghiAbstract {
 			if ($this->ricercaRicavi($utility, $db, $replace)) {
 				if ($this->ricercaAttivo($utility, $db, $replace)) {
 					if ($this->ricercaPassivo($utility, $db, $replace)) {
-						$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-						return TRUE;
+						if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+							if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+								$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+								return TRUE;
+							}
+						}
 					}
 				}
 			}
@@ -263,6 +269,38 @@ class Bilancio extends RiepiloghiAbstract {
 		else {
 			unset($_SESSION['passivoBilancio']);
 			$_SESSION['numPassivoTrovati'] = 0;
+		}
+		return $result;
+	}
+
+	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['costoVariabile'] = $result;
+		}
+		else {
+			unset($_SESSION['costoVariabile']);
+		}
+		return $result;
+	}
+
+	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviMargineContribuzione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['ricavoVenditaProdotti'] = $result;
+		}
+		else {
+			unset($_SESSION['ricavoVenditaProdotti']);
 		}
 		return $result;
 	}
