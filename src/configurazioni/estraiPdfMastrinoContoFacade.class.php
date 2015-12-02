@@ -17,7 +17,8 @@ if ($_GET["modo"] == "start") {
 	$_SESSION["catconto"] = $_REQUEST["catconto"];
 	$_SESSION["desconto"] = $_REQUEST["desconto"];
 	$_SESSION["dessottoconto"] = $_REQUEST["dessottoconto"];
-	
+	$_SESSION["saldiInclusi"] = $_REQUEST["saldiInclusi"];
+		
 	$estraiPdfMastrinoConto->start();
 }
 

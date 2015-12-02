@@ -134,6 +134,7 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				'%dessottoconto%' => $des_sottoconto,
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
 				'%risultato_ricerca%' => $risultato_ricerca,
+				'%saldiInclusi%' => $_SESSION["saldiInclusi"],
 				'%saldiInclusichecked%' => ($_SESSION["saldiInclusi"] == "S") ? "checked" : "",
 				'%saldiEsclusichecked%' => ($_SESSION["saldiInclusi"] == "N") ? "checked" : ""
 		);
