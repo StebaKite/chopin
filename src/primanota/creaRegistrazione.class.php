@@ -170,8 +170,15 @@ class CreaRegistrazione extends primanotaAbstract {
 						foreach(pg_fetch_all($result_fornitore) as $row) {
 							$tipAddebito_fornitore = $row['tip_addebito'];
 						}
-			
-						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $_SESSION["totaleDare"],
+
+						/**
+						 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
+						 *  parziale della data in scadenza
+						 */
+						 
+						$importo_in_scadenza = ($causale == "1110") ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"]; 
+						
+						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
 								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
 					}
 				}
@@ -196,9 +203,15 @@ class CreaRegistrazione extends primanotaAbstract {
 							$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
 							$progrFattura += 1;
 							$numfatt_generato = "'" . $_SESSION["numfatt"] . "." . $progrFattura . "'"; 
-							$importo_scadenza = $e[2];
 							
-							$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_scadenza,
+							/**
+							 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
+							 *  parziale della data in scadenza
+							 */
+								
+							$importo_in_scadenza = ($causale == "1110") ? $e[2] * (-1) : $e[2];
+								
+							$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
 									$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza);
 						}
 					}
