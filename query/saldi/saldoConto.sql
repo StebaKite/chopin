@@ -2,7 +2,7 @@ select
 	t5.cod_conto,
 	t5.cod_sottoconto,
 	t5.tip_conto,
-	COALESCE(sum(t5.tot_conto * t5.tip_conto),0) as tot_conto
+	COALESCE(sum(t5.tot_conto),0) as tot_conto
   FROM (
 		SELECT
 			t4.cod_conto,
@@ -11,7 +11,7 @@ select
 				WHEN t4.tip_conto = 'Dare' then 1
 				WHEN t4.tip_conto = 'Avere' then -1
 			END tip_conto,	
-			COALESCE(sum(t4.tot_conto),0) as tot_conto
+			COALESCE(sum(t4.tot_conto * t4.ind_dareavere),0) as tot_conto
 		  FROM (	
 				SELECT
 						t3.cod_conto,
@@ -46,12 +46,15 @@ select
 			CASE 
 				WHEN saldo.ind_dareavere = 'D' then 1
 				WHEN saldo.ind_dareavere = 'A' then -1
-			END AS tip_conto,
-			saldo.imp_saldo as tot_conto
+			END AS ind_dareavere,
+			CASE 
+				WHEN saldo.ind_dareavere = 'D' then saldo.imp_saldo
+				WHEN saldo.ind_dareavere = 'A' then saldo.imp_saldo * -1
+			END AS tot_conto
 		 FROM contabilita.saldo  
 		 WHERE saldo.dat_saldo = '%datareg_da%'
 		  AND saldo.cod_negozio = '%codnegozio%'		  
 		  AND saldo.cod_conto = '%codconto%'
 		  AND saldo.cod_sottoconto = '%codsottoconto%'
-		) t5 
+		) t5 		
 	GROUP BY t5.cod_conto, t5.cod_sottoconto, t5.tip_conto
