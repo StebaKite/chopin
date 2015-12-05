@@ -126,7 +126,10 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		 * Totali x Utile
 		 */
 		if ($_SESSION['totaleRicavi'] >= $_SESSION['totaleCosti']) {
-			$pdf->BilancioCostiTable($_SESSION['totaleRicavi'], $_SESSION['totaleCosti']);
+			$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));			
+		}
+		else {
+			$pdf->TotaleCostiTable(abs($_SESSION['totaleCosti']));			
 		}
 		
 		$pdf->AddPage();		
@@ -142,7 +145,10 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		 * Totali x Perdita
 		 */
 		if ($_SESSION['totaleRicavi'] < $_SESSION['totaleCosti']) {
-			$pdf->BilancioRicaviTable($_SESSION['totaleRicavi'], $_SESSION['totaleCosti']);
+			$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+		}
+		else {
+			$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));
 		}
 		
 		return $pdf;
@@ -176,6 +182,11 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->SetFillColor(224,235,255);
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioEsercizioTable($this->ricercaAttivo($utility, $db, $replace));
+
+		/**
+		 * Totali Attivitità
+		 */
+ 		$pdf->TotaleAttivoTable(abs($_SESSION['totaleAttivo']));
 		
 		/**
 		 * Passivo
@@ -190,6 +201,11 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->SetFillColor(224,235,255);
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioEsercizioTable($this->ricercaPassivo($utility, $db, $replace));
+
+		/**
+		 * Totali Passività
+		 */
+		$pdf->TotalePassivoTable(abs($_SESSION['totalePassivo']));
 		
 		return $pdf;
 	}

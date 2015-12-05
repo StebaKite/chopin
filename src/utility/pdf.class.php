@@ -658,7 +658,12 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->SetFont('','B',12);
 		$this->SetTextColor(51, 153, 255);
+
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
+		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
 		
+		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Costi','',0,'L');
 		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
@@ -668,14 +673,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Utile del periodo','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($utile), 2, ',', '.'),'',0,'R');
-		
-		$totalePareggio = $totaleCosti + $utile;
-
-		$this->Ln();
-		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,'Totale a Pareggio','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totalePareggio), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,EURO . '  ' . number_format($utile, 2, ',', '.'),'',0,'R');
 		
 		$this->SetTextColor(0);
 	}
@@ -694,20 +692,90 @@ class Pdf extends FPDF {
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
-	
-		$perdita = $totaleCosti - $totaleRicavi;
+
+		$this->Ln();
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'Totale Costi','',0,'L');
+		$this->Cell($w[2],8,number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
+		
+		$perdita =  $totaleRicavi - $totaleCosti;
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,'Perdita del periodo','',0,'L');
-		$this->Cell($w[2],8,number_format(abs($perdita), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[1],8,'Utile del periodo','',0,'L');
+		$this->Cell($w[2],8,number_format($perdita, 2, ',', '.'),'',0,'R');
 	
-		$totalePareggio = $totaleRicavi + $perdita;
+		$this->SetTextColor(0);
+	}
+	
+	public function TotaleCostiTable($totaleCosti) {
+
+		// Column widths
+		$w = array(100, 50, 25);
+		
+		$this->Ln();
+		$this->Ln();
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->SetTextColor(51, 153, 255);
+		
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'Totale Costi','',0,'L');
+		$this->Cell($w[2],8,number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
+
+		$this->SetTextColor(0);
+	}
+
+	public function TotaleRicaviTable($totaleRicavi) {
+	
+		// Column widths
+		$w = array(100, 50, 25);
 	
 		$this->Ln();
+		$this->Ln();
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->SetTextColor(51, 153, 255);
+	
 		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,'Totale a Pareggio','',0,'L');
-		$this->Cell($w[2],8,number_format(abs($totalePareggio), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
+		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
+	
+		$this->SetTextColor(0);
+	}
+	
+	public function TotaleAttivoTable($totaleAttivo) {
+
+		// Column widths
+		$w = array(100, 50, 25);
+		
+		$this->Ln();
+		$this->Ln();
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->SetTextColor(51, 153, 255);
+		
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,utf8_decode('Totale Attività'),'',0,'L');
+		$this->Cell($w[2],8,number_format(abs($totaleAttivo), 2, ',', '.'),'',0,'R');
+		
+		$this->SetTextColor(0);
+	}
+
+	public function TotalePassivoTable($totalePassivo) {
+	
+		// Column widths
+		$w = array(100, 50, 25);
+	
+		$this->Ln();
+		$this->Ln();
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->SetTextColor(51, 153, 255);
+	
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,utf8_decode('Totale Passività'),'',0,'L');
+		$this->Cell($w[2],8,number_format(abs($totalePassivo), 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);
 	}

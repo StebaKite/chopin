@@ -46,7 +46,10 @@ SELECT
 			conto.ind_visibilita_sottoconti,
 			conto.des_conto,
 			sottoconto.des_sottoconto,
-			saldo.imp_saldo as tot_conto
+			CASE 
+				WHEN saldo.ind_dareavere = 'D' then saldo.imp_saldo
+				WHEN saldo.ind_dareavere = 'A' then saldo.imp_saldo * -1
+			END AS tot_conto
 		 FROM contabilita.saldo  
 			INNER JOIN contabilita.conto as conto
 			  ON conto.cod_conto = saldo.cod_conto
