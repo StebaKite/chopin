@@ -64,12 +64,13 @@ class Bilancio extends RiepiloghiAbstract {
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["codneg_sel"] = "VIL";
 		$_SESSION["catconto"] = "Conto Economico";
+		$_SESSION["soloContoEconomico"] = "N";
 		
 		unset($_SESSION["costiBilancio"]);
 		unset($_SESSION["ricaviBilancio"]);
 		unset($_SESSION["attivoBilancio"]);
 		unset($_SESSION["passivoBilancio"]);
-		unset($_SESSION['bottoneEstraiPdf']);
+		unset($_SESSION['bottoneEstraiPdf']);		
 		
 		$bilancioTemplate = BilancioTemplate::getInstance();
 		$this->preparaPagina($bilancioTemplate);
@@ -159,6 +160,12 @@ class Bilancio extends RiepiloghiAbstract {
 	public function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
+
+		unset($_SESSION["costiBilancio"]);
+		unset($_SESSION["ricaviBilancio"]);
+		unset($_SESSION["attivoBilancio"]);
+		unset($_SESSION["passivoBilancio"]);
+		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -173,17 +180,25 @@ class Bilancio extends RiepiloghiAbstract {
 
 		if ($this->ricercaCosti($utility, $db, $replace)) {
 			if ($this->ricercaRicavi($utility, $db, $replace)) {
-				if ($this->ricercaAttivo($utility, $db, $replace)) {
-					if ($this->ricercaPassivo($utility, $db, $replace)) {
-						if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
-							if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
-								if ($this->ricercaCostiFissi($utility, $db, $replace)) {
-									$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-									return TRUE;
+				if ($_SESSION["soloContoEconomico"] == "N") {
+					
+					if ($this->ricercaAttivo($utility, $db, $replace)) {
+						if ($this->ricercaPassivo($utility, $db, $replace)) {
+							if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+								if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+									if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+										$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+										return TRUE;
+									}
 								}
 							}
 						}
 					}
+						
+				}
+				else {
+					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+					return TRUE;						
 				}
 			}
 		}

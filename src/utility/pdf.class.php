@@ -502,7 +502,7 @@ class Pdf extends FPDF {
 					if ($totconto > 0) {
 						$this->Ln();
 						$this->SetFont('','B',12);
-						$this->Cell($w[0],6,utf8_decode($desconto_break),'',0,'L');
+						$this->Cell($w[0],6,$desconto_break,'',0,'L');
 						$this->Cell($w[1],6,$totconto,'',0,'R');
 					}
 					
@@ -525,13 +525,13 @@ class Pdf extends FPDF {
 					$sottoconti = array();	
 				}
 
-				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));				
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));				
 			
-				$desconto_break = trim($row['des_conto']);
+				$desconto_break = utf8_decode(trim($row['des_conto']));
 				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 			}
 			else {
-				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));				
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));				
 			}
 			$totaleConto += $totaleSottoconto;
 		}
@@ -589,7 +589,7 @@ class Pdf extends FPDF {
 					if ($totconto > 0) {
 						$this->Ln();
 						$this->SetFont('','B',12);
-						$this->Cell($w[0],6, iconv('UTF-8', 'CP1252', $desconto_break),'',0,'L');
+						$this->Cell($w[0],6,$desconto_break,'',0,'L');
 						$this->Cell($w[1],6,$totconto,'',0,'R');						
 					}
 						
@@ -600,7 +600,7 @@ class Pdf extends FPDF {
 							if ($sottoconto['importo'] > 0) {
 								$this->Ln();
 								$this->SetFont('','',11);
-								$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'CP1252', $sottoconto['descrizione']),'',0,'L');
+								$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
 								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
 							}
 						}
@@ -611,13 +611,13 @@ class Pdf extends FPDF {
 					$sottoconti = array();					
 				}
 
-				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));
 					
-				$desconto_break = trim($row['des_conto']);
+				$desconto_break = utf8_decode(trim($row['des_conto']));
 				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 			}
 			else {
-				array_push($sottoconti, array('descrizione' => trim($row['des_sottoconto']), 'importo' => $importo));
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));
 			}
 			$totaleConto += $totaleSottoconto;
 		}
@@ -702,7 +702,7 @@ class Pdf extends FPDF {
 	
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,'Utile del periodo','',0,'L');
+		$this->Cell($w[1],8,'Perdita del periodo','',0,'L');
 		$this->Cell($w[2],8,number_format($perdita, 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);

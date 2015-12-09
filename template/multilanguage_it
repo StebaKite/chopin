@@ -41,6 +41,7 @@ passivo = Passivo
 nuovaDataScad = Nuova Scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
+soloContoEconomico = Solo Conto Economico
 ;
 ; Tips ---------------------------------
 ;

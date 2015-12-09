@@ -18,6 +18,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["datareg_a"] = $_REQUEST["datareg_a"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
 	$_SESSION["saldiInclusi"] = $_REQUEST["saldiInclusi"];
+	$_SESSION["soloContoEconomico"] = $_REQUEST["soloContoEconomico"];
 	
 	$bilancio->go();
 }

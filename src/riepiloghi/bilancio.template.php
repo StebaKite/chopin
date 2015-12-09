@@ -84,7 +84,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 			
-			$totaleCosti_margineContribuzione = 0;
+			$totaleCostiVariabili = 0;
 			
 			foreach(pg_fetch_all($costiBilancio) as $row) {
 
@@ -202,7 +202,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$ind_visibilita_sottoconti_break = "";
 			$totaleConto = 0;
 				
-			$totaleRicavi_margineContribuzione = 0;
+			$totaleRicavi = 0;
 			
 			foreach(pg_fetch_all($ricaviBilancio) as $row) {
 					
@@ -541,39 +541,55 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			$costoFisso     = $_SESSION['costoFisso'];
 			
 			foreach(pg_fetch_all($costoVariabile) as $row) {				
-				$totaleCosti_margineContribuzione = trim($row['totalecostovariabile']);
+				$totaleCostiVariabili = trim($row['totalecostovariabile']);
 			}
 
 			foreach(pg_fetch_all($ricavoVendita) as $row) {
-				$totaleRicavi_margineContribuzione = trim($row['totalericavovendita']);
+				$totaleRicavi = trim($row['totalericavovendita']);
 			}
 
 			foreach(pg_fetch_all($costoFisso) as $row) {
-				$totaleCostoFisso = trim($row['totalecostofisso']);
+				$totaleCostiFissi = trim($row['totalecostofisso']);
 			}
-				
-			$margineTotale = $totaleRicavi_margineContribuzione - $totaleCosti_margineContribuzione;
-			$marginePercentuale = ($margineTotale * 100 ) / $totaleRicavi_margineContribuzione;
 			
-//			Questo calcolo è quello suggerito da Bruno
-//
-			$equilibrioCostiRicavi = $totaleCosti_margineContribuzione / $totaleRicavi_margineContribuzione;
-			$differenzaConUno = 1 - $equilibrioCostiRicavi;
-			$bep = $totaleCostoFisso / $differenzaConUno;
+			$margineTotale = $totaleRicavi - $totaleCostiVariabili;
+			$marginePercentuale = ($margineTotale * 100 ) / $totaleRicavi;
 
-// 			$margineGuadagno = $totaleRicavi_margineContribuzione - $totaleCosti_margineContribuzione;
-// 			$bep = $totaleCostoFisso / $margineGuadagno;
-				
+			/**
+			 * Calcolo del Break Eaven Point
+			 *
+			 * Il calcolo del BEP per un’azienda che realizza prodotti 
+			 * si ottiene imponendo l’eguaglianza fra il fatturato totale e i costi totali ovvero
+			 * 
+			 *             Fatturato totale = Costi totali
+			 *
+			 * Metodo analitico: scrivendo le formule1 che esprimono i costi totali ed i ricavi,
+			 * con qualche passaggio matematico è possibile determinare che si intersecano se:
+			 *
+			 *              BEP = CF / (1 – (CV / FAT))
+			 *
+			 * Dove:
+			 *
+			 * FAT è il fatturato
+			 * CF sono i costi fissi
+			 * CV sono i costi variabili e quindi CV/FAT è l’incidenza dei costi variabili sul fatturato
+			 * CT sono i costi totali e quindi CT = CF + CV
+			 *
+			 */
+
+			$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / $totaleRicavi);
+			$bep = $totaleCostiFissi / $incidenzaCostiVariabiliSulFatturato;
+			
 			$margineContribuzione =
 			"<table class='result'>" .
 			"	<tbody>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCosti_margineContribuzione), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Ricavi vendita prodotti</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi_margineContribuzione), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Margine totale</td>" .
@@ -586,20 +602,31 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"   </tbody>" .				
 			"</table>" ;
 			
+			$notaMdc = 
+			"<p>Si definisce margine di contribuzione unitario la differenza tra il prezzo di vendita unitario ed il costo variabile unitario.</p>" .
+			"<p>Quando il margine di contribuzione del periodo è uguale al totale dei costi fissi del periodo si raggiunge il punto di pareggio.</p>" .
+			"<p>Quando il margine di contribuzione è maggiore dei costi fissi si genera l'utile.</p>" .
+			"<p>Il concetto di margine di contribuzione può essere utilizzato per una riclassificazione del conto economico utile a valutare l'effetto sul reddito di variazioni del volume di vendita o del fatturato. Tale riclassificazione si ottiene deducendo dai ricavi i costi variabili.</p>" .
+			"<p><strong>Ricavi - costi variabili= margine di contribuzione lordo di primo livello</strong></p><br>" ;
+			
 			$tabellaBep =
 			"<table class='result'>" .
 			"	<tbody>" .
 			"		<tr height='30'>" .
+			"			<td width='308' align='left' class='mark'>Fatturato</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+			"		</tr>" .
+			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Costi fissi</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostoFisso), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissi), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
-			"			<td width='308' align='left' class='mark'>Costi diviso Ricavi</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($equilibrioCostiRicavi), 2, ',', '.') . "</td>" .
+			"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
-			"			<td width='308' align='left' class='mark'>1 - Costi diviso Ricavi</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($differenzaConUno), 2, ',', '.') . "</td>" .
+			"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Break even point</td>" .
@@ -607,6 +634,19 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"   </tbody>" .
 			"</table>" ;
+			
+			$notaBep = 
+			"<p>Il calcolo del BEP per un’azienda che realizza prodotti si ottiene imponendo l’eguaglianza fra il fatturato totale e i costi totali ovvero : " .
+			"<strong>Fatturato totale = Costi totali</strong></p>" .
+			"<p>Metodo analitico: scrivendo le formule1 che esprimono i costi totali ed i ricavi, con qualche passaggio matematico è possibile determinare che si intersecano se: </p>" .
+			"<p><strong>BEP = CF / (1 – (CV / FAT))</strong></p>" .
+			"<ul>" .
+			"<li>FAT è il fatturato</li>" .
+			"<li>CF sono i costi fissi</li>" .
+			"<li>CV sono i costi variabili e quindi CV/FAT è l’incidenza dei costi variabili sul fatturato</li>" .
+			"<li>CT sono i costi totali e quindi CT = CF + CV</li>" .
+			"</ul><br>" ;
+				
 			
 			$tabs  = "	<div class='tabs'>";
 			$tabs .= "		<ul>";
@@ -617,8 +657,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti))) . "</a></li>";
-			$tabs .= "<li><a href='#tabs-6'>Margine Contribuzione</a></li>";
-			$tabs .= "<li><a href='#tabs-7'>B.E.P.</a></li>";
+			$tabs .= "<li><a href='#tabs-6'>MdC</a></li>";
+			$tabs .= "<li><a href='#tabs-7'>BEP</a></li>";
 			$tabs .= "<li><a href='#tabs-8'>Nota importante</a></li>";
 			$tabs .= "</ul>";
 			
@@ -628,8 +668,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti)), abs($totaleRicavi), abs($totaleCosti)) . "</div>";
-			$tabs .= "<div id='tabs-6'>" . $margineContribuzione . "</div>";
-			$tabs .= "<div id='tabs-7'>" . $tabellaBep . "</div>";
+			$tabs .= "<div id='tabs-6'>" . $notaMdc . $margineContribuzione . "</div>";
+			$tabs .= "<div id='tabs-7'>" . $notaBep . $tabellaBep . "</div>";
 			$tabs .= "<div id='tabs-8'>" . $nota . "</div>";
 			$tabs .= "</div>";				
 		}
@@ -652,6 +692,9 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				'%saldiInclusichecked%' => ($_SESSION["saldiInclusi"] == "S") ? "checked" : "",
 				'%saldiEsclusichecked%' => ($_SESSION["saldiInclusi"] == "N") ? "checked" : "",
 				'%saldiInclusi%' => $_SESSION["saldiInclusi"],
+				'%tuttiContichecked%' => ($_SESSION["soloContoEconomico"] == "N") ? "checked" : "",
+				'%soloContoEconomicochecked%' => ($_SESSION["soloContoEconomico"] == "S") ? "checked" : "",
+				'%soloContoEconomico%' => $_SESSION["soloContoEconomico"],
 				'%ml.anno_esercizio_corrente%' => date("Y"),
 				'%ml.anno_esercizio_menouno%' => date("Y")-1,
 				'%ml.anno_esercizio_menodue%' => date("Y")-2,

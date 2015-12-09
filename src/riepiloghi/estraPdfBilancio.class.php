@@ -64,20 +64,11 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		*/
 		$pdf = $this->generaSezioneIntestazione($pdf);
 		$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
-		$pdf = $this->generaSezioneIntestazione($pdf);
-		$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
-		
-		
-		
-// 		if ($_SESSION["tipoBilancio"] == "Periodico") {
-// 			$pdf = $this->generaSezioneIntestazione($pdf);
-// 			$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
-// 		}
-// 		elseif ($_SESSION["tipoBilancio"] == "Esercizio") {
-// 			$pdf = $this->generaSezioneIntestazione($pdf);
-// 			$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
-// 		}
-		
+
+		if ($_SESSION["soloContoEconomico"] == "N") {
+			$pdf = $this->generaSezioneIntestazione($pdf);
+			$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
+		}
 
 		$pdf->Output();
 	}
@@ -125,13 +116,16 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		/**
 		 * Totali x Utile
 		 */
-		if ($_SESSION['totaleRicavi'] >= $_SESSION['totaleCosti']) {
+		if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
 			$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));			
 		}
 		else {
 			$pdf->TotaleCostiTable(abs($_SESSION['totaleCosti']));			
 		}
 		
+		/**
+		 * Ricavi
+		 */		
 		$pdf->AddPage();		
 		$pdf->SetFont('','B',12);
 		$pdf->SetFillColor(171,224,245);
@@ -144,7 +138,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		/**
 		 * Totali x Perdita
 		 */
-		if ($_SESSION['totaleRicavi'] < $_SESSION['totaleCosti']) {
+		if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
 			$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
 		}
 		else {
