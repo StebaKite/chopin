@@ -75,12 +75,17 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 
 	public function generaSezioneIntestazione($pdf) {
 
-		$negozio = "";
-		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-
-		$_SESSION["title2"] = $_SESSION["catconto_sel"] . " - Negozio di " . $negozio;
+		if ($_SESSION["codneg_sel"] != "") {
+			$negozio = "";
+			$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+			
+			$_SESSION["title2"] = "Negozio di " . $negozio;
+		}
+		else {
+			$_SESSION["title2"] = "Tutti i negozi";
+		}
 		
 		return $pdf;
 	}
@@ -113,15 +118,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioTable($this->ricercaCosti($utility, $db, $replace));
 
-		/**
-		 * Totali x Utile
-		 */
-		if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
-			$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));			
-		}
-		else {
-			$pdf->TotaleCostiTable(abs($_SESSION['totaleCosti']));			
-		}
+		$pdf->TotaleCostiTable(abs($_SESSION['totaleCosti']));
 		
 		/**
 		 * Ricavi
@@ -135,15 +132,19 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioTable($this->ricercaRicavi($utility, $db, $replace));
 
+		$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));
+		
 		/**
-		 * Totali x Perdita
+		 * Riepilogo totali
 		 */
-		if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
-			$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+		if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
+			$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
 		}
 		else {
-			$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));
-		}
+			if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
+				$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+			}				
+		}		
 		
 		return $pdf;
 	}

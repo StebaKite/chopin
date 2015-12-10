@@ -656,24 +656,33 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->Ln();
 		$this->Ln();
+		$this->Ln();
 		$this->SetFont('','B',12);
 		$this->SetTextColor(51, 153, 255);
 
 		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'______________________________________','',0,'L');
+		
+		$this->Ln();
+		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
 		
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Costi','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
 
 		$utile = $totaleRicavi - $totaleCosti;
 		
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Utile del periodo','',0,'L');
-		$this->Cell($w[2],8,EURO . '  ' . number_format($utile, 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($utile, 2, ',', '.'),'',0,'R');
+
+		$this->Ln();
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'______________________________________','',0,'L');
 		
 		$this->SetTextColor(0);
 	}
@@ -686,9 +695,14 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->Ln();
 		$this->Ln();
+		$this->Ln();
 		$this->SetFont('','B',12);
 		$this->SetTextColor(51, 153, 255);
-	
+
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'RIEPILOGO________________________','',0,'L');
+		
+		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
@@ -704,7 +718,11 @@ class Pdf extends FPDF {
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Perdita del periodo','',0,'L');
 		$this->Cell($w[2],8,number_format($perdita, 2, ',', '.'),'',0,'R');
-	
+
+		$this->Ln();
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'________________________________','',0,'L');
+		
 		$this->SetTextColor(0);
 	}
 	
@@ -718,7 +736,11 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->SetFont('','B',12);
 		$this->SetTextColor(51, 153, 255);
+
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'______________________________________','',0,'L');
 		
+		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Costi','',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
@@ -736,7 +758,11 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->SetFont('','B',12);
 		$this->SetTextColor(51, 153, 255);
-	
+
+		$this->Cell($w[0],8,'','',0,'L');
+		$this->Cell($w[1],8,'______________________________________','',0,'L');
+		
+		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
