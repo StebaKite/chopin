@@ -413,8 +413,10 @@ abstract class ChopinAbstract {
 		/**
 		 * Prendo tutto le pianificazioni di tutto l'anno
 		 */
-		$dataLavoroDa = '01/01/' . date("Y");
-		$dataLavoroA = '31/12/' . date("Y");
+		$anno = date("Y");
+		
+		$dataLavoroDa = '01/01/' . $anno;
+		$dataLavoroA = '31/12/' . $anno;
 	
 		$replace = array(
 				'%datalavoro_da%' => $dataLavoroDa,

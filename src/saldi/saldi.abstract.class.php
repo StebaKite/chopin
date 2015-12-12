@@ -197,7 +197,13 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
+	/**
+	 * 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return string
+	 */
 	public function caricaTuttiConti($utility, $db) {
 	
 		$array = $utility->getConfig();
@@ -220,7 +226,33 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		return $elenco_conti;
 	}
 	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $dat_lavoro
+	 * @param unknown $des_lavoro
+	 * @param unknown $fil_esecuzione_lavoro
+	 * @param unknown $cla_esecuzione_lavoro
+	 * @param unknown $sta_lavoro
+	 * @return unknown
+	 */
+	public function inserisciLavoroPianificato($db, $utility, $dat_lavoro, $des_lavoro, $fil_esecuzione_lavoro, $cla_esecuzione_lavoro, $sta_lavoro) {
 	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%dat_lavoro%' => $dat_lavoro,
+				'%des_lavoro%' => $des_lavoro,
+				'%fil_esecuzione_lavoro%' => $fil_esecuzione_lavoro,
+				'%cla_esecuzione_lavoro%' => $cla_esecuzione_lavoro,
+				'%sta_lavoro%' => $sta_lavoro
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaLavoroPianificato;
+	
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 }
 
 ?>

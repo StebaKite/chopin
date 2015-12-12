@@ -85,7 +85,6 @@ class MenubannerTemplate extends ChopinAbstract {
 		}
 
 		$replace = array(
-				'%amb%' => $amb,
 				'%anno%' => $anno,
 				'%tabellaLavoriPianificati%' => $tabellaLavoriPianificati
 		);
