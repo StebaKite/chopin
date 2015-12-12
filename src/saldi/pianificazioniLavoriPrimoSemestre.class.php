@@ -86,10 +86,12 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract  {
 		 * Cancello tutte le pianificazioni del semestre precedente che sono già state eseguite
 		 */
 		$utility = Utility::getInstance();
+
+		$annoCorrente   = date("Y");
 		
 		$replace = array(
-				'%datalavoro_da%' => '01-07-' . date("Y"),
-				'%datalavoro_a%' =>  '31-12-' . date("Y")
+				'%datalavoro_da%' => '01-06-' . $annoCorrente,
+				'%datalavoro_a%' =>  '31-12-' . $annoCorrente
 		);
 			
 		$array = $utility->getConfig();
