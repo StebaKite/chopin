@@ -178,3 +178,6 @@ deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
 dessaldo = Descrizione riporto saldo
+pivacliente = P.iva
+cfiscliente = Codice Fiscale
+categoria = Categoria

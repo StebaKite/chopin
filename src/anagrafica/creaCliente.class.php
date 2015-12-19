@@ -126,13 +126,17 @@ class CreaCliente extends AnagraficaAbstract {
 
 
 		$codcliente = $_SESSION["codcliente"];
-		$descliente = $_SESSION["descliente"];
-		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . $_SESSION["indcliente"] . "'" : "null"; 
-		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . $_SESSION["cittacliente"] . "'" : "null";
+		$descliente = str_replace("'","''",$_SESSION["descliente"]);
+		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . str_replace("'","''",$_SESSION["indcliente"]) . "'" : "null" ;
+		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . str_replace("'","''",$_SESSION["cittacliente"]) . "'" : "null" ;
 		$capcliente = ($_SESSION["capcliente"] != "") ? "'" . $_SESSION["capcliente"] . "'" : "null";
 		$tipoaddebito = $_SESSION["tipoaddebito"];
 
-		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito)) {
+		$codpiva = ($_SESSION["codpiva"] != "") ? "'" . $_SESSION["codpiva"] . "'" : "null" ;
+		$codfisc = ($_SESSION["codfisc"] != "") ? "'" . $_SESSION["codfisc"] . "'" : "null" ;
+		$catcliente = ($_SESSION["catcliente"] != "") ? "'" . $_SESSION["catcliente"] . "'" : "null" ;
+		
+		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
 
 			$db->commitTransaction();
 			return TRUE;
@@ -151,6 +155,13 @@ class CreaCliente extends AnagraficaAbstract {
 		$creaClienteTemplate->setAzione(self::$azioneCreaCliente);
 		$creaClienteTemplate->setConfermaTip("%ml.confermaCreaCliente%");
 		$creaClienteTemplate->setTitoloPagina("%ml.creaNuovoCliente%");
+
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
+		// Prelievo delle categorie -------------------------------------------------------------
+		
+		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);
 	}
 }
 

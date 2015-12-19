@@ -742,6 +742,7 @@ $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
+$( ".selectmenuCategoria" ).selectmenu({ width: 250 });
 
 // -----------------------------------------------------------------
 // Ajax su campi di input

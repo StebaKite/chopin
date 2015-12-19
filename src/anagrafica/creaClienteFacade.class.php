@@ -14,13 +14,16 @@ if ($_GET["modo"] == "start") {
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codcliente"] = $_POST["codcliente"];
-	$_SESSION["descliente"] = $_POST["descliente"];
-	$_SESSION["indcliente"] = $_POST["indcliente"];
-	$_SESSION["cittacliente"] = $_POST["cittacliente"];
-	$_SESSION["capcliente"] = $_POST["capcliente"];
-	$_SESSION["tipoaddebito"] = $_POST["tipoaddebito"];
-
+	$_SESSION["codcliente"] = $_REQUEST["codcliente"];
+	$_SESSION["descliente"] = $_REQUEST["descliente"];
+	$_SESSION["indcliente"] = $_REQUEST["indcliente"];
+	$_SESSION["cittacliente"] = $_REQUEST["cittacliente"];
+	$_SESSION["capcliente"] = $_REQUEST["capcliente"];
+	$_SESSION["tipoaddebito"] = $_REQUEST["tipoaddebito"];
+	$_SESSION["codpiva"] = $_REQUEST["codpiva"];
+	$_SESSION["codfisc"] = $_REQUEST["codfisc"];
+	$_SESSION["catcliente"] = $_REQUEST["catcliente"];
+	
 	$creaCliente->go();
 }
 

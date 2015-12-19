@@ -42,6 +42,11 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 
+		if ($_SESSION["catcliente"] == "") {
+			$msg = $msg . "<br>&ndash; Manca la categoria del cliente";
+			$esito = FALSE;
+		}
+		
 		if ($_SESSION["codcliente"] == "") {
 			$msg = $msg . "<br>&ndash; Manca il codice del cliente";
 			$esito = FALSE;
@@ -52,6 +57,18 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 			$esito = FALSE;
 		}
 
+		if ($_SESSION["codfisc"] != "") {
+		
+			include_once 'cf.class.php';
+		
+			$cf = new CodiceFiscale();
+			$cf->SetCF($_SESSION["codfisc"]);
+			if (!($cf->GetCodiceValido())) {
+				$msg = $msg . "<br>&ndash; Codice fiscale non corretto";
+				$esito = FALSE;
+			}
+		}
+		
 		// ----------------------------------------------
 
 		if ($msg != "<br>") {
@@ -77,6 +94,7 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
+				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codcliente%' => $_SESSION["codcliente"],
@@ -84,7 +102,10 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 				'%indcliente%' => $_SESSION["indcliente"],
 				'%cittacliente%' => $_SESSION["cittacliente"],
 				'%capcliente%' => $_SESSION["capcliente"],
-				'%tipoaddebito%' => $_SESSION["tipoaddebito"]
+				'%tipoaddebito%' => $_SESSION["tipoaddebito"],
+				'%codpiva%' => $_SESSION["codpiva"],
+				'%codfisc%' => $_SESSION["codfisc"],
+				'%catcliente%' => $_SESSION["catcliente"]
 		);
 
 		$utility = Utility::getInstance();

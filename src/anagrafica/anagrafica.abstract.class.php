@@ -19,6 +19,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
 	public static $queryUpdateCliente = "/anagrafica/updateCliente.sql";
 	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
+	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
 	
 	function __construct() {
 	}
@@ -112,7 +113,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		return $result;
 	}
 
-	public function inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito) {
+	public function inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente) {
 
 		$array = $utility->getConfig();
 		$replace = array(
@@ -121,7 +122,10 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%des_indirizzo_cliente%' => trim($indcliente),
 				'%des_citta_cliente%' => trim($cittacliente),
 				'%cap_cliente%' => trim($capcliente),
-				'%tip_addebito%' => trim($tipoaddebito)
+				'%tip_addebito%' => trim($tipoaddebito),
+				'%cod_piva%' => trim($codpiva),
+				'%cod_fisc%' => trim($codfisc),
+				'%cat_cliente%' => trim($catcliente)	
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -152,7 +156,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
-	public function updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito) {
+	public function updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
@@ -162,14 +166,36 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%des_indirizzo_cliente%' => trim($indcliente),
 				'%des_citta_cliente%' => trim($cittacliente),
 				'%cap_cliente%' => trim($capcliente),
-				'%tip_addebito%' => trim($tipoaddebito)
+				'%tip_addebito%' => trim($tipoaddebito),
+				'%cod_piva%' => trim($codpiva),
+				'%cod_fisc%' => trim($codfisc),
+				'%cat_cliente%' => trim($catcliente)	
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
+	public function caricaCategorieCliente($utility, $db) {
+
+		$array = $utility->getConfig();
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercacCategorie;
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->getData($sql);
+		
+		foreach(pg_fetch_all($result) as $row) {
+		
+			if ($row['cat_cliente'] == $_SESSION["catcliente"]) {
+				$elencoCategorieCliente .= "<option value='" . $row['cat_cliente'] . "' selected >" . $row['des_categoria'] . "</option>";
+			}
+			else {
+				$elencoCategorieCliente .= "<option value='" . $row['cat_cliente'] . "'>" . $row['des_categoria'] . "</option>";
+			}
+		}
+		return $elencoCategorieCliente;
+	}
 }
 	
 ?>

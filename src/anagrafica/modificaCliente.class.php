@@ -100,6 +100,19 @@ class ModificaCliente extends AnagraficaAbstract {
 				include(self::$piede);
 			}
 		}
+		else {
+
+			$this->preparaPagina($modificaClienteTemplate);
+				
+			include(self::$testata);
+			$modificaClienteTemplate->displayPagina();
+				
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
+				
+			include(self::$piede);				
+		}
 	}
 
 	public function prelevaCliente($utility) {
@@ -121,6 +134,9 @@ class ModificaCliente extends AnagraficaAbstract {
 				$_SESSION["cittacliente"] = $row["des_citta_cliente"];
 				$_SESSION["capcliente"] = $row["cap_cliente"];
 				$_SESSION["tipoaddebito"] = $row["tip_addebito"];
+				$_SESSION["codpiva"] = $row["cod_piva"];
+				$_SESSION["codfisc"] = $row["cod_fisc"];
+				$_SESSION["catcliente"] = $row["cat_cliente"];
 			}
 		}
 		else {
@@ -137,13 +153,17 @@ class ModificaCliente extends AnagraficaAbstract {
 
 		$idcliente = $_SESSION["idcliente"];
 		$codcliente = $_SESSION["codcliente"];
-		$descliente = $_SESSION["descliente"];
-		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . $_SESSION["indcliente"] . "'" : "null" ;
-		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . $_SESSION["cittacliente"] . "'" : "null" ;
+		$descliente = str_replace("'","''",$_SESSION["descliente"]);
+		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . str_replace("'","''",$_SESSION["indcliente"]) . "'" : "null" ;
+		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . str_replace("'","''",$_SESSION["cittacliente"]) . "'" : "null" ;
 		$capcliente = ($_SESSION["capcliente"] != "") ? "'" . $_SESSION["capcliente"] . "'" : "null" ;
 		$tipoaddebito = $_SESSION["tipoaddebito"];
+		
+		$codpiva = ($_SESSION["codpiva"] != "") ? "'" . $_SESSION["codpiva"] . "'" : "null" ;
+		$codfisc = ($_SESSION["codfisc"] != "") ? "'" . $_SESSION["codfisc"] . "'" : "null" ;
+		$catcliente = ($_SESSION["catcliente"] != "") ? "'" . $_SESSION["catcliente"] . "'" : "null" ;
 
-		if ($this->updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito)) {
+		if ($this->updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
 
 			$db->commitTransaction();
 			return TRUE;
@@ -163,6 +183,14 @@ class ModificaCliente extends AnagraficaAbstract {
 		$modificaClienteTemplate->setAzione(self::$azioneModificaCliente);
 		$modificaClienteTemplate->setConfermaTip("%ml.salvaTip%");
 		$modificaClienteTemplate->setTitoloPagina("%ml.modificaCliente%");
+
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
+		// Prelievo delle categorie -------------------------------------------------------------
+		
+		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);
 	}
 }
+
 ?>
