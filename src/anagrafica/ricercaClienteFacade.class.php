@@ -10,8 +10,9 @@ $ricercaCliente = RicercaCliente::getInstance();
 if ($_GET["modo"] == "start") $ricercaCliente->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codcliente"] = $_POST["codcliente"];
-
+	$_SESSION["codcliente"] = $_REQUEST["codcliente"];
+	$_SESSION["catcliente"] = $_REQUEST["catcliente"];
+	
 	$ricercaCliente->go();
 }
 

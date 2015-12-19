@@ -8,6 +8,13 @@
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
+						<td>%ml.categoria% :</td>
+						<td class="tooltip">
+							<select class="selectmenuCategoria" id="catcliente" name="catcliente" >
+								<option value="">%ml.tutti%</option>
+								%elenco_categorie_cliente%
+							</select>
+						</td>
 						<td class="td">%ml.codcliente% :</td>
 						<td class="tooltip"><input type="text" name="codcliente" size="12" maxlength="10" value='%codcliente%'></td>
 						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>

@@ -136,7 +136,11 @@ class RicercaCliente extends AnagraficaAbstract {
 		if ($_SESSION['codcliente'] != "") {
 			$filtro = "AND cliente.cod_cliente = '" . $_SESSION['codcliente'] . "'";
 		}
-	
+
+		if ($_SESSION['catcliente'] != "") {
+			$filtro = "AND cliente.cat_cliente = '" . $_SESSION['catcliente'] . "'";
+		}
+		
 		$replace = array(
 				'%filtri_cliente%' => $filtro
 		);
@@ -163,11 +167,20 @@ class RicercaCliente extends AnagraficaAbstract {
 	
 	public function preparaPagina($ricercaCausaleTemplate) {
 	
+		require_once 'database.class.php';
 		require_once 'utility.class.php';
 	
 		$_SESSION["azione"] = self::$azioneRicercaCliente;
 		$_SESSION["confermaTip"] = "%ml.cercaTip%";
 		$_SESSION["titoloPagina"] = "%ml.ricercaCliente%";
+
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
+		// Prelievo delle categorie -------------------------------------------------------------
+		
+		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);
+		
 	}
 }
 

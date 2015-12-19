@@ -112,6 +112,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
 				'%codcliente%' => $_SESSION["codcliente"],
+				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
