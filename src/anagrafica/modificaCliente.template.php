@@ -57,17 +57,17 @@ class ModificaClienteTemplate extends AnagraficaAbstract {
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["codfisc"] != "") {
+// 		if ($_SESSION["codfisc"] != "") {
 
-			include_once 'cf.class.php';
+// 			include_once 'cf.class.php';
 				
-			$cf = new CodiceFiscale();
-			$cf->SetCF($_SESSION["codfisc"]);
-			if (!($cf->GetCodiceValido())) {
-				$msg = $msg . "<br>&ndash; Codice fiscale non corretto";
-				$esito = FALSE;				
-			}
-		}
+// 			$cf = new CodiceFiscale();
+// 			$cf->SetCF($_SESSION["codfisc"]);
+// 			if (!($cf->GetCodiceValido())) {
+// 				$msg = $msg . "<br>&ndash; Codice fiscale non corretto";
+// 				$esito = FALSE;				
+// 			}
+// 		}
 		
 		// ----------------------------------------------
 		
