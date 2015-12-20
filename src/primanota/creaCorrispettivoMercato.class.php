@@ -121,7 +121,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 		 * Crea la registrazione e tutti i suoi dettagli
 		*/
 
-		$descreg = $_SESSION["descreg"];
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datascad = "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$numfatt = "null" ;

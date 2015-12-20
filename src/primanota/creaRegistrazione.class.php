@@ -122,7 +122,7 @@ class CreaRegistrazione extends primanotaAbstract {
 		 * Crea la registrazione e tutti i suoi dettagli
 		 */
 		
-		$descreg = $_SESSION["descreg"];
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
 
 		/**

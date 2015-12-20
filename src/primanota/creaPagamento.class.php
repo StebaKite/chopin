@@ -122,7 +122,7 @@ class CreaPagamento extends primanotaAbstract {
 		 * Crea il pagamento
 		*/
 	
-		$descreg = $_SESSION["descreg"];
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;

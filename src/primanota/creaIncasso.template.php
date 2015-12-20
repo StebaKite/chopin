@@ -174,7 +174,7 @@ class CreaIncassoTemplate extends PrimanotaAbstract {
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%descreg%' => $_SESSION["descreg"],
+				'%descreg%' => str_replace("'", "&apos;", $_SESSION["descreg"]),
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",

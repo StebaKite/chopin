@@ -151,7 +151,7 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%descreg%' => $_SESSION["descreg"],
+				'%descreg%' => str_replace("'", "&apos;", $_SESSION["descreg"]),
 				'%datareg%' => $_SESSION["datareg"],
 				'%conto_erario%' => $_SESSION["conto_erario_negozi"],
 				'%conto_corrispettivo%' => $_SESSION["conto_corrispettivo_negozi"],
