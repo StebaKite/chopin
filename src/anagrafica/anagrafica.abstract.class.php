@@ -21,6 +21,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryUpdateCliente = "/anagrafica/updateCliente.sql";
 	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
+	public static $queryLeggiUltimoCodiceCliente = "/anagrafica/leggiUltimoCodiceCliente.sql";
 	
 	function __construct() {
 	}
@@ -305,6 +306,25 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 			}
 		}
 		return $elencoCategorieCliente;
+	}
+	
+	/**
+	 * Questo metodo preleva l'ultimo codoce cliente utilizzato
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return string
+	 */
+	public function prelevaUltimoCodiceCliente($utility, $db) {
+
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiUltimoCodiceCliente;
+		$sql = $utility->getTemplate($sqlTemplate);		
+		$rows = pg_fetch_all($db->getData($sql));
+				
+		foreach($rows as $row) {
+			$result = $row['cod_cliente_ult'];
+		}
+		return $result;
 	}
 }
 	

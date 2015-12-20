@@ -44,15 +44,23 @@ class CreaCliente extends AnagraficaAbstract {
 
 		require_once 'creaCliente.template.php';
 
+		require_once 'database.class.php';
+		require_once 'utility.class.php';
+
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
 		$creaClienteTemplate = CreaClienteTemplate::getInstance();
 		$this->preparaPagina($creaClienteTemplate);
 
-		$_SESSION["codcliente"] = "";
-		$_SESSION["descliente"] = "";
-		$_SESSION["indcliente"] = "";
-		$_SESSION["cittacliente"] = "";
-		$_SESSION["capcliente"] = "";
-
+		$_SESSION["codcliente"] = $this->prelevaUltimoCodiceCliente($utility, $db) + 1;
+		unset($_SESSION["descliente"]);
+		unset($_SESSION["indcliente"]);
+		unset($_SESSION["cittacliente"]);
+		unset($_SESSION["capcliente"]);
+		unset($_SESSION["codpiva"]);
+		unset($_SESSION["codfisc"]);
+		
 		// Compone la pagina
 		include(self::$testata);
 		$creaClienteTemplate->displayPagina();
@@ -62,6 +70,7 @@ class CreaCliente extends AnagraficaAbstract {
 	public function go() {
 
 		require_once 'creaCliente.template.php';
+		require_once 'database.class.php';
 		require_once 'utility.class.php';
 
 		$utility = Utility::getInstance();
@@ -74,7 +83,18 @@ class CreaCliente extends AnagraficaAbstract {
 
 			if ($this->creaCliente($utility)) {
 
-				session_unset();
+				$db = Database::getInstance();
+				$utility = Utility::getInstance();
+				
+// 				session_unset();
+				$_SESSION["codcliente"] = $this->prelevaUltimoCodiceCliente($utility, $db) + 1;
+				unset($_SESSION["descliente"]);
+				unset($_SESSION["indcliente"]);
+				unset($_SESSION["cittacliente"]);
+				unset($_SESSION["capcliente"]);
+				unset($_SESSION["codpiva"]);
+				unset($_SESSION["codfisc"]);
+				
 				$_SESSION["messaggio"] = "Cliente salvato con successo";
 
 				$this->preparaPagina($creaClienteTemplate);
@@ -139,6 +159,8 @@ class CreaCliente extends AnagraficaAbstract {
 		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
 
 			$db->commitTransaction();
+			
+			
 			return TRUE;
 		}
 		$db->rollbackTransaction();
