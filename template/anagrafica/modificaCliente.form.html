@@ -1,11 +1,50 @@
 <body>
 
+<script type="text/javascript">
+
+function controllaUnivocitaPiva() {
+
+	var codpiva = $("#codpiva").val();
+
+	if (codpiva != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#esitoControlloUnivocitaPiva" ).html(xmlhttp.responseText);
+	            $( "#esitoPivaCliente" ).val(xmlhttp.responseText);
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva, true);
+	    xmlhttp.send();		
+	}
+}
+
+function controllaUnivocitaCfis() {
+
+	var codfisc = $("#codfisc").val();
+
+	if (codfisc != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#esitoControlloUnivocitaCfis" ).html(xmlhttp.responseText);
+	            $( "#esitoCfisCliente" ).val(xmlhttp.responseText);
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
+	    xmlhttp.send();		
+	}
+}
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
 		
 		<form method="post" id="back" action="../anagrafica/ricercaClienteFacade.class.php?modo=go" >
 			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" id="catcliente" name="catcliente" value='%catcliente%'>
 		</form>
 		<br>
 		<form method="post" action="%azione%" >
@@ -54,11 +93,17 @@
 					</tr>
 					<tr>
 						<td>%ml.pivacliente% :</td>
-						<td class="tooltip"><input type="text" id="codpiva" name="codpiva" size="15" maxlength="11" value='%codpiva%' ></td>
+						<td class="tooltip">
+							<input type="text" id="codpiva" name="codpiva" size="15" maxlength="11" value='%codpiva%' onblur="controllaUnivocitaPiva();" >&nbsp;&nbsp;&nbsp;
+							<i id="esitoControlloUnivocitaPiva">&nbsp;</i>
+						</td>
 					</tr>					
 					<tr>
 						<td>%ml.cfiscliente% :</td>
-						<td class="tooltip"><input type="text" id="codfisc" name="codfisc" size="20" maxlength="16" value='%codfisc%' ></td>
+						<td class="tooltip">
+							<input type="text" id="codfisc" name="codfisc" size="20" maxlength="16" value='%codfisc%' onblur="controllaUnivocitaCfis();" >&nbsp;&nbsp;&nbsp;
+							<i id="esitoControlloUnivocitaCfis">&nbsp;</i>
+						</td>
 					</tr>					
 				</tbody>
 				<tfoot>
@@ -67,6 +112,8 @@
 					</tr>
 				</tfoot>
 			</table>
+			<input type="hidden" id="esitoPivaCliente" name="esitoPivaCliente" />						
+			<input type="hidden" id="esitoCfisCliente" name="esitoCfisCliente" />						
 		</form>
 	</div>
 </div>

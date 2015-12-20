@@ -118,9 +118,10 @@ class ModificaCliente extends AnagraficaAbstract {
 	public function prelevaCliente($utility) {
 
 		require_once 'database.class.php';
-
+		
 		$db = Database::getInstance();
-
+		$db->beginTransaction();
+		
 		$result = $this->leggiIdCliente($db, $utility, $_SESSION["idcliente"]);
 
 		if ($result) {
@@ -142,6 +143,7 @@ class ModificaCliente extends AnagraficaAbstract {
 		else {
 			error_log(">>>>>> Errore prelievo dati cliente : " . $_SESSION["idcliente"] . " <<<<<<<<" );
 		}
+		$db->commitTransaction();
 	}
 
 	public function aggiornaCliente($utility) {

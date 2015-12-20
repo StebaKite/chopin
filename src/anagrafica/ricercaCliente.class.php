@@ -132,13 +132,13 @@ class RicercaCliente extends AnagraficaAbstract {
 		require_once 'database.class.php';
 	
 		$filtro = "";
-	
-		if ($_SESSION['codcliente'] != "") {
-			$filtro = "AND cliente.cod_cliente = '" . $_SESSION['codcliente'] . "'";
-		}
 
 		if ($_SESSION['catcliente'] != "") {
-			$filtro = "AND cliente.cat_cliente = '" . $_SESSION['catcliente'] . "'";
+			$filtro .= "AND cliente.cat_cliente = '" . $_SESSION['catcliente'] . "'";
+		}
+		
+		if ($_SESSION['codcliente'] != "") {
+			$filtro .= "AND cliente.cod_cliente = '" . $_SESSION['codcliente'] . "'";
 		}
 		
 		$replace = array(

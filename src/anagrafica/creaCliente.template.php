@@ -68,6 +68,18 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 // 				$esito = FALSE;
 // 			}
 // 		}
+
+		if (($_SESSION["esitoPivaCliente"] != "P.iva Ok!") and ($_SESSION["esitoPivaCliente"] != "")) {
+			$msg = $msg . "<br>&ndash; P.iva cliente gi&agrave; esistente";
+			unset($_SESSION["codpiva"]);
+			$esito = FALSE;
+		}
+
+		if (($_SESSION["esitoCfisCliente"] != "C.fisc Ok!") and ($_SESSION["esitoCfisCliente"] != "")) {
+			$msg = $msg . "<br>&ndash; C.fisc cliente gi&agrave; esistente";
+			unset($_SESSION["codfisc"]);
+			$esito = FALSE;
+		}
 		
 		// ----------------------------------------------
 
