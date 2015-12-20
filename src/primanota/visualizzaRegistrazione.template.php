@@ -72,7 +72,7 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%datascad_a%' => $_SESSION["datascad_a"],
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%idregistrazione%' => $_SESSION["idRegistrazione"],
-				'%descreg%' => $_SESSION["descreg"],
+				'%descreg%' => str_replace("'", "&apos;", $_SESSION["descreg"]),
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],

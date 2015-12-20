@@ -175,7 +175,7 @@ class ModificaPagamento extends primanotaAbstract {
 		 * Aggiornamento del pagamento
 		 */		
 		
-		$descreg = $_SESSION["descreg"];
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$stareg = $_SESSION["stareg"];
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;

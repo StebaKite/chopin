@@ -218,7 +218,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$db = Database::getInstance();
 		$db->beginTransaction();
 	
-		$descreg = $_SESSION["descreg"];
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
 		$stareg = $_SESSION["stareg"];

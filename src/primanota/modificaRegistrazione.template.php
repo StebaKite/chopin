@@ -218,7 +218,7 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%idregistrazione%' => $_SESSION["idRegistrazione"],
-				'%descreg%' => trim($_SESSION["descreg"]),
+				'%descreg%' => str_replace("'", "&apos;", trim($_SESSION["descreg"])),
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => trim($_SESSION["numfatt"]),
