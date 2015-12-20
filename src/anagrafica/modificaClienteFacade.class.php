@@ -25,6 +25,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["codpiva"] = $_REQUEST["codpiva"];
 	$_SESSION["codfisc"] = $_REQUEST["codfisc"];
 	$_SESSION["catcliente"] = $_REQUEST["catcliente"];
+	$_SESSION["esitoPivaCliente"] = $_REQUEST["esitoPivaCliente"];
+	$_SESSION["esitoCfisCliente"] = $_REQUEST["esitoCfisCliente"];
 
 	$modificaCliente->go();
 }
