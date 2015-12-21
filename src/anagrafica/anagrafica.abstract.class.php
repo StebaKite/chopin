@@ -22,6 +22,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
 	public static $queryLeggiUltimoCodiceCliente = "/anagrafica/leggiUltimoCodiceCliente.sql";
+	public static $queryLeggiUltimoCodiceFornitore = "/anagrafica/leggiUltimoCodiceFornitore.sql";
 	
 	function __construct() {
 	}
@@ -326,6 +327,26 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		}
 		return $result;
 	}
+	
+	/**
+	 * Questo metodo preleva l'ultimo codice fornitore utilizzato
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return unknown
+	 */
+	public function prelevaUltimoCodiceFornitore($utility, $db) {
+
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiUltimoCodiceFornitore;
+		$sql = $utility->getTemplate($sqlTemplate);
+		$rows = pg_fetch_all($db->getData($sql));
+		
+		foreach($rows as $row) {
+			$result = $row['cod_fornitore_ult'];
+		}
+		return $result;
+		
+	}	
 }
 	
 ?>

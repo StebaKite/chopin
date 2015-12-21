@@ -43,15 +43,20 @@ class CreaFornitore extends AnagraficaAbstract {
 	public function start() {
 
 		require_once 'creaFornitore.template.php';
+		require_once 'database.class.php';
+		require_once 'utility.class.php';
+		
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
 		
 		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
 		$this->preparaPagina($creaFornitoreTemplate);
 		
-		$_SESSION["codfornitore"] = "";
-		$_SESSION["desfornitore"] = "";
-		$_SESSION["indfornitore"] = "";
-		$_SESSION["cittafornitore"] = "";
-		$_SESSION["capfornitore"] = "";
+		$_SESSION["codfornitore"] = $this->prelevaUltimoCodiceFornitore($utility, $db) + 1;
+		unset($_SESSION["desfornitore"]);
+		unset($_SESSION["indfornitore"]);
+		unset($_SESSION["cittafornitore"]);
+		unset($_SESSION["capfornitore"]);
 		
 		// Compone la pagina
 		include(self::$testata);
@@ -62,6 +67,7 @@ class CreaFornitore extends AnagraficaAbstract {
 	public function go() {
 	
 		require_once 'creaFornitore.template.php';
+		require_once 'database.class.php';
 		require_once 'utility.class.php';
 	
 		$utility = Utility::getInstance();
@@ -73,8 +79,16 @@ class CreaFornitore extends AnagraficaAbstract {
 			// Aggiornamento del DB ------------------------------
 		
 			if ($this->creaFornitore($utility)) {
-		
-				session_unset();
+
+				$db = Database::getInstance();
+				$utility = Utility::getInstance();
+				
+				$_SESSION["codfornitore"] = $this->prelevaUltimoCodiceFornitore($utility, $db) + 1;
+				unset($_SESSION["desfornitore"]);
+				unset($_SESSION["indfornitore"]);
+				unset($_SESSION["cittafornitore"]);
+				unset($_SESSION["capfornitore"]);
+				
 				$_SESSION["messaggio"] = "Fornitore salvato con successo";
 		
 				$this->preparaPagina($creaFornitoreTemplate);

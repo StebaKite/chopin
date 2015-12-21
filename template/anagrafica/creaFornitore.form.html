@@ -1,26 +1,5 @@
 <body>
 
-<script type="text/javascript">
-
-function controllaCodiceFornitore() {
-
-	var codfornitore = $("#codfornitore").val();
-
-	if (codfornitore != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#esitoControlloCodiceFornitore" ).html(xmlhttp.responseText);
-	            $( "#esitoCodiceFornitore" ).val(xmlhttp.responseText);
-	        }
-	    } 
-	    xmlhttp.open("GET", "cercaCodiceFornitoreFacade.class.php?modo=start&codfornitore=" + codfornitore, true);
-	    xmlhttp.send();		
-	}
-}
-
-</script>
-
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -30,8 +9,10 @@ function controllaCodiceFornitore() {
 				<tbody>
 					<tr>
 						<td>%ml.codfornitore% :</td>
-						<td class="tooltip"><input type="text" id="codfornitore" name="codfornitore" size="12" maxlength="10" value='%codfornitore%' onblur="controllaCodiceFornitore();" ></td>
-						<td><i><p id="esitoControlloCodiceFornitore">&nbsp;</p></i></td>						
+						<td class="tooltip">
+							<input type="text" id="codfornitore" name="codfornitore" size="12" maxlength="10" value='%codfornitore%' onblur="controllaCodiceFornitore();" />&nbsp;&nbsp;&nbsp;
+							<i>(Codice cliente proposto disponibile)</i>
+						</td>
 					</tr>
 					<tr>
 						<td>%ml.desfornitore% :</td>
