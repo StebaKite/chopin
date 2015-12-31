@@ -42,6 +42,7 @@ nuovaDataScad = Nuova Scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
 soloContoEconomico = Solo Conto Economico
+creaFat = Crea fattura
 ;
 ; Tips ---------------------------------
 ;
@@ -178,3 +179,7 @@ deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
 dessaldo = Descrizione riporto saldo
+azcons = Azienda consortile
+datafat = Data fattura
+descfat = Descrizione
+impofat = Importo
