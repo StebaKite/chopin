@@ -103,8 +103,8 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 
 			$totale = round($tot_dare, 2) - round($tot_avere, 2);
 				
-			if ($totale  != 0 ) {
-				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . $totale . " &euro;";
+			if (round($totale, 2)  != 0 ) {
+				$msg = $msg . "<br>&ndash; La differenza fra Dare e Avere &egrave; di " . round($totale, 2) . " &euro;";
 				$esito = FALSE;
 				$_SESSION["stareg"] = '02';
 			}
