@@ -101,14 +101,16 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 			$dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
 			$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
 			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
-				
+
+			$anno = ($mesePrecedente == 12) ? date("Y") - 1 : date("Y");
+			
 			foreach($conti as $conto) {
 			
 				foreach(SELF::$negozi as $negozio){
 			
 					$replace = array(
-							'%datareg_da%' => '01/' . $mesePrecedente . '/' . date("Y"),
-							'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . date("Y"),
+							'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
+							'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
 							'%codnegozio%' => $negozio,
 							'%codconto%' => $conto['cod_conto'],
 							'%codsottoconto%' => $conto['cod_sottoconto']
@@ -142,8 +144,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 				}
 			}
 
-			$da = '01/' . $mesePrecedente . '/' . date("Y");
-			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . date("Y");
+			$da = '01/' . $mesePrecedente . '/' . $anno;
+			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
 			error_log("Riporto saldo periodo : " . $da . " - " . $a);
 			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
 				
