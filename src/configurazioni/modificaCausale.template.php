@@ -72,7 +72,10 @@ class ModificaCausaleTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%causale%' => $_SESSION["causale"],
 				'%codcausale%' => $_SESSION["codcausale"],
-				'%descausale%' => $_SESSION["descausale"]
+				'%descausale%' => $_SESSION["descausale"],
+				'%generi_checked%' => (trim($_SESSION["catcausale"]) == "GENERI") ? "checked" : "",
+				'%incpag_checked%' => (trim($_SESSION["catcausale"]) == "INCPAG") ? "checked" : "",
+				'%corris_checked%' => (trim($_SESSION["catcausale"]) == "CORRIS") ? "checked" : ""				
 		);
 	
 		$utility = Utility::getInstance();

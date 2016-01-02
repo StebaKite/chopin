@@ -1,6 +1,7 @@
 SELECT
 	causale.cod_causale,
 	causale.des_causale,
+	causale.cat_causale,
 	causale.dat_inserimento,
 	coalesce(t1.totalereg, 0) AS tot_registrazioni_causale,
 	coalesce(t2.totaleconti, 0) AS tot_conti_causale

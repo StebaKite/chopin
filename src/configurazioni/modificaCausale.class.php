@@ -114,6 +114,7 @@ class ModificaCausale extends ConfigurazioniAbstract {
 			foreach ($conto as $row) {
 	
 				$_SESSION["descausale"] = $row["des_causale"];
+				$_SESSION["catcausale"] = $row["cat_causale"];
 			}
 		}
 		else {
@@ -127,10 +128,8 @@ class ModificaCausale extends ConfigurazioniAbstract {
 	
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-		$desconto = $_SESSION["descausale"];
-	
-		if ($this->updateCausale($db, $utility, $_SESSION["codcausale"], $_SESSION["descausale"])) {
+		
+		if ($this->updateCausale($db, $utility, $_SESSION["codcausale"], $_SESSION["descausale"], $_SESSION["catcausale"])) {
 	
 			$db->commitTransaction();
 			return TRUE;

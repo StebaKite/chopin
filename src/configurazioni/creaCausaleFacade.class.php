@@ -8,15 +8,16 @@ session_start();
 $creaCausale = CreaCausale::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
+	
 	$creaCausale->start();
 }
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codcausale"] = $_POST["codcausale"];
-	$_SESSION["descausale"] = $_POST["descausale"];
-
+	$_SESSION["codcausale"] = $_REQUEST["codcausale"];
+	$_SESSION["descausale"] = $_REQUEST["descausale"];
+	$_SESSION["catcausale"] = $_REQUEST["catcausale"];
+	
 	$creaCausale->go();
 }
 

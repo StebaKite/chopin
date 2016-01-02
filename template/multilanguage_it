@@ -42,6 +42,9 @@ nuovaDataScad = Nuova Scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
 soloContoEconomico = Solo Conto Economico
+generi = Generica
+incpag = Inc / Pag
+corris = Corrispettivi
 ;
 ; Tips ---------------------------------
 ;
@@ -142,6 +145,7 @@ codsottoconto = Codice Sottoconto
 dessottoconto = Descrizione sottoconto
 codcausale = Codice causale
 descausale = Descrizione causale
+catcausale = Categoria causale
 qtareg = Qta. Reg.
 qtaconti = Qta. Conti
 codfornitore = Codice fornitore

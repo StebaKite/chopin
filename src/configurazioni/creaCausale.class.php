@@ -49,6 +49,7 @@ class CreaCausale extends ConfigurazioniAbstract {
 		
 		$_SESSION["codcausale"] = "";
 		$_SESSION["descausale"] = "";
+		$_SESSION["catcausale"] = "";
 		
 		// Compone la pagina
 		include(self::$testata);
@@ -124,8 +125,9 @@ class CreaCausale extends ConfigurazioniAbstract {
 	
 		$codcausale = $_SESSION["codcausale"];
 		$descausale = $_SESSION["descausale"];
+		$catcausale = $_SESSION["catcausale"];
 			
-		if ($this->inserisciCausale($db, $utility, $codcausale, $descausale)) {
+		if ($this->inserisciCausale($db, $utility, $codcausale, $descausale, $catcausale)) {
 	
 			$db->commitTransaction();
 			return TRUE;

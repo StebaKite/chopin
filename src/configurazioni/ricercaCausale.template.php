@@ -54,6 +54,7 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 			"	<thead>" .
 			"		<th width='72'>%ml.codcausale%</th>" .
 			"		<th width='402'>%ml.descausale%</th>" .
+			"		<th width='52'>%ml.catcausale%</th>" .
 			"		<th width='47'>%ml.qtareg%</th>" .
 			"		<th width='52'>%ml.qtaconti%</th>" .
 			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
@@ -91,6 +92,7 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 				"<tr " . $class . " id='" . trim($row['cod_causale']) . "'>" .
 				"	<td width='80' class='tooltip' align='center'>" . trim($row['cod_causale']) . "</td>" .
 				"	<td width='410' align='left'>" . trim($row['des_causale']) . "</td>" .
+				"	<td width='65'  align='center'>" . trim($row['cat_causale']) . "</td>" .
 				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_causale']) . "</td>" .
 				"	<td width='60'  align='right'>" . trim($row['tot_conti_causale']) . "</td>" .
 				"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .

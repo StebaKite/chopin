@@ -92,7 +92,8 @@ class CreaCausaleTemplate extends ConfigurazioniAbstract {
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codcausale%' => $_SESSION["codcausale"],
-				'%descausale%' => $_SESSION["descausale"]
+				'%descausale%' => $_SESSION["descausale"],
+				'%catcausale%' => $_SESSION["catcausale"]
 		);
 	
 		$utility = Utility::getInstance();

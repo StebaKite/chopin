@@ -165,12 +165,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 	}
 	
-	public function inserisciCausale($db, $utility, $codcausale, $descausale) {
+	public function inserisciCausale($db, $utility, $codcausale, $descausale, $catcausale) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_causale%' => trim($codcausale),
-				'%des_causale%' => trim($descausale)
+				'%des_causale%' => trim($descausale),
+				'%cat_causale%' => trim($catcausale)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCausale;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -190,12 +191,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
-	public function updateCausale($db, $utility, $codcausale, $descausale) {
+	public function updateCausale($db, $utility, $codcausale, $descausale, $catcausale) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_causale%' => trim($codcausale),
-				'%des_causale%' => trim($descausale)
+				'%des_causale%' => trim($descausale),
+				'%cat_causale%' => trim($catcausale)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateCausale;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
