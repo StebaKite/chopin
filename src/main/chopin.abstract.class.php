@@ -152,12 +152,15 @@ abstract class ChopinAbstract {
 	 * @param unknown $db
 	 * @return string
 	 */
-	public function caricaCausali($utility, $db) {
+	public function caricaCausali($utility, $db, $categoria) {
 
 		$array = $utility->getConfig();
+		$replace = array(
+				'%cat_causale%' => trim($categoria)
+		);
 		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausali;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		
 		while ($row = pg_fetch_row($result)) {

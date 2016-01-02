@@ -5,7 +5,8 @@ require_once 'primanota.abstract.class.php';
 class CreaIncasso extends primanotaAbstract {
 
 	private static $_instance = null;
-
+	private static $categoria_causali = 'INCPAG';
+	
 	public static $azioneCreaIncasso = "../primanota/creaIncassoFacade.class.php?modo=go";
 
 	function __construct() {
@@ -212,7 +213,7 @@ class CreaIncasso extends primanotaAbstract {
 	
 		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
 	
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
 	
 		/**

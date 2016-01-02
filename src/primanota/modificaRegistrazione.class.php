@@ -5,7 +5,8 @@ require_once 'primanota.abstract.class.php';
 class ModificaRegistrazione extends primanotaAbstract {
 
 	private static $_instance = null;
-
+	private static $categoria_causali = 'GENERI';
+	
 	public static $azioneModificaRegistrazione = "../primanota/modificaRegistrazioneFacade.class.php?modo=go";
 		
 	function __construct() {
@@ -345,7 +346,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 	
 		// Prelievo dei dati per i combo --------------------------------------------------------
 	
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
 		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
 		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);

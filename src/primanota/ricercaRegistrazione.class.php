@@ -5,6 +5,7 @@ require_once 'primanota.abstract.class.php';
 class RicercaRegistrazione extends PrimanotaAbstract {
 
 	private static $_instance = null;
+	private static $categoria_causali = '%';
 	
 	public static $azioneRicercaRegistrazione = "../primanota/ricercaRegistrazioneFacade.class.php?modo=go";
 	public static $queryRicercaRegistrazione = "/primanota/ricercaRegistrazione.sql";
@@ -208,7 +209,8 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 
 		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
 		
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
 	}
-}	
+}
+	
 ?>

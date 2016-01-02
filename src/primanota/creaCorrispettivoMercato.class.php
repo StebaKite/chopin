@@ -7,6 +7,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 	private static $_instance = null;
 	private static $contoErario = null;
 	private static $contoCorrispettivo = null;
+	private static $categoria_causali = 'CORRIS';  
 
 	public static $azioneCreaCorrispettivoMercato = "../primanota/creaCorrispettivoMercatoFacade.class.php?modo=go";
 
@@ -183,7 +184,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 
 		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
 
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db);
+		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
 
 		/**
 		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
