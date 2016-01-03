@@ -1,5 +1,21 @@
 <body>
 
+<script type="text/javascript">
+
+function prelevaNumeroFattura(negozio) {
+
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#numfat" ).val(xmlhttp.responseText);
+        }
+    } 
+    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio, true);
+    xmlhttp.send();		
+}
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -7,39 +23,45 @@
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
+					<tr>
+						<td>%ml.azcons% :</td>
+						<td class="tooltip">
+							<select class="selectmenuSoggetto" id="cliente" name="cliente" >
+								<option value=""></option>
+								%elenco_clienti%
+							</select>
+						</td>
+					</tr>				
 					<tr>				
 						<td>%ml.negozio% :</td>						
 						<td>
 							<div class="radioset" >
-								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% ><label for="villa">%ml.villa%</label>
-								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% ><label for="brembate">%ml.brembate%</label>
-								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% ><label for="trezzo">%ml.trezzo%</label>
+								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="prelevaNumeroFattura(this.value)"><label for="villa">%ml.villa%</label>
+								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="prelevaNumeroFattura(this.value)"><label for="brembate">%ml.brembate%</label>
+								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% onchange="prelevaNumeroFattura(this.value)"><label for="trezzo">%ml.trezzo%</label>
 							</div>
 						</td>					
 					</tr>				
 					<tr>
-						<td>%ml.azcons% :</td>
-						<td class="tooltip">
-							<select class="selectmenuSoggetto" id="soggetto" name="soggetto" >
-								<option value=""></option>
-								%elenco_soggetti%
-							</select>
-						</td>
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%'/></td>				
 					</tr>				
 					<tr>
 						<td class="td">%ml.datafat% :</td>
-						<td colspan="4" class="tooltip">
-							<input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%' />
-						</td>
+						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
 					</tr>
 					<tr>
 						<td>%ml.descfat% :</td>
-						<td class="tooltip"><input type="text" id="descfat" name="descfat" size="70" maxlength="200" value='%descfat%' /></td>
+						<td class="tooltip"><input type="text" id="descfat" name="descfat" size="80" maxlength="200" value='%descfat%'/></td>
 					</tr>
 					<tr>
-						<td>%ml.impofat% :</td>
-						<td class="tooltip"><input class="spinner" id="impofat" name="impofat" size="30" maxlength="30" value='%impofat%' /></td>
-					</tr>			
+						<td>%ml.imponibile% :</td>
+						<td class="tooltip"><input type="text" id="impofat" name="impofat" size="10" maxlength="10" value='%impofat%'/></td>				
+					</tr>
+					<tr>
+						<td>%ml.iva% :</td>
+						<td class="tooltip"><input type="text" id="impivafat" name="impivafat" size="10" maxlength="10" value='%impivafat%'/></td>				
+					</tr>				
 				</tbody>
 				<tfoot>
 					<tr>

@@ -50,12 +50,17 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
+				'%numfat%' => $_SESSION["numfat"],
+				'%datafat%' => $_SESSION["datafat"],
+				'%descfat%' => $_SESSION["descfat"],
+				'%impofat%' => $_SESSION["impofat"],
+				'%impivafat%' => $_SESSION["impivafat"],
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
-				'%elenco_soggetti%' => $_SESSION["elenco_soggetti"]
+				'%elenco_clienti%' => $_SESSION["elenco_clienti"]
 		);
 		
 		$utility = Utility::getInstance();

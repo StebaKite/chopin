@@ -55,8 +55,12 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 
 		// Data del giorno preimpostata solo in entrata -------------------------
 		
-		$_SESSION["datareg"] = date("d/m/Y");
-		$_SESSION["codneg"] = "VIL";
+		$_SESSION["datafat"] = date("d/m/Y");
+		$_SESSION["codneg"] = "";
+		$_SESSION["numfat"] = "";
+		$_SESSION["descfat"] = "";
+		$_SESSION["impofat"] = 0;
+		$_SESSION["impivafat"] = 0;
 		
 		// Compone la pagina
 		include(self::$testata);
@@ -66,17 +70,54 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	
 	public function go() {
 		
+		require_once 'creaFatturaAziendaConsortile.template.php';
+		
+		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
+		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
+		
+		// Creo la fattura -------------------------
+		
+
+
+		
+		
+		
+		
+		
+		// Compone la pagina
+		include(self::$testata);
+		$creaFatturaAziendaConsortileTemplate->displayPagina();
+		include(self::$piede);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}
 	
-	public function preparaPagina($creaRegistrazioneTemplate) {
+	public function preparaPagina($creaFatturaAziendaConsortileTemplate) {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-	
-	
-	
+
+		$creaFatturaAziendaConsortileTemplate->setAzione(self::$azioneCreaFatturaAziendaConsortile);
+		$creaFatturaAziendaConsortileTemplate->setConfermaTip("%ml.confermaCreaFattura%");
+		$creaFatturaAziendaConsortileTemplate->setTitoloPagina("%ml.creaFatturaAziendaConsortile%");
+		
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
+		// Prelievo delle aziende consortili -------------------------------------------------------------
+		
+		$_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1200");	// Categoria=1200 -> Aziende
 	}
 }	
 
