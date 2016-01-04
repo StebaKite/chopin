@@ -21,6 +21,8 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["numfat"] = $_REQUEST["numfat"];
 	$_SESSION["ragsocbanca"] = $_REQUEST["ragsocbanca"];
 	$_SESSION["ibanbanca"] = $_REQUEST["ibanbanca"];
+	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];
+	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	
 	$creaFatturaAziendaConsortile->go();
 }

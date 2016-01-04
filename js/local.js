@@ -524,6 +524,33 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 	]
 });
 
+$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
+	autoOpen: false,
+	width: 420,
+	height: 240,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiDettaglio();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
+	$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi
@@ -859,6 +886,33 @@ function cancellaDettaglioPagina(idconto) {
 	var index = jQuery.inArray(c,indexDettInseriti);
 	if (index == -1) {
 		var cc = idconto.toString();
+		var index = jQuery.inArray(cc,indexDettInseriti);
+	}	
+	
+	if (index > -1) {
+ 		indexDettInseriti.splice(index, 1);
+ 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
+
+ 		dettInseriti.splice(index, 1);				
+ 		aggiornaDettaglioInseriti(dettInseriti);
+	}
+}
+
+function cancellaDettaglioFattura(id) {
+	
+	$("#" + id).remove();	
+	
+ 	var rowCount = $("#dettagli tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#dettagli thead tr" ).remove();		
+		$( "#dettagli" ).removeClass("datiCreateSottile");
+	}
+	
+	var c = parseInt(id.toString());
+	var index = jQuery.inArray(c,indexDettInseriti);
+	if (index == -1) {
+		var cc = id.toString();
 		var index = jQuery.inArray(cc,indexDettInseriti);
 	}	
 	

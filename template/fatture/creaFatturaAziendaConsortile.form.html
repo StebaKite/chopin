@@ -2,6 +2,10 @@
 
 <script type="text/javascript">
 
+var indexDettInseriti = [%arrayIndexDettagliInseriti%];
+var dettInseriti = [%arrayDettagliInseriti%];
+var contatore = 0;
+
 function prelevaNumeroFattura(negozio) {
 
 	var xmlhttp = new XMLHttpRequest();
@@ -24,6 +28,61 @@ function prelevaNumeroFattura(negozio) {
     
     if (negozio == "TRE") {$( "#ragsocbanca" ).val("manca!");}
     
+}
+
+function aggiungiDettaglio() {
+	
+	var rowCount = $('#dettagli tr').length;
+	
+	if (rowCount == 0) {
+		$( "#dettagli thead" ).append("<tr>" + 
+			"<th width='50' align='center'></th>" + 
+			"<th width='100' align='center'>Quantit&agrave;</th>" + 
+			"<th width='350' align='left'>Articolo</th>" + 
+			"<th width='100' align='right'>Importo</th>" +
+			"<th>&nbsp;</th>" +
+			"</tr>");
+		$( "#dettagli" ).addClass("datiCreateSottile");
+	}
+
+	contatore = contatore + 1;
+	
+	var quantita = $("#quantita").val();	
+	var articolo = $("#articolo").val();
+	var importo = $("#importo").val();
+	var importoNormalizzato = importo.trim().replace(",", ".");
+	
+	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
+		"<td align='center'>" + contatore + "</td>" +	
+        "<td align='center'>" + quantita + "</td>" +
+        "<td align='left'>" + articolo + "</td>" +
+        "<td align='right'>" + importoNormalizzato + "</td>" +
+    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+      "</tr>" );
+	
+	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato;
+	addDett(elemento, contatore);
+	
+	$("#quantita").val("");
+	$("#articolo").val("");
+	$("#importo").val("");
+}
+
+function addDett(dettaglio, contatore) {
+	
+	dettInseriti.push(dettaglio);
+	aggiornaDettaglioInseriti(dettInseriti);
+
+	indexDettInseriti.push(contatore);
+	aggiornaIndexDettaglioInseriti(indexDettInseriti);
+}
+
+function aggiornaDettaglioInseriti(dettInseriti) {
+ $("#dettagliInseriti").val(dettInseriti);
+}
+
+function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
+	$("#indexDettagliInseriti").val(indexDettInseriti);
 }
 
 </script>
@@ -74,18 +133,50 @@ function prelevaNumeroFattura(negozio) {
 						<td>%ml.iban% :</td>
 						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
 					</tr>				
-					
-
-					
+					<tr>
+						<td colspan="4">
+							<table id="dettagli" class="%class_dettagli%">
+							    <thead>%thead_dettagli%</thead>
+							    <tbody>%tbody_dettagli%</tbody>
+							</table>			
+						</td>
+					</tr>										
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="2" align="right" class="tooltip"><button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button></td>
+						<td colspan="2" align="right" class="tooltip">
+							<button id="nuovo-dett-fattura-aziende" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
+						</td>
 					</tr>
 				</tfoot>
 			</table>
+			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
+			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
 		</form>
 	</div>
 </div>
+
+<div id="nuovo-dettaglio-fattura-aziende-form" title="Nuovo Dettaglio Fattura"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.quantita% :</td>
+					<td class="tooltip"><input type="text" id="quantita" name="quantita" size="10" maxlength="10" ></td>
+				</tr>								
+				<tr>
+					<td>%ml.articolo% :</td>
+					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="40" maxlength="40" ></td>
+				</tr>								
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importo" name="importo" size="20" maxlength="20" ></td>
+				</tr>					
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
 
 <br/>

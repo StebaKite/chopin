@@ -61,6 +61,8 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["tipoadd"] = "";
 		$_SESSION["ragsocbanca"] = "";
 		$_SESSION["ibanbanca"] = "";
+		$_SESSION["dettagliInseriti"] = "";
+		$_SESSION["indexDettagliInseriti"] = "";
 		
 		// Compone la pagina
 		include(self::$testata);
