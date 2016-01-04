@@ -58,9 +58,9 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["datafat"] = date("d/m/Y");
 		$_SESSION["codneg"] = "";
 		$_SESSION["numfat"] = "";
-		$_SESSION["descfat"] = "";
-		$_SESSION["impofat"] = 0;
-		$_SESSION["impivafat"] = 0;
+		$_SESSION["tipoadd"] = "";
+		$_SESSION["ragsocbanca"] = "";
+		$_SESSION["ibanbanca"] = "";
 		
 		// Compone la pagina
 		include(self::$testata);

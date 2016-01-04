@@ -186,3 +186,5 @@ datafat = Data fattura
 descfat = Descrizione
 impofat = Imponibile
 impivafat = IVA
+banca = Istituto bancario
+iban = IBAN

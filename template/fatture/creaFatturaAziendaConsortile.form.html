@@ -12,6 +12,18 @@ function prelevaNumeroFattura(negozio) {
     } 
     xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio, true);
     xmlhttp.send();		
+    
+    // Inizializzazione della banca sulla base del negozio selezionato
+    
+    if (negozio == "VIL") {
+    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
+    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
+    }
+    
+    if (negozio == "BRE") {$( "#ragsocbanca" ).val("manca!");}
+    
+    if (negozio == "TRE") {$( "#ragsocbanca" ).val("manca!");}
+    
 }
 
 </script>
@@ -24,14 +36,22 @@ function prelevaNumeroFattura(negozio) {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
+						<td class="td">%ml.datafat% :</td>
+						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
+					</tr>					
+					<tr>
 						<td>%ml.azcons% :</td>
 						<td class="tooltip">
-							<select class="selectmenuSoggetto" id="cliente" name="cliente" >
+							<select class="selectmenuCliente" id="cliente" name="cliente" >
 								<option value=""></option>
 								%elenco_clienti%
 							</select>
 						</td>
 					</tr>				
+					<tr>
+						<td>%ml.tipaddebito% :</td>
+						<td class="tooltip"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
+					</tr>
 					<tr>				
 						<td>%ml.negozio% :</td>						
 						<td>
@@ -47,21 +67,16 @@ function prelevaNumeroFattura(negozio) {
 						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%'/></td>				
 					</tr>				
 					<tr>
-						<td class="td">%ml.datafat% :</td>
-						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
-					</tr>
-					<tr>
-						<td>%ml.descfat% :</td>
-						<td class="tooltip"><input type="text" id="descfat" name="descfat" size="80" maxlength="200" value='%descfat%'/></td>
-					</tr>
-					<tr>
-						<td>%ml.imponibile% :</td>
-						<td class="tooltip"><input type="text" id="impofat" name="impofat" size="10" maxlength="10" value='%impofat%'/></td>				
-					</tr>
-					<tr>
-						<td>%ml.iva% :</td>
-						<td class="tooltip"><input type="text" id="impivafat" name="impivafat" size="10" maxlength="10" value='%impivafat%'/></td>				
+						<td>%ml.banca% :</td>
+						<td class="tooltip"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
 					</tr>				
+					<tr>
+						<td>%ml.iban% :</td>
+						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
+					</tr>				
+					
+
+					
 				</tbody>
 				<tfoot>
 					<tr>

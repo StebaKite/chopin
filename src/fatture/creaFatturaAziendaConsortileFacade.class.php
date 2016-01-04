@@ -14,13 +14,13 @@ if ($_GET["modo"] == "start") {
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["idcliente"] = $_REQUEST["cliente"];
 	$_SESSION["datafat"] = $_REQUEST["datafat"];
-	$_SESSION["descfat"] = $_REQUEST["descfat"];
-	$_SESSION["numfat"] = $_REQUEST["numfat"];
+	$_SESSION["idcliente"] = $_REQUEST["cliente"];
+	$_SESSION["tipoadd"] = $_REQUEST["tipoadd"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
-	$_SESSION["impofat"] = $_REQUEST["impofat"];
-	$_SESSION["impivafat"] = $_REQUEST["impivafat"];
+	$_SESSION["numfat"] = $_REQUEST["numfat"];
+	$_SESSION["ragsocbanca"] = $_REQUEST["ragsocbanca"];
+	$_SESSION["ibanbanca"] = $_REQUEST["ibanbanca"];
 	
 	$creaFatturaAziendaConsortile->go();
 }

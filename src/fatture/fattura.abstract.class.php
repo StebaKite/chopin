@@ -12,6 +12,7 @@ abstract class FatturaAbstract extends ChopinAbstract {
 
  	public static $queryRicercaClienti = "/fatture/ricercaClienti.sql";
  	public static $queryRicercaNumeroFattura = "/fatture/ricercaNumeroFattura.sql";
+ 	public static $queryRicercaDatiCliente = "/fatture/ricercaDatiCliente.sql";
 
 	function __construct() {
 	}
@@ -46,6 +47,7 @@ abstract class FatturaAbstract extends ChopinAbstract {
 	// Metodi comuni di utilita della prima note ---------------------------
 
 	/**
+	 * Questo metodo carica tutti i clienti fatturabili di una certa categoria 
 	 * 
 	 * @param unknown $utility
 	 * @param unknown $db
@@ -75,6 +77,15 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		return $elencoClienti;
 	}
 	
+	/**
+	 * Questo metodo preleva l'ultimo progressivo fattura utilizzato
+	 * 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $categoriaCliente
+	 * @param unknown $codiceNegozio
+	 * @return un progressivo fattura utilizzabile
+	 */
 	public function caricaNumeroFattura($utility, $db, $categoriaCliente, $codiceNegozio) {
 
 		$array = $utility->getConfig();
@@ -92,6 +103,31 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		}
 		return $numeroFattura;
 	}
+	
+	/**
+	 * Questo metodo preleva il tipo addebito di un cliente
+	 * 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $idcliente
+	 */
+	public function caricaTipoAddebitoCliente($utility, $db, $idcliente) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente),
+		);
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaDatiCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		foreach(pg_fetch_all($result) as $row) {
+			$tipoAddebito = trim($row['tip_addebito']);
+		}
+		return $tipoAddebito;		
+	}
+	
 }
 
 ?>

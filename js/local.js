@@ -687,6 +687,26 @@ $( ".scadenzeAperteCliente" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuCliente" )
+	.selectmenu({change:
+		function(){
+			var cliente = $("#cliente").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#tipoadd" ).val(xmlhttp.responseText);
+	            }
+	        }
+	        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 150})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+
 $( ".selectmenu" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
@@ -742,7 +762,7 @@ $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
-$( ".selectmenuSoggetto" ).selectmenu({ width: 350 });
+$( ".selectmenuCliente" ).selectmenu({ width: 350 });
 
 // -----------------------------------------------------------------
 // Ajax su campi di input
