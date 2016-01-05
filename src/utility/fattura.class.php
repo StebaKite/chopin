@@ -56,7 +56,7 @@ class Fattura extends FPDF {
 		$this->Cell(0, 10, utf8_decode("Domicilio fiscale: via San Martino, 1 - 24030 Villa d'Adda (BG) - tel. 3453208724 C.F./P.IVA: 03691430163"),0,1,'C');		
 	}
 
-	function RoundedRect($x, $y, $w, $h, $r, $style = '') {
+	private function RoundedRect($x, $y, $w, $h, $r, $style = '') {
 		
 		$k = $this->k;
 		$hp = $this->h;
@@ -88,14 +88,14 @@ class Fattura extends FPDF {
 		$this->_out($op);
 	}
 	
-	function _Arc($x1, $y1, $x2, $y2, $x3, $y3) {
+	private function _Arc($x1, $y1, $x2, $y2, $x3, $y3) {
 		
 		$h = $this->h;
 		$this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c ', $x1*$this->k, ($h-$y1)*$this->k,
 				$x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
 	}
 	
-	function Rotate($angle, $x=-1, $y=-1) {
+	private function Rotate($angle, $x=-1, $y=-1) {
 		
 		if($x==-1)
 			$x=$this->x;
@@ -117,11 +117,11 @@ class Fattura extends FPDF {
 	}
 	
 	
-	function pagamento( $mode ) {
+	public function pagamento( $mode ) {
 		
 		$r1  = 10;
-		$r2  = $r1 + 60;
-		$y1  = 80;
+		$r2  = $r1 + 70;
+		$y1  = 40;
 		$y2  = $y1+10;
 		$mid = $y1 + (($y2-$y1) / 2);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
@@ -134,10 +134,49 @@ class Fattura extends FPDF {
 		$this->Cell(10,5,$mode, 0,0, "C");
 	}
 	
+	public function banca($ragsocbanca, $ibanbanca) {
+
+		$r1  = 10;
+		$r2  = $r1 + 70;
+		$y1  = 52;
+		$y2  = $y1+40;
+		$mid = $y1 + (($y2-$y1) / 6);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
+		$this->Line( $r1, $mid, $r2, $mid);
+		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1+1 );
+		$this->SetFont( "Arial", "B", 10);
+		$this->Cell(10,4, "BANCA", 0,0, "C");
+		
+		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1 + 8 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,$ragsocbanca, 0,0, "C");
+		
+		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1 + 13 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,$ibanbanca, 0,0, "C");
+	}
 	
-	
-	
-	
+	public function destinatario($descliente, $indirizzocliente, $cittacliente, $capcliente, $pivacliente) {
+
+		$r1  = 82;
+		$r2  = $r1 + 120;
+		$y1  = 40;
+		$y2  = $y1+52;
+		$mid = $y1 + (($y2-$y1) / 8);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
+		$this->Line( $r1, $mid, $r2, $mid);
+		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1+1 );
+		$this->SetFont( "Arial", "B", 10);
+		$this->Cell(10,4, "DESTINATARIO", 0,0, "C");
+		
+		$this->SetXY( $r1 + 5, $y1 + 8 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,"Spett.le", 0,0, "");
+		
+		$this->SetXY( $r1 + 5, $y1 + 13 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,$descliente, 0,0, "");
+	}
 	
 	
 	
