@@ -73,37 +73,64 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	public function go() {
 		
 		require_once 'creaFatturaAziendaConsortile.template.php';
-		
-		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
-		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
+		require_once 'utility.class.php';
+		require_once 'fattura.class.php';		
 		
 		// Creo la fattura -------------------------
 		
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$_SESSION["logo"] = self::$root . $array["logo"];
+		$_SESSION["creator"] = "Nexus6";
+		
+		$fattura = Fattura::getInstance();
+		
+		$fattura->AliasNbPages();
+		
+		/**
+		 * Generazione del documento
+		 */
+		
+		$fattura = $this->intestazione($fattura);
+		$fattura = $this->sezionePagamento($fattura); 
+		
+		
+		
+		
+		
+		
+		$fattura->Output();
+		
+		// Compone la pagina ----------------------
 
-
+		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
+		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 		
-		
-		
-		
-		
-		// Compone la pagina
 		include(self::$testata);
 		$creaFatturaAziendaConsortileTemplate->displayPagina();
 		include(self::$piede);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
+	
+	private function intestazione($fattura) {
+
+		$_SESSION["title"] = "Cooperativa Chopin - Cooperativa sociale - ONLUS";
+		$_SESSION["title1"] = "Diversamente Impresa: Esperienza occupazionale-lavorativa";
+		$_SESSION["title2"] = "";
+		
+		return $fattura;		
+	}
+	
+	private function sezionePagamento($fattura) {
+		
+		$fattura->AddPage();
+		$fattura->pagamento($_SESSION["tipoadd"]);		
+		return $fattura;
+	}	
+	
+	
+	
+	
 	
 	public function preparaPagina($creaFatturaAziendaConsortileTemplate) {
 	
