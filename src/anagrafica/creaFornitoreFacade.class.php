@@ -21,7 +21,6 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["capfornitore"] = $_REQUEST["capfornitore"];
 	$_SESSION["tipoaddebito"] = $_REQUEST["tipoaddebito"];
 	$_SESSION["numggscadenzafattura"] = $_REQUEST["numggscadenzafattura"];
-	$_SESSION["esitoCodiceFornitore"] = $_REQUEST["esitoCodiceFornitore"];
 	
 	$creaFornitore->go();
 }
