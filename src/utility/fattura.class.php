@@ -4,6 +4,22 @@ require_once 'fpdf.php';
 
 class Fattura extends FPDF {
 
+
+	public static $mese = array(
+			'01' => 'gennaio',
+			'02' => 'febbraio',
+			'03' => 'marzo',
+			'04' => 'aprile',
+			'05' => 'maggio',
+			'06' => 'giugno',
+			'07' => 'luglio',
+			'08' => 'agosto',
+			'09' => 'settembre',
+			'10' => 'ottobre',
+			'11' => 'novembre',
+			'12' => 'dicembre'
+	);
+	
 	private static $_instance = null;	
 
 	private function  __clone() { }
@@ -139,7 +155,7 @@ class Fattura extends FPDF {
 		$r1  = 10;
 		$r2  = $r1 + 70;
 		$y1  = 52;
-		$y2  = $y1+40;
+		$y2  = $y1+30;
 		$mid = $y1 + (($y2-$y1) / 6);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
 		$this->Line( $r1, $mid, $r2, $mid);
@@ -156,15 +172,16 @@ class Fattura extends FPDF {
 		$this->Cell(10,5,$ibanbanca, 0,0, "C");
 	}
 	
-	public function destinatario($descliente, $indirizzocliente, $cittacliente, $capcliente, $pivacliente) {
+	public function destinatario($descliente, $indirizzocliente, $cittacliente, $capcliente, $pivacliente, $cfiscliente) {
 
 		$r1  = 82;
 		$r2  = $r1 + 120;
 		$y1  = 40;
-		$y2  = $y1+52;
+		$y2  = $y1+42;
 		$mid = $y1 + (($y2-$y1) / 8);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
 		$this->Line( $r1, $mid, $r2, $mid);
+		
 		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1+1 );
 		$this->SetFont( "Arial", "B", 10);
 		$this->Cell(10,4, "DESTINATARIO", 0,0, "C");
@@ -184,9 +201,48 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + 5, $y1 + 23 );
 		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$capcliente . " " . $cittacliente, 0,0, "");
+		
+		if (($cfiscliente == "") or ($cfiscliente == $pivacliente)) {
+			$this->SetXY( $r1 + 5, $y1 + 28 );
+			$this->SetFont( "Arial", "", 10);
+			$this->Cell(10,5,"P.iva/C.fisc: " . $pivacliente, 0,0, "");				
+		}
+		else {
+			$this->SetXY( $r1 + 5, $y1 + 28 );
+			$this->SetFont( "Arial", "", 10);
+			$this->Cell(10,5,"P.iva: " . $pivacliente, 0,0, "");
+				
+			$this->SetXY( $r1 + 5, $y1 + 33 );
+			$this->SetFont( "Arial", "", 10);
+			$this->Cell(10,5,"C.fisc: " . $cfiscliente, 0,0, "");
+		}		
 	}
 	
-	
+	public function identificativiFattura($datafat, $numfat, $codneg) {
+		
+		$negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
+		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
+		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
+		
+		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
+		$anno = date('Y', strtotime($datafat));
+		$nmese = date('m', strtotime($datafat));
+		
+		$meserif = SELF::$mese[str_pad($nmese, 2, "0", STR_PAD_LEFT)];
+		
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 84;
+		$y2  = $y1+10;
+		$mid = $y1 + (($y2-$y1) / 2);
+		$this->SetFillColor(166, 221, 242);		
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->SetXY( $r1 + 5, $y1 + 3 );
+		$this->SetFont( "Arial", "B", 10);
+		$this->Cell(10,4, "REG. SEZ. 1PA     " . $negozio . "   (mese di " . $meserif . ")     Fattura N. :   " . $nfat . "PA/" . $anno . "   del  " . $datafat, 0, 0, "");
+		
+		
+	}
 	
 }
 

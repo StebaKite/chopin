@@ -96,6 +96,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$fattura = $this->sezionePagamento($fattura); 
 		$fattura = $this->sezioneBanca($fattura);
 		$fattura = $this->sezioneDestinatario($fattura);
+		$fattura = $this->sezioneIdentificativiFattura($fattura);
 		
 		
 		
@@ -135,10 +136,14 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	private function sezioneDestinatario($fattura) {
-		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"]);
+		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"], $_SESSION["cfiscliente"]);
 		return $fattura;
 	}
 	
+	private function sezioneIdentificativiFattura($fattura) {
+		$fattura->identificativiFattura($_SESSION["datafat"], $_SESSION["numfat"], $_SESSION["codneg"]);
+		return $fattura;		
+	}
 	
 	
 	
