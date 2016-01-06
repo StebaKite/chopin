@@ -205,16 +205,16 @@ class Fattura extends FPDF {
 		if (($cfiscliente == "") or ($cfiscliente == $pivacliente)) {
 			$this->SetXY( $r1 + 5, $y1 + 28 );
 			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"P.iva/C.fisc: " . $pivacliente, 0,0, "");				
+			$this->Cell(10,5,"P.iva/C.F. : " . $pivacliente, 0,0, "");				
 		}
 		else {
 			$this->SetXY( $r1 + 5, $y1 + 28 );
 			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"P.iva: " . $pivacliente, 0,0, "");
+			$this->Cell(10,5,"P.iva : " . $pivacliente, 0,0, "");
 				
 			$this->SetXY( $r1 + 5, $y1 + 33 );
 			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"C.fisc: " . $cfiscliente, 0,0, "");
+			$this->Cell(10,5,"C.F. : " . $cfiscliente, 0,0, "");
 		}		
 	}
 	
@@ -225,9 +225,11 @@ class Fattura extends FPDF {
 		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
 		
 		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
-		$anno = date('Y', strtotime($datafat));
-		$nmese = date('m', strtotime($datafat));
 		
+		$anno = substr($datafat, 6);
+		$nmese = substr($datafat, 3,2);
+		$giorno = substr($datafat, 0,2);
+				
 		$meserif = SELF::$mese[str_pad($nmese, 2, "0", STR_PAD_LEFT)];
 		
 		$r1  = 10;
@@ -239,11 +241,8 @@ class Fattura extends FPDF {
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->SetXY( $r1 + 5, $y1 + 3 );
 		$this->SetFont( "Arial", "B", 10);
-		$this->Cell(10,4, "REG. SEZ. 1PA     " . $negozio . "   (mese di " . $meserif . ")     Fattura N. :   " . $nfat . "PA/" . $anno . "   del  " . $datafat, 0, 0, "");
-		
-		
+		$this->Cell(10,4, "REG. SEZ. 1PA" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "PA/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");				
 	}
-	
 }
 
 ?>

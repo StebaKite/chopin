@@ -36,10 +36,12 @@ function aggiungiDettaglio() {
 	
 	if (rowCount == 0) {
 		$( "#dettagli thead" ).append("<tr>" + 
-			"<th width='50' align='center'></th>" + 
-			"<th width='100' align='center'>Quantit&agrave;</th>" + 
+			"<th width='50' align='center'>Quantit&agrave;</th>" + 
 			"<th width='350' align='left'>Articolo</th>" + 
-			"<th width='100' align='right'>Importo</th>" +
+			"<th width='50' align='right'>Importo</th>" +
+			"<th width='50' align='right'>Totale</th>" +
+			"<th width='50' align='right'>Imponibile</th>" +
+			"<th width='50' align='right'>Iva</th>" +
 			"<th>&nbsp;</th>" +
 			"</tr>");
 		$( "#dettagli" ).addClass("datiCreateSottile");
@@ -51,21 +53,29 @@ function aggiungiDettaglio() {
 	var articolo = $("#articolo").val();
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
+	var totale = $("#totale").val();
+	var imponibile = $("#imponibile").val();
+	var iva = $("#iva").val();
 	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
-		"<td align='center'>" + contatore + "</td>" +	
         "<td align='center'>" + quantita + "</td>" +
         "<td align='left'>" + articolo + "</td>" +
         "<td align='right'>" + importoNormalizzato + "</td>" +
-    	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
+        "<td align='right'>" + totale + "</td>" +
+        "<td align='right'>" + imponibile + "</td>" +
+        "<td align='right'>" + iva + "</td>" +
+    	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato;
+	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");
 	$("#articolo").val("");
 	$("#importo").val("");
+	$("#totale").val("");
+	$("#imponibile").val("");
+	$("#iva").val("");
 }
 
 function addDett(dettaglio, contatore) {
@@ -83,6 +93,30 @@ function aggiornaDettaglioInseriti(dettInseriti) {
 
 function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 	$("#indexDettagliInseriti").val(indexDettInseriti);
+}
+
+function calcolaImponibile() {
+	
+	var importo = $("#importo").val();
+	var quantita = $("#quantita").val();
+	var importoNormalizzato = importo.trim().replace(",", ".");
+	
+	var totale = importoNormalizzato * quantita;	
+	$("#totale").val(totale);
+	
+	var aliquota = $("input[name=aliquota]:checked").val();
+	
+	var imponibile = totale / aliquota;
+	var imponibileArrotondato = imponibile.toFixed(2);
+	
+	$("#imponibile").val(imponibileArrotondato);
+	
+	if (aliquota == "1.04") {
+		var iva = imponibileArrotondato * 0.04;		
+	}
+	
+	var ivaArrotondata = iva.toFixed(2);
+	$("#iva").val(ivaArrotondata);	
 }
 
 </script>
@@ -168,11 +202,28 @@ function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
 				<tr>
 					<td>%ml.articolo% :</td>
 					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="40" maxlength="40" ></td>
-				</tr>								
+				</tr>
 				<tr>
 					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo" name="importo" size="20" maxlength="20" ></td>
-				</tr>					
+					<td class="tooltip" colspan="2"><input type="text" id="importo" name="importo" size="20" maxlength="20" onblur="calcolaImponibile()" /></td>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked /><label for="aliquota4">%ml.aliquota4%</label>
+						</div>
+					</td>					
+				</tr>
+				<tr>
+					<td>%ml.totale% :</td>
+					<td class="tooltip"><input type="text" id="totale" name="totale" size="10" maxlength="20"></td>				
+				</tr>													
+				<tr>
+					<td>%ml.imponibile% :</td>
+					<td class="tooltip"><input type="text" id="imponibile" name="imponibile" size="10" maxlength="20"></td>				
+				</tr>				
+				<tr>
+					<td>%ml.iva% :</td>
+					<td class="tooltip"><input type="text" id="iva" name="iva" size="10" maxlength="20"></td>				
+				</tr>				
 			</tbody>
 		</table> 	 
   </form>
