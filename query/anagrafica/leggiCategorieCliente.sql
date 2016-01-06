@@ -1,3 +1,3 @@
-SELECT cat_cliente, des_categoria, num_fattura_ultimo
+SELECT cat_cliente, des_categoria
 FROM contabilita.categoria_cliente
 ORDER BY cat_cliente
