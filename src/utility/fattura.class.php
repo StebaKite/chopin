@@ -176,6 +176,14 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + 5, $y1 + 13 );
 		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$descliente, 0,0, "");
+		
+		$this->SetXY( $r1 + 5, $y1 + 18 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,$indirizzocliente, 0,0, "");
+		
+		$this->SetXY( $r1 + 5, $y1 + 23 );
+		$this->SetFont( "Arial", "", 10);
+		$this->Cell(10,5,$capcliente . " " . $cittacliente, 0,0, "");
 	}
 	
 	
