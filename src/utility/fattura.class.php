@@ -3,22 +3,6 @@
 require_once 'fpdf.php';
 
 class Fattura extends FPDF {
-
-
-	public static $mese = array(
-			'01' => 'gennaio',
-			'02' => 'febbraio',
-			'03' => 'marzo',
-			'04' => 'aprile',
-			'05' => 'maggio',
-			'06' => 'giugno',
-			'07' => 'luglio',
-			'08' => 'agosto',
-			'09' => 'settembre',
-			'10' => 'ottobre',
-			'11' => 'novembre',
-			'12' => 'dicembre'
-	);
 	
 	private static $_instance = null;	
 
@@ -49,12 +33,12 @@ class Fattura extends FPDF {
 		$this->Ln();
 		
 		$this->SetFont('Arial','I',12);
-		$this->Cell(0,10,utf8_decode($_SESSION["title1"]),0,0,'C');
+		$this->Cell(0,5,utf8_decode($_SESSION["title1"]),0,0,'C');
 		$this->Ln();
 		
 		if (isset($_SESSION["title2"])) {
 
-			$this->SetFont('Arial','I',12);
+			$this->SetFont('Arial','I',10);
 			$this->Cell(0,10,utf8_decode($_SESSION["title2"]),0,0,'C');
 			$this->Ln();
 		}		
@@ -137,7 +121,7 @@ class Fattura extends FPDF {
 		
 		$r1  = 10;
 		$r2  = $r1 + 70;
-		$y1  = 40;
+		$y1  = 50;
 		$y2  = $y1+10;
 		$mid = $y1 + (($y2-$y1) / 2);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
@@ -154,7 +138,7 @@ class Fattura extends FPDF {
 
 		$r1  = 10;
 		$r2  = $r1 + 70;
-		$y1  = 52;
+		$y1  = 62;
 		$y2  = $y1+30;
 		$mid = $y1 + (($y2-$y1) / 6);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
@@ -176,7 +160,7 @@ class Fattura extends FPDF {
 
 		$r1  = 82;
 		$r2  = $r1 + 120;
-		$y1  = 40;
+		$y1  = 50;
 		$y2  = $y1+42;
 		$mid = $y1 + (($y2-$y1) / 8);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
@@ -218,7 +202,7 @@ class Fattura extends FPDF {
 		}		
 	}
 	
-	public function identificativiFattura($datafat, $numfat, $codneg) {
+	public function identificativiFattura($giorno, $meserif, $anno, $numfat, $codneg) {
 		
 		$negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
 		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
@@ -226,15 +210,9 @@ class Fattura extends FPDF {
 		
 		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
 		
-		$anno = substr($datafat, 6);
-		$nmese = substr($datafat, 3,2);
-		$giorno = substr($datafat, 0,2);
-				
-		$meserif = SELF::$mese[str_pad($nmese, 2, "0", STR_PAD_LEFT)];
-		
 		$r1  = 10;
 		$r2  = $r1 + 192;
-		$y1  = 84;
+		$y1  = 94;
 		$y2  = $y1+10;
 		$mid = $y1 + (($y2-$y1) / 2);
 		$this->SetFillColor(166, 221, 242);		
@@ -242,6 +220,50 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + 5, $y1 + 3 );
 		$this->SetFont( "Arial", "B", 10);
 		$this->Cell(10,4, "REG. SEZ. 1PA" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "PA/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");				
+	}
+	
+	public function aggiungiLineaTabella($w, $linea) {
+		
+		$this->SetFont( "Arial", "", 10);
+		
+		$this->Cell($w[0],6,$linea["QUANTITA"],"LR");
+		$this->Cell($w[1],6,$linea["ARTICOLO"],"LR");
+		$this->Cell($w[3],6,EURO . number_format($linea["IMPORTO U."], 2, ',', '.'),"LR",0,'R');
+		$this->Cell($w[3],6,EURO . number_format($linea["TOTALE"], 2, ',', '.'),"LR",0,'R');
+		$this->Cell($w[4],6,EURO . number_format($linea["IMPONIBILE"], 2, ',', '.'),"LR",0,'R');
+		$this->Cell($w[5],6,EURO . number_format($linea["IVA"], 2, ',', '.'),"LR",0,'R');
+		$this->Ln();
+	}
+
+	public function aggiungiLineaLibera($w, $linea) {
+	
+		$this->SetFont( "Arial", "", 10);
+	
+		$this->Cell($w[0],6,"N. " . $linea["QUANTITA"],"");
+		$this->Cell($w[1],6,$linea["ARTICOLO"] . " da " . EURO . $linea["IMPORTO U."] ,"");
+		$this->Cell($w[2],6,EURO,"",0,'R');
+		$this->Cell($w[3],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
+		$this->Ln();
+	}
+	
+	public function totaliFattura($tot_dettagli, $tot_imponibile, $tot_iva) {
+
+		$this->SetFont( "Arial", "B", 8);
+		$r1  = 10;
+		$r2  = $r1 + 190;
+		$y1  = 260;
+		$y2  = $y1+15;
+		$this->SetFillColor(192);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->Line( $r1, $y1+4, $r2, $y1+4);
+		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti all' IVA
+		$this->Line( $r1+100, $y1, $r1+100, $y2);  // davanti al totale
+		$this->SetXY( $r1+15, $y1);
+		$this->Cell(10,4, "IMPONIBILE");
+		$this->SetX( $r1+70 );
+		$this->Cell(10,4, "IVA 4%");
+		$this->SetX( $r1+170 );
+		$this->Cell(10,4, "TOTALE");
 	}
 }
 

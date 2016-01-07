@@ -58,10 +58,12 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 		
 			$thead_dettagli =
 			"<tr>" .
-			"<th width='50' align='center'></th>" .
-			"<th width='100' align='center'>Quantit&agrave;</th>" .
+			"<th width='50' align='center'>Quantit&agrave;</th>" .
 			"<th width='350' align='left'>Articolo</th>" .
-			"<th width='100' align='right'>Importo</th>" .
+			"<th width='50' align='right'>Importo</th>" .
+			"<th width='50' align='right'>Totale</th>" .
+			"<th width='50' align='right'>Imponibile</th>" .
+			"<th width='50' align='right'>Iva</th>" .
 			"<th>&nbsp;</th>" .
 			"</tr>";	
 		
@@ -77,10 +79,12 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 		
 				$dettaglio =
 				"<tr id='" . trim($id) . "'>" .
-				"<td align='center'>" . trim($id) . "</td>" .
 				"<td align='center'>" . $e[1] . "</td>" .
 				"<td align='left'>" . $e[2] . "</td>" .
 				"<td align='right'>&euro;" . number_format($e[3], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro;" . number_format($e[4], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro;" . number_format($e[5], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro;" . number_format($e[6], 2, ',', '.') . "</td>" .
 				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		

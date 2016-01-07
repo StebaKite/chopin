@@ -60,10 +60,10 @@ function aggiungiDettaglio() {
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
         "<td align='center'>" + quantita + "</td>" +
         "<td align='left'>" + articolo + "</td>" +
-        "<td align='right'>" + importoNormalizzato + "</td>" +
-        "<td align='right'>" + totale + "</td>" +
-        "<td align='right'>" + imponibile + "</td>" +
-        "<td align='right'>" + iva + "</td>" +
+        "<td align='right'>&euro;" + importoNormalizzato + "</td>" +
+        "<td align='right'>&euro;" + totale + "</td>" +
+        "<td align='right'>&euro;" + imponibile + "</td>" +
+        "<td align='right'>&euro;" + iva + "</td>" +
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
