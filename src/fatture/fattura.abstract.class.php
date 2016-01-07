@@ -134,6 +134,25 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		return $tipoAddebito;		
 	}
 	
+	public function aggiornaNumeroFattura($utility, $db, $categoriaCliente, $codiceNegozio, $numeroFattura) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cat_cliente%' => trim($categoriaCliente),
+				'%neg_progr%' => trim($codiceNegozio)
+				'%%'
+		);
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaNumeroFattura;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		foreach(pg_fetch_all($result) as $row) {
+			$numeroFattura = $row['num_fattura_ultimo'];
+		}
+		return $numeroFattura;
+		
+	}
 }
 
 ?>

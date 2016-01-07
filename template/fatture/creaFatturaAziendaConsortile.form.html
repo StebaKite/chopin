@@ -24,10 +24,15 @@ function prelevaNumeroFattura(negozio) {
     	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
     }
     
-    if (negozio == "BRE") {$( "#ragsocbanca" ).val("manca!");}
+    if (negozio == "BRE") {
+    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Brembate");
+    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
+    }
     
-    if (negozio == "TRE") {$( "#ragsocbanca" ).val("manca!");}
-    
+    if (negozio == "TRE") {
+    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Trezzo");
+    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
+    }    
 }
 
 function aggiungiDettaglio() {
@@ -119,6 +124,21 @@ function calcolaImponibile() {
 	$("#iva").val(ivaArrotondata);	
 }
 
+function aggiornaNumeroFattura() {
+
+	var negozio = $( "#codneg" ).val();
+	var numfatt = $( "#numfat" ).val();
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#numfat" ).val(xmlhttp.responseText);
+        }
+    } 
+    xmlhttp.open("GET", "aggiornaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio + "&numfatt=" + numfatt, true);
+    xmlhttp.send();		
+}
+
 </script>
 
 <div id="body">
@@ -157,11 +177,11 @@ function calcolaImponibile() {
 					</tr>				
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%'/></td>				
+						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' onblur="aggiornaNumeroFattura()"/></td>
 					</tr>				
 					<tr>
 						<td>%ml.banca% :</td>
-						<td class="tooltip"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
+						<td class="tooltip" colspan="2"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
 					</tr>				
 					<tr>
 						<td>%ml.iban% :</td>
@@ -178,7 +198,7 @@ function calcolaImponibile() {
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="2" align="right" class="tooltip">
+						<td colspan="3" align="right" class="tooltip">
 							<button id="nuovo-dett-fattura-aziende" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
 						</td>

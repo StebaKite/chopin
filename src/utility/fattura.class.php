@@ -240,7 +240,7 @@ class Fattura extends FPDF {
 		$this->SetFont( "Arial", "", 10);
 	
 		$this->Cell($w[0],6,"N. " . $linea["QUANTITA"],"");
-		$this->Cell($w[1],6,$linea["ARTICOLO"] . " da " . EURO . $linea["IMPORTO U."] ,"");
+		$this->Cell($w[1],6,$linea["ARTICOLO"] . " da " . EURO . " " . $linea["IMPORTO U."] ,"");
 		$this->Cell($w[2],6,EURO,"",0,'R');
 		$this->Cell($w[3],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
 		$this->Ln();
@@ -248,22 +248,31 @@ class Fattura extends FPDF {
 	
 	public function totaliFattura($tot_dettagli, $tot_imponibile, $tot_iva) {
 
-		$this->SetFont( "Arial", "B", 8);
+		$this->SetFont( "Arial", "B", 10);
 		$r1  = 10;
 		$r2  = $r1 + 190;
 		$y1  = 260;
 		$y2  = $y1+15;
 		$this->SetFillColor(192);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
-		$this->Line( $r1, $y1+4, $r2, $y1+4);
+		$this->Line( $r1, $y1+6, $r2, $y1+6);
 		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti all' IVA
 		$this->Line( $r1+100, $y1, $r1+100, $y2);  // davanti al totale
+		
 		$this->SetXY( $r1+15, $y1);
-		$this->Cell(10,4, "IMPONIBILE");
+		$this->Cell(10,6, "IMPONIBILE");
 		$this->SetX( $r1+70 );
-		$this->Cell(10,4, "IVA 4%");
+		$this->Cell(10,6, "IVA 4%");
 		$this->SetX( $r1+170 );
-		$this->Cell(10,4, "TOTALE");
+		$this->Cell(10,6, "TOTALE");
+		
+		$this->SetXY( $r1+19, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
+		$this->SetXY( $r1+67, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_iva, 2, ',', '.'));
+		$this->SetXY( $r1+167, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'));
+		
 	}
 }
 
