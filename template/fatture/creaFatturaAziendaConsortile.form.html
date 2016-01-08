@@ -124,21 +124,6 @@ function calcolaImponibile() {
 	$("#iva").val(ivaArrotondata);	
 }
 
-function aggiornaNumeroFattura() {
-
-	var negozio = $( "#codneg" ).val();
-	var numfatt = $( "#numfat" ).val();
-	
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            $( "#numfat" ).val(xmlhttp.responseText);
-        }
-    } 
-    xmlhttp.open("GET", "aggiornaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio + "&numfatt=" + numfatt, true);
-    xmlhttp.send();		
-}
-
 </script>
 
 <div id="body">
@@ -177,7 +162,7 @@ function aggiornaNumeroFattura() {
 					</tr>				
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' onblur="aggiornaNumeroFattura()"/></td>
+						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
 					</tr>				
 					<tr>
 						<td>%ml.banca% :</td>

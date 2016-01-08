@@ -13,7 +13,8 @@ abstract class FatturaAbstract extends ChopinAbstract {
  	public static $queryRicercaClienti = "/fatture/ricercaClienti.sql";
  	public static $queryRicercaNumeroFattura = "/fatture/ricercaNumeroFattura.sql";
  	public static $queryRicercaDatiCliente = "/fatture/ricercaDatiCliente.sql";
-
+	public static $queryAggiornaNumeroFattura = "/fatture/aggiornaNumeroFattura.sql";
+ 	
 	function __construct() {
 	}
 
@@ -139,19 +140,15 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cat_cliente%' => trim($categoriaCliente),
-				'%neg_progr%' => trim($codiceNegozio)
-				'%%'
+				'%neg_progr%' => trim($codiceNegozio),
+				'%num_fattura_ultimo%' => trim($numeroFattura)
 		);
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaNumeroFattura;
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAggiornaNumeroFattura;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		
-		foreach(pg_fetch_all($result) as $row) {
-			$numeroFattura = $row['num_fattura_ultimo'];
-		}
-		return $numeroFattura;
-		
+		return $result;
 	}
 }
 

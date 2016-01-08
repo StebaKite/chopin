@@ -27,10 +27,14 @@ class Fattura extends FPDF {
 		define('EURO', chr(128));
 		
 		$this->Image($_SESSION["logo"],5,5,20);		
-
+		
+		$this->SetTextColor(36, 169, 219);
+		
 		$this->SetFont('Arial','B',15);
 		$this->Cell(0,10,utf8_decode($_SESSION["title"]),0,0,'C');
 		$this->Ln();
+
+		$this->SetTextColor(0, 0, 0);
 		
 		$this->SetFont('Arial','I',12);
 		$this->Cell(0,5,utf8_decode($_SESSION["title1"]),0,0,'C');
@@ -47,13 +51,25 @@ class Fattura extends FPDF {
 
 	public function Footer() {
 
-		$this->SetY(-15);												// Position at 1.5 cm from bottom		
-		$this->SetFont('Arial','B',8);									// Arial italic 8
-		$this->Cell(0,10,'Cooperativa Chopin - Cooperativa sociale - ONLUS',0,0,'C');
+		$this->SetY(-16);												// Position at 1.5 cm from bottom		
+		$this->SetTextColor(36, 169, 219);
 				
-		$this->SetY(-10);												// Position at 1 cm from bottom		
-		$this->SetFont('Arial','',8);									// Arial italic 8
-		$this->Cell(0, 10, utf8_decode("Domicilio fiscale: via San Martino, 1 - 24030 Villa d'Adda (BG) - tel. 3453208724 C.F./P.IVA: 03691430163"),0,1,'C');		
+		$this->SetFont('Arial','B',8);
+		$this->Cell(0,10,'Cooperativa Chopin - Cooperativa sociale - ONLUS',0,0,'C');
+		$this->SetTextColor(0, 0, 0);
+		
+		$this->SetY(-13);												// Position at 1 cm from bottom		
+		$this->SetFont('Arial','I',8);									// Arial italic 8
+		$this->Cell(0, 10, utf8_decode("WEB: http://www.progettochopin.it  -  Tel. 345 32 08 724"),0,1,'C');
+
+		$this->SetY(-10);												// Position at 1 cm from bottom
+		$this->SetFont('Arial','I',8);									// Arial italic 8
+		$this->Cell(0, 10, utf8_decode("Iscritta al Registro Imprese di Bergamo - Numero R.E.A. 400220 - Numero Albo Cooperative A208408"),0,1,'C');
+
+		$this->SetY(-7);												// Position at 1 cm from bottom
+		$this->SetFont('Arial','I',8);									// Arial italic 8
+		$this->Cell(0, 10, utf8_decode("Iscritta all'Albo Regionale delle Cooperative Sociali: sezione A al n.1423 con decreto n.166; sezione B al n.814con decreto 4"),0,1,'C');
+		
 	}
 
 	private function RoundedRect($x, $y, $w, $h, $r, $style = '') {
@@ -215,11 +231,23 @@ class Fattura extends FPDF {
 		$y1  = 94;
 		$y2  = $y1+10;
 		$mid = $y1 + (($y2-$y1) / 2);
-		$this->SetFillColor(166, 221, 242);		
+		$this->SetFillColor(189, 229, 244);		
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->SetXY( $r1 + 5, $y1 + 3 );
 		$this->SetFont( "Arial", "B", 10);
 		$this->Cell(10,4, "REG. SEZ. 1PA" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "PA/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");				
+	}
+	
+	public function boxDettagli() {
+
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 106;
+		$y2  = $y1+169;
+		$mid = $y1 + (($y2-$y1) / 2);
+		
+		$this->SetDrawColor(204, 204, 204);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'D');
 	}
 	
 	public function aggiungiLineaTabella($w, $linea) {
@@ -237,6 +265,7 @@ class Fattura extends FPDF {
 
 	public function aggiungiLineaLibera($w, $linea) {
 	
+		$this->SetX( 15 );		
 		$this->SetFont( "Arial", "", 10);
 	
 		$this->Cell($w[0],6,"N. " . $linea["QUANTITA"],"");
@@ -250,27 +279,27 @@ class Fattura extends FPDF {
 
 		$this->SetFont( "Arial", "B", 10);
 		$r1  = 10;
-		$r2  = $r1 + 190;
+		$r2  = $r1 + 192;
 		$y1  = 260;
 		$y2  = $y1+15;
-		$this->SetFillColor(192);
+		$this->SetFillColor(230, 230, 230);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->Line( $r1, $y1+6, $r2, $y1+6);
 		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti all' IVA
 		$this->Line( $r1+100, $y1, $r1+100, $y2);  // davanti al totale
 		
-		$this->SetXY( $r1+15, $y1);
+		$this->SetXY( $r1+16, $y1);
 		$this->Cell(10,6, "IMPONIBILE");
-		$this->SetX( $r1+70 );
+		$this->SetX( $r1+71 );
 		$this->Cell(10,6, "IVA 4%");
-		$this->SetX( $r1+170 );
+		$this->SetX( $r1+169 );
 		$this->Cell(10,6, "TOTALE");
 		
-		$this->SetXY( $r1+19, $y1+7);
+		$this->SetXY( $r1+16, $y1+7);
 		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
-		$this->SetXY( $r1+67, $y1+7);
+		$this->SetXY( $r1+71, $y1+7);
 		$this->Cell(10,6,EURO . " " . number_format($tot_iva, 2, ',', '.'));
-		$this->SetXY( $r1+167, $y1+7);
+		$this->SetXY( $r1+169, $y1+7);
 		$this->Cell(10,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'));
 		
 	}

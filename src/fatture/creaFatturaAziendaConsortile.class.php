@@ -71,11 +71,9 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		require_once 'creaFatturaAziendaConsortile.template.php';
 	
 		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
-		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
-
-		// Data del giorno preimpostata solo in entrata -------------------------
 		
 		$_SESSION["datafat"] = date("d/m/Y");
+		$_SESSION["idcliente"] = "";
 		$_SESSION["codneg"] = "";
 		$_SESSION["numfat"] = "";
 		$_SESSION["tipoadd"] = "";
@@ -84,7 +82,12 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["dettagliInseriti"] = "";
 		$_SESSION["indexDettagliInseriti"] = "";
 		
-		// Compone la pagina
+		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
+		
+		/**
+		 * Compongo la pagina
+		 */ 
+		
 		include(self::$testata);
 		$creaFatturaAziendaConsortileTemplate->displayPagina();
 		include(self::$piede);
@@ -95,6 +98,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		require_once 'creaFatturaAziendaConsortile.template.php';
 		require_once 'utility.class.php';
 		require_once 'fattura.class.php';		
+		require_once 'database.class.php';
 		
 		// Creo la fattura -------------------------
 		
@@ -113,28 +117,40 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		self::$giorno = substr($_SESSION["datafat"], 0,2);
 		$mm = str_pad(self::$nmese, 2, "0", STR_PAD_LEFT);
 		self::$meserif = self::$mese[$mm];
-		
+
 		/**
-		 * Generazione del documento
+		 * Aggiorno il numero fattura per l'azienda consortile e negozio
 		 */
 		
-		$fattura = $this->intestazione($fattura);
-		$fattura = $this->sezionePagamento($fattura); 
-		$fattura = $this->sezioneBanca($fattura);
-		$fattura = $this->sezioneDestinatario($fattura);
-		$fattura = $this->sezioneIdentificativiFattura($fattura);
-		$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);
-		$fattura = $this->sezioneTotali($fattura);
+		$db = Database::getInstance();
 		
-		$fattura->Output();
-		
-		// Compone la pagina ----------------------
+		if ($this->aggiornaNumeroFattura($utility, $db, "1200", $_SESSION["codneg"], $_SESSION["numfat"])) {
 
+			/**
+			 * Generazione del documento
+			 */
+			
+			$fattura = $this->intestazione($fattura);
+			$fattura = $this->sezionePagamento($fattura);
+			$fattura = $this->sezioneBanca($fattura);
+			$fattura = $this->sezioneDestinatario($fattura);
+			$fattura = $this->sezioneIdentificativiFattura($fattura);
+			$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);
+			$fattura = $this->sezioneTotali($fattura);
+			
+			$fattura->Output();				
+		}
+			
 		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
 		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 		
 		include(self::$testata);
 		$creaFatturaAziendaConsortileTemplate->displayPagina();
+		
+		self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+		echo $utility->tailTemplate($template);
+		
 		include(self::$piede);
 	}
 	
@@ -214,17 +230,16 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 // 	}
 
 	private function sezioneDettagliFattura($fattura, $meserif) {
-	
+
+		$fattura->boxDettagli();
+		
 		$d = explode(",", $_SESSION['dettagliInseriti']);
 			
 		$tot_imponibile = 0;
 		$tot_iva = 0;
 		$w = array(15, 110, 30, 30);
-	
-		$fattura->Ln();
-		$fattura->Ln();
-		$fattura->Ln();
-		$fattura->Ln();
+			
+		$fattura->SetXY( 15, 120 );		
 		$fattura->SetFont( "Arial", "B", 10);
 		$fattura->Cell(50,6,"Mese di " . $meserif, "");
 		$fattura->Ln();
