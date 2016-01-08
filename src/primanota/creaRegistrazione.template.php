@@ -232,6 +232,7 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
  		
  				$dettaglio =
  				"<tr id=" . $e[0] . ">" .
+ 				"<td align='center'>" . $e[0] . "</td>" .
  				"<td align='center'>" . $e[1] . "</td>" .
  				"<td align='right'>" . $e[2] . "</td>" .
 				"<td id='icons'><a class='tooltip' onclick='cancellaScadenzaSupplementarePagina(" . $e[0] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .

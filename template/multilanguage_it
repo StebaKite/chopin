@@ -29,6 +29,7 @@ villa = Villa D.
 brembate = Brembate
 trezzo = Trezzo
 pdf = Estrai in PDF
+aliquota4 = Iva 4%
 aliquota10 = Iva 10%
 aliquota22 = Iva 22%
 presenteInBilancio = Incluso in Bilancio
@@ -42,9 +43,13 @@ nuovaDataScad = Nuova Scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
 soloContoEconomico = Solo Conto Economico
+<<<<<<< HEAD
 generi = Generica
 incpag = Inc / Pag
 corris = Corrispettivi
+=======
+creaFat = Crea fattura
+>>>>>>> refs/heads/fatture
 ;
 ; Tips ---------------------------------
 ;
@@ -69,6 +74,7 @@ chiudiEvento = Chiude questo evento
 estraipdfTip = Estrae la tabella su un documento PDF
 anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
 nuovaDataScadTip = Aggiunge una data scadenza supplementare
+creaFattTip = Genera una fattura per il cliente selezionato
 ;
 ; Funzioni -----------------------------
 ;
@@ -110,6 +116,7 @@ ricercaSaldi = Ricerca Saldi
 creaNuovoSaldo = Nuovo Saldo
 incassiPagamenti = Incassi e Pagamenti
 
+creaFatturaAziendaConsortile = Crea fattura azienda consortile
 ;
 ; Messaggi -----------------------------
 ;
@@ -131,6 +138,7 @@ codclie = Cliente
 importo = Importo
 imponibile = Imponibile
 iva = IVA
+totale = Totale
 conto = Conto
 datareg = Data registrazione
 da = Da
@@ -184,6 +192,18 @@ deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
 dessaldo = Descrizione riporto saldo
+<<<<<<< HEAD
 pivacliente = P.iva
 cfiscliente = Codice Fiscale
 categoria = Categoria
+=======
+azcons = Azienda consortile
+datafat = Data fattura
+descfat = Descrizione
+impofat = Imponibile
+impivafat = IVA
+banca = Istituto bancario
+iban = IBAN
+quantita = Quantit&agrave;
+articolo = Articolo
+>>>>>>> refs/heads/fatture

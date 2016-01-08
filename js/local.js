@@ -524,6 +524,33 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 	]
 });
 
+$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
+	autoOpen: false,
+	width: 530,
+	height: 360,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiDettaglio();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
+	$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi
@@ -687,6 +714,26 @@ $( ".scadenzeAperteCliente" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuCliente" )
+	.selectmenu({change:
+		function(){
+			var cliente = $("#cliente").val();
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#tipoadd" ).val(xmlhttp.responseText);
+	            }
+	        }
+	        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 150})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+
 $( ".selectmenu" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
@@ -743,6 +790,7 @@ $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 250 });
+$( ".selectmenuCliente" ).selectmenu({ width: 350 });
 
 // -----------------------------------------------------------------
 // Ajax su campi di input
@@ -839,6 +887,33 @@ function cancellaDettaglioPagina(idconto) {
 	var index = jQuery.inArray(c,indexDettInseriti);
 	if (index == -1) {
 		var cc = idconto.toString();
+		var index = jQuery.inArray(cc,indexDettInseriti);
+	}	
+	
+	if (index > -1) {
+ 		indexDettInseriti.splice(index, 1);
+ 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
+
+ 		dettInseriti.splice(index, 1);				
+ 		aggiornaDettaglioInseriti(dettInseriti);
+	}
+}
+
+function cancellaDettaglioFattura(id) {
+	
+	$("#" + id).remove();	
+	
+ 	var rowCount = $("#dettagli tbody tr").length;
+	
+	if (rowCount == 0) {
+		$( "#dettagli thead tr" ).remove();		
+		$( "#dettagli" ).removeClass("datiCreateSottile");
+	}
+	
+	var c = parseInt(id.toString());
+	var index = jQuery.inArray(c,indexDettInseriti);
+	if (index == -1) {
+		var cc = id.toString();
 		var index = jQuery.inArray(cc,indexDettInseriti);
 	}	
 	
