@@ -299,7 +299,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		
 		foreach(pg_fetch_all($result) as $row) {
 		
-			if ($row['cat_cliente'] == $_SESSION["catcliente"]) {
+			if (trim($row['cat_cliente']) == trim($_SESSION["catcliente"])) {
 				$elencoCategorieCliente .= "<option value='" . $row['cat_cliente'] . "' selected >" . $row['des_categoria'] . "</option>";
 			}
 			else {
