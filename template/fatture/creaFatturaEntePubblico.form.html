@@ -14,7 +14,7 @@ function prelevaNumeroFattura(negozio) {
             $( "#numfat" ).val(xmlhttp.responseText);
         }
     } 
-    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio, true);
+    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1300&codneg=" + negozio, true);
     xmlhttp.send();		
     
     // Inizializzazione della banca sulla base del negozio selezionato
@@ -171,7 +171,14 @@ function calcolaImponibile() {
 					<tr>
 						<td>%ml.iban% :</td>
 						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
-					</tr>				
+					</tr>
+					<tr>
+						<td class="td">%ml.periodo% %ml.da% :</td>
+						<td class="tooltip">
+							<input class="datepicker" type="text" name="periodo_da" size="10" maxlength="10" value='%periodo_da%' />&nbsp;&nbsp;&nbsp;%ml.a% :&nbsp;
+							<input class="datepicker" type="text" name="periodo_a" size="10" maxlength="10" value='%periodo_a%' >
+						</td>
+					</tr>									
 					<tr>
 						<td colspan="4">
 							<table id="dettagli" class="%class_dettagli%">

@@ -3,12 +3,12 @@
 require_once 'fattura.abstract.class.php';
 
 /**
- * Crazione della fattura per le aziende consortili
+ * Crazione della fattura per gli Enti Pubblici
  * 
  * @author stefano
  *
  */
-class CreaFatturaAziendaConsortile extends FatturaAbstract {
+class CreaFatturaEntePubblico extends FatturaAbstract {
 
 	public static $mese = array(
 			'01' => 'gennaio',
@@ -32,7 +32,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	
 	private static $_instance = null;
 	
-	public static $azioneCreaFatturaAziendaConsortile = "../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=go";
+	public static $azioneCreaFatturaEntePubblico = "../fatture/creaFatturaEntePubblicoFacade.class.php?modo=go";
 	
 	function __construct() {
 	
@@ -59,7 +59,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	
 		if( !is_object(self::$_instance) )
 	
-			self::$_instance = new CreaFatturaAziendaConsortile();
+			self::$_instance = new CreaFatturaEntePubblico();
 	
 		return self::$_instance;
 	}
@@ -68,9 +68,9 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	
 	public function start() {
 	
-		require_once 'creaFatturaAziendaConsortile.template.php';
+		require_once 'creaFatturaEntePubblico.template.php';
 	
-		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
+		$creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
 		
 		$_SESSION["datafat"] = date("d/m/Y");
 		$_SESSION["idcliente"] = "";
@@ -79,23 +79,25 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["tipoadd"] = "";
 		$_SESSION["ragsocbanca"] = "";
 		$_SESSION["ibanbanca"] = "";
+		$_SESSION["periodo_da"] = "";
+		$_SESSION["periodo_a"] = "";
 		$_SESSION["dettagliInseriti"] = "";
 		$_SESSION["indexDettagliInseriti"] = "";
 		
-		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
+		$this->preparaPagina($creaFatturaEntePubblicoTemplate);
 		
 		/**
 		 * Compongo la pagina
 		 */ 
 		
 		include(self::$testata);
-		$creaFatturaAziendaConsortileTemplate->displayPagina();
+		$creaFatturaEntePubblicoTemplate->displayPagina();
 		include(self::$piede);
 	}
 	
 	public function go() {
 		
-		require_once 'creaFatturaAziendaConsortile.template.php';
+		require_once 'creaFatturaEntePubblico.template.php';
 		require_once 'utility.class.php';
 		require_once 'fattura.class.php';		
 		require_once 'database.class.php';
@@ -119,12 +121,12 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		self::$meserif = self::$mese[$mm];
 
 		/**
-		 * Aggiorno il numero fattura per l'azienda consortile e negozio
+		 * Aggiorno il numero fattura per l'ente pubblico e negozio
 		 */
 		
 		$db = Database::getInstance();
 		
-		if ($this->aggiornaNumeroFattura($utility, $db, "1200", $_SESSION["codneg"], $_SESSION["numfat"])) {
+		if ($this->aggiornaNumeroFattura($utility, $db, "1300", $_SESSION["codneg"], $_SESSION["numfat"])) {
 
 			/**
 			 * Generazione del documento
@@ -135,22 +137,18 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 			$fattura = $this->sezioneBanca($fattura);
 			$fattura = $this->sezioneDestinatario($fattura);
 			$fattura = $this->sezioneIdentificativiFattura($fattura);
-			$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);
+			$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);			
+			$fattura = $this->sezioneNota($fattura);
 			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
 		}
 			
-		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
-		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
+		$creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
+		$this->preparaPagina($creaFatturaEntePubblicoTemplate);
 		
 		include(self::$testata);
-		$creaFatturaAziendaConsortileTemplate->displayPagina();
-		
-		self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-		$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-		echo $utility->tailTemplate($template);
-		
+		$creaFatturaEntePubblicoTemplate->displayPagina();		
 		include(self::$piede);
 	}
 	
@@ -180,54 +178,15 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	private function sezioneIdentificativiFattura($fattura) {
-		$fattura->identificativiFattura(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
+		$fattura->identificativiFatturaEntePubblico(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
 		return $fattura;		
 	}
-	
-// 	private function sezioneDettagliFattura($fattura) {
-		
-// 		$d = explode(",", $_SESSION['dettagliInseriti']);
-			
-// 		$tot_imponibile = 0;
-// 		$tot_iva = 0;
-// 		$w = array(20, 70, 25, 25, 25, 25);
-// 		$h = array("QUANTITA'", "DESCRIZIONE", "IMP. U.", "TOTALE", "IMPONIBILE", "IVA 4,00%");
-		
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-		
-// 		for($i=0;$i<count($h);$i++)
-// 			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
-		
-// 		$fattura->Ln();
-		
-// 		foreach($d as $ele) {
-		
-// 			$e = explode("#",$ele);
-			
-// 			$linea = array( "QUANTITA"   => $e[1],
-// 							"ARTICOLO"	 => $e[2],
-// 							"IMPORTO U." => $e[3],
-// 							"TOTALE"     => $e[4],
-// 							"IMPONIBILE" => $e[5],
-// 							"IVA"        => $e[6]		
-// 			);				
 
-// 			$fattura->aggiungiLineaTabella($w, $linea);
-				
-// 			$tot_imponibile += $e[5];
-// 			$tot_iva = $e[6];			
-// 		}
-		
-// 		// Closing line
-// 		$fattura->Cell(array_sum($w),0,'','T');
-		
-// 		$_SESSION["tot_imponibile"] = $tot_imponibile;
-// 		$_SESSION["tot_iva"] = $tot_iva;
-// 		return $fattura;
-// 	}
+	private function sezioneNota($fattura) {
+		$nota = "Operazione con 'scissione dei pagamenti' DPR. n. 633/72";
+		$fattura->aggiungiLineaAnnotazione($nota);
+		return $fattura;
+	}
 
 	private function sezioneDettagliFattura($fattura, $meserif) {
 
@@ -237,11 +196,36 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 			
 		$tot_imponibile = 0;
 		$tot_iva = 0;
-		$w = array(15, 110, 30, 30);
+		$w = array(125, 30, 30);
 			
 		$fattura->SetXY( 15, 120 );		
-		$fattura->SetFont( "Arial", "B", 10);
-		$fattura->Cell(50,6,"Mese di " . $meserif, "");
+		$fattura->SetFont( "Arial", "I", 10);
+		
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Proposta prot. n. 0002904 del 18/02/2015");
+		$fattura->Ln();
+
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Determinazione n. 113 del 18/02/2015");
+		$fattura->Ln();
+
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Codice Classifica: 10.04.06");
+		$fattura->Ln();
+
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Codice C.I.G.: Z01133FBAF");
+		$fattura->Ln();
+
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Codice: TN8ORY");
+		$fattura->Ln();
+		$fattura->Ln();
+
+		$fattura->SetFont( "Arial", "", 10);
+		
+		$fattura->SetX( 15 );		
+		$fattura->Cell(50,6,"Progetto inserimento socio-occupazionale L.B. per il periodo " . $_SESSION["periodo_da"] . " - " . $_SESSION["periodo_a"]);
 		$fattura->Ln();
 		
 		for($i=0;$i<count($h);$i++)
@@ -261,7 +245,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 					"IVA"        => $e[6]
 			);
 	
-			$fattura->aggiungiLineaLibera($w, $linea);
+			$fattura->aggiungiLineaLiberaEntePubblico($w, $linea);
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
@@ -275,25 +259,25 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	public function sezioneTotali($fattura) {
-		$fattura->totaliFattura($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
 		return $fattura;
 	}
 	
-	public function preparaPagina($creaFatturaAziendaConsortileTemplate) {
+	public function preparaPagina($creaFatturaEntePubblicoTemplate) {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 
-		$creaFatturaAziendaConsortileTemplate->setAzione(self::$azioneCreaFatturaAziendaConsortile);
-		$creaFatturaAziendaConsortileTemplate->setConfermaTip("%ml.confermaCreaFattura%");
-		$creaFatturaAziendaConsortileTemplate->setTitoloPagina("%ml.creaFatturaAziendaConsortile%");
+		$creaFatturaEntePubblicoTemplate->setAzione(self::$azioneCreaFatturaEntePubblico);
+		$creaFatturaEntePubblicoTemplate->setConfermaTip("%ml.confermaCreaFattura%");
+		$creaFatturaEntePubblicoTemplate->setTitoloPagina("%ml.creaFatturaEntePubblico%");
 		
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		
 		// Prelievo delle aziende consortili -------------------------------------------------------------
 		
-		$_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1200");	// Categoria=1200 -> Aziende
+		$_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1300");	// Categoria=1300 -> Enti
 	}
 }	
 

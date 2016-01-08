@@ -43,13 +43,10 @@ nuovaDataScad = Nuova Scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
 soloContoEconomico = Solo Conto Economico
-<<<<<<< HEAD
 generi = Generica
 incpag = Inc / Pag
 corris = Corrispettivi
-=======
 creaFat = Crea fattura
->>>>>>> refs/heads/fatture
 ;
 ; Tips ---------------------------------
 ;
@@ -117,6 +114,8 @@ creaNuovoSaldo = Nuovo Saldo
 incassiPagamenti = Incassi e Pagamenti
 
 creaFatturaAziendaConsortile = Crea fattura azienda consortile
+creaFatturaEntePubblico = Crea fattura ente pubblico
+
 ;
 ; Messaggi -----------------------------
 ;
@@ -192,11 +191,10 @@ deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
 dessaldo = Descrizione riporto saldo
-<<<<<<< HEAD
+
 pivacliente = P.iva
 cfiscliente = Codice Fiscale
 categoria = Categoria
-=======
 azcons = Azienda consortile
 datafat = Data fattura
 descfat = Descrizione
@@ -206,4 +204,4 @@ banca = Istituto bancario
 iban = IBAN
 quantita = Quantit&agrave;
 articolo = Articolo
->>>>>>> refs/heads/fatture
+periodo = Periodo
