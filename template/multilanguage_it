@@ -117,6 +117,7 @@ incassiPagamenti = Incassi e Pagamenti
 
 creaFatturaAziendaConsortile = Crea fattura azienda consortile
 creaFatturaEntePubblico = Crea fattura ente pubblico
+creaFatturaCliente = Crea fattura famiglia / cliente
 
 ;
 ; Messaggi -----------------------------
@@ -198,6 +199,7 @@ pivacliente = P.iva
 cfiscliente = Codice Fiscale
 categoria = Categoria
 azcons = Azienda consortile
+entepub = Ente pubblico
 datafat = Data fattura
 descfat = Descrizione
 impofat = Imponibile
@@ -208,3 +210,5 @@ quantita = Quantit&agrave;
 articolo = Articolo
 periodo = Periodo
 tipofat = Tipo fattura
+famcli = Famiglia/Cliente
+assistito = Assistito

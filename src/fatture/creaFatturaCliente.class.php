@@ -80,23 +80,24 @@ class CreaFatturaCliente extends FatturaAbstract {
 		$_SESSION["ragsocbanca"] = "";
 		$_SESSION["ibanbanca"] = "";
 		$_SESSION["tipofat"] = "";
+		$_SESSION["cognomenomeassistito"] = "";
 		$_SESSION["dettagliInseriti"] = "";
 		$_SESSION["indexDettagliInseriti"] = "";
 		
-		$this->preparaPagina($creaFatturaEntePubblicoTemplate);
+		$this->preparaPagina($creaFatturaClienteTemplate);
 		
 		/**
 		 * Compongo la pagina
 		 */ 
 		
 		include(self::$testata);
-		$creaFatturaEntePubblicoTemplate->displayPagina();
+		$creaFatturaClienteTemplate->displayPagina();
 		include(self::$piede);
 	}
 	
 	public function go() {
 		
-		require_once 'creaFatturaEntePubblico.template.php';
+		require_once 'creaFatturaCliente.template.php';
 		require_once 'utility.class.php';
 		require_once 'fattura.class.php';		
 		require_once 'database.class.php';
@@ -120,12 +121,12 @@ class CreaFatturaCliente extends FatturaAbstract {
 		self::$meserif = self::$mese[$mm];
 
 		/**
-		 * Aggiorno il numero fattura per l'ente pubblico e negozio
+		 * Aggiorno il numero fattura per il cliente e negozio
 		 */
 		
 		$db = Database::getInstance();
 		
-		if ($this->aggiornaNumeroFattura($utility, $db, "1300", $_SESSION["codneg"], $_SESSION["numfat"])) {
+		if ($this->aggiornaNumeroFattura($utility, $db, "1000", $_SESSION["codneg"], $_SESSION["numfat"])) {
 
 			/**
 			 * Generazione del documento
@@ -138,7 +139,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 			$fattura = $this->sezioneIdentificativiFattura($fattura);
 			
 			if ($_SESSION["tipofat"] == "CONTRIBUTO") { 
-				$fattura = $this->sezioneNotaTesta($fattura);
+				$fattura = $this->sezioneNotaTesta($fattura, $utility);
 				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 180);			
 			}
 			else {
@@ -151,11 +152,11 @@ class CreaFatturaCliente extends FatturaAbstract {
 			$fattura->Output();				
 		}
 			
-		$creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
-		$this->preparaPagina($creaFatturaEntePubblicoTemplate);
+		$creaFatturaClienteTemplate = CreaFatturaClienteTemplate::getInstance();
+		$this->preparaPagina($creaFatturaClienteTemplate);
 		
 		include(self::$testata);
-		$creaFatturaEntePubblicoTemplate->displayPagina();		
+		$creaFatturaClienteTemplate->displayPagina();		
 		include(self::$piede);
 	}
 	
@@ -185,14 +186,28 @@ class CreaFatturaCliente extends FatturaAbstract {
 	}
 	
 	private function sezioneIdentificativiFattura($fattura) {
-		$fattura->identificativiFatturaEntePubblico(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
+		$fattura->identificativiFatturaCliente(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
 		return $fattura;		
 	}
 
-	private function sezioneNotaTesta($fattura) {
+	private function sezioneNotaTesta($fattura, $utility) {
 
 		if (isset($_SESSION["nota_testa_fattura"])) {
 			$nota = explode("#", $_SESSION["nota_testa_fattura"]);
+			
+			$array = $utility->getConfig();
+			$replace = array(
+					'%ASSISTITO%' => trim($_SESSION["cognomenomeassistito"])
+			);
+
+			/**
+			 * Cerco il placeholder negli spezzoni della nota
+			 */
+			$i = 0;
+			foreach($nota as $spezzone) {
+				$nota[$i] = $utility->tailFile($spezzone, $replace);
+				$i++;				
+			}			
 		}
 		$fattura->aggiungiLineaNota($nota, 15, 120);
 		return $fattura;		
@@ -234,7 +249,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 					"IVA"        => $e[6]
 			);
 	
-			$fattura->aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1);
+			$fattura->aggiungiLineaLiberaCliente($w, $linea, $r1, $y1);
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
@@ -248,25 +263,25 @@ class CreaFatturaCliente extends FatturaAbstract {
 	}
 	
 	public function sezioneTotali($fattura) {
-		$fattura->totaliFatturaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaCliente($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
 		return $fattura;
 	}
 	
-	public function preparaPagina($creaFatturaEntePubblicoTemplate) {
+	public function preparaPagina($creaFatturaClienteTemplate) {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 
-		$creaFatturaEntePubblicoTemplate->setAzione(self::$azioneCreaFatturaEntePubblico);
-		$creaFatturaEntePubblicoTemplate->setConfermaTip("%ml.confermaCreaFattura%");
-		$creaFatturaEntePubblicoTemplate->setTitoloPagina("%ml.creaFatturaEntePubblico%");
+		$creaFatturaClienteTemplate->setAzione(self::$azioneCreaFatturaCliente);
+		$creaFatturaClienteTemplate->setConfermaTip("%ml.confermaCreaFattura%");
+		$creaFatturaClienteTemplate->setTitoloPagina("%ml.creaFatturaCliente%");
 		
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		
 		// Prelievo delle aziende consortili -------------------------------------------------------------
 		
-		$_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1300");	// Categoria=1300 -> Enti
+		$_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1000");	// Categoria=1000 -> Cliente
 	}
 }	
 
