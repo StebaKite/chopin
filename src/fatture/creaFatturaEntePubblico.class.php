@@ -79,8 +79,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		$_SESSION["tipoadd"] = "";
 		$_SESSION["ragsocbanca"] = "";
 		$_SESSION["ibanbanca"] = "";
-		$_SESSION["periodo_da"] = "";
-		$_SESSION["periodo_a"] = "";
+		$_SESSION["tipofat"] = "";
 		$_SESSION["dettagliInseriti"] = "";
 		$_SESSION["indexDettagliInseriti"] = "";
 		
