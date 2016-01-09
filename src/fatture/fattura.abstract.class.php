@@ -101,6 +101,8 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		
 		foreach(pg_fetch_all($result) as $row) {
 			$numeroFattura = $row['num_fattura_ultimo'];
+			$_SESSION["nota_testa_fattura"] = $row["nota_testa_fattura"];
+			$_SESSION["nota_piede_fattura"] = $row["nota_piede_fattura"];
 		}
 		return $numeroFattura;
 	}

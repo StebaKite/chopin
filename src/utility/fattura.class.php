@@ -295,9 +295,9 @@ class Fattura extends FPDF {
 		$this->Ln();
 	}
 
-	public function aggiungiLineaLiberaEntePubblico($w, $linea) {
+	public function aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1) {
 	
-		$this->SetX( 15 );
+		$this->SetXY( $r1, $y1 );
 		$this->SetFont( "Arial", "", 10);
 	
 		$this->Cell($w[0],6,$linea["ARTICOLO"],"");
@@ -305,15 +305,17 @@ class Fattura extends FPDF {
 		$this->Cell($w[2],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
 		$this->Ln();
 	}
-	
-	public function aggiungiLineaAnnotazione($nota) {
 
+	public function aggiungiLineaNota($d, $r1, $y1) {
+	
 		$this->SetFont( "Arial", "I", 10);
-		$r1  = 13;
-		$y1  = 250;
-		
 		$this->SetXY( $r1, $y1 );
-		$this->Cell($w[0],6,$nota,"");
+
+		foreach($d as $nota) {
+			$this->SetX( $r1 );
+			$this->Cell(150,6,$nota,"");
+			$this->Ln();
+		}
 	}
 	
 	public function totaliFattura($tot_dettagli, $tot_imponibile, $tot_iva) {

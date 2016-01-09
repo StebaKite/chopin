@@ -96,8 +96,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				$d_x_array = $d_x_array . "'" . $ele . "',";
 			}
 		}
-		
-		
+				
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%numfat%' => $_SESSION["numfat"],
@@ -105,8 +104,8 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				'%tipoadd%' => $_SESSION["tipoadd"],
 				'%ragsocbanca%' => str_replace("'", "&apos;", $_SESSION["ragsocbanca"]),
 				'%ibanbanca%' => $_SESSION["ibanbanca"],
-				'%periodo_da%' => $_SESSION["periodo_da"],
-				'%periodo_a%' => $_SESSION["periodo_a"],
+				'%contributo-checked%' => ($_SESSION["tipofat"] == "CONTRIBUTO") ? "checked" : "",
+				'%vendita-checked%' => ($_SESSION["tipofat"] == "VENDITA") ? "checked" : "",
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",

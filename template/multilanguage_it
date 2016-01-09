@@ -47,6 +47,8 @@ generi = Generica
 incpag = Inc / Pag
 corris = Corrispettivi
 creaFat = Crea fattura
+contributo = Contributo
+vendita = Vendita
 ;
 ; Tips ---------------------------------
 ;
@@ -205,3 +207,4 @@ iban = IBAN
 quantita = Quantit&agrave;
 articolo = Articolo
 periodo = Periodo
+tipofat = Tipo fattura

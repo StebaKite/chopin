@@ -172,13 +172,15 @@ function calcolaImponibile() {
 						<td>%ml.iban% :</td>
 						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
 					</tr>
-					<tr>
-						<td class="td">%ml.periodo% %ml.da% :</td>
-						<td class="tooltip">
-							<input class="datepicker" type="text" name="periodo_da" size="10" maxlength="10" value='%periodo_da%' />&nbsp;&nbsp;&nbsp;%ml.a% :&nbsp;
-							<input class="datepicker" type="text" name="periodo_a" size="10" maxlength="10" value='%periodo_a%' >
-						</td>
-					</tr>									
+					<tr>				
+						<td>%ml.tipofat% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="contributo" name="tipofat" value="CONTRIBUTO" %contributo-checked% /><label for="contributo">%ml.contributo%</label>
+								<input type="radio" id="vendita" name="tipofat" value="VENDITA" %vendita-checked% /><label for="vendita">%ml.vendita%</label>
+							</div>
+						</td>					
+					</tr>				
 					<tr>
 						<td colspan="4">
 							<table id="dettagli" class="%class_dettagli%">

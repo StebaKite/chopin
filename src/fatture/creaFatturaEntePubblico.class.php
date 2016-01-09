@@ -137,8 +137,16 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 			$fattura = $this->sezioneBanca($fattura);
 			$fattura = $this->sezioneDestinatario($fattura);
 			$fattura = $this->sezioneIdentificativiFattura($fattura);
-			$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);			
-			$fattura = $this->sezioneNota($fattura);
+			
+			if ($_SESSION["tipofat"] == "CONTRIBUTO") { 
+				$fattura = $this->sezioneNotaTesta($fattura);
+				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 180);			
+			}
+			else {
+				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 120);
+			}
+			
+			$fattura = $this->sezioneNotaPiede($fattura);
 			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
@@ -182,13 +190,25 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		return $fattura;		
 	}
 
-	private function sezioneNota($fattura) {
-		$nota = "Operazione con 'scissione dei pagamenti' DPR. n. 633/72";
-		$fattura->aggiungiLineaAnnotazione($nota);
-		return $fattura;
+	private function sezioneNotaTesta($fattura) {
+
+		if (isset($_SESSION["nota_testa_fattura"])) {
+			$nota = explode("#", $_SESSION["nota_testa_fattura"]);
+		}
+		$fattura->aggiungiLineaNota($nota, 15, 120);
+		return $fattura;		
 	}
 
-	private function sezioneDettagliFattura($fattura, $meserif) {
+	private function sezioneNotaPiede($fattura) {
+	
+		if (isset($_SESSION["nota_piede_fattura"])) {
+			$nota = explode("#", $_SESSION["nota_piede_fattura"]);
+		}
+		$fattura->aggiungiLineaNota($nota, 15, 250);
+		return $fattura;
+	}
+	
+	private function sezioneDettagliFattura($fattura, $meserif, $r1, $y1) {
 
 		$fattura->boxDettagli();
 		
@@ -197,36 +217,6 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		$tot_imponibile = 0;
 		$tot_iva = 0;
 		$w = array(125, 30, 30);
-			
-		$fattura->SetXY( 15, 120 );		
-		$fattura->SetFont( "Arial", "I", 10);
-		
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Proposta prot. n. 0002904 del 18/02/2015");
-		$fattura->Ln();
-
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Determinazione n. 113 del 18/02/2015");
-		$fattura->Ln();
-
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Codice Classifica: 10.04.06");
-		$fattura->Ln();
-
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Codice C.I.G.: Z01133FBAF");
-		$fattura->Ln();
-
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Codice: TN8ORY");
-		$fattura->Ln();
-		$fattura->Ln();
-
-		$fattura->SetFont( "Arial", "", 10);
-		
-		$fattura->SetX( 15 );		
-		$fattura->Cell(50,6,"Progetto inserimento socio-occupazionale L.B. per il periodo " . $_SESSION["periodo_da"] . " - " . $_SESSION["periodo_a"]);
-		$fattura->Ln();
 		
 		for($i=0;$i<count($h);$i++)
 			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
@@ -245,7 +235,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 					"IVA"        => $e[6]
 			);
 	
-			$fattura->aggiungiLineaLiberaEntePubblico($w, $linea);
+			$fattura->aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1);
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];

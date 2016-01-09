@@ -21,8 +21,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["numfat"] = $_REQUEST["numfat"];
 	$_SESSION["ragsocbanca"] = $_REQUEST["ragsocbanca"];
 	$_SESSION["ibanbanca"] = $_REQUEST["ibanbanca"];
-	$_SESSION["periodo_da"] = $_REQUEST["periodo_da"];
-	$_SESSION["periodo_a"] = $_REQUEST["periodo_a"];
+	$_SESSION["tipofat"] = $_REQUEST["tipofat"];
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	
