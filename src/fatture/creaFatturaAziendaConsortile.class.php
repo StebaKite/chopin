@@ -183,51 +183,6 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$fattura->identificativiFattura(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
 		return $fattura;		
 	}
-	
-// 	private function sezioneDettagliFattura($fattura) {
-		
-// 		$d = explode(",", $_SESSION['dettagliInseriti']);
-			
-// 		$tot_imponibile = 0;
-// 		$tot_iva = 0;
-// 		$w = array(20, 70, 25, 25, 25, 25);
-// 		$h = array("QUANTITA'", "DESCRIZIONE", "IMP. U.", "TOTALE", "IMPONIBILE", "IVA 4,00%");
-		
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-// 		$fattura->Ln();
-		
-// 		for($i=0;$i<count($h);$i++)
-// 			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
-		
-// 		$fattura->Ln();
-		
-// 		foreach($d as $ele) {
-		
-// 			$e = explode("#",$ele);
-			
-// 			$linea = array( "QUANTITA"   => $e[1],
-// 							"ARTICOLO"	 => $e[2],
-// 							"IMPORTO U." => $e[3],
-// 							"TOTALE"     => $e[4],
-// 							"IMPONIBILE" => $e[5],
-// 							"IVA"        => $e[6]		
-// 			);				
-
-// 			$fattura->aggiungiLineaTabella($w, $linea);
-				
-// 			$tot_imponibile += $e[5];
-// 			$tot_iva = $e[6];			
-// 		}
-		
-// 		// Closing line
-// 		$fattura->Cell(array_sum($w),0,'','T');
-		
-// 		$_SESSION["tot_imponibile"] = $tot_imponibile;
-// 		$_SESSION["tot_iva"] = $tot_iva;
-// 		return $fattura;
-// 	}
 
 	private function sezioneDettagliFattura($fattura, $meserif) {
 

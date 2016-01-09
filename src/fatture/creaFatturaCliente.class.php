@@ -140,10 +140,10 @@ class CreaFatturaCliente extends FatturaAbstract {
 			
 			if ($_SESSION["tipofat"] == "CONTRIBUTO") { 
 				$fattura = $this->sezioneNotaTesta($fattura, $utility);
-				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 180);			
+				$fattura = $this->sezioneDettagliFatturaContributo($fattura, self::$meserif, 15, 180);			
 			}
 			else {
-				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 120);
+				$fattura = $this->sezioneDettagliFatturaVendita($fattura, self::$meserif, 15, 120);
 			}
 			
 			$fattura = $this->sezioneNotaPiede($fattura);
@@ -221,8 +221,56 @@ class CreaFatturaCliente extends FatturaAbstract {
 		$fattura->aggiungiLineaNota($nota, 15, 250);
 		return $fattura;
 	}
+
+	private function sezioneDettagliFatturaVendita($fattura) {
+		
+		$fattura->boxDettagli();
+		
+		$d = explode(",", $_SESSION['dettagliInseriti']);
 	
-	private function sezioneDettagliFattura($fattura, $meserif, $r1, $y1) {
+		$tot_imponibile = 0;
+		$tot_iva = 0;
+		$w = array(10, 82, 20, 20, 25, 20, 15);
+		$h = array("QTA'", "DESCRIZIONE", "IMP. U.", "TOTALE", "IMPONIBILE", "IVA", "%IVA" );
+
+		$fattura->Ln();
+		$fattura->Ln();
+		$fattura->Ln();
+		$fattura->Ln();
+
+		for($i=0;$i<count($h);$i++)
+			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
+
+		$fattura->Ln();
+
+		foreach($d as $ele) {
+
+			$e = explode("#",$ele);
+	
+			$linea = array( "QUANTITA"   => $e[1],
+							"ARTICOLO"	 => $e[2],
+							"IMPORTO U." => $e[3],
+							"TOTALE"     => $e[4],
+							"IMPONIBILE" => $e[5],
+							"IVA"        => $e[6],
+							"%IVA"       => $e[7]
+			);
+
+			$fattura->aggiungiLineaTabella($w, $linea);
+
+			$tot_imponibile += $e[5];
+			$tot_iva = $e[6];
+		}
+
+		// Closing line
+		$fattura->Cell(array_sum($w),0,'','T');
+
+		$_SESSION["tot_imponibile"] = $tot_imponibile;
+		$_SESSION["tot_iva"] = $tot_iva;
+		return $fattura;
+	}
+	
+	private function sezioneDettagliFatturaContributo($fattura, $meserif, $r1, $y1) {
 
 		$fattura->boxDettagli();
 		

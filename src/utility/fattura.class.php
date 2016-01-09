@@ -296,6 +296,7 @@ class Fattura extends FPDF {
 	
 	public function aggiungiLineaTabella($w, $linea) {
 		
+		$this->SetDrawColor(204, 204, 204);
 		$this->SetFont( "Arial", "", 10);
 		
 		$this->Cell($w[0],6,$linea["QUANTITA"],"LR");
@@ -304,6 +305,7 @@ class Fattura extends FPDF {
 		$this->Cell($w[3],6,EURO . number_format($linea["TOTALE"], 2, ',', '.'),"LR",0,'R');
 		$this->Cell($w[4],6,EURO . number_format($linea["IMPONIBILE"], 2, ',', '.'),"LR",0,'R');
 		$this->Cell($w[5],6,EURO . number_format($linea["IVA"], 2, ',', '.'),"LR",0,'R');
+		$this->Cell($w[6],6,$linea["%IVA"],"LR",0,'R');
 		$this->Ln();
 	}
 

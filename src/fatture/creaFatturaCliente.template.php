@@ -64,6 +64,7 @@ class CreaFatturaClienteTemplate extends FatturaAbstract {
 			"<th width='50' align='right'>Totale</th>" .
 			"<th width='50' align='right'>Imponibile</th>" .
 			"<th width='50' align='right'>Iva</th>" .
+			"<th width='50' align='right'>% Aliq</th>" .
 			"<th>&nbsp;</th>" .
 			"</tr>";	
 		
@@ -81,10 +82,11 @@ class CreaFatturaClienteTemplate extends FatturaAbstract {
 				"<tr id='" . trim($id) . "'>" .
 				"<td align='center'>" . $e[1] . "</td>" .
 				"<td align='left'>" . $e[2] . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[3], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[4], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[5], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[6], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro; " . number_format($e[3], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro; " . number_format($e[4], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro; " . number_format($e[5], 2, ',', '.') . "</td>" .
+				"<td align='right'>&euro; " . number_format($e[6], 2, ',', '.') . "</td>" .
+				"<td align='right'>" . number_format($e[7]) . "</td>" .
 				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		
