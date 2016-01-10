@@ -383,7 +383,7 @@ class Fattura extends FPDF {
 		
 	}
 
-	public function totaliFatturaEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva) {
+	public function totaliFatturaEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva, $aliq_iva) {
 	
 		$this->SetFont( "Arial", "B", 10);
 		$r1  = 10;
@@ -401,7 +401,7 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1+3, $y1);
 		$this->Cell(10,6, "IMPONIBILE");
 		$this->SetX( $r1+30 );
-		$this->Cell(10,6, "IVA 4%");
+		$this->Cell(10,6, "IVA " . $aliq_iva . "%");
 		$this->SetX( $r1+50 );
 		$this->Cell(10,6, "TOTALE");		
 		$this->SetX( $r1+77 );
@@ -431,32 +431,22 @@ class Fattura extends FPDF {
 		$this->SetFillColor(230, 230, 230);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->Line( $r1, $y1+6, $r2, $y1+6);
-		$this->Line( $r1+25, $y1, $r1+25, $y2);  // davanti all' IVA
-		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti al totale
-		$this->Line( $r1+75, $y1, $r1+75, $y2);  // davanti all'IVA a Vs. carico
-		$this->Line( $r1+150, $y1, $r1+150, $y2);  // davanti all'IVA a Vs. carico
+		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti all' IVA
+		$this->Line( $r1+100, $y1, $r1+100, $y2);  // davanti al totale
 	
-		$this->SetXY( $r1+3, $y1);
-		$this->Cell(10,6, "IMPONIBILE");
-		$this->SetX( $r1+30 );
-		$this->Cell(10,6, "IVA 4%");
+		$this->SetXY( $r1, $y1);
+		$this->Cell(50,6, "IMPONIBILE","",0,"R");
 		$this->SetX( $r1+50 );
-		$this->Cell(10,6, "TOTALE");
-		$this->SetX( $r1+77 );
-		$this->Cell(10,6, "IVA Vs. carico ex art. 17-ter, DPR n. 633/72");
-		$this->SetX( $r1+154 );
-		$this->Cell(10,6, "NETTO A PAGARE");
+		$this->Cell(50,6, "IVA 4%","",0,"R");
+		$this->SetX( $r1+140 );
+		$this->Cell(50,6, "TOTALE","",0,"R");
 	
-		$this->SetXY( $r1+3, $y1+7);
-		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
-		$this->SetXY( $r1+30, $y1+7);
-		$this->Cell(10,6,EURO . " " . number_format($tot_iva, 2, ',', '.'));
+		$this->SetXY( $r1, $y1+7);
+		$this->Cell(50,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
 		$this->SetXY( $r1+50, $y1+7);
-		$this->Cell(10,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'));
-		$this->SetX( $r1+107 );
-		$this->Cell(10,6,EURO . " -" . number_format($tot_iva, 2, ',', '.'));
-		$this->SetXY( $r1+154, $y1+7);
-		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
+		$this->Cell(50,6,EURO . " " . number_format($tot_iva, 2, ',', '.'),"",0,"R");
+		$this->SetXY( $r1+140, $y1+7);
+		$this->Cell(50,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'),"",0,"R");
 	}
 
 	public function totaliFatturaVenditaCliente($tot_imponibile, $tot_iva, $tot_imponibile_10, $tot_iva_10, $tot_imponibile_22, $tot_iva_22) {

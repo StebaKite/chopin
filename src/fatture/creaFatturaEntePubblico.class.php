@@ -232,7 +232,8 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 					"IMPORTO U." => $e[3],
 					"TOTALE"     => $e[4],
 					"IMPONIBILE" => $e[5],
-					"IVA"        => $e[6]
+					"IVA"        => $e[6],
+					"%IVA"       => $e[7]
 			);
 	
 			$fattura->aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1);
@@ -240,16 +241,19 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
 			$tot_iva = $e[6];
+			$aliq_iva = $e[7];
 		}	
 		
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;	
+		$_SESSION["aliquota_iva"] = $aliq_iva;
+		
 		return $fattura;
 	}
 	
 	public function sezioneTotali($fattura) {
-		$fattura->totaliFatturaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
 		return $fattura;
 	}
 	
