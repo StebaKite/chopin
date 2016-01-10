@@ -141,13 +141,15 @@ class CreaFatturaCliente extends FatturaAbstract {
 			if ($_SESSION["tipofat"] == "CONTRIBUTO") { 
 				$fattura = $this->sezioneNotaTesta($fattura, $utility);
 				$fattura = $this->sezioneDettagliFatturaContributo($fattura, self::$meserif, 15, 180);			
+				$fattura = $this->sezioneNotaPiede($fattura);
+				$fattura = $this->sezioneTotaliContributo($fattura);
 			}
 			else {
 				$fattura = $this->sezioneDettagliFatturaVendita($fattura, self::$meserif, 15, 120);
+				$fattura = $this->sezioneNotaPiede($fattura);
+				$fattura = $this->sezioneTotaliVendita($fattura);
 			}
 			
-			$fattura = $this->sezioneNotaPiede($fattura);
-			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
 		}
@@ -224,25 +226,61 @@ class CreaFatturaCliente extends FatturaAbstract {
 
 	private function sezioneDettagliFatturaVendita($fattura) {
 		
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 118;
+		$fattura->SetDrawColor(204, 204, 204);
+		
+		$tot_imponibile_10 = 0;
+		$tot_iva_10 = 0;
+		$tot_imponibile_22 = 0;
+		$tot_iva_22 = 0;		
+		$tot_imponibile = 0;
+		$tot_iva = 0;
+		
 		$fattura->boxDettagli();
 		
 		$d = explode(",", $_SESSION['dettagliInseriti']);
-	
-		$tot_imponibile = 0;
-		$tot_iva = 0;
-		$w = array(10, 82, 20, 20, 25, 20, 15);
-		$h = array("QTA'", "DESCRIZIONE", "IMP. U.", "TOTALE", "IMPONIBILE", "IVA", "%IVA" );
+		
+		$w = array(10, 82, 25, 25, 25, 25);
+		$h = array("QTA'", "DESCRIZIONE", "PREZZO", "IMPONIBILE", "IVA", "C.IVA" );
 
-		$fattura->Ln();
-		$fattura->Ln();
-		$fattura->Ln();
-		$fattura->Ln();
+		$fattura->Line( $r1, $y1, $r2, $y1);		// linea dopo intestazione
 
-		for($i=0;$i<count($h);$i++)
-			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
+		/**
+		 * Linee colonne
+		 */
+		$rc1 = 10;
+		$yc1 = 240;
+		$yc2 = 106;
 
-		$fattura->Ln();
+		for($i=0;$i<count($w)-1;$i++) {
+			$rc1 += $w[$i];
+			$fattura->Line( $rc1, $yc1, $rc1, $yc2);
+		}
 
+		/**
+		 * Intestazioni colonne
+		 */
+		$fattura->SetXY( $r1, $y1-10 );
+		
+		for($i=0;$i<count($h);$i++) {
+
+			/**
+			 * Allineamento intestazioni
+			 */
+			if ($h[$i] == "DESCRIZIONE") $align = "L";
+			elseif ($h[$i] == "C.IVA") $align = "C";
+			else $align = "R";
+			
+			$fattura->Cell($w[$i],7,$h[$i],"",0,$align);
+		}
+		
+		/**
+		 * Linee fattura
+		 */
+		$fattura->SetXY( $r1, $y1 );
+		
 		foreach($d as $ele) {
 
 			$e = explode("#",$ele);
@@ -258,15 +296,43 @@ class CreaFatturaCliente extends FatturaAbstract {
 
 			$fattura->aggiungiLineaTabella($w, $linea);
 
-			$tot_imponibile += $e[5];
-			$tot_iva = $e[6];
+			/**
+			 * Accumulo totali per aliquota iva
+			 */
+			
+			if ($e[7] == "10") {
+				$tot_imponibile_10 += $e[5];
+				$tot_iva_10 = $e[6];
+			}
+			elseif ($e[7] == "22") {
+				$tot_imponibile_22 += $e[5];
+				$tot_iva_22 = $e[6];
+			}	
+			elseif ($e[7] == "") {
+				$tot_imponibile += $e[5];
+				$tot_iva = $e[6];
+			}	
 		}
 
-		// Closing line
-		$fattura->Cell(array_sum($w),0,'','T');
-
+		/**
+		 * Salvo in sessione i totali accumulati
+		 */
+		$_SESSION["tot_imponibile_10"] = $tot_imponibile_10;
+		$_SESSION["tot_iva_10"] = $tot_iva_10;
+		$_SESSION["tot_imponibile_22"] = $tot_imponibile_22;
+		$_SESSION["tot_iva_22"] = $tot_iva_22;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;
+		
+		/**
+		 * Closing line
+		 */ 
+
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 240;
+		$fattura->Line( $r1, $y1, $r2, $y1);
+		
 		return $fattura;
 	}
 	
@@ -310,8 +376,13 @@ class CreaFatturaCliente extends FatturaAbstract {
 		return $fattura;
 	}
 	
-	public function sezioneTotali($fattura) {
-		$fattura->totaliFatturaCliente($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+	public function sezioneTotaliContributo($fattura) {
+		$fattura->totaliFatturaContributoCliente($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		return $fattura;
+	}
+
+	public function sezioneTotaliVendita($fattura) {
+		$fattura->totaliFatturaVenditaCliente($_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["tot_imponibile_10"], $_SESSION["tot_iva_10"], $_SESSION["tot_imponibile_22"], $_SESSION["tot_iva_22"]);
 		return $fattura;
 	}
 	

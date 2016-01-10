@@ -234,7 +234,7 @@ function gestisciAssistito(tipofattura) {
 				<tfoot>
 					<tr>
 						<td colspan="3" align="right" class="tooltip">
-							<button id="nuovo-dett-fattura-aziende" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="nuovo-dett-fattura-cliente" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
 						</td>
 					</tr>
@@ -246,7 +246,7 @@ function gestisciAssistito(tipofattura) {
 	</div>
 </div>
 
-<div id="nuovo-dettaglio-fattura-aziende-form" title="Nuovo Dettaglio Fattura"> 
+<div id="nuovo-dettaglio-fattura-cliente-form" title="Nuovo Dettaglio Fattura"> 
 	<form>
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>
@@ -256,7 +256,7 @@ function gestisciAssistito(tipofattura) {
 				</tr>								
 				<tr>
 					<td>%ml.articolo% :</td>
-					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="40" maxlength="40" ></td>
+					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="55" maxlength="70" ></td>
 				</tr>
 				<tr>
 					<td>%ml.importo% :</td>
@@ -266,8 +266,8 @@ function gestisciAssistito(tipofattura) {
 					<td>&nbsp;</td>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="aliquota4" name="aliquota" value="1.04" onchange="calcolaImponibile()" /><label for="aliquota4">%ml.aliquota4%</label>
-							<input type="radio" id="aliquota10" name="aliquota" value="1.10" checked onchange="calcolaImponibile()"/><label for="aliquota10">%ml.aliquota10%</label>
+							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked onchange="calcolaImponibile()"/><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota10" name="aliquota" value="1.10" onchange="calcolaImponibile()"/><label for="aliquota10">%ml.aliquota10%</label>
 							<input type="radio" id="aliquota22" name="aliquota" value="1.22" onchange="calcolaImponibile()"/><label for="aliquota22">%ml.aliquota22%</label>
 							<input type="radio" id="fc" name="aliquota" value="1" onchange="calcolaImponibile()"/><label for="fc">%ml.fc%</label>
 						</div>
@@ -289,6 +289,5 @@ function gestisciAssistito(tipofattura) {
 		</table> 	 
   </form>
 </div>
-
 
 <br/>

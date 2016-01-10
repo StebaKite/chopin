@@ -527,7 +527,7 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 	autoOpen: false,
 	width: 530,
-	height: 380,
+	height: 360,
 	buttons: [
 		{
 			text: "Ok",
@@ -548,6 +548,33 @@ $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 // Link to open the dialog
 $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 	$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
+	autoOpen: false,
+	width: 530,
+	height: 390,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiDettaglio();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-fattura-cliente" ).click(function( event ) {
+	$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog( "open" );
 	event.preventDefault();
 });
 
