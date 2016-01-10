@@ -551,6 +551,33 @@ $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 	event.preventDefault();
 });
 
+$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
+	autoOpen: false,
+	width: 530,
+	height: 390,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				aggiungiDettaglio();
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-fattura-cliente" ).click(function( event ) {
+	$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi

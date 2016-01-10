@@ -14,7 +14,7 @@ function prelevaNumeroFattura(negozio) {
             $( "#numfat" ).val(xmlhttp.responseText);
         }
     } 
-    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1300&codneg=" + negozio, true);
+    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1000&codneg=" + negozio, true);
     xmlhttp.send();		
     
     // Inizializzazione della banca sulla base del negozio selezionato
@@ -47,6 +47,7 @@ function aggiungiDettaglio() {
 			"<th width='50' align='right'>Totale</th>" +
 			"<th width='50' align='right'>Imponibile</th>" +
 			"<th width='50' align='right'>Iva</th>" +
+			"<th width='50' align='right'>% Aliq</th>" +
 			"<th>&nbsp;</th>" +
 			"</tr>");
 		$( "#dettagli" ).addClass("datiCreateSottile");
@@ -62,17 +63,33 @@ function aggiungiDettaglio() {
 	var imponibile = $("#imponibile").val();
 	var iva = $("#iva").val();
 	
+	var aliquota = $("input[name=aliquota]:checked").val();
+	
+	if (aliquota == "1.04") {
+		var aliq = 4;		
+	}
+	if (aliquota == "1.10") {
+		var aliq = 10;		
+	}
+	if (aliquota == "1.22") {
+		var aliq = 22;		
+	}
+	if (aliquota == "1") {
+		var aliq = "";		
+	}
+	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
         "<td align='center'>" + quantita + "</td>" +
         "<td align='left'>" + articolo + "</td>" +
-        "<td align='right'>&euro;" + importoNormalizzato + "</td>" +
-        "<td align='right'>&euro;" + totale + "</td>" +
-        "<td align='right'>&euro;" + imponibile + "</td>" +
-        "<td align='right'>&euro;" + iva + "</td>" +
+        "<td align='right'>&euro; " + importoNormalizzato + "</td>" +
+        "<td align='right'>&euro; " + totale + "</td>" +
+        "<td align='right'>&euro; " + imponibile + "</td>" +
+        "<td align='right'>&euro; " + iva + "</td>" +
+        "<td align='right'>" + aliq + "</td>" +
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva;
+	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva + "#" + aliq;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");
@@ -81,6 +98,7 @@ function aggiungiDettaglio() {
 	$("#totale").val("");
 	$("#imponibile").val("");
 	$("#iva").val("");
+	$("#aliquota").val("");
 }
 
 function addDett(dettaglio, contatore) {
@@ -119,9 +137,28 @@ function calcolaImponibile() {
 	if (aliquota == "1.04") {
 		var iva = imponibileArrotondato * 0.04;		
 	}
+	if (aliquota == "1.10") {
+		var iva = imponibileArrotondato * 0.10;		
+	}
+	if (aliquota == "1.22") {
+		var iva = imponibileArrotondato * 0.22;		
+	}
+	if (aliquota == "1") {
+		var iva = 0;		
+	}
 	
 	var ivaArrotondata = iva.toFixed(2);
 	$("#iva").val(ivaArrotondata);	
+}
+
+function gestisciAssistito(tipofattura) {
+	
+	if (tipofattura == "CONTRIBUTO") {
+		$("#linea_assistito").show();
+	}
+	else {
+		$("#linea_assistito").hide();		
+	}
 }
 
 </script>
@@ -138,7 +175,7 @@ function calcolaImponibile() {
 						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
 					</tr>					
 					<tr>
-						<td>%ml.entepub% :</td>
+						<td>%ml.famcli% :</td>
 						<td class="tooltip">
 							<select class="selectmenuCliente" id="cliente" name="cliente" >
 								<option value=""></option>
@@ -176,11 +213,15 @@ function calcolaImponibile() {
 						<td>%ml.tipofat% :</td>						
 						<td>
 							<div class="radioset" >
-								<input type="radio" id="contributo" name="tipofat" value="CONTRIBUTO" %contributo-checked% /><label for="contributo">%ml.contributo%</label>
-								<input type="radio" id="vendita" name="tipofat" value="VENDITA" %vendita-checked% /><label for="vendita">%ml.vendita%</label>
+								<input type="radio" id="contributo" name="tipofat" value="CONTRIBUTO" %contributo-checked% onchange="gestisciAssistito(this.value)"/><label for="contributo">%ml.contributo%</label>
+								<input type="radio" id="vendita" name="tipofat" value="VENDITA" %vendita-checked% onchange="gestisciAssistito(this.value)"/><label for="vendita">%ml.vendita%</label>
 							</div>
 						</td>					
 					</tr>				
+					<tr id="linea_assistito" style="display:none;">
+						<td>%ml.assistito% :</td>
+						<td class="tooltip"><input type="text" id="assistito" name="assistito" size="60" maxlength="60" value='%assistito%'/></td>				
+					</tr>
 					<tr>
 						<td colspan="4">
 							<table id="dettagli" class="%class_dettagli%">
@@ -193,7 +234,7 @@ function calcolaImponibile() {
 				<tfoot>
 					<tr>
 						<td colspan="3" align="right" class="tooltip">
-							<button id="nuovo-dett-fattura-aziende" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="nuovo-dett-fattura-cliente" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
 						</td>
 					</tr>
@@ -205,7 +246,7 @@ function calcolaImponibile() {
 	</div>
 </div>
 
-<div id="nuovo-dettaglio-fattura-aziende-form" title="Nuovo Dettaglio Fattura"> 
+<div id="nuovo-dettaglio-fattura-cliente-form" title="Nuovo Dettaglio Fattura"> 
 	<form>
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>
@@ -215,14 +256,20 @@ function calcolaImponibile() {
 				</tr>								
 				<tr>
 					<td>%ml.articolo% :</td>
-					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="40" maxlength="40" ></td>
+					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="55" maxlength="70" ></td>
 				</tr>
 				<tr>
 					<td>%ml.importo% :</td>
 					<td class="tooltip" colspan="2"><input type="text" id="importo" name="importo" size="20" maxlength="20" onblur="calcolaImponibile()" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked /><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked onchange="calcolaImponibile()"/><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota10" name="aliquota" value="1.10" onchange="calcolaImponibile()"/><label for="aliquota10">%ml.aliquota10%</label>
+							<input type="radio" id="aliquota22" name="aliquota" value="1.22" onchange="calcolaImponibile()"/><label for="aliquota22">%ml.aliquota22%</label>
+							<input type="radio" id="fc" name="aliquota" value="1" onchange="calcolaImponibile()"/><label for="fc">%ml.fc%</label>
 						</div>
 					</td>					
 				</tr>
@@ -242,6 +289,5 @@ function calcolaImponibile() {
 		</table> 	 
   </form>
 </div>
-
 
 <br/>

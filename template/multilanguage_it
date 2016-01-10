@@ -32,6 +32,7 @@ pdf = Estrai in PDF
 aliquota4 = Iva 4%
 aliquota10 = Iva 10%
 aliquota22 = Iva 22%
+fc = Esente
 presenteInBilancio = Incluso in Bilancio
 assenteInBilancio = Escluso
 presenzaSottoconti = Sottoconti visibili
@@ -117,6 +118,7 @@ incassiPagamenti = Incassi e Pagamenti
 
 creaFatturaAziendaConsortile = Crea fattura azienda consortile
 creaFatturaEntePubblico = Crea fattura ente pubblico
+creaFatturaCliente = Crea fattura famiglia / cliente
 
 ;
 ; Messaggi -----------------------------
@@ -198,6 +200,7 @@ pivacliente = P.iva
 cfiscliente = Codice Fiscale
 categoria = Categoria
 azcons = Azienda consortile
+entepub = Ente pubblico
 datafat = Data fattura
 descfat = Descrizione
 impofat = Imponibile
@@ -208,3 +211,6 @@ quantita = Quantit&agrave;
 articolo = Articolo
 periodo = Periodo
 tipofat = Tipo fattura
+famcli = Famiglia/Cliente
+assistito = Assistito
+aliquota = Aliquota IVA

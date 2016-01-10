@@ -243,7 +243,11 @@ class Fattura extends FPDF {
 		$negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
 		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
 		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
-	
+
+		$fatneg = ($codneg == "VIL") ? "" : $fatneg;
+		$fatneg = ($codneg == "TRE") ? "T" : $fatneg;
+		$fatneg = ($codneg == "BRE") ? "B" : $fatneg;		
+		
 		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
 	
 		$r1  = 10;
@@ -255,7 +259,27 @@ class Fattura extends FPDF {
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->SetXY( $r1 + 5, $y1 + 3 );
 		$this->SetFont( "Arial", "B", 10);
-		$this->Cell(10,4, "REG. SEZ. 1" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "B/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
+		$this->Cell(10,4, "REG. SEZ. 1" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . $fatneg . "/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
+	}
+
+	public function identificativiFatturaCliente($giorno, $meserif, $anno, $numfat, $codneg) {
+	
+		$negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
+		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
+		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
+		
+		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
+	
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 94;
+		$y2  = $y1+10;
+		$mid = $y1 + (($y2-$y1) / 2);
+		$this->SetFillColor(189, 229, 244);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->SetXY( $r1 + 5, $y1 + 3 );
+		$this->SetFont( "Arial", "B", 10);
+		$this->Cell(10,4, "REG. SEZ. 0" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
 	}
 	
 	public function boxDettagli() {
@@ -272,14 +296,15 @@ class Fattura extends FPDF {
 	
 	public function aggiungiLineaTabella($w, $linea) {
 		
+		$this->SetDrawColor(204, 204, 204);
 		$this->SetFont( "Arial", "", 10);
 		
-		$this->Cell($w[0],6,$linea["QUANTITA"],"LR");
-		$this->Cell($w[1],6,$linea["ARTICOLO"],"LR");
-		$this->Cell($w[3],6,EURO . number_format($linea["IMPORTO U."], 2, ',', '.'),"LR",0,'R');
-		$this->Cell($w[3],6,EURO . number_format($linea["TOTALE"], 2, ',', '.'),"LR",0,'R');
-		$this->Cell($w[4],6,EURO . number_format($linea["IMPONIBILE"], 2, ',', '.'),"LR",0,'R');
-		$this->Cell($w[5],6,EURO . number_format($linea["IVA"], 2, ',', '.'),"LR",0,'R');
+		$this->Cell($w[0],6,$linea["QUANTITA"],"",0,"C");
+		$this->Cell($w[1],6,$linea["ARTICOLO"],"",0,"L");
+		$this->Cell($w[3],6,EURO . number_format($linea["IMPORTO U."], 2, ',', '.'),"",0,'R');
+		$this->Cell($w[4],6,EURO . number_format($linea["IMPONIBILE"], 2, ',', '.'),"",0,'R');
+		$this->Cell($w[5],6,EURO . number_format($linea["IVA"], 2, ',', '.'),"",0,'R');
+		$this->Cell($w[6],6,$linea["%IVA"],"",0,'C');
 		$this->Ln();
 	}
 
@@ -306,6 +331,17 @@ class Fattura extends FPDF {
 		$this->Ln();
 	}
 
+	public function aggiungiLineaLiberaCliente($w, $linea, $r1, $y1) {
+	
+		$this->SetXY( $r1, $y1 );
+		$this->SetFont( "Arial", "", 10);
+	
+		$this->Cell($w[0],6,$linea["ARTICOLO"],"");
+		$this->Cell($w[1],6,EURO,"",0,'R');
+		$this->Cell($w[2],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
+		$this->Ln();
+	}
+	
 	public function aggiungiLineaNota($d, $r1, $y1) {
 	
 		$this->SetFont( "Arial", "I", 10);
@@ -383,6 +419,174 @@ class Fattura extends FPDF {
 		$this->Cell(10,6,EURO . " -" . number_format($tot_iva, 2, ',', '.'));
 		$this->SetXY( $r1+154, $y1+7);
 		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));		
+	}
+
+	public function totaliFatturaContributoCliente($tot_dettagli, $tot_imponibile, $tot_iva) {
+	
+		$this->SetFont( "Arial", "B", 10);
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 260;
+		$y2  = $y1+15;
+		$this->SetFillColor(230, 230, 230);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->Line( $r1, $y1+6, $r2, $y1+6);
+		$this->Line( $r1+25, $y1, $r1+25, $y2);  // davanti all' IVA
+		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti al totale
+		$this->Line( $r1+75, $y1, $r1+75, $y2);  // davanti all'IVA a Vs. carico
+		$this->Line( $r1+150, $y1, $r1+150, $y2);  // davanti all'IVA a Vs. carico
+	
+		$this->SetXY( $r1+3, $y1);
+		$this->Cell(10,6, "IMPONIBILE");
+		$this->SetX( $r1+30 );
+		$this->Cell(10,6, "IVA 4%");
+		$this->SetX( $r1+50 );
+		$this->Cell(10,6, "TOTALE");
+		$this->SetX( $r1+77 );
+		$this->Cell(10,6, "IVA Vs. carico ex art. 17-ter, DPR n. 633/72");
+		$this->SetX( $r1+154 );
+		$this->Cell(10,6, "NETTO A PAGARE");
+	
+		$this->SetXY( $r1+3, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
+		$this->SetXY( $r1+30, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_iva, 2, ',', '.'));
+		$this->SetXY( $r1+50, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'));
+		$this->SetX( $r1+107 );
+		$this->Cell(10,6,EURO . " -" . number_format($tot_iva, 2, ',', '.'));
+		$this->SetXY( $r1+154, $y1+7);
+		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
+	}
+
+	public function totaliFatturaVenditaCliente($tot_imponibile, $tot_iva, $tot_imponibile_10, $tot_iva_10, $tot_imponibile_22, $tot_iva_22) {
+
+		/**
+		 * Box riepilogo imponibili e aliquote IVA
+		 */		
+		$r1  = 10;
+		$r2  = $r1 + 100;
+		$y1  = 250;
+		$y2  = $y1+25;
+		$this->SetFillColor(230, 230, 230);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->Line( $r1, $y1+6, $r2, $y1+6);
+		$this->Line( $r1+15, $y1, $r1+15, $y2);  // davanti alla descrizione
+		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti all'imponibile
+		$this->Line( $r1+75, $y1, $r1+75, $y2);  // davanti all'imposta
+
+		$this->SetFont( "Arial", "B", 10);
+		
+		$this->SetXY( $r1+2, $y1);
+		$this->Cell(10,6, "C.IVA");
+		$this->SetX( $r1+20 );
+		$this->Cell(10,6, "DESCRIZIONE");
+		$this->SetX( $r1+52 );
+		$this->Cell(10,6, "IMPONIBILE");
+		$this->SetX( $r1+80 );
+		$this->Cell(10,6, "IMPOSTA");
+
+		$this->SetFont( "Arial", "", 10);
+		
+		if ($tot_imponibile_10 > 0) {
+			$this->SetXY( $r1+2, $y1+7);
+			$this->Cell(10,6,"10","",0,"C");					
+			$this->SetX( $r1+20 );
+			$this->Cell(10,6,"Iva 10%","",0,"L");					
+			$this->SetX( $r1+52 );
+			$this->Cell(22,6,EURO . " " . number_format($tot_imponibile_10, 2, ',', '.'),"",0,"R");
+			$this->SetX( $r1+80 );
+			$this->Cell(18,6,EURO . " " . number_format($tot_iva_10, 2, ',', '.'),"",0,"R");
+		}
+
+		if ($tot_imponibile_22 > 0) {
+			$this->SetXY( $r1+2, $y1+12);
+			$this->Cell(10,6,"22","",0,"C");
+			$this->SetX( $r1+20 );
+			$this->Cell(10,6,"Iva 22%","",0,"L");
+			$this->SetX( $r1+52 );
+			$this->Cell(22,6,EURO . " " . number_format($tot_imponibile_22, 2, ',', '.'),"",0,"R");
+			$this->SetX( $r1+80 );
+			$this->Cell(18,6,EURO . " " . number_format($tot_iva_22, 2, ',', '.'),"",0,"R");
+			$this->Ln();
+		}
+
+		if ($tot_imponibile > 0) {
+			$this->SetXY( $r1+2, $y1+17);
+			$this->Cell(10,6,"  ","",0,"C");
+			$this->SetX( $r1+20 );
+			$this->Cell(10,6,"Esente","",0,"L");
+			$this->SetX( $r1+52 );
+			$this->Cell(22,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
+			$this->SetX( $r1+80 );
+			$this->Cell(18,6,EURO . " " . number_format($tot_iva, 2, ',', '.'),"",0,"R");
+			$this->Ln();
+		}
+		
+		/**
+		 * Box riepilogo Totale imponibile e iva
+		 */
+		$r1  = 112;
+		$r2  = $r1 + 40;
+		$y1  = 250;
+		$y2  = $y1+25;
+		$this->SetFillColor(230, 230, 230);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$mid = $y1 + (($y2-$y1) / 2);
+		$this->Line( $r1, $mid, $r2, $mid);
+
+		$this->SetFont( "Arial", "B", 10);
+		
+		$this->SetXY( $r1+28, $y1);
+		$this->Cell(10,6, "Tot. Imponibile","",0,"R");
+		$this->SetXY( $r1+28, $y1+12);
+		$this->Cell(10,6, "Tot. Imposta","",0,"R");
+
+		$imponibile = $tot_imponibile + $tot_imponibile_10 + $tot_imponibile_22;
+		$iva = $tot_iva + $tot_iva_10 + $tot_iva_22;
+
+		$this->SetFont( "Arial", "", 10);
+		
+		$this->SetXY( $r1+28, $y1+6);
+		$this->Cell(10,6,EURO . " " . number_format($imponibile, 2, ',', '.'),"",0,"R");
+
+		$this->SetXY( $r1+28, $y1+18);
+		$this->Cell(10,6,EURO . " " . number_format($iva, 2, ',', '.'),"",0,"R");
+
+		/**
+		 * Box totale documento
+		 */
+		$r1  = 154;
+		$r2  = $r1 + 48;
+		$y1  = 250;
+		$y2  = $y1+25;
+		$this->SetFillColor(230, 230, 230);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+
+		$this->SetFont( "Arial", "B", 10);
+		
+		$this->SetXY( $r1+34, $y1);
+		$this->Cell(10,6, "NETTO A PAGARE","",0,"R");
+
+		$netto = $imponibile + $iva;
+
+		$this->SetFont( "Arial", "B", 14);
+		
+		$this->SetXY( $r1+34, $y1+10);
+		$this->Cell(10,6,EURO . " " . number_format($netto, 2, ',', '.'),"",0,"R");
+		
+		
+	
+// 		$this->SetXY( $r1+3, $y1+7);
+// 		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
+// 		$this->SetXY( $r1+30, $y1+7);
+// 		$this->Cell(10,6,EURO . " " . number_format($tot_iva, 2, ',', '.'));
+// 		$this->SetXY( $r1+50, $y1+7);
+// 		$this->Cell(10,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'));
+// 		$this->SetX( $r1+107 );
+// 		$this->Cell(10,6,EURO . " -" . number_format($tot_iva, 2, ',', '.'));
+// 		$this->SetXY( $r1+154, $y1+7);
+// 		$this->Cell(10,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'));
 	}
 	
 }
