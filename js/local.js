@@ -527,7 +527,7 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 	autoOpen: false,
 	width: 530,
-	height: 360,
+	height: 390,
 	buttons: [
 		{
 			text: "Ok",

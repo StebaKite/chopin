@@ -62,6 +62,21 @@ function aggiungiDettaglio() {
 	var imponibile = $("#imponibile").val();
 	var iva = $("#iva").val();
 	
+	var aliquota = $("input[name=aliquota]:checked").val();
+	
+	if (aliquota == "1.04") {
+		var aliq = 4;		
+	}
+	if (aliquota == "1.10") {
+		var aliq = 10;		
+	}
+	if (aliquota == "1.22") {
+		var aliq = 22;		
+	}
+	if (aliquota == "1") {
+		var aliq = "";		
+	}
+	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
         "<td align='center'>" + quantita + "</td>" +
         "<td align='left'>" + articolo + "</td>" +
@@ -72,7 +87,7 @@ function aggiungiDettaglio() {
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva;
+	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva + "#" + aliq;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");
@@ -118,6 +133,15 @@ function calcolaImponibile() {
 	
 	if (aliquota == "1.04") {
 		var iva = imponibileArrotondato * 0.04;		
+	}
+	if (aliquota == "1.10") {
+		var iva = imponibileArrotondato * 0.10;		
+	}
+	if (aliquota == "1.22") {
+		var iva = imponibileArrotondato * 0.22;		
+	}
+	if (aliquota == "1") {
+		var iva = 0;		
 	}
 	
 	var ivaArrotondata = iva.toFixed(2);
@@ -220,9 +244,15 @@ function calcolaImponibile() {
 				<tr>
 					<td>%ml.importo% :</td>
 					<td class="tooltip" colspan="2"><input type="text" id="importo" name="importo" size="20" maxlength="20" onblur="calcolaImponibile()" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked /><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked onchange="calcolaImponibile()"/><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota10" name="aliquota" value="1.10" onchange="calcolaImponibile()"/><label for="aliquota10">%ml.aliquota10%</label>
+							<input type="radio" id="aliquota22" name="aliquota" value="1.22" onchange="calcolaImponibile()"/><label for="aliquota22">%ml.aliquota22%</label>
+							<input type="radio" id="fc" name="aliquota" value="1" onchange="calcolaImponibile()"/><label for="fc">%ml.fc%</label>
 						</div>
 					</td>					
 				</tr>
