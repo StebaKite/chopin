@@ -75,6 +75,7 @@ estraipdfTip = Estrae la tabella su un documento PDF
 anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
 nuovaDataScadTip = Aggiunge una data scadenza supplementare
 creaFattTip = Genera una fattura per il cliente selezionato
+articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe 
 ;
 ; Funzioni -----------------------------
 ;

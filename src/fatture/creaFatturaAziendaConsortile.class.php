@@ -97,7 +97,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		
 		require_once 'creaFatturaAziendaConsortile.template.php';
 		require_once 'utility.class.php';
-		require_once 'fattura.class.php';		
+		require_once 'fatturaAziendaConsortile.class.php';		
 		require_once 'database.class.php';
 		
 		// Creo la fattura -------------------------
@@ -108,7 +108,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["logo"] = self::$root . $array["logo"];
 		$_SESSION["creator"] = "Nexus6";
 		
-		$fattura = Fattura::getInstance();
+		$fattura = FatturaAziendaConsortile::getInstance();
 		
 		$fattura->AliasNbPages();
 		
@@ -180,7 +180,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	private function sezioneIdentificativiFattura($fattura) {
-		$fattura->identificativiFattura(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
+		$fattura->identificativiFatturaAziendaConsortile(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
 		return $fattura;		
 	}
 
@@ -216,7 +216,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 					"IVA"        => $e[6]
 			);
 	
-			$fattura->aggiungiLineaLibera($w, $linea);
+			$fattura->aggiungiLineaLiberaAziendaConsortile($w, $linea);
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
@@ -230,7 +230,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	public function sezioneTotali($fattura) {
-		$fattura->totaliFattura($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaAziendaConsortile($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
 		return $fattura;
 	}
 	

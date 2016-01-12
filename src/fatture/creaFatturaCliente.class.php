@@ -99,7 +99,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 		
 		require_once 'creaFatturaCliente.template.php';
 		require_once 'utility.class.php';
-		require_once 'fattura.class.php';		
+		require_once 'fatturaCliente.class.php';		
 		require_once 'database.class.php';
 		
 		// Creo la fattura -------------------------
@@ -110,7 +110,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 		$_SESSION["logo"] = self::$root . $array["logo"];
 		$_SESSION["creator"] = "Nexus6";
 		
-		$fattura = Fattura::getInstance();
+		$fattura = FatturaCliente::getInstance();
 		
 		$fattura->AliasNbPages();
 		
