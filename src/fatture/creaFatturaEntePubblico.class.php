@@ -98,7 +98,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		
 		require_once 'creaFatturaEntePubblico.template.php';
 		require_once 'utility.class.php';
-		require_once 'fattura.class.php';		
+		require_once 'fatturaEntePubblico.class.php';		
 		require_once 'database.class.php';
 		
 		// Creo la fattura -------------------------
@@ -109,7 +109,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		$_SESSION["logo"] = self::$root . $array["logo"];
 		$_SESSION["creator"] = "Nexus6";
 		
-		$fattura = Fattura::getInstance();
+		$fattura = FatturaEntePubblico::getInstance();
 		
 		$fattura->AliasNbPages();
 		
