@@ -50,16 +50,17 @@ class InserisciSottoconto extends ConfigurazioniAbstract {
 		$db->beginTransaction();
 		
 		if ($this->inserisciSottoconto($db, $utility, $_SESSION["codconto"], $_SESSION["codsottoconto"], $_SESSION["dessottoconto"])) {
-		
 			$db->commitTransaction();
+			$_SESSION["messaggio"] = "Conto salvato con successo";				
 		}
 		else {
 			$db->rollbackTransaction();
 			error_log("Errore inserimento sottoconto, eseguito Rollback");
+			$_SESSION["messaggio"] = "Attenzione: conto non inserito!";				
 		}
 		
 		$modificaConto = ModificaConto::getInstance();
-		$modificaConto->go();		
+		$modificaConto->start();		
 	}
 }
 

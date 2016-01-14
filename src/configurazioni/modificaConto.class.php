@@ -55,6 +55,23 @@ class ModificaConto extends ConfigurazioniAbstract {
 		// Compone la pagina
 		include(self::$testata);
 		$modificaContoTemplate->displayPagina();
+		
+		if (isset($_SESSION["messaggio"])) {
+			if ($_SESSION["messaggio"] == "Conto salvato con successo") {
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				echo $utility->tailTemplate($template);
+			}
+			else {
+				if ($_SESSION["messaggio"] == "Attenzione: conto non inserito!") {
+					self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+					echo $utility->tailTemplate($template);						
+				}
+			}			
+			unset($_SESSION["messaggio"]);
+		}
+		
 		include(self::$piede);
 	}
 
