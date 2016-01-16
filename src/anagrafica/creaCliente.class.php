@@ -158,8 +158,7 @@ class CreaCliente extends AnagraficaAbstract {
 		
 		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
 
-			$db->commitTransaction();
-			
+			$db->commitTransaction();			
 			
 			return TRUE;
 		}

@@ -11,7 +11,6 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 	// Query ---------------------------------------------------------------
 
 	public static $queryCreaConto = "/configurazioni/creaConto.sql";
-	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	public static $queryLeggiConto = "/configurazioni/leggiConto.sql";
 	public static $queryLeggiSottoconti = "/configurazioni/leggiSottoconti.sql";
 	public static $queryUpdateConto = "/configurazioni/updateConto.sql";
@@ -86,20 +85,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 
-	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto) {
-	
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_conto%' => trim($codconto),
-				'%cod_sottoconto%' => trim($codsottoconto),
-				'%des_sottoconto%' => trim($dessottoconto)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSottoconto;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
-
+	/**
+	 * Questo metodo legge un conto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @return unknown
+	 */
 	public function leggiConto($db, $utility, $codconto) {
 	
 		$array = $utility->getConfig();
@@ -112,6 +104,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Questo metodo legge un sottoconto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @return unknown
+	 */
 	public function leggiSottoconti($db, $utility, $codconto) {
 	
 		$array = $utility->getConfig();
@@ -123,7 +122,20 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	}
-	
+
+	/**
+	 * Questo metodo aggiorna un conto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @param unknown $desconto
+	 * @param unknown $catconto
+	 * @param unknown $tipconto
+	 * @param unknown $indpresenza
+	 * @param unknown $indvisibilitasottoconti
+	 * @param unknown $numrigabilancio
+	 * @return unknown
+	 */
 	public function updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $numrigabilancio) {
 		
 		$array = $utility->getConfig();
@@ -141,7 +153,14 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
+	/**
+	 * Questo metodo cancella un sottoconto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 */
 	public function cancellaSottoconto($db, $utility, $codconto, $codsottoconto) {
 	
 		$array = $utility->getConfig();
@@ -154,6 +173,12 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 	}
 	
+	/**
+	 * Questo metodo cancella un conto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 */
 	public function cancellaConto($db, $utility, $codconto) {
 	
 		$array = $utility->getConfig();
@@ -164,7 +189,16 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
-	
+
+	/**
+	 * Questo metodo inserisce una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @param unknown $descausale
+	 * @param unknown $catcausale
+	 * @return unknown
+	 */
 	public function inserisciCausale($db, $utility, $codcausale, $descausale, $catcausale) {
 
 		$array = $utility->getConfig();
@@ -179,6 +213,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * Questo metodo legge una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @return unknown
+	 */
 	public function leggiCausale($db, $utility, $codcausale) {
 
 		$array = $utility->getConfig();
@@ -191,6 +232,15 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * Questo metodo aggiorna una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @param unknown $descausale
+	 * @param unknown $catcausale
+	 * @return unknown
+	 */
 	public function updateCausale($db, $utility, $codcausale, $descausale, $catcausale) {
 
 		$array = $utility->getConfig();
@@ -205,6 +255,12 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Questo metodo cancella una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 */
 	public function cancellaCausale($db, $utility, $codcausale) {
 	
 		$array = $utility->getConfig();
@@ -216,6 +272,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 	}
 
+	/**
+	 * Questo metodo legge tutti i conti configurati su una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @return unknown
+	 */
 	public function leggiContiCausale($db, $utility, $codcausale) {
 
 		$array = $utility->getConfig();
@@ -228,6 +291,13 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * Questo metodo legge tutti i conti non ancrora associati alla causale corrente
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @return unknown
+	 */
 	public function leggiContiDisponibili($db, $utility, $codcausale) {
 
 		$array = $utility->getConfig();
@@ -240,6 +310,14 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Questo metodo associa un conto ad una causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @param unknown $codconto
+	 * @return unknown
+	 */
 	public function creaConfigurazioneCausale($db, $utility, $codcausale, $codconto) {
 
 		$array = $utility->getConfig();
@@ -253,6 +331,14 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 	
+	/**
+	 * Questo metodo toglie il conto dalla causale
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codcausale
+	 * @param unknown $codconto
+	 * @return unknown
+	 */
 	public function deleteConfigurazioneCausale($db, $utility, $codcausale, $codconto) {
 
 		$array = $utility->getConfig();

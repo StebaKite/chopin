@@ -141,6 +141,12 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		
+		/**
+		 * Creo anche il conto per il fornitore
+		 */
+		
+		$result = $this->inserisciSottoconto($db, $utility, '215', $codfornitore, $desfornitore);
 		return $result;
 	}
 
@@ -226,6 +232,12 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		
+		/**
+		 * Creo anche il conto per il cliente
+		 */
+		
+		$result = $this->inserisciSottoconto($db, $utility, '120', $codcliente, $descliente);
 		return $result;
 	}
 

@@ -37,6 +37,8 @@ abstract class ChopinAbstract {
 	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
 	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
+
+	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -490,6 +492,30 @@ abstract class ChopinAbstract {
 			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
 			return FALSE;
 		}
+	}	
+
+	/**
+	 * Questo metodo inserisce un sottoconto.
+	 * E' qui perchè viene utilizzato dalle configurazioni e dall'anagrafica
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $dessottoconto
+	 * @return unknown
+	 */
+	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto),
+				'%des_sottoconto%' => trim($dessottoconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSottoconto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
 	}	
 }
 
