@@ -20,7 +20,6 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryCreaCliente = "/anagrafica/creaCliente.sql";
 	public static $queryUpdateCliente = "/anagrafica/updateCliente.sql";
 	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
-	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
 	public static $queryLeggiUltimoCodiceCliente = "/anagrafica/leggiUltimoCodiceCliente.sql";
 	public static $queryLeggiUltimoCodiceFornitore = "/anagrafica/leggiUltimoCodiceFornitore.sql";
 	
@@ -293,32 +292,6 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
-	}
-
-	/**
-	 * Questo metodo legge tutte le categorie disponibili
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return string
-	 */
-	public function caricaCategorieCliente($utility, $db) {
-
-		$array = $utility->getConfig();
-		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercacCategorie;
-		$sql = $utility->getTemplate($sqlTemplate);
-		$result = $db->getData($sql);
-		
-		foreach(pg_fetch_all($result) as $row) {
-		
-			if (trim($row['cat_cliente']) == trim($_SESSION["catcliente"])) {
-				$elencoCategorieCliente .= "<option value='" . $row['cat_cliente'] . "' selected >" . $row['des_categoria'] . "</option>";
-			}
-			else {
-				$elencoCategorieCliente .= "<option value='" . $row['cat_cliente'] . "'>" . $row['des_categoria'] . "</option>";
-			}
-		}
-		return $elencoCategorieCliente;
 	}
 	
 	/**

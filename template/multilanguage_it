@@ -76,6 +76,7 @@ anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
 nuovaDataScadTip = Aggiunge una data scadenza supplementare
 creaFattTip = Genera una fattura per il cliente selezionato
 articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe 
+notafatturaTip = Inserisci le note che devono apparire in fattura, il carattere # fa proseguire la nota su una nuova riga
 ;
 ; Funzioni -----------------------------
 ;
@@ -120,13 +121,8 @@ incassiPagamenti = Incassi e Pagamenti
 creaFatturaAziendaConsortile = Crea fattura azienda consortile
 creaFatturaEntePubblico = Crea fattura ente pubblico
 creaFatturaCliente = Crea fattura famiglia / cliente
-
-;
-; Messaggi -----------------------------
-;
-
-
-
+ricercaProgressivoFattura = Progressivi Fattura
+modificaProgressivoFattura = Modifica progressivo fattura
 
 ;
 ; Campi form ---------------------------
