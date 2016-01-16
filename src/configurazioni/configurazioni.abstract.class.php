@@ -24,6 +24,9 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 	public static $queryLeggiContiDisponibili = "/configurazioni/leggiContiDisponibili.sql";
 	public static $queryCreaConfigurazioneCausale = "/configurazioni/creaConfigurazioneCausale.sql";
 	public static $queryDeleteConfigurazioneCausale = "/configurazioni/deleteConfigurazioneCausale.sql";
+	public static $queryRicercaProgressivoFattura = "/configurazioni/ricercaProgressivoFattura.sql";
+	
+	public static $queryUpdateProgressivoFattura = "/configurazioni/updateProgressivoFattura.sql";
 	
 	function __construct() {
 	}
@@ -351,6 +354,46 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}	
+	
+	public function leggiProgressivoFattura($db, $utility, $catcliente, $codneg) {
+
+		$array = $utility->getConfig();
+
+		$filtro = "";
+		
+		if ($catcliente != "") {
+			$filtro .= " AND progressivo_fattura.cat_cliente = '" . $catcliente . "'";
+		}
+
+		if ($codneg != "") {
+			$filtro .= " AND progressivo_fattura.neg_progr = '" . $codneg . "'";
+		}
+		
+		$replace = array(
+				'%filtri_progressivi_fattura%' => $filtro
+		);
+
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaProgressivoFattura;		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
+	public function updateProgressivoFattura($db, $utility, $catcliente, $codneg, $numfatt, $notatesta, $notapiede) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cat_cliente%' => trim($catcliente),
+				'%neg_progr%' => trim($codneg),
+				'%num_fattura_ultimo%' => trim($numfatt),
+				'%nota_testa_fattura%' => trim($notatesta),
+				'%nota_piede_fattura%' => trim($notapiede)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateProgressivoFattura;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 }
 	
 ?>
