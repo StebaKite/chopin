@@ -41,7 +41,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteScadenzaCliente = "/primanota/deleteScadenzaCliente.sql";
 	public static $queryPrelevaRegistrazioneOriginaleCliente = "/primanota/leggiRegistrazioneOriginaleCliente.sql";
 	public static $queryPrelevaRegistrazioneOriginaleFornitore = "/primanota/leggiRegistrazioneOriginaleFornitore.sql";
-	
+	public static $queryTrovaCorrispettivo = "/primanota/trovaCorrispettivo.sql";
 	
 	function __construct() {
 	}
@@ -704,6 +704,30 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		return $db->getData($sql);		
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $datareg
+	 * @param unknown $codneg
+	 * @param unknown $conto
+	 * @param unknown $importo
+	 */
+	public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $importo) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%dat_registrazione%' => trim($datareg),
+				'%cod_negozio%' => trim($codneg),
+				'%cod_conto%' => substr(trim($conto),0,3),
+				'%imp_registrazione%' => trim($importo)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		return $db->getData($sql);
+		
 	}
 }
 

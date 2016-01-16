@@ -175,12 +175,17 @@ function calcolaImponibile() {
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
+							<tfood>
+								<tr style="font-weight:bolder; color:red;">
+									<td colspan="4"><p id="esitoControlloUnivocitaCorrispettivo"></p></td>
+								</tr>
+							</tfood>							
 						</td>
 					</tr>										
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
+						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett-corrisp" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
 						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
 					</tr>
 				</tfoot>
@@ -191,7 +196,7 @@ function calcolaImponibile() {
 	</div>
 </div>
 
-<div id="nuovo-dettaglio-form" title="Nuovo Dettaglio"> 
+<div id="nuovo-dettaglio-corrispettivo-form" title="Nuovo Dettaglio"> 
 	<form>
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>
@@ -200,8 +205,8 @@ function calcolaImponibile() {
 					<td class="tooltip"><input type="text" id="importo" name="importo" size="10" maxlength="20" onblur="calcolaImponibile()" ></td>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="aliquota10" name="aliquota" value="1.10" checked ><label for="aliquota10">%ml.aliquota10%</label>
-							<input type="radio" id="aliquota20" name="aliquota" value="1.22" ><label for="aliquota20">%ml.aliquota22%</label>
+							<input type="radio" id="aliquota10" name="aliquota" value="1.10" checked onclick="calcolaImponibile()"><label for="aliquota10">%ml.aliquota10%</label>
+							<input type="radio" id="aliquota20" name="aliquota" value="1.22" onclick="calcolaImponibile()"><label for="aliquota20">%ml.aliquota22%</label>
 						</div>
 					</td>					
 				</tr>
@@ -223,6 +228,9 @@ function calcolaImponibile() {
 			<tfood>
 				<tr style="font-weight:bolder; color:red;">
 					<td colspan="4"><p id="msgquad"></p></td>
+				</tr>
+				<tr style="font-weight:bolder; color:red;">
+					<td colspan="4"><p id="esitoControlloUnivocitaCorrispettivo"></p></td>
 				</tr>
 			</tfood>
 		</table> 	 

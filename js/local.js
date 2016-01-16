@@ -87,6 +87,60 @@ $( "#nuovo-dett" ).click(function( event ) {
 	event.preventDefault();
 });
 
+// Dettaglio Corrispettivi
+
+$( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
+	autoOpen: false,
+	width: 500,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				
+				// Controllo duplicazione corrispettivo
+				
+				var datareg = $("#datareg").val();
+				var codneg = $("input[name=codneg]:checked").val();
+				var conto = $("#conti").val();
+				var importo = $("#importo").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Corrispettivo ok") {
+							
+							aggiungiDettaglio();
+				            $( "#esitoControlloUnivocitaCorrispettivo" ).html("&nbsp;");
+			        		
+			        	}
+			        	else {
+				            $( "#esitoControlloUnivocitaCorrispettivo" ).html(xmlhttp.responseText);
+			        	}
+			        }		
+			        
+			    } 
+			    xmlhttp.open("GET", "controlloCorrispettivoFacade.class.php?modo=start&datareg=" + datareg + "&codneg=" + codneg + "&conto=" + conto + "&importo=" + importo, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+// Link to open the dialog
+$( "#nuovo-dett-corrisp" ).click(function( event ) {
+	$( "#nuovo-dettaglio-corrispettivo-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
