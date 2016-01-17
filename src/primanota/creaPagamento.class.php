@@ -50,11 +50,11 @@ class CreaPagamento extends primanotaAbstract {
 	
 		// Data del giorno preimpostata solo in entrata -------------------------
 	
-		$_SESSION["datareg"] = date("d/m/Y");
-		$_SESSION["codneg"] = "VIL";
+		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
 		unset($_SESSION["descreg"]);
-		unset($_SESSION["causale"]);
 		unset($_SESSION["numfatt"]);
+		unset($_SESSION["codneg"]);
+		unset($_SESSION["causale"]);
 		unset($_SESSION["fornitore"]);
 		unset($_SESSION["dettagliInseriti"]);
 		unset($_SESSION["indexDettagliInseriti"]);
@@ -80,10 +80,17 @@ class CreaPagamento extends primanotaAbstract {
 				
 			if ($this->creaPagamento($utility)) {
 		
-				session_unset();
 				$_SESSION["messaggio"] = "Pagamento salvato con successo";
-				$_SESSION["datareg"] = date("d/m/Y");
-				$_SESSION["codneg"] = "VIL";
+				
+				if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+				unset($_SESSION["descreg"]);
+				unset($_SESSION["numfatt"]);
+				unset($_SESSION["codneg"]);
+				unset($_SESSION["causale"]);
+				unset($_SESSION["fornitore"]);
+				unset($_SESSION["dettagliInseriti"]);
+				unset($_SESSION["indexDettagliInseriti"]);
+				unset($_SESSION["elenco_scadenze_cliente"]);
 		
 				$this->preparaPagina($creaPagamentoTemplate);
 		

@@ -50,11 +50,11 @@ class CreaIncasso extends primanotaAbstract {
 	
 		// Data del giorno preimpostata solo in entrata -------------------------
 	
-		$_SESSION["datareg"] = date("d/m/Y");
-		$_SESSION["codneg"] = "VIL";
+		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
 		unset($_SESSION["descreg"]);
-		unset($_SESSION["causale"]);
 		unset($_SESSION["numfatt"]);
+		unset($_SESSION["codneg"]);
+		unset($_SESSION["causale"]);
 		unset($_SESSION["cliente"]);
 		unset($_SESSION["dettagliInseriti"]);
 		unset($_SESSION["indexDettagliInseriti"]);
@@ -80,10 +80,17 @@ class CreaIncasso extends primanotaAbstract {
 				
 			if ($this->creaIncasso($utility)) {
 		
-				session_unset();
 				$_SESSION["messaggio"] = "Incasso salvato con successo";
-				$_SESSION["datareg"] = date("d/m/Y");
-				$_SESSION["codneg"] = "VIL";
+				
+				if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+				unset($_SESSION["descreg"]);
+				unset($_SESSION["numfatt"]);
+				unset($_SESSION["codneg"]);
+				unset($_SESSION["causale"]);
+				unset($_SESSION["cliente"]);
+				unset($_SESSION["dettagliInseriti"]);
+				unset($_SESSION["indexDettagliInseriti"]);
+				unset($_SESSION["elenco_scadenze_cliente"]);
 		
 				$this->preparaPagina($creaIncassoTemplate);
 		

@@ -56,8 +56,8 @@ class CreaRegistrazione extends primanotaAbstract {
 
 		// Data del giorno preimpostata solo in entrata -------------------------
 		
-		$_SESSION["datareg"] = date("d/m/Y");
-		$_SESSION["codneg"] = "VIL";
+		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+		$_SESSION["codneg"] = "";
 		
 		// Compone la pagina
 		include(self::$testata);
@@ -80,10 +80,21 @@ class CreaRegistrazione extends primanotaAbstract {
 			
 			if ($this->creaRegistrazione($utility)) {
 
-				session_unset();
 				$_SESSION["messaggio"] = "Registrazione salvata con successo";				
-				$_SESSION["datareg"] = date("d/m/Y");
-				$_SESSION["codneg"] = "VIL";
+				if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+
+				unset($_SESSION["descreg"]);
+				unset($_SESSION["datascad"]);
+				unset($_SESSION["numfatt"]);
+				unset($_SESSION["codneg"]);
+				unset($_SESSION["causale"]);
+				unset($_SESSION["fornitore"]);
+				unset($_SESSION["cliente"]);
+				unset($_SESSION["esitoNumeroFattura"]);
+				unset($_SESSION["dettagliInseriti"]);
+				unset($_SESSION["indexDettagliInseriti"]);
+				unset($_SESSION["scadenzeInserite"]);
+				unset($_SESSION["indexScadenzeInserite"]);
 				
 				$this->preparaPagina($creaRegistrazioneTemplate);
 				

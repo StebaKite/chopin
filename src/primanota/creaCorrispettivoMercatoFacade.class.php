@@ -7,7 +7,13 @@ session_start();
 $creaCorrispettivoMercato = CreaCorrispettivoMercato::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
+
+	unset($_SESSION["descreg"]);
+	unset($_SESSION["codneg"]);
+	unset($_SESSION["causale"]);
+	unset($_SESSION["dettagliInseriti"]);
+	unset($_SESSION["indexDettagliInseriti"]);
+	
 	$creaCorrispettivoMercato->start();
 }
 

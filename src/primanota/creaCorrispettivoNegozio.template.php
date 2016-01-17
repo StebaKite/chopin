@@ -41,7 +41,12 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 		/**
 		 * Controllo presenza dati obbligatori
 		 */
-	
+
+		if ($_SESSION["codneg"] == "") {
+			$msg = $msg . "<br>&ndash; Scegli il negozio";
+			$esito = FALSE;
+		}
+		
 		if ($_SESSION["descreg"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la descrizione";
 			$esito = FALSE;

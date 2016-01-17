@@ -55,9 +55,13 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 	
 		// Data del giorno preimpostata solo in entrata -------------------------
 	
-		$_SESSION["datareg"] = date("d/m/Y");
-		$_SESSION["codneg"] = "VIL";
-	
+		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+		unset($_SESSION["descreg"]);
+		unset($_SESSION["codneg"]);
+		unset($_SESSION["causale"]);
+		unset($_SESSION["dettagliInseriti"]);
+		unset($_SESSION["indexDettagliInseriti"]);
+			
 		// Compone la pagina
 		include(self::$testata);
 		$creaCorrispettivoNegozioTemplate->displayPagina();
@@ -81,8 +85,13 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		
 				session_unset();
 				$_SESSION["messaggio"] = "Corrispettivo salvato con successo";
-				$_SESSION["datareg"] = date("d/m/Y");
-				$_SESSION["codneg"] = "VIL";
+				
+				if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+				unset($_SESSION["descreg"]);
+				unset($_SESSION["codneg"]);
+				unset($_SESSION["causale"]);
+				unset($_SESSION["dettagliInseriti"]);
+				unset($_SESSION["indexDettagliInseriti"]);
 		
 				$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 		

@@ -8,7 +8,20 @@ session_start();
 $creaRegistrazione = CreaRegistrazione::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
+
+	unset($_SESSION["descreg"]);
+	unset($_SESSION["datascad"]);
+	unset($_SESSION["numfatt"]);
+	unset($_SESSION["codneg"]);
+	unset($_SESSION["causale"]);
+	unset($_SESSION["fornitore"]);
+	unset($_SESSION["cliente"]);
+	unset($_SESSION["esitoNumeroFattura"]);
+	unset($_SESSION["dettagliInseriti"]);
+	unset($_SESSION["indexDettagliInseriti"]);
+	unset($_SESSION["scadenzeInserite"]);
+	unset($_SESSION["indexScadenzeInserite"]);
+	
 	$creaRegistrazione->start();
 }
 
