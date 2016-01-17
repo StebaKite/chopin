@@ -258,9 +258,9 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1, $y1 );
 
 		foreach($d as $nota) {
-			$this->SetX( $r1 );
-			$this->Cell(150,6,$nota,"");
+			$this->Cell(150,6,utf8_decode($nota),"",0,"L");
 			$this->Ln();
+			$this->SetX( $r1 );
 		}
 	}
 }
