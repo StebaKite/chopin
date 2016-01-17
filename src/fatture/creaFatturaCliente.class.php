@@ -195,7 +195,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 	private function sezioneNotaTesta($fattura, $utility) {
 
 		if (isset($_SESSION["nota_testa_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_testa_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_testa_fattura"]);
 			
 			$array = $utility->getConfig();
 			$replace = array(
@@ -218,9 +218,9 @@ class CreaFatturaCliente extends FatturaAbstract {
 	private function sezioneNotaPiede($fattura) {
 	
 		if (isset($_SESSION["nota_piede_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_piede_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_piede_fattura"]);
 		}
-		$fattura->aggiungiLineaNota($nota, 15, 250);
+		$fattura->aggiungiLineaNota($nota, 12, 242);
 		return $fattura;
 	}
 
@@ -373,6 +373,16 @@ class CreaFatturaCliente extends FatturaAbstract {
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;	
+
+		/**
+		 * Closing line
+		 */
+		
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 240;
+		$fattura->Line( $r1, $y1, $r2, $y1);
+		
 		return $fattura;
 	}
 	

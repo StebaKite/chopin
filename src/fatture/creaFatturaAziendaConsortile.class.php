@@ -226,6 +226,16 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;	
+
+		/**
+		 * Closing line
+		 */
+		
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 240;
+		$fattura->Line( $r1, $y1, $r2, $y1);
+		
 		return $fattura;
 	}
 	
