@@ -140,13 +140,14 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 			if ($_SESSION["tipofat"] == "CONTRIBUTO") { 
 				$fattura = $this->sezioneNotaTesta($fattura);
 				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 180);			
+				$fattura = $this->sezioneNotaPiede($fattura);
+				$fattura = $this->sezioneTotaliContributo($fattura);
 			}
 			else {
 				$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif, 15, 120);
+				$fattura = $this->sezioneTotaliVendita($fattura);
 			}
 			
-			$fattura = $this->sezioneNotaPiede($fattura);
-			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
 		}
@@ -192,7 +193,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 	private function sezioneNotaTesta($fattura) {
 
 		if (isset($_SESSION["nota_testa_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_testa_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_testa_fattura"]);
 		}
 		$fattura->aggiungiLineaNota($nota, 15, 120);
 		return $fattura;		
@@ -201,7 +202,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 	private function sezioneNotaPiede($fattura) {
 	
 		if (isset($_SESSION["nota_piede_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_piede_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_piede_fattura"]);
 		}
 		$fattura->aggiungiLineaNota($nota, 15, 250);
 		return $fattura;
@@ -251,8 +252,13 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		return $fattura;
 	}
 	
-	public function sezioneTotali($fattura) {
-		$fattura->totaliFatturaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
+	public function sezioneTotaliVendita($fattura) {
+		$fattura->totaliFatturaVenditaEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
+		return $fattura;
+	}
+
+	public function sezioneTotaliContributo($fattura) {
+		$fattura->totaliFatturaContributoEntePubblico($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
 		return $fattura;
 	}
 	
