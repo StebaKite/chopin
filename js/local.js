@@ -580,8 +580,8 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 
 $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 	autoOpen: false,
-	width: 530,
-	height: 390,
+	width: 510,
+	height: 420,
 	buttons: [
 		{
 			text: "Ok",
@@ -607,8 +607,8 @@ $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 
 $( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
 	autoOpen: false,
-	width: 530,
-	height: 390,
+	width: 510,
+	height: 420,
 	buttons: [
 		{
 			text: "Ok",

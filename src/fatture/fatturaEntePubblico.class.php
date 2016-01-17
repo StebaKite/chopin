@@ -63,8 +63,45 @@ class FatturaEntePubblico extends Fattura {
 			$this->Ln();
 		}
 	}
-
-	public function totaliFatturaEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva, $aliq_iva) {
+	public function totaliFatturaContributoEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva, $aliq_iva) {
+	
+		$this->SetFont( "Arial", "B", 10);
+		$r1  = 10;
+		$r2  = $r1 + 192;
+		$y1  = 260;
+		$y2  = $y1+15;
+		$this->SetFillColor(230, 230, 230);
+		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
+		$this->Line( $r1, $y1+6, $r2, $y1+6);
+		$this->Line( $r1+25, $y1, $r1+25, $y2);  // davanti all' IVA
+		$this->Line( $r1+50, $y1, $r1+50, $y2);  // davanti al totale
+		$this->Line( $r1+75, $y1, $r1+75, $y2);  // davanti all'IVA a Vs. carico
+		$this->Line( $r1+150, $y1, $r1+150, $y2);  // davanti all'IVA a Vs. carico
+	
+		$this->SetXY( $r1+3, $y1);
+		$this->Cell(20,6, "IMPONIBILE","",0,"C");
+		$this->SetX( $r1+30 );
+		$this->Cell(20,6, "IVA " . $aliq_iva . "%","",0,"C");
+		$this->SetX( $r1+50 );
+		$this->Cell(20,6, "TOTALE","",0,"C");
+		$this->SetX( $r1+92 );
+		$this->Cell(40,6, "IVA Vs. carico ex art. 17-ter, DM 23.1.2015","",0,"C");
+		$this->SetX( $r1+159 );
+		$this->Cell(20,6, "NETTO A PAGARE","",0,"C");
+	
+		$this->SetXY( $r1+3, $y1+7);
+		$this->Cell(20,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"C");
+		$this->SetXY( $r1+30, $y1+7);
+		$this->Cell(20,6,number_format($tot_iva, 2, ',', '.'),"",0,"C");
+		$this->SetXY( $r1+50, $y1+7);
+		$this->Cell(20,6,number_format($tot_dettagli, 2, ',', '.'),"",0,"C");
+		$this->SetX( $r1+90 );
+		$this->Cell(40,6,"-" . number_format($tot_iva, 2, ',', '.'),"",0,"C");
+		$this->SetXY( $r1+159, $y1+7);
+		$this->Cell(20,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'),"",0,"C");
+	}
+	
+	public function totaliFatturaVenditaEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva, $aliq_iva) {
 	
 		/**
 		 * Box riepilogo imponibili e aliquote IVA

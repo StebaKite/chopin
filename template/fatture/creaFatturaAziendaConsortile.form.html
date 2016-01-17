@@ -206,11 +206,14 @@ function calcolaImponibile() {
 				</tr>								
 				<tr>
 					<td>%ml.articolo% :</td>
-					<td class="tooltip"><input type="text" id="articolo" name="articolo" size="40" maxlength="150" title="%ml.articoloTip%"  ></td>
+					<td class="tooltip"><textarea id="articolo" name="articolo" rows="2" cols="50" title="%ml.articoloTip%"></textarea></td>
 				</tr>
 				<tr>
 					<td>%ml.importo% :</td>
 					<td class="tooltip" colspan="2"><input type="text" id="importo" name="importo" size="20" maxlength="20" onblur="calcolaImponibile()" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
 					<td>
 						<div class="radioset" >
 							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked /><label for="aliquota4">%ml.aliquota4%</label>
