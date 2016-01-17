@@ -192,7 +192,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 	private function sezioneNotaTesta($fattura) {
 
 		if (isset($_SESSION["nota_testa_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_testa_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_testa_fattura"]);
 		}
 		$fattura->aggiungiLineaNota($nota, 15, 120);
 		return $fattura;		
@@ -201,7 +201,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 	private function sezioneNotaPiede($fattura) {
 	
 		if (isset($_SESSION["nota_piede_fattura"])) {
-			$nota = explode("#", $_SESSION["nota_piede_fattura"]);
+			$nota = explode("\\", $_SESSION["nota_piede_fattura"]);
 		}
 		$fattura->aggiungiLineaNota($nota, 15, 250);
 		return $fattura;
