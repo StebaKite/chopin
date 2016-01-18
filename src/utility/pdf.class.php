@@ -491,6 +491,87 @@ class Pdf extends FPDF {
 			
 			$totaleSottoconto = trim($row['tot_conto']);
 				
+			$importo = number_format($totaleSottoconto, 2, ',', '.');
+			
+			if (trim($row['des_conto']) != $desconto_break ) {
+			
+				if ($desconto_break != "") {
+			
+					$totconto = number_format($totaleConto, 2, ',', '.');
+
+					$this->Ln();
+					$this->SetFont('','B',12);
+					$this->Cell($w[0],6,$desconto_break,'',0,'L');
+					$this->Cell($w[1],6,$totconto,'',0,'R');
+					
+					if ($ind_visibilita_sottoconti_break == 'S') {
+						
+						foreach($sottoconti as $sottoconto) {
+							
+							$this->Ln();
+							$this->SetFont('','',11);
+							$this->Cell($w[0],6,str_repeat(' ',7) . utf8_decode($sottoconto['descrizione']),'',0,'L');
+							$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');								
+						}
+					}
+						
+					$this->Ln();
+					$i=0;
+					$totaleConto = 0;
+					$sottoconti = array();	
+				}
+
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));				
+			
+				$desconto_break = utf8_decode(trim($row['des_conto']));
+				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
+			}
+			else {
+				array_push($sottoconti, array('descrizione' => utf8_decode(trim($row['des_sottoconto'])), 'importo' => $importo));				
+			}
+			$totaleConto += $totaleSottoconto;
+		}
+
+		/**
+		 * Ultimo totale di fine ciclo
+		 */		
+		$totconto = number_format($totaleConto, 2, ',', '.');
+		
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->Cell($w[0],6,$desconto_break,'',0,'L');
+		$this->Cell($w[1],6,$totconto,'',0,'R');
+		
+		if ($ind_visibilita_sottoconti_break == 'S') {
+		
+			foreach($sottoconti as $sottoconto) {
+				
+				if ($sottoconto['importo'] > 0) {
+					$this->Ln();
+					$this->SetFont('','',11);
+					$this->Cell($w[0],6,str_repeat(' ',7) . $sottoconto['descrizione'],'',0,'L');
+					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
+				}
+			}
+		}
+	} 	
+
+	public function BilancioTableRicavi($data) {
+	
+			// Column widths
+		$w = array(150, 25);
+
+		$desconto_break = ""; 
+		$ind_visibilita_sottoconti_break = "";
+		$totaleConto = 0;
+		
+		$sottoconti = array();
+		
+		// Data
+		foreach($data as $row) {
+			
+			$totaleSottoconto = trim($row['tot_conto']);
+				
 			$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
 			
 			if (trim($row['des_conto']) != $desconto_break ) {
@@ -560,8 +641,8 @@ class Pdf extends FPDF {
 				}
 			}
 		}
-	} 	
-
+	}
+	
 	public function BilancioEsercizioTable($data) {
 	
 		// Column widths
@@ -743,7 +824,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Costi','',0,'L');
-		$this->Cell($w[2],8,number_format(abs($totaleCosti), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($totaleCosti, 2, ',', '.'),'',0,'R');
 
 		$this->SetTextColor(0);
 	}

@@ -118,7 +118,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->SetFont('Arial','',11);
 		$pdf->BilancioTable($this->ricercaCosti($utility, $db, $replace));
 
-		$pdf->TotaleCostiTable(abs($_SESSION['totaleCosti']));
+		$pdf->TotaleCostiTable($_SESSION['totaleCosti']);
 		
 		/**
 		 * Ricavi
@@ -130,7 +130,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		$pdf->Ln();
 		$pdf->Ln();
 		$pdf->SetFont('Arial','',11);
-		$pdf->BilancioTable($this->ricercaRicavi($utility, $db, $replace));
+		$pdf->BilancioTableRicavi($this->ricercaRicavi($utility, $db, $replace));
 
 		$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));
 		
