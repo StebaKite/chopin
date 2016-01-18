@@ -104,7 +104,7 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codconto%' => $_SESSION["codconto"],
-				'%desconto%' => $_SESSION["desconto"],
+				'%desconto%' => str_replace("'", "&apos;", $_SESSION["desconto"]),
 				'%contoeco_checked%' => (trim($_SESSION["catconto"]) == "Conto Economico") ? "checked" : "",
 				'%contopat_checked%' => (trim($_SESSION["catconto"]) == "Stato Patrimoniale") ? "checked" : "",
 				'%dare_checked%' => (trim($_SESSION["tipconto"]) == "Dare") ? "checked" : "",

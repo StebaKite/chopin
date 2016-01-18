@@ -75,7 +75,7 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_conto%' => trim($codconto),
-				'%des_conto%' => trim($desconto),
+				'%des_conto%' => str_replace("'", "''", trim($desconto)),
 				'%cat_conto%' => trim($catconto),
 				'%tip_conto%' => trim($tipconto),
 				'%ind_presenza_in_bilancio%' => trim($indpresenza),
@@ -144,7 +144,7 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_conto%' => trim($codconto),
-				'%des_conto%' => trim($desconto),
+				'%des_conto%' => str_replace("'", "''", trim($desconto)),
 				'%cat_conto%' => trim($catconto),
 				'%tip_conto%' => trim($tipconto),
 				'%ind_presenza_in_bilancio%' => trim($indpresenza),

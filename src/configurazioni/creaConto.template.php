@@ -139,7 +139,7 @@ class CreaContoTemplate extends ConfigurazioniAbstract {
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codconto%' => $_SESSION["codconto"],
-				'%desconto%' => $_SESSION["desconto"],
+				'%desconto%' => str_replace("'", "&apos;", $_SESSION["desconto"]),
 				'%class_dettagli%' => $class_dettagli,
 				'%thead_sottoconti%' => $thead_sottoconti,
 				'%tbody_sottoconti%' => $tbody_sottoconti,

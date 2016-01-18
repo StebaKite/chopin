@@ -722,7 +722,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%dat_registrazione%' => trim($datareg),
 				'%cod_negozio%' => trim($codneg),
 				'%cod_conto%' => substr(trim($conto),0,3),
-				'%imp_registrazione%' => trim($importo)
+				'%imp_registrazione%' => str_replace(",", ".", trim($importo))
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
