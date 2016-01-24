@@ -43,6 +43,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryPrelevaRegistrazioneOriginaleFornitore = "/primanota/leggiRegistrazioneOriginaleFornitore.sql";
 	public static $queryTrovaCorrispettivo = "/primanota/trovaCorrispettivo.sql";
 	
+	public static $queryTrovaScadenzaFornitore = "/primanota/trovaScadenzaFornitore.sql";
+	
 	function __construct() {
 	}
 	
@@ -192,22 +194,32 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
 	
 		$array = $utility->getConfig();
-		$replace = array(
-				'%id_scadenza%' => trim($idScadenza),
-				'%id_registrazione%' => trim($idRegistrazione),
-				'%dat_scadenza%' => trim($datascad),
-				'%imp_in_scadenza%' => trim($importo),
-				'%nota_in_scadenza%' => trim($descreg),
-				'%tip_addebito%' => trim($tipaddebito),
-				'%cod_negozio%' => trim($codneg),
-				'%id_fornitore%' => $fornitore,
-				'%num_fattura%' => trim($numfatt),
-				'%sta_scadenza%' => trim($staScadenza)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenza;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
+
+		$scadenza_esistente = $this->trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $fornitore, $numfatt);
+		
+		/**
+		 * Se la scadenza esiste già salto l'inserimento
+		 */
+		
+		if (!$scadenza_esistente) {
+			$replace = array(
+					'%id_scadenza%' => trim($idScadenza),
+					'%id_registrazione%' => trim($idRegistrazione),
+					'%dat_scadenza%' => trim($datascad),
+					'%imp_in_scadenza%' => trim($importo),
+					'%nota_in_scadenza%' => trim($descreg),
+					'%tip_addebito%' => trim($tipaddebito),
+					'%cod_negozio%' => trim($codneg),
+					'%id_fornitore%' => $fornitore,
+					'%num_fattura%' => trim($numfatt),
+					'%sta_scadenza%' => trim($staScadenza)
+			);
+			$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenza;
+			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+			$result = $db->execSql($sql);
+			return $result;				
+		}
+		return $scadenza_esistente;		
 	}
 
 	/**
@@ -530,6 +542,22 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $idfornitore, $numfatt) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($idfornitore),				
+				'%id_registrazione%' => trim($idRegistrazione),
+				'%dat_scadenza%' => trim($datascad),
+				'%cod_negozio%' => trim($codneg),
+				'%num_fattura%' => trim($numfatt)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 	
 	/**
 	 * 
@@ -729,6 +757,30 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $db->getData($sql);
 		
 	}
+
+	public function prelevaDatiScadenzeRegistrazione($utility) {
+	
+		require_once 'database.class.php';
+	
+		$db = Database::getInstance();
+	
+		$result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+	
+		if ($result) {
+			if (pg_num_rows($result) > 1) {
+				$_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);
+				$_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);
+			}
+			else {
+				unset($_SESSION["numeroScadenzeRegistrazione"]);
+				unset($_SESSION["elencoScadenzeRegistrazione"]);
+			}
+		}
+		else {
+			error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
+		}
+	}
+	
 }
 
 ?>
