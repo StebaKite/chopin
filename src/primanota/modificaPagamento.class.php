@@ -5,7 +5,7 @@ require_once 'primanota.abstract.class.php';
 class ModificaPagamento extends primanotaAbstract {
 
 	private static $_instance = null;
-	private static $categoria_causali = 'INCPAG';
+	private static $categoria_causali = 'GENERI';
 	
 	public static $azioneModificaPagamento = "../primanota/modificaPagamentoFacade.class.php?modo=go";
 
@@ -209,7 +209,7 @@ class ModificaPagamento extends primanotaAbstract {
 						foreach(pg_fetch_all($result_idReg) as $row) {
 							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
 						}
-						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '00');
+						$this->cambioStatoRegistrazione($db, $utility, $_SESSION["idRegistrazione"], '00');
 					}						
 				}
 			}

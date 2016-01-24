@@ -5,7 +5,7 @@ require_once 'primanota.abstract.class.php';
 class ModificaIncasso extends primanotaAbstract {
 
 	private static $_instance = null;
-	private static $categoria_causali = 'INCPAG';
+	private static $categoria_causali = 'GENERI';
 	
 	public static $azioneModificaIncasso = "../primanota/modificaIncassoFacade.class.php?modo=go";
 
