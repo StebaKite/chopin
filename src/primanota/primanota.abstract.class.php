@@ -198,10 +198,11 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$scadenza_esistente = $this->trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $fornitore, $numfatt);
 		
 		/**
-		 * Se la scadenza esiste già salto l'inserimento
+		 * Se la scadenza esiste la aggiorno altrimenti la inserisco. 
+		 * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
 		 */
 		
-		if (!$scadenza_esistente) {
+		if ($scadenza_esistente) {
 			$replace = array(
 					'%id_scadenza%' => trim($idScadenza),
 					'%id_registrazione%' => trim($idRegistrazione),
@@ -219,6 +220,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$result = $db->execSql($sql);
 			return $result;				
 		}
+		else {			
+			$this->inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo,
+					$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza);				
+		}
+		
+		
+		
 		return $scadenza_esistente;		
 	}
 

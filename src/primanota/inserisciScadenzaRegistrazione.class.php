@@ -62,13 +62,19 @@ class InserisciScadenzaRegistrazione extends primanotaAbstract {
 		}
 		
 		/**
-		 * Conto le scadenze per determinare il progressivo fattura da usare
+		 * Scorro tutte le scadenze alla ricerca di un eventuale buco.
+		 * Se lo trovo utilizzo questo progressivo altrimenti ne aggiungo una alla fine
 		 */
-		$progrFattura = 0;
-		foreach ($_SESSION["elencoScadenzeRegistrazione"] as $row) {		
-			$progrFattura += 1;
+		$progrFattura = 1;
+		foreach ($_SESSION["elencoScadenzeRegistrazione"] as $row) {
+			$f = explode(".", $row['num_fattura']);
+			if ($f[1] == $progrFattura) {
+				$progrFattura += 1;				
+			}
+			else {
+				break;
+			}
 		}		
-		$progrFattura += 1;
 		$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
 		
 		if ($this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $importo,
