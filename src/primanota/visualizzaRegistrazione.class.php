@@ -47,6 +47,7 @@ class VisualizzaRegistrazione extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$this->prelevaDatiRegistrazione($utility);
 		$this->prelevaDatiDettagliRegistrazione($utility);
+		$this->prelevaDatiScadenzeRegistrazione($utility);
 		
 		$visualizzaRegistrazioneTemplate = VisualizzaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($visualizzaRegistrazioneTemplate);

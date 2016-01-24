@@ -180,29 +180,6 @@ class ModificaRegistrazione extends primanotaAbstract {
 			error_log(">>>>>> Errore prelievo dati registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
 		}		
 	}
-
-	public function prelevaDatiScadenzeRegistrazione($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-	
-		if ($result) {
-			if (pg_num_rows($result) > 1) {
-				$_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);
-				$_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);				
-			}
-			else {
-				unset($_SESSION["numeroScadenzeRegistrazione"]);
-				unset($_SESSION["elencoScadenzeRegistrazione"]);				
-			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
-		}
-	}
 	
 	public function aggiornaStatoRegistrazione($utility) {
 		

@@ -64,7 +64,36 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 			"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
 			"</tr>";
 		}
-	
+		
+		/**
+		 * Prepara la tabella delle multiscadenze da iniettare in pagina
+		 */
+		
+		$theadScadenze = "";
+		$tbodyScadenze = "";
+		
+		if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
+		
+			$class_scadenzesuppl = "datiCreateSottile";
+		
+			$theadScadenze =
+			"<tr>" .
+			"<th width='100' align='center'>Scadenza</th>" .
+			"<th width='100' align='right'>Importo</th>" .
+			"</tr>";
+				
+			$scadenzeregistrazione = $_SESSION["elencoScadenzeRegistrazione"];
+				
+			foreach ($scadenzeregistrazione as $row) {
+					
+				$tbodyScadenze .=
+				"<tr>" .
+				"<td align='center'>" . date("d/m/Y",strtotime($row['dat_scadenza'])) . "</td>" .
+				"<td align='right'>" . number_format(round($row['imp_in_scadenza'],2), 2, ',', '.') . "</td>" .
+				"</tr>";
+			}
+		}
+		
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%referer%' => $_SERVER["HTTP_REFERER"],
@@ -86,7 +115,10 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
 				'%elenco_conti%' => $_SESSION["elenco_conti"],
-				'%tbody_dettagli%' => $tbodyDettagli
+				'%tbody_dettagli%' => $tbodyDettagli,
+				'%class_scadenzesuppl%' => $class_scadenzesuppl,
+				'%thead_scadenze%' => $theadScadenze,
+				'%tbody_scadenze%' => $tbodyScadenze,				
 		);
 	
 		$utility = Utility::getInstance();
