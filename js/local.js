@@ -653,6 +653,16 @@ $( "#tutti" ).click(function( event ) {
 //----------------------------------------------------
 
 
+$( ".dataregpicker" ).datepicker({
+	changeMonth: true,
+	changeYear: true,
+	bgiframe: true,
+	dateFormat: formatDateJQ,
+	constrainInput: true,
+	numberOfMonths: 1,
+	maxDate: 0
+});
+
 $( ".datepicker" ).datepicker({
 	changeMonth: true,
 	changeYear: true,
