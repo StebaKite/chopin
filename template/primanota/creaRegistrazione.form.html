@@ -147,6 +147,13 @@ function controllaNumeroFattura() {
 	}
 }
 
+$(function() {
+    var availableTags = [ "aaaaaaaa","bbbbbbbb","cccccccc" ];
+    $( "#autocomplete" ).autocomplete({
+    	source: availableTags
+    });
+  });
+
 </script>
 	
 <div id="body">
@@ -182,12 +189,7 @@ function controllaNumeroFattura() {
 					</tr>					
 					<tr>
 						<td>%ml.codforn% :</td>
-						<td class="tooltip">
-							<select class="selectmenuFornitore" id="fornitore" name="fornitore" >
-								<option value=""></option>
-								%elenco_fornitori%
-							</select>
-						</td>
+						<td><input id="autocomplete" name="fornitore" size="40" /></td>
 						
 						<td>%ml.codclie% :</td>
 						<td class="tooltip">
