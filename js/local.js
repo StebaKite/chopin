@@ -5,6 +5,10 @@ $( "#menu-accordion" ).accordion({
 
 var formatDateJQ="dd/mm/yy";
 
+$( "#fornitore" ).autocomplete({
+ 	source: elencoFornitori
+});	
+
 $( ".button" ).button();
 
 $( ".radioset" ).buttonset();

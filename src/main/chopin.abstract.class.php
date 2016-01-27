@@ -29,6 +29,7 @@ abstract class ChopinAbstract {
 	public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
 	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
 	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
+	public static $queryTrovaDescrizioneFornitore = "/anagrafica/trovaDescFornitore.sql";
 	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
 	public static $queryCreaEvento = "/main/creaEvento.sql";
 	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
@@ -191,13 +192,11 @@ abstract class ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 		
+		/**
+		 * Prepara un elenco da inserire in una array javascript adatta per un campo autocomplete
+		 */
 		while ($row = pg_fetch_row($result)) {
-			if ($row[0] == $_SESSION["fornitore"]) {
-				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='" . $row[0] . "' selected >" . $row[1] . " - " . $row[2] . "</option>";
-			}
-			else {
-				self::$elenco_fornitori = self::$elenco_fornitori . "<option value='" . $row[0] . "' >" . $row[1] . " - " . $row[2] . "</option>";
-			}
+			self::$elenco_fornitori = self::$elenco_fornitori . '"' . $row[2] . '",';
 		}
 		return self::$elenco_fornitori;		
 	}
@@ -286,6 +285,24 @@ abstract class ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
+	}
+	
+	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%des_fornitore%' => trim($desfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaDescrizioneFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		
+		$rows = pg_fetch_all($result);
+		
+		foreach($rows as $row) {
+			$descrizione_fornitore = $row['id_fornitore'];
+		}		
+		return $descrizione_fornitore;
 	}
 	
 	/**

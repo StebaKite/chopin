@@ -8,6 +8,8 @@ var dettInseriti = [%arrayDettagliInseriti%];
 var indexScadenzeInserite = [%arrayIndexScadenzeInserite%];
 var scadenzeInserite = [%arrayScadenzeInserite%];
 
+var elencoFornitori = [%elenco_fornitori%];
+
 function aggiungiDettaglio() {
 	
 	var rowCount = $('#dettagli tr').length;
@@ -147,13 +149,6 @@ function controllaNumeroFattura() {
 	}
 }
 
-$(function() {
-    var availableTags = [ "aaaaaaaa","bbbbbbbb","cccccccc" ];
-    $( "#autocomplete" ).autocomplete({
-    	source: availableTags
-    });
-  });
-
 </script>
 	
 <div id="body">
@@ -189,7 +184,7 @@ $(function() {
 					</tr>					
 					<tr>
 						<td>%ml.codforn% :</td>
-						<td><input id="autocomplete" name="fornitore" size="40" /></td>
+						<td><div><input type="text" id="fornitore" name="fornitore" size="40" /></div></td>
 						
 						<td>%ml.codclie% :</td>
 						<td class="tooltip">
@@ -237,7 +232,7 @@ $(function() {
 						</td>
 					</tr>
 				</tfoot>
-			</table>
+			</table>			
 			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
 			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
 			<input type="hidden" size='150' id="scadenzeInserite" name="scadenzeInserite" value="%scadenzeInserite%" />
@@ -270,8 +265,8 @@ $(function() {
 					</td>					
 				</tr>					
 			</tbody>
-		</table> 	 
-  </form>
+		</table> 	
+	</form>
 </div>
 
 <div id="nuova-data-scadenza-form" title="Data scadenza supplementare"> 
