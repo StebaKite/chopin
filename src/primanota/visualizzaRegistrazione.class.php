@@ -5,7 +5,7 @@ require_once 'primanota.abstract.class.php';
 class VisualizzaRegistrazione extends primanotaAbstract {
 
 	private static $_instance = null;
-	private static $categoria_causali = '';
+	private static $categoria_causali = 'GENERI';
 
 	function __construct() {
 
