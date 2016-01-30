@@ -7,7 +7,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 	private static $_instance = null;
 	private static $contoErario = null;
 	private static $contoCorrispettivo = null;
-	private static $categoria_causali = 'CORRIS';  
+	private static $categoria_causali = 'GENERI';  
 
 	public static $azioneCreaCorrispettivoMercato = "../primanota/creaCorrispettivoMercatoFacade.class.php?modo=go";
 
