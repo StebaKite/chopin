@@ -202,8 +202,8 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$stareg = $_SESSION["stareg"];
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];
-		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
+		$causale = $_SESSION["causale"];		
+		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;		
 		$staScadenza = "00"; 
 		

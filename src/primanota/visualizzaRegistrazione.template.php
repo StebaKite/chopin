@@ -105,6 +105,7 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],
+				'%fornitore%' => $_SESSION["desforn"],
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",

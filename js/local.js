@@ -5,10 +5,6 @@ $( "#menu-accordion" ).accordion({
 
 var formatDateJQ="dd/mm/yy";
 
-$( "#fornitore" ).autocomplete({
- 	source: elencoFornitori
-});	
-
 $( ".button" ).button();
 
 $( ".radioset" ).buttonset();
@@ -1203,3 +1199,10 @@ function generaMastrino(codconto, codsottoconto) {
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 
+// ---------------------------------------------------------
+// Campi autocomplete
+// ---------------------------------------------------------
+
+$( "#fornitore" ).autocomplete({
+ 	source: elencoFornitori
+});	
