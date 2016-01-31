@@ -765,23 +765,25 @@ $( ".selectmenuFornitore" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( ".scadenzeAperteFornitore_" ).change(function() {
+$( ".scadenzeAperteFornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();
 	
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            $( "#select2" ).html(xmlhttp.responseText);
-            $( "#select2" ).selectmenu( "refresh" );
-        }
-    }
-    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore, true);
-    xmlhttp.send();			
+	if (desfornitore != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#select2" ).html(xmlhttp.responseText);
+	            $( "#select2" ).selectmenu( "refresh" );
+	        }
+	    }
+	    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+	    xmlhttp.send();		
+	}
 });
 
 
-$( ".scadenzeAperteFornitore" )
+$( ".scadenzeAperteFornitore_" )
 	.selectmenu({change:
 		function(){
 			var idfornitore = $("#fornitore").val();

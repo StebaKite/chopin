@@ -8,7 +8,7 @@ session_start();
 $ricercaScadenzeAperteFornitore = RicercaScadenzeAperteFornitore::getInstance();
 
 if ($_GET["modo"] == "start") {
-	$_SESSION["idfornitore"] = $_REQUEST["idfornitore"];
+	$_SESSION["desforn"] = $_REQUEST["desforn"];
 	$ricercaScadenzeAperteFornitore->start();
 }
 

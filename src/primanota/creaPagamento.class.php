@@ -56,6 +56,7 @@ class CreaPagamento extends primanotaAbstract {
 		unset($_SESSION["codneg"]);
 		unset($_SESSION["causale"]);
 		unset($_SESSION["fornitore"]);
+		unset($_SESSION["desforn"]);
 		unset($_SESSION["dettagliInseriti"]);
 		unset($_SESSION["indexDettagliInseriti"]);
 		unset($_SESSION["elenco_scadenze_cliente"]);
@@ -136,7 +137,7 @@ class CreaPagamento extends primanotaAbstract {
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$stareg = "10";
-		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
+		$fornitore = ($_SESSION["idfornitore"] != "") ? $_SESSION["idfornitore"] : "null" ;
 			
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $codneg, $stareg)) {
 
