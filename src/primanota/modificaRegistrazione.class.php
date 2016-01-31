@@ -155,7 +155,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				$_SESSION["numfatt"] = $row["num_fattura"];
 				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
-				$_SESSION["fornitore"] = $row["id_fornitore"];
+				$_SESSION["desforn"] = $row["des_fornitore"];
 				$_SESSION["cliente"] = $row["id_cliente"];				
 				$_SESSION["stascad"] = $row["sta_scadenza"];
 			}

@@ -140,6 +140,7 @@ class ModificaPagamento extends primanotaAbstract {
 				$_SESSION["numfatt_old"] = $row["num_fattura"];
 				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
+				$_SESSION["desforn"] = $row["des_fornitore"];
 				$_SESSION["fornitore"] = $row["id_fornitore"];
 				$_SESSION["fornitore_old"] = $row["id_fornitore"];
 			}
@@ -292,7 +293,11 @@ class ModificaPagamento extends primanotaAbstract {
 			$utility = Utility::getInstance();
 				
 			$options = '';
-				
+			
+			$db->beginTransaction();
+			$_SESSION["fornitore"] = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["desforn"]);
+			$db->commitTransaction();		
+			
 			$result_scadenze_fornitore = $this->prelevaScadenzeFornitore($db, $utility, $_SESSION["fornitore"], $_SESSION["idRegistrazione"]);
 				
 			$d = explode(",", $_SESSION["numfatt"]);

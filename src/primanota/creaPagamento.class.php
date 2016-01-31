@@ -89,6 +89,7 @@ class CreaPagamento extends primanotaAbstract {
 				unset($_SESSION["codneg"]);
 				unset($_SESSION["causale"]);
 				unset($_SESSION["fornitore"]);
+				unset($_SESSION["desforn"]);
 				unset($_SESSION["dettagliInseriti"]);
 				unset($_SESSION["indexDettagliInseriti"]);
 				unset($_SESSION["elenco_scadenze_cliente"]);

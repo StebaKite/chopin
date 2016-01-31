@@ -158,6 +158,7 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 				'%descreg%' => str_replace("'", "&apos;", $_SESSION["descreg"]),
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],
+				'%desforn%' => $_SESSION["desforn"],
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
