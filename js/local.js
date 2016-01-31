@@ -1224,3 +1224,7 @@ function generaMastrino(codconto, codsottoconto) {
 $( "#fornitore" ).autocomplete({
  	source: elencoFornitori
 });	
+
+$( "#cliente" ).autocomplete({
+ 	source: elencoClienti
+});	

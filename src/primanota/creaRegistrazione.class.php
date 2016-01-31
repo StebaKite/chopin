@@ -155,7 +155,7 @@ class CreaRegistrazione extends primanotaAbstract {
 		$causale = $_SESSION["causale"];
 		$stareg = "00";
 		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
-		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
+		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;
 		
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
 
