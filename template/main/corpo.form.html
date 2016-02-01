@@ -1,160 +1,63 @@
-<!doctype html>
-<html lang="us">
+<html>
 <head>
 	<meta charset="utf-8">
 	<title>Chopin - Contabilit&agrave;</title>
-	<link href="../../jquery/jquery-ui.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
+	<link rel="stylesheet" type="text/css" href="http://www.jqueryscript.net/css/jquerysctipttop.css" >
+	
 	<style type="text/css" media="screen">
 	
 		@import url("../../css/main.css");
 		@import url("../../css/jquery.css");
+		@import url("../../css/style.css");
+		@import url("../../jquery/jquery-ui.css");
 		
 	</style>	
 </head>
 
-<script>
+<body>
 
-	var pagamentiData = {
-		labels : [%elencoMesi%],
-		datasets : [
-			{
-				label: "Villa",
-				fillColor : "rgba(151,187,205,0.2)",
-				strokeColor : "rgba(151,187,205,1)",
-				pointColor : "rgba(151,187,205,1)",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [%elencoPagamentiVil%]
-			},
-			{
-				label: "Brembate",
-				fillColor : "rgba(166,166,166,0.2)",
-				strokeColor : "rgba(166,166,166,1)",
-				pointColor : "rgba(166,166,166,1)",
-				pointHighlightStroke : "rgba(166,166,166,1)",
-				data : [%elencoPagamentiBre%]
-			},
-			{
-				label: "Trezzo",
-				fillColor : "rgba(255,184,77,0.2)",
-				strokeColor : "rgba(255,184,77,1)",
-				pointColor : "rgba(255,184,77,1)",
-				pointHighlightStroke : "rgba(255,184,77,1)",
-				data : [%elencoPagamentiTre%]
-			}
-		]
-	}
+	<div class="jquery-script-clear"></div>
 
-	var incassiData = {
-		labels : [%elencoMesi%],
-		datasets : [
-			{
-				label: "Villa",
-				fillColor : "rgba(151,187,205,0.2)",
-				strokeColor : "rgba(151,187,205,1)",
-				pointColor : "rgba(151,187,205,1)",
-				pointHighlightStroke : "rgba(151,187,205,1)",
-				data : [%elencoIncassiVil%]
-			},
-			{
-				label: "Brembate",
-				fillColor : "rgba(166,166,166,0.2)",
-				strokeColor : "rgba(166,166,166,1)",
-				pointColor : "rgba(166,166,166,1)",
-				pointHighlightStroke : "rgba(166,166,166,1)",
-				data : [%elencoIncassiBre%]
-			},
-			{
-				label: "Trezzo",
-				fillColor : "rgba(255,184,77,0.2)",
-				strokeColor : "rgba(255,184,77,1)",
-				pointColor : "rgba(255,184,77,1)",
-				pointHighlightStroke : "rgba(255,184,77,1)",
-				data : [%elencoIncassiTre%]
-			}
-		]
-	}
+	<div class="container">
 	
-	
-	window.onload = function(){
-		var ctx = document.getElementById("pagamenti").getContext("2d");
-		pagamenti = new Chart(ctx).Line(pagamentiData, { responsive : true });
+		<div class="task-list" id="pending">
+			<h3>Da Fare</h3>
+		</div>
 		
-		document.getElementById("legendDiv").innerHTML = pagamenti.generateLegend();
+		<div class="task-list" id="inProgress">
+			<h3>In Corso</h3>
+		</div>
+		
+		<div class="task-list" id="completed">
+			<h3>Completati</h3>
+		</div>
+		
+		<div class="task-list">
+			<h3>Aggiungi un task</h3>
 
-		var ctx = document.getElementById("incassi").getContext("2d");
-		incassi = new Chart(ctx).Line(incassiData, { responsive : true });	
-	}
+			<form id="todo-form">
+				<input type="text" placeholder="Title" />
+				<textarea placeholder="Description"></textarea>
+				<input type="text" id="datepicker" placeholder="Due Date (dd/mm/yy)" />
+				<input type="button" class="btn btn-primary" value="Aggiungi" onclick="todo.add();" />
+			</form>
+			<input type="button" class="btn btn-primary" value="Cancella tutti" onclick="todo.clear();"/>
+			<div id="delete-div">Drag Here to Delete</div>
+		</div>
+	</div>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> 
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> 
+	<script src="../../js/todo.js"></script> 
 
-</script>
-
-<div id="main">
-<table>
-	<tbody>
-		<tr>
-			<td valign="top">
-				<div id="trends">
-					<h2>Pagamenti</h2>
-					<canvas id="pagamenti" height="230" width="400"></canvas>
-				</div>
-				<div id="trends">
-					<h2>Incassi</h2>
-					<canvas id="incassi" height="230" width="400"></canvas>
-				</div>
-				<div class="chart-legend" id="legendDiv"></div>
-			</td>
-			<td valign="top">
-				<form method="post" id="elencoEventi" action="../main/corpoFacade.class.php?modo=start">
-					<div id="eventi">
-						<table class="datiCreateSottile">
-							<thead>
-								<tr>
-									<th><h2>E v e n t i</h2></th>
-									<th align="center">
-										<button id="nuovo-evento" class="button" title="%ml.nuovoEvento%" >%ml.nuovoEvento%</button>
-									</th>
-									<th>
-										<div class="radioset" >
-											<input type="radio" id="aperti" name="statoeventi" value="00" %aperti_checked% ><label for="aperti">%ml.eventiAperti%</label>
-											<input type="radio" id="chiusi" name="statoeventi" value="01" %chiusi_checked% ><label for="chiusi">%ml.eventiChiusi%</label>
-											<input type="radio" id="tutti"  name="statoeventi" value=""   %tutti_checked%  ><label for="tutti">%ml.eventiTutti%</label>
-										</div>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td colspan="3" valign="top">
-										<div class='scroll-main'>%risultato_eventi%</div>			
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</form>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-</div>
-
-<div id="nuovo-evento-form" title="Nuovo Evento">
-	<form method="post" id="nuovoEvento" action="../main/inserisciEventoFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.notaevento% :</td>
-					<td><textarea id="notaevento" name="notaevento" rows="4" cols="50"></textarea></td>
-				</tr>					
-				<tr>
-					<td>%ml.dataevento% :</td>
-					<td class="tooltip"><input class="datepicker" type="text" id="dataevento" name="dataevento" size="10" maxlength="10" value='%dataevento%'></td>
-				</tr>					
-			</tbody>
-		</table> 	 
-  </form>
-</div>
-
+	<script type="text/javascript">
+		$("#datepicker").datepicker();
+		$("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
+		todo.init();
+	</script>
 
 </body>
 </html>

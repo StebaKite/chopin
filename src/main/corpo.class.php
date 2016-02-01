@@ -100,9 +100,9 @@ class Corpo extends ChopinAbstract {
 		$this->ricercaMesi($utility, $db);
 				
 		// compone la pagina
-		include($testata);
+//		include($testata);
 		$corpoTemplate->displayPagina();
-		include($piede);
+//		include($piede);
 	}	
 
 	public function ricercaPagamenti($utility, $db, $negozio) {
