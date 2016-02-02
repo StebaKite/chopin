@@ -116,8 +116,8 @@ function calcolaImponibile() {
 	
 	$("#imponibile").val(imponibileArrotondato);
 	
-	if (aliquota == "1.04") {
-		var iva = imponibileArrotondato * 0.04;		
+	if (aliquota == "1.05") {
+		var iva = imponibileArrotondato * 0.05;		
 	}
 	
 	var ivaArrotondata = iva.toFixed(2);
@@ -216,7 +216,7 @@ function calcolaImponibile() {
 					<td>&nbsp;</td>
 					<td>
 						<div class="radioset" >
-							<input type="radio" id="aliquota4" name="aliquota" value="1.04" checked /><label for="aliquota4">%ml.aliquota4%</label>
+							<input type="radio" id="aliquota5" name="aliquota" value="1.05" checked /><label for="aliquota5">%ml.aliquota5%</label>
 						</div>
 					</td>					
 				</tr>
