@@ -5,6 +5,7 @@ SELECT
 	registrazione.id_fornitore,
 	fornitore.des_fornitore,
 	registrazione.id_cliente,
+	cliente.des_cliente,
 	registrazione.cod_causale,
 	registrazione.num_fattura,
 	to_char(registrazione.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
@@ -16,5 +17,8 @@ FROM contabilita.registrazione
 
 	LEFT OUTER JOIN contabilita.fornitore
 		ON fornitore.id_fornitore = registrazione.id_fornitore
+
+	LEFT OUTER JOIN contabilita.cliente
+		ON cliente.id_cliente = registrazione.id_cliente
 
 WHERE registrazione.id_registrazione = %id_registrazione%

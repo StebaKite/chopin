@@ -223,6 +223,7 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => trim($_SESSION["numfatt"]),
 				'%fornitore%' => $_SESSION["desforn"],
+				'%cliente%' => $_SESSION["descli"],
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",

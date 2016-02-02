@@ -156,7 +156,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
 				$_SESSION["desforn"] = $row["des_fornitore"];
-				$_SESSION["cliente"] = $row["id_cliente"];				
+				$_SESSION["descli"] = $row["des_cliente"];				
 				$_SESSION["stascad"] = $row["sta_scadenza"];
 			}
 		}
@@ -204,7 +204,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];		
 		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
-		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;		
+		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;		
 		$staScadenza = "00"; 
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 

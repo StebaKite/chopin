@@ -80,6 +80,7 @@ class VisualizzaRegistrazione extends primanotaAbstract {
 				$_SESSION["fornitore"] = $row["id_fornitore"];
 				$_SESSION["desforn"] = $row["des_fornitore"];
 				$_SESSION["cliente"] = $row["id_cliente"];
+				$_SESSION["descli"] = $row["des_cliente"];
 			}
 		}
 		else {
