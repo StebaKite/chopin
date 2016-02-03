@@ -202,9 +202,9 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		for($i=0;$i<count($h);$i++)
 			$fattura->Cell($w[$i],7,$h[$i],1,0,'C');
 	
-			$fattura->Ln();
+		$fattura->Ln();
 	
-			foreach($d as $ele) {
+		foreach($d as $ele) {
 	
 			$e = explode("#",$ele);
 						
@@ -220,7 +220,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
-			$tot_iva = $e[6];
+			$tot_iva += $e[6];
 		}	
 		
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
