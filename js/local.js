@@ -782,46 +782,22 @@ $( ".scadenzeAperteFornitore" ).change(function() {
 	}
 });
 
+$( ".scadenzeAperteCliente" ).change(function() {
 
-$( ".scadenzeAperteFornitore_" )
-	.selectmenu({change:
-		function(){
-			var idfornitore = $("#fornitore").val();
+	var descliente = $("#cliente").val();
 		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#select2" ).html(xmlhttp.responseText);
-	                $( "#select2" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( ".scadenzeAperteCliente" )
-	.selectmenu({change:
-		function(){
-			var idcliente = $("#cliente").val();
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#select2" ).html(xmlhttp.responseText);
-	                $( "#select2" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&idcliente=" + idcliente, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                $( "#select2" ).html(xmlhttp.responseText);
+                $( "#select2" ).selectmenu( "refresh" );
+            }
+        }
+        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descliente, true);
+        xmlhttp.send();			
+	}		
+})
 
 $( ".selectmenuCliente" )
 	.selectmenu({change:
@@ -897,7 +873,6 @@ $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
-$( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 250 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 

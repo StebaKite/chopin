@@ -182,6 +182,7 @@ class CreaIncassoTemplate extends PrimanotaAbstract {
 				'%descreg%' => str_replace("'", "&apos;", $_SESSION["descreg"]),
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],
+				'%descli%' => $_SESSION["descli"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
@@ -192,6 +193,7 @@ class CreaIncassoTemplate extends PrimanotaAbstract {
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
 				'%elenco_causali%' => $_SESSION["elenco_causali"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
 				'%elenco_conti%' => $_SESSION["elenco_conti"],
 				'%elenco_scadenze_cliente%' => $_SESSION["elenco_scadenze_cliente"]

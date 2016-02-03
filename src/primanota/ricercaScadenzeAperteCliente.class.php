@@ -44,6 +44,10 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract {
 		$utility = Utility::getInstance();
 	
 		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 300px" id="select2">';
+
+		$db->beginTransaction();
+		$_SESSION["idcliente"] = $this->leggiDescrizioneCliente($db, $utility, $_SESSION["descliente"]);
+		$db->commitTransaction();
 		
 		$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
 

@@ -187,7 +187,7 @@ class CreaRegistrazione extends primanotaAbstract {
 						 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
 						 *  parziale della data in scadenza
 						 */
-						 
+						
 						$importo_in_scadenza = ($causale == "1110") ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"]; 
 						
 						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,

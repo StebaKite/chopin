@@ -183,7 +183,7 @@ class ModificaPagamento extends primanotaAbstract {
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
-		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
+		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
 		$staScadenza = "10";   // pagata
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idPagamento"], $_SESSION["totaleDare"],
@@ -195,7 +195,7 @@ class ModificaPagamento extends primanotaAbstract {
 			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_pagamento
 			 */
 			
-			if ((trim($_SESSION["fornitore"]) != trim($_SESSION["fornitore_old"]) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"])))) {
+			if ((trim($fornitore) != trim($_SESSION["fornitore_old"]) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"])))) {
 			
 				$d = explode(",", $_SESSION["numfatt_old"]);
 					
@@ -225,7 +225,7 @@ class ModificaPagamento extends primanotaAbstract {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
 				$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore"], $numfatt, '10', $_SESSION['idPagamento']);
 
-				$result_idReg = $this->prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $_SESSION["fornitore"], $numfatt);
+				$result_idReg = $this->prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $fornitore, $numfatt);
 				
 				if ($result_idReg) {
 						
