@@ -43,7 +43,11 @@ class PrelevaTipoAddebitoCliente extends FatturaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		$tipoAddebitoCliente = $this->caricaTipoAddebitoCliente($utility, $db, $_SESSION["idcliente"]);
+		$db->beginTransaction();
+		$idcliente = $this->leggiDescrizioneCliente($db, $utility, $_SESSION["descliente"]);
+		$db->commitTransaction();
+		
+		$tipoAddebitoCliente = $this->caricaTipoAddebitoCliente($utility, $db, $idcliente);
 
 		echo $tipoAddebitoCliente;		
 	}

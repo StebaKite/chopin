@@ -797,24 +797,21 @@ $( ".scadenzeAperteCliente" ).change(function() {
 	}		
 })
 
-$( ".selectmenuCliente" )
-	.selectmenu({change:
-		function(){
-			var cliente = $("#cliente").val();
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#tipoadd" ).val(xmlhttp.responseText);
-	            }
-	        }
-	        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 150})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+$( "#cliente" ).change(function() {
+	
+	var cliente = $("#cliente").val();
+
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                $( "#tipoadd" ).val(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
+        xmlhttp.send();			
+	}
+})
 
 
 $( ".selectmenu" )

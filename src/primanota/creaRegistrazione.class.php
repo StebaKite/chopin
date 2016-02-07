@@ -179,15 +179,18 @@ class CreaRegistrazione extends primanotaAbstract {
 								
 				/**
 				 * Salvo l'importo inserito sul conto del fornitore o del cliente per inserire la scadenza
+				 * I conti relativi ai fornitori sono in configurazione
 				 */
 				
-				if ($fornitore != "") {
-					if ($conto == "215") {
+				$array = $utility->getConfig();
+				
+				if ($fornitore != "null") {
+					if (strstr($array['contiFornitore'], $conto)) {
 						$importo_in_scadenza = $importo;
 					}
 				}
-				elseif ($cliente != "") {
-					if ($conto == "120") {
+				elseif ($cliente != "null") {
+					if (strstr($array['contiCliente'], $conto)) {
 						$importo_in_scadenza = $importo;
 					}						
 				}
@@ -203,14 +206,14 @@ class CreaRegistrazione extends primanotaAbstract {
 			 * Creo la scedenza fornitore ocliente
 			 */
 				
-			if ($_SESSION["fornitore"] != "") {
+			if ($fornitore != "null") {
 			
 				/**
 				 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
 				 *  parziale della data in scadenza
 				 */
-			
-				$importo_in_scadenza = ($causale == "1110") ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"];
+				$array = $utility->getConfig();				
+				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"];
 			
 				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
 					$db->rollbackTransaction();
@@ -301,8 +304,8 @@ class CreaRegistrazione extends primanotaAbstract {
 					 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
 					 *  parziale della data in scadenza
 					 */
-		
-					$importo_in_scadenza = ($causale == "1110") ? $e[2] * (-1) : $e[2];
+					$array = $utility->getConfig();						
+					$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $e[2] * (-1) : $e[2];
 		
 					if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
 						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza)) {
@@ -326,8 +329,10 @@ class CreaRegistrazione extends primanotaAbstract {
 				$tipAddebito_cliente = $row['tip_addebito'];
 			}
 				
-			$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza,
-					$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
+			if ($this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
+				return true;
+			}
+			else return false;
 		}
 	}
 	
