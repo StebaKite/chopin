@@ -207,81 +207,38 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;		
 		$staScadenza = "00"; 
 		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 
-			$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, 
-			$codneg, $staScadenza)) {
-							
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg, $staScadenza)) {
+
+			$importo_in_scadenza = $this->prelevaImportoInScadenza($db, $utility);
+				
 			/**
-			 * Se l'aggiornamento della registrazione è andata bene ricreo le scadenze fornitore o cliente
+			 * Ricreo le scadenze fornitore o cliente
 			 */
 				
-			if ($_SESSION["fornitore"] != "") {
-				
-				if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
+			if ($fornitore != "null") {
 
-					$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
-					$progrFattura = 0;
-					
-					/**
-					 * I dati da aggiornare sulle scadenza sono : la nota, il numero fattura, il negozio
-					 */
-					foreach ($scadenzeRegistrazione as $row) {
-					
-						$progrFattura += 1;
-						$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
-						$datascad = ($row["dat_scadenza"] != "") ? "'" . $row["dat_scadenza"] . "'" : "null" ;
-						$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-						$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;		
-						
-						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-						foreach(pg_fetch_all($result_fornitore) as $row) {
-							$tipAddebito_fornitore = $row['tip_addebito'];
-						}
-					
-						$this->aggiornaScadenza($db, $utility, $row["id_scadenza"], $_SESSION['idRegistrazione'], $datascad, $row["imp_in_scadenza"],
-								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $row["sta_scadenza"]);
-					}
-				}
-				else {
-				
-					$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
-						
-					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
-						
-					$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-					$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-					
-					if ($dataScadenza > $dataRegistrazione) {
-					
-						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-						foreach(pg_fetch_all($result_fornitore) as $row) {
-							$tipAddebito_fornitore = $row['tip_addebito'];
-						}
-						$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $_SESSION["totaleDare"],
-								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
-					}						
-				}
+				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+					$db->rollbackTransaction();
+					error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
+					return FALSE;
+				}				
 			}
 			else {
 		
 				if ($cliente != "null") {
-		
-					if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
-						
-						$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
-						foreach(pg_fetch_all($result_cliente) as $row) {
-							$tipAddebito_cliente = $row['tip_addebito'];
-						}
-						$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
-								$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);						
-					}						
+
+					if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+						$db->rollbackTransaction();
+						error_log("Errore inserimento scadenza cliente, eseguito Rollback");
+						return FALSE;
+					}
 				}
 			}
 
 			/**
-			 * Rigenerazione dei saldi
+			 * Rigenero i saldi
 			 */
+			
 			$array = $utility->getConfig();
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
@@ -291,6 +248,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				 * i riporti dei saldi potrebbero contenere l'importo due volte
 				 * Questo potrebbe accadere se la data registrazione viene portata da un mese all'altro
 				 */
+				
 				$datareg_new = strtotime(str_replace('/', '-', str_replace("'", "", $datareg)));
 				$datareg_old = strtotime(str_replace('/', '-', $_SESSION["datareg_old"]));
 				if ($datareg_new != $datareg_old) {
@@ -309,6 +267,109 @@ class ModificaRegistrazione extends primanotaAbstract {
 		}
 	}
 
+	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+
+		if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
+		
+			$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
+			$progrFattura = 0;
+				
+			/**
+			 * I dati da aggiornare sulle scadenza sono : la nota, il numero fattura, il negozio
+			 */
+			foreach ($scadenzeRegistrazione as $row) {
+					
+				$progrFattura += 1;
+				$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
+				$datascad = ($row["dat_scadenza"] != "") ? "'" . $row["dat_scadenza"] . "'" : "null" ;
+				$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
+		
+				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+				foreach(pg_fetch_all($result_fornitore) as $row) {
+					$tipAddebito_fornitore = $row['tip_addebito'];
+				}
+					
+				if ($this->aggiornaScadenza($db, $utility, $row["id_scadenza"], $_SESSION['idRegistrazione'], $datascad, $row["imp_in_scadenza"], $descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $row["sta_scadenza"])) {
+					return TRUE;
+				}
+				else return FALSE;
+			}
+		}
+		else {
+		
+			$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
+		
+			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+		
+			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+				
+			if ($dataScadenza > $dataRegistrazione) {
+		
+				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+				foreach(pg_fetch_all($result_fornitore) as $row) {
+					$tipAddebito_fornitore = $row['tip_addebito'];
+				}
+		
+				if (!$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
+					$db->rollbackTransaction();
+					error_log("Errore inserimento registrazione, eseguito Rollback");
+					return FALSE;
+				}
+				else return TRUE;
+			}
+		}
+	}
+
+	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+		
+		if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
+		
+			$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+			foreach(pg_fetch_all($result_cliente) as $row) {
+				$tipAddebito_cliente = $row['tip_addebito'];
+			}
+			if (!$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
+				$db->rollbackTransaction();
+				error_log("Errore inserimento registrazione, eseguito Rollback");
+				return FALSE;
+			}
+		}
+	}
+	
+	private function prelevaImportoInScadenza($db, $utility) {
+		
+		$importo_in_scadenza = 0;
+		
+		$result = $_SESSION["elencoDettagliRegistrazione"];
+			
+		$dettaglioregistrazione = pg_fetch_all($result);
+		$tbodyDettagli = "";
+		
+		foreach ($dettaglioregistrazione as $row) {
+				
+			/**
+			 * Salvo l'importo inserito sul conto del fornitore o del cliente per inserire la scadenza
+			 * I conti relativi ai fornitori/clienti sono in configurazione
+			 */
+				
+			$array = $utility->getConfig();
+				
+			if ($fornitore != "null") {
+				if (strstr($array['contiFornitore'], $row["cod_conto"])) {
+					$importo_in_scadenza = $row["imp_registrazione"];
+				}
+			}
+			elseif ($cliente != "null") {
+				if (strstr($array['contiCliente'], $row["cod_conto"])) {
+					$importo_in_scadenza = $row["imp_registrazione"];
+				}
+			}
+		}
+		return $importo_in_scadenza;		
+	}
+	
 	public function preparaPagina($modificaRegistrazioneTemplate) {
 	
 		require_once 'database.class.php';

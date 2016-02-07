@@ -270,9 +270,7 @@ class CreaRegistrazione extends primanotaAbstract {
 					$tipAddebito_fornitore = $row['tip_addebito'];
 				}
 		
-				if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], 
-					$datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, 
-					$codneg, $fornitore, trim($numfatt), $staScadenza)) {
+				if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
 					return true;			
 				}
 				else return false;
