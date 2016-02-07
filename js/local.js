@@ -745,25 +745,23 @@ $( ".selectmenuCausale" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( ".selectmenuFornitore" )
-	.selectmenu({change:
-		function(){
-			var idfornitore = $("#fornitore").val();
-			var datareg = $("#datareg").val();
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#datascad" ).val(xmlhttp.responseText);
-	            }
-	        }
-	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore + "&datareg=" + datareg, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+$( "#fornitore" ).change(function() {
+	
+	var desfornitore = $("#fornitore").val();
+	var datareg = $("#datareg").val();
+	
+	if (desfornitore != "") {
+
+		var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                $( "#datascad" ).val(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
+        xmlhttp.send();
+	}
+});
 
 $( ".scadenzeAperteFornitore" ).change(function() {
 	
