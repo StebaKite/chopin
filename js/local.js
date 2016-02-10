@@ -763,7 +763,7 @@ $( "#fornitore" ).change(function() {
 	}
 });
 
-$( ".scadenzeAperteFornitore" ).change(function() {
+$( "#scadenzeAperteFornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();
 	
@@ -1197,4 +1197,8 @@ $( "#fornitore" ).autocomplete({
 
 $( "#cliente" ).autocomplete({
  	source: elencoClienti
+});	
+
+$( "#scadenzeAperteFornitore" ).autocomplete({
+ 	source: elencoFornitori
 });	

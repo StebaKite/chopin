@@ -298,27 +298,29 @@ class ModificaRegistrazione extends primanotaAbstract {
 		else {
 		
 			$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
-		
-			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
-		
-			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+
+			if ($datascad != "null") {
+				$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+				$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
 				
-			if ($dataScadenza > $dataRegistrazione) {
-		
-				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-				foreach(pg_fetch_all($result_fornitore) as $row) {
-					$tipAddebito_fornitore = $row['tip_addebito'];
-				}
-		
-				if (!$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
-					$db->rollbackTransaction();
-					error_log("Errore inserimento registrazione, eseguito Rollback");
-					return FALSE;
-				}
-				else return TRUE;
+				$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+				$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+				
+				if ($dataScadenza > $dataRegistrazione) {
+				
+					$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+					foreach(pg_fetch_all($result_fornitore) as $row) {
+						$tipAddebito_fornitore = $row['tip_addebito'];
+					}
+				
+					if (!$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
+						$db->rollbackTransaction();
+						error_log("Errore inserimento registrazione, eseguito Rollback");
+						return FALSE;
+					}
+				}				
 			}
+			return TRUE;
 		}
 	}
 
