@@ -209,7 +209,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg, $staScadenza)) {
 
-			$importo_in_scadenza = $this->prelevaImportoInScadenza($db, $utility);
+			$importo_in_scadenza = $this->prelevaImportoInScadenza($db, $utility, $fornitore, $cliente);
 				
 			/**
 			 * Ricreo le scadenze fornitore o cliente
@@ -327,7 +327,9 @@ class ModificaRegistrazione extends primanotaAbstract {
 	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
 		
 		if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
-		
+
+			$staScadenza = "00";	// scadenza aperta
+			
 			$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
 			foreach(pg_fetch_all($result_cliente) as $row) {
 				$tipAddebito_cliente = $row['tip_addebito'];
@@ -337,10 +339,12 @@ class ModificaRegistrazione extends primanotaAbstract {
 				error_log("Errore inserimento registrazione, eseguito Rollback");
 				return FALSE;
 			}
+			else return TRUE;
 		}
+		return FALSE;
 	}
 	
-	private function prelevaImportoInScadenza($db, $utility) {
+	private function prelevaImportoInScadenza($db, $utility, $fornitore, $cliente) {
 		
 		$importo_in_scadenza = 0;
 		
