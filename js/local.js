@@ -749,21 +749,36 @@ $( "#fornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();
 	var datareg = $("#datareg").val();
+	var form = $("#pagamentoForm").val();
 	
 	if (desfornitore != "") {
 
-		var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                $( "#datascad" ).val(xmlhttp.responseText);
-            }
-        }
-        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
-        xmlhttp.send();
+		if (form == "PAGAMENTO") {
+			
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#select2" ).html(xmlhttp.responseText);
+		            $( "#select2" ).selectmenu( "refresh" );
+		        }
+		    }
+		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+		    xmlhttp.send();		
+		}
+		else {
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#datascad" ).val(xmlhttp.responseText);
+	            }
+	        }
+	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
+	        xmlhttp.send();						
+		}		
 	}
 });
 
-$( "#scadenzeAperteFornitore" ).change(function() {
+$( ".scadenzeAperteFornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();
 	
@@ -1197,8 +1212,4 @@ $( "#fornitore" ).autocomplete({
 
 $( "#cliente" ).autocomplete({
  	source: elencoClienti
-});	
-
-$( "#scadenzeAperteFornitore" ).autocomplete({
- 	source: elencoFornitori
 });	
