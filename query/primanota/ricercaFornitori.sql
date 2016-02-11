@@ -3,6 +3,6 @@ select
 	cod_fornitore,
 	des_fornitore
   from contabilita.fornitore
-  order by cod_fornitore
+  order by des_fornitore
 	
 	

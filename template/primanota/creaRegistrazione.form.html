@@ -8,6 +8,9 @@ var dettInseriti = [%arrayDettagliInseriti%];
 var indexScadenzeInserite = [%arrayIndexScadenzeInserite%];
 var scadenzeInserite = [%arrayScadenzeInserite%];
 
+var elencoFornitori = [%elenco_fornitori%];
+var elencoClienti = [%elenco_clienti%];
+
 function aggiungiDettaglio() {
 	
 	var rowCount = $('#dettagli tr').length;
@@ -182,20 +185,10 @@ function controllaNumeroFattura() {
 					</tr>					
 					<tr>
 						<td>%ml.codforn% :</td>
-						<td class="tooltip">
-							<select class="selectmenuFornitore" id="fornitore" name="fornitore" >
-								<option value=""></option>
-								%elenco_fornitori%
-							</select>
-						</td>
+						<td><div><input type="text" id="fornitore" name="fornitore" size="40" value="%desforn%" /></div></td>
 						
 						<td>%ml.codclie% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCliente" id="cliente" name="cliente" >
-								<option value=""></option>
-								%elenco_clienti%
-							</select>
-						</td>
+						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
 					</tr>					
 					<tr>
 						<td class="td">%ml.datascad% :</td>
@@ -235,7 +228,7 @@ function controllaNumeroFattura() {
 						</td>
 					</tr>
 				</tfoot>
-			</table>
+			</table>			
 			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
 			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
 			<input type="hidden" size='150' id="scadenzeInserite" name="scadenzeInserite" value="%scadenzeInserite%" />
@@ -268,8 +261,8 @@ function controllaNumeroFattura() {
 					</td>					
 				</tr>					
 			</tbody>
-		</table> 	 
-  </form>
+		</table> 	
+	</form>
 </div>
 
 <div id="nuova-data-scadenza-form" title="Data scadenza supplementare"> 

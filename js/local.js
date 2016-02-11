@@ -745,84 +745,88 @@ $( ".selectmenuCausale" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( ".selectmenuFornitore" )
-	.selectmenu({change:
-		function(){
-			var idfornitore = $("#fornitore").val();
-			var datareg = $("#datareg").val();
-		
+$( "#fornitore" ).change(function() {
+	
+	var desfornitore = $("#fornitore").val();
+	var datareg = $("#datareg").val();
+	var form = $("#pagamentoForm").val();
+	
+	if (desfornitore != "") {
+
+		if (form == "PAGAMENTO") {
+			
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#select2" ).html(xmlhttp.responseText);
+		            $( "#select2" ).selectmenu( "refresh" );
+		        }
+		    }
+		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+		    xmlhttp.send();		
+		}
+		else {
 			var xmlhttp = new XMLHttpRequest();
 	        xmlhttp.onreadystatechange = function() {
 	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	                $( "#datascad" ).val(xmlhttp.responseText);
 	            }
 	        }
-	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore + "&datareg=" + datareg, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
+	        xmlhttp.send();						
+		}		
+	}
+});
 
-$( ".scadenzeAperteFornitore" )
-	.selectmenu({change:
-		function(){
-			var idfornitore = $("#fornitore").val();
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#select2" ).html(xmlhttp.responseText);
-	                $( "#select2" ).selectmenu( "refresh" );
-	            }
+$( ".scadenzeAperteFornitore" ).change(function() {
+	
+	var desfornitore = $("#fornitore").val();
+	
+	if (desfornitore != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#select2" ).html(xmlhttp.responseText);
+	            $( "#select2" ).selectmenu( "refresh" );
 	        }
-	        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+	    }
+	    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+	    xmlhttp.send();		
+	}
+});
 
-$( ".scadenzeAperteCliente" )
-	.selectmenu({change:
-		function(){
-			var idcliente = $("#cliente").val();
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#select2" ).html(xmlhttp.responseText);
-	                $( "#select2" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&idcliente=" + idcliente, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 200})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+$( ".scadenzeAperteCliente" ).change(function() {
 
-$( ".selectmenuCliente" )
-	.selectmenu({change:
-		function(){
-			var cliente = $("#cliente").val();
+	var descliente = $("#cliente").val();
 		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#tipoadd" ).val(xmlhttp.responseText);
-	            }
-	        }
-	        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 150})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                $( "#select2" ).html(xmlhttp.responseText);
+                $( "#select2" ).selectmenu( "refresh" );
+            }
+        }
+        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descliente, true);
+        xmlhttp.send();			
+	}		
+})
+
+$( "#cliente" ).change(function() {
+	
+	var cliente = $("#cliente").val();
+
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                $( "#tipoadd" ).val(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
+        xmlhttp.send();			
+	}
+})
 
 
 $( ".selectmenu" )
@@ -879,7 +883,6 @@ $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
-$( ".scadenzeAperteCliente" ).selectmenu({ width: 350 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 250 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 
@@ -1199,3 +1202,14 @@ function generaMastrino(codconto, codsottoconto) {
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 
+// ---------------------------------------------------------
+// Campi autocomplete
+// ---------------------------------------------------------
+
+$( "#fornitore" ).autocomplete({
+ 	source: elencoFornitori
+});	
+
+$( "#cliente" ).autocomplete({
+ 	source: elencoClienti
+});	

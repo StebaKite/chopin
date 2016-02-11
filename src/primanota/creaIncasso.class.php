@@ -56,6 +56,7 @@ class CreaIncasso extends primanotaAbstract {
 		unset($_SESSION["codneg"]);
 		unset($_SESSION["causale"]);
 		unset($_SESSION["cliente"]);
+		unset($_SESSION["descli"]);
 		unset($_SESSION["dettagliInseriti"]);
 		unset($_SESSION["indexDettagliInseriti"]);
 		unset($_SESSION["elenco_scadenze_cliente"]);
@@ -88,6 +89,7 @@ class CreaIncasso extends primanotaAbstract {
 				unset($_SESSION["codneg"]);
 				unset($_SESSION["causale"]);
 				unset($_SESSION["cliente"]);
+				unset($_SESSION["descli"]);
 				unset($_SESSION["dettagliInseriti"]);
 				unset($_SESSION["indexDettagliInseriti"]);
 				unset($_SESSION["elenco_scadenze_cliente"]);
@@ -136,7 +138,7 @@ class CreaIncasso extends primanotaAbstract {
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$stareg = "00";
-		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
+		$cliente = ($_SESSION["idcliente"] != "") ? $_SESSION["idcliente"] : "null" ;
 			
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $codneg, $stareg)) {
 

@@ -154,103 +154,16 @@ class CreaRegistrazione extends primanotaAbstract {
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$stareg = "00";
-		$fornitore = ($_SESSION["fornitore"] != "") ? $_SESSION["fornitore"] : "null" ;
-		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
+		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
+		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;
 		
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
-
-			/**
-			 * Se l'aggiornamento della registrazione è andata bene creo le scadenze fornitore o cliente
-			 */
-					
-			if ($_SESSION["fornitore"] != "") {
-			
-				if ($_SESSION["datascad"] != "") {
-						
-					$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-					$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
-			
-					$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-					$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-			
-					$tipAddebito_fornitore = "";
-					$staScadenza = "00"; 	// aperta
-			
-					if ($dataScadenza > $dataRegistrazione) {
-			
-						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-						foreach(pg_fetch_all($result_fornitore) as $row) {
-							$tipAddebito_fornitore = $row['tip_addebito'];
-						}
-
-						/**
-						 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
-						 *  parziale della data in scadenza
-						 */
-						 
-						$importo_in_scadenza = ($causale == "1110") ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"]; 
-						
-						$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
-								$descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza);
-					}
-				}
-				else {
-
-					if ($_SESSION['scadenzeInserite'] != "") {
-
-						$tipAddebito_fornitore = "";
-						$staScadenza = "00"; 	// aperta
-						
-						$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-						foreach(pg_fetch_all($result_fornitore) as $row) {
-							$tipAddebito_fornitore = $row['tip_addebito'];
-						}
-						
-						$d = explode(",", $_SESSION['scadenzeInserite']);
-						$progrFattura = 0;
-						
-						foreach($d as $ele) {
-
-							$e = explode("#",$ele);
-							$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
-							$progrFattura += 1;
-							$numfatt_generato = "'" . $_SESSION["numfatt"] . "." . $progrFattura . "'"; 
-							
-							/**
-							 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
-							 *  parziale della data in scadenza
-							 */
-								
-							$importo_in_scadenza = ($causale == "1110") ? $e[2] * (-1) : $e[2];
-								
-							$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
-									$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza);
-						}
-					}
-				}
-			}
-			else {
-				if ($cliente != "null") {
-			
-					if ($datascad == "null") {			// per i clienti la data scadenza non c'è
-			
-						$tipAddebito_cliente = "";
-						$staScadenza = "00"; 	// aperta
-			
-						$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
-						foreach(pg_fetch_all($result_cliente) as $row) {
-							$tipAddebito_cliente = $row['tip_addebito'];
-						}
-			
-						$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $_SESSION["totaleDare"],
-								$descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza);
-					}
-				}
-			}
 			
 			/**
 			 * Creo i dettagli della registrazione passati dalla pagina
 			 */
+						
+			$importo_in_scadenza = 0;
 			
  			$d = explode(",", $_SESSION['dettagliInseriti']);
 
@@ -264,16 +177,65 @@ class CreaRegistrazione extends primanotaAbstract {
 				$importo = $e[1];
 				$d_a = $e[2];
 								
+				/**
+				 * Salvo l'importo inserito sul conto del fornitore o del cliente per inserire la scadenza
+				 * I conti relativi ai fornitori sono in configurazione
+				 */
+				
+				$array = $utility->getConfig();
+				
+				if ($fornitore != "null") {
+					if (strstr($array['contiFornitore'], $conto)) {
+						$importo_in_scadenza = $importo;
+					}
+				}
+				elseif ($cliente != "null") {
+					if (strstr($array['contiCliente'], $conto)) {
+						$importo_in_scadenza = $importo;
+					}						
+				}
+				
 				if (!$this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION['idRegistrazione'], $conto, $sottoConto, $importo, $d_a)) {
 					$db->rollbackTransaction();
 					error_log("Errore inserimento dettaglio registrazione, eseguito Rollback");
 					return FALSE;
 				}
 			}
-
+			
 			/**
-			 * Rigenerazione dei saldi
+			 * Creo la scedenza fornitore ocliente
 			 */
+				
+			if ($fornitore != "null") {
+			
+				/**
+				 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
+				 *  parziale della data in scadenza
+				 */
+				$array = $utility->getConfig();				
+				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"];
+			
+				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+					$db->rollbackTransaction();
+					error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
+					return FALSE;
+				}
+			}
+			else {
+				if ($cliente != "null") {
+			
+					if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+						$db->rollbackTransaction();
+						error_log("Errore inserimento scadenza cliente, eseguito Rollback");
+						return FALSE;
+					}
+				}
+			}
+			
+			/**
+			 * Rigenero i saldi
+			 */
+			
 			$array = $utility->getConfig();
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
@@ -287,7 +249,90 @@ class CreaRegistrazione extends primanotaAbstract {
 		error_log("Errore inserimento registrazione, eseguito Rollback");
 		return FALSE;
 	}
+
+	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+		
+		if ($_SESSION["datascad"] != "") {
+		
+			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
+			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
+				
+			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+				
+			$tipAddebito_fornitore = "";
+			$staScadenza = "00"; 	// aperta
+				
+			if ($dataScadenza > $dataRegistrazione) {
+					
+				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+				foreach(pg_fetch_all($result_fornitore) as $row) {
+					$tipAddebito_fornitore = $row['tip_addebito'];
+				}
+		
+				if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
+					return true;			
+				}
+				else return false;
+			}
+		}
+		else {
+		
+			if ($_SESSION['scadenzeInserite'] != "") {
+		
+				$tipAddebito_fornitore = "";
+				$staScadenza = "00"; 	// aperta
+		
+				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
+				foreach(pg_fetch_all($result_fornitore) as $row) {
+					$tipAddebito_fornitore = $row['tip_addebito'];
+				}
+		
+				$d = explode(",", $_SESSION['scadenzeInserite']);
+				$progrFattura = 0;
+		
+				foreach($d as $ele) {
+		
+					$e = explode("#",$ele);
+					$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
+					$progrFattura += 1;
+					$numfatt_generato = "'" . $_SESSION["numfatt"] . "." . $progrFattura . "'";
+						
+					/**
+					 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
+					 *  parziale della data in scadenza
+					 */
+					$array = $utility->getConfig();						
+					$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $e[2] * (-1) : $e[2];
+		
+					if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
+						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza)) {
+						return true;	
+					}
+					else return false;
+				}
+			}
+		}
+	}
 	
+	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+
+		if ($datascad == "null") {			// per i clienti la data scadenza non c'è
+				
+			$tipAddebito_cliente = "";
+			$staScadenza = "00"; 	// aperta
+				
+			$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+			foreach(pg_fetch_all($result_cliente) as $row) {
+				$tipAddebito_cliente = $row['tip_addebito'];
+			}
+				
+			if ($this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
+				return true;
+			}
+			else return false;
+		}
+	}
 	
 	public function preparaPagina($creaRegistrazioneTemplate) {
 	

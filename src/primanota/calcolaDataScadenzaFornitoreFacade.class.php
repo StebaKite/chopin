@@ -8,7 +8,7 @@ session_start();
 $calcolaDataScadenzaFornitore = CalcolaDataScadenzaFornitore::getInstance();
 
 if ($_GET["modo"] == "start") {
-	$_SESSION["idfornitore"] = $_REQUEST["idfornitore"];
+	$_SESSION["desfornitore"] = $_REQUEST["desfornitore"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];	
 	$calcolaDataScadenzaFornitore->start();
 }

@@ -260,6 +260,8 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%datascad%' => $_SESSION["datascad"],
 				'%datareg%' => $_SESSION["datareg"],
 				'%numfatt%' => $_SESSION["numfatt"],
+				'%desforn%' => $_SESSION["fornitore"],
+				'%descli%' => $_SESSION["cliente"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",

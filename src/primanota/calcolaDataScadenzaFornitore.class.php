@@ -58,7 +58,12 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		$result_fornitore = $this->prelevaIdFornitore($db, $utility, $_SESSION["idfornitore"]); 
+		$db->beginTransaction();
+		$idfornitore = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["desfornitore"]);
+		$db->commitTransaction();
+		
+		$result_fornitore = $this->prelevaIdFornitore($db, $utility, $idfornitore); 
+		
 		foreach(pg_fetch_all($result_fornitore) as $row) {
 			$num_gg_scadenza_fattura = $row['num_gg_scadenza_fattura'];
 		}

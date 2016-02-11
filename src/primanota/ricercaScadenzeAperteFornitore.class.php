@@ -42,8 +42,12 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract {
 	
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-	
+		
 		$options = '<select class="numfatt-multiple" multiple="multiple" style="width: 300px" id="select2">';
+
+		$db->beginTransaction();
+		$_SESSION["idfornitore"] = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["desforn"]);
+		$db->commitTransaction();		
 		
 		$result_scadenze_fornitore = $this->prelevaScadenzeAperteFornitore($db, $utility, $_SESSION["idfornitore"]);
 

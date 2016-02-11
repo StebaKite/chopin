@@ -140,6 +140,7 @@ class ModificaIncasso extends primanotaAbstract {
 				$_SESSION["numfatt_old"] = $row["num_fattura"];
 				$_SESSION["codneg"] = $row["cod_negozio"];
 				$_SESSION["causale"] = $row["cod_causale"];
+				$_SESSION["descli"] = $row["des_cliente"];				
 				$_SESSION["cliente"] = $row["id_cliente"];
 				$_SESSION["cliente_old"] = $row["id_cliente"];
 			}
@@ -181,8 +182,8 @@ class ModificaIncasso extends primanotaAbstract {
 		$stareg = $_SESSION["stareg"];
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];
-		$cliente = ($_SESSION["cliente"] != "") ? $_SESSION["cliente"] : "null" ;
+		$causale = $_SESSION["causale"];		
+		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;		
 		$staScadenza = "10";   // pagata
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idIncasso"], $_SESSION["totaleDare"],
@@ -194,7 +195,7 @@ class ModificaIncasso extends primanotaAbstract {
 			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_incasso
 			 */
 			
-			if ((trim($_SESSION["cliente"]) != trim($_SESSION["cliente_old"])) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"]))) {
+			if ((trim($cliente) != trim($_SESSION["cliente_old"])) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"]))) {
 			
 				$d = explode(",", $_SESSION["numfatt_old"]);
 					
@@ -223,7 +224,7 @@ class ModificaIncasso extends primanotaAbstract {
 					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
 					$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idIncasso']);
 
-					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $_SESSION["cliente"], $numfatt);
+					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $cliente, $numfatt);
 						
 					if ($result_idReg) {
 							

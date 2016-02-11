@@ -42,9 +42,11 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-
+		$db->beginTransaction();
+		
 		if ($_SESSION["causale"] != "1100") {
-			$result = $this->cercaFatturaFornitore($db, $utility, $_SESSION["idfornitore"], $_SESSION["numfatt"]);
+			$id_fornitore = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["idfornitore"]);			
+			$result = $this->cercaFatturaFornitore($db, $utility, $id_fornitore, $_SESSION["numfatt"]);
 			
 			if ($result){
 				if (pg_num_rows($result) > 0) {
@@ -64,6 +66,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 		else {
 			echo "Numero fattura Ok!";
 		}
+		$db->commitTransaction();	
 	}
 }
 				
