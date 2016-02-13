@@ -11,6 +11,8 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	// Query --------------------------------------------------------------- 
 	
 	public static $queryRicercaConto = "/saldi/ricercaConto.sql";
+	public static $queryLeggiContiStatoPatrimoniale = "/saldi/ricercaContiStatoPatrimoniale.sql";
+	public static $queryLeggiContiContoEconomico = "/saldi/ricercaContiContoEconomico.sql";
 	public static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
 	public static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";	
@@ -135,6 +137,30 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		
 		return $result;
 	}
+	
+	public function prelevaStatoPatrimoniale($db, $utility) {
+
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiStatoPatrimoniale;
+		
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->execSql($sql);
+		
+		return $result;
+	}
+
+	public function prelevaContoEconomico($db, $utility) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiContoEconomico;
+	
+		$sql = $utility->getTemplate($sqlTemplate);
+		$result = $db->execSql($sql);
+	
+		return $result;
+	}
+	
+	
 	
 	public function caricaDateRiportoSaldo($utility, $db) {
 	

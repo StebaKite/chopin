@@ -237,6 +237,9 @@ class CreaRegistrazione extends primanotaAbstract {
 			 */
 			
 			$array = $utility->getConfig();
+			
+			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
 				$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);

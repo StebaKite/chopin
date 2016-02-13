@@ -416,9 +416,14 @@ abstract class ChopinAbstract {
 				/**
 				 * Se la registrazione ha una data di registrazione che cade all'interno di un mese per il quale è già
 				 * stato riportato il saldo allora devo aggiornare tutti i riporti da quella data riporto in poi
+				 * 
+				 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese 
 				 */				
-				if ((strtotime($row['dat_lavoro']) >= $dataRegistrazione) && ($row['sta_lavoro'] == "10")) {
-					$this->cambioStatoLavoroPianificato($db, $utility, $row['pk_lavoro_pianificato'], '00');
+
+				if (date("d", strtotime($row['dat_lavoro'])) == "01") {
+					if ((strtotime($row['dat_lavoro']) >= $dataRegistrazione) && ($row['sta_lavoro'] == "10")) {
+						$this->cambioStatoLavoroPianificato($db, $utility, $row['pk_lavoro_pianificato'], '00');
+					}						
 				}
 			}
 		}

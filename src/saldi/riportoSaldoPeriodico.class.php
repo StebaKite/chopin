@@ -78,82 +78,173 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 	}
 
 	// ------------------------------------------------
-
+	
 	public function start($db, $pklavoro) {
 
-		require_once 'menubanner.template.php';
 		require_once 'utility.class.php';
 		
+		$riportoStatoPatrimoniale_Ok = FALSE;
+		$riportoContoEconomico_Ok = FALSE;
+		
 		/**
-		 * Prelevo tutti i conti, se ci sono conti faccio il riporto altrimenti esco
+		 * Determino il mese da estrarre rispetto alla data di esecuzione del lavoro pianificato
 		 */
+
+		$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];	
+		$dataEstrazioneRegistrazioni = date("Y/m/d", strtotime('-1 month', strtotime($_SESSION["dataEsecuzioneLavoro"])));
+		
+		$dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
+		$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
+		$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
+		
+		$anno = ($mesePrecedente == 12) ? date("Y") - 1 : date("Y");
+		
+		/**
+		 * Riporto stato patrimoniale
+		 */
+		
 		$utility = Utility::getInstance();
 		
-		$result = $this->prelevaConti($db, $utility);
+		$result = $this->prelevaStatoPatrimoniale($db, $utility);		
 
 		if ($result) {
+			
+			$this->riportoStatoPatriminiale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
 
-			$conti = pg_fetch_all($result);
+			$da = '01/' . $mesePrecedente . '/' . $anno;
+			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
+			error_log("Riporto saldo stato patrimoniale, periodo : " . $da . " - " . $a);
+			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
+			
+			$riportoStatoPatrimoniale_Ok = TRUE;
+		}
+		
+		/**
+		 * Riporto conto economico.
+		 * Il primo riporto dell'anno non viene fatto. I conti ripartono da zero.
+		 */
+		
+		if (date("m/d", strtotime($_SESSION["dataEsecuzioneLavoro"])) != "01/01") {
 
-			$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
-			$dataEstrazioneRegistrazioni = date("Y/m/d", strtotime('-1 month', strtotime($_SESSION["dataEsecuzioneLavoro"])));
+			$result = $this->prelevaContoEconomico($db, $utility);
+			
+			if ($result) {
+
+				$this->riportoContoEconomico($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
+					
+				$da = '01/' . $mesePrecedente . '/' . $anno;
+				$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
+				error_log("Riporto saldo conto economico, periodo : " . $da . " - " . $a);
+				error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
 				
-			$dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
-			$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
-			$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
+				$riportoContoEconomico_Ok = TRUE;
+			}				
+		}
+		
+		/**
+		 * Se uno dei due riporti è andato bene considero il lavoro eseguito  
+		 */
+		
+		if (($riportoStatoPatrimoniale_Ok) or ($riportoContoEconomico_Ok)) { 
+			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');			
+			return TRUE;
+		}
+		else return FALSE;
+	}
+	
+	private function riportoStatoPatriminiale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
 
-			$anno = ($mesePrecedente == 12) ? date("Y") - 1 : date("Y");
+		require_once 'menubanner.template.php';
+		
+		$conti = pg_fetch_all($statoPatrimoniale);
 			
-			foreach($conti as $conto) {
-			
-				foreach(SELF::$negozi as $negozio){
-			
-					$replace = array(
-							'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-							'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
-							'%codnegozio%' => $negozio,
-							'%codconto%' => $conto['cod_conto'],
-							'%codsottoconto%' => $conto['cod_sottoconto']
-					);
+		foreach($conti as $conto) {
+				
+			foreach(SELF::$negozi as $negozio){
 					
-					$array = $utility->getConfig();
-					$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
-						
-					$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-					$result = $db->execSql($sql);
-
-					$saldo = pg_fetch_all($result);					
+				$replace = array(
+						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
+						'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+						'%codnegozio%' => $negozio,
+						'%codconto%' => $conto['cod_conto'],
+						'%codsottoconto%' => $conto['cod_sottoconto']
+				);
 					
-					if (result) {
-						foreach($saldo as $row) {
-
+				$array = $utility->getConfig();
+				$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
+		
+				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+				$result = $db->execSql($sql);
+		
+				$saldo = pg_fetch_all($result);
+					
+				if (result) {
+					foreach($saldo as $row) {
+		
+						/**
+						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+						 */
+						if ($row['tot_conto'] != 0) {
+		
 							/**
-							 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+							 * tip_conto =  1 > Dare
+							 * tip_conto = -1 > Avere
 							 */
-							if ($row['tot_conto'] != 0) {
-								
-								/**
-								 * tip_conto =  1 > Dare
-								 * tip_conto = -1 > Avere
-								 */
-								$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
-								$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);								
-							}
+							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
 						}
 					}
 				}
 			}
+		}		
+	}
+	
+	private function riportoContoEconomico($db, $pklavoro, $utility, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
 
-			$da = '01/' . $mesePrecedente . '/' . $anno;
-			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-			error_log("Riporto saldo periodo : " . $da . " - " . $a);
-			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
-				
-			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');			
-			return TRUE;				
+		require_once 'menubanner.template.php';
+		
+		$conti = pg_fetch_all($contoEconomico);
+			
+		foreach($conti as $conto) {
+		
+			foreach(SELF::$negozi as $negozio){
+					
+				$replace = array(
+						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
+						'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+						'%codnegozio%' => $negozio,
+						'%codconto%' => $conto['cod_conto'],
+						'%codsottoconto%' => $conto['cod_sottoconto']
+				);
+					
+				$array = $utility->getConfig();
+				$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
+		
+				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+				$result = $db->execSql($sql);
+		
+				$saldo = pg_fetch_all($result);
+					
+				if (result) {
+					foreach($saldo as $row) {
+		
+						/**
+						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+						 */
+						if ($row['tot_conto'] != 0) {
+		
+							/**
+							 * tip_conto =  1 > Dare
+							 * tip_conto = -1 > Avere
+							 */
+							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
+						}
+					}
+				}
+			}
 		}
-		return FALSE;
-	}	
+	}
 }
 
 ?>
