@@ -68,7 +68,7 @@ class Menubanner extends ChopinAbstract {
 				 * Refresh della tabellina in sessione dei lavori pianificati e commit della transazione.
 				 * Attenzione che la transazione rimane aperta per tutti i lavori pianificati
 				 */
-				$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
+				$lavoriPianificati = $this->leggiLavoriPianificatiAnnoCorrente($db, $utility);
 				$_SESSION["lavoriPianificati"] = pg_fetch_all($lavoriPianificati);								
 				$db->commitTransaction();
 			}

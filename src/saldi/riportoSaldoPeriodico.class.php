@@ -97,7 +97,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
 		$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 		
-		$anno = ($mesePrecedente == 12) ? date("Y") - 1 : date("Y");
+		$anno = ($mesePrecedente == 12) ? date("Y", strtotime('-1 year', strtotime($_SESSION["dataEsecuzioneLavoro"]))) : date("Y", strtotime($_SESSION["dataEsecuzioneLavoro"]));
 		
 		/**
 		 * Riporto stato patrimoniale
@@ -109,7 +109,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 		if ($result) {
 			
-			$this->riportoStatoPatriminiale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
+			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
 
 			$da = '01/' . $mesePrecedente . '/' . $anno;
 			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -152,7 +152,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		else return FALSE;
 	}
 	
-	private function riportoStatoPatriminiale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
+	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
 
 		require_once 'menubanner.template.php';
 		
@@ -173,14 +173,14 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 				$array = $utility->getConfig();
 				$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
 		
-				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);				
 				$result = $db->execSql($sql);
 		
 				$saldo = pg_fetch_all($result);
 					
 				if (result) {
 					foreach($saldo as $row) {
-		
+						
 						/**
 						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
 						 */
@@ -227,7 +227,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 				if (result) {
 					foreach($saldo as $row) {
-		
+						
 						/**
 						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
 						 */
