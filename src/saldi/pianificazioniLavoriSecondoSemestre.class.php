@@ -10,7 +10,6 @@ require_once 'saldi.abstract.class.php';
 class PianificazioniLavoriSecondoSemestre extends SaldiAbstract  {
 
 	public static $messaggio;
-	public static $queryCancellaPianificazioniSemestre = "/main/cancellaLavoriEseguiti.sql";
 	public static $queryCreaLavoroPianificato = "/main/creaLavoroPianificato.sql";
 
 	public static $ggMese = array(
@@ -83,48 +82,27 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract  {
 		require_once 'utility.class.php';
 
 		/**
-		 * Cancello tutte le pianificazioni del semestre precedente che sono già state eseguite 
-		 * compreso anche il lavoro di pianificazione che è stato eseguito nel dicembre dell'anno precedente
+		 * Vengono pianificati i lavori per il secondo semestre dell'anno in corso.
+		 * Questa esecuzione viene eseguita l'ultimo giorno del primo semestre, presumibilmente il 30/6
 		 */
-		$utility = Utility::getInstance();
-
-		$annoPrecedente = date("Y") - 1;
-		$annoCorrente   = date("Y"); 
 		
-		$replace = array(
-				'%datalavoro_da%' => '01-12-' . $annoPrecedente,
-				'%datalavoro_a%' =>  '30-06-' . $annoCorrente
-		);
+		$anno = date("Y");
+		$fileEsecuzioneLavoro = "riportoSaldoPeriodico";
+		$classeEsecuzioneLavoro = "RiportoSaldoPeriodico";
+		$statoLavoro = "00";
 			
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCancellaPianificazioniSemestre;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-07-01', 'Riporto saldi ' .  SELF::$mese['07'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-08-01', 'Riporto saldi ' .  SELF::$mese['08'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-09-01', 'Riporto saldi ' .  SELF::$mese['09'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-10-01', 'Riporto saldi ' .  SELF::$mese['10'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-11-01', 'Riporto saldi ' .  SELF::$mese['11'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-12-01', 'Riporto saldi ' .  SELF::$mese['12'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
+		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-12-30', 'Pianificazioni semestre 1', 'pianificazioniLavoriPrimoSemestre', 'PianificazioniLavoriPrimoSemestre', $statoLavoro)) return FALSE;
 
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		/**
-		 * Se tutti i lavori del semestre sono stati rimossi inserisco i nuovi lavori pianificati
-		*/
-		if ($result) {
-
-			$anno = date("Y") + 1;
-			$fileEsecuzioneLavoro = "riportoSaldoPeriodico";
-			$classeEsecuzioneLavoro = "RiportoSaldoPeriodico";
-			$statoLavoro = "00";
-				
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-07-01', 'Riporto saldi ' .  SELF::$mese['07'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-08-01', 'Riporto saldi ' .  SELF::$mese['08'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-09-01', 'Riporto saldi ' .  SELF::$mese['09'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-10-01', 'Riporto saldi ' .  SELF::$mese['10'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-11-01', 'Riporto saldi ' .  SELF::$mese['11'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-12-01', 'Riporto saldi ' .  SELF::$mese['12'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
-			if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-12-30', 'Pianificazioni semestre 1', 'pianificazioniLavoriPrimoSemestre', 'PianificazioniLavoriPrimoSemestre', $statoLavoro)) return FALSE;
-
-			error_log("Pianificazione lavori del secondo semestre anno " . $anno);
-			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
-			return TRUE;
-		}
-		return FALSE;
+		error_log("Pianificazione lavori del secondo semestre anno " . $anno);
+		$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
+		
+		return TRUE;
 	}
 }
 
