@@ -552,8 +552,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 				$totaleCostiFissi = trim($row['totalecostofisso']);
 			}
 			
-			$margineTotale = $totaleRicavi - $totaleCostiVariabili;
-			$marginePercentuale = ($margineTotale * 100 ) / $totaleRicavi;
+			$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
+			$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
 
 			/**
 			 * Calcolo del Break Eaven Point
@@ -577,19 +577,19 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			 *
 			 */
 
-			$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / $totaleRicavi);
+			$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
 			$bep = $totaleCostiFissi / $incidenzaCostiVariabiliSulFatturato;
 			
 			$margineContribuzione =
 			"<table class='result'>" .
 			"	<tbody>" .
 			"		<tr height='30'>" .
-			"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+			"			<td width='308' align='left' class='mark'>Fatturato</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
-			"			<td width='308' align='left' class='mark'>Ricavi vendita prodotti</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+			"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Margine totale</td>" .
@@ -597,7 +597,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Margine percentuale</td>" .
-			"			<td width='108' align='right' class='mark'>" . number_format(abs($marginePercentuale), 2, ',', '.') . "&#37;</td>" .
+			"			<td width='108' align='right' class='mark'>" . number_format(abs($marginePercentuale), 2, ',', '.') . " &#37;</td>" .
 			"		</tr>" .
 			"   </tbody>" .				
 			"</table>" ;
@@ -626,10 +626,10 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'> " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . " &#37;</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
-			"			<td width='308' align='left' class='mark'>Break even point</td>" .
+			"			<td width='308' align='left' class='mark'>BEP</td>" .
 			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($bep), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"   </tbody>" .
@@ -657,7 +657,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 			
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti))) . "</a></li>";
-			$tabs .= "<li><a href='#tabs-6'>MdC</a></li>";
+			$tabs .= "<li><a href='#tabs-6'>MCT</a></li>";
 			$tabs .= "<li><a href='#tabs-7'>BEP</a></li>";
 			$tabs .= "<li><a href='#tabs-8'>Nota importante</a></li>";
 			$tabs .= "</ul>";

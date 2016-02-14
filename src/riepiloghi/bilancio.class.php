@@ -197,8 +197,14 @@ class Bilancio extends RiepiloghiAbstract {
 						
 				}
 				else {
-					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-					return TRUE;						
+					if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+						if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+							if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+								$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+								return TRUE;
+							}
+						}
+					}
 				}
 			}
 		}
