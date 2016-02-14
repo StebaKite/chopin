@@ -489,18 +489,7 @@ abstract class ChopinAbstract {
 	 */
 	public function leggiLavoriPianificatiAnnoCorrente($db, $utility) {
 	
-		/**
-		 * Prendo tutto le pianificazioni di tutto l'anno
-		 */
-		$anno = date("Y");
-	
-		$dataLavoroDa = '01/01/' . $anno;
-		$dataLavoroA = '31/12/' . $anno;
-	
-		$replace = array(
-				'%datalavoro_da%' => $dataLavoroDa,
-				'%datalavoro_a%' => $dataLavoroA
-		);
+		$replace = array();
 	
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLavoriPianificatiAnnoCorrente;

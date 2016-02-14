@@ -7,5 +7,4 @@ SELECT
 	sta_lavoro,
 	date(tms_esecuzione) as tms_esecuzione
 FROM contabilita.lavoro_pianificato
-WHERE dat_lavoro BETWEEN '%datalavoro_da%' AND '%datalavoro_a%'
-order by dat_lavoro
+order by dat_lavoro desc
