@@ -107,14 +107,26 @@ function calcolaImponibile() {
 	
 	var importo = $("#importo").val();
 	var quantita = $("#quantita").val();
+
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	
-	var totale = importoNormalizzato * quantita;	
-	$("#totale").val(totale);
+	if (importoNormalizzato > 0) {
+		
+		var totale = importoNormalizzato * quantita;	
+		$("#totale").val(totale);
+		
+		imponibile_e_iva();		
+	}
+}
+
+function imponibile_e_iva() {
+
+	var totale = $("#totale").val();
+	var totaleNormalizzato = totale.trim().replace(",", ".");
 	
 	var aliquota = $("input[name=aliquota]:checked").val();
 	
-	var imponibile = totale / aliquota;
+	var imponibile = totaleNormalizzato / aliquota;
 	var imponibileArrotondato = imponibile.toFixed(2);
 	
 	$("#imponibile").val(imponibileArrotondato);
@@ -124,7 +136,7 @@ function calcolaImponibile() {
 	}
 	
 	var ivaArrotondata = iva.toFixed(2);
-	$("#iva").val(ivaArrotondata);	
+	$("#iva").val(ivaArrotondata);
 }
 
 </script>
@@ -200,7 +212,7 @@ function calcolaImponibile() {
 			<tbody>
 				<tr>
 					<td>%ml.quantita% :</td>
-					<td class="tooltip"><input type="text" id="quantita" name="quantita" size="10" maxlength="10" ></td>
+					<td class="tooltip"><input type="text" id="quantita" name="quantita" size="10" maxlength="10" onblur="calcolaImponibile()" ></td>
 				</tr>								
 				<tr>
 					<td>%ml.articolo% :</td>
@@ -220,7 +232,7 @@ function calcolaImponibile() {
 				</tr>
 				<tr>
 					<td>%ml.totale% :</td>
-					<td class="tooltip"><input type="text" id="totale" name="totale" size="10" maxlength="20"></td>				
+					<td class="tooltip"><input type="text" id="totale" name="totale" size="10" maxlength="20" onblur="imponibile_e_iva()"></td>				
 				</tr>													
 				<tr>
 					<td>%ml.imponibile% :</td>
