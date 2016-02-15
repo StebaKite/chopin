@@ -553,7 +553,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			}
 			
 			$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
-			$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
+			$marginePercentuale = ($totaleCostiVariabili * 100 ) / abs($totaleRicavi);
 
 			/**
 			 * Calcolo del Break Eaven Point
@@ -626,7 +626,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
-			"			<td width='108' align='right' class='mark'> " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . " &#37;</td>" .
+			"			<td width='108' align='right' class='mark'> " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>BEP</td>" .
