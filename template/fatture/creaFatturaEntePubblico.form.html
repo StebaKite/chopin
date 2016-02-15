@@ -6,6 +6,9 @@ var indexDettInseriti = [%arrayIndexDettagliInseriti%];
 var dettInseriti = [%arrayDettagliInseriti%];
 var contatore = 0;
 
+var elencoFornitori = [%elenco_fornitori%];
+var elencoClienti = [%elenco_clienti%];
+
 function prelevaNumeroFattura(negozio) {
 
 	var xmlhttp = new XMLHttpRequest();
@@ -163,12 +166,7 @@ function calcolaImponibile() {
 					</tr>					
 					<tr>
 						<td>%ml.entepub% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCliente" id="cliente" name="cliente" >
-								<option value=""></option>
-								%elenco_clienti%
-							</select>
-						</td>
+						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
 					</tr>				
 					<tr>
 						<td>%ml.tipaddebito% :</td>

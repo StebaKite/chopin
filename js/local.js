@@ -814,7 +814,7 @@ $( ".scadenzeAperteCliente" ).change(function() {
 
 $( "#cliente" ).change(function() {
 	
-	var cliente = $("#cliente").val();
+	var descliente = $("#cliente").val();
 
 	if (descliente != "") {
 		var xmlhttp = new XMLHttpRequest();
@@ -823,7 +823,7 @@ $( "#cliente" ).change(function() {
                 $( "#tipoadd" ).val(xmlhttp.responseText);
             }
         }
-        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + cliente, true);
+        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&descliente=" + descliente, true);
         xmlhttp.send();			
 	}
 })

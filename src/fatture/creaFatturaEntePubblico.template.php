@@ -108,6 +108,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				'%vendita-checked%' => ($_SESSION["tipofat"] == "VENDITA") ? "checked" : "",
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
+				'%descli%' => $_SESSION["cliente"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
@@ -117,6 +118,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"]
 		);
 		

@@ -65,15 +65,12 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaClienti;		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		
+
+		/**
+		 * Prepara un elenco da inserire in una array javascript adatta per un campo autocomplete
+		 */
 		foreach(pg_fetch_all($result) as $row) {
-			
-			if ($row['id_cliente'] == $_SESSION["idcliente"]) {
-				$elencoClienti .= "<option value='" . $row['id_cliente'] . "' selected >" . $row['des_cliente'] . "</option>";
-			}
-			else {
-				$elencoClienti .= "<option value='" . $row['id_cliente'] . "'>" . $row['des_cliente'] . "</option>";
-			}
+			$elencoClienti .= '"' . $row["des_cliente"] . '",';
 		}
 		return $elencoClienti;
 	}

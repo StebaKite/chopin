@@ -96,8 +96,7 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 				$d_x_array = $d_x_array . "'" . $ele . "',";
 			}
 		}
-		
-		
+				
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%numfat%' => $_SESSION["numfat"],
@@ -107,6 +106,7 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 				'%ibanbanca%' => $_SESSION["ibanbanca"],
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
+				'%descli%' => $_SESSION["cliente"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
@@ -116,6 +116,7 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"]
 		);
 		

@@ -111,6 +111,7 @@ class CreaFatturaClienteTemplate extends FatturaAbstract {
 				'%assistito%' => $_SESSION["cognomenomeassistito"],
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
+				'%descli%' => $_SESSION["cliente"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
@@ -120,6 +121,7 @@ class CreaFatturaClienteTemplate extends FatturaAbstract {
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
+				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"]
 		);
 		
