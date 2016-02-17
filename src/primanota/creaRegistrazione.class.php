@@ -255,7 +255,7 @@ class CreaRegistrazione extends primanotaAbstract {
 
 	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
 		
-		if ($_SESSION["datascad"] != "") {
+		if ($_SESSION['datascad'] != "") {
 		
 			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
 			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
@@ -278,6 +278,7 @@ class CreaRegistrazione extends primanotaAbstract {
 				}
 				else return false;
 			}
+			else return true;
 		}
 		else {
 		
@@ -308,13 +309,13 @@ class CreaRegistrazione extends primanotaAbstract {
 					$array = $utility->getConfig();						
 					$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $e[2] * (-1) : $e[2];
 		
-					if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
+					if (!$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
 						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza)) {
-						return true;	
+						return false;
 					}
-					else return false;
 				}
 			}
+			return true;
 		}
 	}
 	
