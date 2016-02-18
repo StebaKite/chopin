@@ -36,6 +36,13 @@ function controllaUnivocitaCfis() {
 	}
 }
 
+function normalizzaCampo(campo) {
+
+	var c = $("#" + campo).val();
+	var cNorm = c.trim().replace("&", "e");
+	$("#" + campo).val(cNorm);	
+}
+
 </script>
 
 <div id="body">
@@ -65,19 +72,19 @@ function controllaUnivocitaCfis() {
 					</tr>
 					<tr>
 						<td>%ml.descliente% :</td>
-						<td class="tooltip"><input type="text" id="descliente" name="descliente" size="70" maxlength="100" value='%descliente%' ></td>
+						<td class="tooltip"><input type="text" id="descliente" name="descliente" size="70" maxlength="100" value='%descliente%' onblur="normalizzaCampo('descliente');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.desindirizzocliente% :</td>
-						<td class="tooltip"><input type="text" id="indcliente" name="indcliente" size="70" maxlength="200" value='%indcliente%' ></td>
+						<td class="tooltip"><input type="text" id="indcliente" name="indcliente" size="70" maxlength="200" value='%indcliente%' onblur="normalizzaCampo('indcliente');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.descittacliente% :</td>
-						<td class="tooltip"><input type="text" id="cittacliente" name="cittacliente" size="70" maxlength="100" value='%cittacliente%' ></td>
+						<td class="tooltip"><input type="text" id="cittacliente" name="cittacliente" size="70" maxlength="100" value='%cittacliente%' onblur="normalizzaCampo('cittacliente');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.capcliente% :</td>
-						<td class="tooltip"><input type="text" id="capcliente" name="capcliente" size="7" maxlength="5" value='%capcliente%' ></td>
+						<td class="tooltip"><input type="text" id="capcliente" name="capcliente" size="7" maxlength="5" value='%capcliente%' onblur="normalizzaCampo('capcliente');"></td>
 					</tr>	
 					<tr>
 						<td>%ml.tipaddebito% :</td>						

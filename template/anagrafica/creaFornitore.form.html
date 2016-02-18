@@ -1,5 +1,16 @@
 <body>
 
+<script type="text/javascript">
+
+function normalizzaCampo(campo) {
+
+	var c = $("#" + campo).val();
+	var cNorm = c.trim().replace("&", "e");
+	$("#" + campo).val(cNorm);	
+}
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -16,19 +27,19 @@
 					</tr>
 					<tr>
 						<td>%ml.desfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="desfornitore" name="desfornitore" size="70" maxlength="100" value='%desfornitore%' ></td>
+						<td class="tooltip" colspan="2"><input type="text" id="desfornitore" name="desfornitore" size="70" maxlength="100" value='%desfornitore%' onblur="normalizzaCampo('desfornitore');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.indfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="indfornitore" name="indfornitore" size="70" maxlength="200" value='%indfornitore%' ></td>
+						<td class="tooltip" colspan="2"><input type="text" id="indfornitore" name="indfornitore" size="70" maxlength="200" value='%indfornitore%' onblur="normalizzaCampo('indfornitore');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.cittafornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="cittafornitore" name="cittafornitore" size="70" maxlength="100" value='%cittafornitore%' ></td>
+						<td class="tooltip" colspan="2"><input type="text" id="cittafornitore" name="cittafornitore" size="70" maxlength="100" value='%cittafornitore%' onblur="normalizzaCampo('cittafornitore');"></td>
 					</tr>			
 					<tr>
 						<td>%ml.capfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="capfornitore" name="capfornitore" size="7" maxlength="5" value='%capfornitore%' ></td>
+						<td class="tooltip" colspan="2"><input type="text" id="capfornitore" name="capfornitore" size="7" maxlength="5" value='%capfornitore%' onblur="normalizzaCampo('capfornitore');"></td>
 					</tr>	
 					<tr>
 						<td>%ml.tipaddebito% :</td>						
