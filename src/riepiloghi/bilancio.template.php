@@ -553,7 +553,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			}
 			
 			$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
-			$marginePercentuale = ($totaleCostiVariabili * 100 ) / abs($totaleRicavi);
+			$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
 
 			/**
 			 * Calcolo del Break Eaven Point
@@ -578,7 +578,7 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			 */
 
 			$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
-			$bep = $totaleCostiFissi / $incidenzaCostiVariabiliSulFatturato;
+			$bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
 			
 			$margineContribuzione =
 			"<table class='result'>" .
@@ -593,11 +593,11 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Margine totale</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($margineTotale), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Margine percentuale</td>" .
-			"			<td width='108' align='right' class='mark'>" . number_format(abs($marginePercentuale), 2, ',', '.') . " &#37;</td>" .
+			"			<td width='108' align='right' class='mark'>" . number_format($marginePercentuale, 2, ',', '.') . " &#37;</td>" .
 			"		</tr>" .
 			"   </tbody>" .				
 			"</table>" ;
