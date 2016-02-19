@@ -626,11 +626,11 @@ class BilancioTemplate extends RiepiloghiAbstract {
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
-			"			<td width='108' align='right' class='mark'> " . number_format(abs($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturato, 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"		<tr height='30'>" .
 			"			<td width='308' align='left' class='mark'>BEP</td>" .
-			"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($bep), 2, ',', '.') . "</td>" .
+			"			<td width='108' align='right' class='mark'>&euro; " . number_format($bep, 2, ',', '.') . "</td>" .
 			"		</tr>" .
 			"   </tbody>" .
 			"</table>" ;
