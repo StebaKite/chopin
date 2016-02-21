@@ -8,7 +8,11 @@ SELECT
 				END AS ind_dareavere,	
 				SUM(t2.imp_registrazione) as tot_conto		  
 				
- 		FROM contabilita.sottoconto as t1
+ 		FROM 
+ 			(SELECT sottoconto.*
+			   FROM contabilita.sottoconto
+		  	  WHERE  sottoconto.ind_gruppo = 'CV'
+ 			) as t1
  		
 			INNER JOIN contabilita.conto as t3
 				ON t3.cod_conto = t1.cod_conto 

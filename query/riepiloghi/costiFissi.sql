@@ -9,18 +9,9 @@ SELECT
 				SUM(t2.imp_registrazione) as tot_conto		  
 				
  		FROM 
- 			(
-				SELECT sottoconto.*
-				  FROM (
-					    SELECT *, cod_conto||cod_sottoconto as conto_sottoconto
-					      FROM contabilita.sottoconto	  			
-	  			       ) as sottoconto
-				WHERE sottoconto.conto_sottoconto not in 
-					('30010','30020','30030','30040','30050','30060','30065',
-					 '320101','320201','320301','320401','320501','320601',
-					 '32510','32520',
-					 '1011','1012','1013','1021','1022','1031','1032','10510','10520'
-					)
+ 			(SELECT sottoconto.*
+			   FROM contabilita.sottoconto
+		  	  WHERE  sottoconto.ind_gruppo = 'CF'
  			) as t1
  		
 			INNER JOIN contabilita.conto as t3
