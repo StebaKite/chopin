@@ -2,7 +2,7 @@
 
 require_once 'configurazioni.abstract.class.php';
 
-class InserisciSottoconto extends ConfigurazioniAbstract {
+class ModificaGruppoSottoconto extends ConfigurazioniAbstract {
 
 	private static $_instance = null;
 
@@ -31,7 +31,7 @@ class InserisciSottoconto extends ConfigurazioniAbstract {
 
 		if( !is_object(self::$_instance) )
 
-			self::$_instance = new InserisciSottoconto();
+			self::$_instance = new ModificaGruppoSottoconto();
 
 		return self::$_instance;
 	}
@@ -47,20 +47,10 @@ class InserisciSottoconto extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 		
-		$db->beginTransaction();
-		
-		if ($this->inserisciSottoconto($db, $utility, $_SESSION["codconto"], $_SESSION["codsottoconto"], $_SESSION["dessottoconto"], $_SESSION["indgruppo"] )) {
-			$db->commitTransaction();
-			$_SESSION["messaggio"] = "Conto salvato con successo";				
-		}
-		else {
-			$db->rollbackTransaction();
-			error_log("Errore inserimento sottoconto, eseguito Rollback");
-			$_SESSION["messaggio"] = "Attenzione: conto non inserito!";				
-		}
+		$this->updateSottoconto($db, $utility, $_SESSION["codconto"], $_SESSION["codsottoconto"], $_SESSION["indgruppo"]);
 		
 		$modificaConto = ModificaConto::getInstance();
-		$modificaConto->start();		
+		$modificaConto->start();
 	}
 }
 

@@ -9,8 +9,9 @@ $inserisciSottoconto = InserisciSottoconto::getInstance();
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codsottoconto"] = $_POST["codsottoconto"];
-	$_SESSION["dessottoconto"] = $_POST["dessottoconto"];
+	$_SESSION["codsottoconto"] = $_REQUEST["codsottoconto"];
+	$_SESSION["dessottoconto"] = $_REQUEST["dessottoconto"];
+	$_SESSION["indgruppo"] = $_REQUEST["indgruppo_new"];
 
 	$inserisciSottoconto->go();
 }

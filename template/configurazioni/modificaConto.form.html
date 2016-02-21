@@ -74,9 +74,10 @@ function setNumeroRigaBilancio(nn) {
 							<table class='result'>
 							    <thead>
 									<tr>
-										<th width='100' align='center'>Sottoconto</th>
-										<th width='400' align='left'>Descrizione</th>
-										<th width='16'>&nbsp;</th>
+										<th width='76' align='center'>Sottoconto</th>
+										<th width='370' align='left'>Descrizione</th>
+										<th width='82' align='center'>Gruppo</th>
+										<th width='50'>&nbsp;</th>
 									</tr>
 							    </thead>
 							</table>
@@ -111,7 +112,18 @@ function setNumeroRigaBilancio(nn) {
 				<tr>
 					<td>%ml.dessottoconto% :</td>
 					<td class="tooltip"><input id="dessottoconto" name="dessottoconto" size="50" maxlength="100" ></td>
-				</tr>					
+				</tr>
+				<tr><td><br></td></tr>		
+				<tr>
+					<td colspan="2" align="center">
+						<div class="radioset" >
+							<input type="radio" id="NS_new" name="indgruppo_new" value="NS" checked><label for="NS_new">%ml.ns%</label>
+							<input type="radio" id="CF_new" name="indgruppo_new" value="CF" ><label for="CF_new">%ml.cf%</label>
+							<input type="radio" id="CV_new" name="indgruppo_new" value="CV" ><label for="CV_new">%ml.cv%</label>
+							<input type="radio" id="RC_new" name="indgruppo_new" value="RC" ><label for="RC_new">%ml.rc%</label>
+						</div>
+					</td>
+				</tr>			
 			</tbody>
 		</table> 	 
   </form>
@@ -120,9 +132,20 @@ function setNumeroRigaBilancio(nn) {
 <div id="cancella-sottoconto-modificaconto-form" title="Cancella Sottoconto"> 
 	<form method="post" id="cancellaSottoconto" action="../configurazioni/cancellaSottocontoFacade.class.php?modo=go" >
 		<p>Elimino il sottoconto ?</p>
-		<input type="hidden" id="codconto" name="codconto">
-		<input type="hidden" id="codsottoconto" name="codsottoconto">
+		<input type="hidden" id="codsottoconto_del" name="codsottoconto_del">
 	</form>
 </div>
 
+<div id="modifica-sottoconto-modificagruppo-form" title="Gruppo Sottoconto"> 
+	<form method="post" id="modificaGruppoSottoconto" action="../configurazioni/modificaGruppoSottocontoFacade.class.php?modo=go" >
+		<input type="text" id="codconto" name="codconto" readonly value="%codconto%">
+		<input type="text" id="codsottoconto" readonly name="codsottoconto">
+		<div class="radioset" >
+			<input type="radio" id="NS" name="indgruppo" value="NS" ><label for="NS">%ml.ns%</label>
+			<input type="radio" id="CF" name="indgruppo" value="CF" ><label for="CF">%ml.cf%</label>
+			<input type="radio" id="CV" name="indgruppo" value="CV" ><label for="CV">%ml.cv%</label>
+			<input type="radio" id="RC" name="indgruppo" value="RC" ><label for="RC">%ml.rc%</label>
+		</div>
+	</form>
+</div>
 <br/>

@@ -14,6 +14,7 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 	public static $queryLeggiConto = "/configurazioni/leggiConto.sql";
 	public static $queryLeggiSottoconti = "/configurazioni/leggiSottoconti.sql";
 	public static $queryUpdateConto = "/configurazioni/updateConto.sql";
+	public static $queryUpdateSottoConto = "/configurazioni/updateSottoconto.sql";
 	public static $queryDeleteSottoconto = "/configurazioni/deleteSottoconto.sql";
 	public static $queryDeleteConto = "/configurazioni/deleteConto.sql";
 	public static $queryCreaCausale = "/configurazioni/creaCausale.sql";
@@ -157,6 +158,27 @@ abstract class ConfigurazioniAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Questo metodo permette di aggiornare gli attributi di un sottoconto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $conto
+	 * @param unknown $sottoconto
+	 */
+	public function updateSottoconto($db, $utility, $codconto, $codsottoconto, $indgruppo) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto),
+				'%ind_gruppo%' => trim($indgruppo)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateSottoConto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+	
 	/**
 	 * Questo metodo cancella un sottoconto
 	 * @param unknown $db

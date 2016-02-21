@@ -9,7 +9,7 @@ $cancellaSottoconto = CancellaSottoconto::getInstance();
 
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["codsottoconto"] = $_POST["codsottoconto"];
+	$_SESSION["codsottoconto"] = $_REQUEST["codsottoconto_del"];
 	$cancellaSottoconto->start();
 }
 

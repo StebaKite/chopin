@@ -90,11 +90,20 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 			if ($row["totale_registrazioni_sottoconto"] == 0) {
 				$bottoneCancella = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
 			}
+
+			if ($row["ind_gruppo"] == "") $indGruppo = "&ndash;&ndash;&ndash;";			
+			elseif ($row["ind_gruppo"] == "NS") $indGruppo = "&ndash;&ndash;&ndash;";
+			elseif ($row["ind_gruppo"] == "CF") $indGruppo = "Costi Fissi";
+			elseif ($row["ind_gruppo"] == "CV") $indGruppo = "Costi Variabili";
+			elseif ($row["ind_gruppo"] == "RC") $indGruppo = "Ricavi";
+
 			
 			$tbodySottoconti = $tbodySottoconti .
 			"<tr id='" . $row["cod_conto"] . "'>" .
-			"<td width='110' align='center'>" . $row["cod_sottoconto"] . "</td>" .
-			"<td width='408' align='left'>" . $row["des_sottoconto"] . "</td>" .			
+			"<td width='88' align='center'>" . $row["cod_sottoconto"] . "</td>" .
+			"<td width='378' align='left'>" . $row["des_sottoconto"] . "</td>" .			
+			"<td width='90' align='center'>" . $indGruppo . "</td>" .			
+			"<td width='25' id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(" . '"' . $row["ind_gruppo"] . '","' . $row["cod_sottoconto"] . '"' . ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>" .
 			$bottoneCancella .
 			"</tr>";
 		}

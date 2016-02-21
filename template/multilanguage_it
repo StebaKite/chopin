@@ -51,6 +51,10 @@ corris = Corrispettivi
 creaFat = Crea fattura
 contributo = Contributo
 vendita = Vendita
+ns = Nessuno
+cf = Costi Fissi
+cv = Costi Variabili
+rc = Ricavi
 ;
 ; Tips ---------------------------------
 ;

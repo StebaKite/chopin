@@ -418,6 +418,27 @@ $( "#cancella-cliente-form" ).dialog({
 	]
 });
 
+//Modifica conto : modifica gruppo sottoconto
+$( "#modifica-sottoconto-modificagruppo-form" ).dialog({
+	autoOpen: false,
+	width: 360,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+         $("#modificaGruppoSottoconto").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 //Modifica conto : cancella sottoconto
 $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
@@ -443,7 +464,7 @@ $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
 	width: 600,
-	height: 200,
+	height: 250,
 	buttons: [
 		{
 			text: "Ok",
@@ -1158,9 +1179,16 @@ function cancellaSottocontoPagina(codsottoconto) {
 	}
 }
 
+function modificaGruppoSottoconto(indgruppo,codsottoconto) {
+		
+	$( "#codsottoconto" ).val(codsottoconto);
+	$( "#" + indgruppo).prop('checked', true).button("refresh");
+	$( "#modifica-sottoconto-modificagruppo-form" ).dialog( "open" );
+}
+
 function cancellaSottoconto(codsottoconto) {
 	
-	$( "#codsottoconto" ).val(codsottoconto);
+	$( "#codsottoconto_del" ).val(codsottoconto);
 	$( "#cancella-sottoconto-modificaconto-form" ).dialog( "open" );
 }
 

@@ -3,6 +3,7 @@ SELECT
 	sottoconto.cod_sottoconto,
 	sottoconto.des_sottoconto,
 	sottoconto.dat_creazione_sottoconto,
+	sottoconto.ind_gruppo,
 	coalesce(t1.totale, 0) as totale_registrazioni_sottoconto
 FROM contabilita.sottoconto as sottoconto
 	LEFT OUTER JOIN

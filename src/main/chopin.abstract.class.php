@@ -567,13 +567,14 @@ abstract class ChopinAbstract {
 	 * @param unknown $dessottoconto
 	 * @return unknown
 	 */
-	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto) {
+	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto, $indgruppo) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_conto%' => trim($codconto),
 				'%cod_sottoconto%' => trim($codsottoconto),
-				'%des_sottoconto%' => trim($dessottoconto)
+				'%des_sottoconto%' => trim($dessottoconto),
+				'%ind_gruppo%' => trim($indgruppo)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSottoconto;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
