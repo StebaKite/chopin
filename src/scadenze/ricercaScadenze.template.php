@@ -127,6 +127,12 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				if (trim($row['tip_addebito']) != "") {$tipaddebito = trim($row['tip_addebito']);}
 				else {$tipaddebito = "&ndash;&ndash;&ndash;";}
 
+				if (trim($row['sta_scadenza']) == "  ") {
+					$stascadenza = "&ndash;&ndash;&ndash;";
+					$tdclass = "class='ko'";
+					$bottoneModificaPagamento = "";
+				}
+				
 				if (trim($row['sta_scadenza']) == "00") {
 					$stascadenza = "Da Pagare";
 					$tdclass = "class='ko'";
