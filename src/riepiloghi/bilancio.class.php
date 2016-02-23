@@ -15,8 +15,11 @@ class Bilancio extends RiepiloghiAbstract {
 	public static $queryAttivo = "/riepiloghi/attivo.sql";
 	public static $queryPassivo = "/riepiloghi/passivo.sql";
 	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";	
+	public static $queryCostiMargineContribuzioneConSaldi = "/riepiloghi/costiMargineContribuzioneConSaldi.sql";
 	public static $queryRicaviMargineContribuzione = "/riepiloghi/ricaviMargineContribuzione.sql";
+	public static $queryRicaviMargineContribuzioneConSaldi = "/riepiloghi/ricaviMargineContribuzioneConSaldi.sql";
 	public static $queryCostiFissi = "/riepiloghi/costiFissi.sql";
+	public static $queryCostiFissiConSaldi = "/riepiloghi/costiFissiConSaldi.sql";
 	
 	function __construct() {
 
@@ -184,6 +187,7 @@ class Bilancio extends RiepiloghiAbstract {
 					
 					if ($this->ricercaAttivo($utility, $db, $replace)) {
 						if ($this->ricercaPassivo($utility, $db, $replace)) {
+							
 							if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 								if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
 									if ($this->ricercaCostiFissi($utility, $db, $replace)) {
@@ -300,7 +304,14 @@ class Bilancio extends RiepiloghiAbstract {
 	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzione;
+
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzioneConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzione;
+		}
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
@@ -316,7 +327,14 @@ class Bilancio extends RiepiloghiAbstract {
 	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviMargineContribuzione;
+
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviMargineContribuzioneConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviMargineContribuzione;
+		}
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
@@ -332,7 +350,14 @@ class Bilancio extends RiepiloghiAbstract {
 	public function ricercaCostiFissi($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCostiFissi;
+
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiFissiConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiFissi;
+		}
+		
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
