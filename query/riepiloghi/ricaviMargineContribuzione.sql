@@ -27,7 +27,6 @@ SELECT
 	  WHERE t4.dat_registrazione BETWEEN '%datareg_da%' AND '%datareg_a%'
 	  AND   t4.cod_negozio IN (%codnegozio%)
 	  AND   t3.cat_conto = 'Conto Economico'
-	  AND   t3.cod_conto in ('400')
 	  AND   t3.tip_conto = 'Avere'
 	  
 	GROUP BY t2.ind_dareavere
