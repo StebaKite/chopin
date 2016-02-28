@@ -1,6 +1,6 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'riepiloghi.abstract.class.php';
 
 abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 
@@ -187,8 +187,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<table class='result'>" .
 		"	<thead>" .
 		"		<th width='300'>%ml.desconto%</th>" .
-		"		<th width='550'>%ml.dessottoconto%</th>" .
-		"		<th width='100'>%ml.importo%</th>" .
+		"		<th width='100'>%ml.brembate%</th>" .
+		"		<th width='100'>%ml.trezzo%</th>" .
+		"		<th width='100'>%ml.villa%</th>" .
+		"		<th width='100'>%ml.totale%</th>" .
 		"	</thead>" .
 		"</table>" .
 		"<div class='scroll-bilancio'>" .
@@ -198,89 +200,97 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$numReg = 0;
 		$totaleCosti = 0;
 		$desconto_break = "";
-		$ind_visibilita_sottoconti_break = "";
-		$totaleConto = 0;
-			
-		$totaleCostiVariabili = 0;
+		
+		$totaleConto_Bre = 0;
+		$totaleConto_Tre = 0;
+		$totaleConto_Vil = 0;
+		
+		$totale_Bre = 0;
+		$totale_Tre = 0;
+		$totale_Vil = 0;
 			
 		foreach(pg_fetch_all($dati) as $row) {
 	
-			$totaleSottoconto = trim($row['tot_conto']);
-			$totaleCosti += $totaleSottoconto;
-	
-			$numReg ++;
+			$totaleConto = trim($row['tot_conto']);
+			$totaleCosti += $totaleConto;
+					
+			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
+			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
+			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
 				
-			$importo = number_format($totaleSottoconto, 2, ',', '.');
+			$numReg ++;
 	
 			if (trim($row['des_conto']) != $desconto_break ) {
 	
 				if ($desconto_break != "") {
-	
-					$totconto = number_format($totaleConto, 2, ',', '.');
-	
-					if ($ind_visibilita_sottoconti_break == 'S') {
-						$risultato_costi .=
-						"<tr>" .
-						"	<td class='mark' colspan='2' align='right'></td>" .
-						"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
-						"</tr>";
-					}
-					else {
-						$risultato_costi .=
-						"<tr>" .
-						"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
-						"	<td class='enlarge' width='558' align='left'></td>" .
-						"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
-						"</tr>";
-					}
-	
-					$totaleConto = 0;
-				}
-	
-				if ($row['ind_visibilita_sottoconti'] == 'S') {
+
+					$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+
+					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+					$tot = ($totale > 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					
 					$risultato_costi .=
 					"<tr>" .
-					"	<td class='enlarge' width='308' align='left'>" . trim($row['des_conto']) . "</td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
+					"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+					"	<td width='108' align='right'>" . $totBre . "</td>" .
+					"	<td width='108' align='right'>" . $totTre . "</td>" .
+					"	<td width='108' align='right'>" . $totVil . "</td>" .
+					"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
-				}
-	
+					
+					$totaleConto_Bre = 0;
+					$totaleConto_Tre = 0;
+					$totaleConto_Vil = 0;
+				}	
+				
 				$desconto_break = trim($row['des_conto']);
-				$ind_visibilita_sottoconti_break = $row['ind_visibilita_sottoconti'];
 			}
-			else {
-	
-				if ($row['ind_visibilita_sottoconti'] == 'S') {
-					$risultato_costi .=
-					"<tr>" .
-					"	<td width='308' align='left'></td>" .
-					"	<td width='558' align='left'>" . trim($row['des_sottoconto']) . "</td>" .
-					"	<td width='108' align='right'>&euro; " . $importo . "</td>" .
-					"</tr>";
-				}
-			}
-			$totaleConto += $totaleSottoconto;
+			
+			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
+			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
+			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
 		}
-	
-		$totconto = number_format($totaleConto, 2, ',', '.');
-	
-		if ($ind_visibilita_sottoconti_break == 'S') {
-			$risultato_costi .=
-			"<tr>" .
-			"	<td class='mark' colspan='2' align='right'></td>" .
-			"	<td class='mark' width='108' align='right'>&euro; " . $totconto . "</td>" .
-			"</tr>";
-		}
-		else {
-			$risultato_costi .=
-			"<tr>" .
-			"	<td class='enlarge' width='308' align='left'>" . $desconto_break . "</td>" .
-			"	<td class='enlarge' width='558' align='left'></td>" .
-			"	<td class='enlarge' width='108' align='right'>&euro; " . $totconto . "</td>" .
-			"</tr>";
-		}
-	
+		
+		$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+		$tot = ($totale > 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$risultato_costi .=
+		"<tr>" .
+		"	<td width='308' align='left'>" . $desconto_break . "</td>" .
+		"	<td width='108' align='right'>" . $totBre . "</td>" .
+		"	<td width='108' align='right'>" . $totTre . "</td>" .
+		"	<td width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"</tr>";
+
+		/**
+		 * Totale complessivo di colonna
+		 */
+
+		$totBre = ($totale_Bre != 0) ? number_format($totale_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totale_Tre != 0) ? number_format($totale_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totale_Vil != 0) ? number_format($totale_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
+		$tot = ($totale > 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+
+		$risultato_costi .=
+		"<tr>" .
+		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.costi%</td>" .
+		"	<td class='enlarge' width='108' align='right'>" . $totBre . "</td>" .
+		"	<td class='enlarge' width='108' align='right'>" . $totTre . "</td>" .
+		"	<td class='enlarge' width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"</tr>";
+		
+		
+		
 		$_SESSION['numCostiTrovati'] = $numReg;
 		$risultato_costi = $risultato_costi . "</tbody>";
 	

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghiComparati.abstract.class.php';
 
-abstract class RiepilogoNegoziTemplate extends RiepiloghiAbstract {
+class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 
 	private static $_instance = null;
 
@@ -49,6 +49,8 @@ abstract class RiepilogoNegoziTemplate extends RiepiloghiAbstract {
 		$risultato_costi = "";
 		$risultato_ricavi = "";
 		$risultato_esercizio = "";
+		$mct = "";
+		$bep = "";
 		$tabs = "";
 
 		if (isset($_SESSION["costiComparati"]))
@@ -82,9 +84,10 @@ abstract class RiepilogoNegoziTemplate extends RiepiloghiAbstract {
 			if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 			
-			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti))) . "</a></li>";
-			$tabs .= "<li><a href='#tabs-6'>MCT</a></li>";
-			$tabs .= "<li><a href='#tabs-7'>BEP</a></li>";
+			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</a></li>";
+
+			if ($mct != "") { $tabs .= "<li><a href='#tabs-6'>MCT</a></li>"; }
+			if ($bep != "") { $tabs .= "<li><a href='#tabs-7'>BEP</a></li>"; }
 			$tabs .= "</ul>";
 			
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -92,9 +95,11 @@ abstract class RiepilogoNegoziTemplate extends RiepiloghiAbstract {
 			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
-			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti)), abs($totaleRicavi), abs($totaleCosti)) . "</div>";
-			$tabs .= "<div id='tabs-6'>" . $mct . "</div>";
-			$tabs .= "<div id='tabs-7'>" . $bep . "</div>";
+			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti'])), abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti'])) . "</div>";
+			
+			if ($mct != "") { $tabs .= "<div id='tabs-6'>" . $mct . "</div>"; }
+			if ($bep != "") { $tabs .= "<div id='tabs-7'>" . $bep . "</div>"; }
+			
 			$tabs .= "</div>";				
 		}
 		

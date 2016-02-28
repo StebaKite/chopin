@@ -5,11 +5,11 @@ require_once 'riepilogoNegozi.class.php';
 
 session_start();
 
-$bilancio = Bilancio::getInstance();
+$riepilogoNegozi = RiepilogoNegozi::getInstance();
 
 if ($_GET["modo"] == "start") {
 	
-	$bilancio->start();	
+	$riepilogoNegozi->start();	
 }
 if ($_GET["modo"] == "go") {
 
@@ -18,7 +18,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["saldiInclusi"] = $_REQUEST["saldiInclusi"];
 	$_SESSION["soloContoEconomico"] = $_REQUEST["soloContoEconomico"];
 	
-	$bilancio->go();
+	$riepilogoNegozi->go();
 }
 
 ?>

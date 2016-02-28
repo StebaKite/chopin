@@ -1,8 +1,8 @@
 <?php
 
-require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghiComparati.abstract.class.php';
 
-class RiepilogoNegozi extends RiepiloghiAbstract {
+class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 
 	private static $_instance = null;
 	
@@ -55,6 +55,7 @@ class RiepilogoNegozi extends RiepiloghiAbstract {
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["catconto"] = "Conto Economico";
 		$_SESSION["soloContoEconomico"] = "N";
+		$_SESSION["saldiInclusi"] = "N";
 	
 		unset($_SESSION["costiComparati"]);
 		unset($_SESSION["ricaviComparati"]);
@@ -94,6 +95,8 @@ class RiepilogoNegozi extends RiepiloghiAbstract {
 				include(self::$testata);
 				$riepilogoNegoziTemplate->displayPagina();
 		
+				$totVoci = $_SESSION['numCostiTrovati'];
+				
 				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);		
 		
@@ -151,11 +154,8 @@ class RiepilogoNegozi extends RiepiloghiAbstract {
 	
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%catconto%' => $_SESSION["catconto_sel"]
+				'%datareg_a%' => $_SESSION["datareg_a"]
 		);
-	
-		error_log("Estrazione bilancio esercizio : " . $_SESSION["datareg_da"] . " - " . $_SESSION["datareg_a"]);
 	
 		$db = Database::getInstance();
 	
@@ -167,7 +167,6 @@ class RiepilogoNegozi extends RiepiloghiAbstract {
 						if ($this->ricercaPassivoComparati($utility, $db, $replace)) {
 
 							$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-							return TRUE;
 								
 							if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 								if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
