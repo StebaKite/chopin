@@ -1,0 +1,46 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="td">%ml.da% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+						<td class="td">%ml.a% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="saldiInclusi" name="saldiInclusi" value="S" %saldiInclusichecked% ><label for="saldiInclusi">%ml.saldiInclusi%</label>
+								<input type="radio" id="saldiEsclusi" name="saldiInclusi" value="N" %saldiEsclusichecked% ><label for="saldiEsclusi">%ml.saldiEsclusi%</label>
+							</div>
+						</td>		
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="tuttiConti" name="soloContoEconomico" value="N" %tuttiContichecked% ><label for="tuttiConti">%ml.tutti%</label>
+								<input type="radio" id="soloContoEconomico" name="soloContoEconomico" value="S" %soloContoEconomicochecked% ><label for="soloContoEconomico">%ml.soloContoEconomico%</label>
+							</div>
+						</td>												
+						<td width="55"></td>						
+						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		%tabs%
+		<br>
+		<form class="tooltip" method="post" id="estraipdf" action="../riepiloghi/estraiPdfRiepilogoNegoziFacade.class.php?modo=start" >
+			%bottoneEstraiPdf%
+			<input type="hidden" name="datareg_da" value='%datareg_da%' >
+			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="catconto_sel" value='%catconto_sel%' >
+			<input type="hidden" name="saldiInclusi" value='%saldiInclusi%' >
+			<input type="hidden" name="soloContoEconomico" value='%soloContoEconomico%' >
+		</form>
