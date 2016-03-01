@@ -17,6 +17,9 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public static $queryRicaviComparatiConSaldi = "/riepiloghi/ricaviComparatiConSaldi.sql";
 	public static $queryAttivoComparati = "/riepiloghi/attivoComparati.sql";
 	public static $queryPassivoComparati = "/riepiloghi/passivoComparati.sql";
+	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";
+	public static $queryCostiMargineContribuzioneConSaldi = "/riepiloghi/costiMargineContribuzioneConSaldi.sql";
+	
 	
 
 	function __construct() {
@@ -164,7 +167,26 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	}
 
 	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {
-		return true;
+		
+		$array = $utility->getConfig();
+		
+		if ($_SESSION['saldiInclusi'] == "S") {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzioneConSaldi;
+		}
+		else {
+			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzione;
+		}
+		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['costoVariabile'] = $result;
+		}
+		else {
+			unset($_SESSION['costoVariabile']);
+		}
+		return $result;
 	}
 	
 	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
