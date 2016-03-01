@@ -95,7 +95,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
-			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti'])), abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti'])) . "</div>";
+			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</div>";
 			
 			if ($mct != "") { $tabs .= "<div id='tabs-6'>" . $mct . "</div>"; }
 			if ($bep != "") { $tabs .= "<div id='tabs-7'>" . $bep . "</div>"; }
@@ -141,11 +141,20 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 		return $nomeTabTotali;
 	}
 
-	public function tabellaTotali($tipoTotale, $totaleRicavi, $totaleCosti) {
+	public function tabellaTotali($tipoTotale) {
 	
 		if ($tipoTotale == "Utile") {
 			
-			$risultato_esercizio = "<table class='result'><tbody>";
+			$risultato_esercizio = 
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>&nbsp;</th>" .
+			"		<th width='100'>%ml.brembate%</th>" .
+			"		<th width='100'>%ml.trezzo%</th>" .
+			"		<th width='100'>%ml.villa%</th>" .
+			"		<th width='100'>%ml.totale%</th>" .
+			"	</thead>" .
+			"<tbody>";
 
 			$risultato_esercizio .=
 			"<tr height='30'>" .
@@ -171,26 +180,48 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 		}
 		elseif ($tipoTotale == "Perdita") {
 			
-			$risultato_esercizio = "<table class='result'><tbody>";
+			$risultato_esercizio = 
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>&nbsp;</th>" .
+			"		<th width='100'>%ml.brembate%</th>" .
+			"		<th width='100'>%ml.trezzo%</th>" .
+			"		<th width='100'>%ml.villa%</th>" .
+			"		<th width='100'>%ml.totale%</th>" .
+			"	</thead>" .
+			"<tbody>";
 				
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Bre"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Tre"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Vil"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi"], 2, ',', '.') . "</td>" .
 			"</tr>";
 
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Bre"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Tre"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Vil"], 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti"], 2, ',', '.') . "</td>" .
 			"</tr>";
 				
-			$perdita = $totaleRicavi - $totaleCosti;
-				
+			$perdita_Bre = $_SESSION["totaleRicavi_Bre"] - $_SESSION["totaleCosti_Bre"];
+			$perdita_Tre = $_SESSION["totaleRicavi_Tre"] - $_SESSION["totaleCosti_Tre"];
+			$perdita_Vil = $_SESSION["totaleRicavi_Vil"] - $_SESSION["totaleCosti_Vil"];
+			$perdita = $perdita_Bre + $perdita_Tre + $perdita_Vil;   
+			
+			
 			$risultato_esercizio .=
 			"<tr height='30'>" .
 			"	<td width='308' align='left' class='mark'>Perdita del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>&euro; " . number_format($perdita, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Bre, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Tre, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Vil, 2, ',', '.') . "</td>" .
+			"	<td width='108' align='right' class='mark'>" . number_format($perdita, 2, ',', '.') . "</td>" .
 			"</tr>";
 				
 			$risultato_esercizio .= "</tbody></table>" ;
