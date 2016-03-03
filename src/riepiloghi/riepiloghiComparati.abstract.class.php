@@ -17,8 +17,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public static $queryRicaviComparatiConSaldi = "/riepiloghi/ricaviComparatiConSaldi.sql";
 	public static $queryAttivoComparati = "/riepiloghi/attivoComparati.sql";
 	public static $queryPassivoComparati = "/riepiloghi/passivoComparati.sql";
-	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";
-	public static $queryCostiMargineContribuzioneConSaldi = "/riepiloghi/costiMargineContribuzioneConSaldi.sql";
+// 	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";
+// 	public static $queryCostiMargineContribuzioneConSaldi = "/riepiloghi/costiMargineContribuzioneConSaldi.sql";
 	
 	
 
@@ -166,36 +166,17 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		return $result;
 	}
 
-	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {
-		
-		$array = $utility->getConfig();
-		
-		if ($_SESSION['saldiInclusi'] == "S") {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzioneConSaldi;
-		}
-		else {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiMargineContribuzione;
-		}
-		
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['costoVariabile'] = $result;
-		}
-		else {
-			unset($_SESSION['costoVariabile']);
-		}
-		return $result;
-	}
+// 	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {	
+// 		return true;
+// 	}
 	
-	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
-		return true;
-	}
+// 	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
+// 		return true;
+// 	}
 	
-	public function ricercaCostiFissi($utility, $db, $replace) {		
-		return true;
-	}
+// 	public function ricercaCostiFissi($utility, $db, $replace) {		
+// 		return true;
+// 	}
 		
 	/**
 	 * Questo metodo costruisce una tabella html dei costi comparati
@@ -728,43 +709,93 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $ricavoVendita
 	 * @param unknown $costoFisso
 	 */
-	public function makeTableMargineContribuzione($costoVariabile, $ricavoVendita, $costoFisso) {
+	public function makeTableMargineContribuzione() {
 			
 		$margineContribuzione = "";
+
+		// Villa ---------------------------------------------------------------------
 		
-		foreach(pg_fetch_all($costoVariabile) as $row) {
-			$totaleCostiVariabili = trim($row['totalecostovariabile']);
+		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
+			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
 		}
 		
-		foreach(pg_fetch_all($ricavoVendita) as $row) {
-			$totaleRicavi = trim($row['totalericavovendita']);
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiVIL']) as $row) {
+			$totaleRicaviVIL = trim($row['totalericavovendita']);
 		}
 		
-		foreach(pg_fetch_all($costoFisso) as $row) {
-			$totaleCostiFissi = trim($row['totalecostofisso']);
+		foreach(pg_fetch_all($_SESSION['costoFissoVIL']) as $row) {
+			$totaleCostiFissiVIL = trim($row['totalecostofisso']);
 		}
 		
-		$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
-		$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
+		$margineTotaleVIL = abs($totaleRicaviVIL) - $totaleCostiVariabiliVIL;
+		$marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
+
+		// Trezzo ---------------------------------------------------------------------
+		
+		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
+			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiTRE']) as $row) {
+			$totaleRicaviTRE = trim($row['totalericavovendita']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['costoFissoTRE']) as $row) {
+			$totaleCostiFissiTRE = trim($row['totalecostofisso']);
+		}
+		
+		$margineTotaleTRE = abs($totaleRicaviTRE) - $totaleCostiVariabiliTRE;
+		$marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
+
+		// Brembate ---------------------------------------------------------------------
+		
+		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
+			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiBRE']) as $row) {
+			$totaleRicaviBRE = trim($row['totalericavovendita']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['costoFissoBRE']) as $row) {
+			$totaleCostiFissiBRE = trim($row['totalecostofisso']);
+		}
+		
+		$margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
+		$marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
 		
 		$margineContribuzione =
 		"<table class='result'>" .
+		"	<thead>" .
+		"		<th width='300'>&nbsp;</th>" .
+		"		<th width='100'>%ml.villa%</th>" .
+		"		<th width='100'>%ml.trezzo%</th>" .
+		"		<th width='100'>%ml.brembate%</th>" .
+		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Fatturato</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Margine totale</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Margine percentuale</td>" .
-		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentuale, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeBRE, 2, ',', '.') . " &#37;</td>" .
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
@@ -778,22 +809,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $ricavoVenditaProdotti
 	 * @param unknown $costoFisso
 	 */
-	public function makeTableBep($costoVariabile, $ricavoVenditaProdotti, $costoFisso) {
+	public function makeTableBep() {
 
-		$tabellaBep = "";
-		
-		foreach(pg_fetch_all($costoVariabile) as $row) {
-			$totaleCostiVariabili = trim($row['totalecostovariabile']);
-		}
-		
-		foreach(pg_fetch_all($ricavoVendita) as $row) {
-			$totaleRicavi = trim($row['totalericavovendita']);
-		}
-		
-		foreach(pg_fetch_all($costoFisso) as $row) {
-			$totaleCostiFissi = trim($row['totalecostofisso']);
-		}
-		
 		/**
 		 * Calcolo del Break Eaven Point
 		 *
@@ -816,31 +833,97 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		 *
 		 */
 		
-		$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
-		$bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
-			
+		$tabellaBep = "";
+
+		// Villa ---------------------------------------------------------------------
+		
+		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
+			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiVIL']) as $row) {
+			$totaleRicaviVIL = trim($row['totalericavovendita']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['costoFissoVIL']) as $row) {
+			$totaleCostiFissiVIL = trim($row['totalecostofisso']);
+		}
+		
+		$incidenzaCostiVariabiliSulFatturatoVIL = 1 - ($totaleCostiVariabiliVIL / abs($totaleRicaviVIL));
+		$bepVIL = $totaleCostiFissiVIL / round($incidenzaCostiVariabiliSulFatturatoVIL, 2);
+
+		// Trezzo ---------------------------------------------------------------------
+		
+		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
+			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiTRE']) as $row) {
+			$totaleRicaviTRE = trim($row['totalericavovendita']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['costoFissoTRE']) as $row) {
+			$totaleCostiFissiTRE = trim($row['totalecostofisso']);
+		}
+		
+		$incidenzaCostiVariabiliSulFatturatoTRE = 1 - ($totaleCostiVariabiliTRE / abs($totaleRicaviTRE));
+		$bepTRE = $totaleCostiFissiTRE / round($incidenzaCostiVariabiliSulFatturatoTRE, 2);
+
+		// Brembate ---------------------------------------------------------------------
+		
+		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
+			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiBRE']) as $row) {
+			$totaleRicaviBRE = trim($row['totalericavovendita']);
+		}
+		
+		foreach(pg_fetch_all($_SESSION['costoFissoBRE']) as $row) {
+			$totaleCostiFissiBRE = trim($row['totalecostofisso']);
+		}
+		
+		$incidenzaCostiVariabiliSulFatturatoBRE = 1 - ($totaleCostiVariabiliBRE / abs($totaleRicaviBRE));
+		$bepBRE = $totaleCostiFissiBRE / round($incidenzaCostiVariabiliSulFatturatoBRE, 2);
+		
 		$tabellaBep =
 		"<table class='result'>" .
+		"	<thead>" .
+		"		<th width='300'>&nbsp;</th>" .
+		"		<th width='100'>%ml.villa%</th>" .
+		"		<th width='100'>%ml.trezzo%</th>" .
+		"		<th width='100'>%ml.brembate%</th>" .
+		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Fatturato</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Costi fissi</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissi), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
-		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturato, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='mark'>BEP</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bep, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepTRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;

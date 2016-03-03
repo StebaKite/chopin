@@ -65,10 +65,8 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 		if (isset($_SESSION["passivoComparati"]))
 			$risultato_passivo = $this->makeTablePassivoComparati($array, $_SESSION["passivoComparati"]);
 					
-		if (isset($_SESSION["costoVariabile"]) and isset($_SESSION["ricavoVenditaProdotti"]) and isset($_SESSION["costoFisso"])) {
-			$mct = $this->makeTableMargineContribuzione($_SESSION['costoVariabile'], $_SESSION['ricavoVenditaProdotti'], $_SESSION['costoFisso']);
-			$bep = $this->makeTableBep($_SESSION['costoVariabile'], $_SESSION['ricavoVenditaProdotti'], $_SESSION['costoFisso']);
-		}			
+		$mct = $this->makeTableMargineContribuzione();
+		$bep = $this->makeTableBep();
 			
 		/** ******************************************
 		 * Costruisco il box delle tabs
