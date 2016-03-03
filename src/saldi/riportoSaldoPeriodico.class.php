@@ -187,10 +187,17 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 						if ($row['tot_conto'] != 0) {
 		
 							/**
-							 * tip_conto =  1 > Dare
-							 * tip_conto = -1 > Avere
+							 * L'attribuzione del segno tiene in considerazione sia il tipo di conto sia l'importo del saldo.
+							 * Ad esempio: la cassa è un conto in Dare ma se il saldo risulta negativo viene riportato in Avere
+							 * Lo stesso per un conto in Avere con un seldo maggiore di zero, viene riportato in Dare
 							 */
-							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+													
+							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == 1)) $dareAvere = "D";	
+							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == 1)) $dareAvere = "A";
+
+							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == -1)) $dareAvere = "D";
+							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == -1)) $dareAvere = "A";
+							
 							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
 						}
 					}
