@@ -500,7 +500,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			 */
 			$_SESSION['totaleRicavi'] = $totaleRicavi;
 		}
-		return $totaleRicavi;
+		return $risultato_ricavi;
 	}
 	
 	public function makeAttivoTable() {
@@ -616,7 +616,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			 */
 			$_SESSION['totaleAttivo'] = $totaleAttivo;
 		}
-		return $totaleAttivo;
+		return $risultato_attivo;
 	}
 	
 	public function makePassivoTable() {
@@ -732,7 +732,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			 */
 			$_SESSION['totalePassivo'] = $totalePassivo;
 		}
-		return $totalePassivo;
+		return $risultato_passivo;
 	}
 	
 	public function makeBepTable() {
