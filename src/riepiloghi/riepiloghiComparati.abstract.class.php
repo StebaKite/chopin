@@ -930,8 +930,155 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		return $tabellaBep;		
 	}
+	/**
+	 * Questo metodo preleva i costi variabili di ciascun negozio
+	 * @param unknown $utility
+	 * @param unknown $db
+	 */
+	public function ricercaCostiVariabiliNegozi($utility, $db) {
 	
+		// Villa -----------------------------------------------------
 	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'VIL'"
+		);
+	
+		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['costoVariabile'])) {
+				$_SESSION['costoVariabileVIL'] = $_SESSION['costoVariabile'];
+			}
+		}
+	
+		// Trezzo ----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'TRE'"
+		);
+	
+		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['costoVariabile'])) {
+				$_SESSION['costoVariabileTRE'] = $_SESSION['costoVariabile'];
+			}
+		}
+	
+		// Brembate -------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'BRE'"
+		);
+	
+		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['costoVariabile'])) {
+				$_SESSION['costoVariabileBRE'] = $_SESSION['costoVariabile'];
+			}
+		}
+	}
+	
+	/**
+	 * Questo metodo preleva i costi fissi di ciascun negozio
+	 * @param unknown $utility
+	 * @param unknown $db
+	 */
+	public function ricercaCostiFissiNegozi($utility, $db) {
+	
+		// Villa -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'VIL'"
+		);
+	
+		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+			if (isset($_SESSION['costoFisso'])) {
+				$_SESSION['costoFissoVIL'] = $_SESSION['costoFisso'];
+			}
+		}
+	
+		// Trezzo -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'TRE'"
+		);
+	
+		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+			if (isset($_SESSION['costoFisso'])) {
+				$_SESSION['costoFissoTRE'] = $_SESSION['costoFisso'];
+			}
+		}
+	
+		// Brembate -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'BRE'"
+		);
+	
+		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
+			if (isset($_SESSION['costoFisso'])) {
+				$_SESSION['costoFissoBRE'] = $_SESSION['costoFisso'];
+			}
+		}
+	}
+	
+	/**
+	 * Questo metodo preleva i ricavi di ciascun negozio
+	 * @param unknown $utility
+	 * @param unknown $db
+	 */
+	public function ricercaRicaviFissiNegozi($utility, $db) {
+	
+		// Villa -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'VIL'"
+		);
+	
+		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['ricavoVenditaProdotti'])) {
+				$_SESSION['ricavoVenditaProdottiVIL'] = $_SESSION['ricavoVenditaProdotti'];
+			}
+		}
+	
+		// Trezzo -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'TRE'"
+		);
+	
+		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['ricavoVenditaProdotti'])) {
+				$_SESSION['ricavoVenditaProdottiTRE'] = $_SESSION['ricavoVenditaProdotti'];
+			}
+		}
+	
+		// Brembate -----------------------------------------------------
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%codnegozio%' => "'BRE'"
+		);
+	
+		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
+			if (isset($_SESSION['ricavoVenditaProdotti'])) {
+				$_SESSION['ricavoVenditaProdottiBRE'] = $_SESSION['ricavoVenditaProdotti'];
+			}
+		}
+	}
 }		
 
 ?>

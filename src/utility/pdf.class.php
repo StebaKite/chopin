@@ -887,6 +887,11 @@ class Pdf extends FPDF {
 		$this->SetTextColor(0);
 	}
 
+	/**
+	 * Questo metodo crea una tabella PDF per il riepilogo negozi
+	 * @param unknown $header
+	 * @param unknown $data
+	 */
 	public function riepilogoNegoziTable($header, $data) {
 
 		// Colors, line width and bold font
@@ -998,9 +1003,10 @@ class Pdf extends FPDF {
 
 		$this->SetFillColor(224,235,255);
 		$this->SetTextColor(0);
-			
+		$fill = !$fill;
+		
 		$this->SetFont('','B',10);
-		$this->Cell($w[0],6,"Totale Costi",'LR',0,'L',$fill);
+		$this->Cell($w[0],6,"TOTALE",'LR',0,'L',$fill);
 		$this->Cell($w[1],6, $totBre,'LR',0,'R',$fill);
 		$this->Cell($w[2],6, $totTre,'LR',0,'R',$fill);
 		$this->Cell($w[3],6, $totVil,'LR',0,'R',$fill);
@@ -1009,6 +1015,61 @@ class Pdf extends FPDF {
 		
 		$this->Cell(array_sum($w),0,'','T');
 	}	
+	
+	/**
+	 * Questo metodo crea una tabella PDF del margine di contribuzione per il riepilogo negozi
+	 * @param unknown $header
+	 * @param unknown $datiMCT
+	 */
+	public function riepilogoNegoziMctTable($header, $datiMCT) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','',12);
+			
+		// Header
+		$w = array(100, 30, 30, 30);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		$this->Ln();
+		
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		
+		$fill = !$fill;	
+		$this->Cell($w[0],8,utf8_decode(trim("Fatturato")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		
+		$fill = !$fill;		
+		$this->Cell($w[0],8,utf8_decode(trim("Costi variabili")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;		
+		$this->Cell($w[0],8,utf8_decode(trim("Margine totale")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format($datiMCT["margineTotaleBRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format($datiMCT["margineTotaleTRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["margineTotaleVIL"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;		
+		$this->Cell($w[0],8,utf8_decode(trim("Margine percentuale")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format($datiMCT["marginePercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format($datiMCT["marginePercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["marginePercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
+		$this->Ln();
+
+		$this->Cell(array_sum($w),0,'','T');
+	}
 }
 
 ?>
