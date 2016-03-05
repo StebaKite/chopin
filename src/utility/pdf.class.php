@@ -886,6 +886,126 @@ class Pdf extends FPDF {
 	
 		$this->SetTextColor(0);
 	}
+
+	public function riepilogoNegoziCostiTable($header, $data) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','B',10);
+		 
+		// Header
+		$w = array(110, 20, 20, 20, 20);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		$this->Ln();
+					 
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('');
+		$this->SetFont('','',8);
+		
+		$numReg = 0;
+		$totaleCosti = 0;
+		$desconto_break = "";
+		
+		$totaleConto_Bre = 0;
+		$totaleConto_Tre = 0;
+		$totaleConto_Vil = 0;
+		
+		$totale_Bre = 0;
+		$totale_Tre = 0;
+		$totale_Vil = 0;
+
+		foreach(pg_fetch_all($data) as $row) {
+		
+			$totaleConto = trim($row['tot_conto']);
+			$totaleCosti += $totaleConto;
+				
+			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
+			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
+			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
+		
+			$numReg ++;
+		
+			if (trim($row['des_conto']) != $desconto_break ) {
+		
+				if ($desconto_break != "") {
+		
+					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+
+					$this->SetFont('','',10);
+					$fill = !$fill;
+					
+					$this->Cell($w[0],6,utf8_decode(trim($desconto_break)),'LR',0,'L',$fill);
+					$this->Cell($w[1],6, $euroDare . number_format($totVil, 2, ',', '.'),'LR',0,'R',$fill);
+					$this->Cell($w[2],6, $euroAvere . number_format($totTre, 2, ',', '.'),'LR',0,'R',$fill);
+					$this->Cell($w[3],6, EURO . number_format($totBre, 2, ',', '.'),'LR',0,'R',$fill);
+					$this->Cell($w[4],6, EURO . number_format($tot, 2, ',', '.'),'LR',0,'R',$fill);
+					$this->Ln();
+												
+					$totaleConto_Bre = 0;
+					$totaleConto_Tre = 0;
+					$totaleConto_Vil = 0;
+				}
+		
+				$desconto_break = trim($row['des_conto']);
+			}
+				
+			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
+			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
+			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
+		}
+
+		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$this->SetFont('','',10);
+		$fill = !$fill;
+			
+		$this->Cell($w[0],6,utf8_decode(trim($desconto_break)),'LR',0,'L',$fill);
+		$this->Cell($w[1],6, $euroDare . number_format($totVil, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],6, $euroAvere . number_format($totTre, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],6, EURO . number_format($totBre, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[4],6, EURO . number_format($tot, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		/**
+		 * Totale complessivo di colonna
+		 */
+		
+		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		
+		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
+		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+			
+		$this->SetFont('','B',10);
+		$this->Cell($w[0],6,"Totale Costi",'LR',0,'L',$fill);
+		$this->Cell($w[1],6, $euroDare . number_format($totVil, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],6, $euroAvere . number_format($totTre, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],6, EURO . number_format($totBre, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[4],6, EURO . number_format($tot, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		
+		$this->Cell(array_sum($w),0,'','T');
+	}	
 }
 
 ?>
