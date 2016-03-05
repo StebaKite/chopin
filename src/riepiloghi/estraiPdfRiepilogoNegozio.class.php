@@ -63,6 +63,11 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$pdf = $this->generaSezioneTabellaCostiRiepilogoNegozi($pdf, $utility, $db);
 		$pdf = $this->generaSezioneTabellaRicaviRiepilogoNegozi($pdf, $utility, $db);
 		
+		if ($_SESSION["soloContoEconomico"] == "N") {
+			$pdf = $this->generaSezioneTabellaAttivoRiepilogoNegozi($pdf, $utility, $db);
+			$pdf = $this->generaSezioneTabellaPassivoRiepilogoNegozi($pdf, $utility, $db);
+		}
+		
 		$pdf->Output();
 	}
 	
@@ -114,7 +119,43 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	
 		return $pdf;
 	}
+	
+	public function generaSezioneTabellaAttivoRiepilogoNegozi($pdf, $utility, $db) {
+
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"]
+		);
 		
+		$this->ricercaAttivoComparati($utility, $db, $replace);
+		
+		$pdf->AddPage('L');
+		
+		$header = array("Attivo", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
+		$pdf->SetFont('Arial','',9);
+		$pdf->riepilogoNegoziTable($header, $_SESSION["attivoComparati"]);
+		
+		return $pdf;
+	}
+
+	public function generaSezioneTabellaPassivoRiepilogoNegozi($pdf, $utility, $db) {
+	
+		$replace = array(
+				'%datareg_da%' => $_SESSION["datareg_da"],
+				'%datareg_a%' => $_SESSION["datareg_a"]
+		);
+	
+		$this->ricercaPassivoComparati($utility, $db, $replace);
+
+		$pdf->Cell(100,10,'','',0,'R',$fill);
+		$pdf->Ln();
+			
+		$header = array("Passivo", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
+		$pdf->SetFont('Arial','',9);
+		$pdf->riepilogoNegoziTable($header, $_SESSION["passivoComparati"]);
+	
+		return $pdf;
+	}	
 }	
 
 ?>
