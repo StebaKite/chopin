@@ -17,8 +17,6 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public static $queryRicaviComparatiConSaldi = "/riepiloghi/ricaviComparatiConSaldi.sql";
 	public static $queryAttivoComparati = "/riepiloghi/attivoComparati.sql";
 	public static $queryPassivoComparati = "/riepiloghi/passivoComparati.sql";
-// 	public static $queryCostiMargineContribuzione = "/riepiloghi/costiMargineContribuzione.sql";
-// 	public static $queryCostiMargineContribuzioneConSaldi = "/riepiloghi/costiMargineContribuzioneConSaldi.sql";
 	
 	
 
@@ -1078,7 +1076,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 				$_SESSION['ricavoVenditaProdottiBRE'] = $_SESSION['ricavoVenditaProdotti'];
 			}
 		}
-	}
+	}	
 }		
 
 ?>

@@ -1062,14 +1062,14 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;		
-		$this->Cell($w[0],8,utf8_decode(trim("MCT % vendite")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,utf8_decode(trim("MCT percentuale")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["marginePercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["marginePercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["marginePercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("MCT % acquisti")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,utf8_decode(trim("MCT totale percentuale")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["margineTotalePercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["margineTotalePercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["margineTotalePercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
@@ -1126,9 +1126,9 @@ class Pdf extends FPDF {
 
 		$fill = !$fill;
 		$this->Cell($w[0],8,utf8_decode(trim("Incidenza acquisti sul fatturato")),'LR',0,'L',$fill);
-		$this->Cell($w[1],8, number_format(abs($datiMCT["CostiVariabiliSulFatturatoBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[2],8, number_format(abs($datiMCT["CostiVariabiliSulFatturatoTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[3],8, number_format(abs($datiMCT["CostiVariabiliSulFatturatoVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[1],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1140,6 +1140,58 @@ class Pdf extends FPDF {
 
 		$this->Cell(array_sum($w),0,'','T');
 	}
+	
+	public function riepilogoNegoziTotaliTable($header, $totaliCostiRicavi) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','',12);
+			
+		// Header
+		$w = array(150, 30, 30, 30, 30);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		
+		$this->Ln();
+	
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('','',10);
+				
+		$fill = !$fill;
+		$this->Cell($w[0],8,utf8_decode(trim("Totale ricavi")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Bre"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Tre"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Vil"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->SetFont('','B',10);
+		$this->Cell($w[4],8, number_format(abs($totaliCostiRicavi["totaleRicavi"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8,utf8_decode(trim("Totale costi")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format(abs($totaliCostiRicavi["totaleCosti_Bre"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format(abs($totaliCostiRicavi["totaleCosti_Tre"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($totaliCostiRicavi["totaleCosti_Vil"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->SetFont('','B',10);
+		$this->Cell($w[4],8, number_format(abs($totaliCostiRicavi["totaleCosti"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;
+		$this->SetFont('','B',10);
+		$this->Cell($w[0],8,utf8_decode(trim($header[0] . " del periodo")),'LR',0,'L',$fill);
+		$this->Cell($w[1],8, number_format($totaliCostiRicavi["totale_Bre"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format($totaliCostiRicavi["totale_Tre"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($totaliCostiRicavi["totale_Vil"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[4],8, number_format($totaliCostiRicavi["totale"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$this->Cell(array_sum($w),0,'','T');
+	}	
 }
 
 ?>

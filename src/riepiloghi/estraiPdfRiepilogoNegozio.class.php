@@ -7,6 +7,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	private static $_instance = null;
 
 	public $_datiMCT = array();
+	public $_totaliCostiRicavi = array();
 	
 	public static $azioneEstraiPdfRiepilogoNegozio = "../riepiloghi/estraiPdfRiepilogoNegoziFacade.class.php?modo=start";
 
@@ -62,8 +63,9 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		 */
 		
 		$pdf = $this->generaSezioneIntestazione($pdf);
-		$pdf = $this->generaSezioneTabellaCosti($pdf, $utility, $db);
-		$pdf = $this->generaSezioneTabellaRicavi($pdf, $utility, $db);
+		$pdf = $this->generaSezioneTabellaCosti($pdf, $utility, $db, $this->get_totaliCostiRicavi());
+		$pdf = $this->generaSezioneTabellaRicavi($pdf, $utility, $db, $this->get_totaliCostiRicavi());
+		$pdf = $this->generaSezioneTabellaTotali($pdf, $utility, $db, $this->get_totaliCostiRicavi());
 		
 		if ($_SESSION["soloContoEconomico"] == "N") {
 			$pdf = $this->generaSezioneTabellaAttivo($pdf, $utility, $db);
@@ -88,7 +90,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaCosti($pdf, $utility, $db) {
+	public function generaSezioneTabellaCosti($pdf, $utility, $db, $totaliCostiRicavi) {
 
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -96,7 +98,17 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		);
 		
 		$this->ricercaCostiComparati($utility, $db, $replace);
-				
+
+		/**
+		 * Metto i totali dei costi visualizzati in pagina in una array per la sezione dei totali Utile o Perdita
+		 */
+		$totaliCostiRicavi["totaleCosti_Bre"] = $_SESSION['totaleCosti_Bre'];
+		$totaliCostiRicavi["totaleCosti_Tre"] = $_SESSION['totaleCosti_Tre'];
+		$totaliCostiRicavi["totaleCosti_Vil"] = $_SESSION['totaleCosti_Vil'];
+		$totaliCostiRicavi["totaleCosti"] 	  = $_SESSION['totaleCosti'];
+
+		$this->set_totaliCostiRicavi($totaliCostiRicavi);
+		
 		$pdf->AddPage('L');
 	
 		$header = array("Costi", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
@@ -106,7 +118,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaRicavi($pdf, $utility, $db) {
+	public function generaSezioneTabellaRicavi($pdf, $utility, $db, $totaliCostiRicavi) {
 
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -115,6 +127,16 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	
 		$this->ricercaRicaviComparati($utility, $db, $replace);
 
+		/**
+		 * Metto i totali dei ricavi visualizzati in pagina in una array per la sezione dei totali Utile o Perdita
+		 */
+		$totaliCostiRicavi["totaleRicavi_Bre"] = $_SESSION['totaleRicavi_Bre'];
+		$totaliCostiRicavi["totaleRicavi_Tre"] = $_SESSION['totaleRicavi_Tre'];
+		$totaliCostiRicavi["totaleRicavi_Vil"] = $_SESSION['totaleRicavi_Vil'];
+		$totaliCostiRicavi["totaleRicavi"] 	   = $_SESSION['totaleRicavi'];
+		
+		$this->set_totaliCostiRicavi($totaliCostiRicavi);
+		
 		$pdf->Cell(100,10,'','',0,'R',$fill);
 		$pdf->Ln();
 		
@@ -122,6 +144,31 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$pdf->SetFont('Arial','',9);		
 		$pdf->riepilogoNegoziTable($header, $_SESSION["ricaviComparati"]);
 	
+		return $pdf;
+	}
+	
+	public function generaSezioneTabellaTotali($pdf, $utility, $db, $totaliCostiRicavi) {
+		
+		$nomeTabella = strtoupper($this->nomeTabTotali($totaliCostiRicavi["totaleRicavi"], $totaliCostiRicavi["totaleCosti"]));
+
+		/**
+		 * Calcolo le differenze fra ricavi e costi e metto i totali in array 
+		 */
+
+		$totaliCostiRicavi["totale_Bre"] = $totaliCostiRicavi["totaleRicavi_Bre"] - $totaliCostiRicavi["totaleCosti_Bre"];
+		$totaliCostiRicavi["totale_Tre"] = $totaliCostiRicavi["totaleRicavi_Tre"] - $totaliCostiRicavi["totaleCosti_Tre"];
+		$totaliCostiRicavi["totale_Vil"] = $totaliCostiRicavi["totaleRicavi_Vil"] - $totaliCostiRicavi["totaleCosti_Vil"];
+		$totaliCostiRicavi["totale"]     = $totaliCostiRicavi["totale_Bre"] + $totaliCostiRicavi["totale_Tre"] + $totaliCostiRicavi["totale_Vil"];
+
+		$this->set_totaliCostiRicavi($totaliCostiRicavi);
+		
+		$pdf->Cell(100,10,'','',0,'R',$fill);
+		$pdf->Ln();
+		
+		$header = array($nomeTabella, "Brembate", "Trezzo", "Villa D'Adda", "Totale");
+		$pdf->SetFont('Arial','',9);
+		$pdf->riepilogoNegoziTotaliTable($header, $this->get_totaliCostiRicavi());
+		
 		return $pdf;
 	}
 	
@@ -167,8 +214,6 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$this->ricercaCostiVariabiliNegozi($utility, $db);
 		$this->ricercaCostiFissiNegozi($utility, $db);
 		$this->ricercaRicaviFissiNegozi($utility, $db);
-		
-		$datiMCT = array();
 		
 		// Villa ---------------------------------------------------------------------
 		
@@ -284,6 +329,14 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	
 	public function set_datiMCT($datiMCT) {
 		$this->_datiMCT = $datiMCT;
+	}
+	
+	public function get_totaliCostiRicavi() {
+		return $this->_totaliCostiRicavi;
+	}
+	
+	public function set_totaliCostiRicavi($totaliCostiRicavi) {
+		$this->_totaliCostiRicavi = $totaliCostiRicavi;
 	}
 }	
 

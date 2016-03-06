@@ -124,20 +124,6 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
-	
-	public function nomeTabTotali($totaleRicavi, $totaleCosti) {
-
-		if ($totaleRicavi > $totaleCosti) {
-			$nomeTabTotali = "Utile";
-		}
-		elseif ($totaleRicavi < $totaleCosti) {
-			$nomeTabTotali = "Perdita";
-		}
-		else {
-			$nomeTabTotali = "Pareggio";
-		}
-		return $nomeTabTotali;
-	}
 
 	public function tabellaTotali($tipoTotale) {
 	
