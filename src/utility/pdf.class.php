@@ -1126,16 +1126,16 @@ class Pdf extends FPDF {
 
 		$fill = !$fill;
 		$this->Cell($w[0],8,utf8_decode(trim("Incidenza acquisti sul fatturato")),'LR',0,'L',$fill);
-		$this->Cell($w[1],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[2],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[3],8, number_format(abs($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[1],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
 		$this->Cell($w[0],8,utf8_decode(trim("BEP totale")),'LR',0,'L',$fill);
-		$this->Cell($w[1],8, number_format(abs($datiMCT["bepBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[2],8, number_format(abs($datiMCT["bepTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[3],8, number_format(abs($datiMCT["bepVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[1],8, number_format($datiMCT["bepBRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[2],8, number_format($datiMCT["bepTRE"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["bepVIL"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$this->Cell(array_sum($w),0,'','T');
