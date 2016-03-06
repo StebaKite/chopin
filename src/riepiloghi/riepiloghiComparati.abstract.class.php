@@ -908,13 +908,13 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
+		"			<td width='308' align='left' class='mark'>Acquisti</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Incidenza costi variabili sul fatturato</td>" .
+		"			<td width='308' align='left' class='mark'>Incidenza acquisti sul fatturato</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoBRE, 2, ',', '.') . "</td>" .

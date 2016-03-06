@@ -5,6 +5,8 @@ require_once 'riepiloghiComparati.abstract.class.php';
 class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 
 	private static $_instance = null;
+
+	public $_datiMCT = array();
 	
 	public static $azioneEstraiPdfRiepilogoNegozio = "../riepiloghi/estraiPdfRiepilogoNegoziFacade.class.php?modo=start";
 
@@ -68,7 +70,8 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 			$pdf = $this->generaSezioneTabellaPassivo($pdf, $utility, $db);
 		}
 		
-		$pdf = $this->generaSezioneTabellaMct($pdf, $utility, $db);
+		$pdf = $this->generaSezioneTabellaMct($pdf, $utility, $db, $this->get_datiMCT());
+		$pdf = $this->generaSezioneTabellaBep($pdf, $utility, $db, $this->get_datiMCT());
 		
 		$pdf->Output();
 	}
@@ -159,7 +162,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}	
 	
-	public function generaSezioneTabellaMct($pdf, $utility, $db) {
+	public function generaSezioneTabellaMct($pdf, $utility, $db, $datiMCT) {
 
 		$this->ricercaCostiVariabiliNegozi($utility, $db);
 		$this->ricercaCostiFissiNegozi($utility, $db);
@@ -183,6 +186,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleVIL"] = abs($datiMCT["totaleRicaviVIL"]) - $datiMCT["totaleCostiVariabiliVIL"];
 		$datiMCT["marginePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleRicaviVIL"]);
+		$datiMCT["margineTotalePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleCostiVariabiliVIL"]);
 		
 		// Trezzo ---------------------------------------------------------------------
 		
@@ -200,6 +204,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleTRE"] = abs($datiMCT["totaleRicaviTRE"]) - $datiMCT["totaleCostiVariabiliTRE"];
 		$datiMCT["marginePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleRicaviTRE"]);
+		$datiMCT["margineTotalePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliTRE"]);
 		
 		// Brembate ---------------------------------------------------------------------
 		
@@ -217,6 +222,11 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleBRE"] = abs($datiMCT["totaleRicaviBRE"]) - $datiMCT["totaleCostiVariabiliBRE"];
 		$datiMCT["marginePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleRicaviBRE"]);
+		$datiMCT["margineTotalePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliBRE"]);
+		
+		$this->set_datiMCT($datiMCT);
+		
+		// Nuova pagina documento -----------------------------------------------
 		
 		$pdf->AddPage('L');
 		
@@ -226,6 +236,54 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		return $pdf;
 		
+	}
+
+	/**
+	 * Questo metodo calcola il BEP per tutti i negozi.
+	 * Utilizza gli stessi dati estratti per il calcolo del margine di contribuzione (MCT) e aggiunge all'array i totali calcolati
+	 * @param unknown $pdf
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $datiMCT
+	 * @return unknown
+	 */
+	public function generaSezioneTabellaBep($pdf, $utility, $db, $datiMCT) {
+		
+		// Villa ---------------------------------------------------------------------
+	
+		$datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"] = 1 - ($datiMCT["totaleCostiVariabiliVIL"] / abs($datiMCT["totaleRicaviVIL"]));
+		$datiMCT["bepVIL"] = $datiMCT["totaleCostiFissiVIL"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2);
+
+		// Trezzo ---------------------------------------------------------------------
+
+		$datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"] = 1 - ($datiMCT["totaleCostiVariabiliTRE"] / abs($datiMCT["totaleRicaviTRE"]));
+		$datiMCT["bepTRE"] = $datiMCT["totaleCostiFissiTRE"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2);
+
+		// Brembate ---------------------------------------------------------------------
+
+		$datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"] = 1 - ($datiMCT["totaleCostiVariabiliBRE"] / abs($datiMCT["totaleRicaviBRE"]));
+		$datiMCT["bepBRE"] = $datiMCT["totaleCostiFissiBRE"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2);
+
+		$this->set_datiMCT($datiMCT);
+		
+		// Nuova pagina documento -----------------------------------------------
+
+		$pdf->Cell(100,10,'','',0,'R',$fill);
+		$pdf->Ln();
+				
+		$header = array("BEP", "Brembate", "Trezzo", "Villa D'Adda");
+		$pdf->SetFont('Arial','',9);
+		$pdf->riepilogoNegoziBepTable($header, $datiMCT);
+		
+		return $pdf;
+	}		
+	
+	public function get_datiMCT() {
+		return $this->_datiMCT;
+	}
+	
+	public function set_datiMCT($datiMCT) {
+		$this->_datiMCT = $datiMCT;
 	}
 }	
 
