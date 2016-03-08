@@ -214,7 +214,8 @@ class FatturaCliente extends Fattura {
 		$this->SetFont( "Arial", "", 10);
 
 		if ($tot_imponibile > 0) {
-			$this->SetXY( $r1+2, $y1+7);
+			$_y1 = $y1 + 7;
+			$this->SetXY( $r1+2, $_y1);
 			$this->Cell(10,6,"4","",0,"C");
 			$this->SetX( $r1+20 );
 			$this->Cell(10,6,"Iva 4%","",0,"L");
@@ -225,7 +226,8 @@ class FatturaCliente extends Fattura {
 		}
 		
 		if ($tot_imponibile_10 > 0) {
-			$this->SetXY( $r1+2, $y1+12);
+			$_y1 = $y1 + 7;
+			$this->SetXY( $r1+2, $_y1);
 			$this->Cell(10,6,"10","",0,"C");
 			$this->SetX( $r1+20 );
 			$this->Cell(10,6,"Iva 10%","",0,"L");
@@ -236,7 +238,8 @@ class FatturaCliente extends Fattura {
 		}
 	
 		if ($tot_imponibile_22 > 0) {
-			$this->SetXY( $r1+2, $y1+17);
+			$_y1 = $y1 + 7;
+			$this->SetXY( $r1+2, $_y1);
 			$this->Cell(10,6,"22","",0,"C");
 			$this->SetX( $r1+20 );
 			$this->Cell(10,6,"Iva 22%","",0,"L");
