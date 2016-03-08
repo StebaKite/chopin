@@ -27,13 +27,17 @@ class FatturaCliente extends Fattura {
 		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
 		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
 	
-		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
+		/**
+		 * Eccezione: le fatture i Brembate hanno una B dopo il progressivo
+		 */
+		
+		$nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : str_pad($numfat, 2, "0", STR_PAD_LEFT);
 	
 		$r1  = 10;
 		$r2  = $r1 + 192;
 		$y1  = 94;
 		$y2  = $y1+10;
-		$mid = $y1 + (($y2-$y1) / 2);
+		$mid = $y1 + (($y2-$y1) / 2); 
 		$this->SetFillColor(189, 229, 244);
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->SetXY( $r1 + 5, $y1 + 3 );
@@ -87,7 +91,7 @@ class FatturaCliente extends Fattura {
 // 		$this->Cell(50,6,EURO . " " . number_format($tot_dettagli, 2, ',', '.'),"",0,"R");
 // 	}
 
-	public function totaliFatturaContributoCliente($tot_dettagli, $tot_imponibile, $tot_iva) {
+	public function totaliFatturaContributoCliente($tot_dettagli, $tot_imponibile, $tot_iva, $aliquota_iva) {
 
 		/**
 		 * Box riepilogo imponibili e aliquote IVA
@@ -118,9 +122,9 @@ class FatturaCliente extends Fattura {
 		
 		if ($tot_imponibile > 0) {
 			$this->SetXY( $r1+2, $y1+7);
-			$this->Cell(10,6,"10","",0,"C");
+			$this->Cell(10,6,$aliquota_iva,"",0,"C");
 			$this->SetX( $r1+20 );
-			$this->Cell(10,6,"Iva 4%","",0,"L");
+			$this->Cell(10,6,"Iva " . $aliquota_iva ."%","",0,"L");
 			$this->SetX( $r1+52 );
 			$this->Cell(22,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
 			$this->SetX( $r1+80 );
@@ -208,9 +212,20 @@ class FatturaCliente extends Fattura {
 		$this->Cell(10,6, "IMPOSTA");
 	
 		$this->SetFont( "Arial", "", 10);
-	
-		if ($tot_imponibile_10 > 0) {
+
+		if ($tot_imponibile > 0) {
 			$this->SetXY( $r1+2, $y1+7);
+			$this->Cell(10,6,"4","",0,"C");
+			$this->SetX( $r1+20 );
+			$this->Cell(10,6,"Iva 4%","",0,"L");
+			$this->SetX( $r1+52 );
+			$this->Cell(22,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
+			$this->SetX( $r1+80 );
+			$this->Cell(18,6,number_format($tot_iva, 2, ',', '.'),"",0,"R");
+		}
+		
+		if ($tot_imponibile_10 > 0) {
+			$this->SetXY( $r1+2, $y1+12);
 			$this->Cell(10,6,"10","",0,"C");
 			$this->SetX( $r1+20 );
 			$this->Cell(10,6,"Iva 10%","",0,"L");
@@ -221,7 +236,7 @@ class FatturaCliente extends Fattura {
 		}
 	
 		if ($tot_imponibile_22 > 0) {
-			$this->SetXY( $r1+2, $y1+12);
+			$this->SetXY( $r1+2, $y1+17);
 			$this->Cell(10,6,"22","",0,"C");
 			$this->SetX( $r1+20 );
 			$this->Cell(10,6,"Iva 22%","",0,"L");
@@ -229,19 +244,6 @@ class FatturaCliente extends Fattura {
 			$this->Cell(22,6,number_format($tot_imponibile_22, 2, ',', '.'),"",0,"R");
 			$this->SetX( $r1+80 );
 			$this->Cell(18,6,number_format($tot_iva_22, 2, ',', '.'),"",0,"R");
-			$this->Ln();
-		}
-	
-		if ($tot_imponibile > 0) {
-			$this->SetXY( $r1+2, $y1+17);
-			$this->Cell(10,6,"  ","",0,"C");
-			$this->SetX( $r1+20 );
-			$this->Cell(10,6,"Esente","",0,"L");
-			$this->SetX( $r1+52 );
-			$this->Cell(22,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
-			$this->SetX( $r1+80 );
-			$this->Cell(18,6,number_format($tot_iva, 2, ',', '.'),"",0,"R");
-			$this->Ln();
 		}
 	
 		/**

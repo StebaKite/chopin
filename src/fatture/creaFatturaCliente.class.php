@@ -308,7 +308,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 				$tot_imponibile_22 += $e[5];
 				$tot_iva_22 = $e[6];
 			}	
-			elseif ($e[7] == "") {
+			elseif ($e[7] == "4") {
 				$tot_imponibile += $e[5];
 				$tot_iva = $e[6];
 			}	
@@ -360,7 +360,8 @@ class CreaFatturaCliente extends FatturaAbstract {
 					"IMPORTO U." => $e[3],
 					"TOTALE"     => $e[4],
 					"IMPONIBILE" => $e[5],
-					"IVA"        => $e[6]
+					"IVA"        => $e[6],
+					"ALIQUOTA"	 => $e[7]
 			);
 	
 			$fattura->aggiungiLineaLiberaCliente($w, $linea, $r1, $y1);
@@ -368,12 +369,14 @@ class CreaFatturaCliente extends FatturaAbstract {
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
 			$tot_iva = $e[6];
+			$aliquota_iva = $e[7];
 		}	
 		
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;	
-
+		$_SESSION["aliquota_iva"] = $aliquota_iva;
+		
 		/**
 		 * Closing line
 		 */
@@ -387,7 +390,7 @@ class CreaFatturaCliente extends FatturaAbstract {
 	}
 	
 	public function sezioneTotaliContributo($fattura) {
-		$fattura->totaliFatturaContributoCliente($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaContributoCliente($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
 		return $fattura;
 	}
 
