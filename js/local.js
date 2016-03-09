@@ -1039,6 +1039,11 @@ function cancellaDettaglioFattura(id) {
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
+
+	// Scopro il bottone nuovo dettaglio nascosto dalla funzione di creazione fattura nel caso di contributo
+
+	$("#nuovo-dett-fattura-cliente").show();
+	$("#nuovo-dett-fattura-aziende").show();
 }
 
 function cancellaScadenza(idscadenza) {

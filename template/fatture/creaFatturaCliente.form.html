@@ -102,6 +102,14 @@ function aggiungiDettaglio() {
 	$("#imponibile").val("");
 	$("#iva").val("");
 	$("#aliquota").val("");
+
+	var tipofat = $("input[name=tipofat]:checked").val();
+
+	// Per il contributo è ammesso solo un singolo dettaglio
+	
+	if (tipofat == "CONTRIBUTO") {		
+		$("#nuovo-dett-fattura-cliente").hide();
+	}
 }
 
 function addDett(dettaglio, contatore) {
