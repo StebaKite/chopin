@@ -15,6 +15,7 @@ if ($_GET["modo"] == "start") {
 if ($_GET["modo"] == "go") {
 
 	$_SESSION["datafat"] = $_REQUEST["datafat"];
+	$_SESSION["meserif"] = $_REQUEST["meserif"];
 	$_SESSION["idcliente"] = $_REQUEST["cliente"];
 	$_SESSION["tipoadd"] = $_REQUEST["tipoadd"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];

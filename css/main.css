@@ -316,6 +316,11 @@
 	.datiCreate tbody {
 		valign: top;
 	}
+/*------------------------------
+	.datiCreate td {
+		border: 1px solid #aaa;
+	}
+------------------------------*/	
 	.result th, .dettaglio th {
 		font-weight: bolder;
 		background-color: #666666;

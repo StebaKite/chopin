@@ -149,20 +149,38 @@ function imponibile_e_iva() {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td class="td">%ml.datafat% :</td>
-						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
+						<td>%ml.datafat% :</td>
+						<td width="100" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
+						<td width="120"align="right">%ml.datarif% :</td>
+						<td>
+							<select class='selectmenuMeserif' id="meserif" name="meserif">
+								<option value="" %empty_selected%>%ml.selezionare%</option>							
+								<option value="%ml.gen%" %gen_selected% >%ml.gen%</option>							
+								<option value="%ml.feb%" %feb_selected% >%ml.feb%</option>							
+								<option value="%ml.mar%" %mar_selected% >%ml.mar%</option>							
+								<option value="%ml.apr%" %apr_selected% >%ml.apr%</option>							
+								<option value="%ml.mag%" %mag_selected% >%ml.mag%</option>							
+								<option value="%ml.giu%" %giu_selected% >%ml.giu%</option>							
+								<option value="%ml.lug%" %lug_selected% >%ml.lug%</option>							
+								<option value="%ml.ago%" %ago_selected% >%ml.ago%</option>							
+								<option value="%ml.set%" %set_selected% >%ml.set%</option>							
+								<option value="%ml.ott%" %ott_selected% >%ml.ott%</option>							
+								<option value="%ml.nov%" %nov_selected% >%ml.nov%</option>							
+								<option value="%ml.dic%" %dic_selected% >%ml.dic%</option>							
+							</select>
+						</td>
 					</tr>					
 					<tr>
 						<td>%ml.azcons% :</td>
-						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
+						<td colspan="4" ><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
 					</tr>				
 					<tr>
 						<td>%ml.tipaddebito% :</td>
-						<td class="tooltip"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
+						<td colspan="4" class="tooltip"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
 					</tr>
 					<tr>				
 						<td>%ml.negozio% :</td>						
-						<td>
+						<td colspan="4" >
 							<div class="radioset" >
 								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="prelevaNumeroFattura(this.value)"><label for="villa">%ml.villa%</label>
 								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="prelevaNumeroFattura(this.value)"><label for="brembate">%ml.brembate%</label>
@@ -172,18 +190,18 @@ function imponibile_e_iva() {
 					</tr>				
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
+						<td colspan="4" class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
 					</tr>				
 					<tr>
 						<td>%ml.banca% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
+						<td colspan="4" class="tooltip"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
 					</tr>				
 					<tr>
 						<td>%ml.iban% :</td>
-						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
+						<td colspan="4" class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
 					</tr>				
 					<tr>
-						<td colspan="4">
+						<td >
 							<table id="dettagli" class="%class_dettagli%">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
@@ -193,7 +211,7 @@ function imponibile_e_iva() {
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="3" align="right" class="tooltip">
+						<td colspan="4" align="right" class="tooltip">
 							<button id="nuovo-dett-fattura-aziende" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
 						</td>

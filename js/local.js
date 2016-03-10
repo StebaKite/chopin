@@ -855,6 +855,11 @@ $( ".selectmenu" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuMeserif" )
+	.selectmenu({width: 100})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCliente" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
