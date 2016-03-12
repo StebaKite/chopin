@@ -995,6 +995,34 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		}
 		return $risultato_esercizio;
 	}
+	
+	public function makeAndamentoTable() {
+
+		$risultato_andamento = "";
+		
+		if (isset($_SESSION["elencoConti"])) {
+		
+			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='300'>&nbsp;</th>" .
+			"		<th width='100'>%ml.gen%</th>" .
+			"		<th width='100'>%ml.feb%</th>" .
+			"		<th width='100'>%ml.mar%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+		
+			$passivoBilancio = $_SESSION["elencoConti"];
+		
+			foreach(pg_fetch_all($passivoBilancio) as $row) {
+				
+			}
+		}		
+		return $risultato_andamento;
+	}
 }		
 
 ?>
