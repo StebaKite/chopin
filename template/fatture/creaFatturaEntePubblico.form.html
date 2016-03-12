@@ -99,6 +99,12 @@ function aggiungiDettaglio() {
 	$("#totale").val("");
 	$("#imponibile").val("");
 	$("#iva").val("");
+
+	var tipofat = $("input[name=tipofat]:checked").val();
+
+	// Per gli enti pubblici in fattura ci va sempre solo un dettaglio
+	
+	$("#nuovo-dett-fattura-aziende").hide();
 }
 
 function addDett(dettaglio, contatore) {

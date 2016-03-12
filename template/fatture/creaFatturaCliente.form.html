@@ -28,7 +28,7 @@ function prelevaNumeroFattura(negozio) {
     }
     
     if (negozio == "BRE") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Brembate");
+    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Gregnano");
     	$( "#ibanbanca" ).val("IT 33 L 08899 52650 000000251624");
     }
     
@@ -102,6 +102,14 @@ function aggiungiDettaglio() {
 	$("#imponibile").val("");
 	$("#iva").val("");
 	$("#aliquota").val("");
+
+	var tipofat = $("input[name=tipofat]:checked").val();
+
+	// Per il contributo è ammesso solo un singolo dettaglio
+	
+	if (tipofat == "CONTRIBUTO") {		
+		$("#nuovo-dett-fattura-cliente").hide();
+	}
 }
 
 function addDett(dettaglio, contatore) {

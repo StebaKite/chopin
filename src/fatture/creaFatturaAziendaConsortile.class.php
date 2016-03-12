@@ -11,18 +11,18 @@ require_once 'fattura.abstract.class.php';
 class CreaFatturaAziendaConsortile extends FatturaAbstract {
 
 	public static $mese = array(
-			'01' => 'gennaio',
-			'02' => 'febbraio',
-			'03' => 'marzo',
-			'04' => 'aprile',
-			'05' => 'maggio',
-			'06' => 'giugno',
-			'07' => 'luglio',
-			'08' => 'agosto',
-			'09' => 'settembre',
-			'10' => 'ottobre',
-			'11' => 'novembre',
-			'12' => 'dicembre'
+			'01' => 'Gennaio',
+			'02' => 'Febbraio',
+			'03' => 'Marzo',
+			'04' => 'Aprile',
+			'05' => 'Maggio',
+			'06' => 'Giugno',
+			'07' => 'Luglio',
+			'08' => 'Agosto',
+			'09' => 'Settembre',
+			'10' => 'Ottobre',
+			'11' => 'Novembre',
+			'12' => 'Dicembre'
 	);
 	
 	public static $anno;
@@ -111,12 +111,21 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$fattura = FatturaAziendaConsortile::getInstance();
 		
 		$fattura->AliasNbPages();
+
+		/**
+		 * Se il mese di riferimento in pagina non è stato selezionato lo ricavo dalla data fattura
+		 */
 		
-		self::$anno = substr($_SESSION["datafat"], 6);
-		self::$nmese = substr($_SESSION["datafat"], 3,2);
-		self::$giorno = substr($_SESSION["datafat"], 0,2);
-		$mm = str_pad(self::$nmese, 2, "0", STR_PAD_LEFT);
-		self::$meserif = self::$mese[$mm];
+		if ($_SESSION["meserif"] == "") {
+			self::$anno = substr($_SESSION["datafat"], 6);
+			self::$nmese = substr($_SESSION["datafat"], 3,2);
+			self::$giorno = substr($_SESSION["datafat"], 0,2);
+			$mm = str_pad(self::$nmese, 2, "0", STR_PAD_LEFT);
+			self::$meserif = self::$mese[$mm];
+		}
+		else {
+			self::$meserif = $_SESSION["meserif"];
+		}
 
 		/**
 		 * Aggiorno il numero fattura per l'azienda consortile e negozio

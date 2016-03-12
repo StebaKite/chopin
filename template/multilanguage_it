@@ -55,6 +55,18 @@ ns = Nessuno
 cf = Costi Fissi
 cv = Costi Variabili
 rc = Ricavi
+gen = Gennaio
+feb = Febbraio
+mar = Marzo
+apr = Aprile
+mag = Maggio
+giu = Giugno
+lug = Luglio
+ago = Agosto
+set = Settembre
+ott = Ottobre
+nov = Novembre
+dic = Dicembre
 ;
 ; Tips ---------------------------------
 ;
@@ -205,6 +217,7 @@ categoria = Categoria
 azcons = Azienda consortile
 entepub = Ente pubblico
 datafat = Data fattura
+datarif = Mese di riferimento
 descfat = Descrizione
 impofat = Imponibile
 impivafat = IVA

@@ -855,6 +855,11 @@ $( ".selectmenu" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuMeserif" )
+	.selectmenu({width: 100})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCliente" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
@@ -1039,6 +1044,11 @@ function cancellaDettaglioFattura(id) {
  		dettInseriti.splice(index, 1);				
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
+
+	// Scopro il bottone nuovo dettaglio nascosto dalla funzione di creazione fattura nel caso di contributo
+
+	$("#nuovo-dett-fattura-cliente").show();
+	$("#nuovo-dett-fattura-aziende").show();
 }
 
 function cancellaScadenza(idscadenza) {

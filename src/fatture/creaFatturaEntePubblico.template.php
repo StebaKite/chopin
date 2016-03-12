@@ -85,7 +85,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				"<td align='right'>&euro;" . number_format($e[4], 2, ',', '.') . "</td>" .
 				"<td align='right'>&euro;" . number_format($e[5], 2, ',', '.') . "</td>" .
 				"<td align='right'>&euro;" . number_format($e[6], 2, ',', '.') . "</td>" .
-				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
+				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioFattura(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		
 				$tbody_dettagli = $tbody_dettagli . $dettaglio;
