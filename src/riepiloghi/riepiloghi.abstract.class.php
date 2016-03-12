@@ -23,6 +23,8 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	public static $queryRicaviMargineContribuzioneConSaldi = "/riepiloghi/ricaviMargineContribuzioneConSaldi.sql";
 	public static $queryCostiFissi = "/riepiloghi/costiFissi.sql";
 	public static $queryCostiFissiConSaldi = "/riepiloghi/costiFissiConSaldi.sql";
+	public static $queryAndamentoNegozio = "/riepiloghi/andamentoNegozio.sql";
+	
 	
 	
 	function __construct() {
@@ -255,6 +257,31 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		}
 		else {
 			unset($_SESSION['costoFisso']);
+		}
+		return $result;
+	}
+
+	/**
+	 * Questo metodo estrae un riepilogo di totali per conto per mese 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $replace
+	 * @return unknown
+	 */
+	public function ricercaVociAndamentoNegozio($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoNegozio;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['elencoVociAndamentoNegozio'] = $result;
+			$_SESSION['numVociTrovate'] = pg_num_rows($result);
+		}
+		else {
+			unset($_SESSION['elencoVociAndamentoNegozio']);
+			$_SESSION['numVociTrovate'] = 0;
 		}
 		return $result;
 	}
@@ -1000,27 +1027,60 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 
 		$risultato_andamento = "";
 		
-		if (isset($_SESSION["elencoConti"])) {
+		if (isset($_SESSION["elencoVociAndamentoNegozio"])) {
 		
 			$risultato_andamento =
-			"<table class='result'>" .
-			"	<thead>" .
-			"		<th width='300'>&nbsp;</th>" .
-			"		<th width='100'>%ml.gen%</th>" .
-			"		<th width='100'>%ml.feb%</th>" .
-			"		<th width='100'>%ml.mar%</th>" .
-			"	</thead>" .
-			"</table>" .
 			"<div class='scroll-bilancio'>" .
 			"	<table class='result'>" .
 			"		<tbody>";
 		
-			$passivoBilancio = $_SESSION["elencoConti"];
-		
-			foreach(pg_fetch_all($passivoBilancio) as $row) {
+			$vociAndamento = $_SESSION["elencoVociAndamentoNegozio"];
+			$desconto_break = "";
+			$mesi = array();
+			
+			foreach(pg_fetch_all($vociAndamento) as $row) {
+
+				array_push($mesi, $row['mm_registrazione']);
+
+				$totconto = number_format(abs($row['tot_conto']), 2, ',', '.');
 				
+				if (trim($row['des_conto']) != $desconto_break ) {
+						
+					if ($desconto_break != "") {
+						
+						$risultato_andamento .= "</tr>";   // a rottura chiudo la riga precedente						
+						$risultato_andamento .=
+						"<tr>" .
+						"	<td align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td align='right'>" . $totconto . "</td>";				
+					}
+					else {
+						
+						$risultato_andamento .=
+						"<tr>" .
+						"	<td align='left'>" . trim($row['des_conto']) . "</td>" .
+						"	<td align='right'>" . $totconto . "</td>";						
+					}		
+					$desconto_break = trim($row['des_conto']);						
+				}
+				else {
+					$risultato_andamento .= "<td align='right'>" . $totconto . "</td>";
+				}				
 			}
-		}		
+			
+			$risultato_andamento .= "</tr></tbody>";   // a rottura chiudo la riga precedente
+			
+			$risultato_andamento .= "<thead><th width='250'>Voce</th>";
+				
+			$mesi_univoci = array_unique($mesi);
+			sort($mesi_univoci);
+
+			foreach ($mesi_univoci as $mese) {
+				$risultato_andamento .= "<th width='50'>" . $mese . "</th>";
+			}
+			
+			$risultato_andamento .= "</thead></table></div>";					
+		}				
 		return $risultato_andamento;
 	}
 }		

@@ -65,7 +65,72 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 	}
 
 	public function go() {
+
+		require_once 'andamentoNegozi.template.php';
+		require_once 'utility.class.php';
 		
+		// Template
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$testata = self::$root . $array['testataPagina'];
+		$piede = self::$root . $array['piedePagina'];
+		
+		$andamentoNegoziTemplate = AndamentoNegoziTemplate::getInstance();
+
+		if ($andamentoNegoziTemplate->controlliLogici()) {
+		
+			if ($this->ricercaDati($utility)) {
+					
+				$this->preparaPagina($andamentoNegoziTemplate);
+					
+				include(self::$testata);
+				$andamentoNegoziTemplate->displayPagina();
+		
+				$totVoci = $_SESSION['numVociTrovate'];
+		
+				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+		
+				if ($totVoci > 0) {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				}
+				else {
+					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				}
+		
+				echo $utility->tailTemplate($template);
+					
+				include(self::$piede);
+			}
+			else {
+					
+				$this->preparaPagina($andamentoNegoziTemplate);
+					
+				include(self::$testata);
+				$andamentoNegoziTemplate->displayPagina();
+		
+				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
+		
+				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				echo $utility->tailTemplate($template);
+					
+				include(self::$piede);
+			}
+		}
+		else {
+			$this->preparaPagina($andamentoNegoziTemplate);
+		
+			include(self::$testata);
+			$andamentoNegoziTemplate->displayPagina();
+		
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
+		
+			include(self::$piede);
+		}
 	}
 
 	public function ricercaDati($utility) {
@@ -77,23 +142,17 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
+				'%codnegozio%' => $_SESSION["codneg_sel"]
 		);
 	
 		$db = Database::getInstance();
 		
+		if ($this->ricercaVociAndamentoNegozio($utility, $db, $replace)) {
 		
-		
-		
-		
-		
-		$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-		
-		
-		
-		
-		
-		
+			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+			return TRUE;
+		}
+		return FALSE;		
 	}
 
 	public function preparaPagina($bilancioTemplate) {
