@@ -1192,6 +1192,93 @@ class Pdf extends FPDF {
 
 		$this->Cell(array_sum($w),0,'','T');
 	}	
+
+	public function progressiviNegozioTable($header, $vociNegozio) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','',12);
+			
+		// Header
+		$w = array(70, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		
+		$this->Ln();
+	
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('','',10);
+
+		$vociAndamento = $_SESSION["elencoVociAndamentoNegozio"];
+		$desconto_break = "";
+		$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+			
+		foreach(pg_fetch_all($vociAndamento) as $row) {
+		
+			$totconto = $row['tot_conto'];
+		
+			if (trim($row['des_conto']) != $desconto_break ) {
+		
+				if ($desconto_break != "") {
+		
+					/**
+					 * A rottura creo le colonne accumulate e inizializzo l'array
+					 */
+					$totale_conto = 0;
+						
+					for ($i = 1; $i < 13; $i++) {
+						
+						if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+						else $this->Cell($w[$i],8, number_format($totaliMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+						
+						$totale_conto = $totale_conto + $totaliMesi[$i];
+					}
+
+					$this->SetFont('','B',10);
+					$this->Cell($w[13],8, number_format($totale_conto, 0, ',', '.'),'LR',0,'R',$fill);								
+					$this->SetFont('','',10);
+					$this->Ln();
+						
+					for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+		
+					$fill = !$fill;
+					$this->Cell($w[0],8, trim($row['des_conto']),'LR',0,'L',$fill);								
+					$totaliMesi[$row['mm_registrazione']] = $totconto;
+				}
+				else {
+					$fill = !$fill;
+					$this->Cell($w[0],8, trim($row['des_conto']),'LR',0,'L',$fill);								
+					$totaliMesi[$row['mm_registrazione']] = $totconto;
+				}
+				$desconto_break = trim($row['des_conto']);
+			}
+			else {
+				$totaliMesi[$row['mm_registrazione']] = $totconto;
+			}
+		}
+		/**
+		 * Ultima riga
+		 */
+		for ($i = 1; $i < 13; $i++) {
+			
+			if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format($totaliMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+			
+			$totale_conto = $totale_conto + $totaliMesi[$i];
+		}
+
+		$this->SetFont('','B',10);
+		$this->Cell($w[13],8, number_format($totale_conto, 0, ',', '.'),'LR',0,'R',$fill);
+		$this->SetFont('','',10);
+		$this->Ln();
+
+		$this->Cell(array_sum($w),0,'','T');
+	}
 }
 
 ?>
