@@ -51,9 +51,11 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
 
-		$_SESSION["datareg_da"] = date("d/m/Y");
-		$_SESSION["datareg_a"] = date("d/m/Y");
-
+		$_SESSION["datareg_da"] = "01/01/" . date("Y");
+		$_SESSION["datareg_a"]  = "31/12/" . date("Y");
+		unset($_SESSION["elencoVociAndamentoNegozio"]);
+		unset($_SESSION['bottoneEstraiPdf']);
+		
 		$andamentoNegoziTemplate = AndamentoNegoziTemplate::getInstance();
 		$this->preparaPagina($andamentoNegoziTemplate);
 

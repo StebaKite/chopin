@@ -142,7 +142,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
+			"	<td width='308' align='left' class='enlarge'>Totale Ricavi</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Bre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Tre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Vil"], 2, ',', '.') . "</td>" .
@@ -151,7 +151,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 				
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
+			"	<td width='308' align='left' class='enlarge'>Totale Costi</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Bre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Tre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Vil"], 2, ',', '.') . "</td>" .
@@ -166,7 +166,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 			
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
+			"	<td width='308' align='left' class='enlarge'>Utile del Periodo</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($utile_Bre, 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($utile_Tre, 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($utile_Vil, 2, ',', '.') . "</td>" .
@@ -190,7 +190,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 				
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
+			"	<td width='308' align='left' class='enlarge'>Totale Ricavi</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Bre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Tre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Vil"], 2, ',', '.') . "</td>" .
@@ -199,7 +199,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
+			"	<td width='308' align='left' class='enlarge'>Totale Costi</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Bre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Tre"], 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Vil"], 2, ',', '.') . "</td>" .
@@ -213,7 +213,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract {
 			
 			$risultato_esercizio .=
 			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Perdita del Periodo</td>" .
+			"	<td width='308' align='left' class='enlarge'>Perdita del Periodo</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Bre, 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Tre, 2, ',', '.') . "</td>" .
 			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Vil, 2, ',', '.') . "</td>" .

@@ -1074,7 +1074,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 							else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 2, ',', '.') . "</td>";
 							$totale_conto = $totale_conto + $totaliMesi[$i];
 						}
-						$risultato_andamento .= "<td width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
 						
 						$risultato_andamento .= "</tr>";
 						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
@@ -1100,7 +1100,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				else $risultato_andamento .= "<td width='58' align='right'>" . $totaliMesi[$i] . "</td>";
 				$totale_conto = $totale_conto + $totaliMesi[$i];
 			}
-			$risultato_andamento .= "<td width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
 			$risultato_andamento .= "</tr></tbody></table></div>";			
 		}				
 		return $risultato_andamento;

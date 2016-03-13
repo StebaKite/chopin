@@ -433,7 +433,8 @@
 	.result td.mark {
 		font-size: 14px;
 		font-weight: bolder;
-		height: 30px;		
+		height: 30px;
+		color: #3399FF;				
 	}
 	.result td.enlarge {
 		font-size: 14px;
