@@ -1030,59 +1030,81 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		if (isset($_SESSION["elencoVociAndamentoNegozio"])) {
 		
 			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desconto%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
 			"<div class='scroll-bilancio'>" .
 			"	<table class='result'>" .
 			"		<tbody>";
 		
 			$vociAndamento = $_SESSION["elencoVociAndamentoNegozio"];
 			$desconto_break = "";
-			$mesi = array();
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
 			
 			foreach(pg_fetch_all($vociAndamento) as $row) {
 
-				array_push($mesi, $row['mm_registrazione']);
-
-				$totconto = number_format(abs($row['tot_conto']), 2, ',', '.');
+				$totconto = $row['tot_conto'];
 				
 				if (trim($row['des_conto']) != $desconto_break ) {
 						
 					if ($desconto_break != "") {
 						
-						$risultato_andamento .= "</tr>";   // a rottura chiudo la riga precedente						
-						$risultato_andamento .=
-						"<tr>" .
-						"	<td align='left'>" . trim($row['des_conto']) . "</td>" .
-						"	<td align='right'>" . $totconto . "</td>";				
-					}
-					else {
+						/**
+						 * A rottura creo le colonne accumulate e inizializzo l'array
+						 */
+						$totale_conto = 0;
 						
-						$risultato_andamento .=
-						"<tr>" .
-						"	<td align='left'>" . trim($row['des_conto']) . "</td>" .
-						"	<td align='right'>" . $totconto . "</td>";						
+						for ($i = 1; $i < 13; $i++) {
+							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 2, ',', '.') . "</td>";
+							$totale_conto = $totale_conto + $totaliMesi[$i];
+						}
+						$risultato_andamento .= "<td width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+						
+						$risultato_andamento .= "</tr>";
+						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+						
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+					}
+					else {						
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
 					}		
 					$desconto_break = trim($row['des_conto']);						
 				}
 				else {
-					$risultato_andamento .= "<td align='right'>" . $totconto . "</td>";
+					$totaliMesi[$row['mm_registrazione']] = $totconto;
 				}				
 			}
-			
-			$risultato_andamento .= "</tr></tbody>";   // a rottura chiudo la riga precedente
-			
-			$risultato_andamento .= "<thead><th width='250'>Voce</th>";
-				
-			$mesi_univoci = array_unique($mesi);
-			sort($mesi_univoci);
-
-			foreach ($mesi_univoci as $mese) {
-				$risultato_andamento .= "<th width='50'>" . $mese . "</th>";
+			/**
+			 * Ultima riga
+			 */
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . $totaliMesi[$i] . "</td>";
+				$totale_conto = $totale_conto + $totaliMesi[$i];
 			}
-			
-			$risultato_andamento .= "</thead></table></div>";					
+			$risultato_andamento .= "<td width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+			$risultato_andamento .= "</tr></tbody></table></div>";			
 		}				
 		return $risultato_andamento;
-	}
+	}	
 }		
 
 ?>
