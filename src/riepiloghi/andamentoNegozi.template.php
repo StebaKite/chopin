@@ -46,6 +46,19 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 
 		$form = self::$root . $array['template'] . self::$pagina;
 
+		$andamentoCostiTable = $this->makeAndamentoTable();
+		$andamentoRicaviTable = $this->makeAndamentoTable();
+		
+		/** ******************************************
+		 * Costruisco il box delle tabs
+		 */
+			
+		$tabs = $this->makeTabs($andamentoCostiTable, $andamentoRicaviTable);
+		
+		
+		
+		
+		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
@@ -56,7 +69,7 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
 				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
-				'%elencoconti%' => $this->makeAndamentoTable(),
+				'%tabs%' => $tabs,
 				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf']
 		);
 
