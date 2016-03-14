@@ -675,6 +675,7 @@ $( "#tutti" ).click(function( event ) {
 
 
 $( ".dataregpicker" ).datepicker({
+	showAnim: "slideDown",
 	changeMonth: true,
 	changeYear: true,
 	bgiframe: true,
@@ -685,6 +686,7 @@ $( ".dataregpicker" ).datepicker({
 });
 
 $( ".datepicker" ).datepicker({
+	showAnim: "slideDown",
 	changeMonth: true,
 	changeYear: true,
 	bgiframe: true,
@@ -694,6 +696,7 @@ $( ".datepicker" ).datepicker({
 });
 
 $( ".data" ).datepicker({
+	showAnim: "slideDown",
 	inline: true,
 	changeMonth: true,
 	changeYear: true,

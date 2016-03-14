@@ -238,7 +238,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totBre . "</td>" .
 					"	<td width='108' align='right'>" . $totTre . "</td>" .
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
-					"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
 					
 					$totaleConto_Bre = 0;
@@ -267,7 +267,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totBre . "</td>" .
 		"	<td width='108' align='right'>" . $totTre . "</td>" .
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 
 		/**
@@ -284,10 +284,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$risultato_costi .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.costi%</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totBre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totTre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totBre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totTre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		
@@ -372,7 +372,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totBre . "</td>" .
 					"	<td width='108' align='right'>" . $totTre . "</td>" .
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
-					"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
 
 					$totaleConto_Bre = 0;
@@ -401,7 +401,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totBre . "</td>" .
 		"	<td width='108' align='right'>" . $totTre . "</td>" .
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		/**
@@ -418,10 +418,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$risultato_ricavi .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.ricavi%</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totBre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totTre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totBre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totTre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		$_SESSION['numRicaviTrovati'] = $numReg;
@@ -502,7 +502,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totBre . "</td>" .
 					"	<td width='108' align='right'>" . $totTre . "</td>" .
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
-					"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
 					
 					$totaleConto_Bre = 0;
@@ -531,7 +531,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totBre . "</td>" .
 		"	<td width='108' align='right'>" . $totTre . "</td>" .
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		/**
@@ -548,10 +548,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$risultato_attivo .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.attivo%</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totBre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totTre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totBre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totTre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		$_SESSION['numAttiviTrovati'] = $numReg;
@@ -632,7 +632,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totBre . "</td>" .
 					"	<td width='108' align='right'>" . $totTre . "</td>" .
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
-					"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
 						
 					$totaleConto_Bre = 0;
@@ -661,7 +661,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totBre . "</td>" .
 		"	<td width='108' align='right'>" . $totTre . "</td>" .
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		/**
@@ -678,10 +678,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$risultato_passivo .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.passivo%</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totBre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totTre . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $totVil . "</td>" .
-		"	<td class='enlarge' width='108' align='right'>" . $tot . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totBre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totTre . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
+		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
 		
 		$_SESSION['numAttiviTrovati'] = $numReg;
@@ -772,25 +772,25 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Fatturato</td>" .
+		"			<td width='308' align='left' class='enlarge'>Fatturato</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Costi variabili</td>" .
+		"			<td width='308' align='left' class='enlarge'>Costi variabili</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Margine totale</td>" .
+		"			<td width='308' align='left' class='enlarge'>Margine totale</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Margine percentuale</td>" .
+		"			<td width='308' align='left' class='enlarge'>Margine percentuale</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeBRE, 2, ',', '.') . " &#37;</td>" .
@@ -894,31 +894,31 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Fatturato</td>" .
+		"			<td width='308' align='left' class='enlarge'>Fatturato</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Costi fissi</td>" .
+		"			<td width='308' align='left' class='enlarge'>Costi fissi</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Acquisti</td>" .
+		"			<td width='308' align='left' class='enlarge'>Acquisti</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>Incidenza acquisti sul fatturato</td>" .
+		"			<td width='308' align='left' class='enlarge'>Incidenza acquisti sul fatturato</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='mark'>BEP</td>" .
+		"			<td width='308' align='left' class='enlarge'>BEP</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepBRE, 2, ',', '.') . "</td>" .
