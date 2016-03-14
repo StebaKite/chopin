@@ -53,7 +53,8 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 
 		$_SESSION["datareg_da"] = "01/01/" . date("Y");
 		$_SESSION["datareg_a"]  = "31/12/" . date("Y");
-		unset($_SESSION["elencoVociAndamentoNegozio"]);
+		unset($_SESSION["elencoVociAndamentoCostiNegozio"]);
+		unset($_SESSION["elencoVociAndamentoRicaviNegozio"]);
 		unset($_SESSION['bottoneEstraiPdf']);
 		
 		$andamentoNegoziTemplate = AndamentoNegoziTemplate::getInstance();

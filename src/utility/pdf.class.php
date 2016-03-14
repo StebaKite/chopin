@@ -1214,11 +1214,11 @@ class Pdf extends FPDF {
 		$this->SetTextColor(0);
 		$this->SetFont('','',10);
 
-		$vociAndamento = $_SESSION["elencoVociAndamentoNegozio"];
 		$desconto_break = "";
 		$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
-			
-		foreach(pg_fetch_all($vociAndamento) as $row) {
+		$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+		
+		foreach(pg_fetch_all($vociNegozio) as $row) {
 		
 			$totconto = $row['tot_conto'];
 		
@@ -1234,49 +1234,74 @@ class Pdf extends FPDF {
 					for ($i = 1; $i < 13; $i++) {
 						
 						if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-						else $this->Cell($w[$i],8, number_format($totaliMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+						else $this->Cell($w[$i],8, number_format(abs($totaliMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
 						
 						$totale_conto = $totale_conto + $totaliMesi[$i];
 					}
 
 					$this->SetFont('','B',10);
-					$this->Cell($w[13],8, number_format($totale_conto, 0, ',', '.'),'LR',0,'R',$fill);								
+					$this->Cell($w[13],8, number_format(abs($totale_conto), 0, ',', '.'),'LR',0,'R',$fill);								
 					$this->SetFont('','',10);
 					$this->Ln();
 						
 					for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
 		
 					$fill = !$fill;
-					$this->Cell($w[0],8, trim($row['des_conto']),'LR',0,'L',$fill);								
+					$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', trim($row['des_conto'])),'LR',0,'L',$fill);								
+
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 				}
 				else {
 					$fill = !$fill;
-					$this->Cell($w[0],8, trim($row['des_conto']),'LR',0,'L',$fill);								
+					$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', trim($row['des_conto'])),'LR',0,'L',$fill);								
+					
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 				}
 				$desconto_break = trim($row['des_conto']);
 			}
 			else {
 				$totaliMesi[$row['mm_registrazione']] = $totconto;
+				$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 			}
 		}
+		
 		/**
 		 * Ultima riga
 		 */
+
+		$totale_conto = 0;
+				
 		for ($i = 1; $i < 13; $i++) {
 			
 			if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format($totaliMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
 			
 			$totale_conto = $totale_conto + $totaliMesi[$i];
 		}
 
 		$this->SetFont('','B',10);
-		$this->Cell($w[13],8, number_format($totale_conto, 0, ',', '.'),'LR',0,'R',$fill);
-		$this->SetFont('','',10);
+		$this->Cell($w[13],8, number_format(abs($totale_conto), 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
+		$fill = !$fill;
+		$this->Cell($w[0],8, "TOTALE",'LR',0,'L',$fill);
+		
+		/**
+		 * Totali mensili finali
+		 */
+		
+		for ($i = 1; $i < 13; $i++) {
+		
+			if ($totaliComplessiviMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		
+			$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+		}
+		$this->Cell($w[13],8, number_format(abs($totale_anno), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		
 		$this->Cell(array_sum($w),0,'','T');
 	}
 }

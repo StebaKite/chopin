@@ -95,14 +95,21 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 				'%codnegozio%' => $_SESSION["codneg_sel"]
 		);
 
-		$this->ricercaVociAndamentoNegozio($utility, $db, $replace);
+		$this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace);
+		$this->ricercaVociAndamentoRicaviNegozio($utility, $db, $replace);
 		
 		$pdf->AddPage('L');
 	
-		$header = array("Descrizione Conto", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+		$header = array("Costi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->SetFont('Arial','',9);
-		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoNegozio"]);
-	
+		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoCostiNegozio"]);
+
+		$pdf->Cell(100,10,'','',0,'R',$fill);
+		$pdf->Ln();
+		
+		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"]);
+		
 		return $pdf;
 	}
 }	
