@@ -23,9 +23,8 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	public static $queryRicaviMargineContribuzioneConSaldi = "/riepiloghi/ricaviMargineContribuzioneConSaldi.sql";
 	public static $queryCostiFissi = "/riepiloghi/costiFissi.sql";
 	public static $queryCostiFissiConSaldi = "/riepiloghi/costiFissiConSaldi.sql";
-	public static $queryAndamentoNegozio = "/riepiloghi/andamentoNegozio.sql";
-	
-	
+	public static $queryAndamentoCostiNegozio = "/riepiloghi/andamentoCostiNegozio.sql";
+	public static $queryAndamentoRicaviNegozio = "/riepiloghi/andamentoRicaviNegozio.sql";
 	
 	function __construct() {
 	}
@@ -262,26 +261,50 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	}
 
 	/**
-	 * Questo metodo estrae un riepilogo di totali per conto per mese 
+	 * Questo metodo estrae un riepilogo di totali per conto in Dare per mese 
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @param unknown $replace
 	 * @return unknown
 	 */
-	public function ricercaVociAndamentoNegozio($utility, $db, $replace) {
+	public function ricercaVociAndamentoCostiNegozio($utility, $db, $replace) {
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoNegozio;
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoCostiNegozio;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
 		if (pg_num_rows($result) > 0) {
-			$_SESSION['elencoVociAndamentoNegozio'] = $result;
-			$_SESSION['numVociTrovate'] = pg_num_rows($result);
+			$_SESSION['elencoVociAndamentoCostiNegozio'] = $result;
+			$_SESSION['numCostiTrovati'] = pg_num_rows($result);
 		}
 		else {
-			unset($_SESSION['elencoVociAndamentoNegozio']);
-			$_SESSION['numVociTrovate'] = 0;
+			unset($_SESSION['elencoVociAndamentoCostiNegozio']);
+			$_SESSION['numCostiTrovati'] = 0;
+		}
+		return $result;
+	}
+	
+	/**
+	 * Questo metodo estrai un riepilogo di totali per conto in Avere per mese
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $replace
+	 */
+	public function ricercaVociAndamentoRicaviNegozio($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoRicaviNegozio;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if (pg_num_rows($result) > 0) {
+			$_SESSION['elencoVociAndamentoRicaviNegozio'] = $result;
+			$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
+		}
+		else {
+			unset($_SESSION['elencoVociAndamentoRicaviNegozio']);
+			$_SESSION['numRicaviTrovati'] = 0;
 		}
 		return $result;
 	}
@@ -760,15 +783,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$_SESSION['totalePassivo'] = $totalePassivo;
 		}
 		return $risultato_passivo;
-	}
-	
-	public function makeBepTable() {
-		
-		
-		
-		
-	}
-	
+	}	
 	
 	public function makeTabs($risultato_costi, $risultato_ricavi, $risultato_attivo, $risultato_passivo) {
 
@@ -925,6 +940,28 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $tabs;
 	}
 
+	public function makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable) {
+
+		$tabs = "";
+		
+		if (($andamentoCostiTable != "") || ($andamentoRicaviTable != "")) {
+		
+			$tabs  = "	<div class='tabs'>";
+			$tabs .= "		<ul>";
+		
+			if ($andamentoCostiTable != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
+			if ($andamentoRicaviTable != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
+		
+			$tabs .= "		</ul>";
+		
+			if ($andamentoCostiTable != "")   { $tabs .= "<div id='tabs-1'>" . $andamentoCostiTable . "</div>"; }
+			if ($andamentoRicaviTable != "")  { $tabs .= "<div id='tabs-2'>" . $andamentoRicaviTable . "</div>"; }
+		
+			$tabs .= "</div>";
+		}
+		return $tabs;
+	}
+	
 	public function nomeTabTotali($totaleRicavi, $totaleCosti) {
 	
 		if ($totaleRicavi > $totaleCosti) {
@@ -1023,11 +1060,11 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $risultato_esercizio;
 	}
 	
-	public function makeAndamentoTable() {
+	public function makeAndamentoCostiTable() {
 
 		$risultato_andamento = "";
 		
-		if (isset($_SESSION["elencoVociAndamentoNegozio"])) {
+		if (isset($_SESSION["elencoVociAndamentoCostiNegozio"])) {
 		
 			$risultato_andamento =
 			"<table class='result'>" .
@@ -1052,10 +1089,11 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			"	<table class='result'>" .
 			"		<tbody>";
 		
-			$vociAndamento = $_SESSION["elencoVociAndamentoNegozio"];
+			$vociAndamento = $_SESSION["elencoVociAndamentoCostiNegozio"];
 			$desconto_break = "";
 			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
-			
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+					
 			foreach(pg_fetch_all($vociAndamento) as $row) {
 
 				$totconto = $row['tot_conto'];
@@ -1071,40 +1109,166 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						
 						for ($i = 1; $i < 13; $i++) {
 							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
-							else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 2, ',', '.') . "</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
 							$totale_conto = $totale_conto + $totaliMesi[$i];
 						}
-						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
 						
 						$risultato_andamento .= "</tr>";
 						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
 						
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 					}
 					else {						
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
 					}		
 					$desconto_break = trim($row['des_conto']);						
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
 				}				
 			}
+			
 			/**
 			 * Ultima riga
 			 */
+
+			$totale_conto = 0;
+				
 			for ($i = 1; $i < 13; $i++) {
 				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
-				else $risultato_andamento .= "<td width='58' align='right'>" . $totaliMesi[$i] . "</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
 				$totale_conto = $totale_conto + $totaliMesi[$i];
 			}
-			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 2, ',', '.') . "</td>";
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+
+			$risultato_andamento .= "</tr>";
+			$risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
+				
+			/**
+			 * Totali mensili finali
+			 */
+			
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+				$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_anno, 0, ',', '.') . "</td>";			
 			$risultato_andamento .= "</tr></tbody></table></div>";			
 		}				
 		return $risultato_andamento;
 	}	
+
+	public function makeAndamentoRicaviTable() {
+	
+		$risultato_andamento = "";
+	
+		if (isset($_SESSION["elencoVociAndamentoRicaviNegozio"])) {
+	
+			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desconto%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+	
+			$vociAndamento = $_SESSION["elencoVociAndamentoRicaviNegozio"];
+			$desconto_break = "";
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+					
+			foreach(pg_fetch_all($vociAndamento) as $row) {
+	
+				$totconto = $row['tot_conto'];
+	
+				if (trim($row['des_conto']) != $desconto_break ) {
+	
+					if ($desconto_break != "") {
+	
+						/**
+						 * A rottura creo le colonne accumulate e inizializzo l'array
+						 */
+						$totale_conto = 0;
+	
+						for ($i = 1; $i < 13; $i++) {
+							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+							$totale_conto = $totale_conto + $totaliMesi[$i];
+						}
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+	
+						$risultato_andamento .= "</tr>";
+						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+	
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+					}
+					else {
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+					}
+					$desconto_break = trim($row['des_conto']);
+				}
+				else {
+					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+				}
+			}
+			
+			/**
+			 * Ultima riga
+			 */
+			 
+			$totale_conto = 0;
+			
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+				$totale_conto = $totale_conto + $totaliMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+				
+			$risultato_andamento .= "</tr>";
+			$risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
+				
+			/**
+			 * Totali mensili finali
+			 */
+			
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
+				$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_anno), 0, ',', '.') . "</td>";			
+			$risultato_andamento .= "</tr></tbody></table></div>";			
+		}
+		return $risultato_andamento;
+	}
 }		
 
 ?>

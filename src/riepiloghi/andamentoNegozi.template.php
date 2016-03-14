@@ -46,18 +46,14 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 
 		$form = self::$root . $array['template'] . self::$pagina;
 
-		$andamentoCostiTable = $this->makeAndamentoTable();
-		$andamentoRicaviTable = $this->makeAndamentoTable();
+		$andamentoCostiTable = $this->makeAndamentoCostiTable();
+		$andamentoRicaviTable = $this->makeAndamentoRicaviTable();
 		
 		/** ******************************************
 		 * Costruisco il box delle tabs
 		 */
 			
-		$tabs = $this->makeTabs($andamentoCostiTable, $andamentoRicaviTable);
-		
-		
-		
-		
+		$tabs = $this->makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable);
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],

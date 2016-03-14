@@ -89,12 +89,13 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 				include(self::$testata);
 				$andamentoNegoziTemplate->displayPagina();
 		
-				$totVoci = $_SESSION['numVociTrovate'];
-		
-				$_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
+				$numCosti = $_SESSION['numCostiTrovati'];
+				$numRicavi = $_SESSION['numRicaviTrovati'];
+				
+				$_SESSION["messaggio"] = "Trovate " . $numCosti . " voci di costo e " . $numRicavi . " voci di ricavo";
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 		
-				if ($totVoci > 0) {
+				if (($numCosti > 0) or ($numRicavi > 0)) {
 					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 				}
 				else {
@@ -149,8 +150,9 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 	
 		$db = Database::getInstance();
 		
-		if ($this->ricercaVociAndamentoNegozio($utility, $db, $replace)) {
+		if ($this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace)) {
 		
+			$this->ricercaVociAndamentoRicaviNegozio($utility, $db, $replace);
 			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
 			return TRUE;
 		}
