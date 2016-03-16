@@ -302,15 +302,15 @@ class CreaFatturaCliente extends FatturaAbstract {
 			
 			if ($e[7] == "10") {
 				$tot_imponibile_10 += $e[5];
-				$tot_iva_10 = $e[6];
+				$tot_iva_10 += $e[6];
 			}
 			elseif ($e[7] == "22") {
 				$tot_imponibile_22 += $e[5];
-				$tot_iva_22 = $e[6];
+				$tot_iva_22 += $e[6];
 			}	
 			elseif ($e[7] == "4") {
 				$tot_imponibile += $e[5];
-				$tot_iva = $e[6];
+				$tot_iva += $e[6];
 			}	
 		}
 
