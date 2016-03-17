@@ -23,7 +23,8 @@ abstract class FatturaAbstract extends ChopinAbstract {
 	public static $nmese;
 	public static $giorno;
 	public static $meserif;
-
+	public static $mesenome;
+	
 	public static $messaggio;
 
 	// Query ---------------------------------------------------------------
