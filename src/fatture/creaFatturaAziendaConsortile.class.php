@@ -10,27 +10,7 @@ require_once 'fattura.abstract.class.php';
  */
 class CreaFatturaAziendaConsortile extends FatturaAbstract {
 
-	public static $mese = array(
-			'01' => 'Gennaio',
-			'02' => 'Febbraio',
-			'03' => 'Marzo',
-			'04' => 'Aprile',
-			'05' => 'Maggio',
-			'06' => 'Giugno',
-			'07' => 'Luglio',
-			'08' => 'Agosto',
-			'09' => 'Settembre',
-			'10' => 'Ottobre',
-			'11' => 'Novembre',
-			'12' => 'Dicembre'
-	);
-	
-	public static $anno;
-	public static $nmese;
-	public static $giorno;
-	public static $meserif;
-	
-	private static $_instance = null;
+	public static $_instance = null;
 	
 	public static $azioneCreaFatturaAziendaConsortile = "../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=go";
 	
@@ -115,17 +95,18 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		/**
 		 * Se il mese di riferimento in pagina non è stato selezionato lo ricavo dalla data fattura
 		 */
+
+		self::$anno = substr($_SESSION["datafat"], 6);
+		self::$nmese = substr($_SESSION["datafat"], 3,2);
+		self::$giorno = substr($_SESSION["datafat"], 0,2);
+		$mm = str_pad(self::$nmese, 2, "0", STR_PAD_LEFT);
+		self::$meserif = self::$mese[$mm];
 		
-		if ($_SESSION["meserif"] == "") {
-			self::$anno = substr($_SESSION["datafat"], 6);
-			self::$nmese = substr($_SESSION["datafat"], 3,2);
-			self::$giorno = substr($_SESSION["datafat"], 0,2);
-			$mm = str_pad(self::$nmese, 2, "0", STR_PAD_LEFT);
-			self::$meserif = self::$mese[$mm];
-		}
-		else {
-			self::$meserif = $_SESSION["meserif"];
-		}
+		if ($_SESSION["meserif"] != "") 
+			self::$mesenome = self::$mese[$_SESSION["meserif"]];
+		else 
+			self::$mesenome = self::$mese[$mm];
+			
 
 		/**
 		 * Aggiorno il numero fattura per l'azienda consortile e negozio
@@ -144,7 +125,8 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 			$fattura = $this->sezioneBanca($fattura);
 			$fattura = $this->sezioneDestinatario($fattura);
 			$fattura = $this->sezioneIdentificativiFattura($fattura);
-			$fattura = $this->sezioneDettagliFattura($fattura, self::$meserif);
+			$fattura = $this->sezioneDettagliFattura($fattura, self::$mesenome);
+			$fattura = $this->sezioneNotaPiede($fattura);
 			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
@@ -161,31 +143,6 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		echo $utility->tailTemplate($template);
 		
 		include(self::$piede);
-	}
-	
-	private function intestazione($fattura) {
-
-		$_SESSION["title"] = "Cooperativa Chopin - Cooperativa sociale - ONLUS";
-		$_SESSION["title1"] = "Diversamente Impresa: Esperienza occupazionale-lavorativa";
-		$_SESSION["title2"] = utf8_decode("Domicilio fiscale: via San Martirio, 1 - 24030 Villa d'Adda (BG) - C.F./P.IVA: 03691430163");
-		
-		return $fattura;		
-	}
-	
-	private function sezionePagamento($fattura) {
-		$fattura->AddPage();
-		$fattura->pagamento($_SESSION["tipoadd"]);		
-		return $fattura;
-	}	
-
-	private function sezioneBanca($fattura) {	
-		$fattura->banca($_SESSION["ragsocbanca"], $_SESSION["ibanbanca"]);
-		return $fattura;
-	}
-	
-	private function sezioneDestinatario($fattura) {
-		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"], $_SESSION["cfiscliente"]);
-		return $fattura;
 	}
 	
 	private function sezioneIdentificativiFattura($fattura) {

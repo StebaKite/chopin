@@ -130,7 +130,10 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract {
 		$db = Database::getInstance();
 		$db->beginTransaction();
 		
-		if ($this->updateProgressivoFattura($db, $utility, $_SESSION["catcliente"], $_SESSION["codneg"], $_SESSION["numfatt"], $_SESSION["notatesta"], $_SESSION["notapiede"])) {
+		$notatesta = str_replace("'", "''", $_SESSION["notatesta"]);
+		$notapiede = str_replace("'", "''", $_SESSION["notapiede"]);
+		
+		if ($this->updateProgressivoFattura($db, $utility, $_SESSION["catcliente"], $_SESSION["codneg"], $_SESSION["numfatt"], $notatesta, $notapiede)) {
 	
 			$db->commitTransaction();
 			return TRUE;

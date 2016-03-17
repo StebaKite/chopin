@@ -28,11 +28,15 @@ class FatturaCliente extends Fattura {
 		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
 	
 		/**
-		 * Eccezione: le fatture i Brembate hanno una B dopo il progressivo
+		 * Eccezione: 
+		 * - le fatture i Brembate hanno una B dopo il progressivo
+		 * - le fatture di Trezzo hanno una T dopo il progressivo
 		 */
 		
-		$nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : str_pad($numfat, 2, "0", STR_PAD_LEFT);
-	
+		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
+		$nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : $nfat;
+		$nfat = ($codneg == "TRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "T" : $nfat;
+		
 		$r1  = 10;
 		$r2  = $r1 + 192;
 		$y1  = 94;
@@ -226,7 +230,7 @@ class FatturaCliente extends Fattura {
 		}
 		
 		if ($tot_imponibile_10 > 0) {
-			$_y1 = $y1 + 7;
+			$_y1 = $y1 + 12;
 			$this->SetXY( $r1+2, $_y1);
 			$this->Cell(10,6,"10","",0,"C");
 			$this->SetX( $r1+20 );
@@ -238,7 +242,7 @@ class FatturaCliente extends Fattura {
 		}
 	
 		if ($tot_imponibile_22 > 0) {
-			$_y1 = $y1 + 7;
+			$_y1 = $y1 + 17;
 			$this->SetXY( $r1+2, $_y1);
 			$this->Cell(10,6,"22","",0,"C");
 			$this->SetX( $r1+20 );
