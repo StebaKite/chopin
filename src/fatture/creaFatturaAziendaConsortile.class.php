@@ -147,6 +147,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 			$fattura = $this->sezioneDestinatario($fattura);
 			$fattura = $this->sezioneIdentificativiFattura($fattura);
 			$fattura = $this->sezioneDettagliFattura($fattura, self::$mesenome);
+			$fattura = $this->sezioneNotaPiede($fattura);
 			$fattura = $this->sezioneTotali($fattura);
 			
 			$fattura->Output();				
@@ -247,6 +248,15 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$y1  = 240;
 		$fattura->Line( $r1, $y1, $r2, $y1);
 		
+		return $fattura;
+	}
+
+	public function sezioneNotaPiede($fattura) {
+	
+		if (isset($_SESSION["nota_piede_fattura"])) {
+			$nota = explode("\\", $_SESSION["nota_piede_fattura"]);
+		}
+		$fattura->aggiungiLineaNota($nota, 12, 242);
 		return $fattura;
 	}
 	
