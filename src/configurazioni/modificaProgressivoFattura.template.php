@@ -74,8 +74,8 @@ class ModificaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
 				'%catcliente%' => $_SESSION["catcliente"],
 				'%codneg%' => $_SESSION["codneg"],
 				'%numfatt%' => $_SESSION["numfatt"],
-				'%notatesta%' => $_SESSION["notatesta"],
-				'%notapiede%' => $_SESSION["notapiede"]
+				'%notatesta%' => str_replace("'", "&apos;", $_SESSION["notatesta"]),				
+				'%notapiede%' => str_replace("'", "&apos;", $_SESSION["notapiede"])
 		);
 	
 		$utility = Utility::getInstance();
