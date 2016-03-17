@@ -33,8 +33,9 @@ class FatturaCliente extends Fattura {
 		 * - le fatture di Trezzo hanno una T dopo il progressivo
 		 */
 		
-		$nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : str_pad($numfat, 2, "0", STR_PAD_LEFT);
-		$nfat = ($codneg == "TRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "T" : str_pad($numfat, 2, "0", STR_PAD_LEFT);
+		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
+		$nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : $nfat;
+		$nfat = ($codneg == "TRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "T" : $nfat;
 		
 		$r1  = 10;
 		$r2  = $r1 + 192;
