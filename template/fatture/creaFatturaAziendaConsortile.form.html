@@ -149,37 +149,37 @@ function imponibile_e_iva() {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td>%ml.datafat% :</td>
+						<td align="right">%ml.datafat% :</td>
 						<td width="100" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
 						<td width="120"align="right">%ml.datarif% :</td>
 						<td>
-							<select class='selectmenuMeserif' id="meserif" name="meserif">
+							<select class="selectmenuMeserif" id="meserif" name="meserif">
 								<option value="" %empty_selected%>%ml.selezionare%</option>							
-								<option value="%ml.gen%" %gen_selected% >%ml.gen%</option>							
-								<option value="%ml.feb%" %feb_selected% >%ml.feb%</option>							
-								<option value="%ml.mar%" %mar_selected% >%ml.mar%</option>							
-								<option value="%ml.apr%" %apr_selected% >%ml.apr%</option>							
-								<option value="%ml.mag%" %mag_selected% >%ml.mag%</option>							
-								<option value="%ml.giu%" %giu_selected% >%ml.giu%</option>							
-								<option value="%ml.lug%" %lug_selected% >%ml.lug%</option>							
-								<option value="%ml.ago%" %ago_selected% >%ml.ago%</option>							
-								<option value="%ml.set%" %set_selected% >%ml.set%</option>							
-								<option value="%ml.ott%" %ott_selected% >%ml.ott%</option>							
-								<option value="%ml.nov%" %nov_selected% >%ml.nov%</option>							
-								<option value="%ml.dic%" %dic_selected% >%ml.dic%</option>							
+								<option value="01" %gen_selected% >%ml.gen%</option>							
+								<option value="02" %feb_selected% >%ml.feb%</option>							
+								<option value="03" %mar_selected% >%ml.mar%</option>							
+								<option value="04" %apr_selected% >%ml.apr%</option>							
+								<option value="05" %mag_selected% >%ml.mag%</option>							
+								<option value="06" %giu_selected% >%ml.giu%</option>							
+								<option value="07" %lug_selected% >%ml.lug%</option>							
+								<option value="08" %ago_selected% >%ml.ago%</option>							
+								<option value="09" %set_selected% >%ml.set%</option>							
+								<option value="10" %ott_selected% >%ml.ott%</option>							
+								<option value="11" %nov_selected% >%ml.nov%</option>							
+								<option value="12" %dic_selected% >%ml.dic%</option>							
 							</select>
 						</td>
 					</tr>					
 					<tr>
-						<td>%ml.azcons% :</td>
+						<td align="right">%ml.azcons% :</td>
 						<td colspan="4" ><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
 					</tr>				
 					<tr>
-						<td>%ml.tipaddebito% :</td>
+						<td align="right">%ml.tipaddebito% :</td>
 						<td colspan="4" class="tooltip"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
 					</tr>
 					<tr>				
-						<td>%ml.negozio% :</td>						
+						<td align="right">%ml.negozio% :</td>						
 						<td colspan="4" >
 							<div class="radioset" >
 								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="prelevaNumeroFattura(this.value)"><label for="villa">%ml.villa%</label>
@@ -189,19 +189,19 @@ function imponibile_e_iva() {
 						</td>					
 					</tr>				
 					<tr>
-						<td>%ml.numfatt% :</td>
+						<td align="right">%ml.numfatt% :</td>
 						<td colspan="4" class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
 					</tr>				
 					<tr>
-						<td>%ml.banca% :</td>
+						<td align="right">%ml.banca% :</td>
 						<td colspan="4" class="tooltip"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
 					</tr>				
 					<tr>
-						<td>%ml.iban% :</td>
+						<td align="right">%ml.iban% :</td>
 						<td colspan="4" class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
 					</tr>				
 					<tr>
-						<td >
+						<td colspan="5">
 							<table id="dettagli" class="%class_dettagli%">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>

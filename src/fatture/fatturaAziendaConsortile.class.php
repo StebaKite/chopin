@@ -55,6 +55,7 @@ class FatturaAziendaConsortile extends Fattura {
 		$this->Ln();
 	
 		for($i=1;$i<count($articolo);$i++) {
+			$this->SetX( 30 );
 			$this->Cell($w[1],6,utf8_decode($articolo[$i]),"",0,"L");
 			$this->Ln();
 		}
