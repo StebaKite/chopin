@@ -10,28 +10,7 @@ require_once 'fattura.abstract.class.php';
  */
 class CreaFatturaAziendaConsortile extends FatturaAbstract {
 
-	public static $mese = array(
-			'01' => 'Gennaio',
-			'02' => 'Febbraio',
-			'03' => 'Marzo',
-			'04' => 'Aprile',
-			'05' => 'Maggio',
-			'06' => 'Giugno',
-			'07' => 'Luglio',
-			'08' => 'Agosto',
-			'09' => 'Settembre',
-			'10' => 'Ottobre',
-			'11' => 'Novembre',
-			'12' => 'Dicembre'
-	);
-	
-	public static $anno;
-	public static $nmese;
-	public static $giorno;
-	public static $meserif;
-	public static $mesenome;
-	
-	private static $_instance = null;
+	public static $_instance = null;
 	
 	public static $azioneCreaFatturaAziendaConsortile = "../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=go";
 	
@@ -166,31 +145,6 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		include(self::$piede);
 	}
 	
-	private function intestazione($fattura) {
-
-		$_SESSION["title"] = "Cooperativa Chopin - Cooperativa sociale - ONLUS";
-		$_SESSION["title1"] = "Diversamente Impresa: Esperienza occupazionale-lavorativa";
-		$_SESSION["title2"] = utf8_decode("Domicilio fiscale: via San Martirio, 1 - 24030 Villa d'Adda (BG) - C.F./P.IVA: 03691430163");
-		
-		return $fattura;		
-	}
-	
-	private function sezionePagamento($fattura) {
-		$fattura->AddPage();
-		$fattura->pagamento($_SESSION["tipoadd"]);		
-		return $fattura;
-	}	
-
-	private function sezioneBanca($fattura) {	
-		$fattura->banca($_SESSION["ragsocbanca"], $_SESSION["ibanbanca"]);
-		return $fattura;
-	}
-	
-	private function sezioneDestinatario($fattura) {
-		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"], $_SESSION["cfiscliente"]);
-		return $fattura;
-	}
-	
 	private function sezioneIdentificativiFattura($fattura) {
 		$fattura->identificativiFatturaAziendaConsortile(self::$giorno, self::$meserif, self::$anno, $_SESSION["numfat"], $_SESSION["codneg"]);
 		return $fattura;		
@@ -248,15 +202,6 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$y1  = 240;
 		$fattura->Line( $r1, $y1, $r2, $y1);
 		
-		return $fattura;
-	}
-
-	public function sezioneNotaPiede($fattura) {
-	
-		if (isset($_SESSION["nota_piede_fattura"])) {
-			$nota = explode("\\", $_SESSION["nota_piede_fattura"]);
-		}
-		$fattura->aggiungiLineaNota($nota, 12, 242);
 		return $fattura;
 	}
 	

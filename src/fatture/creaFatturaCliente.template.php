@@ -4,8 +4,8 @@ require_once 'fattura.abstract.class.php';
 
 class CreaFatturaClienteTemplate extends FatturaAbstract {
 
-	private static $_instance = null;
-
+	public static $_instance = null;
+	
 	private static $pagina = "/fatture/creaFatturaCliente.form.html";
 
 	//-----------------------------------------------------------------------------

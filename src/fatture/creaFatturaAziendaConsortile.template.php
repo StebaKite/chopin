@@ -4,8 +4,8 @@ require_once 'fattura.abstract.class.php';
 
 class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 
-	private static $_instance = null;
-
+	public static $_instance = null;
+	
 	private static $pagina = "/fatture/creaFatturaAziendaConsortile.form.html";
 
 	//-----------------------------------------------------------------------------
