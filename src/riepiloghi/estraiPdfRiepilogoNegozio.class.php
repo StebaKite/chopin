@@ -2,7 +2,7 @@
 
 require_once 'riepiloghiComparati.abstract.class.php';
 
-class EstraiPdfRiepilogoNegozio extends RiepiloghiAbstract {
+class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 
 	private static $_instance = null;
 
