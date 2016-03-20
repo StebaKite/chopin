@@ -1232,14 +1232,12 @@ function cancellaCliente(idcliente, codcliente) {
 }
 
 function generaMastrino(codconto, codsottoconto) {
+		
+	var input_codcontogenera = "<input type='text' id='codcontogenera' name='codcontogenera' value='" + codconto + "' readonly >";
+	var input_codsottocontogenera = "<input type='text' id='codsottocontogenera' name='codsottocontogenera' value='" + codsottoconto + "' readonly >";
 	
-	var codSottoconto = pad(codsottoconto, 2);
-	if (codSottoconto.substring(0, 1) == "0") {
-		var codSottoconto = pad(codsottoconto, 1);
-	}
-	
-	$( "#codcontogenera" ).val(codconto);
-	$( "#codsottocontogenera" ).val(codSottoconto);
+	$( "#id_codcontogenera" ).html(input_codcontogenera);
+	$( "#id_codsottocontogenera" ).html(input_codsottocontogenera);
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 

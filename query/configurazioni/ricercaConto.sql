@@ -5,7 +5,7 @@ select
   from (
 		select 
 			'C' as tipo,
-			cod_conto,
+			cast(cod_conto as integer) as cod_conto,
 			des_conto,
 			cat_conto,
 			tip_conto,
@@ -18,11 +18,11 @@ select
 		union
 		select
 			'S' as tipo,
-			sottoconto.cod_conto,
+			cast(sottoconto.cod_conto as integer) as cod_conto,
 			null as des_conto,
 			null as cat_conto,
 			null as tip_conto,
-			cod_sottoconto,
+			cast(cod_sottoconto as integer) as cod_sottoconto,
 			des_sottoconto
 		from contabilita.sottoconto as sottoconto
 			inner join
@@ -36,8 +36,8 @@ select
 		) as t1		
 	left outer join
 		(select
-			cod_conto,
-			cod_sottoconto,
+			cast(cod_conto as integer) as cod_conto,
+			cast(cod_sottoconto as integer) as cod_sottoconto,
 			count(*) as totale
 		   from contabilita.dettaglio_registrazione
 		    group by cod_conto, cod_sottoconto
@@ -46,7 +46,7 @@ select
 	  and totreg1.cod_sottoconto = t1.cod_sottoconto
 	left outer join
 		(select
-			cod_conto,
+			cast(cod_conto as integer) as cod_conto,
 			count(*) as totale
 		   from contabilita.dettaglio_registrazione
 		    group by cod_conto
