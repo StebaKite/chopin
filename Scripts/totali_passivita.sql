@@ -30,11 +30,13 @@ SELECT
 				  	   		AND t2.cod_sottoconto = t1.cod_sottoconto
 				  		LEFT OUTER JOIN contabilita.registrazione as t4
 				  			ON  t4.id_registrazione = t2.id_registrazione
-				  WHERE t4.dat_registrazione BETWEEN '%datareg_da%' AND '%datareg_a%'
-				  AND   t4.cod_negozio IN (%codnegozio%)
+				  WHERE t4.dat_registrazione BETWEEN '2015-07-01' AND '2015-12-31'
+				  AND   t4.cod_negozio IN ('VIL')
 				  AND   t3.cat_conto = 'Stato Patrimoniale'
 				  AND   t3.ind_presenza_in_bilancio = 'S'
 				  AND   t3.tip_conto = 'Avere' 
+				  AND   t3.cod_conto = '215'
+				  AND	t1.cod_sottoconto = '45'
 				GROUP BY t3.num_riga_bilancio, t3.ind_visibilita_sottoconti, t3.des_conto, t1.des_sottoconto, t2.ind_dareavere
 			) AS t6
 		GROUP BY t6.num_riga_bilancio, t6.ind_visibilita_sottoconti, t6.des_conto, t6.des_sottoconto
@@ -53,11 +55,13 @@ SELECT
 			INNER JOIN contabilita.sottoconto as sottoconto
 			  ON sottoconto.cod_conto = saldo.cod_conto	  
 			  AND sottoconto.cod_sottoconto = saldo.cod_sottoconto	  
-		 WHERE saldo.dat_saldo = '%datareg_da%'
-		  AND saldo.cod_negozio IN (%codnegozio%)		  
+		 WHERE saldo.dat_saldo = '2015-07-01'
+		  AND saldo.cod_negozio IN ('VIL')		  
 		  AND saldo.ind_dareavere = 'A' 		  
 		  AND conto.cat_conto = 'Stato Patrimoniale'
 		  AND conto.ind_presenza_in_bilancio = 'S'
+		  AND conto.cod_conto = '215'
+		  AND sottoconto.cod_sottoconto = '45'
 	) t5 
 GROUP BY t5.num_riga_bilancio, t5.ind_visibilita_sottoconti, t5.des_conto, t5.des_sottoconto	
 ORDER BY t5.num_riga_bilancio, t5.des_conto, t5.des_sottoconto	

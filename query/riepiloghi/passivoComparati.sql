@@ -41,7 +41,7 @@ SELECT
 			conto.num_riga_bilancio,
 			conto.des_conto,
 			saldo.cod_negozio,
-			saldo.imp_saldo as tot_conto
+			(saldo.imp_saldo * -1) as tot_conto
 		 FROM contabilita.saldo  
 			INNER JOIN contabilita.conto as conto
 			  ON conto.cod_conto = saldo.cod_conto
