@@ -157,9 +157,18 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		require_once 'menubanner.template.php';
 		
 		$conti = pg_fetch_all($statoPatrimoniale);
-			
+
+		/**
+		 * Scansione di tutti i conti dello Stato Patrimoniale
+		 */
+		
 		foreach($conti as $conto) {
-				
+		
+			/**
+			 * Per ciascun conto effettuo la totalizzazione delle registrazioni per ciascun negozio
+			 */
+			$dareAvere_conto = ($conto['tip_conto'] = "Avere") ? "A" : "D";		// prelevo il tipo del conto Dare/Avere
+								
 			foreach(SELF::$negozi as $negozio){
 					
 				$replace = array(
@@ -175,31 +184,47 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		
 				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);				
 				$result = $db->execSql($sql);
-		
-				$saldo = pg_fetch_all($result);
 					
-				if (result) {
-					foreach($saldo as $row) {
-						
-						/**
-						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
-						 */
-						if ($row['tot_conto'] != 0) {
-		
-							/**
-							 * L'attribuzione del segno tiene in considerazione sia il tipo di conto sia l'importo del saldo.
-							 * Ad esempio: la cassa è un conto in Dare ma se il saldo risulta negativo viene riportato in Avere
-							 * Lo stesso per un conto in Avere con un seldo maggiore di zero, viene riportato in Dare
-							 */
-													
-							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == 1)) $dareAvere = "D";	
-							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == 1)) $dareAvere = "A";
+				if ($result) {
 
-							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == -1)) $dareAvere = "D";
-							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == -1)) $dareAvere = "A";
+					$saldo = pg_fetch_all($result);
+						
+					$totale_conto = 0;	//default
+					$dareAvere = "";	//default
+
+					/**
+					 * Faccio la somma algebrica di tutti i totali estratti.
+					 * Normalmente dalla query di totalizzazione viene fuori una riga con un totale, ma nel caso
+					 * di conti con importo negativo e segno contrario escono due righe.
+					 *
+					 */
+								
+					foreach($saldo as $row) {
 							
-							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
+							$totale_conto_con_segnato = $row['tot_conto'] * $row['tip_conto'];
+							$totale_conto = $totale_conto + $totale_conto_con_segnato; 
+					}
+					
+					/**
+					 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+					 */
+						
+					if ($totale_conto != 0) {
+										
+						/**
+						 * L'attribuzione del segno tiene in considerazione sia il tipo di conto sia l'importo del saldo.
+						 * Ad esempio: la cassa è un conto in Dare ma se il saldo risulta negativo viene riportato in Avere
+						 * Lo stesso per un conto in Avere con un seldo maggiore di zero, viene riportato in Dare
+						 */
+							
+						if ($dareAvere_conto == "D") {
+							$dareAvere = ($totale_conto > 0) ? "D" : "A";
 						}
+						elseif ($dareAvere_conto == "A") {
+							$dareAvere = ($totale_conto < 0) ? "A" : "D";
+						}
+							
+						$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
 					}
 				}
 			}
