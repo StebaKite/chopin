@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 require_once 'configurazioni.abstract.class.php';
 
@@ -113,15 +113,6 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			$_SESSION['numContiTrovati'] = $numConti;
 			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
 		}
-		else {
-				
-		}
-
-		if ($_SESSION["categoria"] == "Conto Economico") $contoEconomicoSelected = "selected";
-		if ($_SESSION["categoria"] == "Stato Patrimoniale") $statoPatrimonialeSelected = "selected";
-
-		if ($_SESSION["tipoconto"] == "Dare") $dareSelected = "selected";
-		if ($_SESSION["tipoconto"] == "Avere") $avereSelected = "selected";
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
@@ -129,10 +120,10 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 				'%confermaTip%' => $_SESSION["confermaTip"],
 				'%datareg_da%' => "",
 				'%datareg_a%' => "",
-				'%contoeconomicoselected%' => $contoEconomicoSelected,
-				'%statopatrimonialeselected%' => $statoPatrimonialeSelected,
-				'%dareselected%' => $dareSelected,
-				'%avereselected%' => $avereSelected,
+				'%contoeconomicoselected%' => ($_SESSION["categoria"] == "Conto Economico") ? "selected" : "",
+				'%statopatrimonialeselected%' => ($_SESSION["categoria"] == "Stato Patrimoniale") ? "selected" : "",
+				'%dareselected%' => ($_SESSION["tipoconto"] == "Dare") ? "selected" : "",
+				'%avereselected%' => ($_SESSION["tipoconto"] == "Avere") ? "selected" : "",
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

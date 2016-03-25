@@ -169,6 +169,8 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaDateRiportoSaldi;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->getData($sql);
+		
+		$elencoDateRiportoSaldi = "";
 
 		foreach(pg_fetch_all($result) as $row) {
 		

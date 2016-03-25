@@ -162,6 +162,15 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 		
 		// Template --------------------------------------------------------------
 
+		$class_dettagli = "";
+		$thead_dettagli = "";
+		$tbody_dettagli = "";
+		$class_scadenzesuppl = "";
+		$thead_scadenze = "";
+		$tbody_scadenze = "";
+		$s_x_array = "";
+		$d_x_array = "";
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 

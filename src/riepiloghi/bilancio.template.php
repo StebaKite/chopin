@@ -59,8 +59,8 @@ class BilancioTemplate extends RiepiloghiAbstract {
 		 * Costruzione delle tabelle 
 		 */
 
-		$risultato_costi = $this->makeCostiTable();
-		$risultato_ricavi = $this->makeRicaviTable();
+		$risultato_costi = $this->makeCostiTable($array);
+		$risultato_ricavi = $this->makeRicaviTable($array);
 		$risultato_attivo = $this->makeAttivoTable();
 		$risultato_passivo = $this->makePassivoTable();
 		

@@ -313,12 +313,12 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	 * Questo metodo crea la tabella dei costi variabili di iniettare in pagina
 	 * @return string
 	 */
-	public function makeCostiTable() {
+	public function makeCostiTable($array) { 
 		
 		$risultato_costi = "";
 		
 		if (isset($_SESSION["costiBilancio"])) {
-		
+				
 			$sottocontiCostiVariabili = ($array['sottocontiCostiVariabili'] != "") ? explode(",", $array['sottocontiCostiVariabili']) : "";
 				
 			$risultato_costi =
@@ -433,7 +433,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $risultato_costi;
 	}
 	
-	public function makeRicaviTable() {
+	public function makeRicaviTable($array) {
 		
 		$risultato_ricavi = "";
 
@@ -555,6 +555,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	
 	public function makeAttivoTable() {
 		
+		$risultato_attivo = "";
 		$totaleAttivo = "";
 
 		if (isset($_SESSION["attivoBilancio"])) {
@@ -671,6 +672,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	
 	public function makePassivoTable() {
 		
+		$risultato_passivo = "";
 		$totalePassivo = "";
 
 		if (isset($_SESSION["passivoBilancio"])) {
@@ -816,6 +818,8 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				$totaleCostiFissi = trim($row['totalecostofisso']);
 			}
 		
+ 			$totaleCosti = $totaleCostiFissi + $totaleCostiVariabili; 
+			
 			/**
 			 * Calcolo del Break Eaven Point
 			 *
@@ -1153,6 +1157,8 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			/**
 			 * Totali mensili finali
 			 */
+			
+			$totale_anno = 0;
 			
 			for ($i = 1; $i < 13; $i++) {
 				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";

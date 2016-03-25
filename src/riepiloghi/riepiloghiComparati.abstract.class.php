@@ -710,8 +710,14 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public function makeTableMargineContribuzione() {
 			
 		$margineContribuzione = "";
-
+		
 		// Villa ---------------------------------------------------------------------
+
+		$totaleCostiVariabiliVIL = 0;
+		$totaleRicaviVIL = 0;
+		$totaleCostiFissiVIL = 0;
+		$margineTotaleVIL = 0;
+		$marginePercentualeVIL = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
 			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
@@ -729,6 +735,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
 
 		// Trezzo ---------------------------------------------------------------------
+
+		$totaleCostiVariabiliTRE = 0;
+		$totaleRicaviTRE = 0;
+		$totaleCostiFissiTRE = 0;
+		$margineTotaleTRE = 0;
+		$marginePercentualeTRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
 			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
@@ -746,6 +758,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
 
 		// Brembate ---------------------------------------------------------------------
+
+		$totaleCostiVariabiliBRE = 0;
+		$totaleRicaviBRE = 0;
+		$totaleCostiFissiBRE = 0;
+		$margineTotaleBRE = 0;
+		$marginePercentualeBRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
 			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);

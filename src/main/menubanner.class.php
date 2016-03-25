@@ -81,9 +81,7 @@ class Menubanner extends ChopinAbstract {
 		}
 		
 		// compone la pagina
-		include($testata);
 		$menubannerTemplate->displayPagina();
-		include($piede);
 	}		
 }
 
