@@ -42,6 +42,7 @@ $( "#addebitodiretto" ).click(function( event ) {
 
 $( "#msg" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	buttons: [
 		{
@@ -62,6 +63,7 @@ $( "#msg" ).dialog({
 
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -91,6 +93,7 @@ $( "#nuovo-dett" ).click(function( event ) {
 
 $( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -144,6 +147,7 @@ $( "#nuovo-dett-corrisp" ).click(function( event ) {
 
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 150,
 	buttons: [
@@ -173,6 +177,7 @@ $( "#nuova-data-scad" ).click(function( event ) {
 // Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -202,6 +207,7 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuova-scadenza-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 150,
 	buttons: [
@@ -230,6 +236,7 @@ $( "#nuova-scad-modificareg" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -258,6 +265,7 @@ $( "#nuovo-dett-modifica-pagamento" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-incasso-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -283,39 +291,10 @@ $( "#nuovo-dett-modifica-incasso" ).click(function( event ) {
 	event.preventDefault();
 });
 
-// Nuovo evento
-$( "#nuovo-evento-form" ).dialog({
-	autoOpen: false,
-	width: 500,
-	height: 250,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-             $("#nuovoEvento").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-// Link to open the dialog
-$( "#nuovo-evento" ).click(function( event ) {
-	$( "#dataevento" ).val("");
-	$( "#notaevento" ).val("");	
-	$( "#nuovo-evento-form" ).dialog( "open" );
-	event.preventDefault();
-});
-
 //Modifica registrazione : cancella dettaglio
 $( "#cancella-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -337,6 +316,7 @@ $( "#cancella-dettaglio-modificareg-form" ).dialog({
 //Cancella conto
 $( "#cancella-conto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -358,6 +338,7 @@ $( "#cancella-conto-form" ).dialog({
 //Cancella causale
 $( "#cancella-causale-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -379,6 +360,7 @@ $( "#cancella-causale-form" ).dialog({
 //Cancella fornitore
 $( "#cancella-fornitore-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -400,6 +382,7 @@ $( "#cancella-fornitore-form" ).dialog({
 //Cancella cliente
 $( "#cancella-cliente-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -421,6 +404,7 @@ $( "#cancella-cliente-form" ).dialog({
 //Modifica conto : modifica gruppo sottoconto
 $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 360,
 	buttons: [
 		{
@@ -442,6 +426,7 @@ $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 //Modifica conto : cancella sottoconto
 $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -463,6 +448,7 @@ $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 //Modifica conto : aggiunta nuovo sottoconto
 $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 600,
 	height: 250,
 	buttons: [
@@ -485,6 +471,7 @@ $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 // Genera mastrino fornitore
 $( "#generaMastrino-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 400,
 	buttons: [
 		{
@@ -512,6 +499,7 @@ $( "#nuovo-sottoconto-modificaconto" ).click(function( event ) {
 //Cancella registrazione
 $( "#cancella-registrazione-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -533,6 +521,7 @@ $( "#cancella-registrazione-form" ).dialog({
 //Cancella corrispettivo
 $( "#cancella-corrispettivo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -553,6 +542,7 @@ $( "#cancella-corrispettivo-form" ).dialog({
 
 $( "#nuovo-sottoconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 600,
 	height: 200,
 	buttons: [
@@ -581,6 +571,7 @@ $( "#nuovo-sottoconto" ).click(function( event ) {
 //Modifica registrazione : cancella scadenza
 $( "#cancella-scadenza-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -601,6 +592,7 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 
 $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 510,
 	height: 420,
 	buttons: [
@@ -628,6 +620,7 @@ $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 
 $( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 510,
 	height: 420,
 	buttons: [
@@ -1106,6 +1099,7 @@ function cancellaCorrispettivo(idreg) {
 //Modifica pagamento : cancella dettaglio
 $( "#cancella-dettaglio-modificapag-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -1137,6 +1131,7 @@ function cancellaDettaglioPagamento(idconto) {
 //Modifica incasso : cancella dettaglio
 $( "#cancella-dettaglio-modificainc-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
