@@ -125,6 +125,7 @@ function controllaNumeroFattura() {
 	var fornitore = $("#fornitore").val();
 	var cliente = $("#cliente").val();
 	var numfatt = $("#numfatt").val();
+	var datareg = $("#datareg").val();
 
 	if ((fornitore != "") && (numfatt != "")) {
 		var xmlhttp = new XMLHttpRequest();
@@ -134,7 +135,7 @@ function controllaNumeroFattura() {
 	            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
 	        }
 	    } 
-	    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
+	    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
 	    xmlhttp.send();		
 	}	
 	else if ((cliente != "") && (numfatt != "")) {
@@ -145,7 +146,7 @@ function controllaNumeroFattura() {
 	            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
 	        }
 	    } 
-	    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&idcliente=" + cliente + "&numfatt=" + numfatt, true);
+	    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&idcliente=" + cliente + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
 	    xmlhttp.send();		
 	}
 }

@@ -711,12 +711,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $id_fornitore
 	 * @param unknown $num_fattura
 	 */
-	public function cercaFatturaFornitore($db, $utility, $id_fornitore, $num_fattura) {
+	public function cercaFatturaFornitore($db, $utility, $id_fornitore, $num_fattura, $dat_registrazione) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_fornitore%' => trim($id_fornitore),
-				'%num_fattura%' => trim($num_fattura)
+				'%num_fattura%' => trim($num_fattura),
+				'%dat_registrazione%' => trim($dat_registrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -730,12 +731,13 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $idcliente
 	 * @param unknown $numfatt
 	 */
-	public function cercaFatturaCliente($db, $utility, $id_cliente, $num_fattura) {
+	public function cercaFatturaCliente($db, $utility, $id_cliente, $num_fattura, $dat_registrazione) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_cliente%' => trim($id_cliente),
-				'%num_fattura%' => trim($num_fattura)
+				'%num_fattura%' => trim($num_fattura),
+				'%dat_registrazione%' => trim($dat_registrazione)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiFatturaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
