@@ -143,10 +143,18 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 	
 		unset($_SESSION["totaliProgressivi"]);
 	
+		$codnegozio = "";
+		if ($_SESSION["codneg_sel"] == "") {
+			$codnegozio = "'VIL','TRE','BRE'";
+		}
+		else {
+			$codnegozio = "'" . $_SESSION["codneg_sel"] . "'";
+		}
+		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%codnegozio%' => $_SESSION["codneg_sel"]
+				'%codnegozio%' => $codnegozio
 		);
 	
 		$db = Database::getInstance();

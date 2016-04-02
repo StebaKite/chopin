@@ -26,7 +26,7 @@ SELECT
 			  			ON  t4.id_registrazione = t2.id_registrazione
 			  WHERE t4.dat_registrazione BETWEEN '%datareg_da%' AND '%datareg_a%'
 			  AND   t3.cat_conto = 'Conto Economico'	
-			  AND   t4.cod_negozio = '%codnegozio%'
+			  AND   t4.cod_negozio IN (%codnegozio%)
 			  AND   t3.ind_presenza_in_bilancio = 'S'
 			  AND   t3.tip_conto = 'Avere' 
 			GROUP BY mm_registrazione, t3.des_conto, t2.ind_dareavere
