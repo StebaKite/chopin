@@ -245,4 +245,13 @@ ago = Ago
 set = Set
 ott = Ott
 nov = Nov
-dic = Dic 
+dic = Dic
+
+fatturato = Fatturato
+acquisti = Acquisti
+margineAssoluto = Margine Assoluto
+marginePercentuale = Margine %
+ricaricoPercentuale = Ricarico %
+
+
+ 
