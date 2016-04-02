@@ -944,7 +944,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $tabs;
 	}
 
-	public function makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable) {
+	public function makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable, $andamentoMctTable) {
 
 		$tabs = "";
 		
@@ -955,12 +955,14 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 			if ($andamentoCostiTable != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
 			if ($andamentoRicaviTable != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
-		
+			if ($andamentoMctTable != "")  	  { $tabs .= "<li><a href='#tabs-3'>MCT</a></li>"; }
+				
 			$tabs .= "		</ul>";
 		
 			if ($andamentoCostiTable != "")   { $tabs .= "<div id='tabs-1'>" . $andamentoCostiTable . "</div>"; }
 			if ($andamentoRicaviTable != "")  { $tabs .= "<div id='tabs-2'>" . $andamentoRicaviTable . "</div>"; }
-		
+			if ($andamentoMctTable != "")     { $tabs .= "<div id='tabs-3'>" . $andamentoMctTable . "</div>"; }
+				
 			$tabs .= "</div>";
 		}
 		return $tabs;
@@ -1095,8 +1097,14 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 			$vociAndamento = $_SESSION["elencoVociAndamentoCostiNegozio"];
 			$desconto_break = "";
-			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
-			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+			
+			/**
+			 * Salvo i totali che mi occorrono per il calcolo dell'MCT per mese 
+			 */
+			
+			$totaliAcquistiMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
 					
 			foreach(pg_fetch_all($vociAndamento) as $row) {
 
@@ -1123,7 +1131,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
-						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
 					}
 					else {						
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
@@ -1131,6 +1139,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
 					}		
 					$desconto_break = trim($row['des_conto']);						
+					$totaliAcquistiMesi[$row['mm_registrazione']] = (strpos(trim($row['des_conto']), "Acquisto") == true) ? $totconto : 0;					
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
@@ -1168,6 +1177,13 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_anno, 0, ',', '.') . "</td>";			
 			$risultato_andamento .= "</tr></tbody></table></div>";			
 		}				
+		
+		/**
+		 * Metto in sessione i totali per mese degli acquisti che mi occorrono per creare le tabella dell'MCT progressivo
+		 */
+		
+		$_SESSION["totaliAcquistiMesi"] = $totaliAcquistiMesi;
+		
 		return $risultato_andamento;
 	}	
 
@@ -1204,7 +1220,13 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$desconto_break = "";
 			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
 			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
-					
+
+			/**
+			 * Salvo i totali che mi occorrono per il calcolo dell'MCT per mese
+			 */
+				
+			$totaliRicaviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+				
 			foreach(pg_fetch_all($vociAndamento) as $row) {
 	
 				$totconto = $row['tot_conto'];
@@ -1231,17 +1253,20 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+						$totaliRicaviMesi[$row['mm_registrazione']] = (strpos(trim($row['des_conto']), "Ricavi") > 0) ? $totconto : 0;					
 					}
 					else {
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+						$totaliRicaviMesi[$row['mm_registrazione']] = (strpos(trim($row['des_conto']), "Ricavi") > 0) ? $totconto : 0;
 					}
 					$desconto_break = trim($row['des_conto']);
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+					$totaliRicaviMesi[$row['mm_registrazione']] = (strpos(trim($row['des_conto']), "Ricavi") > 0) ? $totconto : 0;
 				}
 			}
 			
@@ -1273,7 +1298,152 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_anno), 0, ',', '.') . "</td>";			
 			$risultato_andamento .= "</tr></tbody></table></div>";			
 		}
+		
+		/**
+		 * Metto in sessione i totali per mese dei ricavi che mi occorrono per creare le tabella dell'MCT progressivo
+		 */
+		
+		$_SESSION["totaliRicaviMesi"] = $totaliRicaviMesi;
+		
 		return $risultato_andamento;
+	}
+
+	/**
+	 * Questo metodo costruisce una tabella html per i risultati del calcolo dell' MCT progressivo per mese
+	 * @param unknown $costoVariabile
+	 * @param unknown $ricavoVendita
+	 * @param unknown $costoFisso
+	 */
+	public function makeTableMargineContribuzione($totaliAcquistiMesi, $totaliRicaviMesi) {
+			
+		$margineContribuzione = "";
+
+		$margineContribuzione =
+		"<table class='result'>" .
+		"	<thead>" .
+		"		<th width='200'>&nbsp;</th>" .
+		"		<th width='50'>%ml.gen%</th>" .
+		"		<th width='50'>%ml.feb%</th>" .
+		"		<th width='50'>%ml.mar%</th>" .
+		"		<th width='50'>%ml.apr%</th>" .
+		"		<th width='50'>%ml.mag%</th>" .
+		"		<th width='50'>%ml.giu%</th>" .
+		"		<th width='50'>%ml.lug%</th>" .
+		"		<th width='50'>%ml.ago%</th>" .
+		"		<th width='50'>%ml.set%</th>" .
+		"		<th width='50'>%ml.ott%</th>" .
+		"		<th width='50'>%ml.nov%</th>" .
+		"		<th width='50'>%ml.dic%</th>" .
+		"		<th width='50'>%ml.totale%</th>" .
+		"	</thead>" .
+		"</table>" .
+		"<div class='scroll-bilancio'>" .
+		"	<table class='result'>" .
+		"		<tbody>" .
+		"			<tr>" .
+		"				<td class='enlarge' width='208' align='left'>%ml.fatturato%</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[1]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[2]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[3]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[4]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[5]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[6]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[7]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[8]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[9]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[10]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[11]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliRicaviMesi[12]), 0, ',', '.') . "</td>" .
+		"			</tr>" .
+		"			<tr>" .
+		"				<td class='enlarge' width='208' align='left'>%ml.acquisti%</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[1]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[2]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[3]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[4]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[5]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[6]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[7]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[8]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[9]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[10]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[11]), 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format(abs($totaliAcquistiMesi[12]), 0, ',', '.') . "</td>" .
+		"			</tr>" .
+		"		</tbody>" .
+		"	</table>" .
+		"</div>";
+		
+		
+
+		
+		
+		
+		
+// 		$margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
+// 		$marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
+	
+	
+		return $margineContribuzione;
+	}
+	
+	
+	
+	
+	
+	public function makeAndamentoMctTable() {
+		
+		$risutato_MCT = "";
+
+		if ((isset($_SESSION["totaliRicaviMesi"])) and (isset($_SESSION["totaliAcquistiMesi"]))) {
+		
+			$risultato_MCT =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desconto%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+		
+		
+		
+		
+
+			
+			
+			
+			
+			
+			// calcolo MCT
+			$datiMCT["margineTotaleVIL"] = abs($datiMCT["totaleRicaviVIL"]) - $datiMCT["totaleCostiVariabiliVIL"];
+			$datiMCT["marginePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleRicaviVIL"]);
+			$datiMCT["margineTotalePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleCostiVariabiliVIL"]);
+				
+			
+			
+		
+		
+		
+		
+		}
+		
+		return $risultato_MCT;
+		
 	}
 }		
 

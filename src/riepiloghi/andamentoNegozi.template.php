@@ -48,12 +48,13 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 
 		$andamentoCostiTable = $this->makeAndamentoCostiTable();
 		$andamentoRicaviTable = $this->makeAndamentoRicaviTable();
+		$andamentoMctTable = $this->makeTableMargineContribuzione($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		
 		/** ******************************************
 		 * Costruisco il box delle tabs
 		 */
 			
-		$tabs = $this->makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable);
+		$tabs = $this->makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable, $andamentoMctTable);
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
