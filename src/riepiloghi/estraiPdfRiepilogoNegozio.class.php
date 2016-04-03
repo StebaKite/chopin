@@ -231,7 +231,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleVIL"] = abs($datiMCT["totaleRicaviVIL"]) - $datiMCT["totaleCostiVariabiliVIL"];
 		$datiMCT["marginePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleRicaviVIL"]);
-		$datiMCT["margineTotalePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleCostiVariabiliVIL"]);
+		$datiMCT["ricaricoPercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleCostiVariabiliVIL"]);
 		
 		// Trezzo ---------------------------------------------------------------------
 		
@@ -249,7 +249,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleTRE"] = abs($datiMCT["totaleRicaviTRE"]) - $datiMCT["totaleCostiVariabiliTRE"];
 		$datiMCT["marginePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleRicaviTRE"]);
-		$datiMCT["margineTotalePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliTRE"]);
+		$datiMCT["ricaricoPercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliTRE"]);
 		
 		// Brembate ---------------------------------------------------------------------
 		
@@ -267,7 +267,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$datiMCT["margineTotaleBRE"] = abs($datiMCT["totaleRicaviBRE"]) - $datiMCT["totaleCostiVariabiliBRE"];
 		$datiMCT["marginePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleRicaviBRE"]);
-		$datiMCT["margineTotalePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliBRE"]);
+		$datiMCT["ricaricoPercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliBRE"]);
 		
 		$this->set_datiMCT($datiMCT);
 		

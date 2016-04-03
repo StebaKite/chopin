@@ -944,7 +944,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $tabs;
 	}
 
-	public function makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable, $andamentoMctTable) {
+	public function makeTabsAndamentoNegozi($andamentoCostiTable, $andamentoRicaviTable, $andamentoUtilePerditaTable, $andamentoMctTable) {
 
 		$tabs = "";
 		
@@ -952,16 +952,18 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 			$tabs  = "	<div class='tabs'>";
 			$tabs .= "		<ul>";
-		
-			if ($andamentoCostiTable != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
-			if ($andamentoRicaviTable != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
-			if ($andamentoMctTable != "")  	  { $tabs .= "<li><a href='#tabs-3'>MCT</a></li>"; }
+			
+			if ($andamentoCostiTable != "")   		{ $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
+			if ($andamentoRicaviTable != "")  		{ $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
+			if ($andamentoUtilePerditaTable != "")	{ $tabs .= "<li><a href='#tabs-3'>Utile/Perdita</a></li>"; }
+			if ($andamentoMctTable != "")  	  		{ $tabs .= "<li><a href='#tabs-4'>MCT</a></li>"; }
 				
 			$tabs .= "		</ul>";
 		
-			if ($andamentoCostiTable != "")   { $tabs .= "<div id='tabs-1'>" . $andamentoCostiTable . "</div>"; }
-			if ($andamentoRicaviTable != "")  { $tabs .= "<div id='tabs-2'>" . $andamentoRicaviTable . "</div>"; }
-			if ($andamentoMctTable != "")     { $tabs .= "<div id='tabs-3'>" . $andamentoMctTable . "</div>"; }
+			if ($andamentoCostiTable != "")   		{ $tabs .= "<div id='tabs-1'>" . $andamentoCostiTable . "</div>"; }
+			if ($andamentoRicaviTable != "") 		{ $tabs .= "<div id='tabs-2'>" . $andamentoRicaviTable . "</div>"; }
+			if ($andamentoUtilePerditaTable != "")	{ $tabs .= "<div id='tabs-3'>" . $andamentoUtilePerditaTable . "</div>"; }
+			if ($andamentoMctTable != "")     		{ $tabs .= "<div id='tabs-4'>" . $andamentoMctTable . "</div>"; }
 				
 			$tabs .= "</div>";
 		}
@@ -1311,6 +1313,73 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 		return $risultato_andamento;
 	}
+	
+	/**
+	 * Questo metodo costruisce una tabella html per l'utile o la perdita progressiva del mese
+	 * @param unknown $totaliAcquistiMesi
+	 * @param unknown $totaliRicaviMesi
+	 */
+	public function makeUtilePerditaTable($totaliAcquistiMesi, $totaliRicaviMesi) {
+
+		$utilePerdita = "";
+		$totaleRicavi = 0;
+		$totaleAcquisti = 0;
+		$totaleUtilePerdita = 0;
+		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+
+		/**
+		 * Calcolo l'utile o la perdita per ciascun mese
+		 */
+		
+		for ($i = 1; $i < 13; $i++) {				
+			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];  
+		}
+		
+		$utilePerdita =
+		"<table class='result'>" .
+		"	<thead>" .
+		"		<th width='200'>&nbsp;</th>" .
+		"		<th width='50'>%ml.gen%</th>" .
+		"		<th width='50'>%ml.feb%</th>" .
+		"		<th width='50'>%ml.mar%</th>" .
+		"		<th width='50'>%ml.apr%</th>" .
+		"		<th width='50'>%ml.mag%</th>" .
+		"		<th width='50'>%ml.giu%</th>" .
+		"		<th width='50'>%ml.lug%</th>" .
+		"		<th width='50'>%ml.ago%</th>" .
+		"		<th width='50'>%ml.set%</th>" .
+		"		<th width='50'>%ml.ott%</th>" .
+		"		<th width='50'>%ml.nov%</th>" .
+		"		<th width='50'>%ml.dic%</th>" .
+		"		<th width='50'>%ml.totale%</th>" .
+		"	</thead>" .
+		"</table>" .
+		"<div class='scroll-bilancio'>" .
+		"	<table class='result'>" .
+		"		<tbody>" .
+		"			<tr>" .
+		"				<td class='enlarge' width='200' align='left'>%ml.utilePerdita%</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[1], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[2], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[3], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[4], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[5], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[6], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[7], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[8], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[9], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[10], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[11], 0, ',', '.') . "</td>" .
+		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[12], 0, ',', '.') . "</td>" .
+		"				<td class='mark' width='58' align='right'>" . number_format(abs($totaleUtilePerdita), 0, ',', '.') . "</td>" .
+		"			</tr>" .
+		"		</tbody>" .
+		"	</table>" .
+		"</div>";
+		
+		return $utilePerdita;
+	}
 
 	/**
 	 * Questo metodo costruisce una tabella html per i risultati del calcolo dell' MCT progressivo per mese
@@ -1470,14 +1539,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		"		</tbody>" .
 		"	</table>" .
 		"</div>";
-		
-		
-
-		
-		
-		
-		
-	
 	
 		return $margineContribuzione;
 	}

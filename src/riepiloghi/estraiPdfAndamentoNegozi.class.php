@@ -75,7 +75,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		unset($_SESSION["title1"]);
 		unset($_SESSION["title2"]);
 		
-		$_SESSION["title"] = "Progressivi Mensili";
+		$_SESSION["title"] = "Progressivi Mensili Chopin";
 		$_SESSION["title1"] = "Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
 		
 		$negozio = "";
@@ -83,7 +83,9 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
 		
-		$_SESSION["title2"] = ($_SESSION["codneg_sel"] == "") ? "Tutti i negozi" : "Negozio di " . $negozio;
+		if ($_SESSION["codneg_sel"] != "") {
+			$_SESSION["title2"] = "Negozio di " . $negozio;
+		}
 		
 		return $pdf;
 	}
@@ -113,8 +115,14 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		
 		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"]);
+
+// 		$pdf->Cell(100,10,'','',0,'R',$fill);
+// 		$pdf->Ln();
 		
-		return $pdf;
+// 		$header = array("Utile/Perdita", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+// 		$pdf->progressiviUtilePerditaTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
+		
+// 		return $pdf;
 	}
 	
 	public function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {

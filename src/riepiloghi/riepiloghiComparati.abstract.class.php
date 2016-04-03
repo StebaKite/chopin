@@ -718,6 +718,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissiVIL = 0;
 		$margineTotaleVIL = 0;
 		$marginePercentualeVIL = 0;
+		$ricaricoPercentualeVIL = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
 			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
@@ -733,7 +734,9 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		$margineTotaleVIL = abs($totaleRicaviVIL) - $totaleCostiVariabiliVIL;
 		$marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
-
+		$ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
+		
+		
 		// Trezzo ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliTRE = 0;
@@ -741,6 +744,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissiTRE = 0;
 		$margineTotaleTRE = 0;
 		$marginePercentualeTRE = 0;
+		$ricaricoPercentualeTRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
 			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
@@ -756,7 +760,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		$margineTotaleTRE = abs($totaleRicaviTRE) - $totaleCostiVariabiliTRE;
 		$marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
-
+		$ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
+		
 		// Brembate ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliBRE = 0;
@@ -764,6 +769,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissiBRE = 0;
 		$margineTotaleBRE = 0;
 		$marginePercentualeBRE = 0;
+		$ricaricoPercentualeBRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
 			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
@@ -779,6 +785,11 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		$margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
 		$marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
+		$ricaricoPercentualeBRE = ($margineTotaleBRE * 100) / abs($totaleCostiVariabiliBRE);
+		
+		/**
+		 * Creo la tabella 
+		 */
 		
 		$margineContribuzione =
 		"<table class='result'>" .
@@ -790,28 +801,34 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='enlarge'>Fatturato</td>" .
+		"			<td width='308' align='left' class='enlarge'>%ml.fatturato%</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='enlarge'>Costi variabili</td>" .
+		"			<td width='308' align='left' class='enlarge'>%ml.acquisti%</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='enlarge'>Margine totale</td>" .
+		"			<td width='308' align='left' class='enlarge'>%ml.margineAssoluto%</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
-		"			<td width='308' align='left' class='enlarge'>Margine percentuale</td>" .
+		"			<td width='308' align='left' class='enlarge'>%ml.marginePercentuale%</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeBRE, 2, ',', '.') . " &#37;</td>" .
+		"		</tr>" .
+		"		<tr height='30'>" .
+		"			<td width='308' align='left' class='enlarge'>%ml.ricaricoPercentuale%</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeVIL, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeTRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeBRE, 2, ',', '.') . " &#37;</td>" .
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
