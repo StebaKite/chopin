@@ -64,7 +64,8 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		
 		$pdf = $this->generaSezioneIntestazione($pdf);
 		$pdf = $this->generaSezioneTabellaProgressivi($pdf, $utility, $db, $_SESSION["elencoVociAndamentoNegozio"]);
-				
+		$pdf = $this->generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
+		
 		$pdf->Output();
 	}
 	
@@ -82,17 +83,20 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
 		
-		$_SESSION["title2"] = "Negozio di " . $negozio;
+		$_SESSION["title2"] = ($_SESSION["codneg_sel"] == "") ? "Tutti i negozi" : "Negozio di " . $negozio;
 		
 		return $pdf;
 	}
 
 	public function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
 
+		$codnegozio = "";
+		$codnegozio = ($_SESSION["codneg_sel"] == "") ?"'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'";
+		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%codnegozio%' => $_SESSION["codneg_sel"]
+				'%codnegozio%' => $codnegozio
 		);
 
 		$this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace);
@@ -110,6 +114,17 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"]);
 		
+		return $pdf;
+	}
+	
+	public function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
+
+		$pdf->AddPage('L');
+		
+		$header = array("Margine di Contribuzione", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+		$pdf->SetFont('Arial','',9);
+		$pdf->progressiviMctTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
+
 		return $pdf;
 	}
 }	

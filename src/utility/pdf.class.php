@@ -1304,6 +1304,138 @@ class Pdf extends FPDF {
 		
 		$this->Cell(array_sum($w),0,'','T');
 	}
+	
+	public function progressiviMctTable($header, $totaliAcquistiMesi, $totaliRicaviMesi) {
+
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','',12);
+			
+		// Header
+		$w = array(70, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+		
+		$this->Ln();
+	
+		// Color and font restoration
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('','',10);
+
+		$margineContribuzione = "";
+		$totaleRicavi = 0;
+		$totaleAcquisti = 0;
+		$totaliMctAssolutoMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+		$totaliMctPercentualeMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+		$totaliMctRicaricoMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+		$totaleMctAssoluto = 0;
+		$totaleMctPercentuale = 0;
+		$totaleMctRicarico = 0;
+		/**
+		 * Faccio i totali di linea annuali per Acquisti e Ricavi
+		 */
+		
+		for ($i = 1; $i < 13; $i++) {
+			$totaleRicavi = $totaleRicavi + $totaliRicaviMesi[$i];
+			$totaleAcquisti = $totaleAcquisti + $totaliAcquistiMesi[$i];
+		}
+		
+		/**
+		 * Calcolo gli MCT per ciascun mese
+		 */
+		
+		for ($i = 1; $i < 13; $i++) {
+				
+			$totaliMctAssolutoMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 ) / abs($totaliRicaviMesi[$i]);
+			$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100) / abs($totaliAcquistiMesi[$i]);
+		}
+		
+		/**
+		 * Faccio il totale di linea annuale per il margine assoluto
+		 */
+		
+		for ($i = 1; $i < 13; $i++) {
+			$totaleMctAssoluto = $totaleMctAssoluto + $totaliMctAssolutoMesi[$i];
+		}
+		
+		/**
+		 * Calcolo i margini sui totali annuali
+		 */
+		
+		$totaleMctPercentuale = ($totaleMctAssoluto * 100 ) / abs($totaleRicavi);
+		$totaleMctRicarico = ($totaleMctAssoluto * 100) / abs($totaleAcquisti);
+				
+		/**
+		 * Genero le righe del documento
+		 */
+		
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, "Fatturato",'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {		
+			if ($totaliRicaviMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliRicaviMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);		
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleRicavi), 0, ',', '.'),'LR',0,'R',$fill);		
+		$this->Ln();
+		
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, "Acquisti",'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+			if ($totaliAcquistiMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliAcquistiMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleAcquisti), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, "Margine assoluto",'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+			if ($totaliMctAssolutoMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliMctAssolutoMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleMctAssoluto), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, "Margine percentuale",'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+			if ($totaliMctPercentualeMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliMctPercentualeMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleMctPercentuale), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, "Ricarico percentuale",'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+			if ($totaliMctRicaricoMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($totaliMctRicaricoMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleMctRicarico), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
+		
+
+		
+		
+		
+		
+		$this->Cell(array_sum($w),0,'','T');
+	}
 }
 
 ?>

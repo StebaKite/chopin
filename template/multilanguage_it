@@ -250,8 +250,8 @@ dic = Dic
 fatturato = Fatturato
 acquisti = Acquisti
 margineAssoluto = Margine Assoluto
-marginePercentuale = Margine %
-ricaricoPercentuale = Ricarico %
+marginePercentuale = Margine percentuale
+ricaricoPercentuale = Ricarico percentuale
 
 
  
