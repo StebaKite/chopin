@@ -1335,6 +1335,7 @@ class Pdf extends FPDF {
 		$totaleMctAssoluto = 0;
 		$totaleMctPercentuale = 0;
 		$totaleMctRicarico = 0;
+		
 		/**
 		 * Faccio i totali di linea annuali per Acquisti e Ricavi
 		 */
@@ -1453,12 +1454,38 @@ class Pdf extends FPDF {
 		$this->SetFillColor(224,235,255);
 		$this->SetTextColor(0);
 		$this->SetFont('','',10);
+
+		$utilePerdita = "";
+		$totaleRicavi = 0;
+		$totaleAcquisti = 0;
+		$totaleUtilePerdita = 0;
+		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+
+		/**
+		 * Calcolo l'utile o la perdita per ciascun mese
+		 */
 		
+		for ($i = 1; $i < 13; $i++) {
+			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];
+		}
 		
+		/**
+		 * Genero le righe del documento
+		 */
 		
+		$fill = !$fill;
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Fatturato - Acquisti"),'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+			if ($utilePerditaMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(abs($utilePerditaMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+		}
+		$this->SetFont('','B',10);
+		$this->Cell($w[$i],8, number_format(abs($totaleUtilePerdita), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Ln();
 		
-		
-		
+		$this->Cell(array_sum($w),0,'','T');
 	}
 }
 

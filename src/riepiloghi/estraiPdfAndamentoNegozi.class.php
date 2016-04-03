@@ -64,6 +64,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		
 		$pdf = $this->generaSezioneIntestazione($pdf);
 		$pdf = $this->generaSezioneTabellaProgressivi($pdf, $utility, $db, $_SESSION["elencoVociAndamentoNegozio"]);
+		$pdf = $this->generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		$pdf = $this->generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		
 		$pdf->Output();
@@ -115,19 +116,24 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		
 		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"]);
+		
+		return $pdf;
+	}
+	
+	public function generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
-// 		$pdf->Cell(100,10,'','',0,'R',$fill);
-// 		$pdf->Ln();
+		$pdf->AddPage('L');
 		
-// 		$header = array("Utile/Perdita", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-// 		$pdf->progressiviUtilePerditaTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
-		
-// 		return $pdf;
+		$header = array("Utile/Perdita", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+		$pdf->progressiviUtilePerditaTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
+
+		return $pdf;
 	}
 	
 	public function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
-		$pdf->AddPage('L');
+		$pdf->Cell(100,10,'','',0,'R',$fill);
+		$pdf->Ln();
 		
 		$header = array("Margine di Contribuzione", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->SetFont('Arial','',9);
