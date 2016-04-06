@@ -10,7 +10,7 @@ $cercaFatturaFornitore = CercaFatturaFornitore::getInstance();
 if ($_GET["modo"] == "start") {
 	$_SESSION["idfornitore"] = $_REQUEST["idfornitore"];
 	$_SESSION["numfatt"] = $_REQUEST["numfatt"];	
-	$_SESSION["datreg"] = $_REQUEST["datreg"];	
+	$_SESSION["datareg"] = $_REQUEST["datareg"];	
 	$cercaFatturaFornitore->start();
 }
 
