@@ -112,19 +112,22 @@ abstract class ChopinAbstract {
 	public function start() { }
 			
 	public function go() { }
-
-	// Metodi per aggiornamenti e creazioni su DB  ----------------------------------------
-	
-
-	
-	
-	
-	
-	
-	
-	
 	
 	// Altri metodi di utilità ------------------------------------------------------------
+
+	/**
+	 * Questo metodo determiona se l'anno è bisestile
+	 * @param unknown $anno
+	 */
+	public function isAnnoBisestile($anno) {
+		
+		$annoBisestile = false;
+		
+		if (($anno%4 == 0 && $anno%100 != 0) || $anno%400 == 0) {
+			$annoBisestile = true;
+		}		
+		return $annoBisestile;
+	}
 	
 	/**
 	 * 
@@ -180,6 +183,8 @@ abstract class ChopinAbstract {
 		return self::$elenco_causali;
 	}
 
+	// Metodi comuni per accessi sul DB  ----------------------------------------
+	
 	/**
 	 * 
 	 * @param unknown $utility
