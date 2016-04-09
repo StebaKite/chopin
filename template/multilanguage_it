@@ -97,7 +97,7 @@ creaFattTip = Genera una fattura per il cliente selezionato
 articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe 
 notafatturaTip = Inserisci le note che devono apparire in fattura. Ogni riga deve terminare col carattere \  (serve per il ritorno a capo della riga)
 avantiTip = Avanza al passo successivo
-confermaTip = Conferma l'esecuzione del lavoro
+confermaTip = Conferma esecuzione lavoro
 ;
 ; Funzioni -----------------------------
 ;
@@ -268,5 +268,5 @@ ricaricoPercentuale = Ricarico percentuale
 utilePerdita = Utile / Perdita
 numRegSel = Numero di registrazioni che contengono il conto da spostare
 contoDest = Conto sul quale verranno spostati i dettagli delle registrazioni
-
+contoOrig = Conto originale sul quale si trovano i dettagli delle registrazioni
  

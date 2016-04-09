@@ -59,10 +59,16 @@ class CambiaContoStep3Template extends StrumentiAbstract {
 	
 		$form = self::$root . $array['template'] . self::$pagina;
 		$bottone_conferma = "";
-		$bottone_conferma = "<button class='button' title='%ml.confermaTip%' >%ml.conferma%</button>";
 		
 		$numRegSel = $_SESSION['numRegTrovate'];
 		$contoDest = $_SESSION['conto_sel_nuovo'];		
+
+		if ($_SESSION['conto_sel_nuovo'] != $_SESSION['conto_sel']) {
+			$bottone_conferma = "<button class='button' title='%ml.confermaTip%' >%ml.conferma%</button>";
+		}
+		else {
+			$bottone_conferma = "<p><strong>Il conto di destinazione coincide con il conto attuale dei dettagli !</strong></p>";
+		}		
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],

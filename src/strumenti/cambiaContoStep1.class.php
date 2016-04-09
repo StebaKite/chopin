@@ -50,9 +50,9 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
 
-		$_SESSION["datareg_da"] = date("d/m/Y");
-		$_SESSION["datareg_a"] = date("d/m/Y");
-		$_SESSION["codneg_sel"] = "VIL";
+		$_SESSION["datareg_da"] = (isset($_SESSION["datareg_da"])) ? $_SESSION["datareg_da"] : date("d/m/Y");
+		$_SESSION["datareg_a"] = (isset($_SESSION["datareg_a"])) ? $_SESSION["datareg_a"] : date("d/m/Y");
+		$_SESSION["codneg_sel"] = (isset($_SESSION["codneg_sel"])) ? $_SESSION["codneg_sel"] : "VIL";
 		
 		unset($_SESSION["registrazioniTrovate"]);
 		
@@ -62,6 +62,16 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		// compone la pagina
 		include($testata);
 		$cambiaContoStep1Template->displayPagina();
+
+		/**
+		 * Gestione del messaggio proveniente da altre funzioni
+		 */
+		if (isset($_SESSION["messaggioCambioConto"])) {
+			self::$replace = array('%messaggio%' => $_SESSION["messaggioCambioConto"]);
+			unset($_SESSION["messaggioCambioConto"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+			echo $utility->tailTemplate($template);
+		}		
 		include($piede);
 	}
 
@@ -87,7 +97,7 @@ class CambiaContoStep1 extends StrumentiAbstract {
 			
 				include(self::$testata);
 				$cambiaContoStep1Template->displayPagina();
-
+				
 				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";				
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 				
@@ -138,6 +148,7 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		require_once 'database.class.php';
 
 		$db = Database::getInstance();
+		$db->beginTransaction();
 		
 		$result = $this->caricaRegistrazioniConto($utility, $db);
 		
@@ -148,7 +159,7 @@ class CambiaContoStep1 extends StrumentiAbstract {
 			unset($_SESSION['registrazioniTrovate']);
 			$_SESSION['numRegTrovate'] = 0;
 		}
-		
+		$db->commitTransaction();		
 		return $result;
 	}
 	

@@ -62,7 +62,9 @@ class CambiaContoStep3 extends StrumentiAbstract {
 	public function go() {
 		
 		require_once 'cambiaContoStep3.template.php';
+		require_once 'database.class.php';
 		require_once 'utility.class.php';
+		require_once 'cambiaContoStep1.class.php';
 		
 		// Template
 		$utility = Utility::getInstance();
@@ -70,16 +72,72 @@ class CambiaContoStep3 extends StrumentiAbstract {
 		
 		$testata = self::$root . $array['testataPagina'];
 		$piede = self::$root . $array['piedePagina'];
-		
+
+		/**
+		 * Sposto le registrazioni in sessione sul nuovo conto
+		 */
+
 		$cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
-		$this->preparaPagina($cambiaContoStep3Template);
+
+		$db = Database::getInstance();
+		$db->beginTransaction();
 		
-		// compone la pagina
-		include($testata);
-		$cambiaContoStep3Template->displayPagina();
-		include($piede);
+		$utility = Utility::getInstance();
+		
+		if ($this->spostaDettagliRegistrazioni($db, $utility)) {
+
+			/**
+			 * Rigenero i saldi a partire dal mese successivo a quello aggiornato dallo spostamento sino all'ultimo 
+			 * già eseguito
+			 */
+				
+			$array = $utility->getConfig();
+			
+			if ($array['lavoriPianificatiAttivati'] == "Si") {
+			
+				$datareg_da = strtotime(str_replace('/', '-', $_SESSION["datareg_da"]));
+				$this->rigenerazioneSaldi($db, $utility, $datareg_da);
+			}
+
+			$db->commitTransaction();
+
+			$_SESSION["messaggioCambioConto"] = "Operazione effettuata con successo";
+			
+			$cambiaContoStep1 = CambiaContoStep1::getInstance();
+			$cambiaContoStep1->start();				
+		}
+		else {
+			
+			$db->rollbackTransaction();
+				
+			$this->preparaPagina($cambiaContoStep3Template);
+			include($testata);
+			$cambiaContoStep3Template->displayPagina();
+			
+			$_SESSION["messaggio"] = "Errore fatale durante lo spostamento dei dettagli" ;
+			
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
+				
+			include(self::$piede);
+				
+		}
 	}
+
+	protected function spostaDettagliRegistrazioni($db, $utility) {
+				
+		$registrazioniTrovate = $this->caricaRegistrazioniConto($utility, $db);		
+		$conto = split(" - ", $_SESSION["conto_sel_nuovo"]);
 		
+		foreach(pg_fetch_all($registrazioniTrovate) as $row) {
+
+			$result = $this->updateDettaglioRegistrazione($db, $utility, $row['id_dettaglio_registrazione'], $conto[0], $conto[1]);
+			if (!$result) return false;
+		}
+		return true;
+	}	
+	
 	public function preparaPagina($ricercaRegistrazioneTemplate) {
 
 		require_once 'database.class.php';
@@ -87,9 +145,6 @@ class CambiaContoStep3 extends StrumentiAbstract {
 
 		$_SESSION["azione"] = self::$azioneConferma;
 		$_SESSION["titoloPagina"] = "%ml.cambioContoStep3%";
-		
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
 	}
 }
 	
