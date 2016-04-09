@@ -866,6 +866,11 @@ $( ".selectmenuConto" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuContoCambioConto" )
+	.selectmenu({width: 400})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCategoria" )
 	.selectmenu({width: 150})
 	.selectmenu("menuWidget")
@@ -900,6 +905,7 @@ $( ".selectmenuConti" )
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
+$( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
 $( ".selectmenuCausale" ).selectmenu({ width: 270 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
