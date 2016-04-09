@@ -1,0 +1,39 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.negozio% :</td>
+						<td class="tooltip">
+							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
+								<option value="">%ml.tutti%</option>
+								<option value="VIL" %villa-selected% >%ml.villa%</option>
+								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
+								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+							</select>
+						</td>
+						<td class="td">%ml.da% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+						<td class="td">%ml.a% :</td>
+						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+						<td>%ml.conto% :</td>
+						<td>
+							<select class='selectmenuContoCambioConto' id="conto_sel" name="conto_sel">%elenco_conti%</select>
+						</td>
+						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		<br>
+		%risultato_ricerca%
+		<br>
+		<form class="tooltip" method="post" id="avanti" action="../strumenti/cambiaContoStep2Facade.class.php?modo=start" >
+			%bottoneAvanti%
+		</form>		
+		
