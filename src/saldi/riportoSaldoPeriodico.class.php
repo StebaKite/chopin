@@ -153,7 +153,9 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
 		require_once 'menubanner.template.php';
-		
+
+		$array = $utility->getConfig();
+				
 		$conti = pg_fetch_all($statoPatrimoniale);
 
 		/**
@@ -195,10 +197,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					 *
 					 */
 								
-					foreach(pg_fetch_all($result) as $row) {
-							
-							$totale_conto_con_segnato = $row['tot_conto'] * $row['tip_conto'];
-							$totale_conto = $totale_conto + $totale_conto_con_segnato; 
+					foreach(pg_fetch_all($result) as $row) {							
+ 						$totale_conto = $totale_conto + $row['tot_conto'];
 					}
 					
 					/**
@@ -208,18 +208,11 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					if ($totale_conto != 0) {
 										
 						/**
-						 * L'attribuzione del segno tiene in considerazione sia il tipo di conto sia l'importo del saldo.
-						 * Ad esempio: la cassa è un conto in Dare ma se il saldo risulta negativo viene riportato in Avere
-						 * Lo stesso per un conto in Avere con un seldo maggiore di zero, viene riportato in Dare
+						 * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
 						 */
-							
-						if ($dareAvere_conto == "D") {
-							$dareAvere = ($totale_conto > 0) ? "D" : "A";
-						}
-						elseif ($dareAvere_conto == "A") {
-							$dareAvere = ($totale_conto < 0) ? "A" : "D";
-						}
-							
+
+						$dareAvere = ($totale_conto > 0) ? "D" : "A";
+						
 						$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
 					}
 				}
