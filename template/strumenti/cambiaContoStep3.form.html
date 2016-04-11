@@ -1,0 +1,50 @@
+<body>
+<script>
+
+$(function() {
+    $( "#progressbar-1" ).progressbar({
+       value: 30
+    });
+ });
+ 
+  
+</script>
+
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form class="tooltip" method="post" id="back" action="../strumenti/cambiaContoStep2Facade.class.php?modo=start" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="datareg_da" value='%datareg_da%' />			
+			<input type="hidden" name="datareg_a" value='%datareg_a%' />
+			<input type="hidden" name="conto_sel" value='%conto_sel%' />						
+		</form>
+		<br>
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.numRegSel%:</td>
+						<td>%numRegSel%</td>
+					</tr>
+					<tr>
+						<td>%ml.contoOrig% :</td>
+						<td>%conto_sel%</td>
+					</tr>
+					<tr>
+						<td>%ml.contoDest% :</td>
+						<td>%conto_sel_nuovo%</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="tooltip" colspan="2" align="right">%bottoneConferma%</td>				
+					</tr>					
+				</tfoot>				
+			</table>
+		</form>
+		<br>
+		<div id="progressbar-1"></div>
+		

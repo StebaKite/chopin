@@ -8,6 +8,8 @@
 ;
 salva = Salva
 tutti = Tutti
+avanti = Avanti
+conferma = Conferma
 nuovoDett = Nuovo Dettaglio
 nuovoSottoconto = Nuovo Sottoconto
 dare = Dare
@@ -94,6 +96,8 @@ nuovaDataScadTip = Aggiunge una data scadenza supplementare
 creaFattTip = Genera una fattura per il cliente selezionato
 articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe 
 notafatturaTip = Inserisci le note che devono apparire in fattura. Ogni riga deve terminare col carattere \  (serve per il ritorno a capo della riga)
+avantiTip = Avanza al passo successivo
+confermaTip = Conferma esecuzione lavoro
 ;
 ; Funzioni -----------------------------
 ;
@@ -143,6 +147,11 @@ modificaProgressivoFattura = Modifica progressivo fattura
 
 riepilogoNegozi = Riepilogo Comparativo Negozi
 andamentoNegozi = Andamento Negozi
+
+cambioContoStep1 = Cambio conto : Passo 1 - Ricerca registrazioni
+cambioContoStep2 = Cambio conto : Passo 2 - Selezione conto di destinazione
+cambioContoStep3 = Cambio conto : Passo 3 - Conferma
+
 ;
 ; Campi form ---------------------------
 ;
@@ -211,6 +220,10 @@ deslavoro = Lavoro
 stalavoro = Stato
 dataRipSaldo = Data riporto saldo
 dessaldo = Descrizione riporto saldo
+staReg = Stato
+impReg = Importo
+indDareAvere = D/A
+sottoconto = Sottoconto
 
 pivacliente = P.iva
 cfiscliente = Codice Fiscale
@@ -253,5 +266,7 @@ margineAssoluto = Margine Assoluto
 marginePercentuale = Margine percentuale
 ricaricoPercentuale = Ricarico percentuale
 utilePerdita = Utile / Perdita
-
+numRegSel = Numero di registrazioni che contengono il conto da spostare
+contoDest = Conto sul quale verranno spostati i dettagli delle registrazioni
+contoOrig = Conto originale sul quale si trovano i dettagli delle registrazioni
  

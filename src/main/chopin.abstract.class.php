@@ -43,6 +43,8 @@ abstract class ChopinAbstract {
 
 	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
+
+	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -232,7 +234,7 @@ abstract class ChopinAbstract {
 	}
 	
 	/**
-	 * 
+	 * Questo metodo carica tutti i conti configurati su una causale
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @return string
@@ -254,6 +256,34 @@ abstract class ChopinAbstract {
 		return self::$elenco_conti;
 	}
 
+	/**
+	 * Questo metodo carica tutti i conti esistenti nel piano dei conti
+	 * @param unknown $utility
+	 * @param unknown $db
+	 */
+	public function caricaTuttiConti($utility, $db) {
+
+		$array = $utility->getConfig();
+		self::$replace = array();
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiTuttiConti;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+		$result = $db->getData($sql);
+
+		while ($row = pg_fetch_row($result)) {
+			if ($row[0] . " - " . $row[1] == $_SESSION["conto_sel"]) {
+				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "' selected>" . $row[0].$row[1] . " - " . $row[2] ;
+			}
+			else {
+				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "'>" . $row[0].$row[1] . " - " . $row[2] ;
+			}
+		}
+		
+		while ($row = pg_fetch_row($result)) {
+		}
+		return self::$elenco_conti;	
+	}
+	
 	/**
 	 * 
 	 * @param unknown $db
