@@ -59,6 +59,7 @@ function aggiungiDettaglio() {
 	
 	var quantita = $("#quantita").val();	
 	var articolo = $("#articolo").val();
+	var articoloNormalizzato = replaceAll(articolo.trim(),",",".");	
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	var totale = $("#totale").val();
@@ -67,7 +68,7 @@ function aggiungiDettaglio() {
 	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
         "<td align='center'>" + quantita + "</td>" +
-        "<td align='left'>" + articolo + "</td>" +
+        "<td align='left'>" + articoloNormalizzato + "</td>" +
         "<td align='right'>&euro;" + importoNormalizzato + "</td>" +
         "<td align='right'>&euro;" + totale + "</td>" +
         "<td align='right'>&euro;" + imponibile + "</td>" +
@@ -75,7 +76,7 @@ function aggiungiDettaglio() {
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articolo + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva;
+	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");
