@@ -111,8 +111,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		$pdf->SetFont('Arial','',9);
 		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoCostiNegozio"]);
 
-		$pdf->Cell(100,10,'','',0,'R',$fill);
-		$pdf->Ln();
+		$pdf->AddPage('L');
 		
 		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
 		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"]);

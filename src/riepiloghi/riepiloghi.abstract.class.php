@@ -1137,18 +1137,16 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 					}
 					else {						
 						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
-						$totaliMesi[$row['mm_registrazione']] = $totconto;
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
 					}		
 					$desconto_break = trim($row['des_conto']);
-					if (strpos(trim($row['des_conto']), "Acquisto prodotti") === FALSE) {}
-					else {$totaliAcquistiMesi[$row['mm_registrazione']] = $totconto;}
+					$totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-					if (strpos(trim($row['des_conto']), "Acquisto prodotti") === FALSE) {}
-					else {$totaliAcquistiMesi[$row['mm_registrazione']] = $totconto;}
+					$totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
 				}				
 			}
 			
@@ -1265,14 +1263,12 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 					}
 					$desconto_break = trim($row['des_conto']);
-					if (strpos(trim($row['des_conto']), "Ricavi relativi attività") === FALSE) {}
-					else {$totaliRicaviMesi[$row['mm_registrazione']] = $totconto;}
+					$totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
-					if (strpos(trim($row['des_conto']), "Ricavi relativi attività") === FALSE) {}
-					else {$totaliRicaviMesi[$row['mm_registrazione']] = $totconto;}
+					$totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
 				}
 			}
 			
@@ -1326,15 +1322,20 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$totaleAcquisti = 0;
 		$totaleUtilePerdita = 0;
 		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
-
+		$classe = array('','','','','','','','','','','','');					// dodici mesi
+		
 		/**
 		 * Calcolo l'utile o la perdita per ciascun mese
 		 */
 		
 		for ($i = 1; $i < 13; $i++) {				
 			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			if ($utilePerditaMesi[$i] < 0) $classe[$i] = "class='ko'";
 			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];  
 		}
+		
+		if ($totaleUtilePerdita < 0) $class = "class='mark-warning'";
+		else $class = "class='mark'";
 		
 		$utilePerdita =
 		"<table class='result'>" .
@@ -1360,19 +1361,19 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		"		<tbody>" .
 		"			<tr>" .
 		"				<td class='enlarge' width='200' align='left'>%ml.utilePerdita%</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[1], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[2], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[3], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[4], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[5], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[6], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[7], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[8], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[9], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[10], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[11], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($utilePerditaMesi[12], 0, ',', '.') . "</td>" .
-		"				<td class='mark' width='58' align='right'>" . number_format(abs($totaleUtilePerdita), 0, ',', '.') . "</td>" .
+		"				<td " . $classe[1] . " width='58' align='right'>" . number_format($utilePerditaMesi[1], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[2] . " width='58' align='right'>" . number_format($utilePerditaMesi[2], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[3] . " width='58' align='right'>" . number_format($utilePerditaMesi[3], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[4] . " width='58' align='right'>" . number_format($utilePerditaMesi[4], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[5] . " width='58' align='right'>" . number_format($utilePerditaMesi[5], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[6] . " width='58' align='right'>" . number_format($utilePerditaMesi[6], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[7] . " width='58' align='right'>" . number_format($utilePerditaMesi[7], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[8] . " width='58' align='right'>" . number_format($utilePerditaMesi[8], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[9] . " width='58' align='right'>" . number_format($utilePerditaMesi[9], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[10] . " width='58' align='right'>" . number_format($utilePerditaMesi[10], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[11] . " width='58' align='right'>" . number_format($utilePerditaMesi[11], 0, ',', '.') . "</td>" .
+		"				<td " . $classe[12] . " width='58' align='right'>" . number_format($utilePerditaMesi[12], 0, ',', '.') . "</td>" .
+		"				<td " . $class . " width='58' align='right'>" . number_format($totaleUtilePerdita, 0, ',', '.') . "</td>" .
 		"			</tr>" .
 		"		</tbody>" .
 		"	</table>" .
@@ -1398,6 +1399,12 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$totaleMctAssoluto = 0;
 		$totaleMctPercentuale = 0;
 		$totaleMctRicarico = 0;
+		$classe_MctAss = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_MctPer = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_MctRic = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_tot_MctAss = "";
+		$classe_tot_MctPer = "";
+		$classe_tot_MctRic = "";
 		
 		/**
 		 * Faccio i totali di linea annuali per Acquisti e Ricavi 
@@ -1415,8 +1422,13 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		for ($i = 1; $i < 13; $i++) {
 			
 			$totaliMctAssolutoMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];							
+			if ($totaliMctAssolutoMesi[$i] < 0) $classe_MctAss[$i] = "class='ko'";
+			
 			$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 ) / abs($totaliRicaviMesi[$i]);
+			if ($totaliMctPercentualeMesi[$i] < 0) $classe_MctPer[$i] = "class='ko'";
+				
 			$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100) / abs($totaliAcquistiMesi[$i]); 
+			if ($totaliMctRicaricoMesi[$i] < 0) $classe_MctRic[$i] = "class='ko'";
 		}
 		
 		/**
@@ -1424,15 +1436,22 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		 */
 		
 		for ($i = 1; $i < 13; $i++) {
-			$totaleMctAssoluto = $totaleMctAssoluto + $totaliMctAssolutoMesi[$i];
+			$totaleMctAssoluto = $totaleMctAssoluto + $totaliMctAssolutoMesi[$i];				
 		}
-
+		if ($totaleMctAssoluto < 0) $classe_tot_MctAss = "class='ko'";
+		else $classe_tot_MctAss = "class='mark'";
+		
 		/**
 		 * Calcolo i margini sui totali annuali
 		 */
 
 		$totaleMctPercentuale = ($totaleMctAssoluto * 100 ) / abs($totaleRicavi);
+		if ($totaleMctPercentuale < 0) $classe_tot_MctPer = "class='ko'";
+		else $classe_tot_MctPer = "class='mark'";
+		
 		$totaleMctRicarico = ($totaleMctAssoluto * 100) / abs($totaleAcquisti);
+		if ($totaleMctRicarico < 0) $classe_tot_MctRic = "class='ko'";
+		else $classe_tot_MctRic = "class='mark'";
 		
 		$margineContribuzione =
 		"<table class='result'>" .
@@ -1490,51 +1509,51 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		"			</tr>" .
 		"			<tr>" .
 		"				<td class='enlarge' width='200' align='left'>%ml.margineAssoluto%</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[1], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[2], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[3], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[4], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[5], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[6], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[7], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[8], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[9], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[10], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[11], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctAssolutoMesi[12], 0, ',', '.') . "</td>" .
-		"				<td class='mark' width='58' align='right'>" . number_format($totaleMctAssoluto, 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[1] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[1], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[2] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[2], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[3] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[3], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[4] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[4], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[5] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[5], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[6] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[6], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[7] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[7], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[8] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[8], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[9] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[9], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[10] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[10], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[11] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[11], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctAss[12] . " width='58' align='right'>" . number_format($totaliMctAssolutoMesi[12], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_tot_MctAss . " width='58' align='right'>" . number_format($totaleMctAssoluto, 0, ',', '.') . "</td>" .
 		"			</tr>" .
 		"			<tr>" .
 		"				<td class='enlarge' width='200' align='left'>%ml.marginePercentuale%</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[1], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[2], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[3], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[4], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[5], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[6], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[7], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[8], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[9], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[10], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[11], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctPercentualeMesi[12], 0, ',', '.') . "</td>" .
-		"				<td class='mark' width='58' align='right'>" . number_format($totaleMctPercentuale, 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[1] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[1], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[2] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[2], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[3] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[3], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[4] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[4], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[5] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[5], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[6] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[6], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[7] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[7], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[8] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[8], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[9] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[9], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[10] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[10], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[11] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[11], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctPer[12] . " width='58' align='right'>" . number_format($totaliMctPercentualeMesi[12], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_tot_MctPer . " width='58' align='right'>" . number_format($totaleMctPercentuale, 0, ',', '.') . "</td>" .
 		"			</tr>" .
 		"			<tr>" .
 		"				<td class='enlarge' width='200' align='left'>%ml.ricaricoPercentuale%</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[1], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[2], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[3], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[4], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[5], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[6], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[7], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[8], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[9], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[10], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[11], 0, ',', '.') . "</td>" .
-		"				<td width='58' align='right'>" . number_format($totaliMctRicaricoMesi[12], 0, ',', '.') . "</td>" .
-		"				<td class='mark' width='58' align='right'>" . number_format($totaleMctRicarico, 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[1] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[1], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[2] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[2], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[3] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[3], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[4] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[4], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[5] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[5], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[6] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[6], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[7] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[7], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[8] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[8], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[9] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[9], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[10] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[10], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[11] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[11], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_MctRic[12] . " width='58' align='right'>" . number_format($totaliMctRicaricoMesi[12], 0, ',', '.') . "</td>" .
+		"				<td " . $classe_tot_MctRic . " width='58' align='right'>" . number_format($totaleMctRicarico, 0, ',', '.') . "</td>" .
 		"			</tr>" .
 		"		</tbody>" .
 		"	</table>" .
