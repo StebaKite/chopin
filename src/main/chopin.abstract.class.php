@@ -37,6 +37,7 @@ abstract class ChopinAbstract {
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
 	public static $queryAggiornaSaldo = "/saldi/aggiornaSaldo.sql";
 	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
+	public static $queryCancellaSaldo = "/saldi/cancellaSaldo.sql";
 	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
 	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";

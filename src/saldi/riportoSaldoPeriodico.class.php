@@ -202,19 +202,11 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					}
 					
 					/**
-					 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+					 * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
 					 */
-						
-					if ($totale_conto != 0) {
-										
-						/**
-						 * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
-						 */
 
-						$dareAvere = ($totale_conto > 0) ? "D" : "A";
-						
-						$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
-					}
+					$dareAvere = ($totale_conto > 0) ? "D" : "A";					
+					$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
 				}
 			}
 		}		
