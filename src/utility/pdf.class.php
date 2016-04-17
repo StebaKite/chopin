@@ -1335,6 +1335,12 @@ class Pdf extends FPDF {
 		$totaleMctAssoluto = 0;
 		$totaleMctPercentuale = 0;
 		$totaleMctRicarico = 0;
+		$classe_MctAss = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_MctPer = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_MctRic = array('','','','','','','','','','','','');					// dodici mesi
+		$classe_tot_MctAss = "";
+		$classe_tot_MctPer = "";
+		$classe_tot_MctRic = "";
 		
 		/**
 		 * Faccio i totali di linea annuali per Acquisti e Ricavi
@@ -1352,8 +1358,13 @@ class Pdf extends FPDF {
 		for ($i = 1; $i < 13; $i++) {
 				
 			$totaliMctAssolutoMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			if ($totaliMctAssolutoMesi[$i] < 0) $classe_MctAss[$i] = "ko";
+				
 			$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 ) / abs($totaliRicaviMesi[$i]);
+			if ($totaliMctPercentualeMesi[$i] < 0) $classe_MctPer[$i] = "ko";
+				
 			$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100) / abs($totaliAcquistiMesi[$i]);
+			if ($totaliMctRicaricoMesi[$i] < 0) $classe_MctRic[$i] = "ko";
 		}
 		
 		/**
@@ -1363,13 +1374,17 @@ class Pdf extends FPDF {
 		for ($i = 1; $i < 13; $i++) {
 			$totaleMctAssoluto = $totaleMctAssoluto + $totaliMctAssolutoMesi[$i];
 		}
+		if ($totaleMctAssoluto < 0) $classe_tot_MctAss = "ko";
 		
 		/**
 		 * Calcolo i margini sui totali annuali
 		 */
 		
 		$totaleMctPercentuale = ($totaleMctAssoluto * 100 ) / abs($totaleRicavi);
+		if ($totaleMctPercentuale < 0) $classe_tot_MctPer = "ko";
+		
 		$totaleMctRicarico = ($totaleMctAssoluto * 100) / abs($totaleAcquisti);
+		if ($totaleMctRicarico < 0) $classe_tot_MctRic = "ko";
 				
 		/**
 		 * Genero le righe del documento
@@ -1399,35 +1414,73 @@ class Pdf extends FPDF {
 
 		$fill = !$fill;
 		$this->SetFont('','',10);
+		$this->SetTextColor(0);
 		$this->Cell($w[0],8, "Margine assoluto",'LR',0,'L',$fill);
 		for ($i = 1; $i < 13; $i++) {
 			if ($totaliMctAssolutoMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($totaliMctAssolutoMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else {
+				if ($classe_MctAss[$i] == "ko") {
+					$this->SetFont('','B',10);
+					$this->SetTextColor(255,0,0);
+				}
+				
+				$this->Cell($w[$i],8, number_format($totaliMctAssolutoMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+				$this->SetTextColor(0);
+				$this->SetFont('','',10);
+			}
 		}
 		$this->SetFont('','B',10);
-		$this->Cell($w[$i],8, number_format(abs($totaleMctAssoluto), 0, ',', '.'),'LR',0,'R',$fill);
+		if ($classe_tot_MctAss == "ko") {
+			$this->SetTextColor(255,0,0);
+		}
+		$this->Cell($w[$i],8, number_format($totaleMctAssoluto, 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
+		$this->SetTextColor(0);
 		$this->SetFont('','',10);
 		$this->Cell($w[0],8, "Margine percentuale",'LR',0,'L',$fill);
 		for ($i = 1; $i < 13; $i++) {
 			if ($totaliMctPercentualeMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($totaliMctPercentualeMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else {
+				if ($classe_MctPer[$i] == "ko") {
+					$this->SetFont('','B',10);
+					$this->SetTextColor(255,0,0);
+				}
+				
+				$this->Cell($w[$i],8, number_format($totaliMctPercentualeMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+				$this->SetTextColor(0);
+				$this->SetFont('','',10);
+			}
 		}
 		$this->SetFont('','B',10);
-		$this->Cell($w[$i],8, number_format(abs($totaleMctPercentuale), 0, ',', '.'),'LR',0,'R',$fill);
+		if ($classe_tot_MctPer == "ko") {
+			$this->SetTextColor(255,0,0);
+		}
+		$this->Cell($w[$i],8, number_format($totaleMctPercentuale, 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
 		$this->SetFont('','',10);
+		$this->SetTextColor(0);
 		$this->Cell($w[0],8, "Ricarico percentuale",'LR',0,'L',$fill);
 		for ($i = 1; $i < 13; $i++) {
 			if ($totaliMctRicaricoMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($totaliMctRicaricoMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else {
+				if ($classe_MctRic[$i] == "ko") {
+					$this->SetFont('','B',10);
+					$this->SetTextColor(255,0,0);
+				}
+				$this->Cell($w[$i],8, number_format($totaliMctRicaricoMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+				$this->SetTextColor(0);
+				$this->SetFont('','',10);
+			}
 		}
 		$this->SetFont('','B',10);
-		$this->Cell($w[$i],8, number_format(abs($totaleMctRicarico), 0, ',', '.'),'LR',0,'R',$fill);
+		if ($classe_tot_MctRic == "ko") {
+			$this->SetTextColor(255,0,0);
+		}
+		$this->Cell($w[$i],8, number_format($totaleMctRicarico, 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$this->Cell(array_sum($w),0,'','T');
@@ -1460,13 +1513,15 @@ class Pdf extends FPDF {
 		$totaleAcquisti = 0;
 		$totaleUtilePerdita = 0;
 		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
-
+		$classe = array('','','','','','','','','','','','');					// dodici mesi
+		
 		/**
 		 * Calcolo l'utile o la perdita per ciascun mese
 		 */
 		
 		for ($i = 1; $i < 13; $i++) {
 			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
+			if ($utilePerditaMesi[$i] < 0) $classe[$i] = "ko";
 			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];
 		}
 		
@@ -1476,13 +1531,27 @@ class Pdf extends FPDF {
 		
 		$fill = !$fill;
 		$this->SetFont('','',10);
-		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Fatturato - Acquisti"),'LR',0,'L',$fill);
+		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Differenza Ricavi - Costi"),'LR',0,'L',$fill);
 		for ($i = 1; $i < 13; $i++) {
 			if ($utilePerditaMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($utilePerditaMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else {
+				if ($classe[$i] == 'ko') {
+					$this->SetTextColor(255,0,0);
+					$this->SetFont('','B',10);
+				}
+				
+				$this->Cell($w[$i],8, number_format($utilePerditaMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+				$this->SetTextColor(0);
+				$this->SetFont('','',10);
+			}
 		}
 		$this->SetFont('','B',10);
-		$this->Cell($w[$i],8, number_format(abs($totaleUtilePerdita), 0, ',', '.'),'LR',0,'R',$fill);
+		
+		if ($totaleUtilePerdita < 0) {
+			$this->SetTextColor(255,0,0);
+		}
+		
+		$this->Cell($w[$i],8, number_format($totaleUtilePerdita, 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$this->Cell(array_sum($w),0,'','T');

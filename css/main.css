@@ -441,6 +441,12 @@
 		height: 30px;
 		color: #3399FF;				
 	}
+	.result td.mark-warning {
+		font-size: 14px;
+		font-weight: bolder;
+		height: 30px;
+		color: red;				
+	}
 	.result td.enlarge {
 		font-size: 14px;
 		font-weight: bolder;

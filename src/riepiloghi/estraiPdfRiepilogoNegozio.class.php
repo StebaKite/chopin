@@ -161,9 +161,8 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$totaliCostiRicavi["totale"]     = $totaliCostiRicavi["totale_Bre"] + $totaliCostiRicavi["totale_Tre"] + $totaliCostiRicavi["totale_Vil"];
 
 		$this->set_totaliCostiRicavi($totaliCostiRicavi);
-		
-		$pdf->Cell(100,10,'','',0,'R',$fill);
-		$pdf->Ln();
+
+		$pdf->AddPage('L');
 		
 		$header = array($nomeTabella, "Brembate", "Trezzo", "Villa D'Adda", "Totale");
 		$pdf->SetFont('Arial','',9);
@@ -199,8 +198,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	
 		$this->ricercaPassivoComparati($utility, $db, $replace);
 
-		$pdf->Cell(100,10,'','',0,'R',$fill);
-		$pdf->Ln();
+		$pdf->AddPage('L');
 			
 		$header = array("Passivo", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
 		$pdf->SetFont('Arial','',9);
