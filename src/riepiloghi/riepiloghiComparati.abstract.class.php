@@ -710,6 +710,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public function makeTableMargineContribuzione() {
 			
 		$margineContribuzione = "";
+		$totaleCostiVariabili = 0;
+		$totaleRicavi = 0;
+		$totaleCostiFissi = 0;
+		$margineTotale = 0;
+		$marginePercentuale = 0;
+		$ricaricoPercentuale = 0;
 		
 		// Villa ---------------------------------------------------------------------
 
@@ -735,7 +741,9 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleVIL = abs($totaleRicaviVIL) - $totaleCostiVariabiliVIL;
 		$marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
 		$ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
-		
+
+		$totaleRicavi += abs($totaleRicaviVIL);
+		$totaleCostiVariabili += $totaleCostiVariabiliVIL;	
 		
 		// Trezzo ---------------------------------------------------------------------
 
@@ -761,6 +769,9 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleTRE = abs($totaleRicaviTRE) - $totaleCostiVariabiliTRE;
 		$marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
 		$ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
+
+		$totaleRicavi += abs($totaleRicaviTRE);
+		$totaleCostiVariabili += $totaleCostiVariabiliTRE;
 		
 		// Brembate ---------------------------------------------------------------------
 
@@ -786,6 +797,15 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
 		$marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
 		$ricaricoPercentualeBRE = ($margineTotaleBRE * 100) / abs($totaleCostiVariabiliBRE);
+
+		$totaleRicavi += abs($totaleRicaviBRE);
+		$totaleCostiVariabili += $totaleCostiVariabiliBRE;
+
+		// MCT totale negozi ---------------------------------------------------------------------
+
+		$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
+		$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
+		$ricaricoPercentuale = ($margineTotale * 100) / abs($totaleCostiVariabili);
 		
 		/**
 		 * Creo la tabella 
@@ -795,40 +815,46 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<table class='result'>" .
 		"	<thead>" .
 		"		<th width='300'>&nbsp;</th>" .
-		"		<th width='100'>%ml.villa%</th>" .
-		"		<th width='100'>%ml.trezzo%</th>" .
 		"		<th width='100'>%ml.brembate%</th>" .
+		"		<th width='100'>%ml.trezzo%</th>" .
+		"		<th width='100'>%ml.villa%</th>" .
+		"		<th width='100'>%ml.totale%</th>" .
 		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.fatturato%</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.acquisti%</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.margineAssoluto%</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.marginePercentuale%</td>" .
-		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
-		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeBRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($marginePercentuale, 2, ',', '.') . " &#37;</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.ricaricoPercentuale%</td>" .
-		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeVIL, 2, ',', '.') . " &#37;</td>" .
-		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeTRE, 2, ',', '.') . " &#37;</td>" .
 		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeBRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeTRE, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentualeVIL, 2, ',', '.') . " &#37;</td>" .
+		"			<td width='108' align='right' class='mark'>" . number_format($ricaricoPercentuale, 2, ',', '.') . " &#37;</td>" .
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
@@ -868,7 +894,19 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		$tabellaBep = "";
 
+		$totaleCostiVariabili = 0;
+		$totaleRicavi = 0;
+		$totaleCostiFissi = 0;
+		$incidenzaCostiVariabiliSulFatturato = 0;
+		$bep = 0;
+		
 		// Villa ---------------------------------------------------------------------
+		
+		$totaleCostiVariabiliVIL = 0;
+		$totaleRicaviVIL = 0;
+		$totaleCostiFissiVIL = 0;
+		$incidenzaCostiVariabiliSulFatturatoVIL = 0;
+		$bepVIL = 0;		
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
 			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
@@ -885,7 +923,17 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$incidenzaCostiVariabiliSulFatturatoVIL = 1 - ($totaleCostiVariabiliVIL / abs($totaleRicaviVIL));
 		$bepVIL = $totaleCostiFissiVIL / round($incidenzaCostiVariabiliSulFatturatoVIL, 2);
 
+		$totaleCostiVariabili += $totaleCostiVariabiliVIL;
+		$totaleRicavi += $totaleRicaviVIL;
+		$totaleCostiFissi += $totaleCostiFissiVIL;		
+		
 		// Trezzo ---------------------------------------------------------------------
+
+		$totaleCostiVariabiliTRE = 0;
+		$totaleRicaviTRE = 0;
+		$totaleCostiFissiTRE = 0;
+		$incidenzaCostiVariabiliSulFatturatoTRE = 0;
+		$bepTRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
 			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
@@ -902,7 +950,17 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$incidenzaCostiVariabiliSulFatturatoTRE = 1 - ($totaleCostiVariabiliTRE / abs($totaleRicaviTRE));
 		$bepTRE = $totaleCostiFissiTRE / round($incidenzaCostiVariabiliSulFatturatoTRE, 2);
 
+		$totaleCostiVariabili += $totaleCostiVariabiliTRE;
+		$totaleRicavi += $totaleRicaviTRE;
+		$totaleCostiFissi += $totaleCostiFissiTRE;
+		
 		// Brembate ---------------------------------------------------------------------
+
+		$totaleCostiVariabiliBRE = 0;
+		$totaleRicaviBRE = 0;
+		$totaleCostiFissiBRE = 0;
+		$incidenzaCostiVariabiliSulFatturatoBRE = 0;
+		$bepBRE = 0;
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
 			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
@@ -918,45 +976,64 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		
 		$incidenzaCostiVariabiliSulFatturatoBRE = 1 - ($totaleCostiVariabiliBRE / abs($totaleRicaviBRE));
 		$bepBRE = $totaleCostiFissiBRE / round($incidenzaCostiVariabiliSulFatturatoBRE, 2);
+
+		$totaleCostiVariabili += $totaleCostiVariabiliBRE;
+		$totaleRicavi += $totaleRicaviBRE;
+		$totaleCostiFissi += $totaleCostiFissiBRE;
+		
+		// BEP totale negozi -----------------------------------------------------
+		
+		$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
+		$bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
+		
+		/**
+		 * tabella del BEP
+		 */
 		
 		$tabellaBep =
 		"<table class='result'>" .
 		"	<thead>" .
 		"		<th width='300'>&nbsp;</th>" .
-		"		<th width='100'>%ml.villa%</th>" .
-		"		<th width='100'>%ml.trezzo%</th>" .
 		"		<th width='100'>%ml.brembate%</th>" .
+		"		<th width='100'>%ml.trezzo%</th>" .
+		"		<th width='100'>%ml.villa%</th>" .
+		"		<th width='100'>%ml.totale%</th>" .
 		"	</thead>" .
 		"	<tbody>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>Fatturato</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>Costi fissi</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiVIL), 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiBRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissiVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiFissi), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>Acquisti</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>Incidenza acquisti sul fatturato</td>" .
-		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoBRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'> " . number_format($incidenzaCostiVariabiliSulFatturato, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>BEP</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepVIL, 2, ',', '.') . "</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepBRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepTRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bepVIL, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($bep, 2, ',', '.') . "</td>" .
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
