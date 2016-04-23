@@ -71,8 +71,9 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-		
-		$_SESSION["title1"] = "Negozio di " . $negozio;
+
+		if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
+		else $_SESSION["title1"] = "Tutti i negozi";
 		
 		return $pdf;
 	}
