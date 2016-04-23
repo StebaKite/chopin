@@ -1031,7 +1031,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','',12);
 			
 		// Header
-		$w = array(100, 30, 30, 30);
+		$w = array(100, 30, 30, 30, 30);
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 		$this->Ln();
@@ -1045,6 +1045,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicavi"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$fill = !$fill;		
@@ -1052,6 +1053,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabili"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;		
@@ -1059,6 +1061,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format($datiMCT["margineTotaleBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["margineTotaleTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["margineTotaleVIL"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["margineTotale"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;		
@@ -1066,6 +1069,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format($datiMCT["marginePercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["marginePercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["marginePercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["marginePercentuale"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1073,6 +1077,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format($datiMCT["ricaricoPercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["ricaricoPercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["ricaricoPercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["ricaricoPercentuale"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$this->Cell(array_sum($w),0,'','T');
@@ -1093,7 +1098,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','',12);
 			
 		// Header
-		$w = array(100, 30, 30, 30);
+		$w = array(100, 30, 30, 30, 30);
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 		
@@ -1108,6 +1113,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicavi"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1115,6 +1121,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiFissiBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiFissiTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiFissiVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiFissi"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1122,6 +1129,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabili"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1129,6 +1137,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturato"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1136,6 +1145,7 @@ class Pdf extends FPDF {
 		$this->Cell($w[1],8, number_format($datiMCT["bepBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["bepTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["bepVIL"], 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],8, number_format($datiMCT["bep"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$this->Cell(array_sum($w),0,'','T');

@@ -231,6 +231,10 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$datiMCT["marginePercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleRicaviVIL"]);
 		$datiMCT["ricaricoPercentualeVIL"] = ($datiMCT["margineTotaleVIL"] * 100 ) / abs($datiMCT["totaleCostiVariabiliVIL"]);
 		
+		$datiMCT["totaleCostiFissi"] += $datiMCT["totaleCostiFissiVIL"];
+		$datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviVIL"];
+		$datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliVIL"];
+		
 		// Trezzo ---------------------------------------------------------------------
 		
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
@@ -248,6 +252,10 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$datiMCT["margineTotaleTRE"] = abs($datiMCT["totaleRicaviTRE"]) - $datiMCT["totaleCostiVariabiliTRE"];
 		$datiMCT["marginePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleRicaviTRE"]);
 		$datiMCT["ricaricoPercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliTRE"]);
+
+		$datiMCT["totaleCostiFissi"] += $datiMCT["totaleCostiFissiTRE"];
+		$datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviTRE"];
+		$datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliTRE"];
 		
 		// Brembate ---------------------------------------------------------------------
 		
@@ -266,6 +274,16 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$datiMCT["margineTotaleBRE"] = abs($datiMCT["totaleRicaviBRE"]) - $datiMCT["totaleCostiVariabiliBRE"];
 		$datiMCT["marginePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleRicaviBRE"]);
 		$datiMCT["ricaricoPercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliBRE"]);
+
+		$datiMCT["totaleCostiFissi"] += $datiMCT["totaleCostiFissiBRE"];
+		$datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviBRE"];
+		$datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliBRE"];
+		
+		// MCT toale negozi ----------------------------------------------------------
+
+		$datiMCT["margineTotale"] = abs($datiMCT["totaleRicavi"]) - $datiMCT["totaleCostiVariabili"];
+		$datiMCT["marginePercentuale"] = ($datiMCT["margineTotale"] * 100 ) / abs($datiMCT["totaleRicavi"]);
+		$datiMCT["ricaricoPercentuale"] = ($datiMCT["margineTotale"] * 100 ) / abs($datiMCT["totaleCostiVariabili"]);
 		
 		$this->set_datiMCT($datiMCT);
 		
@@ -273,7 +291,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$pdf->AddPage('L');
 		
-		$header = array("MCT", "Brembate", "Trezzo", "Villa D'Adda");
+		$header = array("MCT", "Brembate", "Trezzo", "Villa D'Adda", "TOTALE");
 		$pdf->SetFont('Arial','',9);
 		$pdf->riepilogoNegoziMctTable($header, $datiMCT);
 		
@@ -307,6 +325,12 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"] = 1 - ($datiMCT["totaleCostiVariabiliBRE"] / abs($datiMCT["totaleRicaviBRE"]));
 		$datiMCT["bepBRE"] = $datiMCT["totaleCostiFissiBRE"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2);
 
+		// BEP totale negozi -----------------------------------------------------------
+
+		$datiMCT["incidenzaCostiVariabiliSulFatturato"] = 1 - ($datiMCT["totaleCostiVariabili"] / abs($datiMCT["totaleRicavi"]));
+		$datiMCT["bep"] = $datiMCT["totaleCostiFissi"] / round($datiMCT["incidenzaCostiVariabiliSulFatturato"], 2);
+		
+		
 		$this->set_datiMCT($datiMCT);
 		
 		// Nuova pagina documento -----------------------------------------------
@@ -314,7 +338,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		$pdf->Cell(100,10,'','',0,'R',$fill);
 		$pdf->Ln();
 				
-		$header = array("BEP", "Brembate", "Trezzo", "Villa D'Adda");
+		$header = array("BEP", "Brembate", "Trezzo", "Villa D'Adda", "TOTALE");
 		$pdf->SetFont('Arial','',9);
 		$pdf->riepilogoNegoziBepTable($header, $datiMCT);
 		
