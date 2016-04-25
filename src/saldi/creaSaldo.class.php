@@ -70,7 +70,7 @@ class CreaSaldo extends SaldiAbstract {
 
 			// Aggiornamento del DB ------------------------------
 
-			if ($this->creaSaldo($utility)) {
+			if ($this->gestisciSaldo($utility)) {
 
 				$_SESSION["messaggio"] = "Saldo salvato con successo";
 				unset($_SESSION["codconto"]);
@@ -103,7 +103,7 @@ class CreaSaldo extends SaldiAbstract {
 		}
 	}
 
-	public function creaSaldo($utility) {
+	public function gestisciSaldo($utility) {
 
 		require_once 'database.class.php';
 

@@ -93,6 +93,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 				$result = $this->creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);				
 			}					
 		}
+		return $result;
 	}
 	
 	/**
