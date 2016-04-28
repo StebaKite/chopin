@@ -217,7 +217,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				
 			if ($fornitore != "null") {
 
-				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
 					$db->rollbackTransaction();
 					error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
 					return FALSE;
@@ -227,7 +227,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		
 				if ($cliente != "null") {
 
-					if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
+					if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
 						$db->rollbackTransaction();
 						error_log("Errore inserimento scadenza cliente, eseguito Rollback");
 						return FALSE;
@@ -267,17 +267,22 @@ class ModificaRegistrazione extends primanotaAbstract {
 		}
 	}
 
-	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza) {
 
 		if (isset($_SESSION["numeroScadenzeRegistrazione"])) {
 		
-			$scadenzeRegistrazione = $_SESSION["elencoScadenzeRegistrazione"];
+			/**
+			 * RATIO: se la fattura è multiscadenza vengono aggiornate tutte le scadenze in scadenziario senza cancellarle.
+			 * I dati non oggetto di modifica sono: lo stato della scadenza, l'importo della scadenza e le chiavi 
+			 */
+			
+			$scadenze_registrazione = $_SESSION["elencoScadenzeRegistrazione"];
 			$progrFattura = 0;
 				
 			/**
 			 * I dati da aggiornare sulle scadenza sono : la nota, il numero fattura, il negozio
 			 */
-			foreach ($scadenzeRegistrazione as $row) {
+			foreach ($scadenze_registrazione as $row) {
 					
 				$progrFattura += 1;
 				$numfatt_generato = "'" . trim($_SESSION["numfatt"]) . "." . $progrFattura . "'";
@@ -296,7 +301,12 @@ class ModificaRegistrazione extends primanotaAbstract {
 			}
 		}
 		else {
-		
+
+			/**
+			 * RATIO: se la fattura ha una sola data di scadenza, la scadenza viene cancellata e inserita nuovamente con i 
+			 * nuovi dati in stato '00' 
+			 */
+			
 			$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
 
 			if ($datascad != "null") {
@@ -324,11 +334,9 @@ class ModificaRegistrazione extends primanotaAbstract {
 		}
 	}
 
-	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
+	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza) {
 		
 		if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
-
-			$staScadenza = "00";	// scadenza aperta
 			
 			$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
 			foreach(pg_fetch_all($result_cliente) as $row) {

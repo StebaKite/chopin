@@ -1,0 +1,35 @@
+<body>
+
+<div id="body">
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		
+		<form class="tooltip" method="post" id="back" action="../strumenti/cambiaContoStep1Facade.class.php?modo=go" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="datareg_da" value='%datareg_da%' />			
+			<input type="hidden" name="datareg_a" value='%datareg_a%' />
+			<input type="hidden" name="conto_sel" value='%conto_sel%' />						
+		</form>
+		<br>
+		<form method="post" action="%azione%" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.conto% :</td>
+						<td>
+							<select class='selectmenuContoCambioConto' id="conto_sel_nuovo" name="conto_sel_nuovo">
+								<option value=""></option>
+							%elenco_conti%
+							</select>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2" align="right">%bottoneAvanti%</td>				
+					</tr>					
+				</tfoot>
+			</table>
+		</form>
+		<br>
+		

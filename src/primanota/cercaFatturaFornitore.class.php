@@ -46,12 +46,12 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 		
 		if ($_SESSION["causale"] != "1100") {
 			$id_fornitore = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["idfornitore"]);			
-			$result = $this->cercaFatturaFornitore($db, $utility, $id_fornitore, $_SESSION["numfatt"]);
+			$result = $this->cercaFatturaFornitore($db, $utility, $id_fornitore, $_SESSION["numfatt"], $_SESSION["datareg"]);
 			
 			if ($result){
 				if (pg_num_rows($result) > 0) {
 					foreach(pg_fetch_all($result) as $row) {
-						echo "Numero fattura gi&agrave; esistente: " . date("d/m/Y",strtotime($row['dat_registrazione'])) . " , " . $row['des_registrazione'];
+						echo "Fattura gi&agrave; esistente!";
 						break;
 					}
 				}

@@ -10,6 +10,7 @@ $cercaFatturaCliente = CercaFatturaCliente::getInstance();
 if ($_GET["modo"] == "start") {
 	$_SESSION["idcliente"] = $_REQUEST["idcliente"];
 	$_SESSION["numfatt"] = $_REQUEST["numfatt"];	
+	$_SESSION["datareg"] = $_REQUEST["datareg"];	
 	$cercaFatturaCliente->start();
 }
 

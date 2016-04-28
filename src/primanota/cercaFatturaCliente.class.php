@@ -45,12 +45,12 @@ class CercaFatturaCliente extends PrimanotaAbstract {
 		$db->beginTransaction();
 
 		$id_cliente = $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]);
-		$result = $this->cercaFatturaCliente($db, $utility, $id_cliente, $_SESSION["numfatt"]); 
+		$result = $this->cercaFatturaCliente($db, $utility, $id_cliente, $_SESSION["numfatt"], $_SESSION["datareg"]); 
 		
 		if ($result) {
 			if (pg_num_rows($result) > 0) {
 				foreach(pg_fetch_all($result) as $row) {
-					echo "Numero fattura gi&agrave; esistente: " . date("d/m/Y",strtotime($row['dat_registrazione'])) . " , " . $row['des_registrazione'];
+					echo "Fattura gi&agrave; esistente!";
 				}
 			}
 			else {

@@ -47,7 +47,37 @@ class CancellaRegistrazione extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 
+		/**
+		 * Prelevo la data della registrazione da cancellare per ricalcolare i saldi
+		 */
+		
+		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+		
+		if ($result) {
+		
+			$registrazione = pg_fetch_all($result);
+			foreach ($registrazione as $row) {		
+				$datareg = $row["dat_registrazione"];
+			}
+		}
+		
 		$this->cancellaRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+
+		/**
+		 * Rigenero i saldi
+		 */
+
+		$db->beginTransaction();
+		
+		$array = $utility->getConfig();
+			
+		$dataRegistrazione = strtotime(str_replace('/', '-', $datareg));
+		
+		if ($array['lavoriPianificatiAttivati'] == "Si") {
+			$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);
+		}
+			
+		$db->commitTransaction();
 		
 		$_SESSION["messaggioCancellazione"] = "Registrazione numero " . $_SESSION['idRegistrazione'] . " cancellata";
 		$ricercaRegistrazione = RicercaRegistrazione::getInstance();

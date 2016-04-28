@@ -37,12 +37,15 @@ abstract class ChopinAbstract {
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
 	public static $queryAggiornaSaldo = "/saldi/aggiornaSaldo.sql";
 	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
+	public static $queryCancellaSaldo = "/saldi/cancellaSaldo.sql";
 	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
 	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";
 
 	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
+
+	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -112,19 +115,22 @@ abstract class ChopinAbstract {
 	public function start() { }
 			
 	public function go() { }
-
-	// Metodi per aggiornamenti e creazioni su DB  ----------------------------------------
-	
-
-	
-	
-	
-	
-	
-	
-	
 	
 	// Altri metodi di utilità ------------------------------------------------------------
+
+	/**
+	 * Questo metodo determiona se l'anno è bisestile
+	 * @param unknown $anno
+	 */
+	public function isAnnoBisestile($anno) {
+		
+		$annoBisestile = false;
+		
+		if (($anno%4 == 0 && $anno%100 != 0) || $anno%400 == 0) {
+			$annoBisestile = true;
+		}		
+		return $annoBisestile;
+	}
 	
 	/**
 	 * 
@@ -180,6 +186,8 @@ abstract class ChopinAbstract {
 		return self::$elenco_causali;
 	}
 
+	// Metodi comuni per accessi sul DB  ----------------------------------------
+	
 	/**
 	 * 
 	 * @param unknown $utility
@@ -227,7 +235,7 @@ abstract class ChopinAbstract {
 	}
 	
 	/**
-	 * 
+	 * Questo metodo carica tutti i conti configurati su una causale
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @return string
@@ -249,6 +257,34 @@ abstract class ChopinAbstract {
 		return self::$elenco_conti;
 	}
 
+	/**
+	 * Questo metodo carica tutti i conti esistenti nel piano dei conti
+	 * @param unknown $utility
+	 * @param unknown $db
+	 */
+	public function caricaTuttiConti($utility, $db) {
+
+		$array = $utility->getConfig();
+		self::$replace = array();
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiTuttiConti;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+		$result = $db->getData($sql);
+
+		while ($row = pg_fetch_row($result)) {
+			if ($row[0] . " - " . $row[1] == $_SESSION["conto_sel"]) {
+				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "' selected>" . $row[0].$row[1] . " - " . $row[2] ;
+			}
+			else {
+				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "'>" . $row[0].$row[1] . " - " . $row[2] ;
+			}
+		}
+		
+		while ($row = pg_fetch_row($result)) {
+		}
+		return self::$elenco_conti;	
+	}
+	
 	/**
 	 * 
 	 * @param unknown $db
@@ -567,14 +603,13 @@ abstract class ChopinAbstract {
 	 * @param unknown $dessottoconto
 	 * @return unknown
 	 */
-	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto, $indgruppo) {
+	public function inserisciSottoconto($db, $utility, $codconto, $codsottoconto, $dessottoconto) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_conto%' => trim($codconto),
 				'%cod_sottoconto%' => trim($codsottoconto),
-				'%des_sottoconto%' => trim($dessottoconto),
-				'%ind_gruppo%' => trim($indgruppo)
+				'%des_sottoconto%' => trim($dessottoconto)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSottoconto;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

@@ -69,36 +69,30 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
 	
 		$result = $this->leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo);
-	
+		
 		if (pg_num_rows($result) > 0) {
-			$array = $utility->getConfig();
-			$replace = array(
-					'%cod_negozio%' => $codnegozio,
-					'%cod_conto%' => $codconto,
-					'%cod_sottoconto%' => $codsottoconto,
-					'%dat_saldo%' => $datsaldo,
-					'%des_saldo%' => $dessaldo,
-					'%imp_saldo%' => $impsaldo,
-					'%ind_dareavere%' => $inddareavere
-			);
-			$sqlTemplate = self::$root . $array['query'] . self::$queryAggiornaSaldo;
+				
+			/**
+			 * Se il saldo calcolato è significativo, aggiorno il saldo del conto
+			 * altrimenti elimino il saldo del conto 
+			 */
+			
+			if ($impsaldo != 0) {		
+				$result = $this->aggiornaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);			
+			} else {
+				$result = $this->cancellaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo);
+			}
 		}
 		else {
-			$array = $utility->getConfig();
-			$replace = array(
-					'%cod_negozio%' => $codnegozio,
-					'%cod_conto%' => $codconto,
-					'%cod_sottoconto%' => $codsottoconto,
-					'%dat_saldo%' => $datsaldo,
-					'%des_saldo%' => $dessaldo,
-					'%imp_saldo%' => $impsaldo,
-					'%ind_dareavere%' => $inddareavere
-			);
-			$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+			
+			/**
+			 * Se il saldo calcolato è significativo, creo il saldo del conto
+			 */
+
+			if ($impsaldo != 0) {
+				$result = $this->creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);				
+			}					
 		}
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
 		return $result;
 	}
 	
@@ -127,6 +121,95 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * Questo metodo permette di cancellare un saldo di un negozio per un conto-sottoconto-data
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codnegozio
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $datsaldo
+	 */
+	public function cancellaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_negozio%' => $codnegozio,
+				'%cod_conto%' => $codconto,
+				'%cod_sottoconto%' => $codsottoconto,
+				'%dat_saldo%' => $datsaldo
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCancellaSaldo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;		
+	}
+
+	/**
+	 * Questo metodo permette di aggiornare un saldo
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codnegozio
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $datsaldo
+	 * @param unknown $dessaldo
+	 * @param unknown $impsaldo
+	 * @param unknown $inddareavere
+	 */
+	public function aggiornaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_negozio%' => $codnegozio,
+				'%cod_conto%' => $codconto,
+				'%cod_sottoconto%' => $codsottoconto,
+				'%dat_saldo%' => $datsaldo,
+				'%des_saldo%' => $dessaldo,
+				'%imp_saldo%' => $impsaldo,
+				'%ind_dareavere%' => $inddareavere
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAggiornaSaldo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	/**
+	 * Questo metodo permette di creare un saldo
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codnegozio
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 * @param unknown $datsaldo
+	 * @param unknown $dessaldo
+	 * @param unknown $impsaldo
+	 * @param unknown $inddareavere
+	 */
+	public function creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_negozio%' => $codnegozio,
+				'%cod_conto%' => $codconto,
+				'%cod_sottoconto%' => $codsottoconto,
+				'%dat_saldo%' => $datsaldo,
+				'%des_saldo%' => $dessaldo,
+				'%imp_saldo%' => $impsaldo,
+				'%ind_dareavere%' => $inddareavere
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSaldo;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	/**
+	 * Questo metodo preleva tutti i conti esistenti
+	 * @param unknown $db
+	 * @param unknown $utility
+	 */	
 	public function prelevaConti($db, $utility) {
 	
 		$array = $utility->getConfig();
@@ -169,6 +252,8 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaDateRiportoSaldi;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->getData($sql);
+		
+		$elencoDateRiportoSaldi = "";
 
 		foreach(pg_fetch_all($result) as $row) {
 		

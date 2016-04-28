@@ -166,6 +166,7 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 				
 		$dettaglioregistrazione = pg_fetch_all($result);
 		$tbodyDettagli = "";
+		$class_scadenzesuppl = "";
 		
 		foreach ($dettaglioregistrazione as $row) {
 		

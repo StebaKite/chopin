@@ -73,7 +73,9 @@ class EstraiPdfMastrinoConto extends ConfigurazioniAbstract {
 		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
 		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
 
-		$_SESSION["title1"] = "Negozio di " . $negozio;
+		if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
+		else $_SESSION["title1"] = "Tutti i negozi";
+		
 		$_SESSION["title2"] = $_SESSION["catconto"] . " : " . $_SESSION["desconto"] . " / " . $_SESSION["dessottoconto"];
 		
 		return $pdf;

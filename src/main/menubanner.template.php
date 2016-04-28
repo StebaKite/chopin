@@ -62,7 +62,7 @@ class MenubannerTemplate extends ChopinAbstract {
 			$anno = date("Y");
 			$rows = $_SESSION["lavoriPianificati"];
 			
-			$tabellaLavoriPianificati .= "<div class='scroll-lavori'><table class='result'><tbody>";
+			$tabellaLavoriPianificati = "<div class='scroll-lavori'><table class='result'><tbody>";
 			
 			foreach($rows as $row) {
 				

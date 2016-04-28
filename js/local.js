@@ -42,6 +42,7 @@ $( "#addebitodiretto" ).click(function( event ) {
 
 $( "#msg" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	buttons: [
 		{
@@ -62,6 +63,7 @@ $( "#msg" ).dialog({
 
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -91,6 +93,7 @@ $( "#nuovo-dett" ).click(function( event ) {
 
 $( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -144,6 +147,7 @@ $( "#nuovo-dett-corrisp" ).click(function( event ) {
 
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 150,
 	buttons: [
@@ -173,6 +177,7 @@ $( "#nuova-data-scad" ).click(function( event ) {
 // Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -202,6 +207,7 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuova-scadenza-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 150,
 	buttons: [
@@ -230,6 +236,7 @@ $( "#nuova-scad-modificareg" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -258,6 +265,7 @@ $( "#nuovo-dett-modifica-pagamento" ).click(function( event ) {
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-incasso-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 500,
 	height: 400,
 	buttons: [
@@ -283,39 +291,10 @@ $( "#nuovo-dett-modifica-incasso" ).click(function( event ) {
 	event.preventDefault();
 });
 
-// Nuovo evento
-$( "#nuovo-evento-form" ).dialog({
-	autoOpen: false,
-	width: 500,
-	height: 250,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-             $("#nuovoEvento").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-// Link to open the dialog
-$( "#nuovo-evento" ).click(function( event ) {
-	$( "#dataevento" ).val("");
-	$( "#notaevento" ).val("");	
-	$( "#nuovo-evento-form" ).dialog( "open" );
-	event.preventDefault();
-});
-
 //Modifica registrazione : cancella dettaglio
 $( "#cancella-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -337,6 +316,7 @@ $( "#cancella-dettaglio-modificareg-form" ).dialog({
 //Cancella conto
 $( "#cancella-conto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -358,6 +338,7 @@ $( "#cancella-conto-form" ).dialog({
 //Cancella causale
 $( "#cancella-causale-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -379,6 +360,7 @@ $( "#cancella-causale-form" ).dialog({
 //Cancella fornitore
 $( "#cancella-fornitore-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -400,6 +382,7 @@ $( "#cancella-fornitore-form" ).dialog({
 //Cancella cliente
 $( "#cancella-cliente-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -421,6 +404,7 @@ $( "#cancella-cliente-form" ).dialog({
 //Modifica conto : modifica gruppo sottoconto
 $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 360,
 	buttons: [
 		{
@@ -442,6 +426,7 @@ $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 //Modifica conto : cancella sottoconto
 $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -463,6 +448,7 @@ $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 //Modifica conto : aggiunta nuovo sottoconto
 $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 600,
 	height: 250,
 	buttons: [
@@ -485,6 +471,7 @@ $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 // Genera mastrino fornitore
 $( "#generaMastrino-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 400,
 	buttons: [
 		{
@@ -512,6 +499,7 @@ $( "#nuovo-sottoconto-modificaconto" ).click(function( event ) {
 //Cancella registrazione
 $( "#cancella-registrazione-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -533,6 +521,7 @@ $( "#cancella-registrazione-form" ).dialog({
 //Cancella corrispettivo
 $( "#cancella-corrispettivo-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -553,6 +542,7 @@ $( "#cancella-corrispettivo-form" ).dialog({
 
 $( "#nuovo-sottoconto-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 600,
 	height: 200,
 	buttons: [
@@ -581,6 +571,7 @@ $( "#nuovo-sottoconto" ).click(function( event ) {
 //Modifica registrazione : cancella scadenza
 $( "#cancella-scadenza-modificareg-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -601,6 +592,7 @@ $( "#cancella-scadenza-modificareg-form" ).dialog({
 
 $( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 510,
 	height: 420,
 	buttons: [
@@ -628,6 +620,7 @@ $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 
 $( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 510,
 	height: 420,
 	buttons: [
@@ -675,6 +668,7 @@ $( "#tutti" ).click(function( event ) {
 
 
 $( ".dataregpicker" ).datepicker({
+	showAnim: "slideDown",
 	changeMonth: true,
 	changeYear: true,
 	bgiframe: true,
@@ -685,6 +679,7 @@ $( ".dataregpicker" ).datepicker({
 });
 
 $( ".datepicker" ).datepicker({
+	showAnim: "slideDown",
 	changeMonth: true,
 	changeYear: true,
 	bgiframe: true,
@@ -694,6 +689,7 @@ $( ".datepicker" ).datepicker({
 });
 
 $( ".data" ).datepicker({
+	showAnim: "slideDown",
 	inline: true,
 	changeMonth: true,
 	changeYear: true,
@@ -870,6 +866,11 @@ $( ".selectmenuConto" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuContoCambioConto" )
+	.selectmenu({width: 400})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCategoria" )
 	.selectmenu({width: 150})
 	.selectmenu("menuWidget")
@@ -904,6 +905,7 @@ $( ".selectmenuConti" )
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
+$( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
 $( ".selectmenuCausale" ).selectmenu({ width: 270 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
@@ -1103,6 +1105,7 @@ function cancellaCorrispettivo(idreg) {
 //Modifica pagamento : cancella dettaglio
 $( "#cancella-dettaglio-modificapag-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -1134,6 +1137,7 @@ function cancellaDettaglioPagamento(idconto) {
 //Modifica incasso : cancella dettaglio
 $( "#cancella-dettaglio-modificainc-form" ).dialog({
 	autoOpen: false,
+	modal: true,
 	width: 300,
 	buttons: [
 		{
@@ -1229,14 +1233,12 @@ function cancellaCliente(idcliente, codcliente) {
 }
 
 function generaMastrino(codconto, codsottoconto) {
+		
+	var input_codcontogenera = "<input type='text' id='codcontogenera' name='codcontogenera' value='" + codconto + "' readonly >";
+	var input_codsottocontogenera = "<input type='text' id='codsottocontogenera' name='codsottocontogenera' value='" + codsottoconto + "' readonly >";
 	
-	var codSottoconto = pad(codsottoconto, 2);
-	if (codSottoconto.substring(0, 1) == "0") {
-		var codSottoconto = pad(codsottoconto, 1);
-	}
-	
-	$( "#codcontogenera" ).val(codconto);
-	$( "#codsottocontogenera" ).val(codSottoconto);
+	$( "#id_codcontogenera" ).html(input_codcontogenera);
+	$( "#id_codsottocontogenera" ).html(input_codsottocontogenera);
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 
@@ -1251,3 +1253,10 @@ $( "#fornitore" ).autocomplete({
 $( "#cliente" ).autocomplete({
  	source: elencoClienti
 });	
+
+function escapeRegExp(str) {
+	  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}

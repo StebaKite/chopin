@@ -50,9 +50,7 @@ class Spalla extends ChopinAbstract {
 		$spallaTemplate = SpallaTemplate::getInstance();
 		
 		// compone la pagina
-		include($testata);
 		$spallaTemplate->displayPagina();
-		include($piede);
 	}
 }
 

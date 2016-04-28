@@ -12,21 +12,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 	public static $messaggio;
 	public static $querySaldoConto = "/saldi/saldoConto.sql";
-	
-	public static $ggMese = array(
-			'01' => '31',
-			'02' => '28',
-			'03' => '31',
-			'04' => '30',
-			'05' => '31',
-			'06' => '30',
-			'07' => '31',
-			'08' => '31',
-			'09' => '30',
-			'10' => '31',
-			'11' => '30',
-			'12' => '31'
-	);
 
 	public static $mese = array(
 			'01' => 'gennaio',
@@ -55,7 +40,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
+		
 		self::$testata = self::$root . $array['testataPagina'];
 		self::$piede = self::$root . $array['piedePagina'];
 		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
@@ -80,7 +65,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 	// ------------------------------------------------
 	
 	public function start($db, $pklavoro) {
-
+		
 		require_once 'utility.class.php';
 		
 		$riportoStatoPatrimoniale_Ok = FALSE;
@@ -98,6 +83,19 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 		
 		$anno = ($mesePrecedente == 12) ? date("Y", strtotime('-1 year', strtotime($_SESSION["dataEsecuzioneLavoro"]))) : date("Y", strtotime($_SESSION["dataEsecuzioneLavoro"]));
+
+		if ($this->isAnnoBisestile($anno)) {
+			$ggMese = array(
+					'01' => '31', '02' => '29', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
+					'07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
+			);
+		}
+		else {
+			$ggMese = array(
+					'01' => '31', '02' => '28', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
+					'07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
+			);
+		}
 		
 		/**
 		 * Riporto stato patrimoniale
@@ -109,10 +107,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 		if ($result) {
 			
-			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
+			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
 			$da = '01/' . $mesePrecedente . '/' . $anno;
-			$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
+			$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
 			error_log("Riporto saldo stato patrimoniale, periodo : " . $da . " - " . $a);
 			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
 			
@@ -130,10 +128,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 			
 			if ($result) {
 
-				$this->riportoContoEconomico($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo);
+				$this->riportoContoEconomico($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 					
 				$da = '01/' . $mesePrecedente . '/' . $anno;
-				$a  = SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
+				$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
 				error_log("Riporto saldo conto economico, periodo : " . $da . " - " . $a);
 				error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
 				
@@ -152,19 +150,30 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		else return FALSE;
 	}
 	
-	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
+	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
 		require_once 'menubanner.template.php';
-		
-		$conti = pg_fetch_all($statoPatrimoniale);
-			
-		foreach($conti as $conto) {
+
+		$array = $utility->getConfig();
 				
+		$conti = pg_fetch_all($statoPatrimoniale);
+
+		/**
+		 * Scansione di tutti i conti dello Stato Patrimoniale
+		 */
+		
+		foreach($conti as $conto) {
+		
+			/**
+			 * Per ciascun conto effettuo la totalizzazione delle registrazioni per ciascun negozio
+			 */
+			$dareAvere_conto = ($conto['tip_conto'] = "Avere") ? "A" : "D";		// prelevo il tipo del conto Dare/Avere
+								
 			foreach(SELF::$negozi as $negozio){
 					
 				$replace = array(
 						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-						'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+						'%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
 						'%codnegozio%' => $negozio,
 						'%codconto%' => $conto['cod_conto'],
 						'%codsottoconto%' => $conto['cod_sottoconto']
@@ -175,38 +184,35 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		
 				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);				
 				$result = $db->execSql($sql);
-		
-				$saldo = pg_fetch_all($result);
 					
-				if (result) {
-					foreach($saldo as $row) {
+				if ($result) {
 						
-						/**
-						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
-						 */
-						if ($row['tot_conto'] != 0) {
-		
-							/**
-							 * L'attribuzione del segno tiene in considerazione sia il tipo di conto sia l'importo del saldo.
-							 * Ad esempio: la cassa è un conto in Dare ma se il saldo risulta negativo viene riportato in Avere
-							 * Lo stesso per un conto in Avere con un seldo maggiore di zero, viene riportato in Dare
-							 */
-													
-							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == 1)) $dareAvere = "D";	
-							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == 1)) $dareAvere = "A";
+					$totale_conto = 0;	//default
+					$dareAvere = "";	//default
 
-							if (($row['tot_conto'] > 0) and ($row['tip_conto'] == -1)) $dareAvere = "D";
-							if (($row['tot_conto'] < 0) and ($row['tip_conto'] == -1)) $dareAvere = "A";
-							
-							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
-						}
+					/**
+					 * Faccio la somma algebrica di tutti i totali estratti.
+					 * Normalmente dalla query di totalizzazione viene fuori una riga con un totale, ma nel caso
+					 * di conti con importo negativo e segno contrario escono due righe.
+					 *
+					 */
+								
+					foreach(pg_fetch_all($result) as $row) {							
+ 						$totale_conto = $totale_conto + $row['tot_conto'];
 					}
+					
+					/**
+					 * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
+					 */
+
+					$dareAvere = ($totale_conto > 0) ? "D" : "A";					
+					$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
 				}
 			}
 		}		
 	}
 	
-	private function riportoContoEconomico($db, $pklavoro, $utility, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo) {
+	private function riportoContoEconomico($db, $pklavoro, $utility, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
 		require_once 'menubanner.template.php';
 		
@@ -218,7 +224,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 				$replace = array(
 						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-						'%datareg_a%' => SELF::$ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+						'%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
 						'%codnegozio%' => $negozio,
 						'%codconto%' => $conto['cod_conto'],
 						'%codsottoconto%' => $conto['cod_sottoconto']
@@ -229,11 +235,9 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		
 				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 				$result = $db->execSql($sql);
-		
-				$saldo = pg_fetch_all($result);
 					
 				if (result) {
-					foreach($saldo as $row) {
+					foreach(pg_fetch_all($result) as $row) {
 						
 						/**
 						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato

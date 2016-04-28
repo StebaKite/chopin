@@ -46,7 +46,7 @@ SELECT
 			conto.ind_visibilita_sottoconti,
 			conto.des_conto,
 			sottoconto.des_sottoconto,
-			saldo.imp_saldo as tot_conto
+			(saldo.imp_saldo * -1) as tot_conto
 		 FROM contabilita.saldo  
 			INNER JOIN contabilita.conto as conto
 			  ON conto.cod_conto = saldo.cod_conto
