@@ -200,21 +200,25 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + 5, $y1 + 23 );
 		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$capcliente . " " . $cittacliente, 0,0, "");
-		
-		if (($cfiscliente == "") or ($cfiscliente == $pivacliente)) {
+
+		if ($cfiscliente == $pivacliente) {
 			$this->SetXY( $r1 + 5, $y1 + 28 );
 			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"P.iva/C.F. : " . $pivacliente, 0,0, "");				
+			$this->Cell(10,5,"P.iva/C.F. : " . $pivacliente, 0,0, "");
 		}
 		else {
-			$this->SetXY( $r1 + 5, $y1 + 28 );
-			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"P.iva : " . $pivacliente, 0,0, "");
-				
-			$this->SetXY( $r1 + 5, $y1 + 33 );
-			$this->SetFont( "Arial", "", 10);
-			$this->Cell(10,5,"C.F. : " . $cfiscliente, 0,0, "");
-		}		
+			if ($pivacliente != "") {
+				$this->SetXY( $r1 + 5, $y1 + 28 );
+				$this->SetFont( "Arial", "", 10);
+				$this->Cell(10,5,"P.iva : " . $pivacliente, 0,0, "");
+			}
+			
+			if ($cfiscliente != "") {
+				$this->SetXY( $r1 + 5, $y1 + 33 );
+				$this->SetFont( "Arial", "", 10);
+				$this->Cell(10,5,"C.F. : " . $cfiscliente, 0,0, "");
+			}				
+		}
 	}
 	
 	public function boxDettagli() {
@@ -254,9 +258,8 @@ class Fattura extends FPDF {
 	
 	public function aggiungiLineaNota($d, $r1, $y1) {
 	
-		$this->SetFont( "Arial", "I", 10);
+		$this->SetFont( "Arial", "", 10);
 		$this->SetXY( $r1, $y1 );
-
 		foreach($d as $nota) {
 			$this->Cell(150,6,utf8_decode($nota),"",0,"L");
 			$this->Ln();
