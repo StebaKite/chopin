@@ -30,19 +30,19 @@ class Fattura extends FPDF {
 		$this->SetTextColor(36, 169, 219);
 		
 		$this->SetFont('Arial','B',15);
-		$this->Cell(0,10,utf8_decode($_SESSION["title"]),0,0,'C');
+		$this->Cell(0,10,iconv('UTF-8', 'windows-1252', $_SESSION["title"]),0,0,'C');
 		$this->Ln();
 
 		$this->SetTextColor(0, 0, 0);
 		
 		$this->SetFont('Arial','I',12);
-		$this->Cell(0,5,utf8_decode($_SESSION["title1"]),0,0,'C');
+		$this->Cell(0,5,iconv('UTF-8', 'windows-1252', $_SESSION["title1"]),0,0,'C');
 		$this->Ln();
 		
 		if (isset($_SESSION["title2"])) {
 
 			$this->SetFont('Arial','I',10);
-			$this->Cell(0,10,utf8_decode($_SESSION["title2"]),0,0,'C');
+			$this->Cell(0,10,iconv('UTF-8', 'windows-1252', $_SESSION["title2"]),0,0,'C');
 			$this->Ln();
 		}		
 		$this->Ln(10);
@@ -59,15 +59,15 @@ class Fattura extends FPDF {
 		
 		$this->SetY(-13);												// Position at 1 cm from bottom		
 		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, utf8_decode("WEB: http://www.progettochopin.it  -  Tel. 345 32 08 724"),0,1,'C');
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "WEB: http://www.progettochopin.it  -  Tel. 345 32 08 724"),0,1,'C');
 
 		$this->SetY(-10);												// Position at 1 cm from bottom
 		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, utf8_decode("Iscritta al Registro Imprese di Bergamo - Numero R.E.A. 400220 - Numero Albo Cooperative A208408"),0,1,'C');
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "Iscritta al Registro Imprese di Bergamo - Numero R.E.A. 400220 - Numero Albo Cooperative A208408"),0,1,'C');
 
 		$this->SetY(-7);												// Position at 1 cm from bottom
 		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, utf8_decode("Iscritta all'Albo Regionale delle Cooperative Sociali: sezione A al n.1423 con decreto n.166; sezione B al n.814 con decreto 4"),0,1,'C');
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "Iscritta all'Albo Regionale delle Cooperative Sociali: sezione A al n.1423 con decreto n.166; sezione B al n.814 con decreto 4"),0,1,'C');
 		
 	}
 
@@ -242,7 +242,7 @@ class Fattura extends FPDF {
 		
 		$articolo = explode("\\", $linea["ARTICOLO"]);
 				
-		$this->Cell($w[1],6,utf8_decode($articolo[0]),"",0,"L");
+		$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252', $articolo[0]),"",0,"L");
 		$this->Cell($w[3],6,number_format($linea["IMPORTO U."], 2, ',', '.'),"",0,'R');
 		$this->Cell($w[4],6,number_format($linea["IMPONIBILE"], 2, ',', '.'),"",0,'R');
 		$this->Cell($w[5],6,number_format($linea["IVA"], 2, ',', '.'),"",0,'R');
@@ -251,7 +251,7 @@ class Fattura extends FPDF {
 		
 		for($i=1;$i<count($articolo);$i++) {
 			$this->Cell($w[0],4,"","",0,"C");
-			$this->Cell($w[1],4,utf8_decode($articolo[$i]),"",0,"L");				
+			$this->Cell($w[1],4,iconv('UTF-8', 'windows-1252', $articolo[$i]),"",0,"L");				
 			$this->Ln();
 		}
 	}
@@ -261,7 +261,7 @@ class Fattura extends FPDF {
 		$this->SetFont( "Arial", "", 10);
 		$this->SetXY( $r1, $y1 );
 		foreach($d as $nota) {
-			$this->Cell(150,6,utf8_decode($nota),"",0,"L");
+			$this->Cell(150,6,iconv('UTF-8', 'windows-1252', $nota),"",0,"L");
 			$this->Ln();
 			$this->SetX( $r1 );
 		}

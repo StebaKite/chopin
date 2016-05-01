@@ -29,17 +29,17 @@ class Pdf extends FPDF {
 		$this->Image($_SESSION["logo"],5,5,20);		
 
 		$this->SetFont('Arial','B',15);
-		$this->Cell(0,10,utf8_decode($_SESSION["title"]),0,0,'C');
+		$this->Cell(0,10,iconv('UTF-8', 'windows-1252',$_SESSION["title"]),0,0,'C');
 		$this->Ln();
 		
 		$this->SetFont('Arial','B',14);
-		$this->Cell(0,10,utf8_decode($_SESSION["title1"]),0,0,'C');
+		$this->Cell(0,10,iconv('UTF-8', 'windows-1252',$_SESSION["title1"]),0,0,'C');
 		$this->Ln();
 		
 		if (isset($_SESSION["title2"])) {
 
 			$this->SetFont('Arial','I',12);
-			$this->Cell(0,10,utf8_decode($_SESSION["title2"]),0,0,'C');
+			$this->Cell(0,10,iconv('UTF-8', 'windows-1252',$_SESSION["title2"]),0,0,'C');
 			$this->Ln();
 		}		
 		
@@ -53,7 +53,7 @@ class Pdf extends FPDF {
 		$this->Cell(0,10,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');	// Page number
 		
 		$this->SetY(-10);												// Position at 1 cm from bottom		
-		$this->Cell(0, 10, utf8_decode("Generato dal database di Nexus6 il " . date("d/m/Y")),0,1,'C');
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252',"Generato dal database di Nexus6 il " . date("d/m/Y")),0,1,'C');
 		
 		
 	}
@@ -194,8 +194,8 @@ class Pdf extends FPDF {
 			$this->SetFont('','',10);
 			$fill = !$fill;
 				
-			$this->Cell($w[0],6,utf8_decode(date("d/m/Y",strtotime($row['dat_registrazione']))),'LR',0,'L',$fill);
-			$this->Cell($w[1],6,utf8_decode(trim($row['des_registrazione'])),'LR',0,'L',$fill);
+			$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',date("d/m/Y",strtotime($row['dat_registrazione']))),'LR',0,'L',$fill);
+			$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',trim($row['des_registrazione'])),'LR',0,'L',$fill);
 			$this->Cell($w[2],6, $euroDare . number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
 			$this->Cell($w[3],6, $euroAvere . number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);
 			
@@ -307,13 +307,13 @@ class Pdf extends FPDF {
 	    	}	    	
 	    	
 	    	$this->SetFont('','',10);
-	    	$this->Cell($w[0],6,utf8_decode($datscadenza),'LR',0,'L',$fill);
-	    	$this->Cell($w[1],6,utf8_decode($desfornitore),'LR',0,'L',$fill);
-	    	$this->Cell($w[2],6,utf8_decode($row['nota_scadenza']),'LR',0,'L',$fill);
-	    	$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
+	    	$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',$datscadenza),'LR',0,'L',$fill);
+	    	$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',$desfornitore),'LR',0,'L',$fill);
+	    	$this->Cell($w[2],6,iconv('UTF-8', 'windows-1252',$row['nota_scadenza']),'LR',0,'L',$fill);
+	    	$this->Cell($w[3],6,iconv('UTF-8', 'windows-1252',$row['tip_addebito']),'LR',0,'C',$fill);
 	    	$this->SetFont('','',10);	    	
 	    	$this->SetTextColor($c1, $c2, $c3);
-	    	$this->Cell($w[4],6,utf8_decode($stascadenza),'LR',0,'C',$fill);
+	    	$this->Cell($w[4],6,iconv('UTF-8', 'windows-1252',$stascadenza),'LR',0,'C',$fill);
 	    	$this->Cell($w[5],6, EURO . number_format($row['imp_in_scadenza'], 2, ',', '.'),'LR',0,'R',$fill);
 	    	$this->SetFont('','B',8);
 	    	$this->SetTextColor(0);
@@ -432,13 +432,13 @@ class Pdf extends FPDF {
 			}
 		
 			$this->SetFont('','',10);
-			$this->Cell($w[0],6,utf8_decode($datregistrazione),'LR',0,'L',$fill);
-			$this->Cell($w[1],6,utf8_decode($descliente),'LR',0,'L',$fill);
-	    	$this->Cell($w[2],6,utf8_decode($row['nota']),'LR',0,'L',$fill);
-			$this->Cell($w[3],6,utf8_decode($row['tip_addebito']),'LR',0,'C',$fill);
+			$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',$datregistrazione),'LR',0,'L',$fill);
+			$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',$descliente),'LR',0,'L',$fill);
+	    	$this->Cell($w[2],6,iconv('UTF-8', 'windows-1252',$row['nota']),'LR',0,'L',$fill);
+			$this->Cell($w[3],6,iconv('UTF-8', 'windows-1252',$row['tip_addebito']),'LR',0,'C',$fill);
 			$this->SetFont('','',10);
 			$this->SetTextColor($c1, $c2, $c3);
-			$this->Cell($w[4],6,utf8_decode($stascadenza),'LR',0,'C',$fill);
+			$this->Cell($w[4],6,iconv('UTF-8', 'windows-1252',$stascadenza),'LR',0,'C',$fill);
 			$this->Cell($w[5],6, EURO . number_format($row['imp_registrazione'], 2, ',', '.'),'LR',0,'R',$fill);
 	    	$this->SetFont('','B',8);
 	    	$this->SetTextColor(0);
@@ -863,7 +863,7 @@ class Pdf extends FPDF {
 		$this->SetTextColor(51, 153, 255);
 		
 		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,utf8_decode('Totale Attività'),'',0,'L');
+		$this->Cell($w[1],8,iconv('UTF-8', 'windows-1252','Totale Attività'),'',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totaleAttivo), 2, ',', '.'),'',0,'R');
 		
 		$this->SetTextColor(0);
@@ -881,7 +881,7 @@ class Pdf extends FPDF {
 		$this->SetTextColor(51, 153, 255);
 	
 		$this->Cell($w[0],8,'','',0,'L');
-		$this->Cell($w[1],8,utf8_decode('Totale Passività'),'',0,'L');
+		$this->Cell($w[1],8,iconv('UTF-8', 'windows-1252','Totale Passività'),'',0,'L');
 		$this->Cell($w[2],8,number_format(abs($totalePassivo), 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);
@@ -950,7 +950,7 @@ class Pdf extends FPDF {
 					$this->SetFont('','',10);
 					$fill = !$fill;
 					
-					$this->Cell($w[0],6,utf8_decode(trim($desconto_break)),'LR',0,'L',$fill);
+					$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',trim($desconto_break)),'LR',0,'L',$fill);
 					$this->Cell($w[1],6, $totBre,'LR',0,'R',$fill);
 					$this->Cell($w[2],6, $totTre,'LR',0,'R',$fill);
 					$this->Cell($w[3],6, $totVil,'LR',0,'R',$fill);
@@ -982,7 +982,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','',10);
 		$fill = !$fill;
 			
-		$this->Cell($w[0],6,utf8_decode(trim($desconto_break)),'LR',0,'L',$fill);
+		$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',trim($desconto_break)),'LR',0,'L',$fill);
 		$this->Cell($w[1],6, $totBre,'LR',0,'R',$fill);
 		$this->Cell($w[2],6, $totTre,'LR',0,'R',$fill);
 		$this->Cell($w[3],6, $totVil,'LR',0,'R',$fill);
@@ -1041,7 +1041,7 @@ class Pdf extends FPDF {
 		$this->SetTextColor(0);
 		
 		$fill = !$fill;	
-		$this->Cell($w[0],8,utf8_decode(trim("Fatturato")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Fatturato")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1049,7 +1049,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 		
 		$fill = !$fill;		
-		$this->Cell($w[0],8,utf8_decode(trim("Acquisti")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Acquisti")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1057,7 +1057,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;		
-		$this->Cell($w[0],8,utf8_decode(trim("Margine assoluto")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Margine assoluto")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["margineTotaleBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["margineTotaleTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["margineTotaleVIL"], 2, ',', '.'),'LR',0,'R',$fill);
@@ -1065,7 +1065,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;		
-		$this->Cell($w[0],8,utf8_decode(trim("Margine percentuale")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Margine percentuale")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["marginePercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["marginePercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["marginePercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
@@ -1073,7 +1073,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Ricarico percentuale")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Ricarico percentuale")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["ricaricoPercentualeBRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["ricaricoPercentualeTRE"], 2, ',', '.') . " %",'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["ricaricoPercentualeVIL"], 2, ',', '.') . " %",'LR',0,'R',$fill);
@@ -1109,7 +1109,7 @@ class Pdf extends FPDF {
 		$this->SetTextColor(0);
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Fatturato")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Fatturato")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1117,7 +1117,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Costi fissi")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Costi fissi")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiFissiBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiFissiTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiFissiVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1125,7 +1125,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Acquisti")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Acquisti")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1133,7 +1133,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Incidenza acquisti sul fatturato")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Incidenza acquisti sul fatturato")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2, ',', '.'),'LR',0,'R',$fill);
@@ -1141,7 +1141,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("BEP totale")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("BEP totale")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($datiMCT["bepBRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($datiMCT["bepTRE"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($datiMCT["bepVIL"], 2, ',', '.'),'LR',0,'R',$fill);
@@ -1173,7 +1173,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','',10);
 				
 		$fill = !$fill;
-		$this->Cell($w[0],8,utf8_decode(trim("Totale ricavi")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Totale ricavi")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Bre"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Tre"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($totaliCostiRicavi["totaleRicavi_Vil"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1183,7 +1183,7 @@ class Pdf extends FPDF {
 
 		$fill = !$fill;
 		$this->SetFont('','',10);
-		$this->Cell($w[0],8,utf8_decode(trim("Totale costi")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim("Totale costi")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format(abs($totaliCostiRicavi["totaleCosti_Bre"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format(abs($totaliCostiRicavi["totaleCosti_Tre"]), 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format(abs($totaliCostiRicavi["totaleCosti_Vil"]), 2, ',', '.'),'LR',0,'R',$fill);
@@ -1193,7 +1193,7 @@ class Pdf extends FPDF {
 
 		$fill = !$fill;
 		$this->SetFont('','B',10);
-		$this->Cell($w[0],8,utf8_decode(trim($header[0] . " del periodo")),'LR',0,'L',$fill);
+		$this->Cell($w[0],8,iconv('UTF-8', 'windows-1252',trim($header[0] . " del periodo")),'LR',0,'L',$fill);
 		$this->Cell($w[1],8, number_format($totaliCostiRicavi["totale_Bre"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[2],8, number_format($totaliCostiRicavi["totale_Tre"], 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[3],8, number_format($totaliCostiRicavi["totale_Vil"], 2, ',', '.'),'LR',0,'R',$fill);

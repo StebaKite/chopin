@@ -49,14 +49,14 @@ class FatturaAziendaConsortile extends Fattura {
 		$articolo = explode("\\", $linea["ARTICOLO"]);
 	
 		$this->Cell($w[0],6,"N. " . $linea["QUANTITA"],"");
-		$this->Cell($w[1],6,utf8_decode($articolo[0]),"");
+		$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',$articolo[0]),"");
 		$this->Cell($w[2],6,EURO,"",0,'R');
 		$this->Cell($w[3],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
 		$this->Ln();
 	
 		for($i=1;$i<count($articolo);$i++) {
 			$this->SetX( 30 );
-			$this->Cell($w[1],6,utf8_decode($articolo[$i]),"",0,"L");
+			$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',$articolo[$i]),"",0,"L");
 			$this->Ln();
 		}
 	}

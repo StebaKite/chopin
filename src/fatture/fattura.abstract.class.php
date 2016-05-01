@@ -171,9 +171,9 @@ abstract class FatturaAbstract extends ChopinAbstract {
 
 	public function intestazione($fattura) {
 	
-		$_SESSION["title"] = "Cooperativa Chopin - Cooperativa sociale - ONLUS";
-		$_SESSION["title1"] = "Diversamente Impresa: Esperienza occupazionale-lavorativa";
-		$_SESSION["title2"] = utf8_decode("Domicilio fiscale: via San Martirio, 1 - 24030 Villa d'Adda (BG) - C.F./P.IVA: 03691430163");
+		$_SESSION["title"] = iconv('UTF-8', 'windows-1252', "Cooperativa Chopin - Cooperativa sociale - ONLUS");
+		$_SESSION["title1"] = iconv('UTF-8', 'windows-1252', "Diversamente Impresa: Esperienza occupazionale-lavorativa");
+		$_SESSION["title2"] = iconv('UTF-8', 'windows-1252', "Domicilio fiscale: via San Martirio, 1 - 24030 Villa d'Adda (BG) - C.F./P.IVA: 03691430163");
 	
 		return $fattura;
 	}
