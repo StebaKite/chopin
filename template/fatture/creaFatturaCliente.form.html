@@ -188,15 +188,16 @@ function gestisciAssistito(tipofattura) {
 					</tr>					
 					<tr>
 						<td>%ml.famcli% :</td>
+						<td><input type="text" id="titolo" name="titolo" size="15" maxlength="30"value="%titolo%" /></td>
 						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
 					</tr>				
 					<tr>
 						<td>%ml.tipaddebito% :</td>
-						<td class="tooltip"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
+						<td class="tooltip" colspan="2"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
 					</tr>
 					<tr>				
 						<td>%ml.negozio% :</td>						
-						<td>
+						<td colspan="2">
 							<div class="radioset" >
 								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="prelevaNumeroFattura(this.value)"><label for="villa">%ml.villa%</label>
 								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="prelevaNumeroFattura(this.value)"><label for="brembate">%ml.brembate%</label>
@@ -206,7 +207,7 @@ function gestisciAssistito(tipofattura) {
 					</tr>				
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
+						<td class="tooltip" colspan="2"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
 					</tr>				
 					<tr>
 						<td>%ml.banca% :</td>
@@ -214,11 +215,11 @@ function gestisciAssistito(tipofattura) {
 					</tr>				
 					<tr>
 						<td>%ml.iban% :</td>
-						<td class="tooltip"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
+						<td class="tooltip" colspan="2"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
 					</tr>
 					<tr>				
 						<td>%ml.tipofat% :</td>						
-						<td>
+						<td colspan="2">
 							<div class="radioset" >
 								<input type="radio" id="contributo" name="tipofat" value="CONTRIBUTO" %contributo-checked% onchange="gestisciAssistito(this.value)"/><label for="contributo">%ml.contributo%</label>
 								<input type="radio" id="vendita" name="tipofat" value="VENDITA" %vendita-checked% onchange="gestisciAssistito(this.value)"/><label for="vendita">%ml.vendita%</label>
@@ -227,7 +228,7 @@ function gestisciAssistito(tipofattura) {
 					</tr>				
 					<tr id="linea_assistito" style="display:none;">
 						<td>%ml.assistito% :</td>
-						<td class="tooltip"><input type="text" id="assistito" name="assistito" size="60" maxlength="60" value='%assistito%'/></td>				
+						<td class="tooltip" colspan="2"><input type="text" id="assistito" name="assistito" size="60" maxlength="60" value='%assistito%'/></td>				
 					</tr>
 					<tr>
 						<td colspan="4">

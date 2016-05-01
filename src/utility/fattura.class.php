@@ -57,18 +57,9 @@ class Fattura extends FPDF {
 		$this->Cell(0,10,'Cooperativa Chopin - Cooperativa sociale - ONLUS',0,0,'C');
 		$this->SetTextColor(0, 0, 0);
 		
-		$this->SetY(-13);												// Position at 1 cm from bottom		
+		$this->SetY(-11);												// Position at 1 cm from bottom		
 		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "WEB: http://www.progettochopin.it  -  Tel. 345 32 08 724"),0,1,'C');
-
-		$this->SetY(-10);												// Position at 1 cm from bottom
-		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "Iscritta al Registro Imprese di Bergamo - Numero R.E.A. 400220 - Numero Albo Cooperative A208408"),0,1,'C');
-
-		$this->SetY(-7);												// Position at 1 cm from bottom
-		$this->SetFont('Arial','I',8);									// Arial italic 8
-		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "Iscritta all'Albo Regionale delle Cooperative Sociali: sezione A al n.1423 con decreto n.166; sezione B al n.814 con decreto 4"),0,1,'C');
-		
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252', "WEB: http://www.progettochopin.it  -  Tel. 345 32 08 724"),0,1,'C');		
 	}
 
 	public function RoundedRect($x, $y, $w, $h, $r, $style = '') {
@@ -171,7 +162,7 @@ class Fattura extends FPDF {
 		$this->Cell(10,5,$ibanbanca, 0,0, "C");
 	}
 	
-	public function destinatario($descliente, $indirizzocliente, $cittacliente, $capcliente, $pivacliente, $cfiscliente) {
+	public function destinatario($descliente, $indirizzocliente, $cittacliente, $capcliente, $pivacliente, $cfiscliente, $titolo) {
 
 		$r1  = 82;
 		$r2  = $r1 + 120;
@@ -184,38 +175,33 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1+1 );
 		$this->SetFont( "Arial", "B", 10);
 		$this->Cell(10,4, "DESTINATARIO", 0,0, "C");
+
+		$this->SetFont( "Arial", "", 12);
 		
 		$this->SetXY( $r1 + 5, $y1 + 8 );
-		$this->SetFont( "Arial", "", 10);
-		$this->Cell(10,5,"Spett.le", 0,0, "");
+		$this->Cell(10,5,$titolo, 0,0, "");
 		
 		$this->SetXY( $r1 + 5, $y1 + 13 );
-		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$descliente, 0,0, "");
 		
 		$this->SetXY( $r1 + 5, $y1 + 18 );
-		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$indirizzocliente, 0,0, "");
 		
 		$this->SetXY( $r1 + 5, $y1 + 23 );
-		$this->SetFont( "Arial", "", 10);
 		$this->Cell(10,5,$capcliente . " " . $cittacliente, 0,0, "");
 
 		if ($cfiscliente == $pivacliente) {
 			$this->SetXY( $r1 + 5, $y1 + 28 );
-			$this->SetFont( "Arial", "", 10);
 			$this->Cell(10,5,"P.iva/C.F. : " . $pivacliente, 0,0, "");
 		}
 		else {
 			if ($pivacliente != "") {
 				$this->SetXY( $r1 + 5, $y1 + 28 );
-				$this->SetFont( "Arial", "", 10);
 				$this->Cell(10,5,"P.iva : " . $pivacliente, 0,0, "");
 			}
 			
 			if ($cfiscliente != "") {
 				$this->SetXY( $r1 + 5, $y1 + 33 );
-				$this->SetFont( "Arial", "", 10);
 				$this->Cell(10,5,"C.F. : " . $cfiscliente, 0,0, "");
 			}				
 		}
@@ -258,7 +244,7 @@ class Fattura extends FPDF {
 	
 	public function aggiungiLineaNota($d, $r1, $y1) {
 	
-		$this->SetFont( "Arial", "", 10);
+		$this->SetFont( "Arial", "", 12);
 		$this->SetXY( $r1, $y1 );
 		foreach($d as $nota) {
 			$this->Cell(150,6,iconv('UTF-8', 'windows-1252', $nota),"",0,"L");

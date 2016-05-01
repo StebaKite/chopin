@@ -199,7 +199,7 @@ abstract class FatturaAbstract extends ChopinAbstract {
 	}
 	
 	public function sezioneDestinatario($fattura) {
-		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"], $_SESSION["cfiscliente"]);
+		$fattura->destinatario($_SESSION["descliente"], $_SESSION["indirizzocliente"], $_SESSION["cittacliente"], $_SESSION["capcliente"], $_SESSION["pivacliente"], $_SESSION["cfiscliente"], $_SESSION["titolo"]);
 		return $fattura;
 	}
 	
