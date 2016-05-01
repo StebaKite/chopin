@@ -48,7 +48,7 @@ class FatturaEntePubblico extends Fattura {
 	public function aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1) {
 	
 		$this->SetXY( $r1, $y1 );
-		$this->SetFont( "Arial", "", 10);
+		$this->SetFont( "Arial", "", 12);
 	
 		$articolo = explode("\\", $linea["ARTICOLO"]);
 	
@@ -120,7 +120,7 @@ class FatturaEntePubblico extends Fattura {
 		$this->SetFont( "Arial", "B", 10);
 	
 		$this->SetXY( $r1+2, $y1);
-		$this->Cell(10,6, "C.IVA");
+		$this->Cell(10,6, "IVA");
 		$this->SetX( $r1+20 );
 		$this->Cell(10,6, "DESCRIZIONE");
 		$this->SetX( $r1+52 );
@@ -132,9 +132,9 @@ class FatturaEntePubblico extends Fattura {
 	
 		if ($tot_imponibile > 0) {
 			$this->SetXY( $r1+2, $y1+7);
-			$this->Cell(10,6,$aliq_iva,"",0,"C");
+			$this->Cell(10,6,$aliq_iva . "%","",0,"C");
 			$this->SetX( $r1+20 );
-			$this->Cell(10,6,"Iva " . $aliq_iva . "%","",0,"L");
+			$this->Cell(10,6,"","",0,"L");
 			$this->SetX( $r1+52 );
 			$this->Cell(22,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"R");
 			$this->SetX( $r1+80 );
