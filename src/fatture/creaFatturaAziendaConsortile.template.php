@@ -130,7 +130,8 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
 				'%arrayDettagliInseriti%' => $d_x_array,
 				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
-				'%elenco_clienti%' => $_SESSION["elenco_clienti"]
+				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
+				'%titolo%' => $_SESSION["titolo"]
 		);
 		
 		$utility = Utility::getInstance();

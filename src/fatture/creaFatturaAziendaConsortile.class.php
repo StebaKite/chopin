@@ -161,7 +161,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$w = array(15, 110, 30, 30);
 			
 		$fattura->SetXY( 15, 120 );		
-		$fattura->SetFont( "Arial", "B", 10);
+		$fattura->SetFont( "Arial", "B", 12);
 		$fattura->Cell(50,6,"Mese di " . $meserif, "");
 		$fattura->Ln();
 		
