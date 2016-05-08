@@ -50,22 +50,21 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 		if (isset($_SESSION["fornitoriTrovati"])) {
 		
 			$risultato_ricerca =
-			"<table class='result'>" .
 			"	<thead>" .
-			"		<th width='60'>%ml.codfornitore%</th>" .
-			"		<th width='240'>%ml.desfornitore%</th>" .
-			"		<th width='170'>%ml.desindirizzofornitore%</th>" .
-			"		<th width='150'>%ml.descittafornitore%</th>" .
-			"		<th width='40'>%ml.capfornitore%</th>" .
-			"		<th width='60'>%ml.tipaddebito%</th>" .
-			"		<th width='60'>%ml.numggscafatt%</th>" .
-			"		<th width='47'>%ml.qtareg%</th>" .
-			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
+			"		<tr>" .
+			"			<th>%ml.codfornitore%</th>" .
+			"			<th>%ml.desfornitore%</th>" .
+			"			<th>%ml.desindirizzofornitore%</th>" .
+			"			<th>%ml.descittafornitore%</th>" .
+			"			<th>%ml.capfornitore%</th>" .
+			"			<th>%ml.tipaddebito%</th>" .
+			"			<th>%ml.numggscafatt%</th>" .
+			"			<th>%ml.qtareg%</th>" .
+			"			<th>&nbsp;</th>" .
+			"			<th>&nbsp;</th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-fornitori'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>" ;
 		
 			$fornitoriTrovati = $_SESSION["fornitoriTrovati"];
 			$numFornitori = 0;
@@ -90,21 +89,21 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 		
 				$numFornitori ++;
 				$risultato_ricerca = $risultato_ricerca .
-				"<tr " . $class . " id='" . trim($row['id_fornitore']) . "'>" .
-				"	<td width='68' class='tooltip' align='center'>" . trim($row['cod_fornitore']) . "</td>" .
-				"	<td width='248' align='left'>" . trim($row['des_fornitore']) . "</td>" .
-				"	<td width='178' align='left'>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
-				"	<td width='158' align='left'>" . trim($row['des_citta_fornitore']) . "</td>" .				
-				"	<td width='48' align='center'>" . trim($row['cap_fornitore']) . "</td>" .
-				"	<td width='68' align='center'>" . trim($row['tip_addebito']) . "</td>" .
-				"	<td width='68' align='center'>" . trim($row['num_gg_scadenza_fattura']) . "</td>" .
-				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_fornitore']) . "</td>" .
-				"	<td width='25' id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td width='25' id='icons'>" . $bottoneCancella . "</td>" .
+				"<tr>" .
+				"	<td>" . trim($row['cod_fornitore']) . "</td>" .
+				"	<td>" . trim($row['des_fornitore']) . "</td>" .
+				"	<td>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
+				"	<td>" . trim($row['des_citta_fornitore']) . "</td>" .				
+				"	<td>" . trim($row['cap_fornitore']) . "</td>" .
+ 				"	<td>" . trim($row['tip_addebito']) . "</td>" .
+ 				"	<td>" . trim($row['num_gg_scadenza_fattura']) . "</td>" .
+ 				"	<td>" . trim($row['tot_registrazioni_fornitore']) . "</td>" .
+ 				"	<td id='icons'>" . $bottoneModifica . "</td>" .
+ 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$_SESSION['numFornitoriTrovati'] = $numFornitori;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody>";
 		}
 		else {
 		

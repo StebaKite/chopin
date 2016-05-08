@@ -8,11 +8,5 @@ session_start();
 $ricercaFornitore = RicercaFornitore::getInstance();
 
 if ($_GET["modo"] == "start") $ricercaFornitore->start();
-if ($_GET["modo"] == "go") {
-
-	$_SESSION["codfornitore"] = $_POST["codfornitore"];
-
-	$ricercaFornitore->go();
-}
 
 ?>

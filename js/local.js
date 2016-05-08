@@ -1254,6 +1254,9 @@ $( "#cliente" ).autocomplete({
  	source: elencoClienti
 });	
 
+
+
+
 function escapeRegExp(str) {
 	  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }

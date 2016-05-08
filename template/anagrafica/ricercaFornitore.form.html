@@ -1,26 +1,39 @@
 <body>
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#prova').dataTable( {
+    	"order": [[1, 'asc']],
+    	"columnDefs": [
+    	    {"targets": 0, "orderable": false },
+    	    {"targets": 8, "orderable": false },
+    	    {"targets": 9, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
 
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
-		
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td class="td">%ml.codfornitore% :</td>
-						<td class="tooltip"><input type="text" name="codfornitore" size="12" maxlength="10" value='%codfornitore%'></td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
-		<br>
-		%risultato_ricerca%		
+		<table id="prova" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
+	</div>	
 		
 <div id="cancella-fornitore-form" title="Cancella Fornitore"> 
 	<form method="post" id="cancellaFornitore" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=go" >

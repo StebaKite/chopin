@@ -16,6 +16,3 @@ FROM contabilita.fornitore as fornitore
 		   GROUP BY id_fornitore
 		) AS t1
 		on t1.id_fornitore = fornitore.id_fornitore
-WHERE 1 = 1
-%filtri_fornitore%
-ORDER BY cod_fornitore

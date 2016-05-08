@@ -40,30 +40,6 @@ class RicercaFornitore extends AnagraficaAbstract {
 	}
 
 	public function start() {
-
-		require_once 'ricercaFornitore.template.php';
-		require_once 'utility.class.php';
-		
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
-		unset($_SESSION["fornitoriTrovati"]);
-		$_SESSION["codfornitore"] = "";
-		
-		$ricercaFornitoreTemplate = RicercaFornitoreTemplate::getInstance();
-		$this->preparaPagina($ricercaFornitoreTemplate);
-		
-		// compone la pagina
-		include($testata);
-		$ricercaFornitoreTemplate->displayPagina();
-		include($piede);		
-	}
-
-	public function go() {
 	
 		require_once 'ricercaFornitore.template.php';
 		require_once 'utility.class.php';
@@ -130,16 +106,8 @@ class RicercaFornitore extends AnagraficaAbstract {
 	public function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
-	
-		$filtro = "";
-	
-		if ($_SESSION['codfornitore'] != "") {
-			$filtro = "AND fornitore.cod_fornitore = '" . $_SESSION['codfornitore'] . "'";
-		}
-	
-		$replace = array(
-				'%filtri_fornitore%' => $filtro
-		);
+		
+		$replace = array();
 	
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitore;
