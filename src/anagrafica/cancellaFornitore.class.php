@@ -51,7 +51,7 @@ class CancellaFornitore extends AnagraficaAbstract {
 		
 		$_SESSION["messaggioCancellazione"] = "Fornitore " . $_SESSION['codfornitoreselezionato'] . " cancellato";
 		$ricercaFornitore = RicercaFornitore::getInstance();
-		$ricercaFornitore->go();
+		$ricercaFornitore->start();
 	}
 }	
 		

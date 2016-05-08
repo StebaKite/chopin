@@ -1,39 +1,46 @@
 <body>
 
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#clienti').dataTable( {
+    	"order": [[1, 'asc']],
+    	"columnDefs": [
+    	    {"targets": 0, "orderable": false },
+    	    {"targets": 7, "orderable": false },
+    	    {"targets": 8, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
+		<table id="clienti" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
+	</div>	
 		
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.categoria% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCategoria" id="catcliente" name="catcliente" >
-								<option value="">%ml.tutti%</option>
-								%elenco_categorie_cliente%
-							</select>
-						</td>
-						<td class="td">%ml.codcliente% :</td>
-						<td class="tooltip"><input type="text" name="codcliente" size="12" maxlength="10" value='%codcliente%'></td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
+	<div id="cancella-cliente-form" title="Cancella Cliente"> 
+		<form method="post" id="cancellaCliente" action="../anagrafica/cancellaClienteFacade.class.php?modo=go" >
+			<p>Elimino il cliente ?</p>
+			<input type="hidden" id="idcliente" name="idcliente">
+			<input type="hidden" id="codclienteselezionato" name="codclienteselezionato">
 		</form>
-		<br>
-		%risultato_ricerca%		
-		
-<div id="cancella-cliente-form" title="Cancella Cliente"> 
-	<form method="post" id="cancellaCliente" action="../anagrafica/cancellaClienteFacade.class.php?modo=go" >
-		<p>Elimino il cliente ?</p>
-		<input type="hidden" id="idcliente" name="idcliente">
-		<input type="hidden" id="codclienteselezionato" name="codclienteselezionato">
-  </form>
-</div>
+	</div>
 		

@@ -15,6 +15,3 @@ FROM contabilita.cliente as cliente
 		   GROUP BY id_cliente
 		) AS t1
 		on t1.id_cliente = cliente.id_cliente
-WHERE 1 = 1
-%filtri_cliente%
-ORDER BY cod_cliente

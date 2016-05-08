@@ -51,7 +51,7 @@ class CancellaCliente extends AnagraficaAbstract {
 		
 		$_SESSION["messaggioCancellazione"] = "Cliente " . $_SESSION['codclienteselezionato'] . " cancellato";
 		$ricercaCliente = RicercaCliente::getInstance();
-		$ricercaCliente->go();
+		$ricercaCliente->start();
 	}
 }	
 		

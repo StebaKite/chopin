@@ -40,30 +40,6 @@ class RicercaCliente extends AnagraficaAbstract {
 	}
 
 	public function start() {
-
-		require_once 'ricercaCliente.template.php';
-		require_once 'utility.class.php';
-		
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
-		unset($_SESSION["clientiTrovati"]);
-		$_SESSION["codcliente"] = "";
-		
-		$ricercaClienteTemplate = RicercaClienteTemplate::getInstance();
-		$this->preparaPagina($ricercaClienteTemplate);
-		
-		// compone la pagina
-		include($testata);
-		$ricercaClienteTemplate->displayPagina();
-		include($piede);
-	}
-
-	public function go() {
 	
 		require_once 'ricercaCliente.template.php';
 		require_once 'utility.class.php';
@@ -130,20 +106,8 @@ class RicercaCliente extends AnagraficaAbstract {
 	public function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
-	
-		$filtro = "";
-
-		if ($_SESSION['catcliente'] != "") {
-			$filtro .= "AND cliente.cat_cliente = '" . $_SESSION['catcliente'] . "'";
-		}
 		
-		if ($_SESSION['codcliente'] != "") {
-			$filtro .= "AND cliente.cod_cliente = '" . $_SESSION['codcliente'] . "'";
-		}
-		
-		$replace = array(
-				'%filtri_cliente%' => $filtro
-		);
+		$replace = array();
 	
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCliente;
