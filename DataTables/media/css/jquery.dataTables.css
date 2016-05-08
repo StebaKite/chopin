@@ -193,6 +193,16 @@ table.dataTable.compact tbody th,
 table.dataTable.compact tbody td {
   padding: 4px;
 }
+table.dataTable th.dt-ko,
+table.dataTable td.dt-ko {
+	font-weight: bolder;
+	color: red;
+}
+table.dataTable th.dt-ok,
+table.dataTable td.dt-ok {
+	font-weight: bolder;
+	color: green;
+}
 table.dataTable th.dt-left,
 table.dataTable td.dt-left {
   text-align: left;

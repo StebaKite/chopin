@@ -50,18 +50,17 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 		if (isset($_SESSION["registrazioniTrovate"])) {
 
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='mastrino' class='display' width='100%'>" .
 			"	<thead>" .
-			"		<th width='100'>%ml.datReg%</th>" .
-			"		<th width='350'>%ml.descreg%</th>" .
-			"		<th width='100'>%ml.dare%</th>" .
-			"		<th width='100'>%ml.avere%</th>" .
-			"		<th width='100'>%ml.saldoprogressivo%</th>" .
+			"		<tr>" .
+			"			<th class='dt-left'>%ml.datReg%</th>" .
+			"			<th class='dt-left'>%ml.descreg%</th>" .
+			"			<th class='dt-right'>%ml.dare%</th>" .
+			"			<th class='dt-right'>%ml.avere%</th>" .
+			"			<th class='dt-right'>%ml.saldoprogressivo%</th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-mastrino'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>";
 
 			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
 			$totaleDare = 0;
@@ -74,13 +73,13 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 
 				if ($row['ind_dareavere'] == 'D') {
 					$totaleDare = $totaleDare + $row['imp_registrazione'];
-					$impDare = "&euro;" . number_format(round($row['imp_registrazione'],2), 2, ',', '.');
+					$impDare = number_format(round($row['imp_registrazione'],2), 2, ',', '.');
 					$impAvere = "";
 				}
 				elseif ($row['ind_dareavere'] == 'A') {
 					$totaleAvere = $totaleAvere + $row['imp_registrazione'];
 					$impDare = "";
-					$impAvere = "&euro;" . number_format(round($row['imp_registrazione'],2), 2, ',', '.');
+					$impAvere = number_format(round($row['imp_registrazione'],2), 2, ',', '.');
 				}
 
 				if (trim($row['tip_conto']) == "Dare") {
@@ -94,19 +93,19 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				 * Evidenzia la riga se il saldo è negativo
 				 */
 				if ($saldo < 0) {
-					$class = "class='ko'";
+					$class = "dt-ko";
 				}
 				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td width='108' class='tooltip' align='center'>" . date("d/m/Y",strtotime($row['dat_registrazione'])) . "</td>" .
-				"	<td width='358' align='left'>" . trim($row['des_registrazione']) . "</td>" .
-				"	<td width='108' align='right'>" . $impDare . "</td>" .
-				"	<td width='108' align='right'>" . $impAvere . "</td>" .
-				"	<td width='108' align='right' " . $class . ">&euro;" . number_format(round($saldo,2), 2, ',', '.') . "</td>" .
+				"	<td>" . date("d/m/Y",strtotime($row['dat_registrazione'])) . "</td>" .
+				"	<td>" . trim($row['des_registrazione']) . "</td>" .
+				"	<td class='dt-right'>" . $impDare . "</td>" .
+				"	<td class='dt-right'>" . $impAvere . "</td>" .
+				"	<td class='dt-right " . $class . "'>" . number_format(round($saldo,2), 2, ',', '.') . "</td>" .
 				"</tr>";
 			}
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 			$des_conto = trim($row["des_conto"]);
 			$cat_conto = trim($row["cat_conto"]);
 			$des_sottoconto = trim($row["des_sottoconto"]);

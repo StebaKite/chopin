@@ -99,11 +99,11 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 
 			
 			$tbodySottoconti = $tbodySottoconti .
-			"<tr id='" . $row["cod_conto"] . "'>" .
-			"<td width='88' align='center'>" . $row["cod_sottoconto"] . "</td>" .
-			"<td width='378' align='left'>" . $row["des_sottoconto"] . "</td>" .			
-			"<td width='90' align='center'>" . $indGruppo . "</td>" .			
-			"<td width='25' id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(" . '"' . $row["ind_gruppo"] . '","' . $row["cod_sottoconto"] . '"' . ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>" .
+			"<tr>" .
+			"	<td>" . $row["cod_sottoconto"] . "</td>" .
+			"	<td>" . $row["des_sottoconto"] . "</td>" .			
+			"	<td>" . $indGruppo . "</td>" .			
+			"	<td id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(" . '"' . $row["ind_gruppo"] . '","' . $row["cod_sottoconto"] . '"' . ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>" .
 			$bottoneCancella .
 			"</tr>";
 		}

@@ -7,6 +7,39 @@ function setNumeroRigaBilancio(nn) {
 
 <body onload=setNumeroRigaBilancio(%numrigabilancio%)>
 
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#sottoconti').dataTable( {
+    	"order": [[0, 'asc']],
+    	"columnDefs": [
+    	          	{"targets": 0, "orderable": false },
+    	          	{"targets": 1, "orderable": false },
+    	       	    {"targets": 2, "orderable": false },
+    	       	    {"targets": 3, "orderable": false },
+    	       	    {"targets": 4, "orderable": false }
+    	       		],    	
+        "lengthMenu": [ 5 ],
+   		"language": {
+            "lengthMenu": "Visualizza _MENU_ righe per pagina",
+            "zeroRecords": "La ricerca non ha prodotto risultati",
+            "info": "Paina _PAGE_ di _PAGES_",
+            "infoEmpty": "La ricerca non ha prodotto risultati",
+            "infoFiltered": "(righe filtrate da _MAX_ totali)",
+            "search": "Cerca:",
+            "paginate": {
+                "first":      "Prima",
+                "last":       "Ultima",
+                "next":       "Prossima",
+                "previous":   "Precedente"
+            }
+     	},        
+        "info":     false        
+    } );
+} );
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -18,7 +51,7 @@ function setNumeroRigaBilancio(nn) {
 		</form>
 		<br>
 		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
+			<table class="datiCreate" cellpadding="5px" width="70%">
 				<tbody>
 					<tr>
 						<td class="tooltip">%ml.conto% :
@@ -38,8 +71,7 @@ function setNumeroRigaBilancio(nn) {
 						</td>						
 					</tr>
 					<tr>
-						<td colspan="4">
-						
+						<td>						
 							<h2>Opzioni di bilancio</h2>
 							<table class="datiCreate" cellpadding="5px">
 								<tbody>
@@ -70,29 +102,30 @@ function setNumeroRigaBilancio(nn) {
 						</td>
 					</tr>
 					<tr>
-						<td colspan="4">
-							<table class='result'>
+						<td>
+							<table id="sottoconti" class='display'>
 							    <thead>
 									<tr>
-										<th width='76' align='center'>Sottoconto</th>
-										<th width='370' align='left'>Descrizione</th>
-										<th width='82' align='center'>Gruppo</th>
-										<th width='50'>&nbsp;</th>
+										<th>Sottoconto</th>
+										<th>Descrizione</th>
+										<th>Gruppo</th>
+										<th>&nbsp;</th>
+										<th>&nbsp;</th>
 									</tr>
 							    </thead>
-							</table>
-							<div class='scroll-sottoconti'>
-								<table id="sottoconti" class="datiCreateSottile">
-								    <tbody>%tbody_sottoconti%</tbody>
-								</table>			
-							</div>	
+								<tbody>
+									%tbody_sottoconti%
+								</tbody>
+							</table>			
 						</td>
 					</tr>										
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="6" align="right" class="tooltip"><button id="nuovo-sottoconto-modificaconto" class="button" title="%ml.nuovoSottocontoTip%" >%ml.nuovoSottoconto%</button></td>
-						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td align="right" class="tooltip">
+							<button id="nuovo-sottoconto-modificaconto" class="button" title="%ml.nuovoSottocontoTip%" >%ml.nuovoSottoconto%</button>
+							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
+						</td>
 						<input type="hidden" name="codconto" value='%codconto%' >
 					</tr>
 				</tfoot>

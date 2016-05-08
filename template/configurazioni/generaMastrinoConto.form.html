@@ -1,4 +1,35 @@
 <body>
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#mastrino').dataTable( {
+    	"order": [[0, 'asc']],
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false },
+       	    {"targets": 1, "orderable": false },
+    	    {"targets": 2, "orderable": false },
+    	    {"targets": 3, "orderable": false },
+    	    {"targets": 4, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100, "All" ]
+    } );
+} );
+
+</script>
 
 <div id="body">
 	<div id="main">
@@ -11,9 +42,9 @@
 		</form>
 		<br>		
 		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
+			<table class="datiCreate" width="100%" cellpadding="5px">
 				<tbody>
-					<tr>
+					<tr style="float:left;">
 						<td>%ml.negozio% :</td>
 						<td class="tooltip">
 							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
@@ -47,6 +78,7 @@
 		<br>
 		%risultato_ricerca%		
 		<br>
+	</div>		
 		<form class="tooltip" method="post" id="estraipdf" action="../configurazioni/estraiPdfMastrinoContoFacade.class.php?modo=start" >
 			%bottoneEstraiPdf%
 			<input type="hidden" name="datareg_da" value='%datareg_da%' />

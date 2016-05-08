@@ -1,13 +1,46 @@
 <body>
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#conti').dataTable( {
+    	"order": [[0, 'asc'],[1, 'asc'] ],
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false },
+       	    {"targets": 1, "orderable": false },
+    	    {"targets": 2, "orderable": false },
+    	    {"targets": 3, "orderable": false },
+    	    {"targets": 4, "orderable": false },
+    	    {"targets": 5, "orderable": false },
+    	    {"targets": 6, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
 
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
 		
 		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
+			<table class="datiCreate" width="100%" cellpadding="5px">
 				<tbody>
-					<tr>
+					<tr style="float:left;">
 						<td class="td">%ml.catconto% :</td>
 						<td class="tooltip">
 							<select class="selectmenuCategoria" name="categoria" >
@@ -19,12 +52,12 @@
 						<td class="td">%ml.tipconto% :</td>
 						<td class="tooltip">
 							<select class="selectmenuTipoConto" name="tipoconto" >
-								<option value="">Tutti</option>
+									<option value="">Tutti</option>
 								<option value="Dare" %dareselected% >Dare</option>
 								<option value="Avere" %avereselected% >Avere</option>
 							</select>
 						</td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+						<td class="tooltip"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -35,6 +68,7 @@
 		</form>
 		<br>
 		%risultato_ricerca%		
+	</div>		
 		
 <div id="cancella-conto-form" title="Cancella Conto"> 
 	<form method="post" id="cancellaConto" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >

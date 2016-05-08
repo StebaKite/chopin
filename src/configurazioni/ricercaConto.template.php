@@ -50,18 +50,19 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 		if (isset($_SESSION["contiTrovati"])) {
 				
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='conti' class='display'>" .
 			"	<thead>" .
-			"		<th width='70'>%ml.conto%</th>" .
-			"		<th width='400'>%ml.desconto%</th>" .
-			"		<th width='150'>%ml.catconto%</th>" .
-			"		<th width='100'>%ml.tipconto%</th>" .
-			"		<th width='53' colspan='2'>%ml.azioni%</th>" .
+			"   	<tr>" .
+			"			<th>%ml.conto%</th>" .
+			"			<th>%ml.sottoconto%</th>" .
+			"			<th>%ml.desconto%</th>" .
+			"			<th>%ml.catconto%</th>" .
+			"			<th>%ml.tipconto%</th>" .
+			"			<th>&nbsp;</th>" .
+			"			<th>&nbsp;</th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-conti'>" .
-			"	<table class='expandible'>" .
-			"		<tbody>";
+			"	<tbody>";
 				
 			$contiTrovati = $_SESSION["contiTrovati"];
 			$numConti = 0;
@@ -83,13 +84,14 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 
 					$numConti ++;
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr " . $class . " id='" . trim($row['cod_conto']) . "'>" .
-					"	<td width='80' class='tooltip' align='center'>" . trim($row['cod_conto']) . "</td>" .
-					"	<td width='408' align='left'>" . trim($row['des_conto']) . "</td>" .
-					"	<td width='155' align='center'>" . trim($row['cat_conto']) . "</td>" .
-					"	<td width='110' align='center'>" . trim($row['tip_conto']) . "</td>" .
-					"	<td height='28' width='25' id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td height='28' width='25' id='icons'>" . $bottoneCancella . "</td>" .
+					"<tr>" .
+					"	<td>" . trim($row['cod_conto']) . "</td>" .
+					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
+					"	<td>" . trim($row['des_conto']) . "</td>" .
+					"	<td>" . trim($row['cat_conto']) . "</td>" .
+					"	<td>" . trim($row['tip_conto']) . "</td>" .
+					"	<td id='icons'>" . $bottoneModifica . "</td>" .
+					"	<td id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
 						
 				}
@@ -101,17 +103,20 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					$id = "id='child'";
 
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr " . $class . " " . $id . " >" .
-					"	<td class='tooltip' align='right'>" . trim($row['cod_sottoconto']) . "</td>" .
-					"	<td colspan='2' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .
-					"	<td colspan='2' align='right'><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
-					"	<td height='28' width='25' id='icons'>" . $bottoneMastrino . "</td>" .
+					"<tr>" .
+					"	<td>" . trim($row['cod_conto']) . "</td>" .
+					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
+					"	<td>&nbsp;</td>" .
+					"	<td><i>" . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td>&nbsp;</td>" .
+					"	<td><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
+					"	<td id='icons'>" . $bottoneMastrino . "</td>" .
 					"</tr>";
 				}
 
 			}
 			$_SESSION['numContiTrovati'] = $numConti;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 		}
 		
 		$replace = array(
