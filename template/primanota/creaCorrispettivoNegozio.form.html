@@ -7,21 +7,21 @@ var dettInseriti = [%arrayDettagliInseriti%];
 
 function aggiungiDettaglio() {
 
-	// Metti qui i due conti sui quali inserire gli importi del corrispettivo
+	// Qui ci sono i due conti sui quali inserire gli importi del corrispettivo 
+	// presi dalla configurazione
 	// -----------------------------------------------------------------
 	var contoErario = "%conto_erario%";
 	var contoCorrispettivo = "%conto_corrispettivo%";
 	// -----------------------------------------------------------------	
 	
-	var rowCount = $('#dettagli tr').length;
+	var rowCount = $('#dettagli tbody tr').length;
 	
-	if (rowCount == 0) {
+	if (rowCount == 1) {
 		$( "#dettagli thead" ).append("<tr>" + 
-			"<th width='350' align='left'>Conto</th>" + 
-			"<th width='100' align='right'>Importo</th>" + 
-			"<th width='50' align='center'>D/A</th>" +
+			"<th>Conto</th>" + 
+			"<th class='dt-right'>Importo</th>" + 
+			"<th class='dt-center'>D/A</th>" +
 			"</tr>");
-		$( "#dettagli" ).addClass("datiCreateSottile");
 	}
 
 	var conto = $("#conti").val();	
@@ -32,11 +32,11 @@ function aggiungiDettaglio() {
 	
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
-	
+
 	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td align='left'>" + conto + "</td>" +
-        "<td align='right'>" + importoNormalizzato + "</td>" +
-        "<td align='center'>" + D_A + "</td>" +
+        "<td>" + conto + "</td>" +
+        "<td class='dt-right'>" + importoNormalizzato + "</td>" +
+        "<td class='dt-center'>" + D_A + "</td>" +
       "</tr>" );
 	
 	var elemento = conto + "#" + importoNormalizzato + "#" + D_A;
@@ -50,9 +50,9 @@ function aggiungiDettaglio() {
 	var D_A = "A";
 	
 	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td align='left'>" + conto + "</td>" +
-        "<td align='right'>" + ivaNormalizzato + "</td>" +
-        "<td align='center'>" + D_A + "</td>" +
+        "<td>" + conto + "</td>" +
+        "<td class='dt-right'>" + ivaNormalizzato + "</td>" +
+        "<td class='dt-center'>" + D_A + "</td>" +
       "</tr>" );
 	
 	var elemento = conto + "#" + ivaNormalizzato + "#" + D_A;
@@ -66,9 +66,9 @@ function aggiungiDettaglio() {
 	var D_A = "A";
 	
 	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td align='left'>" + conto + "</td>" +
-        "<td align='right'>" + imponibileNormalizzato + "</td>" +
-        "<td align='center'>" + D_A + "</td>" +
+        "<td>" + conto + "</td>" +
+        "<td class='dt-right'>" + imponibileNormalizzato + "</td>" +
+        "<td class='dt-center'>" + D_A + "</td>" +
       "</tr>" );
 	
 	var elemento = conto + "#" + imponibileNormalizzato + "#" + D_A;
@@ -136,6 +136,34 @@ function calcolaImponibile() {
 	}
 }
 
+$(document).ready( function () {
+    $('#dettagli').dataTable( {
+    	"paging": false,
+    	"searching": false,
+    	"info": false,
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false},
+       	    {"targets": 1, "orderable": false},
+    	    {"targets": 2, "orderable": false},
+    	    {"targets": 3, "orderable": false}
+    		],
+       		"language": {
+                "lengthMenu": "Visualizza _MENU_ righe per pagina",
+                "zeroRecords": " ",
+                "info": "Paina _PAGE_ di _PAGES_",
+                "infoEmpty": " ",
+                "infoFiltered": "(righe filtrate da _MAX_ totali)",
+                "search": "Cerca:",
+                "paginate": {
+                    "first":      "Prima",
+                    "last":       "Ultima",
+                    "next":       "Prossima",
+                    "previous":   "Precedente"
+                }
+         }	    		
+    } );
+} );
+
 </script>
 	
 <div id="body">
@@ -169,9 +197,10 @@ function calcolaImponibile() {
 							</div>
 						</td>					
 					</tr>					
+					<tr><td><h2>Dettagli</h2></td></tr>										
 					<tr>
 						<td colspan="4">
-							<table id="dettagli" class="%class_dettagli%">
+							<table id="dettagli" class="display">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
@@ -185,8 +214,10 @@ function calcolaImponibile() {
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett-corrisp" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
-						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td colspan="6" align="right" class="tooltip">
+							<button id="nuovo-dett-corrisp" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
+						</td>
 					</tr>
 				</tfoot>
 			</table>

@@ -105,7 +105,10 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 		require_once 'utility.class.php';
 	
 		// Template --------------------------------------------------------------
-	
+
+		$thead_dettagli = "<tr></tr>";
+		$tbody_dettagli = "<tr></tr>";
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
@@ -116,14 +119,12 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 		 */
 			
 		if ($_SESSION['dettagliInseriti'] != "") {
-	
-			$class_dettagli = "datiCreateSottile";
-	
+
 			$thead_dettagli =
 			"<tr>" .
-			"<th width='350' align='left'>Conto</th>" .
-			"<th width='100' align='right'>Importo</th>" .
-			"<th width='50' align='center'>D/A</th>" .
+			"<th>Conto</th>" .
+			"<th class='dt-right'>Importo</th>" .
+			"<th>D/A</th>" .
 			"</tr>";
 	
 			$tbody_dettagli = "";
@@ -135,12 +136,12 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 	
 				$e = explode("#",$ele);
 				$idconto = substr($e[0], 0, 6);
-	
+
 				$dettaglio =
 				"<tr id='" . trim($idconto) . "'>" .
-				"<td align='left'>" . $e[0] . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[1], 2, ',', '.') . "</td>" .
-				"<td align='center'>" . $e[2] . "</td>" .
+				"<td>" . $e[0] . "</td>" .
+				"<td class='dt-right'>" . number_format($e[1], 2, ',', '.') . "</td>" .
+				"<td class='dt-center'>" . $e[2] . "</td>" .
 				"</tr>";
 	
 				$tbody_dettagli = $tbody_dettagli . $dettaglio;
@@ -163,7 +164,6 @@ class CreaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
-				'%class_dettagli%' => $class_dettagli,
 				'%thead_dettagli%' => $thead_dettagli,
 				'%tbody_dettagli%' => $tbody_dettagli,
 				'%arrayDettagliInseriti%' => $d_x_array,
