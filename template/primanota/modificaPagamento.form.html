@@ -11,6 +11,34 @@ function doSubmit() {
 	$("#mainform").submit();
 }
 
+$(document).ready( function () {
+    $('#dettagli').dataTable( {
+    	"paging": false,
+    	"searching": false,
+    	"info": false,
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false},
+       	    {"targets": 1, "orderable": false},
+    	    {"targets": 2, "orderable": false},
+    	    {"targets": 3, "orderable": false}
+    		],
+       		"language": {
+                "lengthMenu": "Visualizza _MENU_ righe per pagina",
+                "zeroRecords": "La ricerca non ha prodotto risultati",
+                "info": "Paina _PAGE_ di _PAGES_",
+                "infoEmpty": "La ricerca non ha prodotto risultati",
+                "infoFiltered": "(righe filtrate da _MAX_ totali)",
+                "search": "Cerca:",
+                "paginate": {
+                    "first":      "Prima",
+                    "last":       "Ultima",
+                    "next":       "Prossima",
+                    "previous":   "Precedente"
+                }
+         }	    		
+    } );
+} );
+
 </script>
 
 <div id="body">
@@ -63,17 +91,11 @@ function doSubmit() {
 							</select>						
 						</td>	
 					</tr>
+					<tr><td><h2>Dettagli</h2></td></tr>										
 					<tr>
 						<td colspan="4">
-							<table id="dettagli" class="datiCreateSottile">
-							    <thead>
-									<tr> 
-										<th width="350" align="left">Conto</th>
-										<th width="100" align="right">Importo</th> 
-										<th width="50" align="center">D/A</th>
-										<th>&nbsp;</th>
-									</tr>
-							    </thead>
+							<table id="dettagli" class="display">
+							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
 						</td>

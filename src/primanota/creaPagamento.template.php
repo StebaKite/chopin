@@ -126,6 +126,9 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 
 		// Template --------------------------------------------------------------
 
+		$thead_dettagli = "<tr></tr>";
+		$tbody_dettagli = "<tr></tr>";
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -137,16 +140,13 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 			
 		if ($_SESSION['dettagliInseriti'] != "") {
 
-			$class_dettagli = "datiCreateSottile";
-
 			$thead_dettagli =
 			"<tr>" .
-			"<th width='350' align='left'>Conto</th>" .
-			"<th width='100' align='right'>Importo</th>" .
-			"<th width='50' align='center'>D/A</th>" .
+			"<th>Conto</th>" .
+			"<th class='dt-right'>Importo</th>" .
+			"<th>D/A</th>" .
 			"<th>&nbsp;</th>" .
 			"</tr>";
-
 
 			$tbody_dettagli = "";
 			$d_x_array = "";
@@ -160,9 +160,9 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 
 				$dettaglio =
 				"<tr id='" . trim($idconto) . "'>" .
-				"<td align='left'>" . $e[0] . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[1], 2, ',', '.') . "</td>" .
-				"<td align='center'>" . $e[2] . "</td>" .
+				"<td>" . $e[0] . "</td>" .
+				"<td class='dt-right'>" . number_format($e[1], 2, ',', '.') . "</td>" .
+				"<td class='dt-center'>" . $e[2] . "</td>" .
 				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($idconto) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 
@@ -186,7 +186,6 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
-				'%class_dettagli%' => $class_dettagli,
 				'%thead_dettagli%' => $thead_dettagli,
 				'%tbody_dettagli%' => $tbody_dettagli,
 				'%arrayDettagliInseriti%' => $d_x_array,

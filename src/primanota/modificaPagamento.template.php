@@ -132,19 +132,29 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 		/**
 		 * Prepara la tabella dei dettagli del pagamento da iniettare in pagina
 		 */
-	
+		
+		$tbody_dettagli = "";
+		$thead_dettagli = "";
+		
+		$thead_dettagli =
+			"<tr>" .
+			"<th>Conto</th>" .
+			"<th class='dt-right'>Importo</th>" .
+			"<th>D/A</th>" .
+			"<th>&nbsp;</th>" .
+			"</tr>";
+		
 		$result = $_SESSION["elencoDettagliPagamento"];
 	
 		$dettaglioPagamento = pg_fetch_all($result);
-		$tbodyDettagli = "";
 	
 		foreach ($dettaglioPagamento as $row) {
-	
-			$tbodyDettagli = $tbodyDettagli .
-			"<tr id='" . $row["id_dettaglio_registrazione"] . "'>" .
-			"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-			"<td align='right'>&euro;" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
-			"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
+				
+			$tbody_dettagli = $tbody_dettagli .
+			"<tr>" .
+			"<td>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
+			"<td class='dt-right'>" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
+			"<td class='dt-center'>" . $row["ind_dareavere"] . "</td>" .
 			"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagamento(" . $row["id_dettaglio_registrazione"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 			"</tr>";
 		}
@@ -169,7 +179,8 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_conti%' => $_SESSION["elenco_conti"],
 				'%elenco_scadenze_fornitore%' => $_SESSION["elenco_scadenze_fornitore"],
-				'%tbody_dettagli%' => $tbodyDettagli
+				'%thead_dettagli%' => $thead_dettagli,
+				'%tbody_dettagli%' => $tbody_dettagli
 		);
 	
 		$utility = Utility::getInstance();
