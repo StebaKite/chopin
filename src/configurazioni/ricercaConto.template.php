@@ -53,13 +53,15 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			"<table id='conti' class='display'>" .
 			"	<thead>" .
 			"   	<tr>" .
+			"			<th></th>" .
+			"			<th></th>" .
 			"			<th>%ml.conto%</th>" .
 			"			<th>%ml.sottoconto%</th>" .
 			"			<th>%ml.desconto%</th>" .
 			"			<th>%ml.catconto%</th>" .
 			"			<th>%ml.tipconto%</th>" .
-			"			<th>&nbsp;</th>" .
-			"			<th>&nbsp;</th>" .
+			"			<th></th>" .
+			"			<th></th>" .
 			"		</tr>" .
 			"	</thead>" .
 			"	<tbody>";
@@ -84,9 +86,12 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 
 					$numConti ++;
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr>" .
+					"<tr class='dt-bold'>" .
 					"	<td>" . trim($row['cod_conto']) . "</td>" .
 					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
+					
+					"	<td>" . trim($row['cod_conto']) . "</td>" .
+					"	<td></td>" .
 					"	<td>" . trim($row['des_conto']) . "</td>" .
 					"	<td>" . trim($row['cat_conto']) . "</td>" .
 					"	<td>" . trim($row['tip_conto']) . "</td>" .
@@ -106,9 +111,12 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 					"<tr>" .
 					"	<td>" . trim($row['cod_conto']) . "</td>" .
 					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
-					"	<td>&nbsp;</td>" .
+					
+					"	<td></td>" .
+					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
 					"	<td><i>" . trim($row['des_sottoconto']) . "</i></td>" .
-					"	<td>&nbsp;</td>" .
+					"	<td></td>" .
+					"	<td></td>" .
 					"	<td><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
 					"	<td id='icons'>" . $bottoneMastrino . "</td>" .
 					"</tr>";
