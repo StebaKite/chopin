@@ -1000,9 +1000,9 @@ function cancellaDettaglioPagina(idconto) {
 	
  	var rowCount = $("#dettagli tbody tr").length;
 	
-	if (rowCount == 0) {
+	if (rowCount == 1) {
 		$( "#dettagli thead tr" ).remove();		
-		$( "#dettagli" ).removeClass("datiCreateSottile");
+		$( "#dettagli" ).removeClass("display");
 	}
 	
 	var c = parseInt(idconto.toString());

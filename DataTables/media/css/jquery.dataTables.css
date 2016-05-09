@@ -195,19 +195,25 @@ table.dataTable.compact tbody td {
 }
 table.dataTable th.dt-ko,
 table.dataTable td.dt-ko,
-table.dataTable tr.tr-ko {
+table.dataTable tr.dt-ko {
 	font-weight: bolder;
 	color: red;
 }
 table.dataTable th.dt-ok,
 table.dataTable td.dt-ok,
-table.dataTable tr.tr-ok {
+table.dataTable tr.dt-ok {
 	font-weight: bolder;
 	color: green;
 }
-table.dataTable tr.tr-chiuso {
+table.dataTable tr.dt-chiuso {
 	font-weight: bolder;
 	color: #3399FF;
+}
+table.dataTable th.dt-bold,
+table.dataTable td.dt-bold,
+table.dataTable tr.dt-bold {
+	font-weight: bolder;
+	font-size: 14px;	
 }
 table.dataTable th.dt-left,
 table.dataTable td.dt-left {

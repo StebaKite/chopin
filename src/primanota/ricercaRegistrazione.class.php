@@ -54,7 +54,6 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
-		$_SESSION["numfatt"] = "";
 		$_SESSION["codneg_sel"] = "VIL";
 		unset($_SESSION["registrazioniTrovate"]);
 		unset($_SESSION['referer_function_name']);
@@ -159,9 +158,6 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		
 		if ($_SESSION["causale"] != "") {
 			$filtriRegistrazione .= "and reg.cod_causale = '" . $_SESSION["causale"] . "'";
-		}
-		if ($_SESSION["numfatt"] != "") {
-			$filtriRegistrazione .= "and reg.num_fattura like '" . $_SESSION["numfatt"] . "%'";
 		}
 		if ($_SESSION["codneg_sel"] != "") {
 			$filtriRegistrazione .= "and reg.cod_negozio = '" . $_SESSION["codneg_sel"] . "'";

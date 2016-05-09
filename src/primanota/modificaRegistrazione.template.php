@@ -161,20 +161,28 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		/**
 		 * Prepara la tabella dei dettagli della registrazione da iniettare in pagina
 		 */
-	
+
+		$thead_dettagli =
+			"<tr>" .
+			"<th>Conto</th>" .
+			"<th class='dt-right'>Importo</th>" .
+			"<th>D/A</th>" .
+			"<th>&nbsp;</th>" .
+			"</tr>";
+		
 		$result = $_SESSION["elencoDettagliRegistrazione"];
 				
 		$dettaglioregistrazione = pg_fetch_all($result);
-		$tbodyDettagli = "";
+		$tbody_dettagli = "";
 		$class_scadenzesuppl = "";
 		
 		foreach ($dettaglioregistrazione as $row) {
 		
-			$tbodyDettagli = $tbodyDettagli .
-				"<tr id='" . $row["id_dettaglio_registrazione"] . "'>" .
-					"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-					"<td align='right'>&euro;" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
-					"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
+			$tbody_dettagli = $tbody_dettagli .
+				"<tr>" .
+					"<td>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
+					"<td class='dt-right'>" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
+					"<td class='dt-center'>" . $row["ind_dareavere"] . "</td>" .
 					"<td id='icons'><a class='tooltip' onclick='cancellaDettaglio(" . $row["id_dettaglio_registrazione"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		}
@@ -235,7 +243,8 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
 				'%elenco_conti%' => $_SESSION["elenco_conti"],
-				'%tbody_dettagli%' => $tbodyDettagli,
+				'%thead_dettagli%' => $thead_dettagli,
+				'%tbody_dettagli%' => $tbody_dettagli,
 				'%class_scadenzesuppl%' => $class_scadenzesuppl,
 				'%thead_scadenze%' => $theadScadenze,
 				'%tbody_scadenze%' => $tbodyScadenze,

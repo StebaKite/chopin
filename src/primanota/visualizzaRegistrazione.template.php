@@ -58,10 +58,10 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 		foreach ($dettaglioregistrazione as $row) {
 	
 			$tbodyDettagli = $tbodyDettagli .
-			"<tr id='" . $row["id_dettaglio_registrazione"] . "'>" .
-			"<td align='left'>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-			"<td align='right'>&euro;" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
-			"<td align='center'>" . $row["ind_dareavere"] . "</td>" .
+			"<tr>" .
+			"<td>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
+			"<td class='dt-right'>" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
+			"<td class='dt-center'>" . $row["ind_dareavere"] . "</td>" .
 			"</tr>";
 		}
 		

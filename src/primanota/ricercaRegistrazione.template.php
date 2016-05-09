@@ -52,18 +52,6 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 			$esito = FALSE;
 		}
 
-		/**
-		 * Controllo formale dei campi facoltativi
-		 */
-		
-		if ($_SESSION["numfatt"] != "") {
-			
-			if(ereg('[^0-9A-Za-z+_./-]',$_SESSION["numfatt"])) {
-				$msg = $msg . "<br>&ndash; Formato numero fattura non valido.<br>&ndash; Caratteri ammessi 0-9 A-Z a-z + _ . / -";
-				$esito = FALSE;				
-			}
-		}
-
 		// ----------------------------------------------
 		
 		if ($msg != "<br>") {
@@ -117,19 +105,19 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 
 					switch ($row['sta_registrazione']) {
 						case ("00"): {
-							$class = "class='tr-ok'";
+							$class = "class='dt-ok'";
 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						case ("02"): {
-							$class = "class='tr-ko'";
+							$class = "class='dt-ko'";
 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						default: {
-							$class = "class='tr-chiuso'";
+							$class = "class='dt-chiuso'";
 							$bottoneModifica = "&nbsp;";
 							$bottoneCancella = "&nbsp;";								
 							break;
