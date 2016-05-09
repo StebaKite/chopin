@@ -10,16 +10,15 @@ var elencoClienti = [%elenco_clienti%];
 
 function aggiungiDettaglio() {
 	
-	var rowCount = $('#dettagli tr').length;
+	var rowCount = $('#dettagli tbody tr').length;
 	
-	if (rowCount == 0) {
+	if (rowCount == 1) {
 		$( "#dettagli thead" ).append("<tr>" + 
-			"<th width='350' align='left'>Conto</th>" + 
-			"<th width='100' align='right'>Importo</th>" + 
-			"<th width='50' align='center'>D/A</th>" +
+			"<th>Conto</th>" + 
+			"<th class='dt-right'>Importo</th>" + 
+			"<th class='dt-center'>D/A</th>" +
 			"<th>&nbsp;</th>" +
 			"</tr>");
-		$( "#dettagli" ).addClass("datiCreateSottile");
 	}
 	
 	if($('#dare').is(':checked')) { var D_A = $("#dare").val(); }
@@ -29,11 +28,11 @@ function aggiungiDettaglio() {
 	var idconto = conto.substring(0, 6);
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
-	
+
 	$( "#dettagli tbody" ).append( "<tr id='" + idconto.trim() + "'>" +
-        "<td align='left'>" + conto + "</td>" +
-        "<td align='right'>" + importoNormalizzato + "</td>" +
-        "<td align='center'>" + D_A + "</td>" +
+        "<td>" + conto + "</td>" +
+        "<td class='dt-right'>" + importoNormalizzato + "</td>" +
+        "<td class='dt-center'>" + D_A + "</td>" +
     	"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" + idconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
@@ -42,8 +41,7 @@ function aggiungiDettaglio() {
 	
 	$("#importo").val("");
 	$('#conti').prop("selectedIndex",0).selectmenu('refresh');
-	$('#dare').attr('checked', true);
-	
+	$('#dare').attr('checked', true);	
 }
 
 function addDett(dettaglio) {
@@ -78,6 +76,34 @@ function doSubmit() {
 	$("#numfatt").val(selectfatt);
 	$("#mainform").submit();
 }
+
+$(document).ready( function () {
+    $('#dettagli').dataTable( {
+    	"paging": false,
+    	"searching": false,
+    	"info": false,
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false},
+       	    {"targets": 1, "orderable": false},
+    	    {"targets": 2, "orderable": false},
+    	    {"targets": 3, "orderable": false}
+    		],
+       		"language": {
+                "lengthMenu": "Visualizza _MENU_ righe per pagina",
+                "zeroRecords": " ",
+                "info": "Paina _PAGE_ di _PAGES_",
+                "infoEmpty": " ",
+                "infoFiltered": "(righe filtrate da _MAX_ totali)",
+                "search": "Cerca:",
+                "paginate": {
+                    "first":      "Prima",
+                    "last":       "Ultima",
+                    "next":       "Prossima",
+                    "previous":   "Precedente"
+                }
+         }	    		
+    } );
+} );
 
 </script>
 	
@@ -124,9 +150,10 @@ function doSubmit() {
 							</select>						
 						</td>	
 					</tr>
+					<tr><td><h2>Dettagli</h2></td></tr>										
 					<tr>
 						<td colspan="4">
-							<table id="dettagli" class="%class_dettagli%">
+							<table id="dettagli" class="display">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
@@ -135,8 +162,10 @@ function doSubmit() {
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="6" align="right" class="tooltip"><button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button></td>
-						<td colspan="6" align="right" class="tooltip"><button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button></td>
+						<td colspan="6" align="right" class="tooltip">
+							<button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button>
+						</td>
 						<input type="hidden" id="numfatt" name="numfatt" />
 					</tr>
 				</tfoot>
