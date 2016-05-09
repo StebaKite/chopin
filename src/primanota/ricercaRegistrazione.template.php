@@ -91,19 +91,22 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 		if (isset($_SESSION["registrazioniTrovate"])) {
 			
 			$risultato_ricerca = 
-			"<table class='result'>" .
+			"<table id='registrazioni' class='display' width='100%'>" .
 			"	<thead>" .
-			"		<th width='30'>%ml.idReg%</th>" .
-			"		<th width='72'>%ml.datReg%</th>" .
-			"		<th width='100'>%ml.numfatt%</th>" .
-			"		<th width='400'>%ml.desReg%</th>" .
-			"		<th width='270'>%ml.codcau%</th>" .
-			"		<th width='100' colspan='3'>%ml.azioni%</th>" .
+			"		<tr>" .
+			"			<th>%ml.idReg%</th>" .
+			"			<th>%ml.datReg%</th>" .
+			"			<th>&nbsp;</th>" .
+			"			<th>%ml.datReg%</th>" .
+			"			<th class='dt-left'>%ml.numfatt%</th>" .
+			"			<th class='dt-left'>%ml.desReg%</th>" .
+			"			<th class='dt-left'>%ml.codcau%</th>" .
+			"			<th>&nbsp;</th>" .
+			"			<th>&nbsp;</th>" .
+			"			<th>&nbsp;</th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll'>" .
-			"	<table class='expandible'>" .
-			"		<tbody>";
+			"	<tbody>";
 			
 			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
 			$numReg = 0;			
@@ -114,19 +117,19 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 
 					switch ($row['sta_registrazione']) {
 						case ("00"): {
-							$class = "class='parentAperto'";
+							$class = "class='tr-ok'";
 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						case ("02"): {
-							$class = "class='parentErrato'";
+							$class = "class='tr-ko'";
 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						default: {
-							$class = "class='parent'";
+							$class = "class='tr-chiuso'";
 							$bottoneModifica = "&nbsp;";
 							$bottoneCancella = "&nbsp;";								
 							break;
@@ -135,40 +138,41 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 					
 					$numReg ++; 
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr " . $class . " id='" . trim($row['id_registrazione']) . "'>" .
-					"	<td width='40' class='tooltip' align='center'>" . trim($row['id_registrazione']) . "</td>" .
-					"	<td width='80'  align='center'>" . trim($row['dat_registrazione']) . "</td>" .
-					"	<td width='105'  align='center'>" . trim($row['num_fattura']) . "</td>" .
-					"	<td width='410' align='left'>" . trim($row['des_registrazione']) . "</td>" .
-					"	<td width='290'  align='left'>" . trim($row['cod_causale']) . " - " . trim($row['des_causale']) . "</td>" .
-					"	<td width='30' id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
-					"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+					"<tr " . $class . ">" .
+					"	<td>" . trim($row['id_registrazione']) . "</td>" .
+					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
+					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .					
+					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
+					"	<td class='td-left'>" . trim($row['num_fattura']) . "</td>" .
+					"	<td>" . trim($row['des_registrazione']) . "</td>" .
+					"	<td>" . trim($row['cod_causale']) . " - " . trim($row['des_causale']) . "</td>" .
+					"	<td id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
+					"	<td id='icons'>" . $bottoneModifica . "</td>" .
+					"	<td id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";						
 					
 				}
 				elseif (trim($row['tipo']) == 'D') {
-
-					$class = "class='child-" . trim($row['id_registrazione']) . "'";
-					$id = "id='child'";
 						
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr " . $class . " " . $id . " >" .
-					"	<td class='tooltip' align='right'>" . trim($row['ind_dareavere']) . "</td>" .						
-					"	<td class='tooltip' align='right'> &euro; " . trim($row['imp_registrazione']) .  "</td>" .
-					"	<td align='right'><i>" . trim($row['cod_conto']) . trim($row['cod_sottoconto']) . "</i></td>" .
-					"	<td colspan='5' align='left'><i>" . trim($row['des_sottoconto']) . "</i></td>" .					
+					"<tr>" .
+					"	<td>" . trim($row['id_registrazione']) . "</td>" .
+					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
+					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .
+					"	<td class='dt-right'>" . trim($row['ind_dareavere']) . "</td>" .						
+					"	<td class='dt-right'>" . trim($row['imp_registrazione']) .  "</td>" .
+					"	<td><i>" . trim($row['cod_conto']) . trim($row['cod_sottoconto']) . " - " . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td></td>" .					
+					"	<td></td>" .					
+					"	<td></td>" .					
+					"	<td></td>" .					
 					"</tr>";
 						
-					$id = "id='child'";
-					$class = "class='child-" . trim($row['id_registrazione']) . "'";
-					$id_registrazione = "";
-					$id_dettaglio_registrazione = trim($row['id_dettaglio_registrazione']);	
 				}				
 				
 			}
 			$_SESSION['numRegTrovate'] = $numReg;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";			
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";			
 		}
 		else {
 			

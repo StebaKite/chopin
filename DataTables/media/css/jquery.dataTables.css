@@ -194,14 +194,20 @@ table.dataTable.compact tbody td {
   padding: 4px;
 }
 table.dataTable th.dt-ko,
-table.dataTable td.dt-ko {
+table.dataTable td.dt-ko,
+table.dataTable tr.tr-ko {
 	font-weight: bolder;
 	color: red;
 }
 table.dataTable th.dt-ok,
-table.dataTable td.dt-ok {
+table.dataTable td.dt-ok,
+table.dataTable tr.tr-ok {
 	font-weight: bolder;
 	color: green;
+}
+table.dataTable tr.tr-chiuso {
+	font-weight: bolder;
+	color: #3399FF;
 }
 table.dataTable th.dt-left,
 table.dataTable td.dt-left {

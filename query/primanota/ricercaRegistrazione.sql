@@ -24,7 +24,7 @@ select t1.*
 	select
 		'D' as tipo,
 		detreg.id_registrazione,
-		null as dat_registrazione,
+		to_char(reg.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
 		null as des_registrazione,
 		null as cod_causale,
 		null as num_fattura,
@@ -46,4 +46,3 @@ select t1.*
 	  %filtri-registrazione%
 	  %filtri-dettaglio%
 	) as t1
-order by t1.id_registrazione desc, t1.dat_registrazione asc, t1.id_dettaglio_registrazione asc
