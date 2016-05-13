@@ -1,4 +1,41 @@
 <body>
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#scadenze').dataTable( {
+    	"order": [[0, 'asc'],[1, 'asc'] ],
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false, "visible": false },
+       	    {"targets": 1, "orderable": false, "visible": false },
+    	    {"targets": 2, "orderable": false },
+    	    {"targets": 3, "orderable": false },
+    	    {"targets": 4, "orderable": false },
+    	    {"targets": 5, "orderable": false },
+    	    {"targets": 6, "orderable": false },
+    	    {"targets": 7, "orderable": false },
+    	    {"targets": 8, "orderable": false },
+    	    {"targets": 9, "orderable": false },
+    	    {"targets": 10, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
 
 <div id="body">
 	<div id="main">
@@ -51,4 +88,5 @@
 			<input type="hidden" name="datascad_a" value='%datascad_a%' >
 			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
 		</form>
+	</div>	
 		

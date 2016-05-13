@@ -1,4 +1,38 @@
 <body>
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#causali').dataTable( {
+    	"order": [[0, 'asc']],
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": true },
+       	    {"targets": 1, "orderable": true },
+    	    {"targets": 2, "orderable": true },
+    	    {"targets": 3, "orderable": true },
+    	    {"targets": 4, "orderable": true },
+    	    {"targets": 5, "orderable": false },
+    	    {"targets": 6, "orderable": false },
+    	    {"targets": 7, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Paina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
 
 <div id="body">
 	<div id="main">
@@ -21,6 +55,7 @@
 		</form>
 		<br>
 		%risultato_ricerca%		
+	</div>	
 		
 <div id="cancella-causale-form" title="Cancella Causale"> 
 	<form method="post" id="cancellaCausale" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >

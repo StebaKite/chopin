@@ -79,21 +79,21 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 		if (isset($_SESSION["scadenzeClienteTrovate"])) {
 		
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='scadenze' class='display'>" .
 			"	<thead>" .
-			"		<th width='70'>%ml.datregistrazione%</th>" .
-			"		<th width='200'>%ml.codcliente%</th>" .
-			"		<th width='250'>%ml.notascadenza%</th>" .
-			"		<th width='50'>%ml.numfatt%</th>" .
-			"		<th width='90'>%ml.tipaddebito%</th>" .
-			"		<th width='80'>%ml.stascadenza%</th>" .
-			"		<th width='90'>%ml.impscadenza%</th>" .
-			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
+			"		<th></th>" .
+			"		<th></th>" .
+			"		<th>%ml.datregistrazione%</th>" .
+			"		<th>%ml.codcliente%</th>" .
+			"		<th>%ml.notascadenza%</th>" .
+			"		<th>%ml.numfatt%</th>" .
+			"		<th>%ml.tipaddebito%</th>" .
+			"		<th>%ml.stascadenza%</th>" .
+			"		<th>%ml.impscadenza%</th>" .
+			"		<th></th>" .
+			"		<th></th>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-scadenze'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>";
 		
 			$scadenzeClienteTrovate = $_SESSION["scadenzeClienteTrovate"];
 			$numScadenze = 0;
@@ -110,6 +110,8 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$datregistrazione_break = trim($row['dat_registrazione']);
 					$descliente = trim($row['des_cliente']);
 					$datregistrazione  = trim($row['dat_registrazione']);
+					$descliente2 = trim($row['des_cliente']);
+					$datregistrazione2  = trim($row['dat_registrazione']);
 				}
 				
 				if (trim($row['sta_registrazione']) == "00") {
@@ -129,19 +131,19 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 
 				if (trim($row['sta_scadenza']) == "00") {
 					$stascadenza = "Da Incassare";
-					$tdclass = "class='ko'";
+					$tdclass = "class='dt-ko'";
 					$bottoneModificaIncasso = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Incassato";
-					$tdclass = "class='ok'";
+					$tdclass = "class='dt-ok'";
 					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
-					$tdclass = "class='mark'";
+					$tdclass = "class='dt-chiuso'";
 					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
@@ -150,55 +152,84 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				$numScadenze ++;
 				
 				if ((trim($row['id_cliente']) != $idcliente_break) | (trim($row['dat_registrazione']) != $datregistrazione_break)) {
-					
+
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr class='subtotale'>" .
-					"	<td colspan='5' align='right'><i>Totale</i></td>" .
-					"	<td colspan='2' align='right'>&euro;" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
-					"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
+					"<tr class='dt-subtotale'>" .
+					"	<td class='dt-center'>" . $datregistrazione2 . "</td>" .
+					"	<td>" . $descliente2 . "</td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td class='dt-right'><i>Totale data</i></td>" .
+					"	<td></td>" .
+					"	<td class='dt-right'>" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
+					"	<td id='icons'></td>" .
+					"	<td id='icons'></td>" .
 					"</tr>";
 					
 					$descliente = trim($row['des_cliente']);
 					$datregistrazione  = trim($row['dat_registrazione']);
+					$descliente2 = trim($row['des_cliente']);
+					$datregistrazione2  = trim($row['dat_registrazione']);
+						
 					$idcliente_break = trim($row['id_cliente']);
 					$datregistrazione_break = trim($row['dat_registrazione']);
 						
 					$totale_scadenze += $totale_cliente;  
 					$totale_cliente = 0;
 				}
-					
-				$risultato_ricerca = $risultato_ricerca .
-				"<tr " . $class . " id='" . trim($row['id_scadenza']) . "'>" .
-				"	<td width='78' align='center'>" . $datregistrazione . "</td>" .
-				"	<td width='208' align='left'>" . $descliente . "</td>" .
-				"	<td width='258' align='left'>" . $nota . "</td>" .
-				"	<td width='58' align='center'>" . $numfatt . "</td>" .
-				"	<td width='98' align='center'>" . $tipaddebito . "</td>" .
-				"	<td width='88' align='center'" . $tdclass . ">" . $stascadenza . "</td>" .
-				"	<td width='98' align='right'>&euro;" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModificaIncasso . "</td>" .
-				"</tr>";
 
+				$risultato_ricerca = $risultato_ricerca .
+				"<tr>" .
+				"	<td class='dt-center'>" . $datregistrazione2 . "</td>" .
+				"	<td>" . $descliente2 . "</td>" .
+				"	<td class='dt-center'>" . $datregistrazione . "</td>" .
+				"	<td>" . $descliente . "</td>" .
+				"	<td>" . $nota . "</td>" .
+				"	<td class='dt-center'>" . $numfatt . "</td>" .
+				"	<td class='dt-center'>" . $tipaddebito . "</td>" .
+				"	<td " . $tdclass . ">" . $stascadenza . "</td>" .
+				"	<td class='dt-right'>" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
+				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
+				"	<td id='icons'>" . $bottoneModificaPagamento . "</td>" .
+				"</tr>";
+				
 				$descliente = "";
 				$datregistrazione = "";
 				$totale_cliente += trim($row['imp_registrazione']);						
 			}
-			
-			$risultato_ricerca = $risultato_ricerca .
-			"<tr class='subtotale'>" .
-			"	<td colspan='5' align='right'><i>Totale</i></td>" .
-			"	<td colspan='2' align='right'>&euro;" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
-			"</tr>";				
 
+			$risultato_ricerca = $risultato_ricerca .
+			"<tr class='dt-subtotale'>" .
+			"	<td class='dt-center'>" . $datregistrazione2 . "</td>" .
+			"	<td>" . $descliente2 . "</td>" .
+			"	<td class='dt-center'>" . $datregistrazione . "</td>" .
+			"	<td>" . $descliente . "</td>" .
+			"	<td></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'><i>Totale cliente</i></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'>" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
+			"</tr>";
+			
 			$totale_scadenze += $totale_cliente;
 
 			$risultato_ricerca = $risultato_ricerca .
-			"<tr class='totale'>" .
-			"	<td class='mark' colspan='5' align='right'>Totale Scadenze</td>" .
-			"	<td class='mark' colspan='2' align='right'>&euro;" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
+			"<tr class='dt-totale'>" .
+			"	<td class='dt-center'>31/12/9999</td>" .
+			"	<td></td>" .
+			"	<td class='dt-center'>" . $datregistrazione . "</td>" .
+			"	<td>" . $descliente . "</td>" .
+			"	<td></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'><i>Totale scadenze</i></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'>" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
 			"</tr>";
 			
 			$_SESSION['numScadenzeClienteTrovate'] = $numScadenze;

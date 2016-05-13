@@ -81,18 +81,17 @@ class RicercaSaldiTemplate extends SaldiAbstract {
 		if (isset($_SESSION["saldiTrovati"])) {
 			
 			$risultato_ricerca = 
-			"<table class='result'>" .
+			"<table id='saldi' class='display'>" .
 			"	<thead>" .
-			"		<th width='50'>%ml.negozio%</th>" .
-			"		<th width='100'>%ml.conto%</th>" .
-			"		<th width='600'>%ml.codsottoconto%</th>" .
-			"		<th width='100'>%ml.importo%</th>" .
-			"		<th width='80'>%ml.dare%&ndash;%ml.avere%</th>" .
+			"		<tr>" .
+			"			<th>%ml.negozio%</th>" .
+			"			<th>%ml.conto%</th>" .
+			"			<th>%ml.codsottoconto%</th>" .
+			"			<th>%ml.importo%</th>" .
+			"			<th>%ml.dare%&ndash;%ml.avere%</th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll'>" .
-			"	<table class='expandible'>" .
-			"		<tbody>";
+			"	<tbody>";
 			
 			$saldiTrovati = $_SESSION["saldiTrovati"];
 			$numReg = 0;			
@@ -103,15 +102,15 @@ class RicercaSaldiTemplate extends SaldiAbstract {
 				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td width='58' class='tooltip' align='center'>" . trim($row['cod_negozio']) . "</td>" .
-				"	<td width='108' align='center'>" . trim($row['cod_conto']) . ' - ' . trim($row['cod_sottoconto']) . "</td>" .
-				"	<td width='608' align='left'>" . trim($row['des_conto']) . ' - ' . trim($row['des_sottoconto']) . "</td>" .
-				"	<td width='108' align='right'>" . $impSaldo . "</td>" .
-				"	<td width='88' align='center'>" . trim($row['ind_dareavere']) . "</td>" .
+				"	<td class='dt-center'>" . trim($row['cod_negozio']) . "</td>" .
+				"	<td class='dt-center'>" . trim($row['cod_conto']) . ' - ' . trim($row['cod_sottoconto']) . "</td>" .
+				"	<td>" . trim($row['des_conto']) . ' - ' . trim($row['des_sottoconto']) . "</td>" .
+				"	<td class='dt-right'>" . $impSaldo . "</td>" .
+				"	<td class='dt-center'>" . trim($row['ind_dareavere']) . "</td>" .
 				"</tr>";						
 					
 			}
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";			
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";			
 		}
 			
 		$replace = array(

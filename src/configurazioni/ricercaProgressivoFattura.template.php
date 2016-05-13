@@ -50,17 +50,14 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
 		if (isset($_SESSION["progressiviTrovati"])) {
 
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='progressivi' class='display'>" .
 			"	<thead>" .
-			"		<th width='60'>%ml.categoria%</th>" .
-			"		<th width='60'>%ml.negozio%</th>" .
-			"		<th width='100'>%ml.numfatt%</th>" .
-			"		<th width='25'>&nbsp;</th>" .
+			"		<th>%ml.categoria%</th>" .
+			"		<th>%ml.negozio%</th>" .
+			"		<th>%ml.numfatt%</th>" .
+			"		<th></th>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-categorie'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>";
 
 			$progressiviTrovati = $_SESSION["progressiviTrovati"];
 			$numProgressivi = 0;
@@ -72,11 +69,11 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
 
 				$numProgressivi ++;
 				$risultato_ricerca = $risultato_ricerca .
-				"<tr " . $class . " id='" . trim($row['cat_cliente']) . "'>" .
-				"	<td width='68' class='tooltip' align='center'>" . trim($row['cat_cliente']) . "</td>" .
-				"	<td width='68' align='center'>" . trim($row['neg_progr']) . "</td>" .
-				"	<td width='108' align='right'>" . trim($row['num_fattura_ultimo']) . "</td>" .
-				"	<td width='35' id='icons'>" . $bottoneModifica . "</td>" .
+				"<tr>" .
+				"	<td>" . trim($row['cat_cliente']) . "</td>" .
+				"	<td>" . trim($row['neg_progr']) . "</td>" .
+				"	<td>" . trim($row['num_fattura_ultimo']) . "</td>" .
+				"	<td id='icons'>" . $bottoneModifica . "</td>" .
 				"</tr>";
 			}
 			$_SESSION['numProgressiviTrovati'] = $numProgressivi;

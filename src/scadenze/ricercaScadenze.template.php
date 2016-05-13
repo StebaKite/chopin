@@ -79,21 +79,23 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 		if (isset($_SESSION["scadenzeTrovate"])) {
 		
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='scadenze' class='display'>" .
 			"	<thead>" .
-			"		<th width='70'>%ml.datscadenza%</th>" .
-			"		<th width='200'>%ml.codforn%</th>" .
-			"		<th width='250'>%ml.notascadenza%</th>" .
-			"		<th width='50'>%ml.numfatt%</th>" .
-			"		<th width='90'>%ml.tipaddebito%</th>" .
-			"		<th width='80'>%ml.stascadenza%</th>" .
-			"		<th width='90'>%ml.impscadenza%</th>" .
-			"		<th width='52' colspan='2'>%ml.azioni%</th>" .
+			"		<tr>" .
+			"			<th></th>" .
+			"			<th></th>" .
+			"			<th>%ml.datscadenza%</th>" .
+			"			<th>%ml.codforn%</th>" .
+			"			<th>%ml.notascadenza%</th>" .
+			"			<th>%ml.numfatt%</th>" .
+			"			<th>%ml.tipaddebito%</th>" .
+			"			<th>%ml.stascadenza%</th>" .
+			"			<th>%ml.impscadenza%</th>" .
+			"			<th></th>" .
+			"			<th></th>" .
+			"		</tr>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-scadenze'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>";
 		
 			$scadenzeTrovate = $_SESSION["scadenzeTrovate"];
 			$numScadenze = 0;
@@ -110,6 +112,8 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					$datscadenza_break = trim($row['dat_scadenza']);
 					$desfornitore = trim($row['des_fornitore']);
 					$datscadenza  = trim($row['dat_scadenza']);
+					$desfornitore2 = trim($row['des_fornitore']);
+					$datscadenza2  = trim($row['dat_scadenza']);
 				}
 
 				if (trim($row['sta_registrazione']) == "00") {
@@ -129,25 +133,25 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 
 				if (trim($row['sta_scadenza']) == "  ") {
 					$stascadenza = "&ndash;&ndash;&ndash;";
-					$tdclass = "class='ko'";
+					$tdclass = "class='dt-ko'";
 					$bottoneModificaPagamento = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "00") {
 					$stascadenza = "Da Pagare";
-					$tdclass = "class='ko'";
+					$tdclass = "class='dt-ko'";
 					$bottoneModificaPagamento = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Pagato";
-					$tdclass = "class='ok'";
+					$tdclass = "class='dt-ok'";
 					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
-					$tdclass = "class='mark'";
+					$tdclass = "class='dt-chiuso'";
 					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
 				}
 				
@@ -158,14 +162,25 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				if ((trim($row['id_fornitore']) != $idfornitore_break) | (trim($row['dat_scadenza']) != $datscadenza_break)) {
 					
 					$risultato_ricerca = $risultato_ricerca .
-					"<tr class='subtotale'>" .
-					"	<td colspan='5' align='right'><i>Totale</i></td>" .
-					"	<td colspan='2' align='right'>&euro;" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-					"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
+					"<tr class='dt-subtotale'>" .
+					"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
+					"	<td>" . $desfornitore2 . "</td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td class='dt-right'><i>Totale data</i></td>" .
+					"	<td></td>" .
+					"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
+					"	<td id='icons'></td>" .
+					"	<td id='icons'></td>" .
 					"</tr>";
 					
 					$desfornitore = trim($row['des_fornitore']);
 					$datscadenza  = trim($row['dat_scadenza']);
+					$desfornitore2 = trim($row['des_fornitore']);
+					$datscadenza2  = trim($row['dat_scadenza']);
+					
 					$idfornitore_break = trim($row['id_fornitore']);
 					$datscadenza_break = trim($row['dat_scadenza']);
 						
@@ -174,16 +189,18 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				}
 					
 				$risultato_ricerca = $risultato_ricerca .
-				"<tr " . $class . " id='" . trim($row['id_scadenza']) . "'>" .
-				"	<td width='78' align='center'>" . $datscadenza . "</td>" .
-				"	<td width='208' align='left'>" . $desfornitore . "</td>" .
-				"	<td width='258' align='left'>" . $notascadenza . "</td>" .
-				"	<td width='58' align='center'>" . $numfatt . "</td>" .
-				"	<td width='98' align='center'>" . $tipaddebito . "</td>" .
-				"	<td width='88' align='center'" . $tdclass . ">" . $stascadenza . "</td>" .
-				"	<td width='98' align='right'>&euro;" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModificaPagamento . "</td>" .
+				"<tr>" .
+				"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
+				"	<td>" . $desfornitore2 . "</td>" .
+				"	<td class='dt-center'>" . $datscadenza . "</td>" .
+				"	<td>" . $desfornitore . "</td>" .
+				"	<td>" . $notascadenza . "</td>" .
+				"	<td class='dt-center'>" . $numfatt . "</td>" .
+				"	<td class='dt-center'>" . $tipaddebito . "</td>" .
+				"	<td " . $tdclass . ">" . $stascadenza . "</td>" .
+				"	<td class='dt-right'>" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
+				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
+				"	<td id='icons'>" . $bottoneModificaPagamento . "</td>" .
 				"</tr>";
 
 				$desfornitore = "";
@@ -192,23 +209,39 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			}
 			
 			$risultato_ricerca = $risultato_ricerca .
-			"<tr class='subtotale'>" .
-			"	<td colspan='5' align='right'><i>Totale</i></td>" .
-			"	<td colspan='2' align='right'>&euro;" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
-			"</tr>";				
+			"<tr class='dt-subtotale'>" .
+			"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
+			"	<td>" . $desfornitore2 . "</td>" .
+			"	<td class='dt-center'>" . $datscadenza . "</td>" .
+			"	<td>" . $desfornitore . "</td>" .
+			"	<td></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'><i>Totale fornitore</i></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
+			"</tr>";
 
 			$totale_scadenze += $totale_fornitore;
 
 			$risultato_ricerca = $risultato_ricerca .
-			"<tr class='totale'>" .
-			"	<td class='mark' colspan='5' align='right'>Totale Scadenze</td>" .
-			"	<td class='mark' colspan='2' align='right'>&euro;" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
-			"	<td width='45' id='icons' colspan='2'>&nbsp;</td>" .
+			"<tr class='dt-totale'>" .
+			"	<td class='dt-center'>31/12/9999</td>" .
+			"	<td></td>" .
+			"	<td class='dt-center'>" . $datscadenza . "</td>" .
+			"	<td>" . $desfornitore . "</td>" .
+			"	<td></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'><i>Totale scadenze</i></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right'>" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
 			"</tr>";
 			
 			$_SESSION['numScadenzeTrovate'] = $numScadenze;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 		}
 		else {
 		

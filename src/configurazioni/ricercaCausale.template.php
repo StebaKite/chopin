@@ -50,19 +50,18 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 		if (isset($_SESSION["causaliTrovate"])) {
 	
 			$risultato_ricerca =
-			"<table class='result'>" .
+			"<table id='causali' class='display'>" .
 			"	<thead>" .
-			"		<th width='72'>%ml.codcausale%</th>" .
-			"		<th width='402'>%ml.descausale%</th>" .
-			"		<th width='52'>%ml.catcausale%</th>" .
-			"		<th width='47'>%ml.qtareg%</th>" .
-			"		<th width='52'>%ml.qtaconti%</th>" .
-			"		<th width='84' colspan='3'>%ml.azioni%</th>" .
+			"		<th>%ml.codcausale%</th>" .
+			"		<th>%ml.descausale%</th>" .
+			"		<th>%ml.catcausale%</th>" .
+			"		<th>%ml.qtareg%</th>" .
+			"		<th>%ml.qtaconti%</th>" .
+			"		<th></th>" .
+			"		<th></th>" .
+			"		<th></th>" .
 			"	</thead>" .
-			"</table>" .
-			"<div class='scroll-causali'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
+			"	<tbody>";
 	
 			$causaliTrovate = $_SESSION["causaliTrovate"];
 			$numCausali = 0;
@@ -89,19 +88,19 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 
 				$numCausali ++;
 				$risultato_ricerca = $risultato_ricerca .
-				"<tr " . $class . " id='" . trim($row['cod_causale']) . "'>" .
-				"	<td width='80' class='tooltip' align='center'>" . trim($row['cod_causale']) . "</td>" .
-				"	<td width='410' align='left'>" . trim($row['des_causale']) . "</td>" .
-				"	<td width='65'  align='center'>" . trim($row['cat_causale']) . "</td>" .
-				"	<td width='55'  align='right'>" . trim($row['tot_registrazioni_causale']) . "</td>" .
-				"	<td width='60'  align='right'>" . trim($row['tot_conti_causale']) . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneConfigura . "</td>" .
-				"	<td width='30' id='icons'>" . $bottoneCancella . "</td>" .
+				"<tr>" .
+				"	<td>" . trim($row['cod_causale']) . "</td>" .
+				"	<td>" . trim($row['des_causale']) . "</td>" .
+				"	<td>" . trim($row['cat_causale']) . "</td>" .
+				"	<td>" . trim($row['tot_registrazioni_causale']) . "</td>" .
+				"	<td>" . trim($row['tot_conti_causale']) . "</td>" .
+				"	<td id='icons'>" . $bottoneModifica . "</td>" .
+				"	<td id='icons'>" . $bottoneConfigura . "</td>" .
+				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";		
 			}
 			$_SESSION['numCausaliTrovate'] = $numCausali;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 		}
 		else {
 	
