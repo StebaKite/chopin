@@ -1027,7 +1027,7 @@ function cancellaDettaglioFattura(id) {
 	
  	var rowCount = $("#dettagli tbody tr").length;
 	
-	if (rowCount == 0) {
+	if (rowCount == 1) {
 		$( "#dettagli thead tr" ).remove();		
 		$( "#dettagli" ).removeClass("datiCreateSottile");
 	}

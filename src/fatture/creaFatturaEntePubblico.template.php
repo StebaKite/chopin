@@ -42,7 +42,10 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 		require_once 'utility.class.php';
 	
 		// Template --------------------------------------------------------------
-	
+
+		$thead_dettagli = "<tr></tr>";
+		$tbody_dettagli = "<tr></tr>";
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
@@ -54,16 +57,14 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 			
 		if ($_SESSION['dettagliInseriti'] != "") {
 		
-			$class_dettagli = "datiCreateSottile";
-		
 			$thead_dettagli =
 			"<tr>" .
-			"<th width='50' align='center'>Quantit&agrave;</th>" .
-			"<th width='350' align='left'>Articolo</th>" .
-			"<th width='50' align='right'>Importo</th>" .
-			"<th width='50' align='right'>Totale</th>" .
-			"<th width='50' align='right'>Imponibile</th>" .
-			"<th width='50' align='right'>Iva</th>" .
+			"<th class='dt-center'>Quantit&agrave;</th>" .
+			"<th>Articolo</th>" .
+			"<th class='dt-right'>Importo</th>" .
+			"<th class='dt-right'>Totale</th>" .
+			"<th class='dt-right'>Imponibile</th>" .
+			"<th class='dt-right'>Iva</th>" .
 			"<th>&nbsp;</th>" .
 			"</tr>";	
 		
@@ -79,12 +80,12 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 		
 				$dettaglio =
 				"<tr id='" . trim($id) . "'>" .
-				"<td align='center'>" . $e[1] . "</td>" .
-				"<td align='left'>" . $e[2] . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[3], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[4], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[5], 2, ',', '.') . "</td>" .
-				"<td align='right'>&euro;" . number_format($e[6], 2, ',', '.') . "</td>" .
+				"<td class='dt-center'>" . $e[1] . "</td>" .
+				"<td>" . $e[2] . "</td>" .
+				"<td class='dt-right'>" . number_format($e[3], 2, ',', '.') . "</td>" .
+				"<td class='dt-right'>" . number_format($e[4], 2, ',', '.') . "</td>" .
+				"<td class='dt-right'>" . number_format($e[5], 2, ',', '.') . "</td>" .
+				"<td class='dt-right'>" . number_format($e[6], 2, ',', '.') . "</td>" .
 				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioFattura(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 		
@@ -112,7 +113,6 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract {
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
-				'%class_dettagli%' => $class_dettagli,
 				'%thead_dettagli%' => $thead_dettagli,
 				'%tbody_dettagli%' => $tbody_dettagli,
 				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],

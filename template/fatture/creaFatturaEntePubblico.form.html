@@ -40,19 +40,18 @@ function prelevaNumeroFattura(negozio) {
 
 function aggiungiDettaglio() {
 	
-	var rowCount = $('#dettagli tr').length;
+	var rowCount = $('#dettagli tbody tr').length;
 	
-	if (rowCount == 0) {
+	if (rowCount == 1) {
 		$( "#dettagli thead" ).append("<tr>" + 
-			"<th width='50' align='center'>Quantit&agrave;</th>" + 
-			"<th width='350' align='left'>Articolo</th>" + 
-			"<th width='50' align='right'>Importo</th>" +
-			"<th width='50' align='right'>Totale</th>" +
-			"<th width='50' align='right'>Imponibile</th>" +
-			"<th width='50' align='right'>Iva</th>" +
+			"<th class='dt-center'>Quantit&agrave;</th>" + 
+			"<th>Articolo</th>" + 
+			"<th class='dt-right'>Importo</th>" +
+			"<th class='dt-right'>Totale</th>" +
+			"<th class='dt-right'>Imponibile</th>" +
+			"<th class='dt-right'>Iva</th>" +
 			"<th>&nbsp;</th>" +
 			"</tr>");
-		$( "#dettagli" ).addClass("datiCreateSottile");
 	}
 
 	contatore = contatore + 1;
@@ -82,12 +81,12 @@ function aggiungiDettaglio() {
 	}
 	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
-        "<td align='center'>" + quantita + "</td>" +
-        "<td align='left'>" + articoloNormalizzato + "</td>" +
-        "<td align='right'>&euro;" + importoNormalizzato + "</td>" +
-        "<td align='right'>&euro;" + totale + "</td>" +
-        "<td align='right'>&euro;" + imponibile + "</td>" +
-        "<td align='right'>&euro;" + iva + "</td>" +
+        "<td class='dt-center'>" + quantita + "</td>" +
+        "<td>" + articoloNormalizzato + "</td>" +
+        "<td class='dt-right'>" + importoNormalizzato + "</td>" +
+        "<td class='dt-right'>" + totale + "</td>" +
+        "<td class='dt-right'>" + imponibile + "</td>" +
+        "<td class='dt-right'>" + iva + "</td>" +
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
@@ -158,6 +157,37 @@ function calcolaImponibile() {
 	$("#iva").val(ivaArrotondata);	
 }
 
+$(document).ready( function () {
+    $('#dettagli').dataTable( {
+    	"paging": false,
+    	"searching": false,
+    	"info": false,
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false},
+       	    {"targets": 1, "orderable": false},
+    	    {"targets": 2, "orderable": false},
+    	    {"targets": 3, "orderable": false},
+    	    {"targets": 4, "orderable": false},
+    	    {"targets": 5, "orderable": false},
+    	    {"targets": 6, "orderable": false}
+    		],
+       		"language": {
+                "lengthMenu": "Visualizza _MENU_ righe per pagina",
+                "zeroRecords": " ",
+                "info": "Paina _PAGE_ di _PAGES_",
+                "infoEmpty": " ",
+                "infoFiltered": "(righe filtrate da _MAX_ totali)",
+                "search": "Cerca:",
+                "paginate": {
+                    "first":      "Prima",
+                    "last":       "Ultima",
+                    "next":       "Prossima",
+                    "previous":   "Precedente"
+                }
+         }	    		
+    } );
+} );
+
 </script>
 
 <div id="body">
@@ -211,9 +241,10 @@ function calcolaImponibile() {
 							</div>
 						</td>					
 					</tr>				
+					<tr><td><h2>Dettagli</h2></td></tr>
 					<tr>
 						<td colspan="4">
-							<table id="dettagli" class="%class_dettagli%">
+							<table id="dettagli" class="display">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
