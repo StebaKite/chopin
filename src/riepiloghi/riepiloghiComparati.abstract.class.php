@@ -837,8 +837,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"		</tr>" .
 		"		<tr height='30'>" .
 		"			<td width='308' align='left' class='enlarge'>%ml.margineAssoluto%</td>" .
-		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
+		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
 		"			<td width='108' align='right' class='mark'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
 		"		</tr>" .
