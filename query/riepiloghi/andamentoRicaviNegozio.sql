@@ -1,11 +1,13 @@
 SELECT
 	t6.des_conto,
 	t6.mm_registrazione,
+	t6.ind_gruppo,
 	coalesce(sum(t6.tot_conto),0) as tot_conto
   FROM (
 		SELECT
 			t5.mm_registrazione,
 			t5.des_conto,
+			t5.ind_gruppo,
 			COALESCE(sum(t5.tot_conto * t5.ind_dareavere),0) as tot_conto
 		  FROM (
 		  		SELECT 
@@ -14,7 +16,8 @@ SELECT
 						CASE 
 							WHEN t2.ind_dareavere = 'D' then  1
 							WHEN t2.ind_dareavere = 'A' then -1
-						END AS ind_dareavere,	
+						END AS ind_dareavere,
+						t1.ind_gruppo,
 						SUM(t2.imp_registrazione) as tot_conto		  
 		 		FROM contabilita.sottoconto as t1
 					INNER JOIN contabilita.conto as t3
@@ -29,9 +32,9 @@ SELECT
 			  AND   t4.cod_negozio IN (%codnegozio%)
 			  AND   t3.ind_presenza_in_bilancio = 'S'
 			  AND   t3.tip_conto = 'Avere' 
-			GROUP BY mm_registrazione, t3.des_conto, t2.ind_dareavere
+			GROUP BY mm_registrazione, t3.des_conto, t2.ind_dareavere, t1.ind_gruppo
 		) AS t5	
-	GROUP BY t5.mm_registrazione, t5.des_conto
+	GROUP BY t5.mm_registrazione, t5.des_conto, t5.ind_gruppo
 	) t6 
-GROUP BY t6.mm_registrazione, t6.des_conto	
+GROUP BY t6.mm_registrazione, t6.des_conto, t6.ind_gruppo
 ORDER BY t6.des_conto, t6.mm_registrazione

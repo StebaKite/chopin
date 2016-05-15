@@ -1141,12 +1141,12 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						$totaliMesi[$row['mm_registrazione']] = $totconto;
 					}		
 					$desconto_break = trim($row['des_conto']);
-					$totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] == "CV")) $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-					$totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] == "CV")) $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
 				}				
 			}
 			
@@ -1263,12 +1263,12 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 					}
 					$desconto_break = trim($row['des_conto']);
-					$totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] == "RC")) $totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
 				}
 				else {
 					$totaliMesi[$row['mm_registrazione']] = $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
-					$totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] == "RC")) $totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
 				}
 			}
 			
