@@ -805,7 +805,18 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$costoVariabile = $_SESSION['costoVariabile'];
 			$ricavoVendita  = $_SESSION['ricavoVenditaProdotti'];
 			$costoFisso     = $_SESSION['costoFisso'];
-				
+
+			$costiBilancio  = $_SESSION["costiBilancio"];
+			$ricaviBilancio = $_SESSION["ricaviBilancio"];			
+			
+			foreach(pg_fetch_all($costiBilancio) as $row) {
+				$totaleCostiBilancio += trim($row['tot_conto']);
+			}
+
+			foreach(pg_fetch_all($ricaviBilancio) as $row) {
+				$totaleRicaviBilancio += trim($row['tot_conto']);
+			}
+			
 			foreach(pg_fetch_all($costoVariabile) as $row) {
 				$totaleCostiVariabili = trim($row['totalecostovariabile']);
 			}
@@ -924,7 +935,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
 			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
 				
-			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti))) . "</a></li>";
+			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicaviBilancio), abs($totaleCostiBilancio))) . "</a></li>";
 			$tabs .= "<li><a href='#tabs-6'>MCT</a></li>";
 			$tabs .= "<li><a href='#tabs-7'>BEP</a></li>";
 			$tabs .= "<li><a href='#tabs-8'>Nota importante</a></li>";
@@ -935,7 +946,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 				
-			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($totaleRicavi), abs($totaleCosti)), abs($totaleRicavi), abs($totaleCosti)) . "</div>";
+			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($totaleRicaviBilancio), abs($totaleCostiBilancio)), abs($totaleRicaviBilancio), abs($totaleCostiBilancio)) . "</div>";
 			$tabs .= "<div id='tabs-6'>" . $notaMdc . $margineContribuzione . "</div>";
 			$tabs .= "<div id='tabs-7'>" . $notaBep . $tabellaBep . "</div>";
 			$tabs .= "<div id='tabs-8'>" . $nota . "</div>";
