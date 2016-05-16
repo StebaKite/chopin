@@ -48,7 +48,7 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 
 		$andamentoCostiTable = $this->makeAndamentoCostiTable();
 		$andamentoRicaviTable = $this->makeAndamentoRicaviTable();
-		$andamentoUtilePerditaTable = $this->makeUtilePerditaTable($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
+		$andamentoUtilePerditaTable = $this->makeUtilePerditaTable($_SESSION["totaliComplessiviAcquistiMesi"], $_SESSION["totaliComplessiviRicaviMesi"]);
 		$andamentoMctTable = $this->makeTableMargineContribuzione($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		
 		/** ******************************************

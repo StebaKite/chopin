@@ -1186,6 +1186,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		 */
 		
 		$_SESSION["totaliAcquistiMesi"] = $totaliAcquistiMesi;
+		$_SESSION["totaliComplessiviAcquistiMesi"] = $totaliComplessiviMesi;
 		
 		return $risultato_andamento;
 	}	
@@ -1306,6 +1307,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		 */
 		
 		$_SESSION["totaliRicaviMesi"] = $totaliRicaviMesi;
+		$_SESSION["totaliComplessiviRicaviMesi"] = $totaliComplessiviMesi;
 		
 		return $risultato_andamento;
 	}

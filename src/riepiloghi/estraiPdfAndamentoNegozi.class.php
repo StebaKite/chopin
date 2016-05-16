@@ -64,7 +64,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		
 		$pdf = $this->generaSezioneIntestazione($pdf);
 		$pdf = $this->generaSezioneTabellaProgressivi($pdf, $utility, $db, $_SESSION["elencoVociAndamentoNegozio"]);
-		$pdf = $this->generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
+		$pdf = $this->generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $_SESSION["totaliComplessiviAcquistiMesi"], $_SESSION["totaliComplessiviRicaviMesi"]);
 		$pdf = $this->generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		
 		$pdf->Output();
