@@ -53,6 +53,7 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 			"<table id='mastrino' class='display' width='100%'>" .
 			"	<thead>" .
 			"		<tr>" .
+			"			<th></th>" .
 			"			<th class='dt-left'>%ml.datReg%</th>" .
 			"			<th class='dt-left'>%ml.descreg%</th>" .
 			"			<th class='dt-right'>%ml.dare%</th>" .
@@ -98,6 +99,7 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
+				"	<td>" . $row['dat_registrazione'] . "</td>" .
 				"	<td>" . date("d/m/Y",strtotime($row['dat_registrazione'])) . "</td>" .
 				"	<td>" . trim($row['des_registrazione']) . "</td>" .
 				"	<td class='dt-right'>" . $impDare . "</td>" .
