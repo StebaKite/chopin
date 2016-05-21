@@ -3,6 +3,7 @@ select t1.*
 	select
 		'R' as tipo,
 		reg.id_registrazione,
+		reg.dat_registrazione as dat_registrazione_yyyymmdd,
 		to_char(reg.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
 		reg.des_registrazione,
 		reg.cod_causale,
@@ -24,6 +25,7 @@ select t1.*
 	select
 		'D' as tipo,
 		detreg.id_registrazione,
+		reg.dat_registrazione as dat_registrazione_yyyymmdd,
 		to_char(reg.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
 		null as des_registrazione,
 		null as cod_causale,
