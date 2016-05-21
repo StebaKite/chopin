@@ -405,7 +405,7 @@ $( "#cancella-cliente-form" ).dialog({
 $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 360,
+	width: 370,
 	buttons: [
 		{
 			text: "Ok",
