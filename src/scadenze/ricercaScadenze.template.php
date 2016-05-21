@@ -113,7 +113,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					$desfornitore = trim($row['des_fornitore']);
 					$datscadenza  = trim($row['dat_scadenza']);
 					$desfornitore2 = trim($row['des_fornitore']);
-					$datscadenza2  = trim($row['dat_scadenza']);
+					$datscadenza2  = trim($row['dat_scadenza_yyyymmdd']);
 				}
 
 				if (trim($row['sta_registrazione']) == "00") {
@@ -179,7 +179,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					$desfornitore = trim($row['des_fornitore']);
 					$datscadenza  = trim($row['dat_scadenza']);
 					$desfornitore2 = trim($row['des_fornitore']);
-					$datscadenza2  = trim($row['dat_scadenza']);
+					$datscadenza2  = trim($row['dat_scadenza_yyyymmdd']);
 					
 					$idfornitore_break = trim($row['id_fornitore']);
 					$datscadenza_break = trim($row['dat_scadenza']);

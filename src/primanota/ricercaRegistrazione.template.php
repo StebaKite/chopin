@@ -82,9 +82,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 			"<table id='registrazioni' class='display' width='100%'>" .
 			"	<thead>" .
 			"		<tr>" .
-			"			<th>%ml.idReg%</th>" .
-			"			<th>%ml.datReg%</th>" .
-			"			<th>&nbsp;</th>" .
+			"			<th></th>" .
+			"			<th></th>" .
+			"			<th></th>" .
 			"			<th>%ml.datReg%</th>" .
 			"			<th class='dt-left'>%ml.numfatt%</th>" .
 			"			<th class='dt-left'>%ml.desReg%</th>" .
@@ -128,7 +128,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr " . $class . ">" .
 					"	<td>" . trim($row['id_registrazione']) . "</td>" .
-					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
+					"	<td>" . trim($row['dat_registrazione_yyyymmdd']) . "</td>" .
 					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .					
 					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
 					"	<td class='td-left'>" . trim($row['num_fattura']) . "</td>" .
@@ -145,7 +145,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 					$risultato_ricerca = $risultato_ricerca .
 					"<tr>" .
 					"	<td>" . trim($row['id_registrazione']) . "</td>" .
-					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
+					"	<td>" . trim($row['dat_registrazione_yyyymmdd']) . "</td>" .
 					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .
 					"	<td class='dt-right'>" . trim($row['ind_dareavere']) . "</td>" .						
 					"	<td class='dt-right'>" . trim($row['imp_registrazione']) .  "</td>" .
