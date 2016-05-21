@@ -4,6 +4,7 @@ SELECT
 	registrazione.id_fornitore,
 	registrazione.sta_registrazione,	
 	fornitore.des_fornitore,
+	scadenza.dat_scadenza as dat_scadenza_yyyymmdd,
 	to_char(scadenza.dat_scadenza, 'DD/MM/YYYY') as dat_scadenza,
 	scadenza.dat_scadenza as dat_scadenza_originale,
 	scadenza.imp_in_scadenza,

@@ -111,7 +111,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$descliente = trim($row['des_cliente']);
 					$datregistrazione  = trim($row['dat_registrazione']);
 					$descliente2 = trim($row['des_cliente']);
-					$datregistrazione2  = trim($row['dat_registrazione']);
+					$datregistrazione2  = trim($row['dat_registrazione_yyyymmdd']);
 				}
 				
 				if (trim($row['sta_registrazione']) == "00") {
@@ -171,7 +171,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$descliente = trim($row['des_cliente']);
 					$datregistrazione  = trim($row['dat_registrazione']);
 					$descliente2 = trim($row['des_cliente']);
-					$datregistrazione2  = trim($row['dat_registrazione']);
+					$datregistrazione2  = trim($row['dat_registrazione_yyyymmdd']);
 						
 					$idcliente_break = trim($row['id_cliente']);
 					$datregistrazione_break = trim($row['dat_registrazione']);
