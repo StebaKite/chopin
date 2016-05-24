@@ -320,22 +320,23 @@ class CreaRegistrazione extends primanotaAbstract {
 	}
 	
 	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
-
-		if ($datascad == "null") {			// per i clienti la data scadenza non c'è
 				
-			$tipAddebito_cliente = "";
-			$staScadenza = "00"; 	// aperta
-				
-			$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
-			foreach(pg_fetch_all($result_cliente) as $row) {
-				$tipAddebito_cliente = $row['tip_addebito'];
-			}
-				
-			if ($this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
-				return true;
-			}
-			else return false;
+		$tipAddebito_cliente = "";
+		$staScadenza = "00"; 	// aperta
+			
+		$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
+		foreach(pg_fetch_all($result_cliente) as $row) {
+			$tipAddebito_cliente = $row['tip_addebito'];
 		}
+
+		if ($datascad == "null") {
+			$datascad = $datareg;
+		}
+		
+		if ($this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
+			return true;
+		}
+		else return false;
 	}
 	
 	public function preparaPagina($creaRegistrazioneTemplate) {
