@@ -192,7 +192,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				"	<td " . $tdclass . ">" . $stascadenza . "</td>" .
 				"	<td class='dt-right'>" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
-				"	<td id='icons'>" . $bottoneModificaPagamento . "</td>" .
+				"	<td id='icons'>" . $bottoneModificaIncasso . "</td>" .
 				"</tr>";
 				
 				$descliente = "";
