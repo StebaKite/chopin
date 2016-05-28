@@ -137,7 +137,7 @@ class CreaIncasso extends primanotaAbstract {
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
-		$stareg = "00";
+		$stareg = "10";
 		$cliente = ($_SESSION["idcliente"] != "") ? $_SESSION["idcliente"] : "null" ;
 			
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $codneg, $stareg)) {
