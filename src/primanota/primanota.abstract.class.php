@@ -14,7 +14,9 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
 	public static $queryUpdateScadenza = "/primanota/updateScadenza.sql";
+	public static $queryUpdateScadenzaCliente = "/primanota/updateScadenzaCliente.sql";
 	public static $queryDissociaPagamento = "/primanota/dissociaPagamento.sql";
+	public static $queryDissociaIncasso = "/primanota/dissociaIncasso.sql";
 	
 	public static $queryDeleteScadenzaRegistrazione = "/primanota/deleteScadenzaRegistrazione.sql";
 	public static $queryCreaScadenzaCliente = "/primanota/creaScadenzaCliente.sql";
@@ -48,6 +50,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryTrovaCorrispettivo = "/primanota/trovaCorrispettivo.sql";
 	
 	public static $queryTrovaScadenzaFornitore = "/primanota/trovaScadenzaFornitore.sql";
+	public static $queryTrovaScadenzaCliente = "/primanota/trovaScadenzaCliente.sql";
 	
 	function __construct() {
 	}
@@ -232,6 +235,60 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	}
 
 	/**
+	 * Il metodo aggiorna i dati di una scadenza per un cliente
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idScadenza
+	 * @param unknown $idRegistrazione
+	 * @param unknown $datascad
+	 * @param unknown $importo
+	 * @param unknown $descreg
+	 * @param unknown $tipaddebito
+	 * @param unknown $codneg
+	 * @param unknown $cliente
+	 * @param unknown $numfatt
+	 * @param unknown $staScadenza
+	 * @return unknown
+	 */
+	public function aggiornaScadenzaCliente($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo,
+			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
+	
+		$array = $utility->getConfig();
+
+		$scadenza_esistente = $this->trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $cliente, $numfatt);
+
+		/**
+		 * Se la scadenza esiste la aggiorno altrimenti la inserisco.
+		 * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
+		 */
+
+		if ($scadenza_esistente) {
+			$replace = array(
+					'%id_scadenza%' => trim($idScadenza),
+					'%id_registrazione%' => trim($idRegistrazione),
+					'%dat_scadenza%' => trim($datascad),
+					'%imp_in_scadenza%' => trim($importo),
+					'%nota_in_scadenza%' => trim($descreg),
+					'%tip_addebito%' => trim($tipaddebito),
+					'%cod_negozio%' => trim($codneg),
+					'%id_cliente%' => $cliente,
+					'%num_fattura%' => trim($numfatt),
+					'%sta_scadenza%' => trim($staScadenza)
+			);
+			$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenzaCliente;
+			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+			$result = $db->execSql($sql);
+			return $result;
+		}
+		else {
+			$this->inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $importo,
+					$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza);
+		}
+		return $scadenza_esistente;
+	}
+	
+	/**
 	 * Questo metodo dissocia un pagamento dalla registrazione originale sullo scadenziario fornitori
 	 * @param unknown $db
 	 * @param unknown $utility
@@ -249,8 +306,25 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	/**
+	 * Questo metodo dissocia un incasso dalla registrazione originale sullo scadenziario clienti
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idScadenza
+	 * @return unknown
+	 */
+	public function dissociaIncassoScadenza($db, $utility, $idScadenza) {
 	
-	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_scadenza%' => trim($idScadenza),
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDissociaIncasso;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 	
 	/**
 	 * Il metodo cancella una scadenza di una registrazione
@@ -457,6 +531,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		return $result;
 	}
 
 	/**
@@ -634,6 +709,32 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%num_fattura%' => trim($numfatt)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idRegistrazione
+	 * @param unknown $datascad
+	 * @param unknown $codneg
+	 * @param unknown $idfornitore
+	 * @param unknown $numfatt
+	 */
+	public function trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $idcliente, $numfatt) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($idcliente),
+				'%id_registrazione%' => trim($idRegistrazione),
+				'%dat_scadenza%' => trim($datascad),
+				'%cod_negozio%' => trim($codneg),
+				'%num_fattura%' => trim($numfatt)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
