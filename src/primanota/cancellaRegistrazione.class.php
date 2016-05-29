@@ -46,12 +46,14 @@ class CancellaRegistrazione extends primanotaAbstract {
 
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
-
+		
 		/**
 		 * Prelevo la data della registrazione da cancellare per ricalcolare i saldi
 		 */
 		
 		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+
+		$db->beginTransaction();
 		
 		if ($result) {
 		
@@ -63,11 +65,11 @@ class CancellaRegistrazione extends primanotaAbstract {
 		
 		$this->cancellaRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
 
+		$db->commitTransaction();
+		
 		/**
 		 * Rigenero i saldi
 		 */
-
-		$db->beginTransaction();
 		
 		$array = $utility->getConfig();
 			

@@ -178,16 +178,16 @@ class CreaIncasso extends primanotaAbstract {
 			 * registrazione della fattura originale, lo prendo dalla scadenza che ho appena chiuso
 			 */
 
-			$result_scadenza_cliente = $this->leggiScadenzaCliente($db, $utility, $cliente, $_SESSION['idRegistrazione']);
+// 			$result_scadenza_cliente = $this->leggiScadenzaCliente($db, $utility, $cliente, $_SESSION['idRegistrazione']);
 				
-			if ($result_scadenza_cliente) {
+// 			if ($result_scadenza_cliente) {
 
-				foreach(pg_fetch_all($result_scadenza_cliente) as $row) {
-					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
-				}
+// 				foreach(pg_fetch_all($result_scadenza_cliente) as $row) {
+// 					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
+// 				}
 				
-				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK				
-			}
+// 				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK				
+// 			}
 
 			/**
 			 * Rigenerazione dei saldi

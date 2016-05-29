@@ -137,7 +137,7 @@ class CreaPagamento extends primanotaAbstract {
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
-		$stareg = "10";
+		$stareg = "00";
 		$fornitore = ($_SESSION["idfornitore"] != "") ? $_SESSION["idfornitore"] : "null" ;
 			
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $codneg, $stareg)) {
@@ -178,15 +178,15 @@ class CreaPagamento extends primanotaAbstract {
 			 * registrazione della fattura originale, lo prendo dalla scadenza che ho appena chiuso
 			 */
 			
-			$result_scadenza_fornitore = $this->leggiScadenzaFornitore($db, $utility, $fornitore, $_SESSION['idRegistrazione']);
+// 			$result_scadenza_fornitore = $this->leggiScadenzaFornitore($db, $utility, $fornitore, $_SESSION['idRegistrazione']);
 			
-			if ($result_scadenza_fornitore) {
+// 			if ($result_scadenza_fornitore) {
 			
-				foreach(pg_fetch_all($result_scadenza_fornitore) as $row) {
-					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
-				}
-				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK
-			}
+// 				foreach(pg_fetch_all($result_scadenza_fornitore) as $row) {
+// 					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
+// 				}
+// 				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK
+// 			}
 			
 			/**
 			 * Rigenerazione dei saldi

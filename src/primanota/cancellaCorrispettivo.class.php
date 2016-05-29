@@ -47,8 +47,12 @@ class CancellaCorrispettivo extends primanotaAbstract {
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 
+		$db->beginTransaction();
+		
 		$this->cancellaRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
 
+		$db->commitTransaction();
+		
 		$_SESSION["messaggioCancellazione"] = "Corrispettivo numero " . $_SESSION['idRegistrazione'] . " cancellato";
 		$ricercaCorrispettivo = RicercaCorrispettivo::getInstance();
 		$ricercaCorrispettivo->go();

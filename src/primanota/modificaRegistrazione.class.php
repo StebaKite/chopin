@@ -99,9 +99,24 @@ class ModificaRegistrazione extends primanotaAbstract {
 			// Aggiornamento del DB ------------------------------
 				
 			if ($this->aggiornaRegistrazione($utility)) {
-				
-				$_SESSION["messaggioModifica"] = "Registrazione salvata con successo";
 
+				$_SESSION["messaggioModifica"] = "Registrazione salvata con successo";
+				
+				/**
+				 * Aggiungo al messaggio da emettere una nota per avvisare se è stato rimosso un pagamento
+				 * o un incasso associati alla scadenza.
+				 */
+				
+				if (isset($_SESSION["pagamentoCancellato"]) and $_SESSION["pagamentoCancellato"] != "") {				
+					$_SESSION["messaggioModifica"] .= "<br/>ATTENZIONE: " . $_SESSION["pagamentoCancellato"]; 
+					unset($_SESSION["pagamentoCancellato"]);
+				}
+
+				if (isset($_SESSION["incassoCancellato"]) and $_SESSION["incassoCancellato"] != "") {
+					$_SESSION["messaggioModifica"] .= "<br/>ATTENZIONE: " . $_SESSION["incassoCancellato"];
+					unset($_SESSION["incassoCancellato"]);
+				}
+				
 				$fileClass = $_SESSION['referer_function_name'];
 
 				if (strrpos($fileClass,"ScadenzeCliente") > 0) {	// scadenze clienti
@@ -150,6 +165,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				
 				$_SESSION["descreg"] = $row["des_registrazione"]; 
 				$_SESSION["datascad"] = $row["dat_scadenza"];
+				$_SESSION["datascad_old"] = $row["dat_scadenza"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
 				$_SESSION["datareg_old"] = $row["dat_registrazione"];
 				$_SESSION["numfatt"] = $row["num_fattura"];
@@ -212,25 +228,29 @@ class ModificaRegistrazione extends primanotaAbstract {
 			$importo_in_scadenza = $this->prelevaImportoInScadenza($db, $utility, $fornitore, $cliente);
 				
 			/**
-			 * Ricreo le scadenze fornitore o cliente
+			 * Se è stata cambiata la data scadenza devo ricreare la scadenza in scadenziario e slegare 
+			 * l'eventuale pagamento/incasso associato
 			 */
+			
+			if ($_SESSION["datascad"] != $_SESSION["datascad_old"]) {
+								
+				if ($fornitore != "null") {
 				
-			if ($fornitore != "null") {
-
-				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
-					$db->rollbackTransaction();
-					error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
-					return FALSE;
-				}				
-			}
-			else {
-		
-				if ($cliente != "null") {
-
-					if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
+					if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
 						$db->rollbackTransaction();
-						error_log("Errore inserimento scadenza cliente, eseguito Rollback");
+						error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
 						return FALSE;
+					}
+				}
+				else {
+				
+					if ($cliente != "null") {
+				
+						if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza)) {
+							$db->rollbackTransaction();
+							error_log("Errore inserimento scadenza cliente, eseguito Rollback");
+							return FALSE;
+						}
 					}
 				}
 			}
@@ -304,9 +324,38 @@ class ModificaRegistrazione extends primanotaAbstract {
 
 			/**
 			 * RATIO: se la fattura ha una sola data di scadenza, la scadenza viene cancellata e inserita nuovamente con i 
-			 * nuovi dati in stato '00' 
+			 * nuovi dati in stato '00'.
+			 * 
+			 * NOTA : --------------------------------------------------------------------------------------
+			 * Se la scadenza ha associato un pagamento allora devo dissociarlo dalla scadenza e rimuoverlo
+			 * Se la scadenza non ha associati pagamenti la cancello la scadenza e la ricreo 
+			 * ---------------------------------------------------------------------------------------------
 			 */
+
+			$_SESSION["pagamentoCancellato"] = "";
+			$scadenza = $this->scadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
 			
+			foreach(pg_fetch_all($scadenza) as $row) {
+				if ($row['id_pagamento'] != null) {
+					
+					error_log("Dissocio il pagamento: " . $row['id_pagamento'] . " dalla registrazione originale");
+					if ($this->dissociaPagamentoScadenza($db, $utility, $row['id_scadenza'])) {
+
+						error_log("Cancello il pagamento: " . $row['id_pagamento']);
+						if (!$this->cancellaRegistrazione($db, $utility, $row['id_pagamento'])) {
+							$db->rollbackTransaction();
+							error_log("Errore cancellazione pagamento, eseguito Rollback");
+							return FALSE;
+						}
+						$_SESSION["pagamentoCancellato"] = "Pagamento associato rimosso con successo";						
+					}					
+					$db->rollbackTransaction();
+					error_log("Errore dissociazione pagamento da registrazione originale, eseguito Rollback");
+					return FALSE;
+				}
+			}
+			
+			error_log("Cancello la scadenza associata alla registrazione: " . $_SESSION["idRegistrazione"]);
 			$this->cancellaScadenzaFornitore($db, $utility, $_SESSION["idRegistrazione"]);
 
 			if ($datascad != "null") {
@@ -323,11 +372,13 @@ class ModificaRegistrazione extends primanotaAbstract {
 						$tipAddebito_fornitore = $row['tip_addebito'];
 					}
 				
+					error_log("Ricreo la scadenza associata alla registrazione: " . $_SESSION["idRegistrazione"]);
 					if (!$this->inserisciScadenza($db, $utility, $_SESSION["idRegistrazione"], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
 						$db->rollbackTransaction();
 						error_log("Errore inserimento registrazione, eseguito Rollback");
 						return FALSE;
 					}
+					error_log("Scadenza associata alla registrazione: " . $_SESSION["idRegistrazione"] . " ricreata con successo");
 				}				
 			}
 			return TRUE;
@@ -335,6 +386,24 @@ class ModificaRegistrazione extends primanotaAbstract {
 	}
 
 	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza) {
+
+		/**
+		 * Prima di cancellare la scadenza del cliente devo cancellare l'incasso associato
+		 */		
+		
+		$_SESSION["incassoCancellato"] = "";
+		$scadenza = $this->scadenzaCliente($db, $utility, $_SESSION["idRegistrazione"]);
+		
+		foreach(pg_fetch_all($scadenza) as $row) {
+			if ($row['id_incasso'] != '') {
+				if (!$this->cancellaRegistrazione($db, $utility, $row['id_incasso'])) {
+					$db->rollbackTransaction();
+					error_log("Errore cancellazione incasso associato a scadenza, eseguito Rollback");
+					return FALSE;
+				}
+			}
+			$_SESSION["incassoCancellato"] = "Incasso associato rimosso";
+		}
 		
 		if ($this->cancellaScadenzaCliente($db, $utility, $_SESSION["idRegistrazione"])) {
 			

@@ -14,6 +14,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryCreaDettaglioRegistrazione = "/primanota/creaDettaglioRegistrazione.sql";
 	public static $queryCreaScadenza = "/primanota/creaScadenza.sql";
 	public static $queryUpdateScadenza = "/primanota/updateScadenza.sql";
+	public static $queryDissociaPagamento = "/primanota/dissociaPagamento.sql";
+	
 	public static $queryDeleteScadenzaRegistrazione = "/primanota/deleteScadenzaRegistrazione.sql";
 	public static $queryCreaScadenzaCliente = "/primanota/creaScadenzaCliente.sql";
 	
@@ -32,6 +34,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryLeggiScadenzeCliente = "/primanota/ricercaScadenzeCliente.sql";
 	public static $queryPrelevaScadenzaCliente = "/primanota/leggiScadenzaCliente.sql";
 	public static $queryPrelevaScadenzaFornitore = "/primanota/leggiScadenzaFornitore.sql";
+	public static $queryScadenzaFornitore = "/primanota/scadenzaFornitore.sql";
+	public static $queryScadenzaCliente = "/primanota/scadenzaCliente.sql";
 	public static $queryUpdateStatoScadenza = "/primanota/updateStatoScadenzaFornitore.sql";
 	public static $queryUpdateStatoScadenzaCliente = "/primanota/updateStatoScadenzaCliente.sql";
 	public static $queryLeggiFatturaFornitore = "/primanota/ricercaFatturaFornitore.sql";
@@ -224,12 +228,30 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$this->inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo,
 					$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza);				
 		}
-		
-		
-		
 		return $scadenza_esistente;		
 	}
 
+	/**
+	 * Questo metodo dissocia un pagamento dalla registrazione originale sullo scadenziario fornitori
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idScadenza
+	 * @return unknown
+	 */
+	public function dissociaPagamentoScadenza($db, $utility, $idScadenza) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_scadenza%' => trim($idScadenza),
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDissociaPagamento;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	
+	
 	/**
 	 * Il metodo cancella una scadenza di una registrazione
 	 *  
@@ -434,7 +456,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+		$result = $db->execSql($sql);
 	}
 
 	/**
@@ -551,6 +573,56 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		return $result;
 	}
 
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idfornitore
+	 * @param unknown $idpagamento
+	 * @return unknown
+	 */
+	public function scadenzaFornitore($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
+	public function scadenzaCliente($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idRegistrazione
+	 * @param unknown $datascad
+	 * @param unknown $codneg
+	 * @param unknown $idfornitore
+	 * @param unknown $numfatt
+	 * @return unknown
+	 */
 	public function trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $idfornitore, $numfatt) {
 
 		$array = $utility->getConfig();
