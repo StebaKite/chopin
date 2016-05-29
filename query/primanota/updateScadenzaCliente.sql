@@ -1,8 +1,8 @@
 UPDATE contabilita.scadenza_cliente
 SET 
 	id_registrazione=%id_registrazione%, 
-	dat_scadenza=%dat_scadenza%, 
-	imp_in_scadenza=%imp_in_scadenza%, 
+	dat_registrazione=%dat_registrazione%, 
+	imp_registrazione=%imp_registrazione%, 
 	nota='%nota_in_scadenza%', 
 	tip_addebito='%tip_addebito%', 
 	cod_negozio=%cod_negozio%, 

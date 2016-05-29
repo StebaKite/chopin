@@ -461,7 +461,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 				foreach(pg_fetch_all($result_cliente) as $row) {
 					$tipAddebito_cliente = $row['tip_addebito'];
 				}
-				if (!$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datareg, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), "00")) {
+				if (!$this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), "00")) {
 					$db->rollbackTransaction();
 					error_log("Errore inserimento registrazione, eseguito Rollback");
 					return FALSE;
@@ -482,6 +482,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 			if ($this->aggiornaScadenzaCliente($db, $utility, $idScadenza, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, $numfatt, $staScadenza)) {
 				return TRUE;
 			}
+			else return FALSE;
 		}
 		return TRUE;
 	}

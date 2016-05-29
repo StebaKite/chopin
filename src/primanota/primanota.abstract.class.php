@@ -267,8 +267,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			$replace = array(
 					'%id_scadenza%' => trim($idScadenza),
 					'%id_registrazione%' => trim($idRegistrazione),
-					'%dat_scadenza%' => trim($datascad),
-					'%imp_in_scadenza%' => trim($importo),
+					'%dat_registrazione%' => trim($datascad),
+					'%imp_registrazione%' => trim($importo),
 					'%nota_in_scadenza%' => trim($descreg),
 					'%tip_addebito%' => trim($tipaddebito),
 					'%cod_negozio%' => trim($codneg),
@@ -730,7 +730,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$replace = array(
 				'%id_cliente%' => trim($idcliente),
 				'%id_registrazione%' => trim($idRegistrazione),
-				'%dat_scadenza%' => trim($datascad),
+				'%dat_registrazione%' => trim($datascad),
 				'%cod_negozio%' => trim($codneg),
 				'%num_fattura%' => trim($numfatt)
 		);

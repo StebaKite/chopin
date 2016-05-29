@@ -233,7 +233,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"</tr>";
 			
 			$_SESSION['numScadenzeClienteTrovate'] = $numScadenze;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
+			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 		}
 		else {
 		
