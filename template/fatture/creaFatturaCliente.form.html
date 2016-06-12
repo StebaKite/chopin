@@ -20,22 +20,10 @@ function prelevaNumeroFattura(negozio) {
     xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1000&codneg=" + negozio, true);
     xmlhttp.send();		
     
-    // Inizializzazione della banca sulla base del negozio selezionato
-    
-    if (negozio == "VIL") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
-    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
-    }
-    
-    if (negozio == "BRE") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
-    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
-    }
-    
-    if (negozio == "TRE") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
-    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
-    }    
+    // Inizializzazione della banca. Uguale per tutti i negozi
+
+   	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
+   	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
 }
 
 function aggiungiDettaglio() {

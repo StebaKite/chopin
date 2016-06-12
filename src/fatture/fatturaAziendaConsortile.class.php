@@ -26,7 +26,11 @@ class FatturaAziendaConsortile extends Fattura {
 		$negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
 		$negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
 		$negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
-	
+
+		$prefisso = ($codneg == "VIL") ? ""  : $prefisso;
+		$prefisso = ($codneg == "TRE") ? "T" : $prefisso;
+		$prefisso = ($codneg == "BRE") ? "B" : $prefisso;
+		
 		$nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
 	
 		$r1  = 10;
@@ -38,7 +42,7 @@ class FatturaAziendaConsortile extends Fattura {
 		$this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2-$y1), 2.5, 'DF');
 		$this->SetXY( $r1 + 5, $y1 + 3 );
 		$this->SetFont( "Arial", "B", 10);
-		$this->Cell(10,4, "REG. SEZ. 1PA" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . "PA/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
+		$this->Cell(10,4, "REG. SEZ. 1PA" . str_repeat(" ",48) . $negozio . "     Fattura N. :  " . $nfat . $prefisso . "PA/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
 	}
 
 	public function aggiungiLineaLiberaAziendaConsortile($w, $linea) {
