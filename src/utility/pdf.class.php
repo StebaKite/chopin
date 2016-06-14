@@ -1259,21 +1259,21 @@ class Pdf extends FPDF {
 					$fill = !$fill;
 					$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', trim($row['des_conto'])),'LR',0,'L',$fill);								
 
-					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliMesi[$row['mm_registrazione']] += $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 				}
 				else {
 					$fill = !$fill;
 					$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', trim($row['des_conto'])),'LR',0,'L',$fill);								
 					
-					$totaliMesi[$row['mm_registrazione']] = $totconto;
+					$totaliMesi[$row['mm_registrazione']] += $totconto;
 					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
 				}
 				$desconto_break = trim($row['des_conto']);
 			}
 			else {
-				$totaliMesi[$row['mm_registrazione']] = $totconto;
-				$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;						
+				$totaliMesi[$row['mm_registrazione']] += $totconto;
+				$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
 			}
 		}
 		
