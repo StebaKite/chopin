@@ -51,8 +51,11 @@ function aggiungiDettaglio() {
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	var totale = $("#totale").val();
+	var totaleNormalizzato = totale.trim().replace(",", ".");
 	var imponibile = $("#imponibile").val();
+	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
 	var iva = $("#iva").val();
+	var ivaNormalizzato = iva.trim().replace(",", ".");
 	
 	var aliquota = $("input[name=aliquota]:checked").val();
 	
@@ -73,14 +76,14 @@ function aggiungiDettaglio() {
         "<td class='dt-center'>" + quantita + "</td>" +
         "<td>" + articoloNormalizzato + "</td>" +
         "<td class='dt-right'>" + importoNormalizzato + "</td>" +
-        "<td class='dt-right'>" + totale + "</td>" +
-        "<td class='dt-right'>" + imponibile + "</td>" +
-        "<td class='dt-right'>" + iva + "</td>" +
+        "<td class='dt-right'>" + totaleNormalizzato + "</td>" +
+        "<td class='dt-right'>" + imponibileNormalizzato + "</td>" +
+        "<td class='dt-right'>" + ivaNormalizzato + "</td>" +
         "<td class='dt-right'>" + aliq + "</td>" +
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva + "#" + aliq;
+	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato + "#" + aliq;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");

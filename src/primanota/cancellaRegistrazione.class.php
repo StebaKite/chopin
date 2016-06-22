@@ -65,7 +65,7 @@ class CancellaRegistrazione extends primanotaAbstract {
 		
 		$this->cancellaRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
 
-		$db->commitTransaction();
+//		$db->commitTransaction();
 		
 		/**
 		 * Rigenero i saldi

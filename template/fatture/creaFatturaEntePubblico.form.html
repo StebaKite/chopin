@@ -21,21 +21,9 @@ function prelevaNumeroFattura(negozio) {
     xmlhttp.send();		
     
     // Inizializzazione della banca sulla base del negozio selezionato
-    
-    if (negozio == "VIL") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
-    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
-    }
-    
-    if (negozio == "BRE") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Brembate");
-    	$( "#ibanbanca" ).val("IT 33 L 08899 52650 000000251624");
-    }
-    
-    if (negozio == "TRE") {
-    	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
-    	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
-    }    
+
+    $( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Villa d'Adda");
+	$( "#ibanbanca" ).val("IT 58 T 08899 53720 000000420186");
 }
 
 function aggiungiDettaglio() {
@@ -62,8 +50,11 @@ function aggiungiDettaglio() {
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
 	var totale = $("#totale").val();
+	var totaleNormalizzato = totale.trim().replace(",", ".");
 	var imponibile = $("#imponibile").val();
+	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
 	var iva = $("#iva").val();
+	var ivaNormalizzato = iva.trim().replace(",", ".");
 	
 	var aliquota = $("input[name=aliquota]:checked").val();
 	
@@ -84,13 +75,13 @@ function aggiungiDettaglio() {
         "<td class='dt-center'>" + quantita + "</td>" +
         "<td>" + articoloNormalizzato + "</td>" +
         "<td class='dt-right'>" + importoNormalizzato + "</td>" +
-        "<td class='dt-right'>" + totale + "</td>" +
-        "<td class='dt-right'>" + imponibile + "</td>" +
-        "<td class='dt-right'>" + iva + "</td>" +
+        "<td class='dt-right'>" + totaleNormalizzato + "</td>" +
+        "<td class='dt-right'>" + imponibileNormalizzato + "</td>" +
+        "<td class='dt-right'>" + ivaNormalizzato + "</td>" +
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totale + "#" + imponibile + "#" + iva + "#" + aliq;
+	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato + "#" + aliq;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");
@@ -156,6 +147,28 @@ function calcolaImponibile() {
 	var ivaArrotondata = iva.toFixed(2);
 	$("#iva").val(ivaArrotondata);	
 }
+
+function controllaTotale() {
+
+	var totale = $("#totale").val();
+	var totaleNormalizzato = totale.trim().replace(",", ".");
+
+	var imponibile = $("#imponibile").val();
+	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
+	var iva = $("#iva").val();
+	var ivaNormalizzato = iva.trim().replace(",", ".");
+	
+	var totaleCalcolato = parseFloat(parseFloat(imponibile) + parseFloat(iva)).toFixed(2);
+	
+	if (parseFloat(totaleNormalizzato) != totaleCalcolato) {
+		$("#msgErrTotale").html("Totale calcolato approssimato " + totaleCalcolato);
+	}
+	else {
+		$("#msgErrTotale").html("");
+	}
+}
+
+
 
 $(document).ready( function () {
     $('#dettagli').dataTable( {
@@ -295,15 +308,18 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.totale% :</td>
-					<td class="tooltip"><input type="text" id="totale" name="totale" size="10" maxlength="20"></td>				
+					<td class="tooltip">
+						<input type="text" id="totale" name="totale" size="10" maxlength="20">
+						<span style="color: red;" id="msgErrTotale"></span>
+					</td>									
 				</tr>													
 				<tr>
 					<td>%ml.imponibile% :</td>
-					<td class="tooltip"><input type="text" id="imponibile" name="imponibile" size="10" maxlength="20"></td>				
+					<td class="tooltip"><input type="text" id="imponibile" name="imponibile" size="10" maxlength="20" onchange="controllaTotale()"></td>				
 				</tr>				
 				<tr>
 					<td>%ml.iva% :</td>
-					<td class="tooltip"><input type="text" id="iva" name="iva" size="10" maxlength="20"></td>				
+					<td class="tooltip"><input type="text" id="iva" name="iva" size="10" maxlength="20" onchange="controllaTotale()"></td>				
 				</tr>				
 			</tbody>
 		</table> 	 
