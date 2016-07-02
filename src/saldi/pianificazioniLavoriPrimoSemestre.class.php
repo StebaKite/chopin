@@ -90,6 +90,8 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract  {
 		$fileEsecuzioneLavoro = "riportoSaldoPeriodico";
 		$classeEsecuzioneLavoro = "RiportoSaldoPeriodico";
 		$statoLavoro = "00";
+
+		$utility = Utility::getInstance();
 		
 		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-01-01', 'Riporto saldi ' .  SELF::$mese['01'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
 		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-02-01', 'Riporto saldi ' .  SELF::$mese['02'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
