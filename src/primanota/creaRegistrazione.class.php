@@ -154,8 +154,8 @@ class CreaRegistrazione extends primanotaAbstract {
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
 		$stareg = "00";
-		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
-		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;
+		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["fornitore"])) : "null" ;
+		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["cliente"])) : "null" ;
 		
 		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
 			
@@ -213,7 +213,7 @@ class CreaRegistrazione extends primanotaAbstract {
 				 *  parziale della data in scadenza
 				 */
 				$array = $utility->getConfig();				
-				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"];
+				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $importo_in_scadenza;
 			
 				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
 					$db->rollbackTransaction();

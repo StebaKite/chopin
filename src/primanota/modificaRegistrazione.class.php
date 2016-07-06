@@ -238,7 +238,14 @@ class ModificaRegistrazione extends primanotaAbstract {
 			} 
 								
 			if ($fornitore != "null") {
-			
+
+				/**
+				 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
+				 *  parziale della data in scadenza
+				 */
+				$array = $utility->getConfig();
+				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $importo_in_scadenza;
+				
 				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt, $staScadenza, $rimuoviOperazioneAssociata)) {
 					$db->rollbackTransaction();
 					error_log("Errore inserimento scadenza fornitore, eseguito Rollback");
