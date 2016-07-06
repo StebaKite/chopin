@@ -45,7 +45,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 		$db->beginTransaction();
 		
 		if ($_SESSION["causale"] != "1100") {
-			$id_fornitore = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["idfornitore"]);			
+			$id_fornitore = $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["idfornitore"]));			
 			$result = $this->cercaFatturaFornitore($db, $utility, $id_fornitore, $_SESSION["numfatt"], $_SESSION["datareg"]);
 			
 			if ($result){

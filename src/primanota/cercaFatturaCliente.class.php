@@ -44,7 +44,7 @@ class CercaFatturaCliente extends PrimanotaAbstract {
 		$utility = Utility::getInstance();
 		$db->beginTransaction();
 
-		$id_cliente = $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]);
+		$id_cliente = $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["idcliente"]));
 		$result = $this->cercaFatturaCliente($db, $utility, $id_cliente, $_SESSION["numfatt"], $_SESSION["datareg"]); 
 		
 		if ($result) {
