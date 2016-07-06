@@ -85,7 +85,7 @@ class FatturaEntePubblico extends Fattura {
 		$this->SetX( $r1+50 );
 		$this->Cell(20,6, "TOTALE","",0,"C");
 		$this->SetX( $r1+92 );
-		$this->Cell(40,6, "IVA Vs. carico ex art. 17-ter, DM 23.1.2015","",0,"C");
+		$this->Cell(40,6, "IVA Vs. carico ex art. 17-ter, DPR n.633/72","",0,"C");
 		$this->SetX( $r1+159 );
 		$this->Cell(20,6, "NETTO A PAGARE","",0,"C");
 	
