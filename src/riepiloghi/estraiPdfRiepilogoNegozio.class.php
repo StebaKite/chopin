@@ -113,7 +113,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	
 		$header = array("Costi", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
 		$pdf->SetFont('Arial','',9);
-		$pdf->riepilogoNegoziTable($header, $_SESSION["costiComparati"]);
+		$pdf->riepilogoNegoziTable($header, $_SESSION["costiComparati"], 1);
 	
 		return $pdf;
 	}
@@ -142,7 +142,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		
 		$header = array("Ricavi", "Brembate", "Trezzo", "Villa D'Adda", "Totale");
 		$pdf->SetFont('Arial','',9);		
-		$pdf->riepilogoNegoziTable($header, $_SESSION["ricaviComparati"]);
+		$pdf->riepilogoNegoziTable($header, $_SESSION["ricaviComparati"], -1);
 	
 		return $pdf;
 	}

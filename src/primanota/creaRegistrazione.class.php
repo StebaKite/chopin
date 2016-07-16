@@ -213,7 +213,7 @@ class CreaRegistrazione extends primanotaAbstract {
 				 *  parziale della data in scadenza
 				 */
 				$array = $utility->getConfig();				
-				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $_SESSION["totaleDare"];
+				$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $_SESSION["totaleDare"] * (-1) : $importo_in_scadenza;
 			
 				if (!$this->creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
 					$db->rollbackTransaction();

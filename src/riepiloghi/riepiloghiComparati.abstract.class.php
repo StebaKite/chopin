@@ -225,12 +225,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	
 				if ($desconto_break != "") {
 
-					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+					$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					
 					$risultato_costi .=
 					"<tr>" .
@@ -254,12 +254,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
 		}
 		
-		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		
 		$risultato_costi .=
 		"<tr>" .
@@ -274,12 +274,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		 * Totale complessivo di colonna
 		 */
 
-		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totBre = ($totale_Bre != 0) ? number_format($totale_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totTre = ($totale_Tre != 0) ? number_format($totale_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$totVil = ($totale_Vil != 0) ? number_format($totale_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
-		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+		$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
 		$risultato_costi .=
 		"<tr>" .
@@ -301,10 +301,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		 * Metto in sessione il totale costi di ciascun negozio 
 		 */
 		
-		$_SESSION['totaleCosti_Bre'] = abs($totale_Bre);
-		$_SESSION['totaleCosti_Tre'] = abs($totale_Tre);
-		$_SESSION['totaleCosti_Vil'] = abs($totale_Vil);
-		$_SESSION['totaleCosti'] = abs($totale);
+		$_SESSION['totaleCosti_Bre'] = $totale_Bre;
+		$_SESSION['totaleCosti_Tre'] = $totale_Tre;
+		$_SESSION['totaleCosti_Vil'] = $totale_Vil;
+		$_SESSION['totaleCosti'] = $totale;
 		
 		return $risultato_costi;
 	}

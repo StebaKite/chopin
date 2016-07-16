@@ -469,13 +469,13 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 				$numReg ++;
 		
-				$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+				$importo = number_format($totaleSottoconto * (-1), 2, ',', '.');
 		
 				if (trim($row['des_conto']) != $desconto_break ) {
 						
 					if ($desconto_break != "") {
 							
-						$totconto = number_format(abs($totaleConto), 2, ',', '.');
+						$totconto = number_format($totaleConto * (-1), 2, ',', '.');
 							
 						if ($ind_visibilita_sottoconti_break == 'S') {
 							$risultato_ricavi .=
@@ -522,7 +522,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				$totaleConto += $totaleSottoconto;
 			}
 				
-			$totconto = number_format(abs($totaleConto), 2, ',', '.');
+			$totconto = number_format($totaleConto * (-1), 2, ',', '.');
 		
 			if ($ind_visibilita_sottoconti_break == 'S') {
 				$risultato_ricavi .=

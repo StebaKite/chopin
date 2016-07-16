@@ -475,7 +475,7 @@ class Pdf extends FPDF {
 		$this->Cell(array_sum($w),0,'','T');
 	}
 	
-	public function BilancioTable($data) {
+	public function BilancioTable($data, $invSegno) {
 		
 		// Column widths
 		$w = array(150, 25);
@@ -491,13 +491,13 @@ class Pdf extends FPDF {
 			
 			$totaleSottoconto = trim($row['tot_conto']);
 				
-			$importo = number_format($totaleSottoconto, 2, ',', '.');
+			$importo = number_format(($totaleSottoconto * $invSegno), 2, ',', '.');
 			
 			if (trim($row['des_conto']) != $desconto_break ) {
 			
 				if ($desconto_break != "") {
 			
-					$totconto = number_format($totaleConto, 2, ',', '.');
+					$totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
 
 					$this->Ln();
 					$this->SetFont('','B',12);
@@ -535,7 +535,7 @@ class Pdf extends FPDF {
 		/**
 		 * Ultimo totale di fine ciclo
 		 */		
-		$totconto = number_format($totaleConto, 2, ',', '.');
+		$totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
 		
 		$this->Ln();
 		$this->SetFont('','B',12);
@@ -546,17 +546,15 @@ class Pdf extends FPDF {
 		
 			foreach($sottoconti as $sottoconto) {
 				
-				if ($sottoconto['importo'] > 0) {
-					$this->Ln();
-					$this->SetFont('','',11);
-					$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
-					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
-				}
+				$this->Ln();
+				$this->SetFont('','',11);
+				$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
+				$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
 			}
 		}
 	} 	
 
-	public function BilancioTableRicavi($data) {
+	public function BilancioTableRicavi($data, $invSegno) {
 	
 			// Column widths
 		$w = array(150, 25);
@@ -572,31 +570,27 @@ class Pdf extends FPDF {
 			
 			$totaleSottoconto = trim($row['tot_conto']);
 				
-			$importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+			$importo = number_format(($totaleSottoconto * $invSegno), 2, ',', '.');
 			
 			if (trim($row['des_conto']) != $desconto_break ) {
 			
 				if ($desconto_break != "") {
 			
-					$totconto = number_format(abs($totaleConto), 2, ',', '.');
+					$totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
 
-					if ($totconto > 0) {
-						$this->Ln();
-						$this->SetFont('','B',12);
-						$this->Cell($w[0],6, iconv('UTF-8', 'windows-1252', $desconto_break),'',0,'L');
-						$this->Cell($w[1],6,$totconto,'',0,'R');
-					}
+					$this->Ln();
+					$this->SetFont('','B',12);
+					$this->Cell($w[0],6, iconv('UTF-8', 'windows-1252', $desconto_break),'',0,'L');
+					$this->Cell($w[1],6,$totconto,'',0,'R');
 					
 					if ($ind_visibilita_sottoconti_break == 'S') {
 						
 						foreach($sottoconti as $sottoconto) {
 							
-							if ($sottoconto['importo'] > 0) {
-								$this->Ln();
-								$this->SetFont('','',11);
-								$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
-								$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');								
-							}
+							$this->Ln();
+							$this->SetFont('','',11);
+							$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
+							$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');								
 						}
 					}
 						
@@ -622,23 +616,19 @@ class Pdf extends FPDF {
 		 */		
 		$totconto = number_format(abs($totaleConto), 2, ',', '.');
 		
-		if ($totconto > 0) {
-			$this->Ln();
-			$this->SetFont('','B',12);
-			$this->Cell($w[0],6, iconv('UTF-8', 'windows-1252', $desconto_break),'',0,'L');
-			$this->Cell($w[1],6,$totconto,'',0,'R');
-		}
+		$this->Ln();
+		$this->SetFont('','B',12);
+		$this->Cell($w[0],6, iconv('UTF-8', 'windows-1252', $desconto_break),'',0,'L');
+		$this->Cell($w[1],6,$totconto,'',0,'R');
 		
 		if ($ind_visibilita_sottoconti_break == 'S') {
 		
 			foreach($sottoconti as $sottoconto) {
 				
-				if ($sottoconto['importo'] > 0) {
-					$this->Ln();
-					$this->SetFont('','',11);
-					$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
-					$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
-				}
+				$this->Ln();
+				$this->SetFont('','',11);
+				$this->Cell($w[0],6,str_repeat(' ',7) . iconv('UTF-8', 'windows-1252', $sottoconto['descrizione']),'',0,'L');
+				$this->Cell($w[1],6,$sottoconto['importo'] . str_repeat(' ',35),'',0,'R');
 			}
 		}
 	}
@@ -846,7 +836,7 @@ class Pdf extends FPDF {
 		$this->Ln();
 		$this->Cell($w[0],8,'','',0,'L');
 		$this->Cell($w[1],8,'Totale Ricavi','',0,'L');
-		$this->Cell($w[2],8,number_format(abs($totaleRicavi), 2, ',', '.'),'',0,'R');
+		$this->Cell($w[2],8,number_format($totaleRicavi, 2, ',', '.'),'',0,'R');
 	
 		$this->SetTextColor(0);
 	}
@@ -892,7 +882,7 @@ class Pdf extends FPDF {
 	 * @param unknown $header
 	 * @param unknown $data
 	 */
-	public function riepilogoNegoziTable($header, $data) {
+	public function riepilogoNegoziTable($header, $data, $invSegno) {
 
 		// Colors, line width and bold font
 		$this->SetFillColor(28,148,196);
@@ -940,12 +930,12 @@ class Pdf extends FPDF {
 		
 				if ($desconto_break != "") {
 		
-					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "---";
-					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "---";
-					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "---";
+					$totBre = ($totaleConto_Bre != 0) ? number_format(($totaleConto_Bre * $invSegno), 2, ',', '.') : "---";
+					$totTre = ($totaleConto_Tre != 0) ? number_format(($totaleConto_Tre * $invSegno), 2, ',', '.') : "---";
+					$totVil = ($totaleConto_Vil != 0) ? number_format(($totaleConto_Vil * $invSegno), 2, ',', '.') : "---";
 		
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "---";
+					$tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
 
 					$this->SetFont('','',10);
 					$fill = !$fill;
@@ -972,12 +962,12 @@ class Pdf extends FPDF {
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
 		}
 
-		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "---";
-		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "---";
-		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "---";
+		$totBre = ($totaleConto_Bre != 0) ? number_format(($totaleConto_Bre * $invSegno), 2, ',', '.') : "---";
+		$totTre = ($totaleConto_Tre != 0) ? number_format(($totaleConto_Tre * $invSegno), 2, ',', '.') : "---";
+		$totVil = ($totaleConto_Vil != 0) ? number_format(($totaleConto_Vil * $invSegno), 2, ',', '.') : "---";
 		
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "---";
+		$tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
 		
 		$this->SetFont('','',10);
 		$fill = !$fill;
@@ -994,12 +984,12 @@ class Pdf extends FPDF {
 		 * Totale complessivo di colonna
 		 */
 		
-		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "---";
-		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "---";
-		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "---";
+		$totBre = ($totale_Bre != 0) ? number_format(($totale_Bre * $invSegno), 2, ',', '.') : "---";
+		$totTre = ($totale_Tre != 0) ? number_format(($totale_Tre * $invSegno), 2, ',', '.') : "---";
+		$totVil = ($totale_Vil != 0) ? number_format(($totale_Vil * $invSegno), 2, ',', '.') : "---";
 		
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
-		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "---";
+		$tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
 
 		$this->SetFillColor(224,235,255);
 		$this->SetTextColor(0);
@@ -1203,7 +1193,7 @@ class Pdf extends FPDF {
 		$this->Cell(array_sum($w),0,'','T');
 	}	
 
-	public function progressiviNegozioTable($header, $vociNegozio) {
+	public function progressiviNegozioTable($header, $vociNegozio, $invSegno) {
 
 		// Colors, line width and bold font
 		$this->SetFillColor(28,148,196);
@@ -1225,8 +1215,9 @@ class Pdf extends FPDF {
 		$this->SetFont('','',10);
 
 		$desconto_break = "";
-		$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
-		$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+		$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);				// dodici mesi
+		$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);	// dodici mesi
+		$classe = array('','','','','','','','','','','','');		// dodici mesi
 		
 		foreach(pg_fetch_all($vociNegozio) as $row) {
 		
@@ -1244,13 +1235,20 @@ class Pdf extends FPDF {
 					for ($i = 1; $i < 13; $i++) {
 						
 						if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-						else $this->Cell($w[$i],8, number_format(abs($totaliMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
-						
+						else {
+							if (($totaliMesi[$i] * $invSegno) < 0) {
+								$this->SetFont('','B',10);
+								$this->SetTextColor(255,0,0);
+							}							
+							$this->Cell($w[$i],8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);
+							$this->SetTextColor(0);
+							$this->SetFont('','',10);
+						}						
 						$totale_conto = $totale_conto + $totaliMesi[$i];
 					}
 
 					$this->SetFont('','B',10);
-					$this->Cell($w[13],8, number_format(abs($totale_conto), 0, ',', '.'),'LR',0,'R',$fill);								
+					$this->Cell($w[13],8, number_format(($totale_conto * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);								
 					$this->SetFont('','',10);
 					$this->Ln();
 						
@@ -1286,13 +1284,21 @@ class Pdf extends FPDF {
 		for ($i = 1; $i < 13; $i++) {
 			
 			if ($totaliMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($totaliMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else {
+				if (($totaliMesi[$i] * $invSegno) < 0) {
+					$this->SetFont('','B',10);
+					$this->SetTextColor(255,0,0);
+				}				
+				$this->Cell($w[$i],8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);
+				$this->SetTextColor(0);
+				$this->SetFont('','',10);				
+			}
 			
 			$totale_conto = $totale_conto + $totaliMesi[$i];
 		}
 
 		$this->SetFont('','B',10);
-		$this->Cell($w[13],8, number_format(abs($totale_conto), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[13],8, number_format(($totale_conto * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
 		$fill = !$fill;
@@ -1305,11 +1311,11 @@ class Pdf extends FPDF {
 		for ($i = 1; $i < 13; $i++) {
 		
 			if ($totaliComplessiviMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
-			else $this->Cell($w[$i],8, number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.'),'LR',0,'R',$fill);
+			else $this->Cell($w[$i],8, number_format(($totaliComplessiviMesi[$i] * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);
 		
 			$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
 		}
-		$this->Cell($w[13],8, number_format(abs($totale_anno), 0, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[13],8, number_format(($totale_anno * $invSegno), 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$this->Cell(array_sum($w),0,'','T');
