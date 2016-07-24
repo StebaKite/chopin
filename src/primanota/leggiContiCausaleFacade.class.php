@@ -8,7 +8,8 @@ session_start();
 $leggiContiCausale = LeggiContiCausale::getInstance();
 
 if ($_GET["modo"] == "start") {
-	$_SESSION["causale"] = $_GET["causale"];
+	$_SESSION["causale"] = $_REQUEST["causale"];
+	$_SESSION["desconto"] = $_REQUEST["desconto"];
 	$leggiContiCausale->start();
 }
 

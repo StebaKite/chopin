@@ -69,6 +69,25 @@ function doSubmit() {
 	$("#mainform").submit();
 }
 
+//---------------------------------------------------------------------
+
+function cercaContiCausale(desconto) {
+
+	var causale = $("#causale").val();
+
+	if ((causale != "") && (desconto != "")) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        	$( "#conti" ).html(xmlhttp.responseText);
+              $( "#conti" ).selectmenu( "refresh" );	        	
+	        }
+	    } 
+	    xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale + "&desconto=" + desconto, true);
+	    xmlhttp.send();		
+	}	
+}
+
 $(document).ready( function () {
     $('#dettagli').dataTable( {
     	"paging": false,
@@ -116,7 +135,7 @@ $(document).ready( function () {
 					<tr>
 						<td>%ml.codcau% :</td>
 						<td class="tooltip">
-							<select class="selectmenuCausale" id="causale" name="causale" >
+							<select class="selectmenuCausaleIncassi" id="causale" name="causale" >
 								<option value=""></option>
 								%elenco_causali%
 							</select>
@@ -177,10 +196,12 @@ $(document).ready( function () {
 					<td class="tooltip"><input type="text" id="importo" name="importo" size="20" maxlength="20" ></td>
 				</tr>					
 				<tr>
+					<td>%ml.cercaConto% :</td>
+					<td><input type="text" id="conto" name="conto" width=200 onkeyup="cercaContiCausale(this.value)"></td>
+				</tr>	
+				<tr>
 					<td>%ml.conto% :</td>
-					<td>
-						<select class='selectmenuConto' id="conti">%elenco_conti%</select>
-					</td>
+					<td><select class='selectmenuConto' id="conti">%elenco_conti%</select></td>
 				</tr>	
 				<tr>
 					<td>

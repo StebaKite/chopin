@@ -270,4 +270,5 @@ utilePerdita = Differenza Ricavi-Costi
 numRegSel = Numero di registrazioni che contengono il conto da spostare
 contoDest = Conto sul quale verranno spostati i dettagli delle registrazioni
 contoOrig = Conto originale sul quale si trovano i dettagli delle registrazioni
+cercaConto = Cerca il conto
  
