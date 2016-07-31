@@ -45,8 +45,6 @@ class Utility {
 	
 		return self::$_instance;
 	}
-
-	
 	
 	public function tailFile($template, $replacement) {
 		return str_replace(array_keys($replacement), array_values($replacement), $template);
@@ -71,8 +69,7 @@ class Utility {
 		else {
 			error_log("Multilanguage file " . $fileLingua . " not found, template use");
 			return $template;
-		}
-		
+		}		
 	}
 
 	public function getTemplate($fileName) {
@@ -94,29 +91,33 @@ class Utility {
 	 * Prende in input il file della lingua e restituisce una array associativa
 	 */	
 	public function getMultilanguageFile($multiLanguageFile) {
-	
-		if (self::$languageReplace == "") {
 
-			$languageReplace = array();
+		try {
+			if (self::$languageReplace == "") {
 			
-			$lan = fopen($multiLanguageFile,"r");
-			$line = "";
-			
-			while(!feof($lan)){
-				$line = explode(" = ", fgets($lan));
-				if ($line[0] != "") {
-					if (substr($line[0],0,1) != ";") {
-						$key = "%ml." . $line[0] . "%";
-						$value = $line[1];
-						$languageReplace[$key] = $value;
+				$languageReplace = array();
+					
+				$lan = fopen($multiLanguageFile,"r");
+					
+				while(!feof($lan)){
+					$line = explode(" = ", fgets($lan));
+					if (trim($line[0]) != "") {
+						if (substr($line[0],0,1) != ";") {
+							$key = "%ml." . trim($line[0]) . "%";
+							$value = trim($line[1]);
+							$languageReplace[$key] = $value;
+						}
 					}
 				}
-				$line = "";
+				fclose($lan);
+				$this->setLanguageReplace($languageReplace);
 			}
-			fclose($lan);
-			$this->setLanguageReplace($languageReplace);
+			return $this->getLanguageReplace();	
 		}
-		return $this->getLanguageReplace();
+		catch (Throwable $e) {
+			error_log(">>>" + $e->getMessage() + "<<<");
+ 			throw $e;
+		};
 	}	
 	
 	public function getConfig() {
@@ -131,8 +132,10 @@ class Utility {
 				$this->setConfiguration(parse_ini_file($configFile));
 			}
 			else {
-				error_log("Config file " . $configFile . " not found!");
-				$this->setConfiguration(null);	
+				$e = "Config file " . $configFile . " not found!";
+				throw $e;
+// 				error_log("Config file " . $configFile . " not found!");
+// 				$this->setConfiguration(null);	
 			}
 		}
 		return $this->getConfiguration();
