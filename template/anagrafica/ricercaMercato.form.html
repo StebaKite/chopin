@@ -1,0 +1,81 @@
+<body>
+
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#mercati').dataTable( {
+    	"order": [[1, 'asc']],
+    	"columnDefs": [
+    	    {"targets": 0, "orderable": true },
+    	    {"targets": 1, "orderable": true },
+    	    {"targets": 2, "orderable": true },
+    	    {"targets": 3, "orderable": false },
+    	    {"targets": 4, "orderable": false },
+    	    {"targets": 5, "orderable": false },
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Pagina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>
+
+<div id="body">
+
+	<div id="main">
+		<h2>%titoloPagina%</h2>
+		<table>
+			<tfoot>
+				<tr>
+					<td class="tooltip">
+						<button id="nuovo-mercato" class="button" title="%ml.nuovomercato%" >%ml.nuovomercato%</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<br/><br/>		
+		<table id="mercati" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
+	</div>	
+</div>
+
+<div id="nuovo-mercato-form" title="Nuovo Mercato"> 
+	<form method="post" id="nuovoMercato" action="../anagrafica/creaMercatoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.codmercato% :</td>
+					<td class="tooltip"><input type="text" id="codmercato" name="codmercato" size="10" maxlength="10" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.desmercato% :</td>
+					<td class="tooltip"><input type="text" id="desmercato" name="desmercato" size="50" maxlength="100" ></td>
+				</tr>	
+				<tr>
+					<td>%ml.cittamercato% :</td>
+					<td class="tooltip"><input type="text" id="cittamercato" name="cittamercato" size="50" maxlength="100" ></td>
+				</tr>	
+			</tbody>
+		</table> 	
+	</form>
+</div>
+
+<div id="cancella-mercato-form" title="Cancella Mercato"> 
+	<form method="post" id="cancellaMercato" action="../anagrafica/cancellaMercatoFacade.class.php?modo=go" >
+		<p>Elimino il mercato ?</p>
+		<input type="hidden" id="idmercato" name="idmercato">
+		<input type="hidden" id="codmercatoselezionato" name="codmercatoselezionato">
+	</form>
+</div>

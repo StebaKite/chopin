@@ -61,6 +61,36 @@ $( "#msg" ).dialog({
 	]
 });
 
+
+$( "#nuovo-mercato" ).click(function( event ) {
+	$( "#nuovo-mercato-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuovo-mercato-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 600,
+	height: 250,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+                $("#nuovoMercato").submit();				
+
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
 	modal: true,
@@ -390,6 +420,28 @@ $( "#cancella-cliente-form" ).dialog({
 			click: function() {
 				$(this).dialog('close');
 				$("#cancellaCliente").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Cancella cliente
+$( "#cancella-mercato-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#cancellaMercato").submit();				
 			}
 		},
 		{
@@ -1240,6 +1292,13 @@ function cancellaCliente(idcliente, codcliente) {
 	$( "#idcliente" ).val(idcliente);
 	$( "#codclienteselezionato" ).val(codcliente);
 	$( "#cancella-cliente-form" ).dialog( "open" );
+}
+
+function cancellaMercato(idmercato, codmercato) {
+	
+	$( "#idmercato" ).val(idmercato);
+	$( "#codmercatoselezionato" ).val(codmercato);
+	$( "#cancella-mercato-form" ).dialog( "open" );
 }
 
 function generaMastrino(codconto, codsottoconto) {
