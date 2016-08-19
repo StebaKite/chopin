@@ -25,6 +25,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 
 	public static $queryCreaMercato = "/anagrafica/creaMercato.sql";
 	public static $queryDeleteMercato = "/anagrafica/deleteMercato.sql";
+	public static $queryUpdateMercato = "/anagrafica/updateMercato.sql";
 	
 	function __construct() {
 	}
@@ -374,6 +375,21 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteMercato;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);		
+	}
+	
+	public function updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_mercato%' => trim($idmercato),
+				'%cod_mercato%' => trim($codmercato),
+				'%des_mercato%' => trim($desmercato),
+				'%citta_mercato%' => trim($cittamercato)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateMercato;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;		
 	}
 }
 	

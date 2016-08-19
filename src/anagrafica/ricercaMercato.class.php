@@ -62,23 +62,23 @@ class RicercaMercato extends AnagraficaAbstract {
 			include($testata);
 			$ricercaMercatoTemplate->displayPagina();
 
-			/**
-			 * Gestione messaggio dalla creazione
-			 */
 			if (isset($_SESSION["messaggioCreazione"])) {
 				$_SESSION["messaggio"] = $_SESSION["messaggioCreazione"] . "<br>" . "Trovati " . $_SESSION['numMercatiTrovati'] . " mercati";
 				unset($_SESSION["messaggioCreazione"]);
 			}
 			else {
-				/**
-				 * Gestione del messaggio proveniente dalla cancellazione
-				 */
 				if (isset($_SESSION["messaggioCancellazione"])) {
 					$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovati " . $_SESSION['numMercatiTrovati'] . " mercati";
 					unset($_SESSION["messaggioCancellazione"]);
 				}
 				else {
-					$_SESSION["messaggio"] = "Trovati " . $_SESSION['numMercatiTrovati'] . " mercati";
+					if (isset($_SESSION["messaggioModifica"])) {
+						$_SESSION["messaggio"] = $_SESSION["messaggioModifica"] . "<br>" . "Trovati " . $_SESSION['numMercatiTrovati'] . " mercati";
+						unset($_SESSION["messaggioModifica"]);
+					}
+					else {
+						$_SESSION["messaggio"] = "Trovati " . $_SESSION['numMercatiTrovati'] . " mercati";
+					}
 				}
 			}
 			

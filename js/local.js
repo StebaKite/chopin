@@ -91,6 +91,30 @@ $( "#nuovo-mercato-form" ).dialog({
 });
 
 
+$( "#modifica-mercato-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 600,
+	height: 250,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$( this ).dialog( "close" );
+                $("#modificaMercato").submit();				
+
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
 	modal: true,
@@ -1299,6 +1323,18 @@ function cancellaMercato(idmercato, codmercato) {
 	$( "#idmercato" ).val(idmercato);
 	$( "#codmercatoselezionato" ).val(codmercato);
 	$( "#cancella-mercato-form" ).dialog( "open" );
+}
+
+function modificaMercato(parms) {
+	
+	var parm = parms.split("#");
+	
+	$( "#idmercato_mod" ).val(parm[0]);
+	$( "#codmercato_mod" ).val(parm[1]);
+	$( "#desmercato_mod" ).val(parm[2].replace("@","'"));
+	$( "#cittamercato_mod" ).val(parm[3].replace("@","'"));
+	$( "#modifica-mercato-form" ).dialog( "open" );
+	
 }
 
 function generaMastrino(codconto, codsottoconto) {

@@ -72,6 +72,30 @@ $(document).ready( function () {
 	</form>
 </div>
 
+<div id="modifica-mercato-form" title="Modifica Mercato"> 
+	<form method="post" id="modificaMercato" action="../anagrafica/modificaMercatoFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.codmercato% :</td>
+					<td class="tooltip"><input type="text" id="codmercato_mod" name="codmercato_mod" size="10" maxlength="10" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.desmercato% :</td>
+					<td class="tooltip"><input type="text" id="desmercato_mod" name="desmercato_mod" size="50" maxlength="100" ></td>
+				</tr>	
+				<tr>
+					<td>%ml.cittamercato% :</td>
+					<td class="tooltip"><input type="text" id="cittamercato_mod" name="cittamercato_mod" size="50" maxlength="100" ></td>
+				</tr>	
+			</tbody>
+			<tfoot>
+				<tr><td><input type="hidden" id="idmercato_mod" name="idmercato_mod" /></td></tr>
+			</tfoot>
+		</table> 	
+	</form>
+</div>
+
 <div id="cancella-mercato-form" title="Cancella Mercato"> 
 	<form method="post" id="cancellaMercato" action="../anagrafica/cancellaMercatoFacade.class.php?modo=go" >
 		<p>Elimino il mercato ?</p>

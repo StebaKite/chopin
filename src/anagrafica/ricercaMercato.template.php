@@ -68,11 +68,13 @@ class RicercaMercatoTemplate extends AnagraficaAbstract {
 			foreach(pg_fetch_all($mercatiTrovati) as $row) {
 	
 				if ($row['tot_registrazioni_mercato'] == 0) {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaMercatoFacade.class.php?modo=start&idmercato=" . trim($row['id_mercato']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$parms = trim($row['id_mercato']) . "#" . trim($row['cod_mercato']) . "#" . str_replace("'", "@", trim($row['des_mercato'])) . "#" . str_replace("'", "@", trim($row['citta_mercato']));
+					$bottoneModifica = "<a class='tooltip' onclick='modificaMercato(" . '"' . $parms . '"' . ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaMercato(" . trim($row['id_mercato']) . "," . trim($row['cod_mercato']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 				}
 				else {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaMercatoFacade.class.php?modo=start&idmercato=" . trim($row['id_mercato']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$parms = trim($row['id_mercato']) . "#" . trim($row['cod_mercato']) . "#" . str_replace("'", "@", trim($row['des_mercato'])) . "#" . str_replace("'", "@", trim($row['citta_mercato']));
+					$bottoneModifica = "<a class='tooltip' onclick='modificaMercato(" . '"' . $parms . '"' . ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 					$bottoneCancella = "&nbsp;";
 				}
 	
