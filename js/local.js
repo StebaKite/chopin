@@ -71,7 +71,7 @@ $( "#nuovo-mercato-form" ).dialog({
 	autoOpen: false,
 	modal: true,
 	width: 600,
-	height: 250,
+	height: 280,
 	buttons: [
 		{
 			text: "Ok",
@@ -95,7 +95,7 @@ $( "#modifica-mercato-form" ).dialog({
 	autoOpen: false,
 	modal: true,
 	width: 600,
-	height: 250,
+	height: 280,
 	buttons: [
 		{
 			text: "Ok",
@@ -888,6 +888,21 @@ $( ".scadenzeAperteFornitore" ).change(function() {
 	}
 });
 
+
+$('input[type=radio][name=codneg]').change(function() {
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#mercati" ).html(xmlhttp.responseText);
+            $( "#mercati" ).selectmenu( "refresh" );
+        }
+    }
+    xmlhttp.open("GET", "leggiMercatiNegozioFacade.class.php?modo=start&negozio=" + this.value, true);
+    xmlhttp.send();			
+});
+
+
 $( ".scadenzeAperteCliente" ).change(function() {
 
 	var descliente = $("#cliente").val();
@@ -948,6 +963,11 @@ $( ".selectmenuCliente" )
 	.addClass("overflow");
 
 $( ".selectmenuConto" )
+	.selectmenu({width: 200})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuMercato" )
 	.selectmenu({width: 200})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
@@ -1333,8 +1353,12 @@ function modificaMercato(parms) {
 	$( "#codmercato_mod" ).val(parm[1]);
 	$( "#desmercato_mod" ).val(parm[2].replace("@","'"));
 	$( "#cittamercato_mod" ).val(parm[3].replace("@","'"));
-	$( "#modifica-mercato-form" ).dialog( "open" );
+
+	if (parm[4] == "VIL") $( "#villamod" ).attr("checked", "checked").button("refresh");
+	if (parm[4] == "BRE") $( "#brembatemod" ).attr("checked", "checked").button("refresh");
+	if (parm[4] == "TRE") $( "#trezzomod" ).attr("checked", "checked").button("refresh");
 	
+	$( "#modifica-mercato-form" ).dialog( "open" );	
 }
 
 function generaMastrino(codconto, codsottoconto) {

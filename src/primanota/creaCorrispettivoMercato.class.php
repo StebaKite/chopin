@@ -132,16 +132,13 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 		*/
 
 		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
-		$datascad = "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$numfatt = "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
+		$idmercato = ($_SESSION["idmercato"] != "") ? $_SESSION["idmercato"] : "null" ;
 		$causale = $_SESSION["causale"];
 		$stareg = $_SESSION["stareg"];
-		$fornitore = "null" ;
-		$cliente = "null" ;
 
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, 'null', $causale, 'null', 'null', $codneg, $stareg, $idmercato)) {
 
 			$d = explode(",", $_SESSION['dettagliInseriti']);
 

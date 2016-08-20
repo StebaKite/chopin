@@ -10,6 +10,7 @@ if ($_GET["modo"] == "start") {
 
 	unset($_SESSION["descreg"]);
 	unset($_SESSION["codneg"]);
+	unset($_SESSION["idmercato"]);
 	unset($_SESSION["causale"]);
 	unset($_SESSION["dettagliInseriti"]);
 	unset($_SESSION["indexDettagliInseriti"]);
@@ -22,6 +23,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["descreg"] = $_REQUEST["descreg"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
+	$_SESSION["idmercato"] = $_REQUEST["mercati"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];

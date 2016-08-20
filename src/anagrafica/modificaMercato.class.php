@@ -64,8 +64,9 @@ class ModificaMercato extends AnagraficaAbstract {
 		$codmercato = $_SESSION["codmercato"];
 		$desmercato = str_replace("'","''",$_SESSION["desmercato"]);
 		$cittamercato = str_replace("'","''",$_SESSION["cittamercato"]);	
-	
-		if ($this->updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato)) {	
+		$codneg = $_SESSION["codneg"];
+		
+		if ($this->updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato, $codneg)) {	
 			return TRUE;
 		}
 		else {

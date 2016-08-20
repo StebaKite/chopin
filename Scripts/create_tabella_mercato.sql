@@ -8,6 +8,7 @@ CREATE TABLE contabilita.mercato
   cod_mercato character(10) DEFAULT NULL::bpchar,
   des_mercato character varying(200) DEFAULT NULL::character varying,
   citta_mercato character varying(100) DEFAULT NULL::character varying,
+  cod_negozio character(3) DEFAULT NULL::bpchar,
   CONSTRAINT "pk-mercato" PRIMARY KEY (id_mercato)
 )
 WITH (

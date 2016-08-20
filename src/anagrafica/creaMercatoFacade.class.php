@@ -12,6 +12,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["codmercato"] = $_REQUEST["codmercato"];
 	$_SESSION["desmercato"] = $_REQUEST["desmercato"];
 	$_SESSION["cittamercato"] = $_REQUEST["cittamercato"];
+	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	
 	$creaMercato->go();
 }

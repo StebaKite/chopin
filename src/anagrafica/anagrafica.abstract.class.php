@@ -346,13 +346,14 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @param unknown $desmercato
 	 * @param unknown $cittamercato
 	 */
-	public function inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato) {
+	public function inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato, $codneg) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_mercato%' => trim($codmercato),
 				'%des_mercato%' => trim($desmercato),
-				'%citta_mercato%' => trim($cittamercato)
+				'%citta_mercato%' => trim($cittamercato),
+				'%cod_negozio%' => trim($codneg)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaMercato;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -377,14 +378,15 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);		
 	}
 	
-	public function updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato) {
+	public function updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato, $codneg) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_mercato%' => trim($idmercato),
 				'%cod_mercato%' => trim($codmercato),
 				'%des_mercato%' => trim($desmercato),
-				'%citta_mercato%' => trim($cittamercato)
+				'%citta_mercato%' => trim($cittamercato),
+				'%cod_negozio%' => trim($codneg),
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateMercato;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

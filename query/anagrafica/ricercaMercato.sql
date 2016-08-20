@@ -3,6 +3,7 @@ SELECT
 	mercato.cod_mercato,
 	mercato.des_mercato,
 	mercato.citta_mercato,
+	mercato.cod_negozio,
 	coalesce(t1.totale, 0) as tot_registrazioni_mercato	
 FROM contabilita.mercato as mercato
 	LEFT OUTER JOIN

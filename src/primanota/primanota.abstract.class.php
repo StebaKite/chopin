@@ -96,7 +96,7 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $cliente
 	 * @return unknown
 	 */
-	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg) {
+	public function inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg, $idmercato) {
 		
 		$array = $utility->getConfig();	
 		$replace = array(
@@ -109,7 +109,8 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 				'%id_fornitore%' => $fornitore,
 				'%id_cliente%' => $cliente,
 				'%sta_registrazione%' => $stareg,				
-				'%cod_negozio%' => $codneg
+				'%cod_negozio%' => $codneg,
+				'%id_mercato%' => $idmercato
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

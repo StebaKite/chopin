@@ -54,6 +54,7 @@ class CreaMercato extends AnagraficaAbstract {
 			unset($_SESSION["codmercato"]);
 			unset($_SESSION["desmercato"]);
 			unset($_SESSION["cittamercato"]);
+			unset($_SESSION["codneg"]);
 		}
 			
 		$ricercaMercato = RicercaMercato::getInstance();
@@ -65,8 +66,9 @@ class CreaMercato extends AnagraficaAbstract {
 		$codmercato = $_SESSION["codmercato"];
 		$desmercato = str_replace("'","''",$_SESSION["desmercato"]);
 		$cittamercato = str_replace("'","''",$_SESSION["cittamercato"]);
-	
-		if ($this->inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato)) {
+		$codneg = $_SESSION["codneg"];
+		
+		if ($this->inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato, $codneg)) {
 			$_SESSION["messaggioCreazione"] = "Nuovo mercato creato con successo";
 			return TRUE;
 		}

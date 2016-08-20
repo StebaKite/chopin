@@ -6,7 +6,7 @@ class CreaCorrispettivoMercatoTemplate extends PrimanotaAbstract {
 
 	private static $_instance = null;
 
-	private static $pagina = "/primanota/creaCorrispettivoNegozio.form.html";
+	private static $pagina = "/primanota/creaCorrispettivoMercato.form.html";
 
 	//-----------------------------------------------------------------------------
 
