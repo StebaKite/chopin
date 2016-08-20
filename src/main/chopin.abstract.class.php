@@ -17,6 +17,7 @@ abstract class ChopinAbstract {
 	public static $elenco_fornitori;
 	public static $elenco_clienti;
 	public static $elenco_conti;
+	public static $elenco_mercati;
 	
 	public static $errorStyle = "border-color:#ff0000; border-width:1px;";
 
@@ -46,6 +47,9 @@ abstract class ChopinAbstract {
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
 
 	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
+
+	public static $queryRicercaMercati = "/configurazioni/leggiTuttiMercati.sql";
+	public static $queryRicercaMercatiNegozio = "/primanota/ricercaMercati.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -159,7 +163,8 @@ abstract class ChopinAbstract {
 	}
 	
 	/**
-	 * 
+	 * Questo metodo carica una categoria di causali
+	 *  
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @return string
@@ -279,10 +284,55 @@ abstract class ChopinAbstract {
 				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "'>" . $row[0].$row[1] . " - " . $row[2] ;
 			}
 		}
+		return self::$elenco_conti;	
+	}
+
+	/**
+	 * Questo metodo carica tutti i mercati
+	 * 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return string
+	 */
+	public function caricaMercati($utility, $db) {
+	
+		$array = $utility->getConfig();
+	
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaMercati;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+		$result = $db->getData($sql);
+
+		while ($row = pg_fetch_row($result)) {
+			if ($row[0] == $_SESSION["idmercato"]) {
+				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[2] . "</option>";
+			}
+			else {
+				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[2] . "</option>";
+			}		
+		}		
+		return self::$elenco_mercati;
+	}
+
+	public function caricaMercatiNegozio($utility, $db) {
+	
+		$array = $utility->getConfig();
+		self::$replace = array(
+				'%cod_negozio%' => trim($_SESSION["codneg"])
+		);
+		
+		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaMercatiNegozio;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+		$result = $db->getData($sql);
 		
 		while ($row = pg_fetch_row($result)) {
+			if ($row[0] == $_SESSION["idmercato"]) {
+				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[1] . "</option>";
+			}
+			else {
+				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[1] . "</option>";
+			}
 		}
-		return self::$elenco_conti;	
+		return self::$elenco_mercati;
 	}
 	
 	/**

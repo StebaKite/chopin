@@ -105,7 +105,12 @@ confermaTip = Conferma esecuzione lavoro
 creaNuovaRegistrazione = Nuova Registrazione
 ricercaRegistrazione = Ricerca Registrazione
 modificaRegistrazione = Modifica Registrazione
+modificaCorrispettivoMercato = Modifica Corrispettivo Mercato
+modificaCorrispettivoNegozio = Modifica Corrispettivo Negozio
+ 
 visualizzaRegistrazione = Visualizza Registrazione
+visualizzaCorrispettivoMercato = Visualizza Corrispettivo Mercato
+visualizzaCorrispettivoNegozio = Visualizza Corrispettivo Negozio
 creaNuovoCorrispettivoNegozio = Nuovo Corrispettivo Negozio
 creaNuovoCorrispettivoMercato = Nuovo Corrispettivo Mercato
 

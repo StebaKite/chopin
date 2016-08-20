@@ -1,3 +1,16 @@
+
+
+
+ATTENZIONE:
+- crea la tabella relazionata con la Registrazione
+- le funzionalità di gestione dei corrispettivi sono state specializzate (negozi e mercati)
+- la causale 2100 è riservata ai corrispettivi da mercato (cambia la descrizione)
+- devi crearne una nuova (2105) per i corrispettivi da negozio
+- il report che riepiloga l'andamento dei mercati lo facciamo dopo
+
+
+
+
 -- Table: contabilita.mercato
 
 -- DROP TABLE contabilita.mercato;
