@@ -157,7 +157,7 @@ class CreaRegistrazione extends primanotaAbstract {
 		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["fornitore"])) : "null" ;
 		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["cliente"])) : "null" ;
 		
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $codneg, $stareg, 'null')) {
 			
 			/**
 			 * Creo i dettagli della registrazione passati dalla pagina
