@@ -224,7 +224,9 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;		
 		$staScadenza = "00"; 
 		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg, $staScadenza)) {
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 
+				$descreg, $datascad, $datareg, $numfatt, $causale, 
+				$fornitore, $cliente, $stareg, $codneg, $staScadenza, 'null')) {
 
 			$importo_in_scadenza = $this->prelevaImportoInScadenza($db, $utility, $fornitore, $cliente);
 				

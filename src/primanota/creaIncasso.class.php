@@ -140,7 +140,7 @@ class CreaIncasso extends primanotaAbstract {
 		$stareg = "00";
 		$cliente = ($_SESSION["idcliente"] != "") ? $_SESSION["idcliente"] : "null" ;
 			
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $codneg, $stareg)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $codneg, $stareg, 'null')) {
 
 			$d = explode(",", $_SESSION['dettagliInseriti']);
 			
