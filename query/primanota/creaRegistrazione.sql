@@ -10,5 +10,6 @@ VALUES
 	%dat_registrazione%,
 	'%dat_inserimento%',
 	'%sta_registrazione%',
-	%cod_negozio%
+	%cod_negozio%,
+	%id_mercato%
 	) RETURNING id_registrazione
