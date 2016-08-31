@@ -105,19 +105,41 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 
 					switch ($row['sta_registrazione']) {
 						case ("00"): {
+
 							$class = "class='dt-ok'";
-							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+								
+							switch ($row['cod_causale']) {
+								case ($array['corrispettiviMercato']): {
+									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+									break;
+								}
+								case ($array['corrispettiviNegozio']): {
+									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+									break;
+								}
+								default: {
+									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+									break;
+								}
+							}
 							break;
 						}
 						case ("02"): {
 							$class = "class='dt-ko'";
+							$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
 							$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 							$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 							break;
 						}
 						default: {
 							$class = "class='dt-chiuso'";
+							$bottoneVisualizza = "&nbsp;";
 							$bottoneModifica = "&nbsp;";
 							$bottoneCancella = "&nbsp;";								
 							break;
@@ -134,7 +156,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 					"	<td class='td-left'>" . trim($row['num_fattura']) . "</td>" .
 					"	<td>" . trim($row['des_registrazione']) . "</td>" .
 					"	<td>" . trim($row['cod_causale']) . " - " . trim($row['des_causale']) . "</td>" .
-					"	<td id='icons'><a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a></td>" .
+					"	<td id='icons'>" . $bottoneVisualizza . "</td>" .
 					"	<td id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";						

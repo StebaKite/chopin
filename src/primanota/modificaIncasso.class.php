@@ -188,7 +188,7 @@ class ModificaIncasso extends primanotaAbstract {
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idIncasso"], $_SESSION["totaleDare"],
 			$descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $stareg,
-			$codneg, $staScadenza)) {
+			$codneg, $staScadenza, 'null')) {
 
 			/**
 			 * Se sono cambiati il codice cliente o i numeri fattura, cambio lo stato alle fatture incassate: da "10" a "00"

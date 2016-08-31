@@ -188,7 +188,7 @@ class ModificaPagamento extends primanotaAbstract {
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idPagamento"], $_SESSION["totaleDare"],
 			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
-			$codneg, $staScadenza)) {
+			$codneg, $staScadenza, 'null')) {
 
 			/**
 			 * Se sono cambiati il codice fornitore o i numeri fattura, cambio lo stato alle fatture pagate: da "10" a "00"

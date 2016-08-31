@@ -7,5 +7,6 @@ SET dat_scadenza=%dat_scadenza%,
 	num_fattura=%num_fattura%,
 	cod_negozio=%cod_negozio%,
 	dat_registrazione=%dat_registrazione%,
-	sta_registrazione='%sta_registrazione%'
+	sta_registrazione='%sta_registrazione%',
+	id_mercato=%id_mercato%
 WHERE id_registrazione=%id_registrazione%

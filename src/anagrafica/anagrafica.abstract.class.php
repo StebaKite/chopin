@@ -22,6 +22,10 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
 	public static $queryLeggiUltimoCodiceCliente = "/anagrafica/leggiUltimoCodiceCliente.sql";
 	public static $queryLeggiUltimoCodiceFornitore = "/anagrafica/leggiUltimoCodiceFornitore.sql";
+
+	public static $queryCreaMercato = "/anagrafica/creaMercato.sql";
+	public static $queryDeleteMercato = "/anagrafica/deleteMercato.sql";
+	public static $queryUpdateMercato = "/anagrafica/updateMercato.sql";
 	
 	function __construct() {
 	}
@@ -332,6 +336,63 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		return $result;
 		
 	}	
+
+	/**
+	 * Questo metodo crea un nuovo mercato
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codmercato
+	 * @param unknown $desmercato
+	 * @param unknown $cittamercato
+	 */
+	public function inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato, $codneg) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_mercato%' => trim($codmercato),
+				'%des_mercato%' => trim($desmercato),
+				'%citta_mercato%' => trim($cittamercato),
+				'%cod_negozio%' => trim($codneg)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaMercato;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
+	/**
+	 * Questo metodo cancella un mercato
+	 * 
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idmercato
+	 */
+	public function cancellaMercato($db, $utility, $idmercato) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_mercato%' => trim($idmercato)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteMercato;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);		
+	}
+	
+	public function updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato, $codneg) {
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_mercato%' => trim($idmercato),
+				'%cod_mercato%' => trim($codmercato),
+				'%des_mercato%' => trim($desmercato),
+				'%citta_mercato%' => trim($cittamercato),
+				'%cod_negozio%' => trim($codneg),
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateMercato;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;		
+	}
 }
 	
 ?>

@@ -11,7 +11,8 @@ SELECT
 	to_char(registrazione.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
 	registrazione.dat_inserimento,
 	registrazione.sta_registrazione,
-	registrazione.cod_negozio
+	registrazione.cod_negozio,
+	registrazione.id_mercato
 	
 FROM contabilita.registrazione
 

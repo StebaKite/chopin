@@ -140,7 +140,7 @@ class CreaPagamento extends primanotaAbstract {
 		$stareg = "00";
 		$fornitore = ($_SESSION["idfornitore"] != "") ? $_SESSION["idfornitore"] : "null" ;
 			
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $codneg, $stareg)) {
+		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $codneg, $stareg, 'null')) {
 
 			$d = explode(",", $_SESSION['dettagliInseriti']);
 			

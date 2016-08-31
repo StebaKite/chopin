@@ -69,6 +69,7 @@ set = Settembre
 ott = Ottobre
 nov = Novembre
 dic = Dicembre
+nuovomercato = Nuovo mercato
 ;
 ; Tips ---------------------------------
 ;
@@ -104,7 +105,12 @@ confermaTip = Conferma esecuzione lavoro
 creaNuovaRegistrazione = Nuova Registrazione
 ricercaRegistrazione = Ricerca Registrazione
 modificaRegistrazione = Modifica Registrazione
+modificaCorrispettivoMercato = Modifica Corrispettivo Mercato
+modificaCorrispettivoNegozio = Modifica Corrispettivo Negozio
+ 
 visualizzaRegistrazione = Visualizza Registrazione
+visualizzaCorrispettivoMercato = Visualizza Corrispettivo Mercato
+visualizzaCorrispettivoNegozio = Visualizza Corrispettivo Negozio
 creaNuovoCorrispettivoNegozio = Nuovo Corrispettivo Negozio
 creaNuovoCorrispettivoMercato = Nuovo Corrispettivo Mercato
 
@@ -152,6 +158,7 @@ cambioContoStep1 = Cambio conto : Passo 1 - Ricerca registrazioni
 cambioContoStep2 = Cambio conto : Passo 2 - Selezione conto di destinazione
 cambioContoStep3 = Cambio conto : Passo 3 - Conferma
 
+ricercaMercato = Ricerca Mercato
 ;
 ; Campi form ---------------------------
 ;
@@ -271,4 +278,8 @@ numRegSel = Numero di registrazioni che contengono il conto da spostare
 contoDest = Conto sul quale verranno spostati i dettagli delle registrazioni
 contoOrig = Conto originale sul quale si trovano i dettagli delle registrazioni
 cercaConto = Cerca il conto
- 
+
+codmercato = Codice mercato
+desmercato = Descrizione mercato
+cittamercato = Citt&agrave; mercato 
+mercato = Mercato
