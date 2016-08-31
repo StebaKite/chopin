@@ -10,6 +10,11 @@ ATTENZIONE:
 
 
 
+CREATE SEQUENCE contabilita.mercato_id_mercato_seq
+   INCREMENT 1
+   START 1;
+ALTER SEQUENCE contabilita.mercato_id_mercato_seq
+  OWNER TO postgres;
 
 -- Table: contabilita.mercato
 
@@ -32,7 +37,12 @@ ALTER TABLE contabilita.mercato
 COMMENT ON TABLE contabilita.mercato
   IS 'Anagrafica mercati';
 
--- Foreign Key   
+-- Add column on Registrazione 
+
+ALTER TABLE contabilita.registrazione
+   ADD COLUMN id_mercato integer;  
+  
+-- Foreign Key To Registrazione   
   
 ALTER TABLE contabilita.registrazione
   ADD CONSTRAINT mercato_registrazione_fk FOREIGN KEY (id_mercato) REFERENCES contabilita.mercato (id_mercato)
