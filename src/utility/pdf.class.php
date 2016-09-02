@@ -1375,11 +1375,30 @@ class Pdf extends FPDF {
 				
 			$totaliMctAssolutoMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
 			if ($totaliMctAssolutoMesi[$i] < 0) $classe_MctAss[$i] = "ko";
+
+			/**
+			 * Se il ricavo è zero non faccio la divisione
+			 */
+			if ($totaliRicaviMesi[$i] != 0) {
+				$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 ) / abs($totaliRicaviMesi[$i]);
+			}
+			else {
+				$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 );
+			}
 				
-			$totaliMctPercentualeMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100 ) / abs($totaliRicaviMesi[$i]);
 			if ($totaliMctPercentualeMesi[$i] < 0) $classe_MctPer[$i] = "ko";
+
+			/**
+			 * Se il totale acquisti è zero non faccio la divisione
+			 */
 				
-			$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100) / abs($totaliAcquistiMesi[$i]);
+			if ($totaliAcquistiMesi[$i] != 0) {
+				$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100) / abs($totaliAcquistiMesi[$i]);
+			}
+			else {
+				$totaliMctRicaricoMesi[$i] = ($totaliMctAssolutoMesi[$i] * 100);
+			}
+
 			if ($totaliMctRicaricoMesi[$i] < 0) $classe_MctRic[$i] = "ko";
 		}
 		
