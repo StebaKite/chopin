@@ -1,96 +1,27 @@
-<!doctype html>
-<html lang="us">
-<head>
-	<meta charset="utf-8">
-	<title>Chopin - Contabilit&agrave;</title>
-	<link href="../jquery/jquery-ui.css" rel="stylesheet">
-	<style type="text/css" media="screen">
-	
-		@import url("../css/main.css");
-		@import url("../css/jquery.css");
-		
-	</style>
-</head>
-<body>
-	<div id="body">
-	
-		<div id="menu-accordion">
-			<h3>Operazioni</h3>
-			<div>
-				<ul>
-					<li><a href="../src/primanota/ricercaRegistrazioneFacade.class.php?modo=start" target="corpo">Ricerca Registrazione</a></li>
-					<li><a href="../src/primanota/creaRegistrazioneFacade.class.php?modo=start" target="corpo">Nuova Registrazione</a></li>
-					<li><a href="../src/primanota/creaPagamentoFacade.class.php?modo=start" target="corpo">Nuovo Pagamento</a></li>
-					<li><a href="../src/primanota/creaIncassoFacade.class.php?modo=start" target="corpo">Nuovo Incasso</a></li>
-					<li><a href="../src/primanota/creaCorrispettivoNegozioFacade.class.php?modo=start" target="corpo">Nuovo Corrispettivo Negozio</a></li>
-					<li><a href="../src/primanota/creaCorrispettivoMercatoFacade.class.php?modo=start" target="corpo">Nuovo Corrispettivo Mercato</a></li>
-				</ul>
-			</div>
-			<h3>Anagrafiche</h3>
-			<div>
-				<ul>
-					<li><a href="../src/anagrafica/creaFornitoreFacade.class.php?modo=start" target="corpo">Nuovo Fornitore</a></li>
-					<li><a href="../src/anagrafica/ricercaFornitoreFacade.class.php?modo=start" target="corpo">Ricerca Fornitore</a></li>
-					<li><a href="../src/anagrafica/creaClienteFacade.class.php?modo=start" target="corpo">Nuovo Cliente</a></li>
-					<li><a href="../src/anagrafica/ricercaClienteFacade.class.php?modo=start" target="corpo">Ricerca Cliente</a></li>
-					<li><a href="../src/anagrafica/ricercaMercatoFacade.class.php?modo=start" target="corpo">Mercati</a></li>					
-				</ul>
-			</div>
-			<h3>Configurazioni di Base</h3>
-			<div>
-				<ul>
-					<li><a href="../src/configurazioni/creaContoFacade.class.php?modo=start" target="corpo">Nuovo Conto</a></li>
-					<li><a href="../src/configurazioni/ricercaContoFacade.class.php?modo=start" target="corpo">Ricerca Conto</a></li>
-					<li><a href="../src/configurazioni/creaCausaleFacade.class.php?modo=start" target="corpo">Nuova Causale</a></li>
-					<li><a href="../src/configurazioni/ricercaCausaleFacade.class.php?modo=start" target="corpo">Ricerca Causale</a></li>
-					<li><a href="../src/configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=start" target="corpo">Progressivi Fattura</a></li>
-				</ul>
-			</div>
-			<h3>Scadenze</h3>
-			<div>
-				<ul>
-					<li><a href="../src/scadenze/ricercaScadenzeFacade.class.php?modo=start" target="corpo">Ricerca Scadenze Fornitori</a></li>
-					<li><a href="../src/scadenze/ricercaScadenzeClienteFacade.class.php?modo=start" target="corpo">Ricerca Scadenze Clienti</a></li>
-				</ul>
-			</div>
-			<h3>Riepiloghi e Statistiche</h3>
-			<div>
-				<ul>
-					<li><a href="../src/riepiloghi/bilancioFacade.class.php?modo=start" target="corpo">Bilancio Periodico</a></li>
-					<li><a href="../src/riepiloghi/bilancioEsercizioFacade.class.php?modo=start" target="corpo">Bilancio Esercizio</a></li>
-					<li><a href="../src/riepiloghi/riepilogoNegoziFacade.class.php?modo=start" target="corpo">Riepilogo negozi</a></li>
-					<li><a href="../src/riepiloghi/andamentoNegoziFacade.class.php?modo=start" target="corpo">Progressivo negozi</a></li>
-				</ul>
-			</div>
-			<h3>Saldi</h3>
-			<div>
-				<ul>
-					<li><a href="../src/saldi/ricercaSaldiFacade.class.php?modo=start" target="corpo">Ricerca Saldo</a></li>
-					<li><a href="../src/saldi/creaSaldoFacade.class.php?modo=start" target="corpo">Nuovo Saldo</a></li>
-				</ul>
-			</div>
-			<h3>Fatture</h3>
-			<div>
-				<ul>
-					<li><a href="../src/fatture/creaFatturaAziendaConsortileFacade.class.php?modo=start" target="corpo">Azienda Consortile</a></li>
-					<li><a href="../src/fatture/creaFatturaEntePubblicoFacade.class.php?modo=start" target="corpo">Ente Pubblico</a></li>
-					<li><a href="../src/fatture/creaFatturaClienteFacade.class.php?modo=start" target="corpo">Cliente / Famiglia</a></li>
-				</ul>
-			</div>
-			<h3>Strumenti</h3>
-			<div>
-				<ul>
-					<li><a href="../src/strumenti/cambiaContoStep1Facade.class.php?modo=start" target="corpo">Cambia conto operazioni</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-		
-		
-	
-<script src="../jquery/external/jquery/jquery.js"></script>
-<script src="../jquery/jquery-ui.js"></script>
-<script src="../js/local.js"></script>
-
-</body>
-</html>
+<div class="navigation">
+  <ul class="nav">
+	<li>
+	  <a href="../template/main.html">Home</a>
+	</li>
+	<li>
+	  <a href="#">Operazioni</a>
+	  <ul>
+		<li><a href="../src/primanota/ricercaRegistrazioneFacade.class.php?modo=start">Ricerca Registrazione</a></li>
+		<li><a href="../src/primanota/creaRegistrazioneFacade.class.php?modo=start">Registrazione</a></li>
+		<li><a href="../src/primanota/creaPagamentoFacade.class.php?modo=start">Pagamento</a></li>
+		<li><a href="../src/primanota/creaIncassoFacade.class.php?modo=start">Incasso</a></li>
+		<li><a href="../src/primanota/creaCorrispettivoNegozioFacade.class.php?modo=start">Corrispettivo Negozio</a></li>
+		<li><a href="../src/primanota/creaCorrispettivoMercatoFacade.class.php?modo=start">Corrispettivo Mercato</a></li>
+  	  </ul>
+    </li>
+	<li>
+	  <a href="#">About Us</a>
+	  <ul>
+		<li><a href="#">Company</a></li>
+		<li><a href="#">Mission</a></li>
+		<li><a href="#">Contact Information</a></li>
+	  </ul>
+	</li>
+  </ul>
+</div>
+ 

@@ -1,4 +1,48 @@
-<body>
+<h2>%titoloPagina%</h2>
+
+<form method="post" action="%azione%" >
+	<table class="datiCreate" cellpadding="5px" width="100%">
+		<tbody>
+			<tr style="float: left;">
+				<td>%ml.negozio% :</td>
+				<td class="tooltip">
+					<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
+						<option value="">%ml.tutti%</option>
+						<option value="VIL" %villa-selected% >%ml.villa%</option>
+						<option value="BRE" %brembate-selected% >%ml.brembate%</option>
+						<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+					</select>
+				</td>
+				<td class="td">%ml.da% :</td>
+				<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
+				<td class="td">%ml.a% :</td>
+				<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
+				<td>%ml.codcau% :</td>
+				<td class="tooltip">
+					<select class="selectmenuCausale" id="causale" name="causale" >
+						<option value="">Tutte</option>
+						%elenco_causali%
+					</select>
+				</td>
+				<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+			</tr>
+		</tfoot>
+	</table>
+</form>
+<br>
+%risultato_ricerca%
+
+<div id="cancella-registrazione-form" title="Cancella Registrazione"> 
+	<form method="post" id="cancellaRegistrazione" action="../primanota/cancellaRegistrazioneFacade.class.php?modo=go" >
+		<p>Elimino la registrazione e i suoi dettagli ?</p>
+		<input type="hidden" id="idRegistrazione" name="idRegistrazione">
+  </form>
+</div>
+
 <script type="text/javascript">
 
 $(document).ready( function () {
@@ -34,53 +78,4 @@ $(document).ready( function () {
     } );
 } );
 
-</script>
-
-<div id="body">
-	<div id="main">
-		<h2>%titoloPagina%</h2>
-
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px" width="100%">
-				<tbody>
-					<tr style="float: left;">
-						<td>%ml.negozio% :</td>
-						<td class="tooltip">
-							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="VIL" %villa-selected% >%ml.villa%</option>
-								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-							</select>
-						</td>
-						<td class="td">%ml.da% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
-						<td class="td">%ml.a% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
-						<td>%ml.codcau% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCausale" id="causale" name="causale" >
-								<option value="">Tutte</option>
-								%elenco_causali%
-							</select>
-						</td>
-						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
-		<br>
-		%risultato_ricerca%
-	</div>
-
-<div id="cancella-registrazione-form" title="Cancella Registrazione"> 
-	<form method="post" id="cancellaRegistrazione" action="../primanota/cancellaRegistrazioneFacade.class.php?modo=go" >
-		<p>Elimino la registrazione e i suoi dettagli ?</p>
-		<input type="hidden" id="idRegistrazione" name="idRegistrazione">
-  </form>
-</div>
-		
+</script>		
