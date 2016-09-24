@@ -48,9 +48,6 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["numfatt"] = "";
@@ -61,9 +58,12 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 		$this->preparaPagina($ricercaCorrispettivoTemplate);
 
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$ricercaCorrispettivoTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -75,9 +75,6 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$ricercaCorrispettivoTemplate = RicercaCorrispettivoTemplate::getInstance();
 
 		if ($ricercaCorrispettivoTemplate->controlliLogici()) {
@@ -86,7 +83,10 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 					
 				$this->preparaPagina($ricercaCorrispettivoTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$ricercaCorrispettivoTemplate->displayPagina();
 
 				/**
@@ -117,7 +117,10 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 					
 				$this->preparaPagina($ricercaCorrispettivoTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$ricercaCorrispettivoTemplate->displayPagina();
 
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -133,7 +136,10 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 
 			$this->preparaPagina($ricercaCorrispettivoTemplate);
 
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaCorrispettivoTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

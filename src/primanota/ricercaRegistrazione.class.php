@@ -49,9 +49,6 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["codneg_sel"] = "VIL";
@@ -62,9 +59,13 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		$this->preparaPagina($ricercaRegistrazioneTemplate);
 		
 		// compone la pagina
-		include($testata);
+		
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$ricercaRegistrazioneTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -87,7 +88,10 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 			
 				$this->preparaPagina($ricercaRegistrazioneTemplate);
 			
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$ricercaRegistrazioneTemplate->displayPagina();
 
 				/**
@@ -121,8 +125,11 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 			else {
 			
 				$this->preparaPagina($ricercaRegistrazioneTemplate);
-					
-				include(self::$testata);
+
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$ricercaRegistrazioneTemplate->displayPagina();
 
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -137,8 +144,11 @@ class RicercaRegistrazione extends PrimanotaAbstract {
 		else {
 				
 			$this->preparaPagina($ricercaRegistrazioneTemplate);
-		
-			include(self::$testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaRegistrazioneTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

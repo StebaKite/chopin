@@ -46,17 +46,17 @@ class CambiaContoStep3 extends StrumentiAbstract {
 		// Template
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
 		
 		$cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
 		$this->preparaPagina($cambiaContoStep3Template);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$cambiaContoStep3Template->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -69,9 +69,6 @@ class CambiaContoStep3 extends StrumentiAbstract {
 		// Template
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
 
 		/**
 		 * Sposto le registrazioni in sessione sul nuovo conto
@@ -111,7 +108,11 @@ class CambiaContoStep3 extends StrumentiAbstract {
 			$db->rollbackTransaction();
 				
 			$this->preparaPagina($cambiaContoStep3Template);
-			include($testata);
+			
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$cambiaContoStep3Template->displayPagina();
 			
 			$_SESSION["messaggio"] = "Errore fatale durante lo spostamento dei dettagli" ;
@@ -120,8 +121,7 @@ class CambiaContoStep3 extends StrumentiAbstract {
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
 				
-			include(self::$piede);
-				
+			include(self::$piede);	
 		}
 	}
 

@@ -49,13 +49,26 @@ class MainTemplate extends ChopinAbstract {
 
 		$utility = Utility::getInstance();		
 		$array = $utility->getConfig();		
+
 		$form = self::$root . $array['template'] . self::$pagina;
 				
-		// Pagina -----------------------------------------------------
-
-		include(self::$testata);
+		// Ambiente ---------------------------------------------------
 		
-		$replace = array();		
+		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
+		
+		if (strpos($users, $array['usernameProdLogin']) === false) {
+			$_SESSION["ambiente"] = "Ambiente di TEST";
+		}
+		else {
+			$_SESSION["ambiente"] = "Ambiente di PRODUZIONE";
+		}
+						
+		// Pagina -----------------------------------------------------
+		
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);		
+		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 		

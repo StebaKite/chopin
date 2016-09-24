@@ -46,9 +46,6 @@ class CambiaContoStep2 extends StrumentiAbstract {
 		// Template
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
 		
 		unset($_SESSION["conto_sel_nuovo"]);
 		
@@ -56,9 +53,12 @@ class CambiaContoStep2 extends StrumentiAbstract {
 		$this->preparaPagina($cambiaContoStep2Template);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$cambiaContoStep2Template->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {}

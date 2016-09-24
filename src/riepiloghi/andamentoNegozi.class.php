@@ -48,11 +48,9 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$_SESSION["datareg_da"] = "01/01/" . date("Y");
 		$_SESSION["datareg_a"]  = "31/12/" . date("Y");
+		
 		unset($_SESSION["elencoVociAndamentoCostiNegozio"]);
 		unset($_SESSION["elencoVociAndamentoRicaviNegozio"]);
 		unset($_SESSION['bottoneEstraiPdf']);
@@ -62,9 +60,12 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 
 		// compongo la pagina
 		
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$andamentoNegoziTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -76,9 +77,6 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		$andamentoNegoziTemplate = AndamentoNegoziTemplate::getInstance();
 
 		if ($andamentoNegoziTemplate->controlliLogici()) {
@@ -87,7 +85,10 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$andamentoNegoziTemplate->displayPagina();
 		
 				$numCosti = $_SESSION['numCostiTrovati'];
@@ -111,7 +112,10 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$andamentoNegoziTemplate->displayPagina();
 		
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -126,7 +130,10 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		else {
 			$this->preparaPagina($andamentoNegoziTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$andamentoNegoziTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

@@ -52,9 +52,6 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		unset($_SESSION["registrazioniTrovate"]);
 		unset($_SESSION['bottoneEstraiPdf']);
 	
@@ -65,8 +62,11 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 			if (isset($_SESSION['registrazioniTrovate'])) {
 				
 				$this->preparaPagina($generaMastrinoContoTemplate);
+
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
 				
-				include($testata);
 				$generaMastrinoContoTemplate->displayPagina();
 				
 				$_SESSION["messaggio"] = "Mastrino del Conto generato!";
@@ -75,7 +75,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 				echo $utility->tailTemplate($template);
 				
-				include($piede);				
+				include(self::$piede);				
 			}
 			else {
 
@@ -88,8 +88,11 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 		else {
 	
 			$this->preparaPagina($generaMastrinoContoTemplate);
-	
-			include(self::$testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$generaMastrinoContoTemplate->displayPagina();
 	
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;

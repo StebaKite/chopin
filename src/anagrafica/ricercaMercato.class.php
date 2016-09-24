@@ -48,9 +48,6 @@ class RicercaMercato extends AnagraficaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		unset($_SESSION["mercatiTrovati"]);
 	
 		$ricercaMercatoTemplate = RicercaMercatoTemplate::getInstance();
@@ -58,8 +55,11 @@ class RicercaMercato extends AnagraficaAbstract {
 		if ($this->ricercaDati($utility)) {
 	
 			$this->preparaPagina($ricercaMercatoTemplate);
-	
-			include($testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$ricercaMercatoTemplate->displayPagina();
 
 			if (isset($_SESSION["messaggioCreazione"])) {
@@ -93,13 +93,16 @@ class RicercaMercato extends AnagraficaAbstract {
 	
 			echo $utility->tailTemplate($template);
 	
-			include($piede);
+			include(self::$piede);
 		}
 		else {
 	
 			$this->preparaPagina($ricercaMercatoTemplate);
-	
-			include(self::$testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaMercatoTemplate->displayPagina();
 	
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei mercati" ;

@@ -48,9 +48,6 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		unset($_SESSION["progressiviTrovati"]);
 		$_SESSION["catcliente"] = "";
 		
@@ -58,9 +55,12 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 		$this->preparaPagina($ricercaProgressivoFatturaTemplate);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$ricercaProgressivoFatturaTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -72,9 +72,6 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		unset($_SESSION["clientiTrovati"]);
 	
 		$ricercaProgressivoFatturaTemplate = RicercaProgressivoFatturaTemplate::getInstance();
@@ -82,8 +79,11 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 		if ($this->ricercaDati($utility)) {
 	
 			$this->preparaPagina($ricercaProgressivoFatturaTemplate);
-	
-			include($testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaProgressivoFatturaTemplate->displayPagina();
 
 			$_SESSION["messaggio"] = "Trovati " . $_SESSION['numProgressiviTrovati'] . " progressivi fattura";
@@ -99,13 +99,16 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 				
 			echo $utility->tailTemplate($template);
 	
-			include($piede);
+			include(self::$piede);
 		}
 		else {
 	
 			$this->preparaPagina($ricercaProgressivoFatturaTemplate);
-	
-			include(self::$testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$$ricercaProgressivoFatturaTemplate->displayPagina();
 	
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle categorie clienti" ;

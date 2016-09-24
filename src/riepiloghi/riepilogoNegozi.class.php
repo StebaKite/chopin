@@ -48,9 +48,6 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
 		$_SESSION["catconto"] = "Conto Economico";
@@ -67,9 +64,12 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		$this->preparaPagina($riepilogoNegoziTemplate);
 	
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$riepilogoNegoziTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -81,9 +81,6 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		$riepilogoNegoziTemplate = RiepilogoNegoziTemplate::getInstance();
 
 		if ($riepilogoNegoziTemplate->controlliLogici()) {
@@ -92,7 +89,10 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 					
 				$this->preparaPagina($riepilogoNegoziTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$riepilogoNegoziTemplate->displayPagina();
 		
 				$totVoci = $_SESSION['numCostiTrovati'];
@@ -115,7 +115,10 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 					
 				$this->preparaPagina($riepilogoNegoziTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$riepilogoNegoziTemplate->displayPagina();
 		
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -131,7 +134,10 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		
 			$this->preparaPagina($riepilogoNegoziTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$riepilogoNegoziTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

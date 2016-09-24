@@ -47,9 +47,6 @@ class Bilancio extends RiepiloghiAbstract {
 		// Template
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
 
 		$_SESSION["datareg_da"] = date("d/m/Y");
 		$_SESSION["datareg_a"] = date("d/m/Y");
@@ -67,9 +64,12 @@ class Bilancio extends RiepiloghiAbstract {
 		$this->preparaPagina($bilancioTemplate);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$bilancioTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -81,9 +81,6 @@ class Bilancio extends RiepiloghiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		$bilancioTemplate = BilancioTemplate::getInstance();
 		
 		if ($bilancioTemplate->controlliLogici()) {
@@ -92,7 +89,10 @@ class Bilancio extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($bilancioTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$bilancioTemplate->displayPagina();
 
 				if ($_SESSION["tipoBilancio"] == "Periodico") {
@@ -121,7 +121,10 @@ class Bilancio extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($bilancioTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$bilancioTemplate->displayPagina();
 		
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -137,7 +140,10 @@ class Bilancio extends RiepiloghiAbstract {
 		
 			$this->preparaPagina($bilancioTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$bilancioTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

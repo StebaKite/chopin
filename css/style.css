@@ -1,5 +1,5 @@
 .container {
-margin: 15 0 0 0;
+margin-top: 50px;	
 width: 1000px;
 min-height: 100%;
 background-color: transparent;
@@ -12,16 +12,16 @@ margin-bottom: 0px;
 color: #fff;
 }
 .task-list {
-width: 220px;
+width: 240px;
 float: left;
-margin: 0 5px;
+margin-right: 5px;	
 background-color: #e3e3e3;
 min-height: 240px;
 border-radius: 10px;
 padding-bottom: 15px;
 }
 .task-list input, .task-list textarea {
-width: 210px;
+width: 220px;
 margin: 1px 5px;
 }
 .task-list input {
@@ -34,7 +34,7 @@ margin: 5px;
 .todo-task {
 border-radius: 5px;
 background-color: #fff;
-width: 200px;
+width: 220px;
 margin: 5px;
 padding: 5px;
 }

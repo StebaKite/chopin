@@ -48,18 +48,18 @@ class RicercaConto extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		unset($_SESSION["contiTrovati"]);
 		
 		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
 		$this->preparaPagina($ricercaContoTemplate);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$ricercaContoTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -71,9 +71,6 @@ class RicercaConto extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		unset($_SESSION["contiTrovati"]);
 		
 		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
@@ -82,7 +79,10 @@ class RicercaConto extends ConfigurazioniAbstract {
 			
 			$this->preparaPagina($ricercaContoTemplate);
 			
-			include($testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$ricercaContoTemplate->displayPagina();
 				
 			/**
@@ -112,13 +112,16 @@ class RicercaConto extends ConfigurazioniAbstract {
 				
 			echo $utility->tailTemplate($template);
 
-			include($piede);	
+			include(self::$piede);	
 		}
 		else {
 
 			$this->preparaPagina($ricercaContoTemplate);
 				
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$ricercaContoTemplate->displayPagina();
 			
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei conti" ;

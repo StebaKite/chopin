@@ -47,9 +47,6 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$_SESSION["datareg_da"] = (isset($_SESSION["datareg_da"])) ? $_SESSION["datareg_da"] : date("d/m/Y");
 		$_SESSION["datareg_a"] = (isset($_SESSION["datareg_a"])) ? $_SESSION["datareg_a"] : date("d/m/Y");
 		$_SESSION["codneg_sel"] = (isset($_SESSION["codneg_sel"])) ? $_SESSION["codneg_sel"] : "VIL";
@@ -60,7 +57,10 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		$this->preparaPagina($cambiaContoStep1Template);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$cambiaContoStep1Template->displayPagina();
 
 		/**
@@ -72,7 +72,7 @@ class CambiaContoStep1 extends StrumentiAbstract {
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
 			echo $utility->tailTemplate($template);
 		}		
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -84,9 +84,6 @@ class CambiaContoStep1 extends StrumentiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		$cambiaContoStep1Template = CambiaContoStep1Template::getInstance();
 
 		if ($cambiaContoStep1Template->controlliLogici()) {
@@ -95,7 +92,10 @@ class CambiaContoStep1 extends StrumentiAbstract {
 			
 				$this->preparaPagina($cambiaContoStep1Template);
 			
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$cambiaContoStep1Template->displayPagina();
 				
 				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numRegTrovate'] . " registrazioni";				
@@ -116,7 +116,10 @@ class CambiaContoStep1 extends StrumentiAbstract {
 			
 				$this->preparaPagina($cambiaContoStep1Template);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$cambiaContoStep1Template->displayPagina();
 
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
@@ -132,7 +135,10 @@ class CambiaContoStep1 extends StrumentiAbstract {
 				
 			$this->preparaPagina($cambiaContoStep1Template);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$cambiaContoStep1Template->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

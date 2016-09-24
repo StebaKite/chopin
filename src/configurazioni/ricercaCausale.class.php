@@ -48,9 +48,6 @@ class RicercaCausale extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		unset($_SESSION["causaliTrovate"]);
 		$_SESSION["codcausale"] = "";
 
@@ -58,9 +55,12 @@ class RicercaCausale extends ConfigurazioniAbstract {
 		$this->preparaPagina($ricercaCausaleTemplate);
 
 		// compone la pagina
-		include($testata);
+			
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
 		$ricercaCausaleTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -72,9 +72,6 @@ class RicercaCausale extends ConfigurazioniAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		unset($_SESSION["causaliTrovate"]);
 		
 		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
@@ -83,7 +80,10 @@ class RicercaCausale extends ConfigurazioniAbstract {
 				
 			$this->preparaPagina($ricercaCausaleTemplate);
 				
-			include($testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$ricercaCausaleTemplate->displayPagina();
 		
 			/**
@@ -108,13 +108,15 @@ class RicercaCausale extends ConfigurazioniAbstract {
 		
 			echo $utility->tailTemplate($template);
 		
-			include($piede);
+			include(self::$piede);
 		}
 		else {
 		
 			$this->preparaPagina($ricercaCausaleTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
 			$ricercaCausaleTemplate->displayPagina();
 				
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle causali" ;

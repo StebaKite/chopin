@@ -48,9 +48,6 @@ class RicercaCliente extends AnagraficaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		unset($_SESSION["clientiTrovati"]);
 	
 		$ricercaClienteTemplate = RicercaClienteTemplate::getInstance();
@@ -58,8 +55,11 @@ class RicercaCliente extends AnagraficaAbstract {
 		if ($this->ricercaDati($utility)) {
 	
 			$this->preparaPagina($ricercaClienteTemplate);
-	
-			include($testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaClienteTemplate->displayPagina();
 	
 			/**
@@ -84,13 +84,16 @@ class RicercaCliente extends AnagraficaAbstract {
 	
 			echo $utility->tailTemplate($template);
 	
-			include($piede);
+			include(self::$piede);
 		}
 		else {
 	
 			$this->preparaPagina($ricercaClienteTemplate);
-	
-			include(self::$testata);
+
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+				
 			$ricercaClienteTemplate->displayPagina();
 	
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei clienti" ;

@@ -48,9 +48,6 @@ class RicercaFornitore extends AnagraficaAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		unset($_SESSION["fornitoriTrovati"]);
 	
 		$ricercaFornitoreTemplate = RicercaFornitoreTemplate::getInstance();
@@ -58,8 +55,11 @@ class RicercaFornitore extends AnagraficaAbstract {
 		if ($this->ricercaDati($utility)) {
 	
 			$this->preparaPagina($ricercaFornitoreTemplate);
-	
-			include($testata);
+				
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$ricercaFornitoreTemplate->displayPagina();
 	
 			/**
@@ -84,13 +84,16 @@ class RicercaFornitore extends AnagraficaAbstract {
 	
 			echo $utility->tailTemplate($template);
 	
-			include($piede);
+			include(self::$piede);
 		}
 		else {
 	
 			$this->preparaPagina($ricercaFornitoreTemplate);
-	
-			include(self::$testata);
+				
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$ricercaFornitoreTemplate->displayPagina();
 	
 			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei fornitori" ;

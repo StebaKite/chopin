@@ -942,6 +942,11 @@ $( ".selectmenu" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuCausale" )
+	.selectmenu({width: 270})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 $( ".selectmenuCausalePagamenti" )
 	.selectmenu({width: 150})
 	.selectmenu("menuWidget")
@@ -1012,7 +1017,6 @@ $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
 $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
-$( ".selectmenuCausale" ).selectmenu({ width: 270 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
@@ -1371,6 +1375,27 @@ function generaMastrino(codconto, codsottoconto) {
 	$( "#generaMastrino-form" ).dialog( "open" );
 }
 
+
+function escapeRegExp(str) {
+	  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+//---------------------------------------------------------
+//Menu di navigazione
+//---------------------------------------------------------
+
+$('.nav li').hover(
+	function () {
+		$('ul', this).fadeIn();
+	},
+	function () {
+		$('ul', this).fadeOut();
+	}
+);
+
 // ---------------------------------------------------------
 // Campi autocomplete
 // ---------------------------------------------------------
@@ -1382,13 +1407,3 @@ $( "#fornitore" ).autocomplete({
 $( "#cliente" ).autocomplete({
  	source: elencoClienti
 });	
-
-
-
-
-function escapeRegExp(str) {
-	  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-function replaceAll(str, find, replace) {
-  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}

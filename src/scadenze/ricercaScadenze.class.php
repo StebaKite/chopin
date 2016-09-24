@@ -48,9 +48,6 @@ class RicercaScadenze extends ScadenzeAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-		
 		$_SESSION["datascad_da"] = date("d/m/Y");
 		$_SESSION["datascad_a"] = date("d/m/Y");
 		$_SESSION["codneg_sel"] = "VIL";
@@ -63,9 +60,12 @@ class RicercaScadenze extends ScadenzeAbstract {
 		$this->preparaPagina($ricercaScadenzeTemplate);
 		
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$ricercaScadenzeTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 		
 	}
 
@@ -78,9 +78,6 @@ class RicercaScadenze extends ScadenzeAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-	
 		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
 	
 		if ($ricercaScadenzeTemplate->controlliLogici()) {
@@ -89,7 +86,10 @@ class RicercaScadenze extends ScadenzeAbstract {
 					
 				$this->preparaPagina($ricercaScadenzeTemplate);
 					
-				include(self::$testata);				
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$ricercaScadenzeTemplate->displayPagina();
 	
 				/**
@@ -124,7 +124,10 @@ class RicercaScadenze extends ScadenzeAbstract {
 					
 				$this->preparaPagina($ricercaScadenzeTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$ricercaScadenzeTemplate->displayPagina();
 	
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle scadenze" ;
@@ -140,7 +143,10 @@ class RicercaScadenze extends ScadenzeAbstract {
 	
 			$this->preparaPagina($ricercaScadenzeTemplate);
 	
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$ricercaScadenzeTemplate->displayPagina();
 	
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

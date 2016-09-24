@@ -48,9 +48,6 @@ class RicercaSaldi extends SaldiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$_SESSION["codneg_sel"] = "VIL";
 		unset($_SESSION["saldiTrovati"]);
 
@@ -58,9 +55,12 @@ class RicercaSaldi extends SaldiAbstract {
 		$this->preparaPagina($ricercaSaldiTemplate);
 
 		// compone la pagina
-		include($testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$ricercaSaldiTemplate->displayPagina();
-		include($piede);
+		include(self::$piede);
 	}
 
 	public function go() {
@@ -72,9 +72,6 @@ class RicercaSaldi extends SaldiAbstract {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$testata = self::$root . $array['testataPagina'];
-		$piede = self::$root . $array['piedePagina'];
-
 		$ricercaSaldiTemplate = RicercaSaldiTemplate::getInstance();
 
 		if ($ricercaSaldiTemplate->controlliLogici()) {
@@ -83,7 +80,10 @@ class RicercaSaldi extends SaldiAbstract {
 					
 				$this->preparaPagina($ricercaSaldiTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$ricercaSaldiTemplate->displayPagina();
 
 				/**
@@ -114,7 +114,10 @@ class RicercaSaldi extends SaldiAbstract {
 					
 				$this->preparaPagina($ricercaSaldiTemplate);
 					
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$ricercaSaldiTemplate->displayPagina();
 
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura dei saldi" ;
@@ -130,7 +133,10 @@ class RicercaSaldi extends SaldiAbstract {
 
 			$this->preparaPagina($ricercaSaldiTemplate);
 
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$ricercaSaldiTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
