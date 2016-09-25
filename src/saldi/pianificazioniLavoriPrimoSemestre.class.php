@@ -101,7 +101,7 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract  {
 		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-06-01', 'Riporto saldi ' .  SELF::$mese['06'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) return FALSE;
 		if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-06-30', 'Pianificazioni semestre 2', 'pianificazioniLavoriSecondoSemestre', 'PianificazioniLavoriSecondoSemestre', $statoLavoro)) return FALSE;
 			
-		error_log("Pianificazione lavori del primo semestre anno " . $anno);			
+		echo "Pianificazione lavori del primo semestre anno " . $anno;			
 		$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
 		return TRUE;
 	}	

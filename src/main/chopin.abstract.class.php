@@ -567,6 +567,19 @@ abstract class ChopinAbstract {
 		return $result;
 	}	
 
+	public function leggiLavoriPianificatiBatchMode($db, $utility, $project_root) {
+	
+		$replace = array();
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = $project_root . $array['query'] . self::$queryLavoriPianificati;
+	
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+	
+		return $result;
+	}
+	
 	/**
 	 *
 	 * @param unknown $db
@@ -586,23 +599,29 @@ abstract class ChopinAbstract {
 		return $result;
 	}
 	
-	public function eseguiLavoriPianificati($db, $lavoriPianificati) {
+	public function eseguiLavoriPianificati($db, $lavoriPianificati, $project_root) {
 		
 		$rows = pg_fetch_all($lavoriPianificati);
 		$_SESSION["lavoriPianificati"] = $rows;
 		
 		$oggi = date("Y/m/d");
-			
+
+		echo "Esame dei lavori in piano ...\n";
+		
 		foreach($rows as $row) {
 				
 			if ((strtotime($row['dat_lavoro']) <= strtotime($oggi)) && ($row['sta_lavoro'] == "00")) {
 		
-				if ($this->eseguiLavoro($db, $row)) {
-					error_log($row['des_lavoro'] . " eseguito");
+				if ($this->eseguiLavoro($db, $row, $project_root)) {
+					echo $row['des_lavoro'] . " eseguito\n";
 				}
 				else {
-					error_log("ATTENZIONE: Lavori pianificati non eseguiti!!");
+					echo "ATTENZIONE: Lavori pianificati non eseguiti!!\n";
 				}
+			}
+			else {
+				if ($row['sta_lavoro'] != "00") echo $row['des_lavoro'] . " già eseguito!\n";
+				else echo $row['des_lavoro'] . " in attesa...\n";
 			}
 		}
 	}
@@ -613,10 +632,10 @@ abstract class ChopinAbstract {
 	 * @param unknown $row
 	 * @return boolean
 	 */
-	public function eseguiLavoro($db, $row) {
+	public function eseguiLavoro($db, $row, $project_root) {
 	
 		$className = trim($row['cla_esecuzione_lavoro']);
-		$fileClass = self::$root . self::$sourceFolder . trim($row['fil_esecuzione_lavoro']) . '.class.php';
+		$fileClass = $project_root . self::$sourceFolder . trim($row['fil_esecuzione_lavoro']) . '.class.php';
 	
 		if (file_exists($fileClass)) {
 	
@@ -633,7 +652,7 @@ abstract class ChopinAbstract {
 				}
 			}
 			else {
-				error_log("Il nome classe '" . $className . "' non &egrave; definita, lavoro non eseguito");
+				echo "Il nome classe '" . $className . "' non è definito, lavoro non eseguito";
 				return FALSE;
 			}
 		}

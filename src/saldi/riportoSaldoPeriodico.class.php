@@ -34,7 +34,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		self::$root = '/var/www/html';
 
 		require_once 'utility.class.php';
 
@@ -105,14 +105,16 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		
 		$result = $this->prelevaStatoPatrimoniale($db, $utility);		
 
+		echo "Esame del piano dei conti...";		
+		
 		if ($result) {
 			
 			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
 			$da = '01/' . $mesePrecedente . '/' . $anno;
 			$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-			error_log("Riporto saldo stato patrimoniale, periodo : " . $da . " - " . $a);
-			error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
+			echo "Riporto saldo stato patrimoniale, periodo : " . $da . " - " . $a;
+			echo "Data esecuzione riporto saldo : " . $dataGenerazioneSaldo;
 			
 			$riportoStatoPatrimoniale_Ok = TRUE;
 		}
@@ -132,8 +134,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 				$da = '01/' . $mesePrecedente . '/' . $anno;
 				$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-				error_log("Riporto saldo conto economico, periodo : " . $da . " - " . $a);
-				error_log("Data esecuzione riporto saldo : " . $dataGenerazioneSaldo);
+				echo "Riporto saldo conto economico, periodo : " . $da . " - " . $a;
+				echo "Data esecuzione riporto saldo : " . $dataGenerazioneSaldo;
 				
 				$riportoContoEconomico_Ok = TRUE;
 			}				

@@ -132,14 +132,32 @@ class Utility {
 				$this->setConfiguration(parse_ini_file($configFile));
 			}
 			else {
-				$e = "Config file " . $configFile . " not found!";
-				throw $e;
-// 				error_log("Config file " . $configFile . " not found!");
-// 				$this->setConfiguration(null);	
+				error_log("Config file " . $configFile . " not found!");
+				$this->setConfiguration(null);	
 			}
 		}
 		return $this->getConfiguration();
 	}
+
+	public function getConfigInBatchMode($project_root) {
+	
+		if (self::$configuration == "") {
+	
+			$configFile = $project_root . self::$configFile;
+				
+			if (file_exists($configFile)) {
+	
+				// viene ritornata una mappa
+				$this->setConfiguration(parse_ini_file($configFile));
+			}
+			else {
+				error_log("Config file " . $configFile . " not found!");
+				$this->setConfiguration(null);
+			}
+		}
+		return $this->getConfiguration();
+	}
+	
 }
 
 ?>
