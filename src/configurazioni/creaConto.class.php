@@ -43,6 +43,9 @@ class CreaConto extends ConfigurazioniAbstract {
 	public function start() {
 
 		require_once 'creaConto.template.php';
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
 		
 		$creaContoTemplate = CreaContoTemplate::getInstance();
 		$this->preparaPagina($creaContoTemplate);
@@ -51,7 +54,10 @@ class CreaConto extends ConfigurazioniAbstract {
 		$_SESSION["desconto"] = "";
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaContoTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -76,7 +82,10 @@ class CreaConto extends ConfigurazioniAbstract {
 				
 				$this->preparaPagina($creaContoTemplate);
 				
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaContoTemplate->displayPagina();
 				
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -89,7 +98,10 @@ class CreaConto extends ConfigurazioniAbstract {
 
 				$this->preparaPagina($creaContoTemplate);
 				
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaContoTemplate->displayPagina();
 				
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -103,7 +115,10 @@ class CreaConto extends ConfigurazioniAbstract {
 				
 			$this->preparaPagina($creaContoTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaContoTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

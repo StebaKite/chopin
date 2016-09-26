@@ -49,7 +49,10 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	public function start() {
 	
 		require_once 'creaFatturaAziendaConsortile.template.php';
-	
+		require_once 'utility.class.php';
+
+		$utility = Utility::getInstance();
+		
 		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
 		
 		$_SESSION["datafat"] = date("d/m/Y");
@@ -68,7 +71,10 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		 * Compongo la pagina
 		 */ 
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaAziendaConsortileTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -135,7 +141,10 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
 		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaAziendaConsortileTemplate->displayPagina();
 		
 		self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

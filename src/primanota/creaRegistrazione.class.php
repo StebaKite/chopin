@@ -50,7 +50,10 @@ class CreaRegistrazione extends primanotaAbstract {
 	public function start() {
 	
 		require_once 'creaRegistrazione.template.php';
-	
+		require_once 'utility.class.php';
+
+		$utility = Utility::getInstance();
+		
 		$creaRegistrazioneTemplate = CreaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($creaRegistrazioneTemplate);
 
@@ -60,7 +63,10 @@ class CreaRegistrazione extends primanotaAbstract {
 		$_SESSION["codneg"] = "";
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaRegistrazioneTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -98,7 +104,9 @@ class CreaRegistrazione extends primanotaAbstract {
 				
 				$this->preparaPagina($creaRegistrazioneTemplate);
 				
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
 				$creaRegistrazioneTemplate->displayPagina();
 				
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -112,7 +120,10 @@ class CreaRegistrazione extends primanotaAbstract {
 			
 			$this->preparaPagina($creaRegistrazioneTemplate);
 				
-			include(self::$testata);			
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaRegistrazioneTemplate->displayPagina();
 				
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);			

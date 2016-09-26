@@ -8,7 +8,6 @@ session_start();
 $creaFornitore = CreaFornitore::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
 	$creaFornitore->start();
 }
 

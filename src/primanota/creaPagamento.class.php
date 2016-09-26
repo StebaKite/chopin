@@ -44,7 +44,10 @@ class CreaPagamento extends primanotaAbstract {
 	public function start() {
 	
 		require_once 'creaPagamento.template.php';
-	
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaPagamentoTemplate = CreaPagamentoTemplate::getInstance();
 		$this->preparaPagina($creaPagamentoTemplate);
 	
@@ -62,7 +65,10 @@ class CreaPagamento extends primanotaAbstract {
 		unset($_SESSION["elenco_scadenze_cliente"]);
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaPagamentoTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -96,7 +102,10 @@ class CreaPagamento extends primanotaAbstract {
 		
 				$this->preparaPagina($creaPagamentoTemplate);
 		
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$creaPagamentoTemplate->displayPagina();
 		
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -110,7 +119,10 @@ class CreaPagamento extends primanotaAbstract {
 				
 			$this->preparaPagina($creaPagamentoTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$creaPagamentoTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -156,6 +168,7 @@ class CreaPagamento extends primanotaAbstract {
 			
 				if (!$this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION['idRegistrazione'], $conto, $sottoConto, $importo, $d_a)) {
 					$db->rollbackTransaction();
+					
 					error_log("Errore inserimento dettaglio registrazione, eseguito Rollback");
 					return FALSE;
 				}

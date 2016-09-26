@@ -59,7 +59,10 @@ class CreaFornitore extends AnagraficaAbstract {
 		unset($_SESSION["capfornitore"]);
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFornitoreTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -93,7 +96,10 @@ class CreaFornitore extends AnagraficaAbstract {
 		
 				$this->preparaPagina($creaFornitoreTemplate);
 		
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$creaFornitoreTemplate->displayPagina();
 		
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -106,7 +112,10 @@ class CreaFornitore extends AnagraficaAbstract {
 		
 				$this->preparaPagina($creaFornitoreTemplate);
 		
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaFornitoreTemplate->displayPagina();
 		
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -120,7 +129,10 @@ class CreaFornitore extends AnagraficaAbstract {
 		
 			$this->preparaPagina($creaFornitoreTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaFornitoreTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

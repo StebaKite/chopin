@@ -7,7 +7,6 @@ session_start();
 $creaSaldo = CreaSaldo::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
 	$creaSaldo->start();
 }
 

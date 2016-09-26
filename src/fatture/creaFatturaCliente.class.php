@@ -49,7 +49,10 @@ class CreaFatturaCliente extends FatturaAbstract {
 	public function start() {
 	
 		require_once 'creaFatturaCliente.template.php';
-	
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaFatturaClienteTemplate = CreaFatturaClienteTemplate::getInstance();
 		
 		$_SESSION["datafat"] = date("d/m/Y");
@@ -70,7 +73,10 @@ class CreaFatturaCliente extends FatturaAbstract {
 		 * Compongo la pagina
 		 */ 
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaClienteTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -137,7 +143,10 @@ class CreaFatturaCliente extends FatturaAbstract {
 		$creaFatturaClienteTemplate = CreaFatturaClienteTemplate::getInstance();
 		$this->preparaPagina($creaFatturaClienteTemplate);
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaClienteTemplate->displayPagina();		
 		include(self::$piede);
 	}

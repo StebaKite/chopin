@@ -8,7 +8,6 @@ session_start();
 $creaCliente = CreaCliente::getInstance();
 
 if ($_GET["modo"] == "start") {
-	session_unset();
 	$creaCliente->start();
 }
 

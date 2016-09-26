@@ -49,7 +49,10 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 	public function start() {
 	
 		require_once 'creaFatturaEntePubblico.template.php';
-	
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
 		
 		$_SESSION["datafat"] = date("d/m/Y");
@@ -69,7 +72,10 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		 * Compongo la pagina
 		 */ 
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaEntePubblicoTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -135,7 +141,10 @@ class CreaFatturaEntePubblico extends FatturaAbstract {
 		$creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
 		$this->preparaPagina($creaFatturaEntePubblicoTemplate);
 		
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaFatturaEntePubblicoTemplate->displayPagina();		
 		include(self::$piede);
 	}

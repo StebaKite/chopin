@@ -43,7 +43,10 @@ class CreaSaldo extends SaldiAbstract {
 	public function start() {
 
 		require_once 'creaSaldo.template.php';
-
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaSaldoTemplate = CreaSaldoTemplate::getInstance();
 		$this->preparaPagina($creaSaldoTemplate);
 
@@ -52,7 +55,10 @@ class CreaSaldo extends SaldiAbstract {
 		$_SESSION["codneg"] = "VIL";
 
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaSaldoTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -78,7 +84,10 @@ class CreaSaldo extends SaldiAbstract {
 
 				$this->preparaPagina($creaSaldoTemplate);
 
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaSaldoTemplate->displayPagina();
 
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -92,7 +101,10 @@ class CreaSaldo extends SaldiAbstract {
 
 			$this->preparaPagina($creaSaldoTemplate);
 
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaSaldoTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

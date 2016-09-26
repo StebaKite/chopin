@@ -49,7 +49,10 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 	public function start() {
 	
 		require_once 'creaCorrispettivoNegozio.template.php';
-	
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaCorrispettivoNegozioTemplate = CreaCorrispettivoNegozioTemplate::getInstance();
 		$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 	
@@ -63,7 +66,10 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		unset($_SESSION["indexDettagliInseriti"]);
 			
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$creaCorrispettivoNegozioTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -95,7 +101,10 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		
 				$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 		
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$creaCorrispettivoNegozioTemplate->displayPagina();
 		
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -109,7 +118,10 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 				
 			$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 		
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$creaCorrispettivoNegozioTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

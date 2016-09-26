@@ -62,7 +62,10 @@ class CreaCliente extends AnagraficaAbstract {
 		unset($_SESSION["codfisc"]);
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaClienteTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -86,7 +89,6 @@ class CreaCliente extends AnagraficaAbstract {
 				$db = Database::getInstance();
 				$utility = Utility::getInstance();
 				
-// 				session_unset();
 				$_SESSION["codcliente"] = $this->prelevaUltimoCodiceCliente($utility, $db) + 1;
 				unset($_SESSION["descliente"]);
 				unset($_SESSION["indcliente"]);
@@ -99,7 +101,10 @@ class CreaCliente extends AnagraficaAbstract {
 
 				$this->preparaPagina($creaClienteTemplate);
 
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$creaClienteTemplate->displayPagina();
 
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -112,7 +117,10 @@ class CreaCliente extends AnagraficaAbstract {
 
 				$this->preparaPagina($creaClienteTemplate);
 
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaClienteTemplate->displayPagina();
 
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -126,7 +134,10 @@ class CreaCliente extends AnagraficaAbstract {
 
 			$this->preparaPagina($creaClienteTemplate);
 
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaClienteTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

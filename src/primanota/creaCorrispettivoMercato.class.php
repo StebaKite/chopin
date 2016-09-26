@@ -49,7 +49,10 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 	public function start() {
 
 		require_once 'creaCorrispettivoMercato.template.php';
-
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
+		
 		$creaCorrispettivoMercatoTemplate = CreaCorrispettivoMercatoTemplate::getInstance();
 		$this->preparaPagina($creaCorrispettivoMercatoTemplate);
 
@@ -63,7 +66,10 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 		unset($_SESSION["indexDettagliInseriti"]);		
 
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$creaCorrispettivoMercatoTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -95,7 +101,10 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 				
 				$this->preparaPagina($creaCorrispettivoMercatoTemplate);
 
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$creaCorrispettivoMercatoTemplate->displayPagina();
 
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -109,7 +118,10 @@ class CreaCorrispettivoMercato extends primanotaAbstract {
 
 			$this->preparaPagina($creaCorrispettivoMercatoTemplate);
 
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+			
 			$creaCorrispettivoMercatoTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

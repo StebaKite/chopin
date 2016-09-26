@@ -43,6 +43,9 @@ class CreaCausale extends ConfigurazioniAbstract {
 	public function start() {
 
 		require_once 'creaCausale.template.php';
+		require_once 'utility.class.php';
+		
+		$utility = Utility::getInstance();
 		
 		$creaCausaleTemplate = CreaCausaleTemplate::getInstance();
 		$this->preparaPagina($creaCausaleTemplate);
@@ -52,7 +55,10 @@ class CreaCausale extends ConfigurazioniAbstract {
 		$_SESSION["catcausale"] = "";
 		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+
 		$creaCausaleTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -77,7 +83,10 @@ class CreaCausale extends ConfigurazioniAbstract {
 	
 				$this->preparaPagina($creaCausaleTemplate);
 	
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaCausaleTemplate->displayPagina();
 	
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -90,7 +99,10 @@ class CreaCausale extends ConfigurazioniAbstract {
 	
 				$this->preparaPagina($creaCausaleTemplate);
 	
-				include(self::$testata);
+				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+
 				$creaCausaleTemplate->displayPagina();
 	
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -104,7 +116,10 @@ class CreaCausale extends ConfigurazioniAbstract {
 	
 			$this->preparaPagina($creaCausaleTemplate);
 	
-			include(self::$testata);
+			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			echo $utility->tailTemplate($template);
+
 			$creaCausaleTemplate->displayPagina();
 	
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
