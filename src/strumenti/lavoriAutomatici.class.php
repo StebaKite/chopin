@@ -77,8 +77,10 @@ class LavoriAutomatici extends ChopinAbstract {
 		else {
 			error_log("Lavori pianificati non attivi!!");
 		}
+		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
 		
-		include(self::$testata);
 		$lavoriAutomaticiTemplate->displayPagina();
 		include(self::$piede);
 	}		

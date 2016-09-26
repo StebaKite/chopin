@@ -242,7 +242,7 @@ class CreaRegistrazione extends primanotaAbstract {
 			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 				
 			if ($array['lavoriPianificatiAttivati'] == "Si") {
-				$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);
+				$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione, self::$root);
 			}
 			
 			$db->commitTransaction();

@@ -104,8 +104,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		$utility = Utility::getInstance();
 		
 		$result = $this->prelevaStatoPatrimoniale($db, $utility);		
-
-		echo "Esame del piano dei conti...";		
 		
 		if ($result) {
 			
@@ -113,8 +111,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 
 			$da = '01/' . $mesePrecedente . '/' . $anno;
 			$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-			echo "Riporto saldo stato patrimoniale, periodo : " . $da . " - " . $a;
-			echo "Data esecuzione riporto saldo : " . $dataGenerazioneSaldo;
 			
 			$riportoStatoPatrimoniale_Ok = TRUE;
 		}
@@ -134,8 +130,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 					
 				$da = '01/' . $mesePrecedente . '/' . $anno;
 				$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-				echo "Riporto saldo conto economico, periodo : " . $da . " - " . $a;
-				echo "Data esecuzione riporto saldo : " . $dataGenerazioneSaldo;
 				
 				$riportoContoEconomico_Ok = TRUE;
 			}				

@@ -491,7 +491,7 @@ abstract class ChopinAbstract {
 	 * @param unknown $utility
 	 * @param unknown $dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 	 */
-	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione) {
+	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione, $project_root) {
 
 		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
 		
@@ -521,7 +521,7 @@ abstract class ChopinAbstract {
 		 * dei saldi. E' importante che i lavori pianificabili siano rieseguibili.
 		 */
 		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
-		$this->eseguiLavoriPianificati($db, $lavoriPianificati);		
+		$this->eseguiLavoriPianificati($db, $lavoriPianificati, $project_root);		
 	} 
 	
 	/**
@@ -605,23 +605,12 @@ abstract class ChopinAbstract {
 		$_SESSION["lavoriPianificati"] = $rows;
 		
 		$oggi = date("Y/m/d");
-
-		echo "Esame dei lavori in piano ...\n";
 		
 		foreach($rows as $row) {
 				
 			if ((strtotime($row['dat_lavoro']) <= strtotime($oggi)) && ($row['sta_lavoro'] == "00")) {
 		
-				if ($this->eseguiLavoro($db, $row, $project_root)) {
-					echo $row['des_lavoro'] . " eseguito\n";
-				}
-				else {
-					echo "ATTENZIONE: Lavori pianificati non eseguiti!!\n";
-				}
-			}
-			else {
-				if ($row['sta_lavoro'] != "00") echo $row['des_lavoro'] . " già eseguito!\n";
-				else echo $row['des_lavoro'] . " in attesa...\n";
+				$this->eseguiLavoro($db, $row, $project_root);
 			}
 		}
 	}
