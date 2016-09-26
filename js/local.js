@@ -118,7 +118,7 @@ $( "#modifica-mercato-form" ).dialog({
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 400,
 	buttons: [
 		{
@@ -148,7 +148,7 @@ $( "#nuovo-dett" ).click(function( event ) {
 $( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 400,
 	buttons: [
 		{
@@ -202,7 +202,7 @@ $( "#nuovo-dett-corrisp" ).click(function( event ) {
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 150,
 	buttons: [
 		{
@@ -232,7 +232,7 @@ $( "#nuova-data-scad" ).click(function( event ) {
 $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 400,
 	buttons: [
 		{
@@ -262,7 +262,7 @@ $( "#nuovo-dett-modificareg" ).click(function( event ) {
 $( "#nuova-scadenza-modificareg-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 150,
 	buttons: [
 		{
@@ -291,7 +291,7 @@ $( "#nuova-scad-modificareg" ).click(function( event ) {
 $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 400,
 	buttons: [
 		{
@@ -320,7 +320,7 @@ $( "#nuovo-dett-modifica-pagamento" ).click(function( event ) {
 $( "#nuovo-dettaglio-modifica-incasso-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 500,
+	width: 550,
 	height: 400,
 	buttons: [
 		{
@@ -481,7 +481,7 @@ $( "#cancella-mercato-form" ).dialog({
 $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 370,
+	width: 450,
 	buttons: [
 		{
 			text: "Ok",
