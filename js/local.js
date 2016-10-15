@@ -198,6 +198,62 @@ $( "#nuovo-dett-corrisp" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//----------------------------------------------
+
+//Dettaglio Pagamento
+
+$( "#nuovo-dettaglio-pagamento-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 550,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				
+				// Controllo congruenza conto dettaglio con codice fornitore
+				
+				var conto = $("#conti").val();
+				var fornitore = $("#fornitore").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Dettaglio ok") {
+							
+							aggiungiDettaglio();
+				            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+			        		
+			        	}
+			        	else {
+				            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+			        	}
+			        }		
+			        
+			    } 
+			    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-pagam" ).click(function( event ) {
+	$( "#nuovo-dettaglio-pagamento-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+//--------------------------------------------------------
 
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
@@ -287,6 +343,8 @@ $( "#nuova-scad-modificareg" ).click(function( event ) {
 	event.preventDefault();
 });
 
+
+
 //Modifica registrazione : aggiunta nuovo dettaglio
 $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 	autoOpen: false,
@@ -297,8 +355,31 @@ $( "#nuovo-dettaglio-modifica-pagamento-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
-				$(this).dialog('close');
-             $("#nuovoDettaglioPagamento").submit();				
+				
+				// Controllo congruenza conto dettaglio con codice fornitore
+				
+				var conto = $("#conti").val();
+				var fornitore = $("#fornitore").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Dettaglio ok") {
+			        		
+			                $("#nuovoDettaglioPagamento").submit();				
+				            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+			        		
+			        	}
+			        	else {
+				            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+			        	}
+			        }		
+			        
+			    } 
+			    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );
 			}
 		},
 		{

@@ -166,6 +166,11 @@ $(document).ready( function () {
 							<table id="dettagli" class="display">
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
+								<tfoot>
+									<tr style="font-weight:bolder; color:red;">
+										<td colspan="4"><p id="esitoControlloContoDettaglio"></p></td>
+									</tr>
+								</tfoot>							
 							</table>			
 						</td>
 					</tr>										
@@ -173,7 +178,7 @@ $(document).ready( function () {
 				<tfoot>
 					<tr>
 						<td colspan="6" align="right" class="tooltip">
-							<button id="nuovo-dett" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+							<button id="nuovo-dett-pagam" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button>
 						</td>
 						<input type="hidden" id="numfatt" name="numfatt" />
@@ -187,7 +192,7 @@ $(document).ready( function () {
 	</div>
 </div>
 
-<div id="nuovo-dettaglio-form" title="Nuovo Dettaglio"> 
+<div id="nuovo-dettaglio-pagamento-form" title="Nuovo Dettaglio"> 
 	<form>
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>

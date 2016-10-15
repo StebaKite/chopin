@@ -106,6 +106,20 @@ class ModificaPagamento extends primanotaAbstract {
 			}
 		}
 		else {
+			
+			/**
+			 * Se i controlli logici hanno rilevato un problema devo aggiornare lo stato del pagamento 
+			 */
+			
+			if (isset($_SESSION['messaggio'])) {
+				if ($_SESSION["stareg"] == '02') {
+					$db = Database::getInstance();
+					$db->beginTransaction();
+					
+					$this->updatePagamento($db, $utility); 
+					$db->commitTransaction();
+				}				
+			}			
 				
 			$this->preparaPagina($modificaPagamentoTemplate);
 		
@@ -176,26 +190,17 @@ class ModificaPagamento extends primanotaAbstract {
 		/**
 		 * Aggiornamento del pagamento
 		 */		
-		
-		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
-		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$stareg = $_SESSION["stareg"];
-		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
-		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];
-		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
-		$staScadenza = "10";   // pagata
-		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idPagamento"], $_SESSION["totaleDare"],
-			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
-			$codneg, $staScadenza, 'null')) {
 
+		if ($this->updatePagamento($db, $utility)) {
+		
 			/**
 			 * Se sono cambiati il codice fornitore o i numeri fattura, cambio lo stato alle fatture pagate: da "10" a "00"
 			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_pagamento
 			 */
-			
-			if ((trim($fornitore) != trim($_SESSION["fornitore_old"]) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"])))) {
+			$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
+				
+			if ((trim($fornitore) != trim($_SESSION["fornitore_old"]) ||
+				(trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"])))) {
 			
 				$d = explode(",", $_SESSION["numfatt_old"]);
 					
@@ -223,7 +228,7 @@ class ModificaPagamento extends primanotaAbstract {
 			
 			foreach($d as $numeroFattura) {
 				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["fornitore"], $numfatt, '10', $_SESSION['idPagamento']);
+				$this->cambiaStatoScadenzaFornitore($db, $utility, $fornitore, $numfatt, '10', $_SESSION['idPagamento']);
 
 				$result_idReg = $this->prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $fornitore, $numfatt);
 				
@@ -232,7 +237,7 @@ class ModificaPagamento extends primanotaAbstract {
 					foreach(pg_fetch_all($result_idReg) as $row) {
 						$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
 					}
-					$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');
+					$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '00');
 				}				
 			}				
 
@@ -265,7 +270,28 @@ class ModificaPagamento extends primanotaAbstract {
 			return FALSE;
 		}
 	}
+
+	public function updatePagamento($db, $utility) {
 		
+		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
+		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
+		$stareg = $_SESSION["stareg"];
+		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
+		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
+		$causale = $_SESSION["causale"];
+		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
+		
+		$staScadenza = "10";   // pagata
+		
+		if ($this->updateRegistrazione($db, $utility, $_SESSION["idPagamento"], $_SESSION["totaleDare"],
+			$descreg, 'null', $datareg, $numfatt, $causale, $fornitore, 'null', $stareg,
+			$codneg, $staScadenza, 'null')) {
+
+			return TRUE;	
+		}
+		return FALSE;
+	}
+	
 	public function preparaPagina($modificaPagamentoTemplate) {
 	
 		require_once 'database.class.php';
