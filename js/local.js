@@ -114,6 +114,7 @@ $( "#modifica-mercato-form" ).dialog({
 	]
 });
 
+//Dettaglio Registrazione
 
 $( "#nuovo-dettaglio-form" ).dialog({
 	autoOpen: false,
@@ -124,7 +125,62 @@ $( "#nuovo-dettaglio-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
-				aggiungiDettaglio();
+				
+				// Controllo congruenza conto dettaglio
+				
+				var conto = $("#conti").val();
+				var fornitore = $("#fornitore").val();
+				var cliente = $("#cliente").val();
+
+				// Fornitore
+				
+				if (fornitore != "") {
+
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				        	if (xmlhttp.responseText == "Dettaglio ok") {
+								
+								aggiungiDettaglio();
+					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+				        		
+				        	}
+				        	else {
+					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+				        	}
+				        }		
+				        
+				    } 
+				    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
+				    xmlhttp.send();
+				}
+
+				// Cliente
+				
+				else if (cliente != "") {
+
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				        	if (xmlhttp.responseText == "Dettaglio ok") {
+								
+								aggiungiDettaglio();
+					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+				        		
+				        	}
+				        	else {
+					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+				        	}
+				        }		
+				        
+				    } 
+				    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
+				    xmlhttp.send();
+				}
+				else {
+					aggiungiDettaglio();
+				}
+				
 				$( this ).dialog( "close" );
 			}
 		},
@@ -349,8 +405,63 @@ $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
-				$(this).dialog('close');
-                $("#nuovoDettaglio").submit();				
+				
+				// Controllo congruenza conto dettaglio
+				
+				var conto = $("#conti").val();
+				var fornitore = $("#fornitore").val();
+				var cliente = $("#cliente").val();
+
+				// Fornitore
+				
+				if (fornitore != "") {
+
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				        	if (xmlhttp.responseText == "Dettaglio ok") {
+								
+					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+				                $("#nuovoDettaglio").submit();				
+				        		
+				        	}
+				        	else {
+					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+				        	}
+				        }		
+				        
+				    } 
+				    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
+				    xmlhttp.send();
+				}
+
+				// Cliente
+				
+				else if (cliente != "") {
+
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				        	if (xmlhttp.responseText == "Dettaglio ok") {
+								
+					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+				                $("#nuovoDettaglio").submit();				
+				        		
+				        	}
+				        	else {
+					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+				        	}
+				        }		
+				        
+				    } 
+				    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
+				    xmlhttp.send();
+				}
+				else {
+	                $("#nuovoDettaglio").submit();				
+				}
+				
+				$( this ).dialog( "close" );
 			}
 		},
 		{
