@@ -253,6 +253,61 @@ $( "#nuovo-dett-pagam" ).click(function( event ) {
 	event.preventDefault();
 });
 
+//----------------------------------------------
+
+//Dettaglio Incasso
+
+$( "#nuovo-dettaglio-incasso-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 550,
+	height: 400,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				
+				// Controllo congruenza conto dettaglio con codice cliente
+				
+				var conto = $("#conti").val();
+				var cliente = $("#cliente").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Dettaglio ok") {
+							
+							aggiungiDettaglio();
+				            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+			        		
+			        	}
+			        	else {
+				            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+			        	}
+			        }		
+			        
+			    } 
+			    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//Link to open the dialog
+$( "#nuovo-dett-incasso" ).click(function( event ) {
+	$( "#nuovo-dettaglio-incasso-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
 //--------------------------------------------------------
 
 $( "#nuova-data-scadenza-form" ).dialog({
@@ -407,8 +462,31 @@ $( "#nuovo-dettaglio-modifica-incasso-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
-				$(this).dialog('close');
-           $("#nuovoDettaglioIncasso").submit();				
+				
+				// Controllo congruenza conto dettaglio con codice cliente
+				
+				var conto = $("#conti").val();
+				var cliente = $("#cliente").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Dettaglio ok") {
+			        		
+			        		$("#nuovoDettaglioIncasso").submit();
+				            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+			        		
+			        	}
+			        	else {
+				            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+			        	}
+			        }		
+			        
+			    } 
+			    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );           				
 			}
 		},
 		{
