@@ -128,7 +128,7 @@ class CambiaContoStep3 extends StrumentiAbstract {
 	protected function spostaDettagliRegistrazioni($db, $utility) {
 				
 		$registrazioniTrovate = $this->caricaRegistrazioniConto($utility, $db);		
-		$conto = split(" - ", $_SESSION["conto_sel_nuovo"]);
+		$conto = explode(" - ", $_SESSION["conto_sel_nuovo"]);
 		
 		foreach(pg_fetch_all($registrazioniTrovate) as $row) {
 

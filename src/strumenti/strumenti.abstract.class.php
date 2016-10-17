@@ -49,7 +49,7 @@ abstract class StrumentiAbstract extends ChopinAbstract {
 
 		if ($_SESSION["conto_sel"] != "") {
 			
-			$conto = split(" - ", $_SESSION["conto_sel"]); 
+			$conto = explode(" - ", $_SESSION["conto_sel"]); 
 			
 			$filtriDettaglio .= "and detreg.cod_conto = '" . $conto[0] . "'";
 			$filtriDettaglio .= "and detreg.cod_sottoconto = '" . $conto[1] . "'";
