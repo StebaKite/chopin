@@ -54,7 +54,7 @@ class CercaFatturaCliente extends PrimanotaAbstract {
 				}
 			}
 			else {
-				echo "Numero fattura Ok!";				
+				echo "";				
 			}
 		}
 		else {

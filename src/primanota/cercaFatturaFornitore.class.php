@@ -56,7 +56,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 					}
 				}
 				else {
-					echo "Numero fattura Ok!";
+					echo "";
 				}
 			}
 			else {
@@ -64,7 +64,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 			}				
 		}
 		else {
-			echo "Numero fattura Ok!";
+			echo "";
 		}
 		$db->commitTransaction();	
 	}

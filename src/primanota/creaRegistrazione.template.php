@@ -37,6 +37,15 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 		
 		$esito = TRUE;
 		$msg = "<br>";
+
+		/**
+		 * Controllo di validita della data registrazione.
+		 * La data registrazione viene verificata da una funzione ajax che effettua una verifica di ammissione.
+		 */
+		if ($_SESSION["esitoControlloDataRegistrazione"] != "") {
+			$msg = $msg . "<br>&ndash; La data registrazione non è ammessa";
+			$esito = FALSE;		
+		}
 		
 		/**
 		 * Controllo presenza dati obbligatori 
@@ -66,9 +75,8 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				$esito = FALSE;
 			}
 			else {
-				if (($_SESSION["esitoNumeroFattura"] != "Numero fattura Ok!") && ($_SESSION["esitoNumeroFattura"] != "")) {
-					$msg = $msg . "<br>&ndash; Il numero fattura &egrave; gi&agrave; esistente";
-					unset($_SESSION["numfatt"]);
+				if ($_SESSION["esitoNumeroFattura"] != "") {
+					$msg = $msg . "<br>&ndash; Il numero fattura gi&agrave; esistente";
 					$esito = FALSE;
 				}				
 			}
@@ -83,13 +91,20 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 		}
 
 		/**
-		 * Se è stato immesso un fornitore o un cliente deve esserci un numero fattura
+		 * Se è stato immesso un fornitore o un cliente deve esserci un numero fattura e la data scadenza.
+		 * La data scadenza va sempre inserita per poter avere la fattura in scadenziario.
 		 */
 		if (($_SESSION["fornitore"] != "") || ($_SESSION["cliente"] != "")) {
+			
 			if ($_SESSION["numfatt"] == "") {
 				$msg = $msg . "<br>&ndash; In presenza di un fornitore o cliente deve esserci in numero di fattura";
 				$esito = FALSE;	
 			}
+			
+			if ($_SESSION["datascad"] == "") {
+				$msg = $msg . "<br>&ndash; Inserisci una data scadenza che servir&agrave; per associare il pagamento/incasso";
+				$esito = FALSE;
+			}			
 		}
 		
 		/**
@@ -123,27 +138,6 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 			}
 		} 
 
-		/**
-		 * Controllo di congruenza degli importi reteizzati con l'importo totale in avere
-		 * Commentato perchè non deve essere bloccante. Va fatto un popup di avviso se squadra.
-		 */
-// 		if ($_SESSION['scadenzeInserite'] != "") {
-
-// 			$d = explode(",", $_SESSION['scadenzeInserite']);
-			
-// 			foreach($d as $ele) {
-// 				$e = explode("#",$ele);
-// 				$tot_scadenze += $e[2];
-// 			}
-			
-// 			$totale = round($tot_avere, 2) - round($tot_scadenze, 2);
-				
-// 			if ($totale  != 0 ) {
-// 				$msg = $msg . "<br>&ndash; La differenza fra il totale rateizzato e il totale in avere &egrave; di " . $totale . " &euro;";
-// 				$esito = FALSE;
-// 			}
-// 		}
-		
 		// ----------------------------------------------		
 		
 		if ($msg != "<br>") {
@@ -285,7 +279,9 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%elenco_causali%' => $_SESSION["elenco_causali"],
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
-				'%elenco_conti%' => $_SESSION["elenco_conti"]
+				'%elenco_conti%' => $_SESSION["elenco_conti"],
+				'%esitoControlloDataRegistrazione%' => $_SESSION["esitoControlloDataRegistrazione"],
+				'%esitoNumeroFattura%' => $_SESSION["esitoNumeroFattura"]				
 		);
 
 		$utility = Utility::getInstance();

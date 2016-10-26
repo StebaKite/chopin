@@ -6,6 +6,22 @@
 	var elencoClienti = [%elenco_clienti%];
 
 	$(document).ready( function () {
+				
+		var esitoControlloDatareg = $("#esitoControlloDataRegistrazione").val();
+		var esitoControlloNumfatt = $("#esitoNumeroFattura").val();
+		var numfatt = $("#numfatt").val();
+		var numfattCurrent = $("#numfattCurrent").val();
+		
+		if (esitoControlloDatareg != "") {
+			$("#messaggioControlloDataRegistrazione").html(esitoControlloDatareg);
+		}
+
+		if (numfatt != numfattCurrent) {
+			if (esitoControlloNumfatt != "") {
+				$("#messaggioControlloNumeroFattura").html(esitoControlloNumfatt);
+			}			
+		}
+		
 	    $('#dettagli').dataTable( {
 	    	"paging": false,
 	    	"searching": false,
@@ -32,7 +48,49 @@
 	         }	    		
 	    } );
 	} );
-		
+
+
+	// ---------------------------------------------------------------------
+
+	function controllaNumeroFattura() {
+
+		var fornitore = $("#fornitore").val();
+		var cliente = $("#cliente").val();
+		var numfatt = $("#numfatt").val();
+		var numfattCurrent = $("#numfattCurrent").val();
+		var datareg = $("#datareg").val();
+
+		if (numfatt != numfattCurrent) {
+
+			if ((fornitore != "") && (numfatt != "")) {
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
+			            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+			        }
+			    } 
+			    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+			    xmlhttp.send();		
+			}	
+			else if ((cliente != "") && (numfatt != "")) {
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
+			            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+			        }
+			    } 
+			    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&idcliente=" + cliente + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+			    xmlhttp.send();		
+			}
+		}
+		else {
+            $( "#messaggioControlloNumeroFattura" ).html("");
+            $( "#esitoNumeroFattura" ).val("");			
+		}		
+	}
+
 </script>
 
 <div id="body">
@@ -53,6 +111,7 @@
 						<td class="td">%ml.datareg% :</td>
 						<td colspan="4" class="tooltip">
 							<input class="dataregpicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%' >
+							<i id="messaggioControlloDataRegistrazione" style="color:red; font-weight: bolder;">&nbsp;</i>							
 							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' >
 						</td>
 					</tr>	
@@ -88,7 +147,10 @@
 						</td>
 						
 						<td>%ml.numfatt% :</td>						
-						<td class="tooltip"><input type="text" name="numfatt" size="10" maxlength="35" value='%numfatt%' ></td>
+						<td class="tooltip">
+							<input type="text" id="numfatt" name="numfatt" size="10" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura();" />&nbsp;&nbsp;
+							<i id="messaggioControlloNumeroFattura" style="color:red; font-weight: bolder;">&nbsp;</i>			
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4">
@@ -119,10 +181,14 @@
 							<button id="nuovo-dett-modificareg" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
 						</td>
-						<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
 					</tr>
 				</tfoot>
 			</table>
+			<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
+			<input type="hidden" id="numfattCurrent" name="numfattCurrent" value='%numfattCurrent%' >
+			<input type="hidden" id="esitoNumeroFattura" name="esitoNumeroFattura" value="%esitoNumeroFattura%" />
+			<input type="hidden" id="esitoControlloDataRegistrazione" name="esitoControlloDataRegistrazione" value="%esitoControlloDataRegistrazione%" />
+			
 		</form>
 	</div>
 </div>

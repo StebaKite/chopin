@@ -21,10 +21,13 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["datascad"] = $_REQUEST["datascad"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["numfatt"] = $_REQUEST["numfatt"];
+	$_SESSION["numfattCurrent"] = $_REQUEST["numfattCurrent"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
 	$_SESSION["cliente"] = $_REQUEST["cliente"];
+	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
+	$_SESSION["esitoControlloDataRegistrazione"] = $_REQUEST["esitoControlloDataRegistrazione"];
 
 	$modificaRegistrazione->go();
 }

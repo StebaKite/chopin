@@ -1141,6 +1141,26 @@ $( "#fornitore" ).change(function() {
 	}
 });
 
+/* *********************************************************************************************
+ * Il controllo sulla data registrazione verificha che la data immessa cada all'interno
+ * di uno dei mesi in linea. I mesi in linea coincidono con le date pianificate di riporto saldo
+ * 
+ */
+$( "#datareg" ).change(function() {
+	
+	var datareg = $("#datareg").val();
+				
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);
+            $( "#esitoControlloDataRegistrazione" ).val(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
+    xmlhttp.send();						
+});
+
 $( ".scadenzeAperteFornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();

@@ -17,6 +17,7 @@ if ($_GET["modo"] == "start") {
 	unset($_SESSION["fornitore"]);
 	unset($_SESSION["cliente"]);
 	unset($_SESSION["esitoNumeroFattura"]);
+	unset($_SESSION["esitoControlloDataRegistrazione"]);
 	unset($_SESSION["dettagliInseriti"]);
 	unset($_SESSION["indexDettagliInseriti"]);
 	unset($_SESSION["scadenzeInserite"]);
@@ -36,6 +37,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
 	$_SESSION["cliente"] = $_REQUEST["cliente"];
 	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
+	$_SESSION["esitoControlloDataRegistrazione"] = $_REQUEST["esitoControlloDataRegistrazione"];
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];	
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	$_SESSION["scadenzeInserite"] = $_REQUEST["scadenzeInserite"];
