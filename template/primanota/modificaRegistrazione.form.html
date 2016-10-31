@@ -6,21 +6,95 @@
 	var elencoClienti = [%elenco_clienti%];
 
 	$(document).ready( function () {
-				
+
+		// Impostazione dei messaggi di errore ------------------------------------		
+		
 		var esitoControlloDatareg = $("#esitoControlloDataRegistrazione").val();
+		var esitoControlloDescrizione = $("#esitoDescrizione").val();
+		var esitoControlloCausale = $("#esitoCausale").val();
+		var esitoControlloFornitore = $("#esitoFornitore").val();
+		var esitoControlloCliente = $("#esitoCliente").val();
+		var esitoControlloPresenzaNumfatt = $("#esitoNumfatt").val();
+		var esitoControlloDatascad = $("#esitoDatascad").val();
 		var esitoControlloNumfatt = $("#esitoNumeroFattura").val();
 		var numfatt = $("#numfatt").val();
 		var numfattCurrent = $("#numfattCurrent").val();
-		
+
+		//--------------------------------
 		if (esitoControlloDatareg != "") {
 			$("#messaggioControlloDataRegistrazione").html(esitoControlloDatareg);
+			$("#tddatareg").addClass("inputFieldError");
+		}
+		else {
+			$("#tddatareg").removeClass("inputFieldError");			
 		}
 
+		//--------------------------------
+		if (esitoControlloDescrizione != "") {
+			$("#messaggioControlloDescrizione").html(esitoControlloDescrizione);
+			$("#tddescreg").addClass("inputFieldError");
+		}
+		else {
+			$("#tddescreg").removeClass("inputFieldError");			
+		}
+
+		//--------------------------------
+		if (esitoControlloCausale != "") {
+			$("#messaggioControlloCausale").html(esitoControlloCausale);
+			$("#tdcausale").addClass("inputFieldError");
+		}
+		else {
+			$("#tdcausale").removeClass("inputFieldError");			
+		}
+
+		//--------------------------------
+		if (esitoControlloFornitore != "") {
+			$("#messaggioControlloFornitore").html(esitoControlloFornitore);
+			$("#tdfornitore").addClass("inputFieldError");
+		}
+		else {
+			$("#tdfornitore").removeClass("inputFieldError");			
+		}
+
+		//--------------------------------
+		if (esitoControlloCliente != "") {
+			$("#messaggioControlloCliente").html(esitoControlloCliente);
+			$("#tdcliente").addClass("inputFieldError");
+		}
+		else {
+			$("#tdcliente").removeClass("inputFieldError");			
+		}
+
+		//--------------------------------
+		if (esitoControlloPresenzaNumfatt != "") {
+			$("#messaggioControlloNumeroFattura").html(esitoControlloPresenzaNumfatt);
+			$("#tdnumfatt").addClass("inputFieldError");
+		}
+		else {
+			$("#tdnumfatt").removeClass("inputFieldError");			
+		}
+
+		//--------------------------------
+		if (esitoControlloDatascad != "") {
+			$("#messaggioControlloDataScadenza").html(esitoControlloDatascad);
+			$("#tddatascad").addClass("inputFieldError");
+		}
+		else {
+			$("#tddatascad").removeClass("inputFieldError");			
+		}
+		
+		//--------------------------------
 		if (numfatt != numfattCurrent) {
 			if (esitoControlloNumfatt != "") {
 				$("#messaggioControlloNumeroFattura").html(esitoControlloNumfatt);
+				$("#tdnumfatt").addClass("inputFieldError");
 			}			
+			else {
+				$("#tdnumfatt").removeClass("inputFieldError");				
+			}
 		}
+		
+		// fine delle impostazioni messaggi d'errore ------------------------------
 		
 	    $('#dettagli').dataTable( {
 	    	"paging": false,
@@ -49,7 +123,127 @@
 	    } );
 	} );
 
+	// ---------------------------------------------------------------------
 
+	function controllaDescrizione() {
+
+		if ($("#descreg").val() != "") {
+        	$( "#tddescreg").removeClass("inputFieldError");	
+            $( "#esitoDescrizione" ).val("");			
+			$( "#messaggioControlloDescrizione" ).html("");
+		}
+		else {
+			$("#messaggioControlloDescrizione").html("Dato errato");
+			$("#tddescreg").addClass("inputFieldError");			
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	function controllaCausale() {
+
+		if ($("#causale").val() != "") {
+        	$( "#tdcausale").removeClass("inputFieldError");	
+            $( "#esitoCausale" ).val("");			
+			$( "#messaggioControlloCausale" ).html("");
+		}
+		else {
+			$("#messaggioControlloCausale").html("Dato errato");
+			$("#tdcausale").addClass("inputFieldError");			
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	function controllaFornitore() {
+
+		if ($("#fornitore").val() != "") {
+			
+			if ($("#cliente").val() == "") {
+				
+	        	$( "#tdfornitore").removeClass("inputFieldError");	
+	            $( "#esitoFornitore" ).val("");			
+				$( "#messaggioControlloFornitore" ).html("");
+	        	$( "#tdcliente").removeClass("inputFieldError");	
+	            $( "#esitoCliente" ).val("");			
+				$( "#messaggioControlloCliente" ).html("");				
+			}
+			else {
+				$("#messaggioControlloFornitore").html("Dato errato");
+				$("#tdfornitore").addClass("inputFieldError");			
+				$("#messaggioControlloCliente").html("Dato errato");
+				$("#tdcliente").addClass("inputFieldError");							
+			}
+		}
+		else {
+			if ($("#cliente").val() == "") {
+				$("#messaggioControlloFornitore").html("Dato errato");
+				$("#tdfornitore").addClass("inputFieldError");							
+			}
+			else {
+	        	$( "#tdfornitore").removeClass("inputFieldError");	
+	            $( "#esitoFornitore" ).val("");			
+				$( "#messaggioControlloFornitore" ).html("");
+	        	$( "#tdcliente").removeClass("inputFieldError");	
+	            $( "#esitoCliente" ).val("");			
+				$( "#messaggioControlloCliente" ).html("");								
+			}
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	function controllaCliente() {
+
+		if ($("#cliente").val() != "") {
+			
+			if ($("#fornitore").val() == "") {
+				
+	        	$( "#tdcliente").removeClass("inputFieldError");	
+	            $( "#esitoCliente" ).val("");			
+				$( "#messaggioControlloCliente" ).html("");			
+	        	$( "#tdfornitore").removeClass("inputFieldError");	
+	            $( "#esitoFornitore" ).val("");			
+				$( "#messaggioControlloFornitore" ).html("");
+			}
+			else {
+				$("#messaggioControlloCliente").html("Dato errato");
+				$("#tdcliente").addClass("inputFieldError");			
+				$("#messaggioControlloFornitore").html("Dato errato");
+				$("#tdfornitore").addClass("inputFieldError");							
+			}
+		}
+		else {			
+			if ($("#fornitore").val() == "") {
+				$("#messaggioControlloCliente").html("Dato errato");
+				$("#tdcliente").addClass("inputFieldError");							
+			}
+			else {
+	        	$( "#tdcliente").removeClass("inputFieldError");	
+	            $( "#esitoCliente" ).val("");			
+				$( "#messaggioControlloCliente" ).html("");			
+	        	$( "#tdfornitore").removeClass("inputFieldError");	
+	            $( "#esitoFornitore" ).val("");			
+				$( "#messaggioControlloFornitore" ).html("");				
+			}
+		}
+	}
+
+	// ---------------------------------------------------------------------
+
+	function controllaDataScadenza() {
+
+		if ($("#datascad").val() != "") {
+        	$( "#tddatascad").removeClass("inputFieldError");	
+            $( "#esitoDatascad" ).val("");			
+			$( "#messaggioControlloDataScadenza" ).html("");
+		}
+		else {
+			$("#messaggioControlloDataScadenza").html("Dato errato");
+			$("#tddatascad").addClass("inputFieldError");			
+		}
+	}
+	
 	// ---------------------------------------------------------------------
 
 	function controllaNumeroFattura() {
@@ -60,6 +254,16 @@
 		var numfattCurrent = $("#numfattCurrent").val();
 		var datareg = $("#datareg").val();
 
+		if (numfatt != "") {
+        	$( "#tdnumfatt").removeClass("inputFieldError");	
+            $( "#esitoNumfatt" ).val("");			
+			$( "#messaggioControlloNumeroFattura" ).html("");
+		}
+		else {
+			$("#messaggioControlloNumeroFattura").html("Dato errato");
+			$("#tdnumfatt").addClass("inputFieldError");			
+		}
+		
 		if (numfatt != numfattCurrent) {
 
 			if ((fornitore != "") && (numfatt != "")) {
@@ -68,6 +272,13 @@
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
 			            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+			            
+			            if (xmlhttp.responseText != "") 
+			            	$("#tdnumfatt").addClass("inputFieldError");			            	
+			            else {
+			            	$( "#tdnumfatt").removeClass("inputFieldError");	
+			                $( "#esitoNumeroFattura" ).val("");
+			            }
 			        }
 			    } 
 			    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
@@ -79,6 +290,13 @@
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
 			            $( "#esitoNumeroFattura" ).val(xmlhttp.responseText);
+			            
+			            if (xmlhttp.responseText != "") 
+			            	$("#tdnumfatt").addClass("inputFieldError");			            	
+			            else {
+			            	$( "#tdnumfatt").removeClass("inputFieldError");	
+			                $( "#esitoNumeroFattura" ).val("");
+			            }
 			        }
 			    } 
 			    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&idcliente=" + cliente + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
@@ -86,6 +304,7 @@
 			}
 		}
 		else {
+        	$( "#tdsnumfatt").removeClass("inputFieldError");	
             $( "#messaggioControlloNumeroFattura" ).html("");
             $( "#esitoNumeroFattura" ).val("");			
 		}		
@@ -105,20 +324,30 @@
 		</form>
 		<br>
 		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
+			<table class="datiCreate">
 				<tbody>
 					<tr>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloDataRegistrazione" >&nbsp;</i></td>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloDescrizione" >&nbsp;</i></td>
+					</tr>
+					<tr>
 						<td class="td">%ml.datareg% :</td>
-						<td colspan="4" class="tooltip">
-							<input class="dataregpicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%' >
-							<i id="messaggioControlloDataRegistrazione" style="color:red; font-weight: bolder;">&nbsp;</i>							
-							&nbsp;&nbsp;&nbsp;%ml.descreg% : <input type="text" name="descreg" size="80" maxlength="200" value='%descreg%' >
-						</td>
+						<td id="tddatareg" class="tooltip"><input class="dataregpicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%'/></td>
+						<td>%ml.descreg% :</td>
+						<td id="tddescreg"><input type="text" id="descreg" name="descreg" size="50" maxlength="200" value='%descreg%' onblur="controllaDescrizione()"/></td>
 					</tr>	
 					<tr>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloCausale" >&nbsp;</i></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
 						<td>%ml.codcau% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCausale" id="causale" name="causale" >
+						<td class="tooltip" id="tdcausale">
+							<select class="selectmenuCausale" id="causale" name="causale">
 								<option value=""></option>
 								%elenco_causali%
 							</select>
@@ -133,23 +362,33 @@
 						</td>					
 					</tr>
 					<tr>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloFornitore" >&nbsp;</i></td>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloCliente" >&nbsp;</i></td>
+					</tr>
+					<tr>
 						<td>%ml.codforn% :</td>
-						<td><div><input type="text" id="fornitore" name="fornitore" size="40" value="%fornitore%" /></div></td>
+						<td id="tdfornitore"><div><input type="text" id="fornitore" name="fornitore" size="40" value="%fornitore%" onblur="controllaFornitore()" /></div></td>
 						
 						<td>%ml.codclie% :</td>
-						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%cliente%" /></div></td>
+						<td id="tdcliente"><div><input type="text" id="cliente" name="cliente" size="40" value="%cliente%" onblur="controllaCliente()" /></div></td>
 					</tr>					
 					<tr>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloDataScadenza" >&nbsp;</i></td>
+						<td></td>
+						<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFattura" >&nbsp;</i></td>
+					</tr>
+					<tr>
 						<td class="td">%ml.datascad% :</td>
-						<td class="tooltip">
-							<input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' />
+						<td id="tddatascad" >
+							<input class="datepicker" type="text" id="datascad" name="datascad" size="10" maxlength="10" value='%datascad%' onblur="controllaDataScadenza()" />
 							<button id="nuova-scad-modificareg" class="button" title="%ml.nuovaDataScadTip%" >%ml.nuovaDataScad%</button>
 						</td>
-						
 						<td>%ml.numfatt% :</td>						
-						<td class="tooltip">
-							<input type="text" id="numfatt" name="numfatt" size="10" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura();" />&nbsp;&nbsp;
-							<i id="messaggioControlloNumeroFattura" style="color:red; font-weight: bolder;">&nbsp;</i>			
+						<td id="tdnumfatt" >
+							<input type="text" id="numfatt" name="numfatt" size="10" maxlength="35" value='%numfatt%' onblur="controllaNumeroFattura()" />&nbsp;&nbsp;
 						</td>
 					</tr>
 					<tr>
@@ -186,7 +425,13 @@
 			</table>
 			<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
 			<input type="hidden" id="numfattCurrent" name="numfattCurrent" value='%numfattCurrent%' >
+			<input type="hidden" id="esitoDescrizione" name="esitoDescrizione" value="%esitoControlloDescrizione%" />
+			<input type="hidden" id="esitoCausale" name="esitoCausale" value="%esitoControlloCausale%" />
+			<input type="hidden" id="esitoFornitore" name="esitoFornitore" value="%esitoControlloFornitore%" />
+			<input type="hidden" id="esitoCliente" name="esitoCliente" value="%esitoControlloCliente%" />
 			<input type="hidden" id="esitoNumeroFattura" name="esitoNumeroFattura" value="%esitoNumeroFattura%" />
+			<input type="hidden" id="esitoNumfatt" name="esitoNumfatt" value="%esitoControlloNumfatt%" />
+			<input type="hidden" id="esitoDatascad" name="esitoDatascad" value="%esitoControlloDatascad%" />
 			<input type="hidden" id="esitoControlloDataRegistrazione" name="esitoControlloDataRegistrazione" value="%esitoControlloDataRegistrazione%" />
 			
 		</form>

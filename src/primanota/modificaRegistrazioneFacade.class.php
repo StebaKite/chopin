@@ -10,6 +10,13 @@ $modificaRegistrazione = ModificaRegistrazione::getInstance();
 if ($_GET["modo"] == "start") {
 	
 	$_SESSION["idRegistrazione"] = $_REQUEST["idRegistrazione"];
+
+	unset($_SESSION["esitoControlloDescrizione"]);
+	unset($_SESSION["esitoControlloCausale"]);
+	unset($_SESSION["esitoControlloFornitore"]);
+	unset($_SESSION["esitoControlloCliente"]);
+	unset($_SESSION["esitoControlloNumfatt"]);
+	unset($_SESSION["esitoControlloDatascad"]);
 	
 	$modificaRegistrazione->start();
 }
@@ -25,8 +32,18 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
+	$_SESSION["desforn"] = $_REQUEST["fornitore"];	
 	$_SESSION["cliente"] = $_REQUEST["cliente"];
+	$_SESSION["descli"] = $_REQUEST["cliente"];
+	
+	$_SESSION["esitoDescrizione"] = $_REQUEST["esitoDescrizione"];
 	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
+	$_SESSION["esitoCausale"] = $_REQUEST["esitoCausale"];
+	$_SESSION["esitoFornitore"] = $_REQUEST["esitoFornitore"];
+	$_SESSION["esitoCliente"] = $_REQUEST["esitoCliente"];
+	$_SESSION["esitoNumfatt"] = $_REQUEST["esitoNumfatt"];
+	$_SESSION["esitoDatascad"] = $_REQUEST["esitoDatascad"];
+	
 	$_SESSION["esitoControlloDataRegistrazione"] = $_REQUEST["esitoControlloDataRegistrazione"];
 
 	$modificaRegistrazione->go();

@@ -37,7 +37,13 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 
 		$esito = TRUE;
 		$msg = "<br>";
-
+		unset($_SESSION["esitoControlloDescrizione"]);
+		unset($_SESSION["esitoControlloCausale"]);
+		unset($_SESSION["esitoControlloFornitore"]);
+		unset($_SESSION["esitoControlloCliente"]);
+		unset($_SESSION["esitoControlloNumfatt"]);
+		unset($_SESSION["esitoControlloDatascad"]);
+		
 		/**
 		 * Controllo di validita della data registrazione.
 		 * La data registrazione viene verificata da una funzione ajax che effettua una verifica di ammissione.
@@ -53,11 +59,13 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 
 		if ($_SESSION["descreg"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la descrizione";
+			$_SESSION["esitoControlloDescrizione"] = "Dato errato"; 
 			$esito = FALSE;
 		}
 
 		if ($_SESSION["causale"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la causale";
+			$_SESSION["esitoControlloCausale"] = "Dato errato";
 			$esito = FALSE;
 		}
 
@@ -66,7 +74,9 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		 */
 		if ($_SESSION["numfatt"] != "") {
 			if (($_SESSION["fornitore"] == "") && ($_SESSION["cliente"] == "")) {
-				$msg = $msg . "<br>&ndash; Col numero fattura presente devi inserire il fornitore o il cliente";
+				$msg = $msg . "<br>&ndash; Inserisci il fornitore o il cliente";
+				$_SESSION["esitoControlloFornitore"] = "Dato errato";
+				$_SESSION["esitoControlloCliente"] = "Dato errato";
 				$esito = FALSE;
 			}
 			else {
@@ -82,6 +92,8 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		 */
 		if (($_SESSION["fornitore"] != "") && ($_SESSION["cliente"] != "")) {
 			$msg = $msg . "<br>&ndash; Il fornitore e il cliente sono mutualmente esclusivi";
+			$_SESSION["esitoControlloFornitore"] = "Dato errato";
+			$_SESSION["esitoControlloCliente"] = "Dato errato";
 			$esito = FALSE;
 		}
 
@@ -92,12 +104,14 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 		if (($_SESSION["fornitore"] != "") || ($_SESSION["cliente"] != "")) {
 			
 			if ($_SESSION["numfatt"] == "") {
-				$msg = $msg . "<br>&ndash; In presenza di un fornitore o cliente deve esserci in numero di fattura";
+				$msg = $msg . "<br>&ndash; Inserisci il numero di fattura";
+				$_SESSION["esitoControlloNumfatt"] = "Dato errato";
 				$esito = FALSE;
 			}
 
 			if ($_SESSION["datascad"] == "") {
-				$msg = $msg . "<br>&ndash; Inserisci una data scadenza che servir&agrave; per associare il pagamento/incasso";
+				$msg = $msg . "<br>&ndash; Inserisci una data scadenza";
+				$_SESSION["esitoControlloDatascad"] = "Dato errato";
 				$esito = FALSE;
 			}			
 		}
@@ -250,7 +264,13 @@ class ModificaRegistrazioneTemplate extends PrimanotaAbstract {
 				'%class_scadenzesuppl%' => $class_scadenzesuppl,
 				'%thead_scadenze%' => $theadScadenze,
 				'%tbody_scadenze%' => $tbodyScadenze,
+				'%esitoControlloDescrizione%' => $_SESSION["esitoControlloDescrizione"],
+				'%esitoControlloCausale%' => $_SESSION["esitoControlloCausale"],
+				'%esitoControlloFornitore%' => $_SESSION["esitoControlloFornitore"],
+				'%esitoControlloCliente%' => $_SESSION["esitoControlloCliente"],
 				'%esitoControlloDataRegistrazione%' => $_SESSION["esitoControlloDataRegistrazione"],
+				'%esitoControlloNumfatt%' => $_SESSION["esitoControlloNumfatt"],
+				'%esitoControlloDatascad%' => $_SESSION["esitoControlloDatascad"],
 				'%esitoNumeroFattura%' => $_SESSION["esitoNumeroFattura"]
 		);
 		

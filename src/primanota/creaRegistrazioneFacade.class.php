@@ -16,8 +16,18 @@ if ($_GET["modo"] == "start") {
 	unset($_SESSION["causale"]);
 	unset($_SESSION["fornitore"]);
 	unset($_SESSION["cliente"]);
+
+	unset($_SESSION["esitoControlloDescrizione"]);
+	unset($_SESSION["esitoControlloCausale"]);
+	unset($_SESSION["esitoControlloNegozio"]);
+	unset($_SESSION["esitoControlloFornitore"]);
+	unset($_SESSION["esitoControlloCliente"]);
+	unset($_SESSION["esitoControlloNumfatt"]);
+	unset($_SESSION["esitoControlloDatascad"]);
 	unset($_SESSION["esitoNumeroFattura"]);
+	unset($_SESSION["esitoNumfatt"]);
 	unset($_SESSION["esitoControlloDataRegistrazione"]);
+	
 	unset($_SESSION["dettagliInseriti"]);
 	unset($_SESSION["indexDettagliInseriti"]);
 	unset($_SESSION["scadenzeInserite"]);
@@ -36,8 +46,17 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
 	$_SESSION["cliente"] = $_REQUEST["cliente"];
+
+	$_SESSION["esitoDescrizione"] = $_REQUEST["esitoDescrizione"];
 	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
+	$_SESSION["esitoCausale"] = $_REQUEST["esitoCausale"];
+	$_SESSION["esitoNegozio"] = $_REQUEST["esitoNegozio"];
+	$_SESSION["esitoFornitore"] = $_REQUEST["esitoFornitore"];
+	$_SESSION["esitoCliente"] = $_REQUEST["esitoCliente"];
+	$_SESSION["esitoNumfatt"] = $_REQUEST["esitoNumfatt"];
+	$_SESSION["esitoDatascad"] = $_REQUEST["esitoDatascad"];
 	$_SESSION["esitoControlloDataRegistrazione"] = $_REQUEST["esitoControlloDataRegistrazione"];
+	
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];	
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 	$_SESSION["scadenzeInserite"] = $_REQUEST["scadenzeInserite"];
