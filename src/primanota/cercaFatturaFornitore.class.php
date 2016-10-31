@@ -51,7 +51,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 			if ($result){
 				if (pg_num_rows($result) > 0) {
 					foreach(pg_fetch_all($result) as $row) {
-						echo "Fattura gi&agrave; esistente!";
+						echo "Fattura gi&agrave; esistente";
 						break;
 					}
 				}
@@ -60,7 +60,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract {
 				}
 			}
 			else {
-				echo "Controllo numero fattura non eseguito!";
+				echo "Errore controllo!";
 			}				
 		}
 		else {

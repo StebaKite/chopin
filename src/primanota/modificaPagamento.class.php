@@ -279,7 +279,13 @@ class ModificaPagamento extends primanotaAbstract {
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
-		$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
+		
+		if (is_numeric($_SESSION["fornitore"])) {
+			$fornitore = $_SESSION["fornitore"];
+		}
+		else {
+			$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]) : "null" ;
+		}		
 		
 		$staScadenza = "10";   // pagata
 		

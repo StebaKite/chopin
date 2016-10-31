@@ -1092,6 +1092,16 @@ $( ".selectmenuCausale" )
 	.selectmenu({change:
 		function(){
 			var causale = $("#causale").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale").removeClass("inputFieldError");	
+	            $( "#esitoCausale" ).val("");			
+				$( "#messaggioControlloCausale" ).html("");
+			}
+			else {
+				$("#messaggioControlloCausale").html("Dato errato");
+				$("#tdcausale").addClass("inputFieldError");	
+			}
 		
 			var xmlhttp = new XMLHttpRequest();
 	        xmlhttp.onreadystatechange = function() {
@@ -1107,6 +1117,8 @@ $( ".selectmenuCausale" )
 	.selectmenu({width: 150})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
+
+// -------------------------------------------
 
 $( "#fornitore" ).change(function() {
 	
@@ -1133,6 +1145,9 @@ $( "#fornitore" ).change(function() {
 	        xmlhttp.onreadystatechange = function() {
 	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	                $( "#datascad" ).val(xmlhttp.responseText);
+	            	$( "#tddatascad").removeClass("inputFieldError");	
+	                $( "#esitoDatascad" ).val("");			
+	        		$( "#messaggioControlloDataScadenza" ).html("");	                
 	            }
 	        }
 	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
@@ -1149,16 +1164,31 @@ $( "#fornitore" ).change(function() {
 $( "#datareg" ).change(function() {
 	
 	var datareg = $("#datareg").val();
-				
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            $( "#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);
-            $( "#esitoControlloDataRegistrazione" ).val(xmlhttp.responseText);
-        }
-    }
-    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
-    xmlhttp.send();						
+
+	if (datareg != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);
+	            $( "#esitoControlloDataRegistrazione" ).val(xmlhttp.responseText);
+	            
+	            if (xmlhttp.responseText != "") 
+	            	$("#tddatareg").addClass("inputFieldError");			            	
+	            else {
+	            	$( "#tddatareg").removeClass("inputFieldError");	
+	                $( "#esitoControlloDataRegistrazione" ).val("");
+	            }
+	            
+	        }
+	    }
+	    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
+	    xmlhttp.send();		
+	}
+	else {
+        $( "#messaggioControlloDataRegistrazione" ).html("Dato errato");
+        $( "#esitoControlloDataRegistrazione" ).val("Dato errato");		
+    	$( "#tddatareg" ).addClass("inputFieldError");			            	
+	}
 });
 
 $( ".scadenzeAperteFornitore" ).change(function() {
@@ -1238,12 +1268,37 @@ $( ".selectmenuCausale" )
 	.addClass("overflow");
 
 $( ".selectmenuCausalePagamenti" )
-	.selectmenu({width: 150})
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale").removeClass("inputFieldError");	
+	            $( "#esitoCausale" ).val("");			
+				$( "#messaggioControlloCausale" ).html("");
+			}
+			else {
+				$("#messaggioControlloCausale").html("Dato errato");
+				$("#tdcausale").addClass("inputFieldError");	
+			}
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#conti" ).html(xmlhttp.responseText);
+	                $( "#conti" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 300})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
 $( ".selectmenuCausaleIncassi" )
-	.selectmenu({width: 150})
+	.selectmenu({width: 300})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
@@ -1362,7 +1417,26 @@ $(function() {
 
 });
 
-$(".numfatt-multiple").select2();
+$(".numfatt-multiple").select2()
+.on("change", function() {
+	var numfatt = $("#select2").val();
+	if (numfatt == undefined) {
+		$("#messaggioControlloNumeroFattura").html("Dato errato");
+		$("#tdnumfatt").addClass("inputFieldError");			
+	}
+	else {
+		if (numfatt .length > 0) {
+	    	$( "#tdnumfatt").removeClass("inputFieldError");	
+	        $( "#esitoNumfatt" ).val("");			
+			$( "#messaggioControlloNumeroFattura" ).html("");
+		}
+		else {
+			$("#messaggioControlloNumeroFattura").html("Dato errato");
+			$("#tdnumfatt").addClass("inputFieldError");	
+		}		
+	}
+})	
+	
 $(".numfatt-cliente-multiple").select2();
 
 // Hover states on the static widgets

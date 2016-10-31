@@ -37,42 +37,68 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 
 		$esito = TRUE;
 		$msg = "<br>";
-
+		unset($_SESSION["esitoControlloNegozio"]);
+		unset($_SESSION["esitoControlloDescrizione"]);
+		unset($_SESSION["esitoControlloCausale"]);
+		unset($_SESSION["esitoControlloNegozio"]);
+		unset($_SESSION["esitoControlloFornitore"]);
+		unset($_SESSION["esitoControlloNumfatt"]);
+		
+		/**
+		 * Controllo di validita della data registrazione.
+		 * La data registrazione viene verificata da una funzione ajax che effettua una verifica di ammissione.
+		 */
+		if ($_SESSION["esitoControlloDataRegistrazione"] != "") {
+			$msg = $msg . "<br>&ndash; La data registrazione non è ammessa";
+			$esito = FALSE;
+		}
+		
 		/**
 		 * Controllo presenza dati obbligatori
 		 */
 
 		if ($_SESSION["codneg"] == "") {
 			$msg = $msg . "<br>&ndash; Scegli il negozio";
+			$_SESSION["esitoControlloNegozio"] = "Dato errato";
 			$esito = FALSE;
 		}
 		
 		if ($_SESSION["descreg"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la descrizione";
+			$_SESSION["esitoControlloDescrizione"] = "Dato errato";
 			$esito = FALSE;
 		}
 
 		if ($_SESSION["causale"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la causale";
+			$_SESSION["esitoControlloCausale"] = "Dato errato";
 			$esito = FALSE;
 		}
 
+		if ($_SESSION["fornitore"] == "") {
+			$msg = $msg . "<br>&ndash; Inserisci il fornitore";
+			$_SESSION["esitoControlloFornitore"] = "Dato errato";
+			$esito = FALSE;
+		}
+		
 		/**
-		 * Se è stato immesso un numero fattura allora deve esserci un fornitore o cliente
+		 * Se è stato immesso un numero fattura allora deve esserci un fornitore
 		 */
 		if ($_SESSION["numfatt"] != "") {
-			if (($_SESSION["fornitore"] == "") && ($_SESSION["cliente"] == "")) {
-				$msg = $msg . "<br>&ndash; Col numero fattura presente devi inserire il fornitore o il cliente";
+			if ($_SESSION["fornitore"] == "") {
+				$msg = $msg . "<br>&ndash; Inserisci il fornitore";
+				$_SESSION["esitoControlloFornitore"] = "Dato errato";
 				$esito = FALSE;
 			}
 		}
 
 		/**
-		 * Se è stato immesso un fornitore o un cliente deve esserci un numero fattura
+		 * Se è stato immesso un fornitore deve esserci un numero fattura
 		 */
 		if ($_SESSION["fornitore"] != "") {
 			if ($_SESSION["numfatt"] == "") {
-				$msg = $msg . "<br>&ndash; In presenza di un fornitore o cliente deve esserci in numero di fattura";
+				$msg = $msg . "<br>&ndash; Inserisci il numero di fattura";
+				$_SESSION["esitoControlloNumfatt"] = "Dato errato";
 				$esito = FALSE;
 			}
 		}
@@ -194,6 +220,12 @@ class CreaPagamentoTemplate extends PrimanotaAbstract {
 				'%elenco_causali%' => $_SESSION["elenco_causali"],
 				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
 				'%elenco_conti%' => $_SESSION["elenco_conti"],
+				'%esitoControlloDescrizione%' => $_SESSION["esitoControlloDescrizione"],
+				'%esitoControlloCausale%' => $_SESSION["esitoControlloCausale"],
+				'%esitoControlloNegozio%' => $_SESSION["esitoControlloNegozio"],
+				'%esitoControlloFornitore%' => $_SESSION["esitoControlloFornitore"],
+				'%esitoControlloNumfatt%' => $_SESSION["esitoControlloNumfatt"],
+				'%esitoControlloDataRegistrazione%' => $_SESSION["esitoControlloDataRegistrazione"],
 				'%elenco_scadenze_fornitore%' => $_SESSION["elenco_scadenze_fornitore"]
 		);
 

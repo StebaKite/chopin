@@ -145,9 +145,13 @@ input[type="text"] {
 	
 input:focus {
 	border: 1px solid #5897fb;
-	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-		box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+	box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
+
+.inputFieldError {
+	box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
 
 textarea {
 	padding: 0 0 0 8px;
@@ -321,11 +325,15 @@ div.scroll-categorie {
 .datiCreate tbody {
 	valign: top;
 }
-/*------------------------------
-	.datiCreate td {
-		border: 1px solid #aaa;
-	}
-------------------------------*/	
+.datiCreate .tdmessage {
+	padding: 0px;
+	margin: 0px;
+	color: red;
+}
+.datiCreate td i .message {
+	text-align: center;
+}
+	
 .result th, .dettaglio th {
 	font-weight: bolder;
 	background-color: #666666;
