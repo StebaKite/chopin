@@ -8,7 +8,7 @@ session_start();
 $ricercaScadenzeAperteCliente = RicercaScadenzeAperteCliente::getInstance();
 
 if ($_GET["modo"] == "start") {
-	$_SESSION["descliente"] = $_REQUEST["descli"];
+	$_SESSION["descli"] = $_REQUEST["descli"];
 	$ricercaScadenzeAperteCliente->start();
 }
 

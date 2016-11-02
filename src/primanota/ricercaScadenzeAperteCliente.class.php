@@ -40,23 +40,25 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract {
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 	
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-	
 		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 300px" id="select2">';
 
-		$db->beginTransaction();
-		$_SESSION["idcliente"] = $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["descliente"]));
-		$db->commitTransaction();
+		if ($_SESSION["descli"] != "") {
+			$db = Database::getInstance();
+			$utility = Utility::getInstance();
+	
+			$db->beginTransaction();
+			$_SESSION["idcliente"] = $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["descli"]));
+			$db->commitTransaction();
+			
+			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
+	
+			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
+				$options .= '<option value="' . trim($row['num_fattura']) . '">' . trim($row['num_fattura']) . '</option>';
+			}		
+		}
 		
-		$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
-
-		foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-			$options .= '<option value="' . trim($row['num_fattura']) . '">' . trim($row['num_fattura']) . '</option>';
-		}		
-		$options .= '</select>';
-		
-		echo $options;
+		$options .= '</select>';		
+		echo $options;		
 	}
 }
 

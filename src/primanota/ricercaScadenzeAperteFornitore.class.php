@@ -39,21 +39,23 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-	
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
 		
 		$options = '<select class="numfatt-multiple" multiple="multiple" style="width: 300px" id="select2">';
 
-		$db->beginTransaction();
-		$_SESSION["idfornitore"] = $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["desforn"]));
-		$db->commitTransaction();		
-		
-		$result_scadenze_fornitore = $this->prelevaScadenzeAperteFornitore($db, $utility, $_SESSION["idfornitore"]);
-
-		foreach(pg_fetch_all($result_scadenze_fornitore) as $row) {
-			$options .= '<option value="' . trim($row['num_fattura']) . '">' . trim($row['num_fattura']) . '</option>';
-		}		
+		if ($_SESSION["desforn"] != "") {
+			$db = Database::getInstance();
+			$utility = Utility::getInstance();
+	
+			$db->beginTransaction();
+			$_SESSION["idfornitore"] = $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["desforn"]));
+			$db->commitTransaction();		
+			
+			$result_scadenze_fornitore = $this->prelevaScadenzeAperteFornitore($db, $utility, $_SESSION["idfornitore"]);
+	
+			foreach(pg_fetch_all($result_scadenze_fornitore) as $row) {
+				$options .= '<option value="' . trim($row['num_fattura']) . '">' . trim($row['num_fattura']) . '</option>';
+			}
+		}
 		$options .= '</select>';
 		
 		echo $options;
