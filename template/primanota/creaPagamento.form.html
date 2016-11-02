@@ -301,8 +301,8 @@ $(document).ready( function () {
 					</tr>
 					<tr>
 						<td>%ml.codforn% :</td>
-						<td id="tdfornitore"><div><input type="text" id="fornitore" name="fornitore" size="40" value="%desforn%" onblur="controllaFornitore()" /></div></td>						
-					</tr>					
+						<td id="tdfornitore"><div><input class="scadenzeAperteFornitore" type="text" id="fornitore" name="fornitore" size="40" value="%desforn%" onblur="controllaFornitore()" /></div></td>
+					</tr>
 					<tr>
 						<td></td>
 						<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFattura" >&nbsp;</i></td>
@@ -336,11 +336,12 @@ $(document).ready( function () {
 							<button id="nuovo-dett-pagam" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="salva" class="button" onclick="doSubmit()" title="%ml.salvaTip%" >%ml.salva%</button>
 						</td>
-						<input type="hidden" id="numfatt" name="numfatt" />
-						<input type="hidden" id="pagamentoForm" value="PAGAMENTO"/>
 					</tr>
 				</tfoot>
 			</table>
+			<input type="hidden" id="numfatt" name="numfatt" />
+			<input type="hidden" id="pagamentoForm" value="PAGAMENTO"/>
+			
 			<input type="hidden" id="esitoDescrizione" name="esitoDescrizione" value="%esitoControlloDescrizione%" />
 			<input type="hidden" id="esitoCausale" name="esitoCausale" value="%esitoControlloCausale%" />
 			<input type="hidden" id="esitoNegozio" name="esitoNegozio" value="%esitoControlloNegozio%" />
