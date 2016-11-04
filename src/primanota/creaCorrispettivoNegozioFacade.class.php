@@ -12,6 +12,12 @@ if ($_GET["modo"] == "start") {
 	unset($_SESSION["descreg"]);
 	unset($_SESSION["codneg"]);
 	unset($_SESSION["causale"]);
+
+	unset($_SESSION["esitoControlloDescrizione"]);
+	unset($_SESSION["esitoControlloCausale"]);
+	unset($_SESSION["esitoControlloNegozio"]);
+	unset($_SESSION["esitoControlloDataRegistrazione"]);
+	
 	unset($_SESSION["dettagliInseriti"]);
 	unset($_SESSION["indexDettagliInseriti"]);
 	
@@ -24,6 +30,13 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
+
+	$_SESSION["esitoDescrizione"] = $_REQUEST["esitoDescrizione"];
+	$_SESSION["esitoNumeroFattura"] = $_REQUEST["esitoNumeroFattura"];
+	$_SESSION["esitoCausale"] = $_REQUEST["esitoCausale"];
+	$_SESSION["esitoNegozio"] = $_REQUEST["esitoNegozio"];
+	$_SESSION["esitoControlloDataRegistrazione"] = $_REQUEST["esitoControlloDataRegistrazione"];
+	
 	$_SESSION["dettagliInseriti"] = $_REQUEST["dettagliInseriti"];
 	$_SESSION["indexDettagliInseriti"] = $_REQUEST["indexDettagliInseriti"];
 

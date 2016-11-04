@@ -36,18 +36,39 @@ class ModificaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 
 		$esito = TRUE;
 		$msg = "<br>";
-
+		unset($_SESSION["esitoControlloNegozio"]);
+		unset($_SESSION["esitoControlloDescrizione"]);
+		unset($_SESSION["esitoControlloCausale"]);
+		unset($_SESSION["esitoControlloNegozio"]);
+		
+		/**
+		 * Controllo di validita della data registrazione.
+		 * La data registrazione viene verificata da una funzione ajax che effettua una verifica di ammissione.
+		 */
+		if ($_SESSION["esitoControlloDataRegistrazione"] != "") {
+			$msg = $msg . "<br>&ndash; La data registrazione non è ammessa";
+			$esito = FALSE;
+		}
+		
 		/**
 		 * Controllo presenza dati obbligatori
 		 */
-
-		if ($_SESSION["descreg"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione";
+		
+		if ($_SESSION["codneg"] == "") {
+			$msg = $msg . "<br>&ndash; Scegli il negozio";
+			$_SESSION["esitoControlloNegozio"] = "Dato errato";
 			$esito = FALSE;
 		}
-
+		
+		if ($_SESSION["descreg"] == "") {
+			$msg = $msg . "<br>&ndash; Manca la descrizione";
+			$_SESSION["esitoControlloDescrizione"] = "Dato errato";
+			$esito = FALSE;
+		}
+		
 		if ($_SESSION["causale"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la causale";
+			$_SESSION["esitoControlloCausale"] = "Dato errato";
 			$esito = FALSE;
 		}
 
@@ -155,6 +176,10 @@ class ModificaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
 			'%datareg_a%' => $_SESSION["datareg_a"],
 			'%elenco_causali%' => $_SESSION["elenco_causali"],
 			'%elenco_conti%' => $_SESSION["elenco_conti"],
+			'%esitoControlloDescrizione%' => $_SESSION["esitoControlloDescrizione"],
+			'%esitoControlloCausale%' => $_SESSION["esitoControlloCausale"],
+			'%esitoControlloNegozio%' => $_SESSION["esitoControlloNegozio"],
+			'%esitoControlloDataRegistrazione%' => $_SESSION["esitoControlloDataRegistrazione"],
 			'%thead_dettagli%' => $thead_dettagli,
 			'%tbody_dettagli%' => $tbody_dettagli,				
 		);

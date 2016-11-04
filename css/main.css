@@ -329,6 +329,7 @@ div.scroll-categorie {
 	padding: 0px;
 	margin: 0px;
 	color: red;
+	height: 15px;	
 }
 .datiCreate td i .message {
 	text-align: center;

@@ -58,7 +58,7 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 	
 		// Data del giorno preimpostata solo in entrata -------------------------
 	
-		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
+		$_SESSION["datareg"] = date("d/m/Y");
 		unset($_SESSION["descreg"]);
 		unset($_SESSION["codneg"]);
 		unset($_SESSION["causale"]);

@@ -1193,19 +1193,17 @@ $( "#datareg" ).change(function() {
 
 $( ".scadenzeAperteFornitore" ).change(function() {
 	
-	var desfornitore = $("#fornitore").val();
+	var desforn = $("#fornitore").val();
 	
-	if (desfornitore != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#select2" ).html(xmlhttp.responseText);
-	            $( "#select2" ).selectmenu( "refresh" );
-	        }
-	    }
-	    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
-	    xmlhttp.send();		
-	}
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#select2" ).html(xmlhttp.responseText);
+            $( "#select2" ).selectmenu( "refresh" );
+        }
+    }
+    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desforn, true);
+    xmlhttp.send();		
 });
 
 
@@ -1225,19 +1223,17 @@ $('input[type=radio][name=codneg]').change(function() {
 
 $( ".scadenzeAperteCliente" ).change(function() {
 
-	var descliente = $("#cliente").val();
+	var descli = $("#cliente").val();
 		
-	if (descliente != "") {
-		var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                $( "#select2" ).html(xmlhttp.responseText);
-                $( "#select2" ).selectmenu( "refresh" );
-            }
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            $( "#select2" ).html(xmlhttp.responseText);
+            $( "#select2" ).selectmenu( "refresh" );
         }
-        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descliente, true);
-        xmlhttp.send();			
-	}		
+    }
+    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descli, true);
+    xmlhttp.send();			
 })
 
 $( "#cliente" ).change(function() {
@@ -1263,7 +1259,7 @@ $( ".selectmenu" )
 	.addClass("overflow");
 
 $( ".selectmenuCausale" )
-	.selectmenu({width: 270})
+	.selectmenu({width: 350})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
@@ -1298,6 +1294,31 @@ $( ".selectmenuCausalePagamenti" )
 	.addClass("overflow");
 
 $( ".selectmenuCausaleIncassi" )
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale").removeClass("inputFieldError");	
+	            $( "#esitoCausale" ).val("");			
+				$( "#messaggioControlloCausale" ).html("");
+			}
+			else {
+				$("#messaggioControlloCausale").html("Dato errato");
+				$("#tdcausale").addClass("inputFieldError");	
+			}
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#conti" ).html(xmlhttp.responseText);
+	                $( "#conti" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+	        xmlhttp.send();			
+		}
+	})
 	.selectmenu({width: 300})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
@@ -1317,8 +1338,26 @@ $( ".selectmenuConto" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+
+
 $( ".selectmenuMercato" )
-	.selectmenu({width: 200})
+	.selectmenu({change:
+		function() {
+		
+			var mercati = $("#mercati").val();
+			
+			if (mercati != "") {
+	        	$( "#tdmercato").removeClass("inputFieldError");	
+	            $( "#esitoMercato" ).val("");			
+				$( "#messaggioControlloMercato" ).html("");
+			}
+			else {
+				$("#messaggioControlloMercato").html("Dato errato");
+				$("#tdmercato").addClass("inputFieldError");	
+			}
+		}
+	})
+	.selectmenu({width: 350})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
@@ -1437,7 +1476,25 @@ $(".numfatt-multiple").select2()
 	}
 })	
 	
-$(".numfatt-cliente-multiple").select2();
+$(".numfatt-cliente-multiple").select2()
+.on("change", function() {
+	var numfatt = $("#select2").val();
+	if (numfatt == undefined) {
+		$("#messaggioControlloNumeroFattura").html("Dato errato");
+		$("#tdnumfatt").addClass("inputFieldError");			
+	}
+	else {
+		if (numfatt .length > 0) {
+	    	$( "#tdnumfatt").removeClass("inputFieldError");	
+	        $( "#esitoNumfatt" ).val("");			
+			$( "#messaggioControlloNumeroFattura" ).html("");
+		}
+		else {
+			$("#messaggioControlloNumeroFattura").html("Dato errato");
+			$("#tdnumfatt").addClass("inputFieldError");	
+		}		
+	}
+})	
 
 // Hover states on the static widgets
 $( "#dialog-link, #icons li" ).hover(
