@@ -2,140 +2,6 @@
 
 <script type="text/javascript">
 
-var indexDettInseriti = [%arrayIndexDettagliInseriti%];
-var dettInseriti = [%arrayDettagliInseriti%];
-
-function aggiungiDettaglio() {
-
-	// Qui ci sono i due conti sui quali inserire gli importi del corrispettivo 
-	// presi dalla configurazione
-	// -----------------------------------------------------------------
-	var contoErario = "%conto_erario%";
-	var contoCorrispettivo = "%conto_corrispettivo%";
-	// -----------------------------------------------------------------	
-	
-	var rowCount = $('#dettagli tbody tr').length;
-	
-	if (rowCount == 1) {
-		$( "#dettagli thead" ).append("<tr>" + 
-			"<th>Conto</th>" + 
-			"<th class='dt-right'>Importo</th>" + 
-			"<th class='dt-center'>D/A</th>" +
-			"</tr>");
-	}
-
-	var conto = $("#conti").val();	
-	var idconto = conto.substring(0, 6);
-	var D_A = "D";
-	
-	// riga importo ---------------------------------------------------
-	
-	var importo = $("#importo").val();
-	var importoNormalizzato = importo.trim().replace(",", ".");
-
-	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td>" + conto + "</td>" +
-        "<td class='dt-right'>" + importoNormalizzato + "</td>" +
-        "<td class='dt-center'>" + D_A + "</td>" +
-      "</tr>" );
-	
-	var elemento = conto + "#" + importoNormalizzato + "#" + D_A;
-	addDett(elemento);
-	
-	// riga conto Erario -------------------------------------------------------
-	
-	var iva = $("#iva").val();
-	var ivaNormalizzato = iva.trim().replace(",", ".");
-	var conto = contoErario; 
-	var D_A = "A";
-	
-	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td>" + conto + "</td>" +
-        "<td class='dt-right'>" + ivaNormalizzato + "</td>" +
-        "<td class='dt-center'>" + D_A + "</td>" +
-      "</tr>" );
-	
-	var elemento = conto + "#" + ivaNormalizzato + "#" + D_A;
-	addDett(elemento);
-	
-	// riga conto Cassa / Banca ---------------------------------------------
-	
-	var imponibile = $("#imponibile").val();
-	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
-	var conto = contoCorrispettivo; 
-	var D_A = "A";
-	
-	$( "#dettagli tbody" ).append( "<tr>" +
-        "<td>" + conto + "</td>" +
-        "<td class='dt-right'>" + imponibileNormalizzato + "</td>" +
-        "<td class='dt-center'>" + D_A + "</td>" +
-      "</tr>" );
-	
-	var elemento = conto + "#" + imponibileNormalizzato + "#" + D_A;
-	addDett(elemento);
-	
-	$("#importo").val("");
-	$("#iva").val("");
-	$("#imponibile").val("");
-	$('#conti').prop("selectedIndex",0).selectmenu('refresh');
-	$('#dare').attr('checked', true);
-}
-
-function addDett(dettaglio) {
-	
-	dettInseriti.push(dettaglio);
-	aggiornaDettaglioInseriti(dettInseriti);
-
-	var conto = dettaglio.substring(0, 6).trim();
-	indexDettInseriti.push(conto);
-	aggiornaIndexDettaglioInseriti(indexDettInseriti);
-}
-
-function aggiornaDettaglioInseriti(dettInseriti) {
-	$("#dettagliInseriti").val(dettInseriti);
-}
-
-function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
-	$("#indexDettagliInseriti").val(indexDettInseriti);
-}
-
-function calcolaImponibile() {
-	
-	var importo = $("#importo").val();
-	var importoNormalizzato = importo.trim().replace(",", ".");
-	
-	var aliquota = $("input[name=aliquota]:checked").val();
-	
-	var imponibile = importoNormalizzato / aliquota;
-	var imponibileArrotondato = imponibile.toFixed(2);
-	
-	$("#imponibile").val(imponibileArrotondato);
-	
-	if (aliquota == "1.10") {
-		var iva = imponibileArrotondato * 0.1;		
-	}
-	else {
-		var iva = imponibileArrotondato * 0.22;
-	}
-	
-	var ivaArrotondata = iva.toFixed(2);
-	$("#iva").val(ivaArrotondata); 
-	
-	// Breve controllo di quadratura degli importi
-	
-	var sommaImportiCalcolati = parseFloat(imponibileArrotondato) + parseFloat(ivaArrotondata);
-	var sommaImportiCalcolatiArrotondato = sommaImportiCalcolati.toFixed(2);
-	
-	var importoSquadratura = importoNormalizzato - parseFloat(sommaImportiCalcolatiArrotondato);
-	
-	if (importoSquadratura != 0) {
-		$("#msgquad").html("ATTENZIONE, squadratura di &euro; " + importoSquadratura.toFixed(2) + " Correggi manualmente");
-	}
-	else {
-		$("#msgquad").html("");
-	}
-}
-
 //---------------------------------------------------------------------
 
 function controllaDescrizione() {
@@ -195,7 +61,6 @@ function controllaMercato() {
 		$("#tdmercato").addClass("inputFieldError");			
 	}
 }
-
 
 $(document).ready( function () {
 
@@ -264,9 +129,9 @@ $(document).ready( function () {
     		],
        		"language": {
                 "lengthMenu": "Visualizza _MENU_ righe per pagina",
-                "zeroRecords": " ",
+                "zeroRecords": "La ricerca non ha prodotto risultati",
                 "info": "Pagina _PAGE_ di _PAGES_",
-                "infoEmpty": " ",
+                "infoEmpty": "La ricerca non ha prodotto risultati",
                 "infoFiltered": "(righe filtrate da _MAX_ totali)",
                 "search": "Cerca:",
                 "paginate": {
@@ -278,13 +143,20 @@ $(document).ready( function () {
          }	    		
     } );
 } );
-
+		
 </script>
-	
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
 
+		<form method="post" id="back" action="%referer%&datascad_da=%datascad_da%&datascad_a=%datascad_a%" >
+			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+			<input type="hidden" name="datareg_da" value='%datareg_da%' >
+			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
+		</form>
+		<br>
 		<form method="post" action="%azione%" >
 			<table class="datiCreate">
 				<tbody>
@@ -297,9 +169,9 @@ $(document).ready( function () {
 					<tr>
 						<td class="td">%ml.datareg% :</td>
 						<td id="tddatareg"><input class="dataregpicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%' /></td>
-						<td>%ml.descreg% :</td>
+						<td>%ml.descreg% : </td>
 						<td id="tddescreg"><input type="text" id="descreg" name="descreg" size="50" maxlength="200" value='%descreg%' onblur="controllaDescrizione()" /></td>
-					</tr>
+					</tr>	
 					<tr>
 						<td></td>
 						<td class="tdmessage"><i class="message" id="messaggioControlloCausale" >&nbsp;</i></td>
@@ -315,7 +187,7 @@ $(document).ready( function () {
 							</select>
 						</td>
 						<td>%ml.negozio% :</td>						
-						<td>
+						<td id="tdnegozio">
 							<div class="radioset" >
 								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="controllaNegozio()" /><label for="villa">%ml.villa%</label>
 								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="controllaNegozio()" /><label for="brembate">%ml.brembate%</label>
@@ -332,9 +204,12 @@ $(document).ready( function () {
 					<tr>
 						<td>%ml.mercato% :</td>
 						<td class="tooltip" id="tdmercato">
-							<select class="selectmenuMercato" id="mercati" name="mercati"></select>
+							<select class="selectmenuMercato" id="mercati" name="mercati">
+								<option value=""></option>
+								%elenco_mercati%
+							</select>
 						</td>
-					</tr>					
+					</tr>										
 					<tr><td><h2>Dettagli</h2></td></tr>										
 					<tr>
 						<td colspan="4">
@@ -342,18 +217,13 @@ $(document).ready( function () {
 							    <thead>%thead_dettagli%</thead>
 							    <tbody>%tbody_dettagli%</tbody>
 							</table>			
-							<tfood>
-								<tr style="font-weight:bolder; color:red;">
-									<td colspan="4"><p id="esitoControlloUnivocitaCorrispettivo"></p></td>
-								</tr>
-							</tfood>							
 						</td>
 					</tr>										
 				</tbody>
 				<tfoot>
-					<tr>
-						<td colspan="6" align="right" class="tooltip">
-							<button id="nuovo-dett-corrisp" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
+					<tr>						
+						<td colspan="4" align="right" class="tooltip">
+							<button id="nuovo-dett-modificareg" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
 							<button id="salva" class="button" title="%ml.salvaTip%" >%ml.salva%</button>
 						</td>
 					</tr>
@@ -365,50 +235,69 @@ $(document).ready( function () {
 			<input type="hidden" id="esitoNegozio" name="esitoNegozio" value="%esitoControlloNegozio%" />
 			<input type="hidden" id="esitoControlloDataRegistrazione" name="esitoControlloDataRegistrazione" value="%esitoControlloDataRegistrazione%" />
 			
-			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
-			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
+			<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
 		</form>
 	</div>
 </div>
 
-<div id="nuovo-dettaglio-corrispettivo-form" title="Nuovo Dettaglio"> 
-	<form>
+<div id="nuovo-dettaglio-modificareg-form" title="Nuovo Dettaglio"> 
+	<form method="post" id="nuovoDettaglio" action="../primanota/inserisciDettaglioRegistrazioneFacade.class.php?modo=go" >
 		<table class="datiCreate" cellpadding="5px">
 			<tbody>
 				<tr>
 					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo" name="importo" size="10" maxlength="20" onblur="calcolaImponibile()" ></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="aliquota10" name="aliquota" value="1.10" checked onclick="calcolaImponibile()"><label for="aliquota10">%ml.aliquota10%</label>
-							<input type="radio" id="aliquota20" name="aliquota" value="1.22" onclick="calcolaImponibile()"><label for="aliquota20">%ml.aliquota22%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td>%ml.iva% :</td>
-					<td class="tooltip"><input type="text" id="iva" name="iva" size="10" maxlength="20"></td>				
-				</tr>				
-				<tr>
-					<td>%ml.imponibile% :</td>
-					<td class="tooltip"><input type="text" id="imponibile" name="imponibile" size="10" maxlength="20"></td>				
-				</tr>				
+					<td class="tooltip"><input type="text" id="importo" name="importo" required size="20" maxlength="20" ></td>
+				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>
-					<td colspan="2">
-						<select class='selectmenuConto' id="conti">%elenco_conti%</select>
+					<td>
+						<select class="selectmenuConto" id="conti" name="conti">
+							<option value=""></option>
+							%elenco_conti%
+						</select>
 					</td>
-				</tr>	
+				</tr>					
+				<tr>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="dare" name="dareavere" value="D" checked ><label for="dare">%ml.dare%</label>
+							<input type="radio" id="avere" name="dareavere" value="A" ><label for="avere">%ml.avere%</label>
+							<input type="hidden" name="idRegistrazione" value='%idregistrazione%' >
+						</div>
+					</td>					
+				</tr>					
 			</tbody>
-			<tfood>
-				<tr style="font-weight:bolder; color:red;">
-					<td colspan="4"><p id="msgquad"></p></td>
-				</tr>
-				<tr style="font-weight:bolder; color:red;">
-					<td colspan="4"><p id="esitoControlloUnivocitaCorrispettivo"></p></td>
-				</tr>
-			</tfood>
 		</table> 	 
+  </form>
+</div>
+
+<div id="cancella-dettaglio-modificareg-form" title="Cancella Dettaglio"> 
+	<form method="post" id="cancellaDettaglio" action="../primanota/cancellaDettaglioRegistrazioneFacade.class.php?modo=go" >
+		<p>Elimino il dettaglio della registrazione ?</p>
+		<input type="hidden" id="idDettaglioRegistrazione" name="idDettaglioRegistrazione">
+  </form>
+</div>
+
+<div id="nuova-scadenza-modificareg-form" title="Data scadenza supplementare"> 
+	<form method="post" id="nuovaScadenza" action="../primanota/inserisciScadenzaRegistrazioneFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td class="td">%ml.datascad% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" id="datascadsuppl" name="datascadsuppl" size="10" maxlength="10" /></td>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importosuppl" name="importosuppl" size="20" maxlength="20" ></td>
+					<td><input type="hidden" name="idRegistrazione" value='%idregistrazione%' /></td>					
+				</tr>			
+			</tbody>
+		</table> 	 
+  </form>
+</div>
+
+<div id="cancella-scadenza-modificareg-form" title="Cancella scadenza supplementare"> 
+	<form method="post" id="cancellaScadenza" action="../primanota/cancellaScadenzaRegistrazioneFacade.class.php?modo=go" >
+		<p>Elimino la scadenza della registrazione ?</p>
+		<input type="hidden" id="idScadenzaRegistrazione" name="idScadenzaRegistrazione">
   </form>
 </div>
 

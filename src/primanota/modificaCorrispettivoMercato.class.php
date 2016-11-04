@@ -2,12 +2,12 @@
 
 require_once 'primanota.abstract.class.php';
 
-class ModificaCorrispettivo extends primanotaAbstract {
+class ModificaCorrispettivoMercato extends primanotaAbstract {
 
 	private static $_instance = null;
 	private static $categoria_causali = 'GENERI';
 	
-	public static $azioneModificaCorrispettivo = "../primanota/modificaCorrispettivoFacade.class.php?modo=go";
+	public static $azioneModificaCorrispettivo = "../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=go";
 		
 	function __construct() {
 
@@ -33,7 +33,7 @@ class ModificaCorrispettivo extends primanotaAbstract {
 	public static function getInstance() {
 
 		if( !is_object(self::$_instance) )
-			self::$_instance = new ModificaCorrispettivo();
+			self::$_instance = new ModificaCorrispettivoMercato();
 
 		return self::$_instance;
 	}
@@ -42,7 +42,7 @@ class ModificaCorrispettivo extends primanotaAbstract {
 
 	public function start() {
 
-		require_once 'modificaCorrispettivo.template.php';
+		require_once 'modificaCorrispettivoMercato.template.php';
 		require_once 'utility.class.php';
 
 		$utility = Utility::getInstance();
@@ -57,18 +57,18 @@ class ModificaCorrispettivo extends primanotaAbstract {
 			$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
 		}
 		
-		$modificaCorrispettivoTemplate = ModificaCorrispettivoTemplate::getInstance();
-		$this->preparaPagina($modificaCorrispettivoTemplate);
+		$modificaCorrispettivoMercatoTemplate = ModificaCorrispettivoMercatoTemplate::getInstance();
+		$this->preparaPagina($modificaCorrispettivoMercatoTemplate);
 			
 		// Compone la pagina
 		include(self::$testata);
-		$modificaCorrispettivoTemplate->displayPagina();
+		$modificaCorrispettivoMercatoTemplate->displayPagina();
 		include(self::$piede);	
 	}
 
 	public function go() {
 	
-		require_once 'modificaCorrispettivo.template.php';
+		require_once 'modificaCorrispettivoMercato.template.php';
 		require_once 'ricercaRegistrazione.class.php';
 		require_once 'utility.class.php';
 	
@@ -88,9 +88,9 @@ class ModificaCorrispettivo extends primanotaAbstract {
 		}
 		$_SESSION['dettagliInseriti'] = $dett;
 		
-		$modificaCorrispettivoTemplate = ModificaCorrispettivoTemplate::getInstance();
+		$modificaCorrispettivoMercatoTemplate = ModificaCorrispettivoMercatoTemplate::getInstance();
 		
-		if ($modificaCorrispettivoTemplate->controlliLogici()) {
+		if ($modificaCorrispettivoMercatoTemplate->controlliLogici()) {
 
 			// Aggiornamento del DB ------------------------------
 				
@@ -110,10 +110,10 @@ class ModificaCorrispettivo extends primanotaAbstract {
 		else {
 			
 			$this->aggiornaStatoRegistrazione($utility);			// mette le registrazione in stato 02 (Errata)	
-			$this->preparaPagina($modificaCorrispettivoTemplate);
+			$this->preparaPagina($modificaCorrispettivoMercatoTemplate);
 		
 			include(self::$testata);
-			$modificaCorrispettivoTemplate->displayPagina();
+			$modificaCorrispettivoMercatoTemplate->displayPagina();
 		
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
@@ -223,14 +223,14 @@ class ModificaCorrispettivo extends primanotaAbstract {
 		}
 	}
 	
-	public function preparaPagina($modificaCorrispettivoTemplate) {
+	public function preparaPagina($modificaCorrispettivoMercatoTemplate) {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 	
-		$modificaCorrispettivoTemplate->setAzione(self::$azioneModificaCorrispettivo);
-		$modificaCorrispettivoTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaCorrispettivoTemplate->setTitoloPagina("%ml.modificaCorrispettivoMercato%");
+		$modificaCorrispettivoMercatoTemplate->setAzione(self::$azioneModificaCorrispettivo);
+		$modificaCorrispettivoMercatoTemplate->setConfermaTip("%ml.salvaTip%");
+		$modificaCorrispettivoMercatoTemplate->setTitoloPagina("%ml.modificaCorrispettivoMercato%");
 	
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
