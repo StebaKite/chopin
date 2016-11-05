@@ -51,9 +51,12 @@ class VisualizzaCorrispettivoNegozio extends primanotaAbstract {
 		$this->preparaPagina($visualizzaCorrispettivoNegozioTemplate);
 			
 		// Compone la pagina
-		include(self::$testata);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$visualizzaCorrispettivoNegozioTemplate->displayPagina();
-		include(self::$piede);	
+		include(self::$piede);
 	}
 
 	public function prelevaDatiRegistrazione($utility) {
