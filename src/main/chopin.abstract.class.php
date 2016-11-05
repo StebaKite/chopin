@@ -701,6 +701,23 @@ abstract class ChopinAbstract {
 		}
 		return $elencoCategorieCliente;
 	}
+
+	/**
+	 * Questo metodo determina l'ambiente sulla bae degli utenti preenti loggati
+	 * @param array
+	 * @param _SESSION
+	 */
+	 public function getEnvironment($array) {
+	
+		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
+		
+		if (strpos($users, $array['usernameProdLogin']) === false) {
+			$_SESSION["ambiente"] = "Ambiente di TEST";
+		}
+		else {
+			$_SESSION["ambiente"] = "Ambiente di PRODUZIONE";
+		}
+	}
 }
 
 ?>

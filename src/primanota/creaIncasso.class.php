@@ -65,7 +65,7 @@ class CreaIncasso extends primanotaAbstract {
 		unset($_SESSION["elenco_scadenze_cliente"]);
 	
 		// Compone la pagina
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -102,7 +102,7 @@ class CreaIncasso extends primanotaAbstract {
 		
 				$this->preparaPagina($creaIncassoTemplate);
 		
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -119,7 +119,7 @@ class CreaIncasso extends primanotaAbstract {
 				
 			$this->preparaPagina($creaIncassoTemplate);
 		
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 			

@@ -63,7 +63,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 				
 				$this->preparaPagina($generaMastrinoContoTemplate);
 
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -89,7 +89,7 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 	
 			$this->preparaPagina($generaMastrinoContoTemplate);
 
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 				

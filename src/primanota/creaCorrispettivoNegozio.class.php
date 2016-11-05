@@ -66,7 +66,7 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		unset($_SESSION["indexDettagliInseriti"]);
 			
 		// Compone la pagina
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 		
@@ -101,7 +101,7 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 		
 				$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 		
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -118,7 +118,7 @@ class CreaCorrispettivoNegozio extends primanotaAbstract {
 				
 			$this->preparaPagina($creaCorrispettivoNegozioTemplate);
 		
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 			

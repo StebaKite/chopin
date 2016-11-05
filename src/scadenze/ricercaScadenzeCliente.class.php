@@ -60,7 +60,7 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 		$this->preparaPagina($ricercaScadenzeClienteTemplate);
 		
 		// compone la pagina
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -86,7 +86,7 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 					
 				$this->preparaPagina($ricercaScadenzeClienteTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -124,7 +124,7 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 					
 				$this->preparaPagina($ricercaScadenzeClienteTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -143,7 +143,7 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 	
 			$this->preparaPagina($ricercaScadenzeClienteTemplate);
 	
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 

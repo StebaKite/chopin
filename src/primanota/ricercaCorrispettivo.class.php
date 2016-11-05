@@ -58,7 +58,7 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 		$this->preparaPagina($ricercaCorrispettivoTemplate);
 
 		// compone la pagina
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 		
@@ -83,7 +83,7 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 					
 				$this->preparaPagina($ricercaCorrispettivoTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -117,7 +117,7 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 					
 				$this->preparaPagina($ricercaCorrispettivoTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -136,7 +136,7 @@ class RicercaCorrispettivo extends PrimanotaAbstract {
 
 			$this->preparaPagina($ricercaCorrispettivoTemplate);
 
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 				

@@ -60,7 +60,7 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 
 		// compongo la pagina
 		
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 		
@@ -85,7 +85,7 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -112,7 +112,7 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 					
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -130,7 +130,7 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 		else {
 			$this->preparaPagina($andamentoNegoziTemplate);
 		
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 

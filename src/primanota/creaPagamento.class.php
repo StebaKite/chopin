@@ -2,7 +2,7 @@
 
 require_once 'primanota.abstract.class.php';
 
-class CreaPagamento extends primanotaAbstract {
+class CreaPagamento extends PrimanotaAbstract {
 
 	private static $_instance = null;
 	private static $categoria_causali = 'GENERI';
@@ -65,7 +65,7 @@ class CreaPagamento extends primanotaAbstract {
 		unset($_SESSION["elenco_scadenze_cliente"]);
 		
 		// Compone la pagina
-		$replace = array('%amb%' => $_SESSION["ambiente"]);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -102,7 +102,7 @@ class CreaPagamento extends primanotaAbstract {
 		
 				$this->preparaPagina($creaPagamentoTemplate);
 		
-				$replace = array('%amb%' => $_SESSION["ambiente"]);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 				
@@ -119,7 +119,7 @@ class CreaPagamento extends primanotaAbstract {
 				
 			$this->preparaPagina($creaPagamentoTemplate);
 		
-			$replace = array('%amb%' => $_SESSION["ambiente"]);
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 			

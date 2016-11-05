@@ -42,11 +42,11 @@ class LeggiContiCausale extends PrimanotaAbstract {
 
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-
+		
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		
-		$array = $utility->getConfig();
+		$array = $utility->getConfig();		
 		
 		self::$replace = array(
 				'%cod_causale%' => trim($_SESSION["causale"]),
