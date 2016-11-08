@@ -42,12 +42,12 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 		
-		if ($_SESSION["datareg_da"] == "") {
+		if ($_SESSION["datascad_da"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la data di inizio ricerca";
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["datareg_a"] == "") {
+		if ($_SESSION["datascad_a"] == "") {
 			$msg = $msg . "<br>&ndash; Manca la data di fine ricerca";
 			$esito = FALSE;
 		}
@@ -242,8 +242,8 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 		$replace = array(
 				'%titoloPagina%' => $_SESSION["titoloPagina"],
 				'%azione%' => $_SESSION["azione"],
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
+				'%datascad_da%' => $_SESSION["datascad_da"],
+				'%datascad_a%' => $_SESSION["datascad_a"],
 				'%codneg_sel%' => $_SESSION["codneg_sel"],
 				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
 				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",

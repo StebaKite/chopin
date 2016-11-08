@@ -96,7 +96,7 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract {
 		$filtro = "";
 		
 		if (($_SESSION['datascad_da'] != "") & ($_SESSION['datascad_a'] != "")) {
-			$filtro = "AND scadenza_cliente.dat_scadenza between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
+			$filtro = "AND scadenza_cliente.dat_registrazione between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
 		}
 		
 		if ($_SESSION['codneg_sel'] != "") {

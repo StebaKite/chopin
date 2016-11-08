@@ -413,19 +413,19 @@ class Pdf extends FPDF {
 			}
 		
 			if (trim($row['sta_scadenza']) == "00") {
-				$stascadenza = "Da Pagare";
+				$stascadenza = "Da Incassare";
 				$c1 = "0";
 				$c2 = "0";
 				$c3 = "0";
 			}
 			if (trim($row['sta_scadenza']) == "10") {
-				$stascadenza = "Pagato";
+				$stascadenza = "Incassata";
 				$c1 = "0";
 				$c2 = "0";
 				$c3 = "0";
 			}
 			if (trim($row['sta_scadenza']) == "02") {
-				$stascadenza = "Posticipato";
+				$stascadenza = "Posticipata";
 				$c1 = "51";
 				$c2 = "153";
 				$c3 = "255";

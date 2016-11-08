@@ -163,8 +163,8 @@ class RicercaScadenzeCliente extends ScadenzeAbstract {
 
 		$filtro = "";
 
-		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
-			$filtro = "AND scadenza_cliente.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
+		if (($_SESSION['datascad_da'] != "") & ($_SESSION['datascad_a'] != "")) {
+			$filtro = "AND scadenza_cliente.dat_registrazione between '" . $_SESSION['datascad_da'] . "' and '" . $_SESSION['datascad_a'] . "'" ;
 		}
 		
 		if ($_SESSION['codneg_sel'] != "") {

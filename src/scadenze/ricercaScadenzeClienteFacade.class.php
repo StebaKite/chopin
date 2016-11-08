@@ -10,8 +10,8 @@ $ricercaScadenzeCliente = RicercaScadenzeCliente::getInstance();
 if ($_GET["modo"] == "start") $ricercaScadenzeCliente->start();
 if ($_GET["modo"] == "go") {
 
-	$_SESSION["datareg_da"] = $_REQUEST["datareg_da"];
-	$_SESSION["datareg_a"] = $_REQUEST["datareg_a"];
+	$_SESSION["datascad_da"] = $_REQUEST["datascad_da"];
+	$_SESSION["datascad_a"] = $_REQUEST["datascad_a"];
 	$_SESSION["codneg_sel"] = $_REQUEST["codneg_sel"];
 	$_SESSION["statoscad_sel"] = $_REQUEST["statoscad_sel"];
 	

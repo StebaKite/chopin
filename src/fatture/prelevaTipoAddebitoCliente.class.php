@@ -40,6 +40,15 @@ class PrelevaTipoAddebitoCliente extends FatturaAbstract {
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 
+		/**
+		 * Questi dati vengono ricaricati in sessione dalla funzione caricaTipoAddebitoCliente
+		 */
+		unset($_SESSION["indirizzocliente"]);
+		unset($_SESSION["cittacliente"]);
+		unset($_SESSION["capcliente"]);
+		unset($_SESSION["pivacliente"]);
+		unset($_SESSION["cfiscliente"]);
+		
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 

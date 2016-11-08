@@ -132,6 +132,7 @@ abstract class FatturaAbstract extends ChopinAbstract {
 	 */
 	public function caricaTipoAddebitoCliente($utility, $db, $idcliente) {
 
+		$tipoAddebito = "";
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_cliente%' => trim($idcliente),
@@ -141,14 +142,17 @@ abstract class FatturaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		
-		foreach(pg_fetch_all($result) as $row) {
-			$tipoAddebito = trim($row['tip_addebito']);
-			$_SESSION["descliente"] = trim($row['des_cliente']);
-			$_SESSION["indirizzocliente"] = trim($row['des_indirizzo_cliente']);
-			$_SESSION["cittacliente"] = trim($row['des_citta_cliente']);
-			$_SESSION["capcliente"] = trim($row['cap_cliente']);
-			$_SESSION["pivacliente"] = trim($row['cod_piva']);
-			$_SESSION["cfiscliente"] = trim($row['cod_fisc']);
+		if ($result) {
+			foreach(pg_fetch_all($result) as $row) {
+				$tipoAddebito = trim($row['tip_addebito']);
+				
+				$_SESSION["descliente"] = trim($row['des_cliente']);
+				$_SESSION["indirizzocliente"] = trim($row['des_indirizzo_cliente']);
+				$_SESSION["cittacliente"] = trim($row['des_citta_cliente']);
+				$_SESSION["capcliente"] = trim($row['cap_cliente']);
+				$_SESSION["pivacliente"] = trim($row['cod_piva']);
+				$_SESSION["cfiscliente"] = trim($row['cod_fisc']);
+			}
 		}
 		return $tipoAddebito;		
 	}
