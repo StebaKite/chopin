@@ -309,14 +309,14 @@ div.scroll-categorie {
 .datiCreateSottile th {
 	font-weight: bolder;
 	background-color: #666666;
+	height: 25px;	
 	color: white;
 	padding-left: 5px;
 	padding-right: 5px;
 }
 .datiCreateSottile tr {
 	background-color: #ECECEC;
-	border-radius: 4px;
-	
+	border-radius: 4px;	
 }
 
 .result tfoot, .result_alt tfoot, .ricerca tfoot, .dettaglio tfoot, .datiCreate tfoot {

@@ -1118,6 +1118,33 @@ $( ".selectmenuCausale" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectmenuCausaleRapido" )
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale").removeClass("inputFieldError");	
+	            $( "#esitoCausale" ).val("");			
+				$( "#messaggioControlloCausale" ).html("");
+			}
+			else {
+				$("#messaggioControlloCausale").html("Dato errato");
+				$("#tdcausale").addClass("inputFieldError");	
+			}
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
+	        }
+	        xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 300})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 // -------------------------------------------
 
 $( "#fornitore" ).change(function() {
@@ -1141,6 +1168,10 @@ $( "#fornitore" ).change(function() {
 		    xmlhttp.send();		
 		}
 		else {
+			
+			/**
+			 * Data scadenza
+			 */			
 			var xmlhttp = new XMLHttpRequest();
 	        xmlhttp.onreadystatechange = function() {
 	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -1154,6 +1185,48 @@ $( "#fornitore" ).change(function() {
 	        xmlhttp.send();						
 		}		
 	}
+});
+
+//---------------------------------------------------------------------
+
+$( "#fornitore_regrap" ).change(function() {
+	
+	var desfornitore = $("#fornitore_regrap").val();
+	
+	if (desfornitore != "") {
+		/**
+		 * Genero i dettagli della registrazione
+		 */
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			$( "#dettagli" ).html(xmlhttp.responseText);	                
+        }
+	}
+	xmlhttp.open("GET", "aggiungiFornitoreDettagliRegistrazioneFacade.class.php?modo=start&desfornitore=" + desfornitore, true);
+	xmlhttp.send();						
+	}		
+});
+
+//---------------------------------------------------------------------
+
+$( "#cliente_regrap" ).change(function() {
+	
+	var descliente = $("#cliente_regrap").val();
+	
+	if (descliente != "") {
+		/**
+		 * Genero i dettagli della registrazione
+		 */
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    		$( "#dettagli" ).html(xmlhttp.responseText);	                
+        }
+    }
+	xmlhttp.open("GET", "aggiungiClienteDettagliRegistrazioneFacade.class.php?modo=start&descliente=" + descliente, true);
+	xmlhttp.send();						
+	}		
 });
 
 /* *********************************************************************************************
@@ -1826,5 +1899,13 @@ $( "#fornitore" ).autocomplete({
 });	
 
 $( "#cliente" ).autocomplete({
+ 	source: elencoClienti
+});	
+
+$( "#fornitore_regrap" ).autocomplete({
+ 	source: elencoFornitori
+});	
+
+$( "#cliente_regrap" ).autocomplete({
  	source: elencoClienti
 });	
