@@ -84,7 +84,7 @@ class ControlloContoDettaglioPagamento extends PrimanotaAbstract {
 	 * Questo metodo fa l'override del super perchè restituisce il codice del fornitore anzichè il suo ID
 	 * @see ChopinAbstract::leggiDescrizioneFornitore()
 	 */
-	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) {
+	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) : string {
 	
 		$array = $utility->getConfig();
 		$replace = array(

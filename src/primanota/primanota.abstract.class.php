@@ -213,7 +213,10 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		 * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
 		 */
 		
-		if ($scadenza_esistente) {
+		$numrow = pg_num_rows($scadenza_esistente);
+		
+		if ($numrow > 0) {
+			
 			$replace = array(
 					'%id_scadenza%' => trim($idScadenza),
 					'%id_registrazione%' => trim($idRegistrazione),

@@ -164,6 +164,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 			foreach ($registrazione as $row) {
 				
 				$_SESSION["descreg"] = $row["des_registrazione"]; 
+				$_SESSION["stareg"] = $row["sta_registrazione"];
 				$_SESSION["datascad"] = $row["dat_scadenza"];
 				$_SESSION["datascad_old"] = $row["dat_scadenza"];
 				$_SESSION["datareg"] = $row["dat_registrazione"];
@@ -217,7 +218,9 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
 		$datascad = ($_SESSION["datascad"] != "") ? "'" . $_SESSION["datascad"] . "'" : "null" ;
 		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$stareg = $_SESSION["stareg"];
+
+		$stareg = ($_SESSION["stareg"] == "02") ? "00" : $_SESSION["stareg"];		// se si trovava in stato 02 la metto in stato 00
+		
 		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
 		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
 		$causale = $_SESSION["causale"];
@@ -228,7 +231,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		if (!is_numeric($_SESSION["cliente"]))
 			$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null";
 		
-		$staScadenza = "00"; 
+		$staScadenza = "00";		
 		
 		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], 
 				$descreg, $datascad, $datareg, $numfatt, $causale, 
