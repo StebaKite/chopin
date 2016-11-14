@@ -55,8 +55,18 @@ class MainTemplate extends ChopinAbstract {
 		$this->getEnvironment ( $array );
 						
 		// Pagina -----------------------------------------------------
+
+		$ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment ( $array, $_SESSION );
 		
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+		$replace = array(
+				'%amb%' => $ambiente,
+				'%avvisoDiv%' => $_SESSION['avvisoDiv'],
+				'%avvisoDialog%' => $_SESSION['avvisoDialog'],
+		);
+
+		unset($_SESSION['avvisoDialog']);
+		unset($_SESSION['avvisoDiv']);
+		
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);		
 		

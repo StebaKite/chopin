@@ -45,11 +45,13 @@ abstract class ChopinAbstract {
 
 	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
-
 	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
-
 	public static $queryRicercaMercati = "/configurazioni/leggiTuttiMercati.sql";
 	public static $queryRicercaMercatiNegozio = "/primanota/ricercaMercati.sql";
+	
+	public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
+	public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
+	public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
 	
 	// Costruttore ------------------------------------------------------------------------
 	
@@ -718,6 +720,71 @@ abstract class ChopinAbstract {
 			$_SESSION["ambiente"] = "Ambiente di PRODUZIONE";
 		}
 	}
+	
+	/**
+	 * Questo metodo effettua un controllo sullo scadenziario dei fornitori.
+	 * Se ci sono scadenze superate restituisce un testo di notifica 
+	 * 
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return string
+	 */
+	public function controllaScadenzeFornitoriSuperate($utility, $db) : string {
+		
+		$array = $utility->getConfig();
+		$replace = array();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaScadenzeFornitoreSuperate;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		$scadenze = "";
+		
+		foreach(pg_fetch_all($result) as $row) {
+			$scadenze .= "&ndash; Pagamento scaduto il " . $row['dat_scadenza'] . " : " . $row['nota_scadenza'] . "<br/>";			
+		}
+		return $scadenze;
+	}
+
+	/**
+	 * Questo metodo effettua un controllo sullo scadenziario dei clienti.
+	 * Se ci sono scadenze superate restituisce un testo di notifica
+	 *
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @return string
+	 */
+	public function controllaScadenzeClientiSuperate($utility, $db) : string {
+	
+		$array = $utility->getConfig();
+		$replace = array();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaScadenzeClienteSuperate;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		$scadenze = "";
+	
+		foreach(pg_fetch_all($result) as $row) {
+			$scadenze .= "&ndash; Incasso scaduto il " . $row['dat_registrazione'] . " : " . $row['nota'] . "<br/>";
+		}	
+		return $scadenze;
+	}
+	
+	public function controllaRegistrazioniInErrore($utility, $db) : string {
+	
+		$array = $utility->getConfig();
+		$replace = array();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaRegistrazioniInErrore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		$scadenze = "";
+	
+		foreach(pg_fetch_all($result) as $row) {
+			$scadenze .= "&ndash; Operazione errata del " . $row['dat_registrazione'] . " : " . $row['cod_negozio'] . " - " . $row['des_registrazione'] . "<br/>";
+		}
+		return $scadenze;
+	}
+	
 }
 
 ?>
