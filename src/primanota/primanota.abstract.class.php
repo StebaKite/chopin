@@ -52,6 +52,9 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryTrovaScadenzaFornitore = "/primanota/trovaScadenzaFornitore.sql";
 	public static $queryTrovaScadenzaCliente = "/primanota/trovaScadenzaCliente.sql";
 	
+	public static $queryPrelevaCapocontoFornitore = "/primanota/ricercaCapocontoFornitore.sql";
+	public static $queryPrelevaCapocontoCliente = "/primanota/ricercaCapocontoCliente.sql";
+	
 	function __construct() {
 	}
 	
@@ -965,7 +968,35 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 			error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
 		}
 	}
+
+	/**
+	 * Questo metodo preleva il capoconto di un fornitore accedendo con il codice fornitore che corrisponde al sottoconto
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $cod_fornitore
+	 * @return resultset
+	 */
+	public function leggiContoFornitore($db, $utility, $cod_fornitore) {
+		
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_fornitore%' => trim($cod_fornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		return $db->execSql($sql);
+	}
 	
+	public function leggiContoCliente($db, $utility, $cod_cliente) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_cliente%' => trim($cod_cliente)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		return $db->execSql($sql);
+	}
 }
 
 ?>

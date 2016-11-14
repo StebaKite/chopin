@@ -380,9 +380,9 @@ abstract class ChopinAbstract {
 	 * @param unknown $db
 	 * @param unknown $utility
 	 * @param unknown $desfornitore
-	 * @return unknown
+	 * @return string
 	 */
-	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) {
+	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) : string {
 	
 		$array = $utility->getConfig();
 		$replace = array(
@@ -405,9 +405,9 @@ abstract class ChopinAbstract {
 	 * @param unknown $db
 	 * @param unknown $utility
 	 * @param unknown $descliente
-	 * @return unknown
+	 * @return string
 	 */
-	public function leggiDescrizioneCliente($db, $utility, $descliente) {
+	public function leggiDescrizioneCliente($db, $utility, $descliente) : string {
 	
 		$array = $utility->getConfig();
 		$replace = array(
