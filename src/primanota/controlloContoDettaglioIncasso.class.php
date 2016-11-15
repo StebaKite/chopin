@@ -84,7 +84,7 @@ class ControlloContoDettaglioIncasso extends PrimanotaAbstract {
 	 * Questo metodo fa l'override del super perchè restituisce il codice del cliente anzichè il suo ID
 	 * @see ChopinAbstract::leggiDescrizioneCliente()
 	 */
-	public function leggiDescrizioneCliente($db, $utility, $descliente) {
+	public function leggiDescrizioneCliente($db, $utility, $descliente) : string {
 	
 		$array = $utility->getConfig();
 		$replace = array(
