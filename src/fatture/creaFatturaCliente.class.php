@@ -197,8 +197,8 @@ class CreaFatturaCliente extends FatturaAbstract {
 		
 		$d = explode(",", $_SESSION['dettagliInseriti']);
 		
-		$w = array(10, 82, 25, 25, 25, 25);
-		$h = array("QTA'", "DESCRIZIONE", "PREZZO", "IMPONIBILE", "IVA", "C.IVA" );
+		$w = array(10, 82, 25, 20, 25, 15, 15);
+		$h = array("QTA'", "DESCRIZIONE", "PREZZO U.", "TOTALE", "IMPONIBILE", "IVA", "C.IVA" );
 
 		$fattura->Line( $r1, $y1, $r2, $y1);		// linea dopo intestazione
 

@@ -229,7 +229,8 @@ class Fattura extends FPDF {
 		$articolo = explode("\\", $linea["ARTICOLO"]);
 				
 		$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252', $articolo[0]),"",0,"L");
-		$this->Cell($w[3],6,number_format($linea["IMPORTO U."], 2, ',', '.'),"",0,'R');
+		$this->Cell($w[2],6,number_format($linea["IMPORTO U."], 2, ',', '.'),"",0,'R');
+		$this->Cell($w[3],6,number_format($linea["TOTALE"], 2, ',', '.'),"",0,'R');
 		$this->Cell($w[4],6,number_format($linea["IMPONIBILE"], 2, ',', '.'),"",0,'R');
 		$this->Cell($w[5],6,number_format($linea["IVA"], 2, ',', '.'),"",0,'R');
 		$this->Cell($w[6],6,$linea["%IVA"],"",0,'C');
