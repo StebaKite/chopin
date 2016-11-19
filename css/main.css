@@ -516,7 +516,7 @@ div.scroll-categorie {
 }
 
 .nav li a:hover {
-	color: #ffa500;
+	color: #ffffff;
 }
 
 /*=== submenu ===*/
@@ -530,7 +530,7 @@ div.scroll-categorie {
 }
 
 .nav ul li {
-	width: 100%;
+	width: 170px;
 	float: left;
 	z-index: 999;
 }
@@ -544,5 +544,5 @@ div.scroll-categorie {
 }
 
 .nav ul li a:hover {
-	color: #ffa500;
+	color: #ffffff;
 }
