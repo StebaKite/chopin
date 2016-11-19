@@ -85,11 +85,12 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @param unknown $codpiva
 	 * @return unknown
 	 */
-	public function cercaPartivaIvaCliente($db, $utility, $codpiva) {
+	public function cercaPartivaIvaCliente($db, $utility, $codpiva, $idcliente) {
 
 		$array = $utility->getConfig();
 		$replace = array(
-				'%cod_piva%' => trim($codpiva)
+				'%cod_piva%' => trim($codpiva),
+				'%id_cliente%' => trim($idcliente)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiPivaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -104,11 +105,12 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @param unknown $codfisc
 	 * @return unknown
 	 */
-	public function cercaCodiceFiscaleCliente($db, $utility, $codfisc) {
+	public function cercaCodiceFiscaleCliente($db, $utility, $codfisc, $idcliente) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
-				'%cod_fisc%' => trim($codfisc)
+				'%cod_fisc%' => trim($codfisc),
+				'%id_cliente%' => trim($idcliente)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiCfisCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

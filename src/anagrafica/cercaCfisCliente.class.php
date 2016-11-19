@@ -43,7 +43,12 @@ class CercaCfisCliente extends AnagraficaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		$result = $this->cercaCodiceFiscaleCliente($db, $utility, $_SESSION["codfisc"]); 
+		$idcliente = $_SESSION["idcliente"];
+		
+		if (!is_numeric($idcliente))
+			$idcliente = ($_SESSION["idcliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]) : "null";
+		
+		$result = $this->cercaCodiceFiscaleCliente($db, $utility, $_SESSION["codfisc"], $idcliente); 
 		
 		if ($result){
 			if (pg_num_rows($result) > 0) {

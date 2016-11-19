@@ -133,8 +133,12 @@ class ModificaFornitore extends AnagraficaAbstract {
 	
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
+
 		$idfornitore = $_SESSION["idfornitore"];
+		
+		if (!is_numeric($idfornitore))
+			$idfornitore = ($_SESSION["idfornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["idfornitore"]) : "null" ;
+		
 		$codfornitore = $_SESSION["codfornitore"];
 		$desfornitore = $_SESSION["desfornitore"];		
 		$indfornitore = ($_SESSION["indfornitore"] != "") ? "'" . $_SESSION["indfornitore"] . "'" : "null" ;

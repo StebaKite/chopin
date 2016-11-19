@@ -154,6 +154,10 @@ class ModificaCliente extends AnagraficaAbstract {
 		$db->beginTransaction();
 
 		$idcliente = $_SESSION["idcliente"];
+		
+		if (!is_numeric($idcliente))
+			$idcliente = ($_SESSION["idcliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]) : "null";
+		
 		$codcliente = $_SESSION["codcliente"];
 		$descliente = str_replace("'","''",$_SESSION["descliente"]);
 		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . str_replace("'","''",$_SESSION["indcliente"]) . "'" : "null" ;
