@@ -58,19 +58,34 @@ class Main extends ChopinAbstract {
 			 * Qui si possono inserire i controlli da fare in apertura
 			 * @var Ambiguous $testAvviso
 			 */
-			$testAvviso = "<hr/><br/";
-			$testAvviso .= $this->controllaScadenzeFornitoriSuperate($utility, $db);
-			$testAvviso .= "<br/><hr/><br/>";
-			$testAvviso .= $this->controllaScadenzeClientiSuperate($utility, $db);
-			$testAvviso .= "<br/><hr/><br/>";
-			$testAvviso .= $this->controllaRegistrazioniInErrore($utility, $db);
-			$testAvviso .= "<br/><hr/><br/>";
-				
+			$registrazioniErrate = "";
+			$registrazioniErrate = $this->controllaRegistrazioniInErrore($utility, $db);
+			if ($registrazioniErrate != "") {
+				$registrazioniErrate = $registrazioniErrate . "<hr/><br/>"; 
+			}
+
+			// ------------------------------------------------------------------------------
+			$scadenzeFornitori = "";
+			$scadenzeFornitori = $this->controllaScadenzeFornitoriSuperate($utility, $db);
+			if ($scadenzeFornitori != "") {
+				$scadenzeFornitori = $scadenzeFornitori . "<hr/><br/>";  
+			}
+
+			// ------------------------------------------------------------------------------
+			$scadenzeClienti = "";
+			$scadenzeClienti = $this->controllaScadenzeClientiSuperate($utility, $db);
+			if ($scadenzeClienti != "") {
+				$scadenzeClienti = $scadenzeClienti . "<hr/><br/>";			
+			}				
+			
+			//--------------------------------------------------------------------------------
+					
+			$messaggio = $registrazioniErrate . $scadenzeFornitori . $scadenzeClienti;
 			
 			//--------------------------------------------------------------------------------
 			
-			if ($testAvviso != "") {
-				$_SESSION['avvisoDiv'] = "<div id='avviso' title='Notifica'><p>" . $testAvviso . "</p></div>";
+			if ($messaggio != "") {
+				$_SESSION['avvisoDiv'] = "<div id='avviso' title='Notifica'><p>" . $messaggio . "</p></div>";
 				$_SESSION['avvisoDialog'] = "$( '#avviso' ).dialog({ " .
 						"autoOpen: true, modal: true, minimize:true, width: 700, height: 400, " .
 						"buttons: [{ text: 'Ok', click: function() { $(this).dialog('close'); }} ] })";								
