@@ -112,7 +112,7 @@ class CreaFatturaClienteTemplate extends FatturaAbstract {
 				'%assistito%' => $_SESSION["cognomenomeassistito"],
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%descli%' => $_SESSION["descliente"],
+				'%descli%' => $_SESSION["descli"],
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
