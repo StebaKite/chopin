@@ -12,6 +12,27 @@ function doSubmit() {
 	$("#mainform").submit();
 }
 
+//---------------------------------------------------------------------
+
+function cercaContiCausale(desconto) {
+
+	var causale = $("#causale").val();
+
+	if ((causale != "") && (desconto != "")) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        	$( "#conti" ).html(xmlhttp.responseText);
+            $( "#conti" ).selectmenu( "refresh" );	        	
+	        }
+	    } 
+	    xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale + "&desconto=" + desconto, true);
+	    xmlhttp.send();		
+	}	
+}
+
+//---------------------------------------------------------------------
+
 $(document).ready( function () {
     $('#dettagli').dataTable( {
     	"paging": false,
@@ -48,8 +69,8 @@ $(document).ready( function () {
 
 		<form method="post" id="back" action="../scadenze/ricercaScadenzeClienteFacade.class.php?modo=go" >
 			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
-			<input type="hidden" name="datareg_da" value='%datareg_da%' >
-			<input type="hidden" name="datareg_a" value='%datareg_a%' >
+			<input type="hidden" name="datascad_da" value='%datascad_da%' >
+			<input type="hidden" name="datascad_a" value='%datascad_a%' >
 			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
 		</form>
 		<br>
@@ -131,6 +152,10 @@ $(document).ready( function () {
 					<td>%ml.importo% :</td>
 					<td class="tooltip"><input type="text" id="importo" name="importo" required size="20" maxlength="20" ></td>
 				</tr>					
+				<tr>
+					<td>%ml.cercaConto% :</td>
+					<td><input type="text" id="conto" name="conto" width=200 onkeyup="cercaContiCausale(this.value)"></td>
+				</tr>	
 				<tr>
 					<td>%ml.conto% :</td>
 					<td>
