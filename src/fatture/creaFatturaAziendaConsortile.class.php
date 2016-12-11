@@ -56,14 +56,15 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 		$creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
 		
 		$_SESSION["datafat"] = date("d/m/Y");
-		$_SESSION["idcliente"] = "";
-		$_SESSION["codneg"] = "";
-		$_SESSION["numfat"] = "";
-		$_SESSION["tipoadd"] = "";
-		$_SESSION["ragsocbanca"] = "";
-		$_SESSION["ibanbanca"] = "";
-		$_SESSION["dettagliInseriti"] = "";
-		$_SESSION["indexDettagliInseriti"] = "";
+		unset($_SESSION["cliente"]);
+		unset($_SESSION["descli"]);
+		unset($_SESSION["codneg"]);
+		unset($_SESSION["numfat"]);
+		unset($_SESSION["tipoadd"]);
+		unset($_SESSION["ragsocbanca"]);
+		unset($_SESSION["ibanbanca"]);
+		unset($_SESSION["dettagliInseriti"]);
+		unset($_SESSION["indexDettagliInseriti"]);
 		
 		$this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 		

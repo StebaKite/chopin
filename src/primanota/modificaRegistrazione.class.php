@@ -88,7 +88,7 @@ class ModificaRegistrazione extends primanotaAbstract {
 		$dett = "";
 		
 		foreach ($dettaglioregistrazione as $row) {
-			$dett = $dett . trim($row["cod_conto"]) . trim($row["cod_sottoconto"]) . "#" . trim($row["imp_registrazione"]) . "#" . trim($row["ind_dareavere"]) . ",";			
+			$dett .= trim($row["cod_conto"]) . trim($row["cod_sottoconto"]) . "#" . trim($row["imp_registrazione"]) . "#" . trim($row["ind_dareavere"]) . ",";
 		}
 		$_SESSION['dettagliInseriti'] = $dett;
 		

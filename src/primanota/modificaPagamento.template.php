@@ -35,6 +35,14 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 
 	public function controlliLogici() {
 
+		require_once 'database.class.php';
+		require_once 'utility.class.php';
+
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		
+		$array = $utility->getConfig();
+		
 		$esito = TRUE;
 		$msg = "<br>";
 		
@@ -91,6 +99,21 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 				$e = explode("#",$ele);
 				if ($e[2] == "D") {	$tot_dare = $tot_dare + $e[1]; }
 				if ($e[2] == "A") {	$tot_avere = $tot_avere + $e[1]; }
+				
+				/**
+				 * Controllo la congruenza del fornitore / cliente col conto dei dettagli
+				 */
+				if ($_SESSION["fornitore"] != "") {
+					if (strstr($array['contiFornitore'], trim(substr($e[0],0,3)))) {
+				
+						$conto = trim(substr($e[0],0,3)) . $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["fornitore"]);
+				
+						if (trim($conto) != $e[0]) {
+							$msg .= "<br>&ndash; Il conto in dettaglio non appartiene a questo fornitore";
+							$esito = FALSE;
+						}
+					}
+				}
 			}
 		
 			$totale = round($tot_dare, 2) - round($tot_avere, 2);
@@ -187,6 +210,28 @@ class ModificaPagamentoTemplate extends PrimanotaAbstract {
 	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
+	}
+
+	/**
+	 * Questo metodo fa l'override del super perchè restituisce il codice del fornitore anzichè il suo ID
+	 * @see ChopinAbstract::leggiDescrizioneFornitore()
+	 */
+	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) : string {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%des_fornitore%' => trim($desfornitore)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaDescrizioneFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		$rows = pg_fetch_all($result);
+	
+		foreach($rows as $row) {
+			$descrizione_fornitore = $row['cod_fornitore'];
+		}
+		return $descrizione_fornitore;
 	}
 }
 	
