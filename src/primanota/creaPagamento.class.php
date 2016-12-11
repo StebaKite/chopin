@@ -248,10 +248,17 @@ class CreaPagamento extends PrimanotaAbstract {
 		 * Come per i conti, l'ajax non interviene se c'è un errore logico e la pagina viene ripresentata
 		 */
 		if (isset($_SESSION["idfornitore"])) {
+			
 			$db = Database::getInstance();
 			$utility = Utility::getInstance();
 			
 			$options = '';
+
+			if (!is_numeric($_SESSION["idfornitore"])) {
+				$db->beginTransaction();
+				$_SESSION["idfornitore"] = $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["fornitore"]));
+				$db->commitTransaction();
+			}
 			
 			$result_scadenze_fornitore = $this->prelevaScadenzeAperteFornitore($db, $utility, $_SESSION["idfornitore"]);
 			
