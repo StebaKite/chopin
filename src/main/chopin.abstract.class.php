@@ -392,6 +392,8 @@ abstract class ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		
+		error_log($sql);
+		
 		$rows = pg_fetch_all($result);
 		
 		foreach($rows as $row) {
@@ -416,7 +418,9 @@ abstract class ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaDescrizioneCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-	
+
+		error_log($sql);
+		
 		$rows = pg_fetch_all($result);
 	
 		foreach($rows as $row) {
