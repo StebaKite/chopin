@@ -42,18 +42,13 @@ class CercaCfisCliente extends AnagraficaAbstract {
 
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-
-		$idcliente = $_SESSION["idcliente"];
 		
-		if (!is_numeric($idcliente))
-			$idcliente = ($_SESSION["idcliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]) : "null";
-		
-		$result = $this->cercaCodiceFiscaleCliente($db, $utility, $_SESSION["codfisc"], $idcliente); 
+		$result = $this->cercaCodiceFiscaleCliente($db, $utility, $_SESSION["codfisc"]);
 		
 		if ($result){
 			if (pg_num_rows($result) > 0) {
 				foreach(pg_fetch_all($result) as $row) {
-					echo "C.fisc cliente gi&agrave; esistente: " . $row['des_cliente'];
+					echo "C.fisc cliente gi&agrave; usato da : " . $row['des_cliente'];
 					break;
 				}
 			}
@@ -62,7 +57,7 @@ class CercaCfisCliente extends AnagraficaAbstract {
 			}
 		}
 		else {
-			echo "Controllo codice fiscale cliente non eseguito!";				
+			echo "ATTENZIONE!! Errore controllo codice fiscale cliente";				
 		}
 	}
 }

@@ -105,12 +105,11 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @param unknown $codfisc
 	 * @return unknown
 	 */
-	public function cercaCodiceFiscaleCliente($db, $utility, $codfisc, $idcliente) {
+	public function cercaCodiceFiscaleCliente($db, $utility, $codfisc) {
 	
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_fisc%' => trim($codfisc),
-				'%id_cliente%' => trim($idcliente)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiCfisCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
