@@ -42,7 +42,8 @@ abstract class ChopinAbstract {
 	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
 	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";
-
+	public static $queryDeleteSottoconto = "/configurazioni/deleteSottoconto.sql";
+	
 	public static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
 	public static $queryRicercacCategorie = "/anagrafica/leggiCategorieCliente.sql";
 	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
@@ -681,6 +682,26 @@ abstract class ChopinAbstract {
 		return $result;
 	}	
 
+	/**
+	 * Questo metodo cancella un sottoconto.
+	 * E' qui perch' viene usato dalle configurazioni e dell'anagrafica
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $codconto
+	 * @param unknown $codsottoconto
+	 */
+	public function cancellaSottoconto($db, $utility, $codconto, $codsottoconto) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteSottoconto;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
 
 	/**
 	 * Questo metodo legge tutte le categorie disponibili
@@ -788,7 +809,6 @@ abstract class ChopinAbstract {
 		}
 		return $scadenze;
 	}
-	
 }
 
 ?>

@@ -166,6 +166,24 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$replace = array(
 				'%id_fornitore%' => trim($idfornitore)
 		);
+
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		/**
+		 * Cancello il conto del fornitore
+		 * @var array $conto
+		 */
+		$conto = explode(",", $array["fornitori"]);
+		
+		foreach(pg_fetch_all($result) as $row) {
+		
+			foreach ($conto as $contoFornitori) {
+				$this->cancellaSottoconto($db, $utility, $contoFornitori, $row['cod_fornitore']);
+			}
+		}
+		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
@@ -257,6 +275,24 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$replace = array(
 				'%id_cliente%' => trim($idcliente)
 		);
+
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		/**
+		 * Cancello il conto del cliente
+		 * @var array $conto
+		 */
+		$conto = explode(",", $array["clienti"]);
+		
+		foreach(pg_fetch_all($result) as $row) {
+
+			foreach ($conto as $contoClienti) {				
+				$this->cancellaSottoconto($db, $utility, $contoClienti, $row['cod_cliente']);
+			}
+		}
+		
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
