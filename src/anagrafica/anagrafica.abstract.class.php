@@ -175,7 +175,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		 * Cancello il conto del fornitore
 		 * @var array $conto
 		 */
-		$conto = explode(",", $array["fornitori"]);
+		$conto = explode(",", $array["contiFornitore"]);
 		
 		foreach(pg_fetch_all($result) as $row) {
 		
@@ -284,7 +284,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		 * Cancello il conto del cliente
 		 * @var array $conto
 		 */
-		$conto = explode(",", $array["clienti"]);
+		$conto = explode(",", $array["contiCliente"]);
 		
 		foreach(pg_fetch_all($result) as $row) {
 
