@@ -335,7 +335,16 @@ class ModificaPagamento extends primanotaAbstract {
 			$d = explode(",", $_SESSION["numfatt"]);
 		
 			foreach(pg_fetch_all($result_scadenze_fornitore) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $this->setFatturaSelezionata($d, trim($row['num_fattura'])) . '>' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_in_scadenza']) . ' - (' . trim($row['nota_scadenza']) . ')</option>';
+				
+				$optionSelected = $this->setFatturaSelezionata($d, trim($row['num_fattura']));
+				if ($optionSelected != "") {
+					$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $optionSelected . '>Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_in_scadenza']) . ' - (' . trim($row['nota_scadenza']) . ')</option>';				
+				}
+				else {
+					if (trim($row['sta_scadenza'] == "00")) {
+						$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_in_scadenza']) . ' - (' . trim($row['nota_scadenza']) . ')</option>';
+					}
+				}
 			}
 				
 			$_SESSION["elenco_scadenze_fornitore"] = $options;
