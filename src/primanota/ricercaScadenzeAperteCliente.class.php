@@ -40,7 +40,7 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract {
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
 	
-		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 300px" id="select2">';
+		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">';
 
 		if ($_SESSION["descli"] != "") {
 			$db = Database::getInstance();
@@ -53,7 +53,7 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract {
 			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
 	
 			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '">' . trim($row['num_fattura']) . '</option>';
+				$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';				
 			}		
 		}
 		

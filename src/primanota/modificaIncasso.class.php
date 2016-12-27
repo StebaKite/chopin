@@ -289,8 +289,6 @@ class ModificaIncasso extends primanotaAbstract {
 		 * Come per i conti, l'ajax non interviene se c'è un errore logico e la pagina viene ripresentata
 		 */
 		if (isset($_SESSION["cliente"])) {
-			$db = Database::getInstance();
-			$utility = Utility::getInstance();
 				
 			$options = '';
 				
@@ -299,7 +297,16 @@ class ModificaIncasso extends primanotaAbstract {
 			$d = explode(",", $_SESSION["numfatt"]);
 		
 			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $this->setFatturaSelezionata($d, trim($row['num_fattura'])) . ' >' . trim($row['num_fattura']) . '</option>';
+				
+				$optionSelected = $this->setFatturaSelezionata($d, trim($row['num_fattura']));
+				if ($optionSelected != "") {
+					$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $optionSelected . '>Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
+				}
+				else {
+					if (trim($row['sta_scadenza'] == "00")) {
+						$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
+					}
+				}
 			}
 				
 			$_SESSION["elenco_scadenze_cliente"] = $options;
