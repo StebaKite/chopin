@@ -54,6 +54,9 @@ abstract class ChopinAbstract {
 	public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
 	public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
 	
+	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
+	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
+	
 	// Costruttore ------------------------------------------------------------------------
 	
 	function __construct() {
@@ -809,6 +812,44 @@ abstract class ChopinAbstract {
 		}
 		return $scadenze;
 	}
+
+	/**
+	 * Questo metodo legge una registrazione
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $idregistrazione
+	 * @return unknown
+	 */
+	public function leggiRegistrazione($db, $utility, $idregistrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($idregistrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @param unknown $id_dettaglioregistrazione
+	 */
+	public function cancellaRegistrazione($db, $utility, $id_registrazione) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($id_registrazione)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+	
 }
 
 ?>

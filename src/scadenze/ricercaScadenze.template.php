@@ -93,6 +93,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			"			<th>%ml.impscadenza%</th>" .
 			"			<th></th>" .
 			"			<th></th>" .
+			"			<th></th>" .
 			"		</tr>" .
 			"	</thead>" .
 			"	<tbody>";
@@ -135,24 +136,28 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					$stascadenza = "&ndash;&ndash;&ndash;";
 					$tdclass = "class='dt-ko'";
 					$bottoneModificaPagamento = "";
-				}
+					$bottoneCancellaPagamento = "";
+					}
 				
 				if (trim($row['sta_scadenza']) == "00") {
 					$stascadenza = "Da Pagare";
 					$tdclass = "class='dt-ko'";
 					$bottoneModificaPagamento = "";
-				}
+					$bottoneCancellaPagamento = "";
+					}
 				
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Pagato";
 					$tdclass = "class='dt-ok'";
 					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneCancellaPagamento = "<a class='tooltip' onclick='cancellaPagamento(" . trim($row['id_scadenza']) . "," . trim($row['id_pagamento']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaPagamento%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='dt-chiuso'";
 					$bottoneModificaPagamento = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idPagamento= " . trim($row['id_pagamento']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneCancellaPagamento = "<a class='tooltip' onclick='cancellaPagamento(" . trim($row['id_scadenza']) . "," . trim($row['id_pagamento']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaPagamento%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
 				}
 				
 				$numfatt = trim($row['num_fattura']);
@@ -172,6 +177,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 					"	<td class='dt-right'><i>Totale data</i></td>" .
 					"	<td></td>" .
 					"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
+					"	<td id='icons'></td>" .
 					"	<td id='icons'></td>" .
 					"	<td id='icons'></td>" .
 					"</tr>";
@@ -201,6 +207,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 				"	<td class='dt-right'>" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaPagamento . "</td>" .
+				"	<td id='icons'>" . $bottoneCancellaPagamento . "</td>" .
 				"</tr>";
 
 				$desfornitore = "";
@@ -221,6 +228,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
 			"</tr>";
 
 			$totale_scadenze += $totale_fornitore;
@@ -236,6 +244,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract {
 			"	<td class='dt-right'><i>Totale scadenze</i></td>" .
 			"	<td></td>" .
 			"	<td class='dt-right'>" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"</tr>";

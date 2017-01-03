@@ -90,3 +90,11 @@ $(document).ready( function () {
 		</form>
 	</div>	
 		
+<div id="cancella-pagamento-form" title="Cancella Pagamento"> 
+	<form method="post" id="cancellaPagamento" action="../scadenze/cancellaPagamentoFacade.class.php?modo=go" >
+		<p>Elimino il pagamento e ripristino lo stato della scadenza in "Da Pagare" ?</p>
+		<input type="hidden" id="idScadenza" name="idScadenza">
+		<input type="hidden" id="idPagamento" name="idPagamento">
+  </form>
+</div>
+		

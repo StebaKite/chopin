@@ -21,14 +21,12 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	public static $queryDeleteScadenzaRegistrazione = "/primanota/deleteScadenzaRegistrazione.sql";
 	public static $queryCreaScadenzaCliente = "/primanota/creaScadenzaCliente.sql";
 	
-	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
 	public static $queryLeggiDettagliRegistrazione = "/primanota/leggiDettagliRegistrazione.sql";
 	public static $queryLeggiScadenzeRegistrazione = "/primanota/leggiScadenzeRegistrazione.sql";
 	public static $queryUpdateRegistrazione = "/primanota/updateRegistrazione.sql";
 	public static $queryUpdateStatoRegistrazione = "/primanota/updateStatoRegistrazione.sql";
 	
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";	
-	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
 	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
 	public static $queryLeggiScadenzeAperteCliente = "/primanota/ricercaScadenzeAperteCliente.sql";
@@ -397,25 +395,6 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $idregistrazione
 	 * @return unknown
 	 */
-	public function leggiRegistrazione($db, $utility, $idregistrazione) {
-	
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
-	
-	/**
-	 * 
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
 	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
 	
 		$array = $utility->getConfig();
@@ -522,24 +501,6 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteDettaglioRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	}
-
-	/**
-	 * 
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_dettaglioregistrazione
-	 */
-	public function cancellaRegistrazione($db, $utility, $id_registrazione) {
-	
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($id_registrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
 	}
 
 	/**

@@ -136,6 +136,7 @@ ricercaScadenzeCliente = Ricerca Scadenze Cliente
 creaNuovoPagamento = Nuovo Pagamento
 creaNuovoIncasso = Nuovo Incasso
 modificaPagamento = Modifica Pagamento
+cancellaPagamento = Elimina il pagamento e lascia la scadenza "Da Pagare"
 bilancioEsercizio = Bilancio Esercizio
 bilancioPeriodico = Bilancio Periodico
 ricercaCorrispettivo = Ricerca Corrispettivo

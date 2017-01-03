@@ -886,6 +886,31 @@ $( "#cancella-corrispettivo-form" ).dialog({
 	]
 });
 
+
+//Cancella pagamento
+$( "#cancella-pagamento-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+         $("#cancellaPagamento").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
+
 $( "#nuovo-sottoconto-form" ).dialog({
 	autoOpen: false,
 	modal: true,
@@ -1700,6 +1725,13 @@ function cancellaCorrispettivo(idreg) {
 	
 	$( "#idRegistrazione" ).val(idreg);
 	$( "#cancella-corrispettivo-form" ).dialog( "open" );
+}
+
+function cancellaPagamento(idscad,idpag) {
+	
+	$( "#idScadenza" ).val(idscad);
+	$( "#idPagamento" ).val(idpag);
+	$( "#cancella-pagamento-form" ).dialog( "open" );
 }
 
 //---------------------------------------------------------------
