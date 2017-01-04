@@ -886,7 +886,6 @@ $( "#cancella-corrispettivo-form" ).dialog({
 	]
 });
 
-
 //Cancella pagamento
 $( "#cancella-pagamento-form" ).dialog({
 	autoOpen: false,
@@ -909,7 +908,27 @@ $( "#cancella-pagamento-form" ).dialog({
 	]
 });
 
-
+//Cancella incasso
+$( "#cancella-incasso-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+       $("#cancellaIncasso").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
 
 $( "#nuovo-sottoconto-form" ).dialog({
 	autoOpen: false,
@@ -1732,6 +1751,13 @@ function cancellaPagamento(idscad,idpag) {
 	$( "#idScadenza" ).val(idscad);
 	$( "#idPagamento" ).val(idpag);
 	$( "#cancella-pagamento-form" ).dialog( "open" );
+}
+
+function cancellaIncasso(idscad,idinc) {
+	
+	$( "#idScadenza" ).val(idscad);
+	$( "#idIncasso" ).val(idinc);
+	$( "#cancella-incasso-form" ).dialog( "open" );
 }
 
 //---------------------------------------------------------------

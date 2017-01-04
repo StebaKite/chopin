@@ -12,6 +12,7 @@ abstract class ScadenzeAbstract extends ChopinAbstract {
 
 	public static $queryRicercaScadenze = "/scadenze/ricercaScadenze.sql";
 	public static $queryUpdateStatoScadenza = "/scadenze/updateStatoScadenzaFornitore.sql";
+	public static $queryUpdateStatoScadenzaCliente = "/scadenze/updateStatoScadenzaCliente.sql";
 	
 
 	function __construct() {
@@ -77,6 +78,18 @@ abstract class ScadenzeAbstract extends ChopinAbstract {
 				'%sta_scadenza%' => trim($statoScadenza)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+	}
+
+	public function cambiaStatoScadenzaCliente($db, $utility, $idscadenza, $statoScadenza) {
+	
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_scadenza%' => trim($idscadenza),
+				'%sta_scadenza%' => trim($statoScadenza)
+		);
+		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenzaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 	}

@@ -89,5 +89,11 @@ $(document).ready( function () {
 			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
 		</form>
 	</div>	
-		
-		
+
+<div id="cancella-incasso-form" title="Cancella Incasso"> 
+	<form method="post" id="cancellaIncasso" action="../scadenze/cancellaIncassoFacade.class.php?modo=go" >
+		<p>Elimino l'incasso e ripristino lo stato della scadenza in "Da Incassare" ?</p>
+		<input type="hidden" id="idScadenza" name="idScadenza">
+		<input type="hidden" id="idIncasso" name="idIncasso">
+	</form>
+</div>

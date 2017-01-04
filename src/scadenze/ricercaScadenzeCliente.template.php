@@ -92,6 +92,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"		<th>%ml.impscadenza%</th>" .
 			"		<th></th>" .
 			"		<th></th>" .
+			"		<th></th>" .
 			"	</thead>" .
 			"	<tbody>";
 		
@@ -133,19 +134,22 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					$stascadenza = "Da Incassare";
 					$tdclass = "class='dt-ko'";
 					$bottoneModificaIncasso = "";
+					$bottoneCancellaIncasso = "";
 				}
 				
 				if (trim($row['sta_scadenza']) == "10") {
 					$stascadenza = "Incassato";
 					$tdclass = "class='dt-ok'";
 					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+					$bottoneCancellaIncasso = "<a class='tooltip' onclick='cancellaIncasso(" . trim($row['id_scadenza']) . "," . trim($row['id_incasso']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
 				}
 
 				if (trim($row['sta_scadenza']) == "02") {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='dt-chiuso'";
 					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
-				}
+					$bottoneCancellaIncasso = "<a class='tooltip' onclick='cancellaIncasso(" . trim($row['id_scadenza']) . "," . trim($row['id_incasso']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
+					}
 				
 				$numfatt = trim($row['num_fattura']);
 				
@@ -164,6 +168,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					"	<td class='dt-right'><i>Totale data</i></td>" .
 					"	<td></td>" .
 					"	<td class='dt-right'>" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
+					"	<td id='icons'></td>" .
 					"	<td id='icons'></td>" .
 					"	<td id='icons'></td>" .
 					"</tr>";
@@ -193,6 +198,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				"	<td class='dt-right'>" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaIncasso . "</td>" .
+				"	<td id='icons'>" . $bottoneCancellaIncasso . "</td>" .
 				"</tr>";
 				
 				$descliente = "";
@@ -213,6 +219,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"	<td class='dt-right'>" . number_format($totale_cliente, 2, ',', '.') . "</td>" .
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
+			"	<td id='icons'></td>" .
 			"</tr>";
 			
 			$totale_scadenze += $totale_cliente;
@@ -228,6 +235,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"	<td class='dt-right'><i>Totale scadenze</i></td>" .
 			"	<td></td>" .
 			"	<td class='dt-right'>" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
+			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"</tr>";
@@ -260,7 +268,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
-		}
 	}
+}
 
 ?>

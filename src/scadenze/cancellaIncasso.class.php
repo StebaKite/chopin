@@ -2,7 +2,7 @@
 
 require_once 'scadenze.abstract.class.php';
 
-class CancellaPagamento extends ScadenzeAbstract {
+class CancellaIncasso extends ScadenzeAbstract {
 
 	private static $_instance = null;
 
@@ -31,7 +31,7 @@ class CancellaPagamento extends ScadenzeAbstract {
 
 		if( !is_object(self::$_instance) )
 
-			self::$_instance = new CancellaPagamento();
+			self::$_instance = new CancellaIncasso();
 
 			return self::$_instance;
 	}
@@ -42,16 +42,16 @@ class CancellaPagamento extends ScadenzeAbstract {
 
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-		require_once 'ricercaScadenze.class.php';
+		require_once 'ricercaScadenzeCliente.class.php';
 
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 
 		/**
-		 * Prelevo la data del pagamento da cancellare per ricalcolare i saldi
+		 * Prelevo la data dell'incasso da cancellare per ricalcolare i saldi
 		 */
 
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idPagamento"]);
+		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idIncasso"]);
 
 		$db->beginTransaction();
 
@@ -63,15 +63,15 @@ class CancellaPagamento extends ScadenzeAbstract {
 			}
 		}
 
-		$this->cancellaRegistrazione($db, $utility, $_SESSION["idPagamento"]);
+		$this->cancellaRegistrazione($db, $utility, $_SESSION["idIncasso"]);
 
 		/**
-		 * Ripristino lo stato della scadenza in "Da Pagare"
-		 * L'id del pagamento associato viene settato a null dalla delete rule definita sulla fk
+		 * Ripristino lo stato della scadenza in "Da incassare"
+		 * L'id dell'incasso associato viene settato a null dalla delete rule definita sulla fk
 		 */
 
-		$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["idScadenza"], "00");		
-		
+		$this->cambiaStatoScadenzaCliente($db, $utility, $_SESSION["idScadenza"], "00");
+
 		/**
 		 * Rigenero i saldi
 		 */
@@ -86,9 +86,8 @@ class CancellaPagamento extends ScadenzeAbstract {
 			
 		$db->commitTransaction();
 
-		$_SESSION["messaggioCancellazione"] = "Pagamento cancellato, scadenza ripristinata";
-		$ricercaScadenze = RicercaScadenze::getInstance();
-		$ricercaScadenze->go();
+		$_SESSION["messaggioCancellazione"] = "Incasso cancellato, scadenza ripristinata";
+		RicercaScadenzeCliente::getInstance()->go();
 	}
 }
 
