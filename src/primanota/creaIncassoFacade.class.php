@@ -14,6 +14,7 @@ if ($_GET["modo"] == "start") {
 	unset($_SESSION["codneg"]);
 	unset($_SESSION["causale"]);
 	unset($_SESSION["cliente"]);
+	unset($_SESSION["idcliente"]);
 
 	unset($_SESSION["esitoControlloDescrizione"]);
 	unset($_SESSION["esitoControlloCausale"]);
