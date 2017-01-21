@@ -216,9 +216,9 @@ class Pdf extends FPDF {
 		
 		$this->SetFont('','B',10);
 		$this->Cell($w[0],6,'','LR',0,'L',$fill);
-		$this->Cell($w[1],6,'Saldo Finale','LR',0,'R',$fill);
-		$this->Cell($w[2],6,'','LR',0,'R',$fill);
-		$this->Cell($w[3],6,'','LR',0,'C',$fill);
+		$this->Cell($w[1],6,'Totale','LR',0,'R',$fill);
+		$this->Cell($w[2],6, EURO . number_format($totaleDare, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],6, EURO . number_format($totaleAvere, 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Cell($w[4],6, EURO . number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
