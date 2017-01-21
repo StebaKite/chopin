@@ -53,7 +53,11 @@ class ModificaConto extends ConfigurazioniAbstract {
 		$this->preparaPagina($modificaContoTemplate);
 			
 		// Compone la pagina
-		include(self::$testata);
+		
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$modificaContoTemplate->displayPagina();
 		
 		if (isset($_SESSION["messaggio"])) {
@@ -121,7 +125,10 @@ class ModificaConto extends ConfigurazioniAbstract {
 					
 				$this->preparaPagina($modificaContoTemplate);
 			
-				include(self::$testata);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$modificaContoTemplate->displayPagina();
 			
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);

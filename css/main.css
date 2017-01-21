@@ -1,8 +1,8 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-family: Ubuntu;
+	font-size: 13px;
 	background-color: #ffffff;
 	background-color: #d9d4d4;
 	color: #515151;
@@ -85,18 +85,20 @@ frame {
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: left; width: 17em; }
 
 * {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-family: Ubuntu;
+	font-size: 13px;
 }
 h1 {
 	text-align: center;
 	font-size: 2em;
-	color: #3399FF;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 h2 {
 	margin-top: 10px;
 	text-align: left;
+	color: #dd4814;
 	font-size: 1.2em;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 h3 {
 	text-align: left;
@@ -506,13 +508,14 @@ div.scroll-categorie {
 .nav li a {
 	background: #bfbfbf;
 	text-align: left;
-	font-size: 1em;
+	font-size: 1.1em;
 	color: #000;
 	display: block;
 	padding: 7px 7px 7px 7px;
 	text-decoration: none;
 	border-top: 1px solid #ececec;
 	border-left: 1px solid #ececec;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .nav li a:hover {
@@ -540,6 +543,7 @@ div.scroll-categorie {
 	height: 15px;
 	padding: 10px 10px;
 	color: #000;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 	text-decoration: none;
 }
 
