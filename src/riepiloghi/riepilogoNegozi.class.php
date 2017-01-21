@@ -64,7 +64,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		$this->preparaPagina($riepilogoNegoziTemplate);
 	
 		// compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -89,7 +89,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 					
 				$this->preparaPagina($riepilogoNegoziTemplate);
 					
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -115,7 +115,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 					
 				$this->preparaPagina($riepilogoNegoziTemplate);
 					
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 				echo $utility->tailTemplate($template);
 
@@ -134,7 +134,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract {
 		
 			$this->preparaPagina($riepilogoNegoziTemplate);
 		
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"]) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION )));
+			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
 			echo $utility->tailTemplate($template);
 

@@ -62,6 +62,7 @@ class MainTemplate extends ChopinAbstract {
 				'%amb%' => $ambiente,
 				'%avvisoDiv%' => $_SESSION['avvisoDiv'],
 				'%avvisoDialog%' => $_SESSION['avvisoDialog'],
+				'%menu%' => $this->makeMenu($utility)
 		);
 
 		unset($_SESSION['avvisoDialog']);

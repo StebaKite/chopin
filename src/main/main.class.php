@@ -54,10 +54,10 @@ class Main extends ChopinAbstract {
 		
 		if (!isset($_SESSION['notificaEffettuata'])) {
 
-			/** ------------------------------------------------------------------------------
+			/**
 			 * Qui si possono inserire i controlli da fare in apertura
-			 * @var Ambiguous $testAvviso
 			 */
+			
 			$registrazioniErrate = "";
 			$registrazioniErrate = $this->controllaRegistrazioniInErrore($utility, $db);
 			if ($registrazioniErrate != "") {
