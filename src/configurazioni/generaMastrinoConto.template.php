@@ -107,6 +107,25 @@ class GeneraMastrinoContoTemplate extends ConfigurazioniAbstract {
 				"	<td class='dt-right " . $class . "'>" . number_format(round($saldo,2), 2, ',', '.') . "</td>" .
 				"</tr>";
 			}
+			
+			/**
+			 * Aggiunto una riga di totalizzazione per le colonna Dare e Avere
+			 */
+			
+			$class = "dt-ok";
+			$risultato_ricerca = $risultato_ricerca .
+			"<tr>" .
+			"	<td>999999999</td>" .
+			"	<td></td>" .
+			"	<td></td>" .
+			"	<td class='dt-right " . $class . "'>" . number_format(round($totaleDare,2), 2, ',', '.') . "</td>" .
+			"	<td class='dt-right " . $class . "'>" . number_format(round($totaleAvere,2), 2, ',', '.') . "</td>" .
+			"	<td></td>" .
+			"</tr>";
+				
+			
+			
+			
 			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
 			$des_conto = trim($row["des_conto"]);
 			$cat_conto = trim($row["cat_conto"]);
