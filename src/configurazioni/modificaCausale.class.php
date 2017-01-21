@@ -52,7 +52,10 @@ class ModificaCausale extends ConfigurazioniAbstract {
 		$this->preparaPagina($modificaCausaleTemplate);
 			
 		// Compone la pagina
-		include(self::$testata);
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		$modificaCausaleTemplate->displayPagina();
 		include(self::$piede);
 	}
@@ -75,7 +78,9 @@ class ModificaCausale extends ConfigurazioniAbstract {
 	
 				$this->preparaPagina($modificaCausaleTemplate);
 	
-				include(self::$testata);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
 				$modificaCausaleTemplate->displayPagina();
 	
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
@@ -88,7 +93,10 @@ class ModificaCausale extends ConfigurazioniAbstract {
 					
 				$this->preparaPagina($modificaCausaleTemplate);
 					
-				include(self::$testata);
+				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				echo $utility->tailTemplate($template);
+				
 				$modificaCausaleTemplate->displayPagina();
 					
 				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
