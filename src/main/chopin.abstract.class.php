@@ -161,6 +161,9 @@ abstract class ChopinAbstract {
 			if ($array["operazioni_item_5"] == "Y") $operazioni .= "<li><a href='../primanota/creaIncassoFacade.class.php?modo=start'>" . $array["operazioni_item_5_name"] . "</a></li>";
 			if ($array["operazioni_item_6"] == "Y") $operazioni .= "<li><a href='../primanota/creaCorrispettivoNegozioFacade.class.php?modo=start'>" . $array["operazioni_item_6_name"] . "</a></li>";
 			if ($array["operazioni_item_7"] == "Y") $operazioni .= "<li><a href='../primanota/creaCorrispettivoMercatoFacade.class.php?modo=start'>" . $array["operazioni_item_7_name"] . "</a></li>";
+			$operazioni .= "<li><hr/></li>";
+			if ($array["operazioni_item_8"] == "Y") $operazioni .= "<li><a href='../primanota/importaExcelCorrispettivoNegozioStep1Facade.class.php?modo=start'>" . $array["operazioni_item_8_name"] . "</a></li>";
+			if ($array["operazioni_item_9"] == "Y") $operazioni .= "<li><a href='../primanota/importaExcelCorrispettivoMercatoStep1Facade.class.php?modo=start'>" . $array["operazioni_item_9_name"] . "</a></li>";
 			$operazioni .= "</ul></li>";
 		}
 		$menu .= $operazioni;

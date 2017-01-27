@@ -24,7 +24,7 @@ table.dataTable thead td {
 	background-color: #858585;
 	color: white;
 	border-collapse: separate;
-	border-top: 4px solid #dd4814;
+	border-top: 2px solid #dd4814;
 	border-bottom: 2px solid #dd4814;
 }
 table.dataTable thead th:active,
@@ -176,7 +176,7 @@ table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.or
   background-color: #ffbf80;
 }
 table.dataTable.no-footer {
-  border-bottom: 4px solid #dd4814;
+  border-bottom: 2px solid #dd4814;
 }
 table.dataTable.nowrap th, table.dataTable.nowrap td {
   white-space: nowrap;

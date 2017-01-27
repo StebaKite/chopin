@@ -161,6 +161,16 @@ cambioContoStep2 = Cambio conto : Passo 2 - Selezione conto di destinazione
 cambioContoStep3 = Cambio conto : Passo 3 - Conferma
 
 ricercaMercato = Ricerca Mercato
+
+importaExcelCorrispettivoNegozioStep1 = Importa Corrispettivi Negozio : Passo 1 - Controllo file
+importaExcelCorrispettivoNegozioStep2 = Importa Corrispettivi Negozio: Passo 2 - Importazione dei dati
+importaExcelCorrispettivoMercatoStep1 = Importa Corrispettivi Mercato : Passo 1 - Controllo file
+importaExcelCorrispettivoMercatoStep2 = Importa Corrispettivi Mercato: Passo 2 - Importazione dei dati
+
+confermaimportaExcelCorrispettivoNegozioStep1 = Controlla
+confermaimportaExcelCorrispettivoNegozioStep2 = Importa
+confermaimportaExcelCorrispettivoMercatoStep1 = Controlla
+confermaimportaExcelCorrispettivoMercatoStep2 = Importa
 ;
 ; Campi form ---------------------------
 ;
@@ -285,3 +295,5 @@ codmercato = Codice mercato
 desmercato = Descrizione mercato
 cittamercato = Citt&agrave; mercato 
 mercato = Mercato
+file = File da importare
+tabellaCorrispettivi = Corrispettivi da importare
