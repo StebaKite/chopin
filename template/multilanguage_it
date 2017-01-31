@@ -155,6 +155,7 @@ modificaProgressivoFattura = Modifica progressivo fattura
 
 riepilogoNegozi = Riepilogo Comparativo Negozi
 andamentoNegozi = Andamento Negozi
+confrontoNegozi = Confronto progressivi mensili negozi
 
 cambioContoStep1 = Cambio conto : Passo 1 - Ricerca registrazioni
 cambioContoStep2 = Cambio conto : Passo 2 - Selezione conto di destinazione

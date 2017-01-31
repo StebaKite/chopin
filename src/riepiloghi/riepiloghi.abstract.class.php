@@ -273,16 +273,47 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoCostiNegozio;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
+
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['elencoVociAndamentoCostiNegozio'] = $result;
+				$_SESSION['numCostiTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['elencoVociAndamentoCostiNegozio']);
+				$_SESSION['numCostiTrovati'] = 0;
+			}
+			return $_SESSION['numCostiTrovati'];
+		}
+		else return "";
+	}
+
+	/**
+	 * Questo metodo estrae un riepilogo di totali per conto in Dare per mese
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $replace
+	 * @return unknown
+	 */
+	public function ricercaVociAndamentoCostiNegozioRiferimento($utility, $db, $replace) {
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['elencoVociAndamentoCostiNegozio'] = $result;
-			$_SESSION['numCostiTrovati'] = pg_num_rows($result);
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoCostiNegozio;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['elencoVociAndamentoCostiNegozioRiferimento'] = $result;
+				$_SESSION['numCostiTrovatiRiferimento'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['elencoVociAndamentoCostiNegozioRiferimento']);
+				$_SESSION['numCostiTrovatiRiferimento'] = 0;
+			}
+			return $_SESSION['numCostiTrovatiRiferimento'];
 		}
-		else {
-			unset($_SESSION['elencoVociAndamentoCostiNegozio']);
-			$_SESSION['numCostiTrovati'] = 0;
-		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -298,15 +329,45 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['elencoVociAndamentoRicaviNegozio'] = $result;
-			$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['elencoVociAndamentoRicaviNegozio'] = $result;
+				$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['elencoVociAndamentoRicaviNegozio']);
+				$_SESSION['numRicaviTrovati'] = 0;
+			}
+			return $_SESSION['numRicaviTrovati'];
 		}
-		else {
-			unset($_SESSION['elencoVociAndamentoRicaviNegozio']);
-			$_SESSION['numRicaviTrovati'] = 0;
+		else return "";
+	}
+
+	/**
+	 * Questo metodo estrai un riepilogo di totali per conto in Avere per mese
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $replace
+	 */
+	public function ricercaVociAndamentoRicaviNegozioRiferimento($utility, $db, $replace) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoRicaviNegozio;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['elencoVociAndamentoRicaviNegozioRiferimento'] = $result;
+				$_SESSION['numRicaviTrovatiRiferimento'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['elencoVociAndamentoRicaviNegozioRiferimento']);
+				$_SESSION['numRicaviTrovatiRiferimento'] = 0;
+			}
+			return $_SESSION['numRicaviTrovatiRiferimento'];
 		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -1078,12 +1139,101 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		}
 		return $risultato_esercizio;
 	}
+
+	public function makeDeltaCosti() {
+
+		$deltaCosti = array();
+		unset($_SESSION["elencoVociDeltaCostiNegozio"]);
+		
+		if (isset($_SESSION["elencoVociAndamentoCostiNegozio"])) {
+
+			$vociCosto = pg_fetch_all($_SESSION["elencoVociAndamentoCostiNegozio"]);	
+			$vociCostoRif = pg_fetch_all($_SESSION["elencoVociAndamentoCostiNegozioRiferimento"]);
+			
+			/**
+			 * Vengono riportate solo le voci di costo presenti nell'elenco del periodo corrente
+			 * Ogni voce presente nel periodo corrente viene cercata nel periodo di riferimento
+			 * L'importo della voce di riferimento viene sottratto all'importo della voe corrente
+			 */
+			
+			foreach($vociCosto as $voce) {
+
+				$desConto = trim($voce['des_conto']);
+				$mm_registrazione = trim($voce['mm_registrazione']);
+				$ind_gruppo = trim($voce['ind_gruppo']);
+				
+				$importo = $voce['tot_conto'];
+				$importoRiferimento = $this->getImportoVoce($vociCostoRif, $desConto, $mm_registrazione);
+				
+				$deltaVoce = array(
+						'des_conto' => $desConto,
+						'mm_registrazione' => $mm_registrazione,
+						'ind_gruppo' => $ind_gruppo,
+						'tot_conto' => abs($importo) - abs($importoRiferimento)
+						);
+				
+				array_push($deltaCosti, $deltaVoce);
+			}
+			$_SESSION["elencoVociDeltaCostiNegozio"] = $deltaCosti;
+		}
+	}
+
+	public function makeDeltaRicavi() {
 	
-	public function makeAndamentoCostiTable() {
+		$deltaRicavi = array();
+		unset($_SESSION["elencoVociDeltaRicaviNegozio"]);
+	
+		if (isset($_SESSION["elencoVociAndamentoRicaviNegozio"])) {
+	
+			$vociRicavo = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviNegozio"]);
+			$vociRicavoRif = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviNegozioRiferimento"]);
+				
+			/**
+			 * Vengono riportate solo le voci di ricavo presenti nell'elenco del periodo corrente
+			 * Ogni voce presente nel periodo corrente viene cercata nel periodo di riferimento
+			 * L'importo della voce di riferimento viene sottratto all'importo della voe corrente
+			 */
+				
+			foreach($vociRicavo as $voce) {
+	
+				$desConto = trim($voce['des_conto']);
+				$mm_registrazione = trim($voce['mm_registrazione']);
+				$ind_gruppo = trim($voce['ind_gruppo']);
+	
+				$importo = $voce['tot_conto'];
+				$importoRiferimento = $this->getImportoVoce($vociRicavoRif, $desConto, $mm_registrazione);
+	
+				$deltaVoce = array(
+						'des_conto' => $desConto,
+						'mm_registrazione' => $mm_registrazione,
+						'ind_gruppo' => $ind_gruppo,
+						'tot_conto' => abs($importo) - abs($importoRiferimento)
+				);
+	
+				array_push($deltaRicavi, $deltaVoce);
+			}
+			$_SESSION["elencoVociDeltaRicaviNegozio"] = $deltaRicavi;
+		}
+	}
+	
+	public function getImportoVoce($vociCostoRif, $desConto, $mm_registrazione) {
+		
+		$tot_conto = 0;
+		
+		foreach($vociCostoRif as $voceRif) {
+		
+			if ((trim($voceRif['des_conto']) == $desConto) and (trim($voceRif['mm_registrazione'])) == $mm_registrazione) {
+				$tot_conto = $voceRif['tot_conto'];
+			}
+		}
+		return $tot_conto;
+	}
+	
+	public function makeAndamentoCostiTable($vociAndamento) {
 
 		$risultato_andamento = "";
 		
-		if (isset($_SESSION["elencoVociAndamentoCostiNegozio"])) {
+		if (count($vociAndamento) > 0 ) {
 		
 			$risultato_andamento =
 			"<table class='result'>" .
@@ -1108,7 +1258,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			"	<table class='result'>" .
 			"		<tbody>";
 		
-			$vociAndamento = $_SESSION["elencoVociAndamentoCostiNegozio"];
 			$desconto_break = "";
 			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
 			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
@@ -1119,7 +1268,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			
 			$totaliAcquistiMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
 					
-			foreach(pg_fetch_all($vociAndamento) as $row) {
+			foreach($vociAndamento as $row) {
 
 				$totconto = $row['tot_conto'];
 				
@@ -1202,11 +1351,11 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		return $risultato_andamento;
 	}	
 
-	public function makeAndamentoRicaviTable() {
+	public function makeAndamentoRicaviTable($vociAndamento) {
 	
 		$risultato_andamento = "";
 	
-		if (isset($_SESSION["elencoVociAndamentoRicaviNegozio"])) {
+		if (count($vociAndamento) > 0 ) {
 	
 			$risultato_andamento =
 			"<table class='result'>" .
@@ -1231,7 +1380,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			"	<table class='result'>" .
 			"		<tbody>";
 	
-			$vociAndamento = $_SESSION["elencoVociAndamentoRicaviNegozio"];
 			$desconto_break = "";
 			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
 			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
@@ -1242,7 +1390,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				
 			$totaliRicaviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
 				
-			foreach(pg_fetch_all($vociAndamento) as $row) {
+			foreach($vociAndamento as $row) {
 	
 				$totconto = $row['tot_conto'];
 	
@@ -1320,6 +1468,248 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$_SESSION["totaliRicaviMesi"] = $totaliRicaviMesi;
 		$_SESSION["totaliComplessiviRicaviMesi"] = $totaliComplessiviMesi;
 		
+		return $risultato_andamento;
+	}
+
+	public function makeAndamentoCostiDeltaTable($vociAndamento) {
+	
+		$risultato_andamento = "";
+	
+		if (count($vociAndamento) > 0 ) {
+	
+			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desconto%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+	
+			$desconto_break = "";
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+				
+			/**
+			 * Salvo i totali che mi occorrono per il calcolo dell'MCT per mese
+			 */
+				
+			$totaliAcquistiMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+				
+			foreach($vociAndamento as $row) {
+	
+				$totconto = $row['tot_conto'];
+	
+				if (trim($row['des_conto']) != $desconto_break ) {
+	
+					if ($desconto_break != "") {
+	
+						/**
+						 * A rottura creo le colonne accumulate e inizializzo l'array
+						 */
+						$totale_conto = 0;
+	
+						for ($i = 1; $i < 13; $i++) {
+							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+							$totale_conto = $totale_conto + $totaliMesi[$i];
+						}
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+	
+						$risultato_andamento .= "</tr>";
+						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+	
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+					}
+					else {
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+					}
+					$desconto_break = trim($row['des_conto']);
+					if (trim($row['ind_gruppo'] === "CV")) { $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto; }
+				}
+				else {
+					$totaliMesi[$row['mm_registrazione']] += $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] === "CV")) { $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto; }
+				}
+			}
+				
+			/**
+			 * Ultima riga
+			 */
+	
+			$totale_conto = 0;
+	
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+				$totale_conto = $totale_conto + $totaliMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+	
+			$risultato_andamento .= "</tr>";
+			$risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
+	
+			/**
+			 * Totali mensili finali
+			 */
+				
+			$totale_anno = 0;
+				
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+				$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
+			$risultato_andamento .= "</tr></tbody></table></div>";
+		}
+	
+		/**
+		 * Metto in sessione i totali per mese degli acquisti che mi occorrono per creare le tabella dell'MCT progressivo
+		 */
+	
+		$_SESSION["totaliAcquistiMesi"] = $totaliAcquistiMesi;
+		$_SESSION["totaliComplessiviAcquistiMesi"] = $totaliComplessiviMesi;
+	
+		return $risultato_andamento;
+	}
+	
+	public function makeAndamentoRicaviDeltaTable($vociAndamento) {
+	
+		$risultato_andamento = "";
+	
+		if (count($vociAndamento) > 0 ) {
+	
+			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desconto%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+	
+			$desconto_break = "";
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+	
+			/**
+			 * Salvo i totali che mi occorrono per il calcolo dell'MCT per mese
+			 */
+	
+			$totaliRicaviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+	
+			foreach($vociAndamento as $row) {
+	
+				$totconto = $row['tot_conto'];
+	
+				if (trim($row['des_conto']) != $desconto_break ) {
+	
+					if ($desconto_break != "") {
+	
+						/**
+						 * A rottura creo le colonne accumulate e inizializzo l'array
+						 */
+						$totale_conto = 0;
+	
+						for ($i = 1; $i < 13; $i++) {
+							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+							$totale_conto = $totale_conto + $totaliMesi[$i];
+						}
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+	
+						$risultato_andamento .= "</tr>";
+						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+	
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+					}
+					else {
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_conto']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totconto;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+					}
+					$desconto_break = trim($row['des_conto']);
+					if (trim($row['ind_gruppo'] == "RC")) $totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
+				}
+				else {
+					$totaliMesi[$row['mm_registrazione']] += $totconto;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+					if (trim($row['ind_gruppo'] == "RC")) $totaliRicaviMesi[$row['mm_registrazione']] += $totconto;
+				}
+			}
+				
+			/**
+			 * Ultima riga
+			 */
+	
+			$totale_conto = 0;
+				
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+				$totale_conto = $totale_conto + $totaliMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+	
+			$risultato_andamento .= "</tr>";
+			$risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
+	
+			/**
+			 * Totali mensili finali
+			 */
+				
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+				$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
+			$risultato_andamento .= "</tr></tbody></table></div>";
+		}
+	
+		/**
+		 * Metto in sessione i totali per mese dei ricavi che mi occorrono per creare le tabella dell'MCT progressivo
+		 */
+	
+		$_SESSION["totaliRicaviMesi"] = $totaliRicaviMesi;
+		$_SESSION["totaliComplessiviRicaviMesi"] = $totaliComplessiviMesi;
+	
 		return $risultato_andamento;
 	}
 	
