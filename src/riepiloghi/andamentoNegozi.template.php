@@ -46,8 +46,13 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract {
 
 		$form = self::$root . $array['template'] . self::$pagina;
 
-		$andamentoCostiTable = $this->makeAndamentoCostiTable();
-		$andamentoRicaviTable = $this->makeAndamentoRicaviTable();
+		
+		$vociCosto = pg_fetch_all($_SESSION["elencoVociAndamentoCostiNegozio"]);
+		$vociRicavo = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviNegozio"]);
+		
+		$andamentoCostiTable = $this->makeAndamentoCostiTable($vociCosto);
+		$andamentoRicaviTable = $this->makeAndamentoRicaviDeltaTable($vociRicavo);
+		
 		$andamentoUtilePerditaTable = $this->makeUtilePerditaTable($_SESSION["totaliComplessiviAcquistiMesi"], $_SESSION["totaliComplessiviRicaviMesi"]);
 		$andamentoMctTable = $this->makeTableMargineContribuzione($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		

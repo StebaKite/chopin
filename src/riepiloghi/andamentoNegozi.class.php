@@ -161,13 +161,20 @@ class AndamentoNegozi extends RiepiloghiAbstract {
 	
 		$db = Database::getInstance();
 		
-		if ($this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace)) {
+		$numCostiCor = $this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace);
+		$numRicaviCor = $this->ricercaVociAndamentoRicaviNegozio($utility, $db, $replace);
 		
-			$this->ricercaVociAndamentoRicaviNegozio($utility, $db, $replace);
+		/**
+		 * Un contatore che contiene "" indica un accesso a db fallito
+		 */
+		
+		if (($numCostiCor > 0) or ($numRicaviCor > 0)) {
 			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-			return TRUE;
 		}
-		return FALSE;		
+		else {
+			unset($_SESSION['bottoneEstraiPdf']);
+		}
+		return true;		
 	}
 
 	public function preparaPagina($bilancioTemplate) {
