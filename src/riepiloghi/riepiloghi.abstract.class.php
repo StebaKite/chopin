@@ -793,15 +793,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		
 		if (($risultato_costi != "") || ($risultato_ricavi != "") || ($risultato_attivo != "") || ($risultato_passivo != "")) {
 				
-			/**
-			 * Annotazione provvisoria per 2015, con il 2016 puoi buttarla via con la tab-6
-			 */
-			$nota = "<p>Il bilancio di esercizio, <b>per il 2015</b>, viene generato partendo dal primo saldo disponibile: il <b>01/07/2015</b><br> " .
-					"<p>La funzione preleva un parametro dal config 'primoSaldoDisponibile = 01/07/2015' , in situazioni normali questo parametro non è " .
-					"valorizzato consentendo alla funzione il prelievo del primo saldo dell'anno al 01/01/2015</p>" .
-					"<p>Il bilancio periodico invece è funzionante e può essere estratto sempre tenendo presente la data del primo saldo o le " .
-					"eventuali successive.</p>";
-				
 			$costoVariabile = $_SESSION['costoVariabile'];
 			$ricavoVendita  = $_SESSION['ricavoVenditaProdotti'];
 			$costoFisso     = $_SESSION['costoFisso'];
@@ -938,7 +929,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($totaleRicaviBilancio), abs($totaleCostiBilancio))) . "</a></li>";
 			$tabs .= "<li><a href='#tabs-6'>MCT</a></li>";
 			$tabs .= "<li><a href='#tabs-7'>BEP</a></li>";
-			$tabs .= "<li><a href='#tabs-8'>Nota importante</a></li>";
 			$tabs .= "</ul>";
 				
 			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
@@ -949,7 +939,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($totaleRicaviBilancio), abs($totaleCostiBilancio)), abs($totaleRicaviBilancio), abs($totaleCostiBilancio)) . "</div>";
 			$tabs .= "<div id='tabs-6'>" . $notaMdc . $margineContribuzione . "</div>";
 			$tabs .= "<div id='tabs-7'>" . $notaBep . $tabellaBep . "</div>";
-			$tabs .= "<div id='tabs-8'>" . $nota . "</div>";
 			$tabs .= "</div>";
 		}
 		return $tabs;

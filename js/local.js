@@ -1513,6 +1513,11 @@ $( ".selectmenuConti" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+$( ".selectannoesercizio" )
+	.selectmenu({ width: 100 })
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
 
 $( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 150 });
@@ -1520,7 +1525,6 @@ $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
-$( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 250 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });

@@ -262,8 +262,8 @@ $(document).ready( function () {
 					<tr>
 						<td class="td">%ml.datareg% :</td>
 						<td id="tddatareg"><input class="dataregpicker" type="text" id="datareg" name="datareg" size="10" maxlength="10" value='%datareg%' /></td>
-						<td>%ml.descreg% : </td>
-						<td id="tddescreg"><input type="text" id="descreg" name="descreg" size="50" maxlength="200" value='%descreg%' onblur="controllaDescrizione()" /></td>
+						<td>&nbsp;&nbsp;&nbsp;%ml.descreg% : </td>
+						<td id="tddescreg"><input type="text" id="descreg" name="descreg" size="80" maxlength="200" value='%descreg%' onblur="controllaDescrizione()" /></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -273,20 +273,13 @@ $(document).ready( function () {
 					</tr>
 					<tr>
 						<td>%ml.codcau% :</td>
-						<td class="tooltip" id="tdcausale">
+						<td class="tooltip" id="tdcausale" colspan="3">
 							<select class="selectmenuCausaleIncassi" id="causale" name="causale" >
 								<option value=""></option>
 								%elenco_causali%
 							</select>
 						</td>
-						<td>%ml.negozio% :</td>						
-						<td id="tdnegozio">
-							<div class="radioset" >
-								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="controllaNegozio()"><label for="villa">%ml.villa%</label>
-								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="controllaNegozio()"><label for="brembate">%ml.brembate%</label>
-								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% onchange="controllaNegozio()"><label for="trezzo">%ml.trezzo%</label>
-							</div>
-						</td>					
+						<input type="hidden" name="codneg" value="CAS"/>
 					</tr>
 					<tr>
 						<td></td>
@@ -296,7 +289,7 @@ $(document).ready( function () {
 					</tr>
 					<tr>
 						<td>%ml.codclie% :</td>
-						<td id="tdcliente"><div><input class="scadenzeAperteCliente" type="text" id="cliente" name="cliente" size="40" value="%descli%" onblur="controllaCliente()" /></div></td>
+						<td id="tdcliente" colspan="3"><div><input class="scadenzeAperteCliente" type="text" id="cliente" name="cliente" size="40" value="%descli%" onblur="controllaCliente()" /></div></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -306,7 +299,7 @@ $(document).ready( function () {
 					</tr>
 					<tr>
 						<td>%ml.numfatt% :</td>
-						<td id="tdnumfatt">
+						<td id="tdnumfatt" colspan="3">
 							<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">
 							%elenco_scadenze_cliente%
 							</select>						

@@ -58,7 +58,13 @@ class CreaRegistrazioneTemplate extends PrimanotaAbstract {
 		/**
 		 * Controllo presenza dati obbligatori 
 		 */
-		
+
+		if ($_SESSION["codneg"] == "") {
+			$msg = $msg . "<br>&ndash; Scegli il negozio";
+			$_SESSION["esitoControlloNegozio"] = "Dato errato";
+			$esito = FALSE;
+		}
+				
 		if ($_SESSION["descreg"] == "") {			
 			$msg = $msg . "<br>&ndash; Manca la descrizione";
 			$_SESSION["esitoControlloDescrizione"] = "Dato errato";

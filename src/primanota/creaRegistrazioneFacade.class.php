@@ -12,6 +12,7 @@ if ($_GET["modo"] == "start") {
 	unset($_SESSION["descreg"]);
 	unset($_SESSION["datascad"]);
 	unset($_SESSION["numfatt"]);
+	unset($_SESSION["codneg"]);
 	unset($_SESSION["causale"]);
 	unset($_SESSION["fornitore"]);
 	unset($_SESSION["cliente"]);
@@ -41,6 +42,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["datascad"] = $_REQUEST["datascad"];
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["numfatt"] = $_REQUEST["numfatt"];
+	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["fornitore"] = $_REQUEST["fornitore"];
 	$_SESSION["cliente"] = $_REQUEST["cliente"];
