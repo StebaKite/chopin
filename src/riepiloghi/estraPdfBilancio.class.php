@@ -148,14 +148,17 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		/**
 		 * Riepilogo totali
 		 */
-		if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
-			$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+		if (($_SESSION['numCostiTrovati'] > 0) or ($_SESSION['numRicaviTrovati'] > 0)) {
+			
+			if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
+				$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+			}
+			else {
+				if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
+					$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
+				}				
+			}		
 		}
-		else {
-			if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
-				$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
-			}				
-		}		
 		
 		return $pdf;
 	}
