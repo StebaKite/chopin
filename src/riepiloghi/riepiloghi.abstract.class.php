@@ -76,16 +76,19 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['costiBilancio'] = $result;
-			$_SESSION['numCostiTrovati'] = pg_num_rows($result);
+
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['costiBilancio'] = $result;
+				$_SESSION['numCostiTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['costiBilancio']);
+				$_SESSION['numCostiTrovati'] = 0;
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['costiBilancio']);
-			$_SESSION['numCostiTrovati'] = 0;
-		}
-		return $result;
+		else return "";
 	}
 
 	/**
@@ -109,15 +112,18 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['ricaviBilancio'] = $result;
-			$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['ricaviBilancio'] = $result;
+				$_SESSION['numRicaviTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['ricaviBilancio']);
+				$_SESSION['numRicaviTrovati'] = 0;
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['ricaviBilancio']);
-			$_SESSION['numRicaviTrovati'] = 0;
-		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -134,15 +140,18 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['attivoBilancio'] = $result;
-			$_SESSION['numAttivoTrovati'] = pg_num_rows($result);
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['attivoBilancio'] = $result;
+				$_SESSION['numAttivoTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['attivoBilancio']);
+				$_SESSION['numAttivoTrovati'] = 0;
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['attivoBilancio']);
-			$_SESSION['numAttivoTrovati'] = 0;
-		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -159,15 +168,18 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['passivoBilancio'] = $result;
-			$_SESSION['numPassivoTrovati'] = pg_num_rows($result);
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['passivoBilancio'] = $result;
+				$_SESSION['numPassivoTrovati'] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION['passivoBilancio']);
+				$_SESSION['numPassivoTrovati'] = 0;
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['passivoBilancio']);
-			$_SESSION['numPassivoTrovati'] = 0;
-		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -191,13 +203,16 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['costoVariabile'] = $result;
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['costoVariabile'] = $result;
+			}
+			else {
+				unset($_SESSION['costoVariabile']);
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['costoVariabile']);
-		}
-		return $result;
+		else return "";
 	}
 	
 	/**
@@ -220,14 +235,17 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['ricavoVenditaProdotti'] = $result;
+		
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['ricavoVenditaProdotti'] = $result;
+			}
+			else {
+				unset($_SESSION['ricavoVenditaProdotti']);
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['ricavoVenditaProdotti']);
-		}
-		return $result;
+		else return "";
 	}
 
 	/**
@@ -251,13 +269,16 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['costoFisso'] = $result;
+		if ($result) {			
+			if (pg_num_rows($result) > 0) {
+				$_SESSION['costoFisso'] = $result;
+			}
+			else {
+				unset($_SESSION['costoFisso']);
+			}
+			return pg_num_rows($result);
 		}
-		else {
-			unset($_SESSION['costoFisso']);
-		}
-		return $result;
+		else return "";
 	}
 
 	/**

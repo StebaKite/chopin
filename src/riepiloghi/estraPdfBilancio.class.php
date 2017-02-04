@@ -75,17 +75,23 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 
 	public function generaSezioneIntestazione($pdf) {
 
-		if ($_SESSION["codneg_sel"] != "") {
-			$negozio = "";
-			$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-			$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-			$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+		if ($_SESSION["codneg_sel"] != "CAS") {
 			
-			$_SESSION["title2"] = "Negozio di " . $negozio;
+			if ($_SESSION["codneg_sel"] != "") {
+				$negozio = "";
+				$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
+				$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
+				$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+				
+				$_SESSION["title2"] = "Negozio di " . $negozio;
+			}
+			else {
+				$_SESSION["title2"] = "Tutti i negozi";
+			}
 		}
 		else {
-			$_SESSION["title2"] = "Tutti i negozi";
-		}
+			$_SESSION["title2"] = "";
+		}		
 		
 		return $pdf;
 	}
@@ -102,37 +108,42 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		);
 		
 		$db = Database::getInstance();
+		$fill = true;		
 		
 		/**
 		 * Costi
 		 */
-		$fill = true;		
+		if ($this->ricercaCosti($utility, $db, $replace) > 0) {
 		
-		$pdf->AddPage();
-		$pdf->SetFont('','B',12);
-		$pdf->SetFillColor(171,224,245);
-		$pdf->Cell($w[0],6,'COSTI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
-		$pdf->Ln();
-		$pdf->Ln();
+			$pdf->AddPage();
+			$pdf->SetFont('','B',12);
+			$pdf->SetFillColor(171,224,245);
+			$pdf->Cell($w[0],6,'COSTI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
+			$pdf->Ln();
+			$pdf->Ln();
+			
+			$pdf->SetFont('Arial','',11);
 		
-		$pdf->SetFont('Arial','',11);
-		$pdf->BilancioTable($this->ricercaCosti($utility, $db, $replace), 1);
-
-		$pdf->TotaleCostiTable($_SESSION['totaleCosti']);
+			$pdf->BilancioTable(pg_fetch_all($_SESSION['costiBilancio']), 1);			
+			$pdf->TotaleCostiTable($_SESSION['totaleCosti']);
+		}		
 		
 		/**
 		 * Ricavi
 		 */		
-		$pdf->AddPage();		
-		$pdf->SetFont('','B',12);
-		$pdf->SetFillColor(171,224,245);
-		$pdf->Cell($w[0],6,'RICAVI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
-		$pdf->Ln();
-		$pdf->Ln();
-		$pdf->SetFont('Arial','',11);
-		$pdf->BilancioTableRicavi($this->ricercaRicavi($utility, $db, $replace), -1);
-
-		$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));
+		if ($this->ricercaRicavi($utility, $db, $replace) > 0) {
+			
+			$pdf->AddPage();		
+			$pdf->SetFont('','B',12);
+			$pdf->SetFillColor(171,224,245);
+			$pdf->Cell($w[0],6,'RICAVI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
+			$pdf->Ln();
+			$pdf->Ln();
+			$pdf->SetFont('Arial','',11);
+		
+			$pdf->BilancioTableRicavi(pg_fetch_all($_SESSION['ricaviBilancio']), -1);
+			$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));			
+		}
 		
 		/**
 		 * Riepilogo totali
@@ -161,134 +172,46 @@ class EstraiPdfBilancio extends RiepiloghiAbstract {
 		);
 		
 		$db = Database::getInstance();
+		$fill = true;				
 
 		/**
 		 * Attivo
 		 */
-		$fill = true;	
+		if ($this->ricercaAttivo($utility, $db, $replace) > 0) {
 			
-		$pdf->AddPage();
-		$pdf->SetFont('','B',12);
-	    $pdf->SetFillColor(171,224,245);
-		$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
-		$pdf->Ln();
-		$pdf->Ln();
-
-		$pdf->SetFillColor(224,235,255);
-		$pdf->SetFont('Arial','',11);
-		$pdf->BilancioEsercizioTable($this->ricercaAttivo($utility, $db, $replace));
-
-		/**
-		 * Totali Attivitità
-		 */
- 		$pdf->TotaleAttivoTable(abs($_SESSION['totaleAttivo']));
+			$pdf->AddPage();
+			$pdf->SetFont('','B',12);
+		    $pdf->SetFillColor(171,224,245);
+			$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
+			$pdf->Ln();
+			$pdf->Ln();
+			$pdf->SetFillColor(224,235,255);
+			$pdf->SetFont('Arial','',11);
+		
+			$pdf->BilancioEsercizioTable(pg_fetch_all($_SESSION['attivoBilancio']));			
+	 		$pdf->TotaleAttivoTable(abs($_SESSION['totaleAttivo']));
+		}
 		
 		/**
 		 * Passivo
 		 */
-		$pdf->AddPage();
-		$pdf->SetFont('','B',12);
-		$pdf->SetFillColor(171,224,245);		
-		$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
-		$pdf->Ln();
-		$pdf->Ln();
+		if ($this->ricercaPassivo($utility, $db, $replace) > 0) {
+			
+			$pdf->AddPage();
+			$pdf->SetFont('','B',12);
+			$pdf->SetFillColor(171,224,245);		
+			$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
+			$pdf->Ln();
+			$pdf->Ln();			
+			$pdf->SetFillColor(224,235,255);
+			$pdf->SetFont('Arial','',11);
 		
-		$pdf->SetFillColor(224,235,255);
-		$pdf->SetFont('Arial','',11);
-		$pdf->BilancioEsercizioTable($this->ricercaPassivo($utility, $db, $replace));
-
-		/**
-		 * Totali Passività
-		 */
-		$pdf->TotalePassivoTable(abs($_SESSION['totalePassivo']));
+			$pdf->BilancioEsercizioTable(pg_fetch_all($_SESSION['passivoBilancio']));
+			$pdf->TotalePassivoTable(abs($_SESSION['totalePassivo']));		
+		}
 		
 		return $pdf;
-	}
-	
-	public function ricercaCosti($utility, $db, $replace) {
-	
-		$array = $utility->getConfig();
-		
-		if ($_SESSION['saldiInclusi'] == "S") {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiConSaldi;
-		}
-		else {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryCosti;
-		}
-		
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['costiBilancio'] = $result;
-		}
-		else {
-			unset($_SESSION['costiBilancio']);
-			$_SESSION['numCostiTrovati'] = 0;
-		}
-		return pg_fetch_all($result);;
-	}
-	
-	public function ricercaRicavi($utility, $db, $replace) {
-	
-		$array = $utility->getConfig();
-
-		if ($_SESSION['saldiInclusi'] == "S") {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviConSaldi;
-		}
-		else {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryRicavi;
-		}
-		
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['ricaviBilancio'] = $result;
-		}
-		else {
-			unset($_SESSION['costiBilancio']);
-			$_SESSION['numRicaviTrovati'] = 0;
-		}
-		return pg_fetch_all($result);;
-	}
-	
-	public function ricercaAttivo($utility, $db, $replace) {
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryAttivo;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['attivoBilancio'] = $result;
-			$_SESSION['numAttivoTrovati'] = pg_num_rows($result);
-		}
-		else {
-			unset($_SESSION['attivoBilancio']);
-			$_SESSION['numAttivoTrovati'] = 0;
-		}
-		return pg_fetch_all($result);;
-	}
-	
-	public function ricercaPassivo($utility, $db, $replace) {
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryPassivo;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['passivoBilancio'] = $result;
-			$_SESSION['numPassivoTrovati'] = pg_num_rows($result);
-		}
-		else {
-			unset($_SESSION['passivoBilancio']);
-			$_SESSION['numPassivoTrovati'] = 0;
-		}
-		return pg_fetch_all($result);;
-	}
-		
+	}		
 }
 
 ?>
