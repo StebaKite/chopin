@@ -1525,7 +1525,7 @@ $( ".selectmenuConto" ).selectmenu({ width: 300 });
 $( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
-$( ".selectmenuDataRipSaldo" ).selectmenu({ width: 120 });
+$( ".selectmenuDataRipSaldo" ).selectmenu({ width: 150 });
 $( ".selectmenuCategoria" ).selectmenu({ width: 250 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 

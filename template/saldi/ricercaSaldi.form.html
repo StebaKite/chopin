@@ -39,15 +39,7 @@ $(document).ready( function () {
 			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr>
-						<td>%ml.negozio% :</td>
-						<td class="tooltip">
-							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="VIL" %villa-selected% >%ml.villa%</option>
-								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-							</select>
-						</td>
+						<input type="hidden" name="codneg_sel" value="CAS"/>						
 						<td>%ml.dataRipSaldo% :</td>
 						<td class="tooltip">
 							<select class="selectmenuDataRipSaldo" id="datarip_saldo" name="datarip_saldo" >

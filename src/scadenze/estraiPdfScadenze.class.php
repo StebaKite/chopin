@@ -66,14 +66,17 @@ class EstraiPdfScadenze extends ScadenzeAbstract {
 	public function generaSezioneIntestazione($pdf) {
 			
 		$_SESSION["title"] = "Scadenze dal " . $_SESSION["datascad_da"] . " al " . $_SESSION["datascad_a"];
-
-		$negozio = "";
-		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-
-		if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
-		else $_SESSION["title1"] = "Tutti i negozi";
+		$_SESSION["title1"] = "";
+		
+		if ($_SESSION["codneg_sel"] != "CAS") {
+			$negozio = "";
+			$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+	
+			if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
+			else $_SESSION["title1"] = "Tutti i negozi";			
+		}
 		
 		return $pdf;
 	}

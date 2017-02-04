@@ -67,14 +67,17 @@ class EstraiPdfMastrinoConto extends ConfigurazioniAbstract {
 	public function generaSezioneIntestazione($pdf) {
 
 		$_SESSION["title"] = "Registrazioni dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];		
+		$_SESSION["title1"] = "";
 
-		$negozio = "";
-		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-
-		if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
-		else $_SESSION["title1"] = "Tutti i negozi";
+		if ($_SESSION["codneg_sel"] != "CAS") {
+			$negozio = "";
+			$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
+			$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
+	
+			if ($negozio != "") $_SESSION["title1"] = "Negozio di " . $negozio;
+			else $_SESSION["title1"] = "Tutti i negozi";			
+		}		
 		
 		$_SESSION["title2"] = $_SESSION["catconto"] . " : " . $_SESSION["desconto"] . " / " . $_SESSION["dessottoconto"];
 		
