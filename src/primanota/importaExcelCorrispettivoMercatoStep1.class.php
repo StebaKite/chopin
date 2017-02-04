@@ -102,7 +102,16 @@ class ImportaExcelCorrispettivoMercatoStep1 extends PrimanotaAbstract {
 
 		if ($importaExcelCorrispettivoMercatoStep1Template->controlliLogici()) {
 
-			$data=new Spreadsheet_Excel_Reader($array["filePath"] . "/" . $_SESSION["file"]);
+			$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
+			
+			if (strpos($users, $array['usernameProdLogin']) === false) {
+				$path = str_replace("%user%", "stefano", $array["filePath"]);				
+			}
+			else {
+				$path = str_replace("%user%", $array["usernameProdLogin"], $array["filePath"]);
+			}					
+			
+			$data=new Spreadsheet_Excel_Reader($path . "/" . $_SESSION["file"]);
 			$sheets=$_SESSION["mese"];
 			$mese = str_pad($_SESSION["mese"] + 1, 2, "0", STR_PAD_LEFT);
 
