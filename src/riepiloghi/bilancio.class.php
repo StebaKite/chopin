@@ -175,38 +175,43 @@ class Bilancio extends RiepiloghiAbstract {
 		
 		$db = Database::getInstance();
 
-		if ($this->ricercaCosti($utility, $db, $replace)) {
-			if ($this->ricercaRicavi($utility, $db, $replace)) {
-				if ($_SESSION["soloContoEconomico"] == "N") {
-					
-					if ($this->ricercaAttivo($utility, $db, $replace)) {
-						if ($this->ricercaPassivo($utility, $db, $replace)) {
-							
-							if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
-								if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
-									if ($this->ricercaCostiFissi($utility, $db, $replace)) {
-										$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-										return TRUE;
-									}
-								}
-							}
-						}
-					}
-						
-				}
-				else {
-					if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
-						if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
-							if ($this->ricercaCostiFissi($utility, $db, $replace)) {
-								$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-								return TRUE;
-							}
-						}
-					}
-				}
+		$numCosti = $this->ricercaCosti($utility, $db, $replace);
+		$numRicavi = $this->ricercaRicavi($utility, $db, $replace);			
+			
+			
+		if ($_SESSION["soloContoEconomico"] == "N") {
+			
+			$numAttivo = $this->ricercaAttivo($utility, $db, $replace);
+			$numPassivo = $this->ricercaPassivo($utility, $db, $replace);		
+			$numCostiMct = $this->ricercaCostiMargineContribuzione($utility, $db, $replace);
+			$numRicaviMct = $this->ricercaRicaviMargineContribuzione($utility, $db, $replace);
+			$numCostiFissi = $this->ricercaCostiFissi($utility, $db, $replace);
+								
+			if (($numCosti > 0) or ($numRicavi > 0) or ($numAttivo > 0) or ($numPassivo > 0)) {
+				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+			}				
+		}
+		else {
+			
+			$numCostiMct = $this->ricercaCostiMargineContribuzione($utility, $db, $replace);
+			$numRicaviMct = $this->ricercaRicaviMargineContribuzione($utility, $db, $replace);
+			$numCostiFissi = $this->ricercaCostiFissi($utility, $db, $replace);
+				
+			if (($numCosti > 0) or ($numRicavi > 0)) {
+				$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
 			}
 		}
-		return FALSE;
+		
+		if ((is_numeric(trim($numCosti))) and 
+			(is_numeric(trim($numRicavi))) and 
+			(is_numeric(trim($numAttivo))) and 
+			(is_numeric(trim($numPassivo))) and 
+			(is_numeric(trim($numCostiMct))) and 
+			(is_numeric(trim($numRicaviMct))) and 
+			(is_numeric(trim($numCostiFissi)))) {
+			return true;		
+		}
+		return false;
 	}
 	
 	public function preparaPagina($bilancioTemplate) {
