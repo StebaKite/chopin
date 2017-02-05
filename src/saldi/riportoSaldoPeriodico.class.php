@@ -28,8 +28,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 			'12' => 'dicembre'
 	);
 	
-	public static $negozi = array('VIL','BRE','TRE');
-	
 	private static $_instance = null;
 
 	function __construct() {
@@ -39,12 +37,12 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		require_once 'utility.class.php';
 
 		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+		$config = $utility->getConfig();
 		
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		self::$testata = self::$root . $config['testataPagina'];
+		self::$piede = self::$root . $config['piedePagina'];
+		self::$messaggioErrore = self::$root . $config['messaggioErrore'];
+		self::$messaggioInfo = self::$root . $config['messaggioInfo'];
 	}
 
 	private function  __clone() { }
@@ -70,6 +68,12 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		
 		$riportoStatoPatrimoniale_Ok = FALSE;
 		$riportoContoEconomico_Ok = FALSE;
+
+		$utility = Utility::getInstance();
+		$config = $utility->getConfig();
+		
+		$negozi = array();
+		array_push($negozi, $config['negozi']);
 		
 		/**
 		 * Determino il mese da estrarre rispetto alla data di esecuzione del lavoro pianificato
@@ -101,13 +105,11 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		 * Riporto stato patrimoniale
 		 */
 		
-		$utility = Utility::getInstance();
-		
 		$result = $this->prelevaStatoPatrimoniale($db, $utility);		
 		
 		if ($result) {
 			
-			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
 			$da = '01/' . $mesePrecedente . '/' . $anno;
 			$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -126,7 +128,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 			
 			if ($result) {
 
-				$this->riportoContoEconomico($db, $pklavoro, $utility, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+				$this->riportoContoEconomico($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 					
 				$da = '01/' . $mesePrecedente . '/' . $anno;
 				$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -146,11 +148,11 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		else return FALSE;
 	}
 	
-	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
 		require_once 'menubanner.template.php';
 
-		$array = $utility->getConfig();
+		$config = $utility->getConfig();
 				
 		$conti = pg_fetch_all($statoPatrimoniale);
 
@@ -164,8 +166,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 			 * Per ciascun conto effettuo la totalizzazione delle registrazioni per ciascun negozio
 			 */
 			$dareAvere_conto = ($conto['tip_conto'] = "Avere") ? "A" : "D";		// prelevo il tipo del conto Dare/Avere
-								
-			foreach(SELF::$negozi as $negozio){
+						
+			foreach($negozi as $negozio){
 					
 				$replace = array(
 						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
@@ -175,8 +177,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 						'%codsottoconto%' => $conto['cod_sottoconto']
 				);
 					
-				$array = $utility->getConfig();
-				$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
+				$sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
 		
 				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);				
 				$result = $db->execSql($sql);
@@ -208,15 +209,17 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		}		
 	}
 	
-	private function riportoContoEconomico($db, $pklavoro, $utility, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+	private function riportoContoEconomico($db, $pklavoro, $utility, $negozi, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
 		require_once 'menubanner.template.php';
+
+		$config = $utility->getConfig();
 		
 		$conti = pg_fetch_all($contoEconomico);
 			
 		foreach($conti as $conto) {
-		
-			foreach(SELF::$negozi as $negozio){
+				
+			foreach($negozi as $negozio){
 					
 				$replace = array(
 						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
@@ -226,8 +229,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 						'%codsottoconto%' => $conto['cod_sottoconto']
 				);
 					
-				$array = $utility->getConfig();
-				$sqlTemplate = self::$root . $array['query'] . self::$querySaldoConto;
+				$sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
 		
 				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 				$result = $db->execSql($sql);
