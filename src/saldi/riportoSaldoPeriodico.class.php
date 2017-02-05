@@ -72,9 +72,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract {
 		$utility = Utility::getInstance();
 		$config = $utility->getConfig();
 		
-		$negozi = array();
-		array_push($negozi, $config['negozi']);
-		
+		$negozi = explode(',', $config['negozi']);
+				
 		/**
 		 * Determino il mese da estrarre rispetto alla data di esecuzione del lavoro pianificato
 		 */
