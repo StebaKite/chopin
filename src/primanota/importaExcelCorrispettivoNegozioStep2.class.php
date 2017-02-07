@@ -139,7 +139,12 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 
 		$dettagliInseriti = array();
 		$dettaglio = array();
-		
+
+		if ($_SESSION["contocassa"] == "S")
+			$contoDare = explode(" - ", $array['contoCassa']);
+		else
+			$contoDare = explode(" - ", $array['contoBanca']);
+						
 		$contoErario = explode(" - ", $array['contoErarioNegozi']);
 		$contoCorrispettivo = explode(" - ", $array['contoCorrispettivoNegozi']);
 
@@ -147,7 +152,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 		 * Primo dettaglio registrazione
 		 */
 		
-		array_push($dettaglio, $contoCorrispettivo[0]);
+		array_push($dettaglio, $contoDare[0]);
 		array_push($dettaglio, $importo);
 		array_push($dettaglio, "D");
 		

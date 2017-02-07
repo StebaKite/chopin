@@ -12,6 +12,7 @@ if ($_GET["modo"] == "go") {
 	$_SESSION["mese"] = $_REQUEST["mese"];
 	$_SESSION["anno"] = $_REQUEST["anno"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
+	$_SESSION["contocassa"] = $_REQUEST["contocassa"];
 	
 	$importaExcelCorrispettivoNegozioStep2->go();
 }
