@@ -83,10 +83,13 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract  {
 		
 		/**
 		 * Vengono inseriti i lavori per il primo semestre dell'anno prossimo.
-		 * Questa esecuzione deve andare OBBLIGATORIAMENTE entro il primo giorno dell'anno. Presumibilmente il 31/12
+		 * Questo lavoro viene pianificato per il 30/12 di ogni anno. Se viene eseguito in questa data somma 1 all'anno
+		 * altrimenti lascia l'anno corrente. Deve essere eseguito al più tardi entro la fine del mese di gennaio. 
 		 */		
+
+		if (date("m") == "12") $anno = date("Y") + 1;
+		if ((date("m") == "01") or (date("m") == "1")) $anno = date("Y");		
 		
-		$anno = date("Y") + 1;
 		$fileEsecuzioneLavoro = "riportoSaldoPeriodico";
 		$classeEsecuzioneLavoro = "RiportoSaldoPeriodico";
 		$statoLavoro = "00";
