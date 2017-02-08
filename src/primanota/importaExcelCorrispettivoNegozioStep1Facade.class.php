@@ -27,7 +27,8 @@ if ($_GET["modo"] == "go") {
 	if ($_REQUEST["file"] != "") $_SESSION["file"] = $_REQUEST["file"];
 	$_SESSION["datada"]= $_REQUEST["datada"];
 	$_SESSION["dataa"] = $_REQUEST["dataa"];
-
+	$_SESSION["contocassa"] = $_REQUEST["contocassa"];
+	
 	$importaExcelCorrispettivoNegozioStep1->go();
 }
 

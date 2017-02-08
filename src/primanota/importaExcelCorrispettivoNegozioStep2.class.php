@@ -40,6 +40,9 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 		require_once 'importaExcelCorrispettivoNegozioStep1.class.php';
 		require_once 'utility.class.php';
 		require_once 'database.class.php';
+
+		unset($_SESSION["messaggioImportFileErr"]);
+		unset($_SESSION["messaggioImportFileOk"]);
 		
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
@@ -106,7 +109,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 						$corrispettiviInseriti ++;
 						$dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo10, $iva10);
 						if (!$this->creaCorrispettivoNegozio($db, $utility, $datareg, $negozio, $causale, $stareg, $dettagliInseriti)) {
-							$_SESSION["messaggioImportFileOk"] = "Errore imprevisto, ripristino eseguito";
+							$_SESSION["messaggioImportFileErr"] = "Errore imprevisto, ripristino eseguito";
 							break;
 						}						
 					}
@@ -126,9 +129,11 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 					else $corrispettiviIgnorati ++;
 				}
 			}
-			$db->commitTransaction();
-			$_SESSION["messaggioImportFileOk"]  = "<br/>&ndash; corrispettivi inseriti " . $corrispettiviInseriti;
-			$_SESSION["messaggioImportFileOk"] .= "<br/>&ndash; corrispettivi gi&agrave; esistenti " . $corrispettiviIgnorati;
+			if (!isset($_SESSION["messaggioImportFileErr"])) {
+				$db->commitTransaction();
+				$_SESSION["messaggioImportFileOk"]  = "<br/>&ndash; corrispettivi inseriti " . $corrispettiviInseriti;
+				$_SESSION["messaggioImportFileOk"] .= "<br/>&ndash; corrispettivi gi&agrave; esistenti " . $corrispettiviIgnorati;				
+			}
 		}
 		
 		$importaExcelCorrispettivoNegozioStep1 = ImportaExcelCorrispettivoNegozioStep1::getInstance();
