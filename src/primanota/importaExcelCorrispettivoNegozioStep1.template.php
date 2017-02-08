@@ -123,6 +123,8 @@ class ImportaExcelCorrispettivoNegozioStep1Template extends PrimanotaAbstract {
 				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
 				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
 				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",				
+				'%cassa-checked%' => ($_SESSION["contocassa"] == "S") ? "checked" : "",
+				'%banca-checked%' => ($_SESSION["contocassa"] == "N") ? "checked" : "",				
 				'%esitoMese%' => $_SESSION["esitoMese"],
 				'%esitoAnno%' => $_SESSION["esitoAnno"],
 				'%esitoNegozio%' => $_SESSION["esitoNegozio"],
