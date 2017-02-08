@@ -56,6 +56,8 @@ class ImportaExcelCorrispettivoNegozioStep1 extends primanotaAbstract {
 		$_SESSION["anno"] = date("Y");
 		$_SESSION["mese"] = date("m") - 1;	// il mese è dimimuito di 1 per coincidere con i fogli del file excel
 		$_SESSION["codneg"] = "VIL";
+		$_SESSION["contocassa"] = "S";
+		
 		if (!isset($_SESSION["datada"])) $_SESSION["datada"] = date("01/m/Y");
 		if (!isset($_SESSION["dataa"]))  $_SESSION["dataa"] = date("d/m/Y");
 		

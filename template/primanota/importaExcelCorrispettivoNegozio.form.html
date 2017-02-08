@@ -93,7 +93,19 @@ $(document).ready( function () {
 				<td class="tooltip"><input class="data" type="text" name="datada" size="10" maxlength="10" value='%datada%' ></td>
 				<td class="td">&nbsp;&nbsp;&nbsp;%ml.a% :</td>
 				<td class="tooltip"><input class="data" type="text" name="dataa" size="10" maxlength="10" value='%dataa%' ></td>
-				
+			</tr>
+			<tr>
+				<td></td>
+				<td class="tdmessage"><i class="message" id="messaggioControlloContocassa" >&nbsp;</i></td>
+			</tr>
+			<tr>
+				<td class="td">%ml.tipoIncasso% :</td>
+				<td id="tdcontocassa">
+					<div class="radioset" >
+						<input type="radio" id="cassa" name="contocassa" value="S" %cassa-checked%  /><label for="cassa">%ml.cassa%</label>
+						<input type="radio" id="banca" name="contocassa" value="N" %banca-checked%  /><label for="banca">%ml.banca%</label>
+					</div>
+				</td>					
 			</tr>
 		</tbody>
 		<tfoot>
