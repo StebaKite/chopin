@@ -2,7 +2,7 @@
 
 require_once 'riepiloghi.abstract.class.php';
 
-class AndamentoNegoziConfrontatoTemplate extends RiepiloghiAbstract {
+class AndamentoNegoziConfrontatoTemplate extends RiepiloghiAbstract implements RiepiloghiPresentation {
 
 	private static $_instance = null;
 

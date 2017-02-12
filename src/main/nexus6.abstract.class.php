@@ -1,6 +1,6 @@
 <?php
 
-abstract class ChopinAbstract {
+abstract class Nexus6Abstract implements Nexus6BusinessInterface {
 
 	public static $root;
 	public static $testata;
@@ -59,24 +59,24 @@ abstract class ChopinAbstract {
 	
 	// Costruttore ------------------------------------------------------------------------
 	
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+// 	function __construct() {
+// 		self::$root = $_SERVER['DOCUMENT_ROOT'];
+// 	}
 
-	private function  __clone() { }
+// 	private function  __clone() { }
 	
-	/**
-	 * Singleton Pattern
-	 */
+// 	/**
+// 	 * Singleton Pattern
+// 	 */
 	
-	public static function getInstance() {
+// 	public static function getInstance() {
 	
-		if( !is_object(self::$_instance) )
+// 		if( !is_object(self::$_instance) )
 	
-			self::$_instance = new ChopinAbstract();
+// 			self::$_instance = new Nexus6Abstract();
 	
-		return self::$_instance;
-	}
+// 		return self::$_instance;
+// 	}
 	
 	// Setters -----------------------------------------------------------------------------
 	
@@ -579,49 +579,6 @@ abstract class ChopinAbstract {
 	 * 
 	 * @param unknown $db
 	 * @param unknown $utility
-	 * @param unknown $datevento
-	 * @param unknown $notaevento
-	 * @return unknown
-	 */
-	public function inserisciEvento($db, $utility, $datevento, $notaevento) {
-		
-		$array = $utility->getConfig();
-		$replace = array(
-				'%dat_evento%' => trim($datevento),
-				'%nota_evento%' => str_replace("'", "''", trim($notaevento))
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaEvento;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;		
-	}
-
-	/**
-	 * 
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idevento
-	 * @param unknown $staevento
-	 * @return unknown
-	 */
-	public function chiudiEvento($db, $utility, $idevento, $staevento) {
-		
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_evento%' => trim($idevento),
-				'%sta_evento%' => trim($staevento),
-				'%dat_cambio_stato%' => date("d/m/Y")
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryChiudiEvento;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
-
-	/**
-	 * 
-	 * @param unknown $db
-	 * @param unknown $utility
 	 * @param unknown $dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 	 */
 	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione, $project_root) {
@@ -971,8 +928,7 @@ abstract class ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
-	}
-	
+	}	
 }
 
 ?>

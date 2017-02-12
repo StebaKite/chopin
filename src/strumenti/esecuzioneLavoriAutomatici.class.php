@@ -11,9 +11,9 @@
  *
  */
 
-require_once 'chopin.abstract.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class EsecuzioneLavoriAutomatici extends ChopinAbstract {
+class EsecuzioneLavoriAutomatici extends Nexus6Abstract {
 
 	private static $project_root = "/var/www/html";
 	

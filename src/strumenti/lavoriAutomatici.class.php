@@ -1,8 +1,8 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class LavoriAutomatici extends ChopinAbstract {
+class LavoriAutomatici extends Nexus6Abstract {
 
 	private static $messaggio;
 	

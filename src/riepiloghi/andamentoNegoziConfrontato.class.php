@@ -1,9 +1,8 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
-require_once 'riepiloghi.interface.php';
 
-class AndamentoNegoziConfrontato extends RiepiloghiAbstract implements Riepiloghi {
+class AndamentoNegoziConfrontato extends RiepiloghiAbstract {
 
 	private static $_instance = null;
 

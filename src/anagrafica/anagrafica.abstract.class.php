@@ -2,7 +2,7 @@
 
 require_once 'chopin.abstract.class.php';
 
-abstract class AnagraficaAbstract extends ChopinAbstract {
+abstract class AnagraficaAbstract extends Nexus6Abstract {
 
 	private static $_instance = null;
 

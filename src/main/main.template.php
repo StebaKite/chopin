@@ -1,8 +1,8 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class MainTemplate extends ChopinAbstract {
+class MainTemplate extends Nexus6Abstract {
 
 	public static $root;
 	public static $pagina = "/main/main.html";

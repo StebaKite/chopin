@@ -1,8 +1,9 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'nexus6.abstract.class.php';
+require_once 'riepiloghi.business.interface.php';
 
-abstract class RiepiloghiAbstract extends ChopinAbstract {
+abstract class RiepiloghiAbstract extends Nexus6Abstract implements RiepiloghiBusinessInterface {
 
 	private static $_instance = null;
 

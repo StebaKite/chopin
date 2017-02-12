@@ -1,8 +1,8 @@
 <?php
 
-require_once 'chopin.abstract.class.php';
+require_once 'nexus6.abstract.class.php';
 
-abstract class FatturaAbstract extends ChopinAbstract {
+abstract class FatturaAbstract extends Nexus6Abstract {
 
 	public static $mese = array(
 			'01' => 'Gennaio',
