@@ -3,7 +3,7 @@
 require_once 'riepiloghi.abstract.class.php';
 require_once 'riepiloghi.presentation.interface.php';
 
-class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPresentation {
+class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPresentationInterface {
 
 	private static $_instance = null;
 
@@ -55,7 +55,7 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPr
 		$andamentoRicaviTable = $this->makeAndamentoRicaviDeltaTable($vociRicavo);
 		
 		$andamentoUtilePerditaTable = $this->makeUtilePerditaTable($_SESSION["totaliComplessiviAcquistiMesi"], $_SESSION["totaliComplessiviRicaviMesi"]);
-		$andamentoMctTable = $this->makeTableMargineContribuzione($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
+		$andamentoMctTable = $this->makeTableMargineContribuzioneAndamentoNegozi($_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
 		
 		/** ******************************************
 		 * Costruisco il box delle tabs
@@ -82,6 +82,8 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPr
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
+	
+	public function tabellaTotaliRiepilogoNegozi($tipoTotale) {}	
 }
 
 ?>

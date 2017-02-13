@@ -1,8 +1,9 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghi.extractor.interface.php';
 
-class EstraiPdfAndamentoNegoziConfrontato extends RiepiloghiAbstract {
+class EstraiPdfAndamentoNegoziConfrontato extends RiepiloghiAbstract implements RiepiloghiExtractorInterface {
 
 	private static $_instance = null;
 
@@ -88,46 +89,21 @@ class EstraiPdfAndamentoNegoziConfrontato extends RiepiloghiAbstract {
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
-		
-		if ($this->ricercaDati($utility)) {
+	private function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
 
-			$this->makeDeltaCosti();
-			$this->makeDeltaRicavi();
-			
-			$pdf->AddPage('L');
-	
-			if (isset($_SESSION["elencoVociDeltaCostiNegozio"])) {
-				$header = array("Costi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-				$pdf->SetFont('Arial','',9);
-				$pdf->progressiviNegozioConfrontatoTable($header, $_SESSION["elencoVociDeltaCostiNegozio"], 1);
-		
-				$pdf->AddPage('L');				
-			}
-
-			if (isset($_SESSION["elencoVociDeltaRicaviNegozio"])) {
-				$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-				$pdf->progressiviNegozioConfrontatoTable($header, $_SESSION["elencoVociDeltaRicaviNegozio"], 1);					
-			}
-		}
-		return $pdf;
-	}
-
-	public function ricercaDati($utility) {
-	
 		require_once 'database.class.php';
-	
+		
 		unset($_SESSION["totaliProgressivi"]);
-	
+		
 		$codnegozio = "";
 		$codnegozio = ($_SESSION["codneg_sel"] == "") ?"'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'";
-	
+		
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => $codnegozio
 		);
-	
+		
 		$db = Database::getInstance();
 		
 		/**
@@ -154,8 +130,26 @@ class EstraiPdfAndamentoNegoziConfrontato extends RiepiloghiAbstract {
 		
 		if (($numCostiCor == 0) and ($numRicaviCor == 0)) {
 			unset($_SESSION['bottoneEstraiPdf']);
+		}		
+
+		$this->makeDeltaCosti();
+		$this->makeDeltaRicavi();
+		
+		$pdf->AddPage('L');
+
+		if (isset($_SESSION["elencoVociDeltaCostiNegozio"])) {
+			$header = array("Costi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+			$pdf->SetFont('Arial','',9);
+			$pdf->progressiviNegozioConfrontatoTable($header, $_SESSION["elencoVociDeltaCostiNegozio"], 1);
+	
+			$pdf->AddPage('L');				
 		}
-		return true;
+
+		if (isset($_SESSION["elencoVociDeltaRicaviNegozio"])) {
+			$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+			$pdf->progressiviNegozioConfrontatoTable($header, $_SESSION["elencoVociDeltaRicaviNegozio"], 1);					
+		}
+		return $pdf;
 	}
 }
 

@@ -8,8 +8,8 @@ session_start();
 $andamentoNegozi = AndamentoNegozi::getInstance();
 
 if ($_GET["modo"] == "start") {
-	
-	$andamentoNegozi->start();	
+
+	$andamentoNegozi->start();
 }
 if ($_GET["modo"] == "go") {
 

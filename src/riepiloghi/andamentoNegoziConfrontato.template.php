@@ -1,8 +1,9 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghi.presentation.interface.php';
 
-class AndamentoNegoziConfrontatoTemplate extends RiepiloghiAbstract implements RiepiloghiPresentation {
+class AndamentoNegoziConfrontatoTemplate extends RiepiloghiAbstract implements RiepiloghiPresentationInterface {
 
 	private static $_instance = null;
 
@@ -83,6 +84,8 @@ class AndamentoNegoziConfrontatoTemplate extends RiepiloghiAbstract implements R
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
+
+	public function tabellaTotaliRiepilogoNegozi($tipoTotale) {}	
 }
 
 ?>

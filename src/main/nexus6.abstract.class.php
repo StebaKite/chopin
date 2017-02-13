@@ -1,6 +1,8 @@
 <?php
 
-abstract class Nexus6Abstract implements Nexus6BusinessInterface {
+require_once 'nexus6.business.interface.php';
+
+abstract class Nexus6Abstract {
 
 	public static $root;
 	public static $testata;

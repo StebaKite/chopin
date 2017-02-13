@@ -1,9 +1,10 @@
+
 <?php
 
 require_once 'riepiloghiComparati.abstract.class.php';
 require_once 'riepiloghi.presentation.interface.php';
 
-class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements RiepiloghiPresentation {
+class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements RiepiloghiPresentationInterface {
 
 	private static $_instance = null;
 
@@ -94,7 +95,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
 			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
 			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
 			
-			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotali($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</div>";
+			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotaliRiepilogoNegozi($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</div>";
 			
 			if ($mct != "") { $tabs .= "<div id='tabs-6'>" . $mct . "</div>"; }
 			if ($bep != "") { $tabs .= "<div id='tabs-7'>" . $bep . "</div>"; }
@@ -126,7 +127,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
 		echo $utility->tailTemplate($template);
 	}
 
-	public function tabellaTotali($tipoTotale) {
+	public function tabellaTotaliRiepilogoNegozi($tipoTotale) {
 	
 		if ($tipoTotale == "Utile") {
 			
@@ -252,6 +253,10 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
 		}
 		return $risultato_esercizio;
 	}	
+
+	public function ricercaDati($utility) {}
+	public function preparaPagina($template) {}
+	
 }	
 	
 ?>

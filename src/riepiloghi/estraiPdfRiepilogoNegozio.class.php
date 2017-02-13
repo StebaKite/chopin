@@ -1,8 +1,9 @@
 <?php
 
 require_once 'riepiloghiComparati.abstract.class.php';
+require_once 'riepiloghi.extractor.interface.php';
 
-class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
+class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements RiepiloghiExtractorInterface {
 
 	private static $_instance = null;
 
@@ -90,7 +91,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaCosti($pdf, $utility, $db, $totaliCostiRicavi) {
+	private function generaSezioneTabellaCosti($pdf, $utility, $db, $totaliCostiRicavi) {
 
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -118,7 +119,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaRicavi($pdf, $utility, $db, $totaliCostiRicavi) {
+	private function generaSezioneTabellaRicavi($pdf, $utility, $db, $totaliCostiRicavi) {
 
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -147,7 +148,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaTotali($pdf, $utility, $db, $totaliCostiRicavi) {
+	private function generaSezioneTabellaTotali($pdf, $utility, $db, $totaliCostiRicavi) {
 		
 		$nomeTabella = strtoupper($this->nomeTabTotali($totaliCostiRicavi["totaleRicavi"], $totaliCostiRicavi["totaleCosti"]));
 
@@ -171,7 +172,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaAttivo($pdf, $utility, $db) {
+	private function generaSezioneTabellaAttivo($pdf, $utility, $db) {
 
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -189,7 +190,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaPassivo($pdf, $utility, $db) {
+	private function generaSezioneTabellaPassivo($pdf, $utility, $db) {
 	
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
@@ -207,7 +208,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}	
 	
-	public function generaSezioneTabellaMct($pdf, $utility, $db, $datiMCT) {
+	private function generaSezioneTabellaMct($pdf, $utility, $db, $datiMCT) {
 
 		$this->ricercaCostiVariabiliNegozi($utility, $db);
 		$this->ricercaCostiFissiNegozi($utility, $db);
@@ -308,7 +309,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 	 * @param unknown $datiMCT
 	 * @return unknown
 	 */
-	public function generaSezioneTabellaBep($pdf, $utility, $db, $datiMCT) {
+	private function generaSezioneTabellaBep($pdf, $utility, $db, $datiMCT) {
 		
 		// Villa ---------------------------------------------------------------------
 	
@@ -345,19 +346,19 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract {
 		return $pdf;
 	}		
 	
-	public function get_datiMCT() {
+	private function get_datiMCT() {
 		return $this->_datiMCT;
 	}
 	
-	public function set_datiMCT($datiMCT) {
+	private function set_datiMCT($datiMCT) {
 		$this->_datiMCT = $datiMCT;
 	}
 	
-	public function get_totaliCostiRicavi() {
+	private function get_totaliCostiRicavi() {
 		return $this->_totaliCostiRicavi;
 	}
 	
-	public function set_totaliCostiRicavi($totaliCostiRicavi) {
+	private function set_totaliCostiRicavi($totaliCostiRicavi) {
 		$this->_totaliCostiRicavi = $totaliCostiRicavi;
 	}
 }	

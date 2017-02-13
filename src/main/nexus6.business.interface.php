@@ -6,6 +6,9 @@ interface Nexus6BusinessInterface {
 	
 	public function start();
 	public function go();
+
+	public function ricercaDati($utility);
+	public function preparaPagina($template);
 	
 	public function setTestata($testata);
 	public function setPiede($piede);
@@ -40,7 +43,7 @@ interface Nexus6BusinessInterface {
 	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) : string;
 	public function leggiDescrizioneCliente($db, $utility, $descliente) : string;
 	public function prelevaIdFornitore($db, $utility, $idfornitore);
-	
+		
 	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione, $project_root);
 	public function cambioStatoLavoroPianificato($db, $utility, $pklavoro, $stato);
 	
@@ -61,7 +64,6 @@ interface Nexus6BusinessInterface {
 	public function controllaRegistrazioniInErrore($utility, $db) : string;
 	
 	public function leggiRegistrazione($db, $utility, $idregistrazione);
-	public function cancellaRegistrazione($db, $utility, $id_registrazione);
 	public function cancellaRegistrazione($db, $utility, $id_registrazione);
 }
 

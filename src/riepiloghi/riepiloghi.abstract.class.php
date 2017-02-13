@@ -3,7 +3,7 @@
 require_once 'nexus6.abstract.class.php';
 require_once 'riepiloghi.business.interface.php';
 
-abstract class RiepiloghiAbstract extends Nexus6Abstract implements RiepiloghiBusinessInterface {
+abstract class RiepiloghiAbstract extends Nexus6Abstract {
 
 	private static $_instance = null;
 
@@ -1815,7 +1815,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements RiepiloghiBu
 	 * @param unknown $ricavoVendita
 	 * @param unknown $costoFisso
 	 */
-	public function makeTableMargineContribuzione($totaliAcquistiMesi, $totaliRicaviMesi) {
+	public function makeTableMargineContribuzioneAndamentoNegozi($totaliAcquistiMesi, $totaliRicaviMesi) {
 			
 		$margineContribuzione = "";		
 		$totaleRicavi = 0;

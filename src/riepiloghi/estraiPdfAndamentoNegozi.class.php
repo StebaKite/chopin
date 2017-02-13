@@ -1,8 +1,9 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghi.extractor.interface.php';
 
-class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
+class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiExtractorInterface {
 
 	private static $_instance = null;
 
@@ -91,7 +92,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
+	private function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
 
 		$codnegozio = "";
 		$codnegozio = ($_SESSION["codneg_sel"] == "") ?"'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'";
@@ -119,7 +120,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
+	private function generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
 		$pdf->AddPage('L');
 		
@@ -129,7 +130,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract {
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
+	private function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
 		$pdf->Cell(100,10,'','',0,'R',$fill);
 		$pdf->Ln();

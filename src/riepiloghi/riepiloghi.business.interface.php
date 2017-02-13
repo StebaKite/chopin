@@ -1,9 +1,6 @@
 <?php
 
 interface RiepiloghiBusinessInterface extends Nexus6BusinessInterface {
-		
-	public function ricercaDati($utility);
-	public function preparaPagina($template);
 	
 	public function ricercaCosti($utility, $db, $replace);
 	public function ricercaRicavi($utility, $db, $replace);
@@ -36,7 +33,7 @@ interface RiepiloghiBusinessInterface extends Nexus6BusinessInterface {
 	public function makeAndamentoCostiDeltaTable($vociAndamento);
 	public function makeAndamentoRicaviDeltaTable($vociAndamento);
 	public function makeUtilePerditaTable($totaliAcquistiMesi, $totaliRicaviMesi);
-	public function makeTableMargineContribuzione($totaliAcquistiMesi, $totaliRicaviMesi);
+	public function makeTableMargineContribuzioneAndamentoNegozi($totaliAcquistiMesi, $totaliRicaviMesi);
 }
 
 ?>

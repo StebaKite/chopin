@@ -1,8 +1,9 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghi.extractor.interface.php';
 
-class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiEstrazioni {
+class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiExtractorInterface {
 
 	private static $_instance = null;
 
@@ -96,7 +97,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiEstrazio
 		return $pdf;
 	}
 
-	public function generaSezioneTabellaBilancio($pdf, $utility) {
+	private function generaSezioneTabellaBilancio($pdf, $utility) {
 
 		require_once 'database.class.php';
 		
@@ -163,7 +164,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiEstrazio
 		return $pdf;
 	}
 	
-	public function generaSezioneTabellaBilancioEsercizio($pdf, $utility) {
+	private function generaSezioneTabellaBilancioEsercizio($pdf, $utility) {
 		
 		require_once 'database.class.php';
 		

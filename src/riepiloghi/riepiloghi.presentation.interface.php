@@ -1,13 +1,9 @@
 <?php
+require_once 'nexus6.presentation.interface.php';
 
-interface RiepiloghiPresentation {
-	
-	public static function getInstance();
-	
-	public function inizializzaPagina();
-	public function controlliLogici();	
-	public function displayPagina();
-	public function tabellaTotali($tipoTotale);
+interface RiepiloghiPresentationInterface extends Nexus6PresentationInterface {
+		
+	public function tabellaTotaliRiepilogoNegozi($tipoTotale);
 }
 
 ?>
