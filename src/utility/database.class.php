@@ -1,9 +1,11 @@
 <?php
 
-Class Database {
+require_once 'database.access.interface.php';
+
+Class Database implements DatabaseAccessInterface {
 
 	private static $root;
-	private static $dblink;
+	private static $DBConnection;
 	private static $lastIdUsed;
 	private static $numrows;
 
@@ -30,8 +32,8 @@ Class Database {
 	}	
 	
 	
-	public function getDbLink() {
-		return self::$dblink;
+	public function getDBConnection() {
+		return self::$DBConnection;
 	}
 	public function getLastIdUsed() {
 		return self::$lastIdUsed;
@@ -40,8 +42,8 @@ Class Database {
 		return self::$numrows;
 	}
 
-	public function setDbLink($dblink) {
-		self::$dblink = $dblink;
+	public function setDBConnection($DBConnection) {
+		self::$DBConnection = $DBConnection;
 	}
 	public function setLastIdUsed($lastIdUsed) {
 		self::$lastIdUsed = $lastIdUsed;
@@ -50,7 +52,7 @@ Class Database {
 		self::$numrows = $numrows;
 	}
 
-	public function getLink() {
+	public function createDatabaseConnection() {
 
 		require_once 'utility.class.php';
 
@@ -70,74 +72,65 @@ Class Database {
 		else {
 			$dsn = "host=" . $array['hostname'] . " port=" . $array['portnum'] . " dbname=" . $array['dbnameProd'] . " user=" . $array['username'] . " password=" . $array['password'];				
 		}		
+		$DBConnection = pg_connect("$dsn") or die('Connection failed');
 
-		// Create connection
-		$dblink = pg_connect("$dsn") or die('Connection failed');
-		
-		// restituisco un oggetto connessione
-		return $dblink;			
+		if ($DBConnection) {
+			$this->setDBConnection($DBConnection);
+			return true;
+		}		
+		return false;			
 	}
 
-	public function getData($sql) {
-
-		$dblink = $this->getLink();
-		$result = pg_query($dblink, $sql);
-		pg_close($dblink); 
+	public function getData($sql) {	
+		
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection();			
+		$result = pg_query($this->getDBConnection(), $sql);
 		return $result;
 	}
 	
 	public function beginTransaction() {
 
-		$dblink = $this->getLink();
-		$result = pg_query($dblink, "BEGIN");
-		
-		if ($result) {
-			$this->setDbLink($dblink);
-		}
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection();		
+		$result = pg_query($this->getDBConnection(), "BEGIN");
+		if (!$result) error_log("BEGIN TRANSACTION FALLITO !!");
+		return $result;
 	}
 	
 	public function commitTransaction() {
 		
-		$result = pg_query($this->getDbLink(), "COMMIT");
-		
-		if ($result) {
-			pg_close($this->getDbLink()); 
-		}		
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+		$result = pg_query($this->getDBConnection(), "COMMIT");		
+		if (!$result) error_log("COMMIT DATI FALLITO !!");		
+		return $result;
 	}
 	
 	public function rollbackTransaction() {
 	
-		$result = pg_query($this->getDbLink(), "ROLLBACK");
-		
-		if ($result) {
-			pg_close($this->getDbLink()); 
-		}		
-	}
-		
-	public function execSql($sql) {
-
-		if ($this->getDbLink() == null) {
-			error_log("CONNESSIONE AL DATABASE NON STABILITA");
-			return FALSE;
-		}
-		else {
-			
-			// Esegue la query e se sulla INSERT e' impostata la clausola RETURNING, salva l'ID usato
-			// Salva il numero di righe risultato della query
-			
-			$result = pg_query($this->getDbLink(), $sql);
-			
-			$row = pg_fetch_row($result);			
-			$this->setLastIdUsed($row['0']);
-			
-			$this->setNumrows(pg_num_rows($result));	
-			return $result;	
-		}
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+		$result = pg_query($this->getDBConnection(), "ROLLBACK");		
+		if (!$result) error_log("RIPRISTINO DATI FALLITO !!");
+		return $result;
 	}
 	
-	public function closeDbLink() {
+	public function execSql($sql) {
 
-		if (pg_close($this->getDbLink()))
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+					
+		// Esegue la query e se sulla INSERT e' impostata la clausola RETURNING, salva l'ID usato
+		// Salva il numero di righe risultato della query
+		
+		$result = pg_query($this->getDBConnection(), $sql);
+		
+		$row = pg_fetch_row($result);			
+		$this->setLastIdUsed($row['0']);
+		
+		$this->setNumrows(pg_num_rows($result));	
+		return $result;	
+	}
+	
+	public function closeDBConnection() {
+
+		if (pg_close($this->getDBConnection()))
 			error_log("CONNESSIONE AL DATABASE CHIUSA CON SUCCESSO");
 		else
 			error_log("Errore durante la chiusura della connessione al DB");
