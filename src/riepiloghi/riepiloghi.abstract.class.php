@@ -1184,7 +1184,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				$ind_gruppo = trim($voce['ind_gruppo']);
 				
 				$importo = $voce['tot_conto'];
-				$importoRiferimento = $this->getImportoVoce($vociCostoRif, $desConto, $mm_registrazione);
+				$importoRiferimento = $this->getImportoVoce($vociCostoRif, $desConto, $ind_gruppo, $mm_registrazione);
 				
 				$deltaVoce = array(
 						'des_conto' => $desConto,
@@ -1222,7 +1222,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 				$ind_gruppo = trim($voce['ind_gruppo']);
 	
 				$importo = $voce['tot_conto'];
-				$importoRiferimento = $this->getImportoVoce($vociRicavoRif, $desConto, $mm_registrazione);
+				$importoRiferimento = $this->getImportoVoce($vociRicavoRif, $desConto, $ind_gruppo, $mm_registrazione);
 	
 				$deltaVoce = array(
 						'des_conto' => $desConto,
@@ -1237,13 +1237,15 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		}
 	}
 	
-	public function getImportoVoce($vociCostoRif, $desConto, $mm_registrazione) {
+	public function getImportoVoce($vociRif, $desConto, $ind_gruppo, $mm_registrazione) {
 		
 		$tot_conto = 0;
 		
-		foreach($vociCostoRif as $voceRif) {
+		foreach($vociRif as $voceRif) {
 		
-			if ((trim($voceRif['des_conto']) == $desConto) and (trim($voceRif['mm_registrazione'])) == $mm_registrazione) {
+			if ((trim($voceRif['des_conto']) === $desConto) and 
+				(trim($voceRif['mm_registrazione']) === $mm_registrazione) and 
+				(trim($voceRif['ind_gruppo']) === $ind_gruppo)) {
 				$tot_conto = $voceRif['tot_conto'];
 			}
 		}
