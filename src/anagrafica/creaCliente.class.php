@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CreaCliente extends AnagraficaAbstract {
+class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	public static $_instance = null;
 
@@ -148,7 +149,7 @@ class CreaCliente extends AnagraficaAbstract {
 		}
 	}
 
-	public function creaCliente($utility) {
+	private function creaCliente($utility) {
 
 		require_once 'database.class.php';
 
@@ -179,7 +180,7 @@ class CreaCliente extends AnagraficaAbstract {
 		return FALSE;
 	}
 
-	public function preparaPagina($creaClienteTemplate) {
+	private function preparaPagina($creaClienteTemplate) {
 
 		require_once 'database.class.php';
 		require_once 'utility.class.php';

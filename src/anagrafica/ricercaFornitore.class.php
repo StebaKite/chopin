@@ -1,54 +1,39 @@
 <?php
 
-require_once 'anagrafica.abstract.class.php';
+require_once "anagrafica.abstract.class.php";
+require_once "anagrafica.business.interface.php";
+require_once "ricercaFornitore.template.php";
+require_once "utility.class.php";
+require_once "database.class.php";
 
-class RicercaFornitore extends AnagraficaAbstract {
-
-	private static $_instance = null;
-
-	public static $azioneRicercaFornitore = "../anagrafica/ricercaFornitoreFacade.class.php?modo=go";
-	public static $queryRicercaFornitore = "/anagrafica/ricercaFornitore.sql";
+class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
+	public function getInstance() {
 
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaFornitore();
-
-		return self::$_instance;
+		if (!isset($_SESSION[self::RICERCA_FORNITORE])) $_SESSION[self::RICERCA_FORNITORE] = serialize(new RicercaFornitore());
+		return unserialize($_SESSION[self::RICERCA_FORNITORE]);
 	}
 
 	public function start() {
 	
-		require_once 'ricercaFornitore.template.php';
-		require_once 'utility.class.php';
-	
 		// Template
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		unset($_SESSION["fornitoriTrovati"]);
+		unset($_SESSION[self::FORNITORI]);
 	
 		$ricercaFornitoreTemplate = RicercaFornitoreTemplate::getInstance();
 	
@@ -56,8 +41,8 @@ class RicercaFornitore extends AnagraficaAbstract {
 	
 			$this->preparaPagina($ricercaFornitoreTemplate);
 				
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 			
 			$ricercaFornitoreTemplate->displayPagina();
@@ -65,55 +50,55 @@ class RicercaFornitore extends AnagraficaAbstract {
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
 			*/
-			if (isset($_SESSION["messaggioCancellazione"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovati " . $_SESSION['numFornitoriTrovati'] . " fornitori";
-				unset($_SESSION["messaggioCancellazione"]);
+			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $_SESSION[self::QTA_FORNITORI] . " fornitori";
+				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 			}
 			else {
-				$_SESSION["messaggio"] = "Trovati " . $_SESSION['numFornitoriTrovati'] . " fornitori";
+				$_SESSION[self::MESSAGGIO] = "Trovati " . $_SESSION[self::QTA_FORNITORI] . " fornitori";
 			}
 	
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 	
-			if ($_SESSION['numFornitoriTrovati'] > 0) {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+			if ($_SESSION[self::QTA_FORNITORI] > 0) {
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			}
 			else {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
 	
 			echo $utility->tailTemplate($template);
 	
-			include(self::$piede);
+			include($this->piede);
 		}
 		else {
 	
 			$this->preparaPagina($ricercaFornitoreTemplate);
 				
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 
 			$ricercaFornitoreTemplate->displayPagina();
 	
-			$_SESSION["messaggio"] = "Errore fatale durante la lettura dei fornitori" ;
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
 	
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
 	
-			include(self::$piede);
+			include($this->piede);
 		}
 	}
+
+	public function go() {}
 	
-	public function ricercaDati($utility) {
-	
-		require_once 'database.class.php';
+	private function ricercaDati($utility) {
 		
 		$replace = array();
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::QUERY_RICERCA_FORNITORE;
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 	
@@ -123,20 +108,18 @@ class RicercaFornitore extends AnagraficaAbstract {
 		$result = $db->getData($sql);
 	
 		if (pg_num_rows($result) > 0) {
-			$_SESSION['fornitoriTrovati'] = $result;
+			$_SESSION[self::FORNITORI] = $result;
 		}
 		else {
-			unset($_SESSION['fornitoriTrovati']);
-			$_SESSION['numFornitoriTrovati'] = 0;
+			unset($_SESSION[self::FORNITORI]);
+			$_SESSION[self::QTA_FORNITORI] = 0;
 		}
 		return $result;
 	}
 	
-	public function preparaPagina() {
+	private function preparaPagina() {
 	
-		require_once 'utility.class.php';
-	
-		$_SESSION["azione"] = self::$azioneRicercaFornitore;
+		$_SESSION["azione"] = self::AZIONE_RICERCA_FORNITORE;
 		$_SESSION["confermaTip"] = "%ml.cercaTip%";
 		$_SESSION["titoloPagina"] = "%ml.ricercaFornitore%";
 	}

@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CercaPivaCliente extends AnagraficaAbstract {
+class CercaPivaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	public static $replace;
 
@@ -65,6 +66,8 @@ class CercaPivaCliente extends AnagraficaAbstract {
 			echo "Controllo partita iva cliente non eseguito!";				
 		}
 	}
+	
+	public function go() {}	
 }
 				
 ?>

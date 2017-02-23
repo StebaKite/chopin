@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CercaCfisCliente extends AnagraficaAbstract {
+class CercaCfisCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	public static $replace;
 
@@ -60,6 +61,8 @@ class CercaCfisCliente extends AnagraficaAbstract {
 			echo "ATTENZIONE!! Errore controllo codice fiscale cliente";				
 		}
 	}
+	
+	public function go() {}
 }
 				
 ?>

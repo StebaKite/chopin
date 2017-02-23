@@ -1,32 +1,21 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.presentation.interface.php';
+require_once 'utility.class.php';
 
-class RicercaFornitoreTemplate extends AnagraficaAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/ricercaFornitore.form.html";
-
-	//-----------------------------------------------------------------------------
+class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
 	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaFornitoreTemplate();
-
-		return self::$_instance;
+	public function getInstance() {
+		if (!isset($_SESSION[self::RICERCA_FORNITORE_TEMPLATE])) $_SESSION[self::RICERCA_FORNITORE_TEMPLATE] = serialize(new RicercaFornitoreTemplate());
+		return unserialize($_SESSION[self::RICERCA_FORNITORE_TEMPLATE]);
 	}
 
 	// template ------------------------------------------------
@@ -36,15 +25,13 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 	public function controlliLogici() {}
 
 	public function displayPagina() {
-
-		require_once 'utility.class.php';
 		
 		// Template --------------------------------------------------------------
 		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_FORNITORE;
 		$risultato_ricerca = "";
 		
 		if (isset($_SESSION["fornitoriTrovati"])) {
@@ -66,43 +53,43 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 			"	</thead>" .
 			"	<tbody>" ;
 		
-			$fornitoriTrovati = $_SESSION["fornitoriTrovati"];
+			$fornitoriTrovati = $_SESSION[self::FORNITORI];
 			$numFornitori = 0;
 		
 			foreach(pg_fetch_all($fornitoriTrovati) as $row) {
 		
-				if ($row['tot_registrazioni_fornitore'] == 0) {
+				if ($row[self::QTA_REGISTRAZIONI_FORNITORE] == 0) {
 					$class = "class=''";
 				}
 				else {
 					$class = "class=''";
 				}
 		
-				if ($row['tot_registrazioni_fornitore'] == 0) {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneCancella = "<a class='tooltip' onclick='cancellaFornitore(" . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+				if ($row[self::QTA_REGISTRAZIONI_FORNITORE] == 0) {
+					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_FORNITORE_ICON;
+					$bottoneCancella = self::CANCELLA_FORNITORE_HREF . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . self::CANCELLA_FORNITORE_ICON;
 				}
 				else {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaFornitoreFacade.class.php?modo=start&idfornitore=" . trim($row['id_fornitore']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_FORNITORE_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 		
 				$numFornitori ++;
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td>" . trim($row['cod_fornitore']) . "</td>" .
-				"	<td>" . trim($row['des_fornitore']) . "</td>" .
-				"	<td>" . trim($row['des_indirizzo_fornitore']) . "</td>" .
-				"	<td>" . trim($row['des_citta_fornitore']) . "</td>" .				
-				"	<td>" . trim($row['cap_fornitore']) . "</td>" .
- 				"	<td>" . trim($row['tip_addebito']) . "</td>" .
- 				"	<td>" . trim($row['num_gg_scadenza_fattura']) . "</td>" .
- 				"	<td>" . trim($row['tot_registrazioni_fornitore']) . "</td>" .
+				"	<td>" . trim($row[self::CODICE_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[self::DESCRIZIONE_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[self::INDIRIZZO_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[self::CITTA_FORNITORE]) . "</td>" .				
+				"	<td>" . trim($row[self::CAP_FORNITORE]) . "</td>" .
+ 				"	<td>" . trim($row[self::TIP_ADDEBITO]) . "</td>" .
+ 				"	<td>" . trim($row[self::GIORNI_SCADENZA_FATTURA]) . "</td>" .
+ 				"	<td>" . trim($row[self::QTA_REGISTRAZIONI_FORNITORE]) . "</td>" .
  				"	<td id='icons'>" . $bottoneModifica . "</td>" .
  				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$_SESSION['numFornitoriTrovati'] = $numFornitori;
+			$_SESSION[self::QTA_FORNITORI] = $numFornitori;
 			$risultato_ricerca = $risultato_ricerca . "</tbody>";
 		}
 		else {
@@ -110,10 +97,10 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract {
 		}
 		
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
+				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%azione%' => $_SESSION[self::AZIONE_RICERCA_FORNITORE],
 				'%codfornitore%' => $_SESSION["codfornitore"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 		

@@ -10,17 +10,15 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
 		require_once 'utility.class.php';
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		$this->testata = $this->root . $this->array['testataPagina'];
+		$this->piede = $this->root . $this->array['piedePagina'];
+		$this->messaggioErrore = $this->root . $this->array['messaggioErrore'];
+		$this->messaggioInfo = $this->root . $this->array['messaggioInfo'];
 	}
 
 	private function  __clone() { }
@@ -37,7 +35,6 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 
 			return self::$_instance;
 	}
-
 
 	public function start() {
 
@@ -61,11 +58,11 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 		// compongo la pagina
 		
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 		
 		$andamentoNegoziTemplate->displayPagina();
-		include(self::$piede);
+		include($this->piede);
 	}
 
 	public function go() {
@@ -86,7 +83,7 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
 				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 				echo $utility->tailTemplate($template);
 
 				$andamentoNegoziTemplate->displayPagina();
@@ -95,56 +92,56 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 				$numRicavi = $_SESSION['numRicaviTrovati'];
 				
 				$_SESSION["messaggio"] = "Trovate " . $numCosti . " voci di costo e " . $numRicavi . " voci di ricavo";
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$this->replace = array('%messaggio%' => $_SESSION["messaggio"]);
 		
 				if (($numCosti > 0) or ($numRicavi > 0)) {
-					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), $this->replace);
 				}
 				else {
-					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $this->replace);
 				}
 		
 				echo $utility->tailTemplate($template);
 					
-				include(self::$piede);
+				include($this->piede);
 			}
 			else {
 					
 				$this->preparaPagina($andamentoNegoziTemplate);
 					
 				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 				echo $utility->tailTemplate($template);
 
 				$andamentoNegoziTemplate->displayPagina();
 		
 				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
 		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				$this->replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $this->replace);
 				echo $utility->tailTemplate($template);
 					
-				include(self::$piede);
+				include($this->piede);
 			}
 		}
 		else {
 			$this->preparaPagina($andamentoNegoziTemplate);
 		
 			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 
 			$andamentoNegoziTemplate->displayPagina();
 		
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			$this->replace = array('%messaggio%' => $_SESSION["messaggio"]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $this->replace);
 			echo $utility->tailTemplate($template);
 		
-			include(self::$piede);
+			include($this->piede);
 		}
 	}
 
-	public function ricercaDati($utility) {
+	private function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
 	
@@ -177,7 +174,7 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
 		return true;		
 	}
 
-	public function preparaPagina($bilancioTemplate) {
+	private function preparaPagina($andamentoNegoziTemplate) {
 	
 		require_once 'utility.class.php';
 	

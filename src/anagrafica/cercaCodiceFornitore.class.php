@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CercaCodiceFornitore extends AnagraficaAbstract {
+class CercaCodiceFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	public static $replace;
 
@@ -60,6 +61,8 @@ class CercaCodiceFornitore extends AnagraficaAbstract {
 			echo "Controllo codice fornitore non eseguito!";				
 		}
 	}
+	
+	public function go() {}
 }
 				
 ?>

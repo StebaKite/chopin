@@ -1,32 +1,28 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'fornitore.class.php';
 
-class CreaFornitoreTemplate extends AnagraficaAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/creaFornitore.form.html";
-
-	//-----------------------------------------------------------------------------
+class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
 	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaFornitoreTemplate();
-
-		return self::$_instance;
+	public function getInstance() {
+		
+		if (!isset($_SESSION[self::CREA_FORNITORE_TEMPLATE])) $_SESSION[self::CREA_FORNITORE_TEMPLATE] = serialize(new CreaFornitoreTemplate());
+		return unserialize($_SESSION[self::CREA_FORNITORE_TEMPLATE]);
 	}
 
 	// template ------------------------------------------------
@@ -34,7 +30,9 @@ class CreaFornitoreTemplate extends AnagraficaAbstract {
 	public function inizializzaPagina() {}
 	
 	public function controlliLogici() {
-	
+
+		$fornitore = Fornitore::getInstance();
+		
 		$esito = TRUE;
 		$msg = "<br>";
 	
@@ -42,55 +40,46 @@ class CreaFornitoreTemplate extends AnagraficaAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 	
-		if ($_SESSION["codfornitore"] == "") {
-			$msg = $msg . "<br>&ndash; Manca il codice del fornitore";
+		if ($fornitore->get_cod_fornitore() == "") {
+			$msg = $msg . self::ERRORE_CODICE_FORNITORE;
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["desfornitore"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione del fornitore";
+		if ($fornitore->get_des_fornitore() == "") {
+			$msg = $msg . self::ERRORE_DESCRIZIONE_FORNITORE;
 			$esito = FALSE;
 		}
 		
 		// ----------------------------------------------
 		
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
-		}
-		
+			unset($_SESSION[self::MESSAGGIO]);
+		}		
 		return $esito;
 	}
 
 	public function displayPagina() {
 	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
-	
+		$form = $this->root . $this->array['template'] . self::PAGINA_CREA_FORNITORE;
+
+		$fornitore = Fornitore::getInstance();
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%codfornitore%' => $_SESSION["codfornitore"],
-				'%desfornitore%' => $_SESSION["desfornitore"],
-				'%indfornitore%' => $_SESSION["indfornitore"],
-				'%cittafornitore%' => $_SESSION["cittafornitore"],
-				'%capfornitore%' => $_SESSION["capfornitore"],
-				'%tipoaddebito%' => $_SESSION["tipoaddebito"]
+				'%codfornitore%' => $fornitore->get_cod_fornitore(),
+				'%desfornitore%' => $fornitore->get_des_fornitore(),
+				'%indfornitore%' => $fornitore->get_des_indirizzo_fornitore(),
+				'%cittafornitore%' => $fornitore->get_des_citta_fornitore(),
+				'%capfornitore%' => $fornitore->get_cap_fornitore(),
+				'%tipoaddebito%' => $fornitore->get_tip_addebito()
 		);
 	
-		$utility = Utility::getInstance();
-	
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
+		$template = $this->utility->tailFile($this->utility->getTemplate($form), $replace);
+		echo $this->utility->tailTemplate($template);
 	}	
 }		
 

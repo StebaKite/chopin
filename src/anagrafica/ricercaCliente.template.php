@@ -1,32 +1,22 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.presentation.interface.php';
+require_once 'utility.class.php';
 
-class RicercaClienteTemplate extends AnagraficaAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/ricercaCliente.form.html";
-
-	//-----------------------------------------------------------------------------
+class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
 	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
+	public function getInstance() {
 
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaClienteTemplate();
-
-		return self::$_instance;
+		if (!isset($_SESSION[self::RICERCA_CLIENTE_TEMPLATE])) $_SESSION[self::RICERCA_CLIENTE_TEMPLATE] = serialize(new RicercaClienteTemplate());
+		return unserialize($_SESSION[self::RICERCA_CLIENTE_TEMPLATE]);
 	}
 
 	// template ------------------------------------------------
@@ -37,17 +27,15 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 
 	public function displayPagina() {
 
-		require_once 'utility.class.php';
-
 		// Template --------------------------------------------------------------
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_CLIENTE;
 		$risultato_ricerca = "";
 
-		if (isset($_SESSION["clientiTrovati"])) {
+		if (isset($_SESSION[self::CLIENTI])) {
 
 			$risultato_ricerca =
 			"	<thead>" .
@@ -65,35 +53,35 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 			"	</thead>" .
 			"	<tbody>";
 
-			$clientiTrovati = $_SESSION["clientiTrovati"];
+			$clientiTrovati = $_SESSION[self::CLIENTI];
 			$numClienti = 0;
 
 			foreach(pg_fetch_all($clientiTrovati) as $row) {
 
 				if ($row['tot_registrazioni_cliente'] == 0) {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneCancella = "<a class='tooltip' onclick='cancellaCliente(" . trim($row['id_cliente']) . "," . trim($row['cod_cliente']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
+					$bottoneCancella = self::CANCELLA_CLIENTE_HREF . trim($row['id_cliente']) . "," . trim($row['cod_cliente']) . self::CANCELLA_CLIENTE_ICON;
 				}
 				else {
-					$bottoneModifica = "<a class='tooltip' href='../anagrafica/modificaClienteFacade.class.php?modo=start&idcliente=" . trim($row['id_cliente']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 
 				$numClienti ++;
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td>" . trim($row['cod_cliente']) . "</td>" .
-				"	<td>" . trim($row['des_cliente']) . "</td>" .
-				"	<td>" . trim($row['des_indirizzo_cliente']) . "</td>" .
-				"	<td>" . trim($row['des_citta_cliente']) . "</td>" .
-				"	<td>" . trim($row['cap_cliente']) . "</td>" .
-				"	<td>" . trim($row['tip_addebito']) . "</td>" .
-				"	<td>" . trim($row['tot_registrazioni_cliente']) . "</td>" .
+				"	<td>" . trim($row[self::CODICE_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[self::DESCRIZIONE_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[self::INDIRIZZO_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[self::CITTA_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[self::CAP_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[self::TIP_ADDEBITO]) . "</td>" .
+				"	<td>" . trim($row[self::QTA_REGISTRAZIONI_CLIENTE]) . "</td>" .
 				"	<td id='icons'>" . $bottoneModifica . "</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$_SESSION['numClientiTrovati'] = $numClienti;
+			$_SESSION[self::QTA_CLIENTI] = $numClienti;
 			$risultato_ricerca = $risultato_ricerca . "</tbody>";
 		}
 		else {
@@ -101,11 +89,11 @@ class RicercaClienteTemplate extends AnagraficaAbstract {
 		}
 
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%codcliente%' => $_SESSION["codcliente"],
-				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
-				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%azione%' => $_SESSION[self::AZIONE_RICERCA_CLIENTE],
+				'%codcliente%' => $_SESSION[self::CODICE_CLIENTE],
+				'%elenco_categorie_cliente%' => $_SESSION[SELF::CATEGORIE_CLIENTE],
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

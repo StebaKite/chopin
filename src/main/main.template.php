@@ -1,46 +1,32 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
+require_once 'main.presentation.interface.php';
 
-class MainTemplate extends Nexus6Abstract {
-
-	public static $root;
-	public static $pagina = "/main/main.html";
-	
-	private static $_instance = null;
+class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
 		require_once 'utility.class.php';
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array['testataPagina'];
+		$this->piede = $this->root . $this->array['piedePagina'];
+		$this->messaggioErrore = $this->root . $this->array['messaggioErrore'];
+		$this->messaggioInfo = $this->root . $this->array['messaggioInfo'];		
 	}
-
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
 
 	public static function getInstance() {
 
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new MainTemplate();
-
-		return self::$_instance;
+		if (!isset($_SESSION["Obj_maintemplate"])) $_SESSION["Obj_maintemplate"] = serialize(new MainTemplate());
+		return unserialize($_SESSION["Obj_maintemplate"]);		
 	}
 
-	// ------------------------------------------------
-
+	public function controlliLogici() {}
+	
 	public function displayPagina() {
 
 		require_once 'utility.class.php';
@@ -50,7 +36,7 @@ class MainTemplate extends Nexus6Abstract {
 		$utility = Utility::getInstance();		
 		$array = $utility->getConfig();		
 
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::MAIN_PAGE;
 				
 		$this->getEnvironment ( $array );
 						
@@ -68,13 +54,13 @@ class MainTemplate extends Nexus6Abstract {
 		unset($_SESSION['avvisoDialog']);
 		unset($_SESSION['avvisoDiv']);
 		
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);		
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 		
-		include(self::$piede);		
+		include($this->piede);		
 	}
 }
 ?>

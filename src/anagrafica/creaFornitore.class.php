@@ -1,79 +1,54 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
+require_once 'creaFornitore.template.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'fornitore.class.php';
 
-class CreaFornitore extends AnagraficaAbstract {
-
-	public static $_instance = null;
-
-	public static $azioneCreaFornitore = "../anagrafica/creaFornitoreFacade.class.php?modo=go";
+class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
+	public function getInstance() {
 
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaFornitore();
-
-		return self::$_instance;
+		if (!isset($_SESSION[self::CREA_FORNITORE])) $_SESSION[self::CREA_FORNITORE] = serialize(new CreaFornitore());
+		return unserialize($_SESSION[self::CREA_FORNITORE]);
 	}
 
 	// ------------------------------------------------
 
 	public function start() {
 
-		require_once 'creaFornitore.template.php';
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
 		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
 		$this->preparaPagina($creaFornitoreTemplate);
 		
-		$_SESSION["codfornitore"] = $this->prelevaUltimoCodiceFornitore($utility, $db) + 1;
-		unset($_SESSION["desfornitore"]);
-		unset($_SESSION["indfornitore"]);
-		unset($_SESSION["cittafornitore"]);
-		unset($_SESSION["capfornitore"]);
+		$fornitore = Fornitore::getInstance();
+		$fornitore->preparaNuovoFornitore();
 		
-		// Compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		
+		// Compongo la pagina
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+		echo $this->utility->tailTemplate($template);
 
 		$creaFornitoreTemplate->displayPagina();
-		include(self::$piede);
+		include($this->piede);		
 	}
 	
 	public function go() {
-	
-		require_once 'creaFornitore.template.php';
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$utility = Utility::getInstance();
 
 		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
 		
@@ -81,101 +56,84 @@ class CreaFornitore extends AnagraficaAbstract {
 		
 			// Aggiornamento del DB ------------------------------
 		
-			if ($this->creaFornitore($utility)) {
+			if ($this->creaFornitore()) {
 
-				$db = Database::getInstance();
-				$utility = Utility::getInstance();
+				$fornitore = Fornitore::getInstance();
+				$fornitore->preparaNuovoFornitore();
 				
-				$_SESSION["codfornitore"] = $this->prelevaUltimoCodiceFornitore($utility, $db) + 1;
-				unset($_SESSION["desfornitore"]);
-				unset($_SESSION["indfornitore"]);
-				unset($_SESSION["cittafornitore"]);
-				unset($_SESSION["capfornitore"]);
+				$_SESSION[self::FORNITORE] = serialize($fornitore);
 				
-				$_SESSION["messaggio"] = "Fornitore salvato con successo";
+				$_SESSION["messaggio"] = self::CREA_FORNITORE_OK;
 		
 				$this->preparaPagina($creaFornitoreTemplate);
-		
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
+
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
 				
 				$creaFornitoreTemplate->displayPagina();
 		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
+				echo $this->utility->tailTemplate($template);
 					
-				include(self::$piede);
+				include($this->piede);
 			}
 			else {
 		
 				$this->preparaPagina($creaFornitoreTemplate);
 		
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 				echo $utility->tailTemplate($template);
 
 				$creaFornitoreTemplate->displayPagina();
 		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 				echo $utility->tailTemplate($template);
 		
-				include(self::$piede);
+				include($this->piede);
 			}
 		}
 		else {
 		
 			$this->preparaPagina($creaFornitoreTemplate);
 		
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 
 			$creaFornitoreTemplate->displayPagina();
 		
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
 		
-			include(self::$piede);
+			include($this->piede);
 		}
 	}
 
-	public function creaFornitore($utility) {
-	
-		require_once 'database.class.php';
-	
+	private function creaFornitore() {
+
+		$fornitore = Fornitore::getInstance();
+		
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-	
-		$codfornitore = $_SESSION["codfornitore"];
-		$desfornitore = $_SESSION["desfornitore"];
-		$indfornitore = $_SESSION["indfornitore"];
-		$cittafornitore = $_SESSION["cittafornitore"];
-		$capfornitore = $_SESSION["capfornitore"];
-		$tipoaddebito = $_SESSION["tipoaddebito"];
-		$numggscadenzafattura = $_SESSION["numggscadenzafattura"];
 		
-		if ($this->inserisciFornitore($db, $utility, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura)) {
+		if ($fornitore->inserisciFornitore($db)) {
 	
 			$db->commitTransaction();
 			return TRUE;
 		}
 		$db->rollbackTransaction();
-		error_log("Errore inserimento fornitore, eseguito Rollback");
-		$_SESSION["messaggio"] = "Fornitore già esistente, inserimento fallito";
+		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREA_FORNITORE;
 		return FALSE;
 	}
 	
-	public function preparaPagina($creaFornitoreTemplate) {
+	private function preparaPagina($creaFornitoreTemplate) {
 	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$creaFornitoreTemplate->setAzione(self::$azioneCreaFornitore);
+		$creaFornitoreTemplate->setAzione(self::AZIONE_CREA_FORNITORE);
 		$creaFornitoreTemplate->setConfermaTip("%ml.confermaCreaFornitore%");
 		$creaFornitoreTemplate->setTitoloPagina("%ml.creaNuovoFornitore%");
 	}

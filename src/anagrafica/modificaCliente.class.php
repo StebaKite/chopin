@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class ModificaCliente extends AnagraficaAbstract {
+class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	private static $_instance = null;
 
@@ -115,7 +116,7 @@ class ModificaCliente extends AnagraficaAbstract {
 		}
 	}
 
-	public function prelevaCliente($utility) {
+	private function prelevaCliente($utility) {
 
 		require_once 'database.class.php';
 		
@@ -146,7 +147,7 @@ class ModificaCliente extends AnagraficaAbstract {
 		$db->commitTransaction();
 	}
 
-	public function aggiornaCliente($utility) {
+	private function aggiornaCliente($utility) {
 
 		require_once 'database.class.php';
 
@@ -181,7 +182,7 @@ class ModificaCliente extends AnagraficaAbstract {
 		}
 	}
 
-	public function preparaPagina($modificaClienteTemplate) {
+	private function preparaPagina($modificaClienteTemplate) {
 
 		require_once 'database.class.php';
 		require_once 'utility.class.php';

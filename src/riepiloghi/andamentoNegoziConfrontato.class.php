@@ -154,7 +154,7 @@ class AndamentoNegoziConfrontato extends RiepiloghiAbstract implements Riepilogh
 		}
 	}
 
-	public function ricercaDati($utility) {
+	private function ricercaDati($utility) {
 
 		require_once 'database.class.php';
 
@@ -202,7 +202,7 @@ class AndamentoNegoziConfrontato extends RiepiloghiAbstract implements Riepilogh
 		return true;
 	}
 
-	public function preparaPagina($bilancioTemplate) {
+	private function preparaPagina($bilancioTemplate) {
 
 		require_once 'utility.class.php';
 

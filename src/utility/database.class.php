@@ -1,39 +1,28 @@
 <?php
 
 require_once 'database.access.interface.php';
+require_once 'utility.class.php';
 
 Class Database implements DatabaseAccessInterface {
 
-	private static $root;
-	private static $DBConnection;
-	private static $lastIdUsed;
-	private static $numrows;
-
-	private static $_instance = null;
+	public static $root;
+	public static $dbconnection;
+	public static $lastIdUsed;
+	public static $numrows;
 	
-	function __construct() {
-		
+	function __construct() {		
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
-
+	
 	private function  __clone() { }
 
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-			
-			self::$_instance = new Database();
-		
-		return self::$_instance;
+	public static function getInstance() {		
+		if (!isset($_SESSION["Obj_database"])) $_SESSION["Obj_database"] = serialize(new Database());		
+		return unserialize($_SESSION["Obj_database"]);
 	}	
 	
-	
-	public function getDBConnection() {
-		return self::$DBConnection;
+	public function getDBConnection() {		
+		return self::$dbconnection;
 	}
 	public function getLastIdUsed() {
 		return self::$lastIdUsed;
@@ -41,22 +30,26 @@ Class Database implements DatabaseAccessInterface {
 	public function getNumrows() {
 		return self::$numrows;
 	}
-
-	public function setDBConnection($DBConnection) {
-		self::$DBConnection = $DBConnection;
-	}
 	public function setLastIdUsed($lastIdUsed) {
 		self::$lastIdUsed = $lastIdUsed;
 	}
 	public function setNumrows($numrows) {
 		self::$numrows = $numrows;
 	}
+	public function setDBConnection($dbconnection) {
+		self::$dbconnection = $dbconnection;
+	}
+	
+	/**
+	 * Questo metodo stabilisce una connessione persistente col DB.
+	 * Il comando pg_connect verific se esiste già una connessione con le stessa caratteristiche,
+	 * se esiste viene ritornata quella altrimenti ne viene ritornata una nuova.
+	 * 
+	 * {@inheritDoc}
+	 * @see DatabaseAccessInterface::createDatabaseConnection()
+	 */
+	public function createDatabaseConnection($utility) {
 
-	public function createDatabaseConnection() {
-
-		require_once 'utility.class.php';
-
-		$utility = new utility();
 		$array = $utility->getConfig();
 
 		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
@@ -72,7 +65,7 @@ Class Database implements DatabaseAccessInterface {
 		else {
 			$dsn = "host=" . $array['hostname'] . " port=" . $array['portnum'] . " dbname=" . $array['dbnameProd'] . " user=" . $array['username'] . " password=" . $array['password'];				
 		}		
-		$DBConnection = pg_connect("$dsn") or die('Connection failed');
+		$DBConnection = pg_connect("$dsn") or die('Database connection failed');
 
 		if ($DBConnection) {
 			$this->setDBConnection($DBConnection);
@@ -82,31 +75,39 @@ Class Database implements DatabaseAccessInterface {
 	}
 
 	public function getData($sql) {	
+
+		$utility = Utility::getInstance();
 		
-		if ($this->getDBConnection() == null) $this->createDatabaseConnection();			
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection($utility);			
 		$result = pg_query($this->getDBConnection(), $sql);
 		return $result;
 	}
 	
 	public function beginTransaction() {
 
-		if ($this->getDBConnection() == null) $this->createDatabaseConnection();		
+		$utility = Utility::getInstance();
+		
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection($utility);		
 		$result = pg_query($this->getDBConnection(), "BEGIN");
 		if (!$result) error_log("BEGIN TRANSACTION FALLITO !!");
 		return $result;
 	}
 	
 	public function commitTransaction() {
+
+		$utility = Utility::getInstance();
 		
-		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection($utility);
 		$result = pg_query($this->getDBConnection(), "COMMIT");		
 		if (!$result) error_log("COMMIT DATI FALLITO !!");		
 		return $result;
 	}
 	
 	public function rollbackTransaction() {
-	
-		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+
+		$utility = Utility::getInstance();
+		
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection($utility);
 		$result = pg_query($this->getDBConnection(), "ROLLBACK");		
 		if (!$result) error_log("RIPRISTINO DATI FALLITO !!");
 		return $result;
@@ -114,7 +115,9 @@ Class Database implements DatabaseAccessInterface {
 	
 	public function execSql($sql) {
 
-		if ($this->getDBConnection() == null) $this->createDatabaseConnection();
+		$utility = Utility::getInstance();
+		
+		if ($this->getDBConnection() == null) $this->createDatabaseConnection($utility);
 					
 		// Esegue la query e se sulla INSERT e' impostata la clausola RETURNING, salva l'ID usato
 		// Salva il numero di righe risultato della query
@@ -130,8 +133,10 @@ Class Database implements DatabaseAccessInterface {
 	
 	public function closeDBConnection() {
 
-		if (pg_close($this->getDBConnection()))
+		if (pg_close($this->getDBConnection())) {
+			unset($_SESSION["Obj_DBConnection"]);
 			error_log("CONNESSIONE AL DATABASE CHIUSA CON SUCCESSO");
+		}
 		else
 			error_log("Errore durante la chiusura della connessione al DB");
 	}

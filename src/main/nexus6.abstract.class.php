@@ -1,7 +1,5 @@
 <?php
 
-require_once 'nexus6.business.interface.php';
-
 abstract class Nexus6Abstract {
 
 	public static $root;
@@ -59,27 +57,6 @@ abstract class Nexus6Abstract {
 	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
 	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 	
-	// Costruttore ------------------------------------------------------------------------
-	
-// 	function __construct() {
-// 		self::$root = $_SERVER['DOCUMENT_ROOT'];
-// 	}
-
-// 	private function  __clone() { }
-	
-// 	/**
-// 	 * Singleton Pattern
-// 	 */
-	
-// 	public static function getInstance() {
-	
-// 		if( !is_object(self::$_instance) )
-	
-// 			self::$_instance = new Nexus6Abstract();
-	
-// 		return self::$_instance;
-// 	}
-	
 	// Setters -----------------------------------------------------------------------------
 	
 	public function setTestata($testata) {
@@ -121,12 +98,6 @@ abstract class Nexus6Abstract {
 	public function getConfermaTip() {
 		return self::$confermaTip;
 	}
-	
-	// Start e Go funzione ----------------------------------------------------------------
-
-	public function start() { }
-			
-	public function go() { }
 
 	// Composizione del menu in testata pagine --------------------------------------------
 	
@@ -307,7 +278,7 @@ abstract class Nexus6Abstract {
 				'%cat_causale%' => trim($categoria)
 		);
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausali;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaCausali;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		
@@ -334,7 +305,7 @@ abstract class Nexus6Abstract {
 
 		$array = $utility->getConfig();
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaFornitori;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaFornitori;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 		
@@ -357,7 +328,7 @@ abstract class Nexus6Abstract {
 	
 		$array = $utility->getConfig();
 	
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaClienti;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaClienti;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 
@@ -383,7 +354,7 @@ abstract class Nexus6Abstract {
 				'%cod_causale%' => trim($_SESSION["causale"])
 		);
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConti;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaConti;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 	
@@ -403,7 +374,7 @@ abstract class Nexus6Abstract {
 		$array = $utility->getConfig();
 		self::$replace = array();
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiTuttiConti;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiTuttiConti;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 
@@ -429,7 +400,7 @@ abstract class Nexus6Abstract {
 	
 		$array = $utility->getConfig();
 	
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaMercati;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercati;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 
@@ -451,7 +422,7 @@ abstract class Nexus6Abstract {
 				'%cod_negozio%' => trim($_SESSION["codneg"])
 		);
 		
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaMercatiNegozio;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercatiNegozio;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
 		$result = $db->getData($sql);
 		
@@ -479,7 +450,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%id_fornitore%' => trim($idfornitore)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
@@ -498,7 +469,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%id_cliente%' => trim($idcliente)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdCliente;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
@@ -517,7 +488,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%des_fornitore%' => trim($desfornitore)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaDescrizioneFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryTrovaDescrizioneFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		
@@ -544,7 +515,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%des_cliente%' => trim($descliente)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaDescrizioneCliente;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryTrovaDescrizioneCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
@@ -571,7 +542,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%id_fornitore%' => trim($idfornitore)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		return $result;
@@ -632,7 +603,7 @@ abstract class Nexus6Abstract {
 		);
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
@@ -651,7 +622,7 @@ abstract class Nexus6Abstract {
 		$replace = array();
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLavoriPianificati;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLavoriPianificati;
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
@@ -683,7 +654,7 @@ abstract class Nexus6Abstract {
 		$replace = array();
 	
 		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLavoriPianificatiAnnoCorrente;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLavoriPianificatiAnnoCorrente;
 	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
@@ -761,7 +732,7 @@ abstract class Nexus6Abstract {
 				'%cod_sottoconto%' => trim($codsottoconto),
 				'%des_sottoconto%' => trim($dessottoconto)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaSottoconto;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryCreaSottoconto;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
@@ -782,7 +753,7 @@ abstract class Nexus6Abstract {
 				'%cod_conto%' => trim($codconto),
 				'%cod_sottoconto%' => trim($codsottoconto)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteSottoconto;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryDeleteSottoconto;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
@@ -798,7 +769,7 @@ abstract class Nexus6Abstract {
 	
 		$array = $utility->getConfig();
 	
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercacCategorie;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercacCategorie;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->getData($sql);
 	
@@ -843,7 +814,7 @@ abstract class Nexus6Abstract {
 		
 		$array = $utility->getConfig();
 		$replace = array();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaScadenzeFornitoreSuperate;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryControllaScadenzeFornitoreSuperate;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		
@@ -867,7 +838,7 @@ abstract class Nexus6Abstract {
 	
 		$array = $utility->getConfig();
 		$replace = array();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaScadenzeClienteSuperate;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryControllaScadenzeClienteSuperate;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
@@ -883,7 +854,7 @@ abstract class Nexus6Abstract {
 	
 		$array = $utility->getConfig();
 		$replace = array();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryControllaRegistrazioniInErrore;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryControllaRegistrazioniInErrore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	
@@ -908,7 +879,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%id_registrazione%' => trim($idregistrazione)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiRegistrazione;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		return $result;
@@ -926,7 +897,7 @@ abstract class Nexus6Abstract {
 		$replace = array(
 				'%id_registrazione%' => trim($id_registrazione)
 		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteRegistrazione;
+		$sqlTemplate = $this->root . $array['query'] . self::$queryDeleteRegistrazione;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;

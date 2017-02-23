@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CreaMercato extends AnagraficaAbstract {
+class CreaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	public static $_instance = null;
 
@@ -36,8 +37,8 @@ class CreaMercato extends AnagraficaAbstract {
 		return self::$_instance;
 	}
 
-	// ------------------------------------------------
-
+	public function start() {}
+	
 	public function go() {
 	
 		require_once 'database.class.php';
@@ -61,7 +62,7 @@ class CreaMercato extends AnagraficaAbstract {
 		$ricercaMercato->start();			
 	}
 
-	public function creaMercato($db, $utility) {
+	private function creaMercato($db, $utility) {
 	
 		$codmercato = $_SESSION["codmercato"];
 		$desmercato = str_replace("'","''",$_SESSION["desmercato"]);

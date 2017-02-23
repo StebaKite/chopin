@@ -154,7 +154,7 @@ class Bilancio extends RiepiloghiAbstract implements RiepiloghiBusinessInterface
 		}
 	}
 
-	public function ricercaDati($utility) {
+	private function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
 
@@ -214,7 +214,7 @@ class Bilancio extends RiepiloghiAbstract implements RiepiloghiBusinessInterface
 		return false;
 	}
 	
-	public function preparaPagina($bilancioTemplate) {
+	private function preparaPagina($bilancioTemplate) {
 	
 		require_once 'utility.class.php';
 	

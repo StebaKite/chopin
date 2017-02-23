@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class RicercaMercato extends AnagraficaAbstract {
+class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	private static $_instance = null;
 
@@ -114,8 +115,10 @@ class RicercaMercato extends AnagraficaAbstract {
 			include(self::$piede);
 		}
 	}
+	
+	public function go() {}
 
-	public function ricercaDati($utility) {
+	private function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
 	
@@ -141,7 +144,7 @@ class RicercaMercato extends AnagraficaAbstract {
 		return $result;
 	}
 	
-	public function preparaPagina($ricercaCausaleTemplate) {
+	private function preparaPagina($ricercaCausaleTemplate) {
 	
 		require_once 'database.class.php';
 		require_once 'utility.class.php';

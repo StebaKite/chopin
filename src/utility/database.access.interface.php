@@ -4,7 +4,7 @@ interface DatabaseAccessInterface {
 	
 	public static function getInstance();
 
-	public function createDatabaseConnection();
+	public function createDatabaseConnection($utility);
 	public function closeDBConnection();
 	
 	public function beginTransaction();
@@ -15,7 +15,6 @@ interface DatabaseAccessInterface {
 	public function getData($sql);
 	
 	public function getDBConnection();
-	public function setDBConnection($dbconnection);
 	
 	public function getLastIdUsed();
 	public function setLastIdUsed($lastIdUsed);

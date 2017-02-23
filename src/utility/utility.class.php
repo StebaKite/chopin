@@ -1,12 +1,12 @@
 <?php
 
-class Utility {
+require_once 'utility.component.interface.php';
+
+class Utility implements UtilityComponentInterface {
 
 	private static $root;
 	private static $languageReplace;
 	private static $configuration;
-
-	private static $_instance = null;
 	
 	private static $configFile = "/chopin/config/chopin.config.ini";
 
@@ -28,22 +28,22 @@ class Utility {
 
 	// Costruttore --------------------
 	function __construct() {		
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
+	private function __autoload($class_name) {
+		require_once $class_name . 'class.php';
+	}
+	
 	private function  __clone() { }
 	
 	/**
 	 * Singleton Pattern
 	 */
 	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-				
-			self::$_instance = new Utility();
-	
-		return self::$_instance;
+	public static function getInstance() {	
+		if (!isset($_SESSION["Obj_utility"])) $_SESSION["Obj_utility"] = serialize(new Utility()); 
+		return unserialize($_SESSION["Obj_utility"]);
 	}
 	
 	public function tailFile($template, $replacement) {
@@ -57,7 +57,7 @@ class Utility {
 		$lingua = $array['language'];
 		$lanFile = "languageFile_" . $lingua; 
 
-		$fileLingua = self::$root . $array[$lanFile];
+		$fileLingua = $_SERVER['DOCUMENT_ROOT'] . $array[$lanFile];
 
 		/*
 		 * Se non trova il file corrispondente alla lingua impostata, il metodo
@@ -90,7 +90,7 @@ class Utility {
 	/*
 	 * Prende in input il file della lingua e restituisce una array associativa
 	 */	
-	public function getMultilanguageFile($multiLanguageFile) {
+	private function getMultilanguageFile($multiLanguageFile) {
 
 		try {
 			if (self::$languageReplace == "") {
@@ -124,7 +124,7 @@ class Utility {
 
 		if (self::$configuration == "") {
 
-			$configFile = self::$root . self::$configFile;
+			$configFile = $_SERVER['DOCUMENT_ROOT'] . self::$configFile;
 			
 			if (file_exists($configFile)) {
 

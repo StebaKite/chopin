@@ -148,7 +148,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
 		}
 	}
 
-	public function ricercaDati($utility) {
+	private function ricercaDati($utility) {
 	
 		require_once 'database.class.php';
 	
@@ -195,7 +195,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
 		return FALSE;
 	}
 	
-	public function preparaPagina($bilancioTemplate) {
+	private function preparaPagina($bilancioTemplate) {
 	
 		require_once 'utility.class.php';
 	

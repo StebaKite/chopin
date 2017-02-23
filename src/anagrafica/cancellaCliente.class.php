@@ -1,8 +1,9 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
 
-class CancellaCliente extends AnagraficaAbstract {
+class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
 	private static $_instance = null;
 
@@ -53,6 +54,8 @@ class CancellaCliente extends AnagraficaAbstract {
 		$ricercaCliente = RicercaCliente::getInstance();
 		$ricercaCliente->start();
 	}
+	
+	public function go() {}
 }	
 		
 ?>

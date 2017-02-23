@@ -1,44 +1,33 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
-require_once 'nexus6.business.interface.php';
+require_once 'main.business.interface.php';
 
-class Main extends Nexus6Abstract implements Nexus6BusinessInterface {
+class Main extends Nexus6Abstract implements MainBusinessInterface {
 
-	public static $messaggio;
-	private static $_instance = null;
-
+	public $messaggio;
+	public $utility;
+	public $array;
+	
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
 		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array['testataPagina'];
+		$this->piede = $this->root . $this->array['piedePagina'];
+		$this->messaggioErrore = $this->root . $this->array['messaggioErrore'];
+		$this->messaggioInfo = $this->root . $this->array['messaggioInfo'];
 	}
 
-	private function  __clone() { }
+	public function getInstance() {
 
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new Main();
-
-		return self::$_instance;
+		if (!isset($_SESSION["Obj_main"])) $_SESSION["Obj_main"] = serialize(new Main());
+		return unserialize($_SESSION["Obj_main"]);
 	}
-
-	// ------------------------------------------------
 
 	public function start() {
 
@@ -55,7 +44,7 @@ class Main extends Nexus6Abstract implements Nexus6BusinessInterface {
 			 * Apertura della connessione col Database
 			 */
 			
-			if ($db->createDatabaseConnection()) {
+			if ($db->createDatabaseConnection($utility)) {
 					
 				/**
 				 * I controlli in apertura vengono fatti una sola volta nella vita della sessione
@@ -114,9 +103,7 @@ class Main extends Nexus6Abstract implements Nexus6BusinessInterface {
 		}
 	}
 	
-	public function ricercaDati($utility) {}
-	public function preparaPagina($template) {}
-	
+	public function go() {}	
 }
 
 ?>
