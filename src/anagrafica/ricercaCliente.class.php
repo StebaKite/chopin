@@ -1,10 +1,11 @@
 <?php
 
-require_once "anagrafica.abstract.class.php";
-require_once "anagrafica.business.interface.php";
-require_once "ricercaCliente.template.php";
-require_once "utility.class.php";
-require_once "database.class.php";
+require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
+require_once 'ricercaCliente.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'cliente.class.php';
 
 class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
@@ -30,15 +31,18 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		
 		// Template
 		
+		$cliente = Cliente::getInstance();		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-	
-		unset($_SESSION[self::CLIENTI]);
-	
+
 		$ricercaClienteTemplate = RicercaClienteTemplate::getInstance();
+		
+		$cliente->setClienti(null);
+		
+		if ($cliente->load(Database::getInstance())) {
 	
-		if ($this->ricercaDati($utility)) {
-	
+			$_SESSION[self::CLIENTE] = serialize($cliente);
+				
 			$this->preparaPagina($ricercaClienteTemplate);
 
 			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
@@ -52,16 +56,16 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 			 */
 			
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $_SESSION[self::QTA_CLIENTI] . " clienti";
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 			}
 			else {
-				$_SESSION[self::MESSAGGIO] = "Trovati " . $_SESSION[self::QTA_CLIENTI] . " clienti";
+				$_SESSION[self::MESSAGGIO] = "Trovati " . $cliente->getQtaClienti() . " clienti";
 			}
 	
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 	
-			if ($_SESSION[self::QTA_CLIENTI] > 0) {
+			if ($cliente->getQtaClienti() > 0) {
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			}
 			else {
@@ -94,42 +98,11 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 	
 	public function go() {}
 	
-	private function ricercaDati($utility) {
-		
-		$replace = array();
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::QUERY_RICERCA_CLIENTE;
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-	
-		// esegue la query
-	
-		$db = Database::getInstance();
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION[self::CLIENTI] = $result;
-		}
-		else {
-			unset($_SESSION[self::CLIENTI]);
-			$_SESSION[self::QTA_CLIENTI] = 0;
-		}
-		return $result;
-	}
-	
 	private function preparaPagina($ricercaCausaleTemplate) {
 	
 		$_SESSION["azione"] = self::AZIONE_RICERCA_CLIENTE;
 		$_SESSION["confermaTip"] = "%ml.cercaTip%";
 		$_SESSION["titoloPagina"] = "%ml.ricercaCliente%";
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
-		// Prelievo delle categorie -------------------------------------------------------------
-		
-		$_SESSION[self::CATEGORIE_CLIENTE] = $this->caricaCategorieCliente($utility, $db);		
 	}
 }
 

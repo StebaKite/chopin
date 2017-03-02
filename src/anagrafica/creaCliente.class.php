@@ -2,199 +2,166 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'creaCliente.template.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'cliente.class.php';
+require_once 'categoriaCliente.class.php';
 
-class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
-
-	public static $_instance = null;
-
-	public static $azioneCreaCliente = "../anagrafica/creaClienteFacade.class.php?modo=go";
-
+class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface
+{
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaCliente();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CREA_CLIENTE])) $_SESSION[self::CREA_CLIENTE] = serialize(new CreaCliente());
+		return unserialize($_SESSION[self::CREA_CLIENTE]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'creaCliente.template.php';
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
+	public function start()
+	{
 		$creaClienteTemplate = CreaClienteTemplate::getInstance();
 		$this->preparaPagina($creaClienteTemplate);
 
-		$_SESSION["codcliente"] = $this->prelevaUltimoCodiceCliente($utility, $db) + 1;
-		unset($_SESSION["descliente"]);
-		unset($_SESSION["indcliente"]);
-		unset($_SESSION["cittacliente"]);
-		unset($_SESSION["capcliente"]);
-		unset($_SESSION["codpiva"]);
-		unset($_SESSION["codfisc"]);
-		
+		$cliente = Cliente::getInstance();
+		$categoriaCliente = CategoriaCliente::getInstance();
+		$cliente->prepara();
+		$categoriaCliente->load();
+
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		$_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
+
 		// Compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+		echo $this->utility->tailTemplate($template);
 
 		$creaClienteTemplate->displayPagina();
-		include(self::$piede);
+		include($this->piede);
 	}
 
-	public function go() {
-
-		require_once 'creaCliente.template.php';
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-
+	public function go()
+	{
 		$creaClienteTemplate = CreaClienteTemplate::getInstance();
 
 		if ($creaClienteTemplate->controlliLogici()) {
 
 			// Aggiornamento del DB ------------------------------
 
-			if ($this->creaCliente($utility)) {
+			if ($this->creaCliente()) {
 
-				$db = Database::getInstance();
-				$utility = Utility::getInstance();
-				
-				$_SESSION["codcliente"] = $this->prelevaUltimoCodiceCliente($utility, $db) + 1;
-				unset($_SESSION["descliente"]);
-				unset($_SESSION["indcliente"]);
-				unset($_SESSION["cittacliente"]);
-				unset($_SESSION["capcliente"]);
-				unset($_SESSION["codpiva"]);
-				unset($_SESSION["codfisc"]);
-				
-				$_SESSION["messaggio"] = "Cliente salvato con successo";
+				$cliente = Cliente::getInstance();
+				$cliente->prepara();
+
+
+				$_SESSION[self::CLIENTE] = serialize($cliente);
+
+				$_SESSION["messaggio"] = self::CREA_CLIENTE_OK;
 
 				$this->preparaPagina($creaClienteTemplate);
 
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
-				
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+
 				$creaClienteTemplate->displayPagina();
 
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
+				echo $this->utility->tailTemplate($template);
+
+				include($this->piede);
 			}
 			else {
 
 				$this->preparaPagina($creaClienteTemplate);
 
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
 
 				$creaClienteTemplate->displayPagina();
 
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+				echo $this->utility->tailTemplate($template);
 
-				include(self::$piede);
+				include($this->piede);
 			}
 		}
 		else {
 
 			$this->preparaPagina($creaClienteTemplate);
 
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+			echo $this->utility->tailTemplate($template);
 
 			$creaClienteTemplate->displayPagina();
 
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+			echo $this->utility->tailTemplate($template);
 
-			include(self::$piede);
+			include($this->piede);
 		}
 	}
 
-	private function creaCliente($utility) {
+	private function creaCliente($utility)
+	{
+		$cliente = Cliente::getInstance();
 
-		require_once 'database.class.php';
+		$descrizione = ($cliente->getDesCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesCliente()) . "'" : "null" ;
+		$cliente->setDesCliente($descrizione);
+
+		$indirizzo = ($cliente->getDesIndirizzoCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesIndirizzoCliente()) . "'" : "null" ;
+		$cliente->setDesIndirizzoCliente($indirizzo);
+
+		$citta = ($cliente->getDesCittaCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesCittaCliente()) . "'" : "null" ;
+		$cliente->setDesCittaCliente($citta);
+
+		$cap = ($cliente->getCapCliente() != "") ? "'" . $cliente->getCapCliente() . "'" : "null";
+		$cliente->setCapCliente($cap);
+
+		$piva = ($cliente->getCodPiva() != "") ? "'" . $cliente->getCodPiva() . "'" : "null" ;
+		$cliente->setCodPiva($piva);
+
+		$cfis = ($cliente->getCodFisc() != "") ? "'" . $cliente->getCodFisc() . "'" : "null" ;
+		$cliente->setCodFisc($cfis);
+
+		$cat = ($cliente->getCatCliente() != "") ? "'" . $cliente->getCatCliente() . "'" : "null" ;
+		$cliente->setCatCliente($cat);
+
+		$_SESSION[self::CLIENTE] = serialize($cliente);
 
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
+		if ($cliente->inserisci($db)) {
 
-		$codcliente = $_SESSION["codcliente"];
-		$descliente = str_replace("'","''",$_SESSION["descliente"]);
-		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . str_replace("'","''",$_SESSION["indcliente"]) . "'" : "null" ;
-		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . str_replace("'","''",$_SESSION["cittacliente"]) . "'" : "null" ;
-		$capcliente = ($_SESSION["capcliente"] != "") ? "'" . $_SESSION["capcliente"] . "'" : "null";
-		$tipoaddebito = $_SESSION["tipoaddebito"];
-
-		$codpiva = ($_SESSION["codpiva"] != "") ? "'" . $_SESSION["codpiva"] . "'" : "null" ;
-		$codfisc = ($_SESSION["codfisc"] != "") ? "'" . $_SESSION["codfisc"] . "'" : "null" ;
-		$catcliente = ($_SESSION["catcliente"] != "") ? "'" . $_SESSION["catcliente"] . "'" : "null" ;
-		
-		if ($this->inserisciCliente($db, $utility, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
-
-			$db->commitTransaction();			
-			
+			$db->commitTransaction();
 			return TRUE;
 		}
 		$db->rollbackTransaction();
-		error_log("Errore inserimento cliente, eseguito Rollback");
-		$_SESSION["messaggio"] = "Cliente già esistente, inserimento fallito";
+		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREA_CLIENTE;
 		return FALSE;
 	}
 
-	private function preparaPagina($creaClienteTemplate) {
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		$creaClienteTemplate->setAzione(self::$azioneCreaCliente);
+	private function preparaPagina($creaClienteTemplate)
+	{
+		$creaClienteTemplate->setAzione(self::AZIONE_CREA_CLIENTE);
 		$creaClienteTemplate->setConfermaTip("%ml.confermaCreaCliente%");
 		$creaClienteTemplate->setTitoloPagina("%ml.creaNuovoCliente%");
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
-		// Prelievo delle categorie -------------------------------------------------------------
-		
-		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);
 	}
 }
 

@@ -5,6 +5,7 @@
 function controllaUnivocitaPiva() {
 
 	var codpiva = $("#codpiva").val();
+	var descliente = $("#descliente").val();
 
 	if (codpiva != "") {
 		var xmlhttp = new XMLHttpRequest();
@@ -14,7 +15,7 @@ function controllaUnivocitaPiva() {
 	            $( "#esitoPivaCliente" ).val(xmlhttp.responseText);
 	        }
 	    } 
-	    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva, true);
+	    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
 	    xmlhttp.send();		
 	}
 }

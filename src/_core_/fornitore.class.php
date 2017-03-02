@@ -3,13 +3,14 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'sottoconto.class.php';
 
 class Fornitore implements CoreInterface {
-	
+
 	public $root;
-	
+
 	// Nomi colonne tabella Fornitore
-	
+
 	const ID_FORNITORE = "id_fornitore";
 	const COD_FORNITORE = "cod_fornitore";
 	const DES_FORNITORE = "des_fornitore";
@@ -19,56 +20,56 @@ class Fornitore implements CoreInterface {
 	const TIP_ADDEBITO = "tip_addebito";
 	const DAT_CREAZIONE = "dat_creazione";
 	const NUM_GG_SCADENZA_FATTURA = "num_gg_scadenza_fattura";
-	
+
 	// Dati fornitore
-	
-	public $id_fornitore;
-	public $cod_fornitore;
-	public $des_fornitore;
-	public $des_indirizzo_fornitore;
-	public $des_citta_fornitore;
-	public $cap_fornitore;
-	public $tip_addebito;
-	public $dat_creazione;
-	public $num_gg_scadenza_fattura;
-	
+
+	private $id_fornitore;
+	private $cod_fornitore;
+	private $des_fornitore;
+	private $des_indirizzo_fornitore;
+	private $des_citta_fornitore;
+	private $cap_fornitore;
+	private $num_gg_scadenza_fattura;
+	private $tip_addebito;
+	private $dat_creazione;
+
 	// Queries
-	
-	public static $queryLeggiUltimoCodiceFornitore = "/anagrafica/leggiUltimoCodiceFornitore.sql";
-	public static $queryLeggiFornitore = "/anagrafica/ricercaCodiceFornitore.sql";
-	public static $queryCreaFornitore = "/anagrafica/creaFornitore.sql";
-	public static $queryDeleteFornitore = "/anagrafica/deleteFornitore.sql";
-	public static $queryUpdateFornitore = "/anagrafica/updateFornitore.sql";
-	
-	
+
+	const ULTIMO_CODICE_FORNITORE = "/anagrafica/leggiUltimoCodiceFornitore.sql";
+	const LEGGI_FORNITORE = "/anagrafica/ricercaCodiceFornitore.sql";
+	const CREA_FORNITORE = "/anagrafica/creaFornitore.sql";
+	const CANCELLA_FORNITORE = "/anagrafica/deleteFornitore.sql";
+	const AGGIORNA_FORNITORE = "/anagrafica/updateFornitore.sql";
+
+	// Metodi
+
 	function __construct() {
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
 	public function getInstance() {
-	
+
 		if (!isset($_SESSION[self::FORNITORE])) $_SESSION[self::FORNITORE] = serialize(new Fornitore());
 		return unserialize($_SESSION[self::FORNITORE]);
 	}
 
-	public function preparaNuovoFornitore() {
-		
+	public function prepara() {
+
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		
-		$this->set_cod_fornitore($this->prelevaUltimoCodiceFornitore($utility, $db) + 1);
+
+		$this->set_cod_fornitore($this->prelevaUltimoCodice($utility, $db) + 1);
 		$this->set_des_fornitore(null);
 		$this->set_des_indirizzo_fornitore(null);
 		$this->set_des_citta_fornitore(null);
 		$this->set_cap_fornitore(null);
 	}
 
-	public function inserisciFornitore($db) {
+	public function inserisci($db) {
 
 		$utility = Utility::getInstance();
-		
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_fornitore%' => $this->get_cod_fornitore(),
 				'%des_fornitore%' => $this->get_des_fornitore(),
@@ -78,65 +79,61 @@ class Fornitore implements CoreInterface {
 				'%tip_addebito%' => $this->get_tip_addebito(),
 				'%num_gg_scadenza_fattura%' => $this->get_num_gg_scadenza_fattura()
 		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryCreaFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::CREA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-	
+
 		/**
 		 * Creo anche il conto per il fornitore.
-		 * Qui devi creare la classe Sottoconto nel package _core_
 		 */
-			
-// 		if ($result) {
-// 			$result = $this->inserisciSottoconto($db, $utility, '215', $codfornitore, $desfornitore);
-// 		}
+
+		if ($result) {
+			$sottoconto = Sottoconto::getInstance();
+			$sottoconto->set_cod_conto($array["contoFornitoreNazionale"]);
+			$sottoconto->set_cod_sottoconto($this->get_cod_fornitore());
+			$sottoconto->set_des_sottoconto($this->get_des_fornitore());
+
+			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+			$result = $sottoconto->inserisci($db);
+		}
 		return $result;
 	}
-	
-	
-	
-	
-	/**
-	 * Questo metodo preleva l'ultimo codice fornitore utilizzato
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return unknown
-	 */
-	private function prelevaUltimoCodiceFornitore($utility, $db) {
-	
+
+	private function prelevaUltimoCodice($utility, $db) {
+
 		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiUltimoCodiceFornitore;
+		$sqlTemplate = $this->root . $array['query'] . self::ULTIMO_CODICE_FORNITORE;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$rows = pg_fetch_all($db->getData($sql));
-	
+
 		foreach($rows as $row) {
 			$result = $row['cod_fornitore_ult'];
 		}
 		return $result;
 	}
-	
-	
-	
-	
 
-	/**
+
+
+
+
+	/************************************************************************
 	 * Getters e setters
 	 */
-	
+
 	public function set_id_fornitore($id_fornitore) {
 		$this->id_fornitore = $id_fornitore;
 	}
 	public function get_id_fornitore() {
 		return $this->id_fornitore;
 	}
-	
+
 	public function set_cod_fornitore($cod_fornitore) {
 		$this->cod_fornitore = $cod_fornitore;
 	}
 	public function get_cod_fornitore() {
 		return $this->cod_fornitore;
 	}
-	
+
 	public function set_des_fornitore($des_fornitore) {
 		$this->des_fornitore = $des_fornitore;
 	}

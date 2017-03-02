@@ -1,32 +1,29 @@
 <?php
 
-require_once 'anagrafica.abstract.class.php';
+require_once "anagrafica.abstract.class.php";
+require_once "anagrafica.presentation.interface.php";
+require_once "cliente.class.php";
+require_once "categoriaCliente.class.php";
+require_once 'utility.class.php';
 
-class CreaClienteTemplate extends AnagraficaAbstract {
+class CreaClienteTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/creaCliente.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaClienteTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CREA_CLIENTE_TEMPLATE])) $_SESSION[self::CREA_CLIENTE_TEMPLATE] = serialize(new CreaClienteTemplate());
+		return unserialize($_SESSION[self::CREA_CLIENTE_TEMPLATE]);
 	}
 
 	// template ------------------------------------------------
@@ -35,6 +32,8 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 
 	public function controlliLogici() {
 
+		$cliente = Cliente::getInstance();
+
 		$esito = TRUE;
 		$msg = "<br>";
 
@@ -42,25 +41,25 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 
-		if ($_SESSION["catcliente"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la categoria del cliente";
-			$esito = FALSE;
-		}
-		
-		if ($_SESSION["codcliente"] == "") {
-			$msg = $msg . "<br>&ndash; Manca il codice del cliente";
+		if ($cliente->getCatCliente() == "") {
+			$msg = $msg . self::ERRORE_CATEGORIA_CLIENTE;
 			$esito = FALSE;
 		}
 
-		if ($_SESSION["descliente"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione del cliente";
+		if ($cliente->getCodCliente() == "") {
+			$msg = $msg . self::ERRORE_CODICE_CLIENTE;
+			$esito = FALSE;
+		}
+
+		if ($cliente->getDesCliente() == "") {
+			$msg = $msg . self::ERRORE_DESCRIZIONE_CLIENTE;
 			$esito = FALSE;
 		}
 
 // 		if ($_SESSION["codfisc"] != "") {
-		
+
 // 			include_once 'cf.class.php';
-		
+
 // 			$cf = new CodiceFiscale();
 // 			$cf->SetCF($_SESSION["codfisc"]);
 // 			if (!($cf->GetCodiceValido())) {
@@ -69,58 +68,53 @@ class CreaClienteTemplate extends AnagraficaAbstract {
 // 			}
 // 		}
 
-		if (($_SESSION["esitoPivaCliente"] != "P.iva Ok!") and ($_SESSION["esitoPivaCliente"] != "")) {
-			$msg = $msg . "<br>&ndash; P.iva cliente gi&agrave; esistente";
-			unset($_SESSION["codpiva"]);
+		if (($cliente->getEsitoPivaCliente() != "P.iva Ok!") and ($cliente->getEsitoPivaCliente() != "")) {
+			$msg = $msg . self::ERRORE_PIVA_CLIENTE;
+			$cliente->setCodPiva(null);
 			$esito = FALSE;
 		}
 
-		if (($_SESSION["esitoCfisCliente"] != "C.fisc Ok!") and ($_SESSION["esitoCfisCliente"] != "")) {
-			$msg = $msg . "<br>&ndash; C.fisc cliente gi&agrave; esistente";
-			unset($_SESSION["codfisc"]);
+		if (($cliente->getEsitoCfisCliente() != "C.fisc Ok!") and ($cliente->getEsitoCfisCliente() != "")) {
+			$msg = $msg . self::ERRORE_CFISC_CLIENTE;
+			$cliente->setCodFisc(null);
 			$esito = FALSE;
 		}
-		
+
 		// ----------------------------------------------
 
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
+			unset($_SESSION[self::MESSAGGIO]);
 		}
-
 		return $esito;
 	}
 
 	public function displayPagina() {
 
-		require_once 'utility.class.php';
-
-		// Template --------------------------------------------------------------
-
+		$cliente = Cliente::getInstance();
+		$categoriaCliente = CategoriaCliente::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_CREA_CLIENTE;
 
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
-				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
+				'%elenco_categorie_cliente%' => $categoriaCliente->getElencoCategorieCliente(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%codcliente%' => $_SESSION["codcliente"],
-				'%descliente%' => $_SESSION["descliente"],
-				'%indcliente%' => $_SESSION["indcliente"],
-				'%cittacliente%' => $_SESSION["cittacliente"],
-				'%capcliente%' => $_SESSION["capcliente"],
-				'%tipoaddebito%' => $_SESSION["tipoaddebito"],
-				'%codpiva%' => $_SESSION["codpiva"],
-				'%codfisc%' => $_SESSION["codfisc"],
-				'%catcliente%' => $_SESSION["catcliente"]
+				'%codcliente%' => $cliente->getCodCliente(),
+				'%descliente%' => $cliente->getDesCliente(),
+				'%indcliente%' => $cliente->getDesIndirizzoCliente(),
+				'%cittacliente%' => $cliente->getDesCittaCliente(),
+				'%capcliente%' => $cliente->getCapCliente(),
+				'%tipoaddebito%' => $cliente->getTipAddebito(),
+				'%codpiva%' => $cliente->getCodPiva(),
+				'%codfisc%' => $cliente->getCodFisc(),
+				'%catcliente%' => $cliente->getCatCliente()
 		);
-
-		$utility = Utility::getInstance();
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
