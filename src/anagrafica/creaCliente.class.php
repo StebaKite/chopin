@@ -121,7 +121,7 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
 	{
 		$cliente = Cliente::getInstance();
 
-		$descrizione = ($cliente->getDesCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesCliente()) . "'" : "null" ;
+		$descrizione = ($cliente->getDesCliente() != "") ? str_replace("'","''",$cliente->getDesCliente()) : "" ;
 		$cliente->setDesCliente($descrizione);
 
 		$indirizzo = ($cliente->getDesIndirizzoCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesIndirizzoCliente()) . "'" : "null" ;

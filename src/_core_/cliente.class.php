@@ -6,7 +6,7 @@ require_once 'utility.class.php';
 
 class Cliente implements CoreInterface {
 
-	public $root;
+	private $root;
 
 	// Nomi colonne tabella Cliente
 
@@ -57,7 +57,7 @@ class Cliente implements CoreInterface {
 	// Metodi
 
 	function __construct() {
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
 	}
 
 	public function getInstance() {
@@ -188,7 +188,7 @@ class Cliente implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-		$sqlTemplate = $this->root . $array['query'] . self::QUERY_RICERCA_CLIENTE;	
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_CLIENTE;	
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 

@@ -23,12 +23,12 @@ class AnagraficaController {
 		if (isset($_REQUEST["codfornitore"])) {
 
 			$fornitore = Fornitore::getInstance();
-			$fornitore->set_des_fornitore($_REQUEST["desfornitore"]);
-			$fornitore->set_des_indirizzo_fornitore($_REQUEST["indfornitore"]);
-			$fornitore->set_des_citta_fornitore($_REQUEST["cittafornitore"]);
-			$fornitore->set_cap_fornitore($_REQUEST["capfornitore"]);
-			$fornitore->set_tip_addebito($_REQUEST["tipoaddebito"]);
-			$fornitore->set_num_gg_scadenza_fattura($_REQUEST["numggscadenzafattura"]);
+			$fornitore->setDesFornitore($_REQUEST["desfornitore"]);
+			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore"]);
+			$fornitore->setDesCittaFornitore($_REQUEST["cittafornitore"]);
+			$fornitore->setCapFornitore($_REQUEST["capfornitore"]);
+			$fornitore->setTipAddebito($_REQUEST["tipoaddebito"]);
+			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura"]);
 
 			$_SESSION[self::FORNITORE] = serialize($fornitore);
 		}

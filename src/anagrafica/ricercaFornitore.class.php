@@ -1,10 +1,11 @@
 <?php
 
-require_once "anagrafica.abstract.class.php";
-require_once "anagrafica.business.interface.php";
-require_once "ricercaFornitore.template.php";
-require_once "utility.class.php";
-require_once "database.class.php";
+require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.business.interface.php';
+require_once 'ricercaFornitore.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'fornitore.class.php';
 
 class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
@@ -30,15 +31,18 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 	
 		// Template
 		
+		$fornitore = Fornitore::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		unset($_SESSION[self::FORNITORI]);
-	
 		$ricercaFornitoreTemplate = RicercaFornitoreTemplate::getInstance();
 	
-		if ($this->ricercaDati($utility)) {
-	
+		$fornitore->setFornitori(null);
+		
+		if ($fornitore->load(Database::getInstance())) {
+
+			$_SESSION[self::FORNITORE] = serialize($fornitore);
+				
 			$this->preparaPagina($ricercaFornitoreTemplate);
 				
 			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
@@ -51,16 +55,16 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 			 * Gestione del messaggio proveniente dalla cancellazione
 			*/
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $_SESSION[self::QTA_FORNITORI] . " fornitori";
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 			}
 			else {
-				$_SESSION[self::MESSAGGIO] = "Trovati " . $_SESSION[self::QTA_FORNITORI] . " fornitori";
+				$_SESSION[self::MESSAGGIO] = "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
 			}
 	
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 	
-			if ($_SESSION[self::QTA_FORNITORI] > 0) {
+			if ($fornitore->getQtaFornitori()  > 0) {
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			}
 			else {
@@ -92,30 +96,6 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 	}
 
 	public function go() {}
-	
-	private function ricercaDati($utility) {
-		
-		$replace = array();
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::QUERY_RICERCA_FORNITORE;
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-	
-		// esegue la query
-	
-		$db = Database::getInstance();
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION[self::FORNITORI] = $result;
-		}
-		else {
-			unset($_SESSION[self::FORNITORI]);
-			$_SESSION[self::QTA_FORNITORI] = 0;
-		}
-		return $result;
-	}
 	
 	private function preparaPagina() {
 	

@@ -31,10 +31,6 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const AZIONE_CREA_FORNITORE	    = "../anagrafica/creaFornitoreFacade.class.php?modo=go";
 	const AZIONE_CREA_CLIENTE		= "../anagrafica/creaClienteFacade.class.php?modo=go";
 
-	// Queries
-
-	const QUERY_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.sql";
-
 	// Errori e messaggi
 
 	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";

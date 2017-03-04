@@ -40,12 +40,12 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
 		 * Controllo presenza dati obbligatori
 		 */
 
-		if ($fornitore->get_cod_fornitore() == "") {
+		if ($fornitore->getCodFornitore() == "") {
 			$msg = $msg . self::ERRORE_CODICE_FORNITORE;
 			$esito = FALSE;
 		}
 
-		if ($fornitore->get_des_fornitore() == "") {
+		if ($fornitore->getDesFornitore() == "") {
 			$msg = $msg . self::ERRORE_DESCRIZIONE_FORNITORE;
 			$esito = FALSE;
 		}
@@ -70,12 +70,12 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%codfornitore%' => $fornitore->get_cod_fornitore(),
-				'%desfornitore%' => $fornitore->get_des_fornitore(),
-				'%indfornitore%' => $fornitore->get_des_indirizzo_fornitore(),
-				'%cittafornitore%' => $fornitore->get_des_citta_fornitore(),
-				'%capfornitore%' => $fornitore->get_cap_fornitore(),
-				'%tipoaddebito%' => $fornitore->get_tip_addebito()
+				'%codfornitore%' => $fornitore->getCodFornitore(),
+				'%desfornitore%' => $fornitore->getDesFornitore(),
+				'%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),
+				'%cittafornitore%' => $fornitore->getDesCittaFornitore(),
+				'%capfornitore%' => $fornitore->getCapFornitore(),
+				'%tipoaddebito%' => $fornitore->getTipAddebito()
 		);
 
 		$template = $this->utility->tailFile($this->utility->getTemplate($form), $replace);

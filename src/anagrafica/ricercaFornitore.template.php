@@ -3,9 +3,10 @@
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.presentation.interface.php';
 require_once 'utility.class.php';
+require_once 'fornitore.class.php';
 
 class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
-
+	
 	function __construct() {
 		
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
@@ -28,13 +29,14 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 		
 		// Template --------------------------------------------------------------
 		
+		$fornitore = Fornitore::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
 		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_FORNITORE;
 		$risultato_ricerca = "";
 		
-		if (isset($_SESSION["fornitoriTrovati"])) {
+		if ($fornitore->getQtaFornitori() > 0) {
 		
 			$risultato_ricerca =
 			"	<thead>" .
@@ -53,10 +55,7 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 			"	</thead>" .
 			"	<tbody>" ;
 		
-			$fornitoriTrovati = $_SESSION[self::FORNITORI];
-			$numFornitori = 0;
-		
-			foreach(pg_fetch_all($fornitoriTrovati) as $row) {
+			foreach($fornitore->getFornitori() as $row) {
 		
 				if ($row[self::QTA_REGISTRAZIONI_FORNITORE] == 0) {
 					$class = "class=''";
@@ -74,23 +73,21 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 					$bottoneCancella = "&nbsp;";
 				}
 		
-				$numFornitori ++;
-				$risultato_ricerca = $risultato_ricerca .
+				$risultato_ricerca .= 
 				"<tr>" .
-				"	<td>" . trim($row[self::CODICE_FORNITORE]) . "</td>" .
-				"	<td>" . trim($row[self::DESCRIZIONE_FORNITORE]) . "</td>" .
-				"	<td>" . trim($row[self::INDIRIZZO_FORNITORE]) . "</td>" .
-				"	<td>" . trim($row[self::CITTA_FORNITORE]) . "</td>" .				
-				"	<td>" . trim($row[self::CAP_FORNITORE]) . "</td>" .
- 				"	<td>" . trim($row[self::TIP_ADDEBITO]) . "</td>" .
- 				"	<td>" . trim($row[self::GIORNI_SCADENZA_FATTURA]) . "</td>" .
- 				"	<td>" . trim($row[self::QTA_REGISTRAZIONI_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[$fornitore::COD_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[$fornitore::DES_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[$fornitore::DES_INDIRIZZO_FORNITORE]) . "</td>" .
+				"	<td>" . trim($row[$fornitore::DES_CITTA_FORNITORE]) . "</td>" .				
+				"	<td>" . trim($row[$fornitore::CAP_FORNITORE]) . "</td>" .
+ 				"	<td>" . trim($row[$fornitore::TIP_ADDEBITO]) . "</td>" .
+ 				"	<td>" . trim($row[$fornitore::NUM_GG_SCADENZA_FATTURA]) . "</td>" .
+ 				"	<td>" . trim($row[$fornitore::QTA_REGISTRAZIONI_FORNITORE]) . "</td>" .
  				"	<td id='icons'>" . $bottoneModifica . "</td>" .
  				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$_SESSION[self::QTA_FORNITORI] = $numFornitori;
-			$risultato_ricerca = $risultato_ricerca . "</tbody>";
+			$risultato_ricerca .= "</tbody>";
 		}
 		else {
 		
@@ -98,9 +95,6 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
-				'%azione%' => $_SESSION[self::AZIONE_RICERCA_FORNITORE],
-				'%codfornitore%' => $_SESSION["codfornitore"],
-				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 		

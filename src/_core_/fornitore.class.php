@@ -7,7 +7,7 @@ require_once 'sottoconto.class.php';
 
 class Fornitore implements CoreInterface {
 
-	public $root;
+	private $root;
 
 	// Nomi colonne tabella Fornitore
 
@@ -20,7 +20,8 @@ class Fornitore implements CoreInterface {
 	const TIP_ADDEBITO = "tip_addebito";
 	const DAT_CREAZIONE = "dat_creazione";
 	const NUM_GG_SCADENZA_FATTURA = "num_gg_scadenza_fattura";
-
+	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
+	
 	// Dati fornitore
 
 	private $id_fornitore;
@@ -33,6 +34,11 @@ class Fornitore implements CoreInterface {
 	private $tip_addebito;
 	private $dat_creazione;
 
+	// Altri dati funzionali
+	
+	private $fornitori;
+	private $qtaFornitori;
+	
 	// Queries
 
 	const ULTIMO_CODICE_FORNITORE = "/anagrafica/leggiUltimoCodiceFornitore.sql";
@@ -40,11 +46,12 @@ class Fornitore implements CoreInterface {
 	const CREA_FORNITORE = "/anagrafica/creaFornitore.sql";
 	const CANCELLA_FORNITORE = "/anagrafica/deleteFornitore.sql";
 	const AGGIORNA_FORNITORE = "/anagrafica/updateFornitore.sql";
-
+	const QUERY_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.sql";
+	
 	// Metodi
 
 	function __construct() {
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
 	}
 
 	public function getInstance() {
@@ -58,11 +65,11 @@ class Fornitore implements CoreInterface {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		$this->set_cod_fornitore($this->prelevaUltimoCodice($utility, $db) + 1);
-		$this->set_des_fornitore(null);
-		$this->set_des_indirizzo_fornitore(null);
-		$this->set_des_citta_fornitore(null);
-		$this->set_cap_fornitore(null);
+		$this->setCodFornitore($this->prelevaUltimoCodice($utility, $db) + 1);
+		$this->setDesFornitore(null);
+		$this->setDesIndirizzoFornitore(null);
+		$this->setDesCittaFornitore(null);
+		$this->setCapFornitore(null);
 	}
 
 	public function inserisci($db) {
@@ -71,15 +78,15 @@ class Fornitore implements CoreInterface {
 		$array = $utility->getConfig();
 
 		$replace = array(
-				'%cod_fornitore%' => $this->get_cod_fornitore(),
-				'%des_fornitore%' => $this->get_des_fornitore(),
-				'%des_indirizzo_fornitore%' => $this->get_des_indirizzo_fornitore(),
-				'%des_citta_fornitore%' => $this->get_des_citta_fornitore(),
-				'%cap_fornitore%' => $this->get_cap_fornitore(),
-				'%tip_addebito%' => $this->get_tip_addebito(),
-				'%num_gg_scadenza_fattura%' => $this->get_num_gg_scadenza_fattura()
+				'%cod_fornitore%' => $this->getCodFornitore(),
+				'%des_fornitore%' => $this->getDesFornitore(),
+				'%des_indirizzo_fornitore%' => $this->getDesIndirizzoFornitore(),
+				'%des_citta_fornitore%' => $this->getDesCittaFornitore(),
+				'%cap_fornitore%' => $this->getCapFornitore(),
+				'%tip_addebito%' => $this->getTipAddebito(),
+				'%num_gg_scadenza_fattura%' => $this->getNumGgScadenzaFattura()
 		);
-		$sqlTemplate = $this->root . $array['query'] . self::CREA_FORNITORE;
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
@@ -89,9 +96,9 @@ class Fornitore implements CoreInterface {
 
 		if ($result) {
 			$sottoconto = Sottoconto::getInstance();
-			$sottoconto->set_cod_conto($array["contoFornitoreNazionale"]);
-			$sottoconto->set_cod_sottoconto($this->get_cod_fornitore());
-			$sottoconto->set_des_sottoconto($this->get_des_fornitore());
+			$sottoconto->setCodConto($array["contoFornitoreNazionale"]);
+			$sottoconto->setCodSottoconto($this->getCodFornitore());
+			$sottoconto->setDesSottoconto($this->getDesFornitore());
 
 			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 			$result = $sottoconto->inserisci($db);
@@ -102,7 +109,7 @@ class Fornitore implements CoreInterface {
 	private function prelevaUltimoCodice($utility, $db) {
 
 		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::ULTIMO_CODICE_FORNITORE;
+		$sqlTemplate =  $this->getRoot() . $array['query'] . self::ULTIMO_CODICE_FORNITORE;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$rows = pg_fetch_all($db->getData($sql));
 
@@ -112,76 +119,113 @@ class Fornitore implements CoreInterface {
 		return $result;
 	}
 
-
-
-
+	public function load($db) {
+	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+	
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_FORNITORE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if ($result) {
+			$this->setFornitori(pg_fetch_all($result));
+			$this->setQtaFornitori(pg_num_rows($result));
+		} else {
+			$this->setFornitori(null);
+			$this->setQtaFornitori(null);
+		}
+		return $result;
+	}
 
 	/************************************************************************
 	 * Getters e setters
 	 */
 
-	public function set_id_fornitore($id_fornitore) {
+	public function getRoot() {
+		return $this->root;
+	}
+	public function setRoot($root) {
+		$this->root = $root;
+	}
+	
+	public function setIdFornitore($id_fornitore) {
 		$this->id_fornitore = $id_fornitore;
 	}
-	public function get_id_fornitore() {
+	public function getIdFornitore() {
 		return $this->id_fornitore;
 	}
 
-	public function set_cod_fornitore($cod_fornitore) {
+	public function setCodFornitore($cod_fornitore) {
 		$this->cod_fornitore = $cod_fornitore;
 	}
-	public function get_cod_fornitore() {
+	public function getCodFornitore() {
 		return $this->cod_fornitore;
 	}
 
-	public function set_des_fornitore($des_fornitore) {
+	public function setDesFornitore($des_fornitore) {
 		$this->des_fornitore = $des_fornitore;
 	}
-	public function get_des_fornitore() {
+	public function getDesFornitore() {
 		return $this->des_fornitore;
 	}
 
-	public function set_des_indirizzo_fornitore($des_indirizzo_fornitore) {
+	public function setDesIndirizzoFornitore($des_indirizzo_fornitore) {
 		$this->des_indirizzo_fornitore = $des_indirizzo_fornitore;
 	}
-	public function get_des_indirizzo_fornitore() {
+	public function getDesIndirizzoFornitore() {
 		return $this->des_indirizzo_fornitore;
 	}
 
-	public function set_des_citta_fornitore($des_citta_fornitore) {
+	public function setDesCittaFornitore($des_citta_fornitore) {
 		$this->des_citta_fornitore = $des_citta_fornitore;
 	}
-	public function get_des_citta_fornitore() {
+	public function getDesCittaFornitore() {
 		return $this->des_citta_fornitore;
 	}
 
-	public function set_cap_fornitore($cap_fornitore) {
+	public function setCapFornitore($cap_fornitore) {
 		$this->cap_fornitore = $cap_fornitore;
 	}
-	public function get_cap_fornitore() {
+	public function getCapFornitore() {
 		return $this->cap_fornitore;
 	}
 
-	public function set_tip_addebito($tip_addebito) {
+	public function setTipAddebito($tip_addebito) {
 		$this->tip_addebito = $tip_addebito;
 	}
-	public function get_tip_addebito() {
+	public function getTipAddebito() {
 		return $this->tip_addebito;
 	}
 
-	public function set_dat_creazione($dat_creazione) {
+	public function setDatCreazione($dat_creazione) {
 		$this->dat_creazione = $dat_creazione;
 	}
-	public function get_dat_creazione() {
+	public function getDatCreazione() {
 		return $this->dat_creazione;
 	}
 
-	public function set_num_gg_scadenza_fattura($num_gg_scadenza_fattura) {
+	public function setNumGgScadenzaFattura($num_gg_scadenza_fattura) {
 		$this->num_gg_scadenza_fattura = $num_gg_scadenza_fattura;
 	}
-	public function get_num_gg_scadenza_fattura() {
+	public function getNumGgScadenzaFattura() {
 		return $this->num_gg_scadenza_fattura;
 	}
+	
+	public function getFornitori() {
+		return $this->fornitori;
+	}
+	public function setFornitori($fornitori) {
+		$this->fornitori = $fornitori;
+	}
+	
+	public function getQtaFornitori() {
+		return $this->qtaFornitori;
+	}
+	public function setQtaFornitori($qtaFornitori) {
+		$this->qtaFornitori = $qtaFornitori;
+	}
+	
 }
 
 ?>

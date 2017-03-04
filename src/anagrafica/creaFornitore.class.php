@@ -83,15 +83,15 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 
 				$this->preparaPagina($creaFornitoreTemplate);
 
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-				echo $utility->tailTemplate($template);
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
 
 				$creaFornitoreTemplate->displayPagina();
 
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+				echo $this->utility->tailTemplate($template);
 
 				include($this->piede);
 			}
@@ -100,15 +100,15 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 
 			$this->preparaPagina($creaFornitoreTemplate);
 
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+			echo $this->utility->tailTemplate($template);
 
 			$creaFornitoreTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+			echo $this->utility->tailTemplate($template);
 
 			include($this->piede);
 		}
@@ -118,6 +118,11 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 	{
 		$fornitore = Fornitore::getInstance();
 
+		$descrizione = ($fornitore->getDesFornitore() != "") ? str_replace("'","''",$fornitore->getDesFornitore()) : "" ;
+		$fornitore->setDesFornitore($descrizione);
+
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
