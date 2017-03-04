@@ -29,9 +29,7 @@ abstract class Nexus6Abstract {
 	public static $queryRicercaFornitori = "/primanota/ricercaFornitori.sql";
 	public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
 	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
-	public static $queryLeggiIdFornitore = "/anagrafica/leggiIdFornitore.sql";
 	public static $queryTrovaDescrizioneFornitore = "/anagrafica/trovaDescFornitore.sql";
-	public static $queryLeggiIdCliente = "/anagrafica/leggiIdCliente.sql";
 	public static $queryCreaEvento = "/main/creaEvento.sql";
 	public static $queryChiudiEvento = "/main/chiudiEvento.sql";
 	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
@@ -41,7 +39,6 @@ abstract class Nexus6Abstract {
 	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
 	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";
-	public static $queryDeleteSottoconto = "/configurazioni/deleteSottoconto.sql";
 
 	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	public static $queryRicercaMercati = "/configurazioni/leggiTuttiMercati.sql";
@@ -693,26 +690,6 @@ abstract class Nexus6Abstract {
 			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
 			return FALSE;
 		}
-	}
-
-	/**
-	 * Questo metodo cancella un sottoconto.
-	 * E' qui perch' viene usato dalle configurazioni e dell'anagrafica
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $codconto
-	 * @param unknown $codsottoconto
-	 */
-	public function cancellaSottoconto($db, $utility, $codconto, $codsottoconto) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_conto%' => trim($codconto),
-				'%cod_sottoconto%' => trim($codsottoconto)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryDeleteSottoconto;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
 	}
 
 

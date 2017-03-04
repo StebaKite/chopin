@@ -2,57 +2,43 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'ricercaCliente.class.php';
+require_once 'cliente.class.php';
 
 class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	private static $_instance = null;
-
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CancellaCliente();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CANCELLA_CLIENTE])) $_SESSION[self::CANCELLA_CLIENTE] = serialize(new CancellaCliente());
+		return unserialize($_SESSION[self::CANCELLA_CLIENTE]);
 	}
-
-	// ------------------------------------------------
 
 	public function start() {
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'ricercaCliente.class.php';
-		
-		$utility = Utility::getInstance();
+		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
 		
-		$this->cancellaCliente($db, $utility, $_SESSION["idcliente"]);
+		$cliente->cancella($db);
 		
-		$_SESSION["messaggioCancellazione"] = "Cliente " . $_SESSION['codclienteselezionato'] . " cancellato";
-		$ricercaCliente = RicercaCliente::getInstance();
-		$ricercaCliente->start();
+		$_SESSION["messaggioCancellazione"] = "Cliente cancellato";
+		
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->start();
 	}
 	
 	public function go() {}

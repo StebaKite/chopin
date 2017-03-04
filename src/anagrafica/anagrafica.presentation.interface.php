@@ -10,24 +10,9 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const FORNITORI = "fornitoriTrovati";
 	const QTA_CLIENTI = "numClientiTrovati";
 	const QTA_FORNITORI = "numFornitoriTrovati";
-
 	const CATEGORIE_CLIENTE = "elenco_categorie_cliente";
 	const TITOLO = "titoloPagina";
-	
-// 	const CODICE_CLIENTE = "cod_cliente";
-// 	const DESCRIZIONE_CLIENTE = "des_cliente";
-// 	const INDIRIZZO_CLIENTE = "des_indirizzo_cliente";
-// 	const CITTA_CLIENTE = "des_citta_cliente";
-// 	const CAP_CLIENTE = "cap_cliente";
-
 	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
-	
-// 	const CODICE_FORNITORE = "cod_fornitore";
-// 	const DESCRIZIONE_FORNITORE = "des_fornitore";
-// 	const INDIRIZZO_FORNITORE = "des_indirizzo_fornitore";
-// 	const CITTA_FORNITORE = "des_citta_fornitore";
-// 	const CAP_FORNITORE = "cap_fornitore";
-// 	const GIORNI_SCADENZA_FATTURA = "num_gg_scadenza_fattura";
 
 	// Tips
 
@@ -39,6 +24,7 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const PAGINA_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.form.html";
 	const PAGINA_CREA_FORNITORE    = "/anagrafica/creaFornitore.form.html";
 	const PAGINA_CREA_CLIENTE      = "/anagrafica/creaCliente.form.html";
+	const PAGINA_MODIFICA_CLIENTE  = "/anagrafica/modificaCliente.form.html";
 
 	// Bottoni
 
@@ -73,6 +59,7 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const RICERCA_FORNITORE_TEMPLATE = "Obj_ricercafornitoretemplate";
 	const CREA_FORNITORE_TEMPLATE    = "Obj_creafornitoretemplate";
 	const CREA_CLIENTE_TEMPLATE		 = "Obj_creaclientetemplate";
+	const MODIFICA_CLIENTE_TEMPLATE  = "Obj_modificaclientetemplate";
 
 	// Metodi
 

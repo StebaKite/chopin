@@ -47,6 +47,7 @@ class Fornitore implements CoreInterface {
 	const CANCELLA_FORNITORE = "/anagrafica/deleteFornitore.sql";
 	const AGGIORNA_FORNITORE = "/anagrafica/updateFornitore.sql";
 	const QUERY_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.sql";
+	const LEGGI_FORNITORE_X_ID = "/anagrafica/leggiIdFornitore.sql";
 	
 	// Metodi
 
@@ -138,6 +139,40 @@ class Fornitore implements CoreInterface {
 		return $result;
 	}
 
+	public function cancella($db) {
+	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%id_fornitore%' => $this->getIdFornitore()
+		);
+	
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		/**
+		 * Cancello il conto del fornitore
+		 * @var array $conto
+		 */
+		$sottoconto = Sottoconto::getInstance();
+		$conto = explode(",", $array["contiFornitore"]);
+		
+		foreach(pg_fetch_all($result) as $row) {
+		
+			foreach ($conto as $contoFornitori) {
+				$sottoconto->setCodConto($contoFornitori);
+				$sottoconto->setCodSottoconto($row['cod_fornitore']);
+				$sottoconto->cancella($db);
+			}
+		}
+	
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
 	/************************************************************************
 	 * Getters e setters
 	 */

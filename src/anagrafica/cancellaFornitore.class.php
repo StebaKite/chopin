@@ -2,57 +2,43 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'ricercaFornitore.class.php';
+require_once 'fornitore.class.php';
 
 class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	private static $_instance = null;
-
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
+		}
 
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CANCELLA_FORNITORE])) $_SESSION[self::CANCELLA_FORNITORE] = serialize(new CancellaFornitore());
+		return unserialize($_SESSION[self::CANCELLA_FORNITORE]);
 	}
-
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CancellaFornitore();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
 
 	public function start() {
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'ricercaFornitore.class.php';
 		
-		$utility = Utility::getInstance();
+		$fornitore = Fornitore::getInstance();
 		$db = Database::getInstance();
 		
-		$this->cancellaFornitore($db, $utility, $_SESSION["idfornitore"]);
+		$fornitore->cancella($db);
 		
-		$_SESSION["messaggioCancellazione"] = "Fornitore " . $_SESSION['codfornitoreselezionato'] . " cancellato";
-		$ricercaFornitore = RicercaFornitore::getInstance();
-		$ricercaFornitore->start();
+		$_SESSION["messaggioCancellazione"] = "Fornitore cancellato";
+		
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));		
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->start();
 	}
 	
 	public function go() {}

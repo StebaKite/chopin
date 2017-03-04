@@ -1883,14 +1883,12 @@ function cancellaCausale(codcausale) {
 function cancellaFornitore(idfornitore, codfornitore) {
 	
 	$( "#idfornitore" ).val(idfornitore);
-	$( "#codfornitoreselezionato" ).val(codfornitore);
 	$( "#cancella-fornitore-form" ).dialog( "open" );
 }
 
 function cancellaCliente(idcliente, codcliente) {
 	
 	$( "#idcliente" ).val(idcliente);
-	$( "#codclienteselezionato" ).val(codcliente);
 	$( "#cancella-cliente-form" ).dialog( "open" );
 }
 

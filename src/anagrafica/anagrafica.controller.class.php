@@ -20,50 +20,51 @@ class AnagraficaController {
 
 	public function start() {
 
+		$fornitore = Fornitore::getInstance();
+		$cliente = Cliente::getInstance();
+		
 		if (isset($_REQUEST["codfornitore"])) {
-
-			$fornitore = Fornitore::getInstance();
 			$fornitore->setDesFornitore($_REQUEST["desfornitore"]);
 			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore"]);
 			$fornitore->setDesCittaFornitore($_REQUEST["cittafornitore"]);
 			$fornitore->setCapFornitore($_REQUEST["capfornitore"]);
 			$fornitore->setTipAddebito($_REQUEST["tipoaddebito"]);
 			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura"]);
-
-			$_SESSION[self::FORNITORE] = serialize($fornitore);
 		}
 
 		if (isset($_REQUEST["codcliente"])) {
-
-			$cliente = Cliente::getInstance();
 			$cliente->setCodCliente($_REQUEST["codcliente"]);
 			$cliente->setDesCliente($_REQUEST["descliente"]);
 			$cliente->setDesIndirizzoCliente($_REQUEST["indcliente"]);
 			$cliente->setDesCittaCliente($_REQUEST["cittacliente"]);
 			$cliente->setCapCliente($_REQUEST["capcliente"]);
+			$cliente->setTipAddebito($_REQUEST["tipoaddebito"]);
 			$cliente->setCodPiva($_REQUEST["codpiva"]);
 			$cliente->setCodFisc($_REQUEST["codfisc"]);
 			$cliente->setCatCliente($_REQUEST["catcliente"]);
 			$cliente->setEsitoPivaCliente($_REQUEST["esitoPivaCliente"]);
 			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente"]);
-
-			$_SESSION[self::CLIENTE] = serialize($cliente);
 		}
 
 		if (isset($_REQUEST["codfisc"])) {
-		
-			$cliente = Cliente::getInstance();
 			$cliente->setCodFisc($_REQUEST["codfisc"]);
-			$_SESSION[self::CLIENTE] = serialize($cliente);
 		}
 
 		if (isset($_REQUEST["codpiva"])) {
-		
-			$cliente = Cliente::getInstance();
 			$cliente->setCodPiva($_REQUEST["codpiva"]);
 			$cliente->setDesCliente($_REQUEST["descliente"]);
-			$_SESSION[self::CLIENTE] = serialize($cliente);
 		}
+
+		if (isset($_REQUEST["idcliente"])) {
+			$cliente->setIdCliente($_REQUEST["idcliente"]);
+		}
+
+		if (isset($_REQUEST["idfornitore"])) {
+			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
+		}
+		
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
 		
 		if ($_REQUEST["modo"] == "start") { $this->anagraficaFunction->start(); }
 		if ($_REQUEST["modo"] == "go") { $this->anagraficaFunction->go();}

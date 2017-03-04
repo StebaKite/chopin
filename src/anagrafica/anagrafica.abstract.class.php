@@ -8,8 +8,6 @@ abstract class AnagraficaAbstract extends Nexus6Abstract {
 
 	// Query ---------------------------------------------------------------
 
-	public static $queryUpdateCliente = "/anagrafica/updateCliente.sql";
-	public static $queryDeleteCliente = "/anagrafica/deleteCliente.sql";
 
 	public static $queryCreaMercato = "/anagrafica/creaMercato.sql";
 	public static $queryDeleteMercato = "/anagrafica/deleteMercato.sql";
@@ -71,41 +69,6 @@ abstract class AnagraficaAbstract extends Nexus6Abstract {
 	}
 
 	/**
-	 * Questo metodo cancella un fornitore tramite il suo ID
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 */
-	public function cancellaFornitore($db, $utility, $idfornitore) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
-		);
-
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-
-		/**
-		 * Cancello il conto del fornitore
-		 * @var array $conto
-		 */
-		$conto = explode(",", $array["contiFornitore"]);
-
-		foreach(pg_fetch_all($result) as $row) {
-
-			foreach ($conto as $contoFornitori) {
-				$this->cancellaSottoconto($db, $utility, $contoFornitori, $row['cod_fornitore']);
-			}
-		}
-
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	}
-
-	/**
 	 * Questo metodo aggiorna i dati del fornitore
 	 * @param unknown $db
 	 * @param unknown $utility
@@ -133,78 +96,6 @@ abstract class AnagraficaAbstract extends Nexus6Abstract {
 				'%num_gg_scadenza_fattura%' => trim($numggscadenzafattura)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
-
-	/**
-	 * Il metodo cancella un cliente tramite il suo ID
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 */
-	public function cancellaCliente($db, $utility, $idcliente) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => trim($idcliente)
-		);
-
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-
-		/**
-		 * Cancello il conto del cliente
-		 * @var array $conto
-		 */
-		$conto = explode(",", $array["contiCliente"]);
-
-		foreach(pg_fetch_all($result) as $row) {
-
-			foreach ($conto as $contoClienti) {
-				$this->cancellaSottoconto($db, $utility, $contoClienti, $row['cod_cliente']);
-			}
-		}
-
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-	}
-
-	/**
-	 * Il metodo aggiorna i dati del cliente
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 * @param unknown $codcliente
-	 * @param unknown $descliente
-	 * @param unknown $indcliente
-	 * @param unknown $cittacliente
-	 * @param unknown $capcliente
-	 * @param unknown $tipoaddebito
-	 * @param unknown $codpiva
-	 * @param unknown $codfisc
-	 * @param unknown $catcliente
-	 * @return unknown
-	 */
-	public function updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => trim($idcliente),
-				'%cod_cliente%' => trim($codcliente),
-				'%des_cliente%' => trim($descliente),
-				'%des_indirizzo_cliente%' => trim($indcliente),
-				'%des_citta_cliente%' => trim($cittacliente),
-				'%cap_cliente%' => trim($capcliente),
-				'%tip_addebito%' => trim($tipoaddebito),
-				'%cod_piva%' => trim($codpiva),
-				'%cod_fisc%' => trim($codfisc),
-				'%cat_cliente%' => trim($catcliente)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;

@@ -5,6 +5,7 @@ require_once 'ricercaCliente.class.php';
 require_once 'anagrafica.controller.class.php';
 
 session_start();
+xdebug_disable();
 
 $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
 

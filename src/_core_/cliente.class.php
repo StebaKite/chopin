@@ -3,6 +3,7 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'sottoconto.class.php';
 
 class Cliente implements CoreInterface {
 
@@ -10,6 +11,7 @@ class Cliente implements CoreInterface {
 
 	// Nomi colonne tabella Cliente
 
+	const ID_CLIENTE = "id_cliente";
 	const COD_CLIENTE = "cod_cliente";
 	const DES_CLIENTE = "des_cliente";
 	const DES_INDIRIZZO_CLIENTE = "des_indirizzo_cliente";
@@ -44,6 +46,7 @@ class Cliente implements CoreInterface {
 	private $cfiscEsistente;
 	private $clienti;
 	private $qtaClienti;
+	private $qtaRegistrazioniCliente;
 	
 	// Queries
 
@@ -53,6 +56,9 @@ class Cliente implements CoreInterface {
 	const CERCA_PARTITA_IVA = "/anagrafica/ricercaPivaCliente.sql";
 	const CERCA_DESCRIZIONE = "/anagrafica/trovaDescCliente.sql";
 	const QUERY_RICERCA_CLIENTE   = "/anagrafica/ricercaCliente.sql";
+	const LEGGI_CLIENTE_X_ID = "/anagrafica/leggiIdCliente.sql";
+	const CANCELLA_CLIENTE = "/anagrafica/deleteCliente.sql";
+	const AGGIORNA_CLIENTE = "/anagrafica/updateCliente.sql";
 	
 	// Metodi
 
@@ -201,6 +207,83 @@ class Cliente implements CoreInterface {
 		}
 		return $result;
 	}
+
+	public function leggi($db) {
+		
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%id_cliente%' => $this->getIdCliente()
+		);
+		
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CLIENTE_X_ID;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		foreach(pg_fetch_all($result) as $row) {
+			$this->setCodCliente($row[self::COD_CLIENTE]);
+			$this->setDesCliente($row[self::DES_CLIENTE]);
+			$this->setDesIndirizzoCliente($row[self::DES_INDIRIZZO_CLIENTE]);
+			$this->setDesCittaCliente($row[self::DES_CITTA_CLIENTE]);
+			$this->setCapCliente($row[self::CAP_CLIENTE]);
+			$this->setTipAddebito($row[self::TIP_ADDEBITO]);
+			$this->setDatCreazione($row[self::DAT_CREAZIONE]);
+			$this->setCodPiva($row[self::COD_PIVA]);
+			$this->setCodFisc($row[self::COD_FISC]);
+			$this->setCatCliente($row[self::CAT_CLIENTE]);
+			$this->setQtaRegistrazioniCliente($row[self::QTA_REGISTRAZIONI_CLIENTE]);
+		}
+		return $result;
+	}
+	
+	public function cancella($db) {
+	
+		if ($this->leggi($db)) {
+			/**
+			 * Cancello il conto del cliente
+			 * @var array $conto
+			 */
+			$sottoconto = Sottoconto::getInstance();
+			$conto = explode(",", $array["contiCliente"]);
+			
+			foreach(pg_fetch_all($result) as $row) {
+			
+				foreach ($conto as $contoClienti) {
+					$sottoconto->setCodConto($contoClienti);
+					$sottoconto->setCodSottoconto($this->getCodCliente());
+					$sottoconto->cancella($db);
+				}
+			}
+			
+			$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CLIENTE;
+			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+			$result = $db->getData($sql);		
+		}
+	}
+
+	public function update($db) {
+	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%id_cliente%' => $this->getIdCliente(),
+				'%cod_cliente%' => $this->getCodCliente(),
+				'%des_cliente%' => $this->getDesCliente(),
+				'%des_indirizzo_cliente%' => $this->getDesIndirizzoCliente(),
+				'%des_citta_cliente%' => $this->getDesCittaCliente(),
+				'%cap_cliente%' => $this->getCapCliente(),
+				'%tip_addebito%' => $this->getTipAddebito(),
+				'%cod_piva%' => $this->getCodPiva(),
+				'%cod_fisc%' => $this->getCodFisc(),
+				'%cat_cliente%' => $this->getCatCliente()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CLIENTE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}	
 	
 	/************************************************************************
 	 * Getters e setters
@@ -314,7 +397,12 @@ class Cliente implements CoreInterface {
 	public function setQtaClienti($qtaClienti) {
 		$this->qtaClienti = $qtaClienti;
 	}
-	
+	public function getQtaRegistrazioniCliente() {
+		return $this->qtaRegistrazioniCliente;
+	}
+	public function setQtaRegistrazioniCliente($qtaRegistrazioniCliente) {
+		$this->qtaRegistrazioniCliente = $qtaRegistrazioniCliente;
+	}	
 }
 
 ?>

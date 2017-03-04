@@ -26,7 +26,8 @@ class Sottoconto implements CoreInterface {
 	
 	// Queries
 	
-	private static $queryCreaSottoconto = "/configurazioni/creaSottoconto.sql";
+	const CREA_SOTTOCONTO     = "/configurazioni/creaSottoconto.sql";
+	const CANCELLA_SOTTOCONTO = "/configurazioni/deleteSottoconto.sql";
 	
 	
 	function __construct() {
@@ -49,12 +50,26 @@ class Sottoconto implements CoreInterface {
 				'%cod_sottoconto%' => $this->getCodSottoconto(),
 				'%des_sottoconto%' => $this->getDesSottoconto()
 		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::$queryCreaSottoconto;
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function cancella($db) {
+	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 		
+		$replace = array(
+				'%cod_conto%' => $this->getCodConto(),
+				'%cod_sottoconto%' => $this->getCodSottoconto()
+		);
+		$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_SOTTOCONTO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
+	
 	/************************************************************************
 	 * Getters e setters
 	 */

@@ -20,9 +20,12 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const CREA_CLIENTE = "Obj_creacliente";
 	const FORNITORE = "Obj_fornitore";
 	const CLIENTE = "Obj_cliente";
+	const CANCELLA_CLIENTE = "Obj_cancellacliente";
+	const CANCELLA_FORNITORE = "Obj_cancellafornitore";
 	const CATEGORIA_CLIENTE = "Obj_categoriacliente";
 	const CERCA_CFISC_CLIENTE = "Obj_cercacfisccliente";
 	const CERCA_PIVA_CLIENTE = "Obj_cercapivacliente";
+	const MODIFICA_CLIENTE = "Obj_modificacliente";
 
 	// Actions
 
@@ -30,7 +33,8 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const AZIONE_RICERCA_FORNITORE  = "../anagrafica/ricercaFornitoreFacade.class.php?modo=go";
 	const AZIONE_CREA_FORNITORE	    = "../anagrafica/creaFornitoreFacade.class.php?modo=go";
 	const AZIONE_CREA_CLIENTE		= "../anagrafica/creaClienteFacade.class.php?modo=go";
-
+	const AZIONE_MODIFICA_CLIENTE   = "../anagrafica/modificaClienteFacade.class.php?modo=go";
+	
 	// Errori e messaggi
 
 	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";

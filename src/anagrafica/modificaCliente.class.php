@@ -2,175 +2,150 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'modificaCliente.template.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'cliente.class.php';
+require_once 'categoriaCliente.class.php';
 
 class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	private static $_instance = null;
-
-	public static $azioneModificaCliente = "../anagrafica/modificaClienteFacade.class.php?modo=go";
-
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaCliente();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CLIENTE])) $_SESSION[self::MODIFICA_CLIENTE] = serialize(new ModificaCliente());
+		return unserialize($_SESSION[self::MODIFICA_CLIENTE]);
 	}
-
-	// ------------------------------------------------
 
 	public function start() {
 
-		require_once 'modificaCliente.template.php';
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$this->prelevaCliente($utility);
-
 		$modificaClienteTemplate = ModificaClienteTemplate::getInstance();
 		$this->preparaPagina($modificaClienteTemplate);
-			
+		
+		$db = Database::getInstance();		
+		$cliente = Cliente::getInstance();
+		$cliente->leggi($db);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		
+		$categoriaCliente = CategoriaCliente::getInstance();
+		$categoriaCliente->load();
+		$_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
+		
 		// Compone la pagina
-		include(self::$testata);
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+		echo $this->utility->tailTemplate($template);
+		
 		$modificaClienteTemplate->displayPagina();
-		include(self::$piede);
+		include($this->piede);
 	}
 
 	public function go() {
-
-		require_once 'modificaCliente.template.php';
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
+		
 		$modificaClienteTemplate = ModificaClienteTemplate::getInstance();
 
 		if ($modificaClienteTemplate->controlliLogici()) {
 
 			// Aggiornamento del DB ------------------------------
 
-			if ($this->aggiornaCliente($utility)) {
+			if ($this->aggiornaCliente()) {
 
 				$_SESSION["messaggio"] = "Cliente salvato con successo";
 
 				$this->preparaPagina($modificaClienteTemplate);
 
-				include(self::$testata);
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+				
 				$modificaClienteTemplate->displayPagina();
 
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
+				echo $this->utility->tailTemplate($template);
 					
-				include(self::$piede);
+				include($this->piede);
 			}
 			else {
 				
 				$_SESSION["messaggio"] = "Errore durante l'aggiornamento del cliente";
 				
 				$this->preparaPagina($modificaClienteTemplate);
-					
-				include(self::$testata);
+
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+				
 				$modificaClienteTemplate->displayPagina();
 					
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+				echo $this->utility->tailTemplate($template);
+				
+				include($this->piede);
 			}
 		}
 		else {
 
 			$this->preparaPagina($modificaClienteTemplate);
+
+			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+			echo $this->utility->tailTemplate($template);
 				
-			include(self::$testata);
 			$modificaClienteTemplate->displayPagina();
 				
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+			echo $this->utility->tailTemplate($template);
 				
-			include(self::$piede);				
+			include($this->piede);				
 		}
 	}
 
-	private function prelevaCliente($utility) {
+	private function aggiornaCliente() {
 
-		require_once 'database.class.php';
+		$cliente = Cliente::getInstance();
 		
 		$db = Database::getInstance();
 		$db->beginTransaction();
+
+		/**
+		 * Metto il doppio apostrofo e gli apici dove servono
+		 */
 		
-		$result = $this->leggiIdCliente($db, $utility, $_SESSION["idcliente"]);
-
-		if ($result) {
-
-			$cliente = pg_fetch_all($result);
-			foreach ($cliente as $row) {
-
-				$_SESSION["codcliente"] = $row["cod_cliente"];
-				$_SESSION["descliente"] = $row["des_cliente"];
-				$_SESSION["indcliente"] = $row["des_indirizzo_cliente"];
-				$_SESSION["cittacliente"] = $row["des_citta_cliente"];
-				$_SESSION["capcliente"] = $row["cap_cliente"];
-				$_SESSION["tipoaddebito"] = $row["tip_addebito"];
-				$_SESSION["codpiva"] = $row["cod_piva"];
-				$_SESSION["codfisc"] = $row["cod_fisc"];
-				$_SESSION["catcliente"] = $row["cat_cliente"];
-			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati cliente : " . $_SESSION["idcliente"] . " <<<<<<<<" );
-		}
-		$db->commitTransaction();
-	}
-
-	private function aggiornaCliente($utility) {
-
-		require_once 'database.class.php';
-
-		$db = Database::getInstance();
-		$db->beginTransaction();
-
-		$idcliente = $_SESSION["idcliente"];
+		$cliente->setDescliente(str_replace("'","''",$cliente->getDesCliente()));
 		
-		if (!is_numeric($idcliente))
-			$idcliente = ($_SESSION["idcliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["idcliente"]) : "null";
+		$indirizzo = ($cliente->getDesIndirizzoCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesIndirizzoCliente()) . "'" : "null" ;
+		$cliente->setDesIndirizzoCliente($indirizzo); 
 		
-		$codcliente = $_SESSION["codcliente"];
-		$descliente = str_replace("'","''",$_SESSION["descliente"]);
-		$indcliente = ($_SESSION["indcliente"] != "") ? "'" . str_replace("'","''",$_SESSION["indcliente"]) . "'" : "null" ;
-		$cittacliente = ($_SESSION["cittacliente"] != "") ? "'" . str_replace("'","''",$_SESSION["cittacliente"]) . "'" : "null" ;
-		$capcliente = ($_SESSION["capcliente"] != "") ? "'" . $_SESSION["capcliente"] . "'" : "null" ;
-		$tipoaddebito = $_SESSION["tipoaddebito"];
+		$cittacliente = ($cliente->getDesCittaCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesCittaCliente()) . "'" : "null" ;
+		$cliente->setDesCittaCliente($cittacliente);
 		
-		$codpiva = ($_SESSION["codpiva"] != "") ? "'" . $_SESSION["codpiva"] . "'" : "null" ;
-		$codfisc = ($_SESSION["codfisc"] != "") ? "'" . $_SESSION["codfisc"] . "'" : "null" ;
-		$catcliente = ($_SESSION["catcliente"] != "") ? "'" . $_SESSION["catcliente"] . "'" : "null" ;
-
-		if ($this->updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente)) {
+		$capcliente = ($cliente->getCapCliente() != "") ? "'" . $cliente->getCapCliente() . "'" : "null" ;
+		$cliente->setCapCliente($capcliente);
+		
+		$codpiva = ($cliente->getCodPiva() != "") ? "'" . $cliente->getCodPiva() . "'" : "null" ;
+		$cliente->setCodPiva($codpiva);		
+		
+		$codfisc = ($cliente->getCodFisc() != "") ? "'" . $cliente->getCodFisc() . "'" : "null" ;
+		$cliente->setCodFisc($codfisc);
+				
+		$catcliente = ($cliente->getCatCliente() != "") ? "'" . $cliente->getCatCliente() . "'" : "null" ;
+		$cliente->setCatCliente($catcliente);
+		
+		if ($cliente->update($db)) {
 
 			$db->commitTransaction();
 			return TRUE;
@@ -184,19 +159,9 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
 
 	private function preparaPagina($modificaClienteTemplate) {
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		$modificaClienteTemplate->setAzione(self::$azioneModificaCliente);
+		$modificaClienteTemplate->setAzione(self::AZIONE_MODIFICA_CLIENTE);
 		$modificaClienteTemplate->setConfermaTip("%ml.salvaTip%");
 		$modificaClienteTemplate->setTitoloPagina("%ml.modificaCliente%");
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
-		// Prelievo delle categorie -------------------------------------------------------------
-		
-		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);
 	}
 }
 

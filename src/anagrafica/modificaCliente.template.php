@@ -1,32 +1,29 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once "anagrafica.presentation.interface.php";
+require_once "cliente.class.php";
+require_once "categoriaCliente.class.php";
+require_once 'utility.class.php';
 
-class ModificaClienteTemplate extends AnagraficaAbstract {
+class ModificaClienteTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/modificaCliente.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaClienteTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CLIENTE_TEMPLATE])) $_SESSION[self::MODIFICA_CLIENTE_TEMPLATE] = serialize(new ModificaClienteTemplate());
+		return unserialize($_SESSION[self::MODIFICA_CLIENTE_TEMPLATE]);
 	}
 
 	// template ------------------------------------------------
@@ -35,6 +32,8 @@ class ModificaClienteTemplate extends AnagraficaAbstract {
 
 	public function controlliLogici() {
 
+		$cliente = Cliente::getInstance();
+		
 		$esito = TRUE;
 		$msg = "<br>";
 	
@@ -42,17 +41,17 @@ class ModificaClienteTemplate extends AnagraficaAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 
-		if ($_SESSION["catcliente"] == "") {
+		if ($cliente->getCatCliente() == "") {
 			$msg = $msg . "<br>&ndash; Manca la categoria del cliente";
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["codcliente"] == "") {
+		if ($cliente->getCodCliente() == "") {
 			$msg = $msg . "<br>&ndash; Manca il codice del cliente";
 			$esito = FALSE;
 		}
 
-		if ($_SESSION["descliente"] == "") {
+		if ($cliente->getDesCliente() == "") {
 			$msg = $msg . "<br>&ndash; Manca la descrizione del cliente";
 			$esito = FALSE;
 		}
@@ -69,13 +68,13 @@ class ModificaClienteTemplate extends AnagraficaAbstract {
 // 			}
 // 		}
 
-		if (($_SESSION["esitoPivaCliente"] != "P.iva Ok!") and ($_SESSION["esitoPivaCliente"] != "")) {
+		if (($cliente->getEsitoPivaCliente() != "P.iva Ok!") and ($cliente->getEsitoPivaCliente() != "")) {
 			$msg = $msg . "<br>&ndash; P.iva cliente gi&agrave; esistente";
 			unset($_SESSION["codpiva"]);
 			$esito = FALSE;
 		}
 		
-		if (($_SESSION["esitoCfisCliente"] != "C.fisc Ok!") and ($_SESSION["esitoCfisCliente"] != "")) {
+		if (($cliente->getEsitoCfisCliente() != "C.fisc Ok!") and ($cliente->getEsitoCfisCliente() != "")) {
 			$msg = $msg . "<br>&ndash; C.fisc cliente gi&agrave; esistente";
 			unset($_SESSION["codfisc"]);
 			$esito = FALSE;
@@ -95,36 +94,32 @@ class ModificaClienteTemplate extends AnagraficaAbstract {
 
 	public function displayPagina() {
 
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+		$cliente = Cliente::getInstance();
+		$categoriaCliente = CategoriaCliente::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_MODIFICA_CLIENTE;
 		
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
-				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
+				'%elenco_categorie_cliente%' => $categoriaCliente->getElencoCategorieCliente(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%codcliente%' => $_SESSION["codcliente"],
-				'%descliente%' => str_replace("'","&apos;",$_SESSION["descliente"]),
-				'%indcliente%' => str_replace("'","&apos;",$_SESSION["indcliente"]),
-				'%cittacliente%' => str_replace("'","&apos;",$_SESSION["cittacliente"]),
-				'%capcliente%' => $_SESSION["capcliente"],
-				'%codpiva%' => $_SESSION["codpiva"],
-				'%codfisc%' => $_SESSION["codfisc"],
-				'%catcliente%' => $_SESSION["catcliente"],
-				'%bonifico_checked%' => (trim($_SESSION["tipoaddebito"]) == "BONIFICO") ? "checked" : "",
-				'%riba_checked%' => (trim($_SESSION["tipoaddebito"]) == "RIBA") ? "checked" : "",
-				'%rimdiretta_checked%' => (trim($_SESSION["tipoaddebito"]) == "RIM_DIR") ? "checked" : "",
-				'%assegnobancario_checked%' => (trim($_SESSION["tipoaddebito"]) == "ASS_BAN") ? "checked" : "",
-				'%addebitodiretto_checked%' => (trim($_SESSION["tipoaddebito"]) == "ADD_DIR") ? "checked" : ""
+				'%codcliente%' => $cliente->getCodCliente(),
+				'%descliente%' => str_replace("'","&apos;",$cliente->getDesCliente()),
+				'%indcliente%' => str_replace("'","&apos;",$cliente->getDesIndirizzoCliente()),
+				'%cittacliente%' => str_replace("'","&apos;",$cliente->getDesCittaCliente()),
+				'%capcliente%' => $cliente->getCapCliente(),
+				'%codpiva%' => $cliente->getCodPiva(),
+				'%codfisc%' => $cliente->getCodFisc(),
+				'%catcliente%' => $cliente->getCatCliente(),
+				'%bonifico_checked%' => (trim($cliente->getTipAddebito()) == "BONIFICO") ? "checked" : "",
+				'%riba_checked%' => (trim($cliente->getTipAddebito()) == "RIBA") ? "checked" : "",
+				'%rimdiretta_checked%' => (trim($cliente->getTipAddebito()) == "RIM_DIR") ? "checked" : "",
+				'%assegnobancario_checked%' => (trim($cliente->getTipAddebito()) == "ASS_BAN") ? "checked" : "",
+				'%addebitodiretto_checked%' => (trim($cliente->getTipAddebito()) == "ADD_DIR") ? "checked" : ""
 		);
-	
-		$utility = Utility::getInstance();
 	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
