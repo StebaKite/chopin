@@ -25,7 +25,7 @@ function aggiungiDettaglio() {
 	if($('#dare').is(':checked')) { var D_A = $("#dare").val(); }
 	if($('#avere').is(':checked')) { var D_A = $("#avere").val(); }
 
-	var conto = $("#conti").val();	
+	var conto = $("#conti").val().replace(",",".");			// tolgo eventuali virgole nella descrizione  del conto	
 	var idconto = conto.substring(0, 6);
 	var importo = $("#importo").val();
 	var importoNormalizzato = importo.trim().replace(",", ".");
@@ -43,7 +43,7 @@ function aggiungiDettaglio() {
 	$("#importo").val("");
 	$('#conti').prop("selectedIndex",0).selectmenu('refresh');
 	$('#dare').attr('checked', true);	
-}
+}dettInseriti
 
 function addDett(dettaglio) {
 	
