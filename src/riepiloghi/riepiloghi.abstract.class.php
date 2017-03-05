@@ -26,6 +26,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract {
 	public static $queryCostiFissiConSaldi = "/riepiloghi/costiFissiConSaldi.sql";
 	public static $queryAndamentoCostiNegozio = "/riepiloghi/andamentoCostiNegozio.sql";
 	public static $queryAndamentoRicaviNegozio = "/riepiloghi/andamentoRicaviNegozio.sql";
+	public static $queryAndamentoRicaviMercato = "/riepiloghi/andamentoRicaviMercato.sql";
 	
 	function __construct() {
 	}
@@ -339,7 +340,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract {
 	}
 	
 	/**
-	 * Questo metodo estrai un riepilogo di totali per conto in Avere per mese
+	 * Questo metodo estrae un riepilogo di totali per conto in Avere per mese
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @param unknown $replace
@@ -388,6 +389,34 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract {
 				$_SESSION['numRicaviTrovatiRiferimento'] = 0;
 			}
 			return $_SESSION['numRicaviTrovatiRiferimento'];
+		}
+		else return "";
+	}
+
+	/**
+	 * Questo metodo ottiene una totalizzazione di ricavi per mese per negozio
+	 * @param unknown $utility
+	 * @param unknown $db
+	 * @param unknown $replace
+	 * @return number|string
+	 */
+	public function ricercaVociAndamentoRicaviMercato($utility, $db, $replace, $negozio) {
+	
+		$array = $utility->getConfig();
+		$sqlTemplate = self::$root . $array['query'] . self::$queryAndamentoRicaviMercato;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	
+		if ($result) {
+			if (pg_num_rows($result) > 0) {
+				$_SESSION["elencoVociAndamentoRicaviMercato_" . $negozio] = $result;
+				$_SESSION["numRicaviTrovati_". $negozio] = pg_num_rows($result);
+			}
+			else {
+				unset($_SESSION["elencoVociAndamentoRicaviMercato_" . $negozio]);
+				$_SESSION["numRicaviTrovati_". $negozio] = 0;
+			}
+			return $_SESSION["numRicaviTrovati_". $negozio];
 		}
 		else return "";
 	}
@@ -1061,6 +1090,25 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract {
 				
 			$tabs .= "</div>";
 		}
+		return $tabs;
+	}
+
+	public function makeTabsAndamentoMercati($andamentoMercatiTables) {
+	
+		$tabs = "";
+		$tabs  = "	<div class='tabs'>";
+		$tabs .= "		<ul>";
+		
+		foreach ($andamentoMercatiTables as $key => $mercatoTable ) {			
+			$tabs .= "<li><a href='#tabs-" . $key . "'>" . $key . "</a></li>";
+		}
+		$tabs .= "		</ul>";
+
+		foreach ($andamentoMercatiTables as $key => $mercatoTable ) {
+			$tabs .= "<div id='tabs-" . $key . "'>" . $mercatoTable . "</div>";
+		}
+		$tabs .= "</div>";
+		
 		return $tabs;
 	}
 	
@@ -2006,6 +2054,123 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract {
 		"</div>";
 	
 		return $margineContribuzione;
+	}
+
+	public function makeAndamentoRicaviMercatoTable($vociAndamento) {
+	
+		$risultato_andamento = "";
+	
+		if (count($vociAndamento) > 0 ) {
+	
+			$risultato_andamento =
+			"<table class='result'>" .
+			"	<thead>" .
+			"		<th width='200'>%ml.desmercato%</th>" .
+			"		<th width='50'>%ml.gen%</th>" .
+			"		<th width='50'>%ml.feb%</th>" .
+			"		<th width='50'>%ml.mar%</th>" .
+			"		<th width='50'>%ml.apr%</th>" .
+			"		<th width='50'>%ml.mag%</th>" .
+			"		<th width='50'>%ml.giu%</th>" .
+			"		<th width='50'>%ml.lug%</th>" .
+			"		<th width='50'>%ml.ago%</th>" .
+			"		<th width='50'>%ml.set%</th>" .
+			"		<th width='50'>%ml.ott%</th>" .
+			"		<th width='50'>%ml.nov%</th>" .
+			"		<th width='50'>%ml.dic%</th>" .
+			"		<th width='50'>%ml.totale%</th>" .
+			"	</thead>" .
+			"</table>" .
+			"<div class='scroll-bilancio'>" .
+			"	<table class='result'>" .
+			"		<tbody>";
+	
+			$desmercato_break = "";
+			$totaliMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+			$totaliComplessiviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);		// dodici mesi
+	
+			/**
+			 * Salvo i totali che mi occorrono per il calcolo dell'MCT per mese
+			 */
+	
+			$totaliRicaviMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);
+	
+			foreach($vociAndamento as $row) {
+	
+				$totmercato = $row['imp_ricavo_mercato'];
+	
+				if (trim($row['des_mercato']) != $desmercato_break ) {
+	
+					if ($desmercato_break != "") {
+	
+						/**
+						 * A rottura creo le colonne accumulate e inizializzo l'array
+						 */
+						$totale_mercato = 0;
+	
+						for ($i = 1; $i < 13; $i++) {
+							if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+							else $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+							$totale_mercato += $totaliMesi[$i];
+						}
+						$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_mercato), 0, ',', '.') . "</td>";
+	
+						$risultato_andamento .= "</tr>";
+						for ($i = 1; $i < 13; $i++) {$totaliMesi[$i] = 0;}
+	
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_mercato']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totmercato;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totmercato;
+					}
+					else {
+						$risultato_andamento .= "<tr><td width='208' align='left'>" . trim($row['des_mercato']) . "</td>";
+						$totaliMesi[$row['mm_registrazione']] = $totmercato;
+						$totaliComplessiviMesi[$row['mm_registrazione']] += $totmercato;
+					}
+					$desmercato_break = trim($row['des_mercato']);
+				}
+				else {
+					$totaliMesi[$row['mm_registrazione']] += $totmercato;
+					$totaliComplessiviMesi[$row['mm_registrazione']] += $totmercato;
+				}
+			}
+				
+			/**
+			 * Ultima riga
+			 */
+	
+			$totale_mercato = 0;
+				
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+				$totale_mercato += $totaliMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_mercato), 0, ',', '.') . "</td>";
+	
+			$risultato_andamento .= "</tr>";
+			$risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
+	
+			/**
+			 * Totali mensili finali
+			 */
+				
+			for ($i = 1; $i < 13; $i++) {
+				if ($totaliComplessiviMesi[$i] == 0) $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
+				else $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
+				$totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+			}
+			$risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_anno), 0, ',', '.') . "</td>";
+			$risultato_andamento .= "</tr></tbody></table></div>";
+		}
+	
+		/**
+		 * Metto in sessione i totali per mese dei ricavi che mi occorrono per creare le tabella dell'MCT progressivo
+		 */
+	
+		$_SESSION["totaliComplessiviRicaviMesi"] = $totaliComplessiviMesi;
+	
+		return $risultato_andamento;
 	}
 }		
 

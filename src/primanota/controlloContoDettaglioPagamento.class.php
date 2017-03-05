@@ -47,37 +47,43 @@ class ControlloContoDettaglioPagamento extends PrimanotaAbstract {
 
 		$array = $utility->getConfig();
 		
-		/**
-		 * Faccio il controllo del conto solo per i conti fornitori 
-		 */
-		
-		if (strstr($array['contiFornitore'], trim(substr($_SESSION["conto"],0,3)))) {
+		if ($_SESSION["conto"] != "") {
 			
 			/**
-			 *  cerco il codice del fornitore selezionato
+			 * Faccio il controllo del conto solo per i conti fornitori 
 			 */
 			
-			$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["fornitore"])) : "null" ;
-			
-			/**
-			 * il codice del fornitore deve corrispondere al codice del sottoconto selezionato
-			 */
-			
-			if ($fornitore != "null") {
-				if (trim(substr($_SESSION["conto"], 3)) != trim($fornitore)) {
-					echo "Il conto selezionato non appartiene a questo fornitore, dettaglio non inserito" ;
+			if (strstr($array['contiFornitore'], trim(substr($_SESSION["conto"],0,3)))) {
+				
+				/**
+				 *  cerco il codice del fornitore selezionato
+				 */
+				
+				$fornitore = ($_SESSION["fornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["fornitore"])) : "null" ;
+				
+				/**
+				 * il codice del fornitore deve corrispondere al codice del sottoconto selezionato
+				 */
+				
+				if ($fornitore != "null") {
+					if (trim(substr($_SESSION["conto"], 3)) != trim($fornitore)) {
+						echo "Il conto selezionato non appartiene a questo fornitore, dettaglio non inserito" ;
+					}
+					else {
+						echo "Dettaglio ok";
+					}
 				}
 				else {
-					echo "Dettaglio ok";
+					echo "Fornitore non esistente, controllo conto dettaglio non eseguito!";
 				}
 			}
 			else {
-				echo "Fornitore non esistente, controllo conto dettaglio non eseguito!";
-			}
+				echo "Dettaglio ok";
+			}		
 		}
 		else {
-			echo "Dettaglio ok";
-		}		
+			echo "Conto non selezionato, dettaglio registrazione non inserito";
+		}
 	}
 	
 	/**
