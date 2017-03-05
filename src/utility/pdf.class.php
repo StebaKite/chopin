@@ -150,7 +150,7 @@ class Pdf extends FPDF {
 		$this->SetFont('','B',10);
 		 
 		// Header
-		$w = array(20, 110, 20, 20, 20);
+		$w = array(20, 80, 30, 30, 30);
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
 		$this->Ln();
@@ -172,7 +172,6 @@ class Pdf extends FPDF {
 			if ($row['ind_dareavere'] == 'D') {
 				$totaleDare = $totaleDare + $row['imp_registrazione'];
 				$impDare = $row['imp_registrazione'];
-				$euroDare = EURO;
 				$euroAvere = "";
 				$impAvere = "";
 			}
@@ -181,7 +180,6 @@ class Pdf extends FPDF {
 				$impDare = "";
 				$impAvere = $row['imp_registrazione'];
 				$euroDare = "";
-				$euroAvere = EURO;
 			}
 			
 			if (trim($row['tip_conto']) == "Dare") {
@@ -196,15 +194,15 @@ class Pdf extends FPDF {
 				
 			$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',date("d/m/Y",strtotime($row['dat_registrazione']))),'LR',0,'L',$fill);
 			$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',trim($row['des_registrazione'])),'LR',0,'L',$fill);
-			$this->Cell($w[2],6, $euroDare . number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
-			$this->Cell($w[3],6, $euroAvere . number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[2],6,number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[3],6,number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);
 			
 			if ($saldo < 0) {
 				$this->SetTextColor(255,0,0);
 				$this->SetFont('','B',10);
 			}
 
-			$this->Cell($w[4],6, EURO . number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[4],6,number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
 			$this->Ln();
 							
 			$this->SetFont('');
@@ -216,10 +214,10 @@ class Pdf extends FPDF {
 		
 		$this->SetFont('','B',10);
 		$this->Cell($w[0],6,'','LR',0,'L',$fill);
-		$this->Cell($w[1],6,'Totale','LR',0,'R',$fill);
-		$this->Cell($w[2],6, EURO . number_format($totaleDare, 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[3],6, EURO . number_format($totaleAvere, 2, ',', '.'),'LR',0,'R',$fill);
-		$this->Cell($w[4],6, EURO . number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[1],6,'Totale ' . EURO ,'LR',0,'R',$fill);
+		$this->Cell($w[2],6,number_format($totaleDare, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[3],6,number_format($totaleAvere, 2, ',', '.'),'LR',0,'R',$fill);
+		$this->Cell($w[4],6,number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 		
 		$this->Cell(array_sum($w),0,'','T');
