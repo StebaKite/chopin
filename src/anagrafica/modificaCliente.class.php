@@ -125,7 +125,7 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
 		 * Metto il doppio apostrofo e gli apici dove servono
 		 */
 		
-		$cliente->setDescliente(str_replace("'","''",$cliente->getDesCliente()));
+		$cliente->setDesCliente(str_replace("'","''",$cliente->getDesCliente()));
 		
 		$indirizzo = ($cliente->getDesIndirizzoCliente() != "") ? "'" . str_replace("'","''",$cliente->getDesIndirizzoCliente()) . "'" : "null" ;
 		$cliente->setDesIndirizzoCliente($indirizzo); 

@@ -435,25 +435,6 @@ abstract class Nexus6Abstract {
 	 *
 	 * @param unknown $db
 	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @return unknown
-	 */
-	public function leggiIdFornitore($db, $utility, $idfornitore) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
 	 * @param unknown $idcliente
 	 * @return unknown
 	 */
@@ -507,24 +488,6 @@ abstract class Nexus6Abstract {
 
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @return unknown
-	 */
-	public function prelevaIdFornitore($db, $utility, $idfornitore) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
 
 	/**
 	 *

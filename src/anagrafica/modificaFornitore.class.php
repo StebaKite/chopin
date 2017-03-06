@@ -2,153 +2,118 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'modificaFornitore.template.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'fornitore.class.php';
 
 class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	private static $_instance = null;
-
-	public static $azioneModificaFornitore = "../anagrafica/modificaFornitoreFacade.class.php?modo=go";
-
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaFornitore();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_FORNITORE])) $_SESSION[self::MODIFICA_FORNITORE] = serialize(new ModificaFornitore());
+		return unserialize($_SESSION[self::MODIFICA_FORNITORE]);
 	}
-
-	// ------------------------------------------------
 
 	public function start() {
 
-		require_once 'modificaFornitore.template.php';
-		require_once 'utility.class.php';
-		
-		$utility = Utility::getInstance();
-		$this->prelevaFornitore($utility);
-		
 		$modificaFornitoreTemplate = ModificaFornitoreTemplate::getInstance();
 		$this->preparaPagina($modificaFornitoreTemplate);
-			
+		
+		$db = Database::getInstance();
+		$fornitore = Fornitore::getInstance();
+		$fornitore->leggi($db);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+				
 		// Compone la pagina
-		include(self::$testata);
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+		echo $this->utility->tailTemplate($template);
+		
 		$modificaFornitoreTemplate->displayPagina();
-		include(self::$piede);				
+		include($this->piede);
 	}
 	
 	public function go() {
-	
-		require_once 'modificaFornitore.template.php';
-		require_once 'utility.class.php';
 
-		$utility = Utility::getInstance();
 		$modificaFornitoreTemplate = ModificaFornitoreTemplate::getInstance();
 		
 		if ($modificaFornitoreTemplate->controlliLogici()) {
 		
 			// Aggiornamento del DB ------------------------------
 		
-			if ($this->aggiornaFornitore($utility)) {
+			if ($this->aggiornaFornitore()) {
 		
 				$_SESSION["messaggio"] = "Fornitore salvato con successo";
 		
 				$this->preparaPagina($modificaFornitoreTemplate);
-		
-				include(self::$testata);
+
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+				
 				$modificaFornitoreTemplate->displayPagina();
-		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
+
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
+				echo $this->utility->tailTemplate($template);
+									
+				include($this->piede);
 			}
 			else {
 					
 				$this->preparaPagina($modificaFornitoreTemplate);
-					
-				include(self::$testata);
-				$modificaFornitoreTemplate->displayPagina();
-					
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
-			}
-		}
-	}
 
-	private function prelevaFornitore($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->prelevaIdFornitore($db, $utility, $_SESSION["idfornitore"]);
-	
-		if ($result) {
-	
-			$fornitore = pg_fetch_all($result);
-			foreach ($fornitore as $row) {
-	
-				$_SESSION["codfornitore"] = $row["cod_fornitore"];
-				$_SESSION["desfornitore"] = $row["des_fornitore"];
-				$_SESSION["indfornitore"] = $row["des_indirizzo_fornitore"];
-				$_SESSION["cittafornitore"] = $row["des_citta_fornitore"];
-				$_SESSION["capfornitore"] = $row["cap_fornitore"];
-				$_SESSION["tipoaddebito"] = $row["tip_addebito"];
-				$_SESSION["numggscadenzafattura"] = $row["num_gg_scadenza_fattura"];
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+				
+				$modificaFornitoreTemplate->displayPagina();
+
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
+				echo $this->utility->tailTemplate($template);
+					
+				include($this->piede);
 			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati fornitore : " . $_SESSION["idfornitore"] . " <<<<<<<<" );
 		}
 	}
 
 	private function aggiornaFornitore($utility) {
-	
-		require_once 'database.class.php';
-	
+
+		$fornitore = Fornitore::getInstance();
+		
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
-		$idfornitore = $_SESSION["idfornitore"];
+		/**
+		 * Metto il doppio apostrofo e gli apici dove servono
+		 */
 		
-		if (!is_numeric($idfornitore))
-			$idfornitore = ($_SESSION["idfornitore"] != "") ? $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["idfornitore"]) : "null" ;
+		$fornitore->setDesFornitore(str_replace("'","''",$fornitore->getDesFornitore()));		
 		
-		$codfornitore = $_SESSION["codfornitore"];
-		$desfornitore = $_SESSION["desfornitore"];		
-		$indfornitore = ($_SESSION["indfornitore"] != "") ? "'" . $_SESSION["indfornitore"] . "'" : "null" ;
-		$cittafornitore = ($_SESSION["cittafornitore"] != "") ? "'" . $_SESSION["cittafornitore"] . "'" : "null" ;
-		$capfornitore = ($_SESSION["capfornitore"] != "") ? "'" . $_SESSION["capfornitore"] . "'" : "null" ;
-		$tipoaddebito = $_SESSION["tipoaddebito"];
-		$numggscadenzafattura = $_SESSION["numggscadenzafattura"];
+		$indirizzo = ($fornitore->getDesIndirizzoFornitore() != "") ? "'" . $fornitore->getDesIndirizzoFornitore() . "'" : "null" ;
+		$fornitore->setDesIndirizzoFornitore($indirizzo);
+
+		$citta = ($fornitore->getDesCittaFornitore() != "") ? "'" . $fornitore->getDesCittaFornitore() . "'" : "null" ;
+		$fornitore->setDesCittaFornitore($citta);
+
+		$cap = ($fornitore->getCapFornitore() != "") ? "'" . $fornitore->getCapFornitore() . "'" : "null" ;
+		$fornitore->setCapFornitore($cap);
 	
-		if ($this->updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura)) {
+		if ($fornitore->update($db)) {
 	 
 			$db->commitTransaction();
 			return TRUE;
@@ -162,10 +127,7 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 	
 	private function preparaPagina($modificaFornitoreTemplate) {
 	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$modificaFornitoreTemplate->setAzione(self::$azioneModificaFornitore);
+		$modificaFornitoreTemplate->setAzione(self::AZIONE_MODIFICA_FORNITORE);
 		$modificaFornitoreTemplate->setConfermaTip("%ml.salvaTip%");
 		$modificaFornitoreTemplate->setTitoloPagina("%ml.modificaFornitore%");
 	}

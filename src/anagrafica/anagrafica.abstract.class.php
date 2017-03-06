@@ -68,38 +68,6 @@ abstract class AnagraficaAbstract extends Nexus6Abstract {
 
 	}
 
-	/**
-	 * Questo metodo aggiorna i dati del fornitore
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @param unknown $codfornitore
-	 * @param unknown $desfornitore
-	 * @param unknown $indfornitore
-	 * @param unknown $cittafornitore
-	 * @param unknown $capfornitore
-	 * @param unknown $tipoaddebito
-	 * @param unknown $numggscadenzafattura
-	 * @return unknown
-	 */
-	public function updateFornitore($db, $utility, $idfornitore, $codfornitore, $desfornitore, $indfornitore, $cittafornitore, $capfornitore, $tipoaddebito, $numggscadenzafattura) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore),
-				'%cod_fornitore%' => trim($codfornitore),
-				'%des_fornitore%' => trim($desfornitore),
-				'%des_indirizzo_fornitore%' => trim($indfornitore),
-				'%des_citta_fornitore%' => trim($cittafornitore),
-				'%cap_fornitore%' => trim($capfornitore),
-				'%tip_addebito%' => trim($tipoaddebito),
-				'%num_gg_scadenza_fattura%' => trim($numggscadenzafattura)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
 
 	/**
 	 * Questo metodo crea un nuovo mercato

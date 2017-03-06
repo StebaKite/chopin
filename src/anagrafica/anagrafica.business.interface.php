@@ -26,7 +26,8 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const CERCA_CFISC_CLIENTE = "Obj_cercacfisccliente";
 	const CERCA_PIVA_CLIENTE = "Obj_cercapivacliente";
 	const MODIFICA_CLIENTE = "Obj_modificacliente";
-
+	const MODIFICA_FORNITORE = "Obj_modificafornitore";
+	
 	// Actions
 
 	const AZIONE_RICERCA_CLIENTE    = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
@@ -34,6 +35,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const AZIONE_CREA_FORNITORE	    = "../anagrafica/creaFornitoreFacade.class.php?modo=go";
 	const AZIONE_CREA_CLIENTE		= "../anagrafica/creaClienteFacade.class.php?modo=go";
 	const AZIONE_MODIFICA_CLIENTE   = "../anagrafica/modificaClienteFacade.class.php?modo=go";
+	const AZIONE_MODIFICA_FORNITORE = "../anagrafica/modificaFornitoreFacade.class.php?modo=go";
 	
 	// Errori e messaggi
 

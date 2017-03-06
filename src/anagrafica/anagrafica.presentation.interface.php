@@ -20,11 +20,12 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 
 	// Pagine
 
-	const PAGINA_RICERCA_CLIENTE   = "/anagrafica/ricercaCliente.form.html";
-	const PAGINA_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.form.html";
-	const PAGINA_CREA_FORNITORE    = "/anagrafica/creaFornitore.form.html";
-	const PAGINA_CREA_CLIENTE      = "/anagrafica/creaCliente.form.html";
-	const PAGINA_MODIFICA_CLIENTE  = "/anagrafica/modificaCliente.form.html";
+	const PAGINA_RICERCA_CLIENTE    = "/anagrafica/ricercaCliente.form.html";
+	const PAGINA_RICERCA_FORNITORE  = "/anagrafica/ricercaFornitore.form.html";
+	const PAGINA_CREA_FORNITORE     = "/anagrafica/creaFornitore.form.html";
+	const PAGINA_CREA_CLIENTE       = "/anagrafica/creaCliente.form.html";
+	const PAGINA_MODIFICA_CLIENTE   = "/anagrafica/modificaCliente.form.html";
+	const PAGINA_MODIFICA_FORNITORE = "/anagrafica/modificaFornitore.form.html";
 
 	// Bottoni
 
@@ -55,12 +56,13 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	
 	// Oggetti
 
-	const RICERCA_CLIENTE_TEMPLATE   = "Obj_ricercaclientetemplate";
-	const RICERCA_FORNITORE_TEMPLATE = "Obj_ricercafornitoretemplate";
-	const CREA_FORNITORE_TEMPLATE    = "Obj_creafornitoretemplate";
-	const CREA_CLIENTE_TEMPLATE		 = "Obj_creaclientetemplate";
-	const MODIFICA_CLIENTE_TEMPLATE  = "Obj_modificaclientetemplate";
-
+	const RICERCA_CLIENTE_TEMPLATE     = "Obj_ricercaclientetemplate";
+	const RICERCA_FORNITORE_TEMPLATE   = "Obj_ricercafornitoretemplate";
+	const CREA_FORNITORE_TEMPLATE      = "Obj_creafornitoretemplate";
+	const CREA_CLIENTE_TEMPLATE		   = "Obj_creaclientetemplate";
+	const MODIFICA_CLIENTE_TEMPLATE    = "Obj_modificaclientetemplate";
+	const MODIFICA_FORNITORE_TEMPLATE  = "Obj_modificafornitoretemplate";
+	
 	// Metodi
 
 	public function getInstance();

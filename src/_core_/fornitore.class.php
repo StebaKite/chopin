@@ -33,6 +33,7 @@ class Fornitore implements CoreInterface {
 	private $num_gg_scadenza_fattura;
 	private $tip_addebito;
 	private $dat_creazione;
+	private $qtaRegistrazioniFornitore;
 
 	// Altri dati funzionali
 	
@@ -139,8 +140,8 @@ class Fornitore implements CoreInterface {
 		return $result;
 	}
 
-	public function cancella($db) {
-	
+	public function cancella($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
@@ -171,6 +172,52 @@ class Fornitore implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
+	}
+
+	public function leggi($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($this->getIdFornitore())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		foreach(pg_fetch_all($result) as $row) {
+			$this->setCodFornitore($row[self::COD_FORNITORE]);
+			$this->setDesFornitore($row[self::DES_FORNITORE]);
+			$this->setDesIndirizzoFornitore($row[self::DES_INDIRIZZO_FORNITORE]);
+			$this->setDesCittaFornitore($row[self::DES_CITTA_FORNITORE]);
+			$this->setCapFornitore($row[self::CAP_FORNITORE]);
+			$this->setTipAddebito($row[self::TIP_ADDEBITO]);
+			$this->setDatCreazione($row[self::DAT_CREAZIONE]);
+			$this->setNumGgScadenzaFattura($row[self::NUM_GG_SCADENZA_FATTURA]);
+			$this->setQtaRegistrazioniFornitore($row[self::QTA_REGISTRAZIONI_FORNITORE]);
+		}
+		return $result;
+	}
+	
+	public function update($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%id_fornitore%' => $this->getIdFornitore(),
+				'%cod_fornitore%' => $this->getCodFornitore(),
+				'%des_fornitore%' => $this->getDesFornitore(),
+				'%des_indirizzo_fornitore%' => $this->getDesIndirizzoFornitore(),
+				'%des_citta_fornitore%' => $this->getDesCittaFornitore(),
+				'%cap_fornitore%' => $this->getCapFornitore(),
+				'%tip_addebito%' => $this->getTipAddebito(),
+				'%num_gg_scadenza_fattura%' => $this->getNumGgScadenzaFattura()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_FORNITORE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
 	}
 	
 	/************************************************************************
@@ -259,6 +306,13 @@ class Fornitore implements CoreInterface {
 	}
 	public function setQtaFornitori($qtaFornitori) {
 		$this->qtaFornitori = $qtaFornitori;
+	}
+
+	public function getQtaRegistrazioniFornitore() {
+		return $this->qtaRegistrazioniFornitore;
+	}
+	public function setQtaRegistrazioniFornitore($qtaRegistrazioniFornitore) {
+		$this->qtaRegistrazioniFornitore = $qtaRegistrazioniFornitore;
 	}
 	
 }
