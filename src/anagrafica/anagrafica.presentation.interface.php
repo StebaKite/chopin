@@ -26,7 +26,8 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const PAGINA_CREA_CLIENTE       = "/anagrafica/creaCliente.form.html";
 	const PAGINA_MODIFICA_CLIENTE   = "/anagrafica/modificaCliente.form.html";
 	const PAGINA_MODIFICA_FORNITORE = "/anagrafica/modificaFornitore.form.html";
-
+	const PAGINA_RICERCA_MERCATO    = "/anagrafica/ricercaMercato.form.html";
+	
 	// Bottoni
 
 	const MODIFICA_CLIENTE_HREF = "<a class='tooltip' href='../anagrafica/modificaClienteFacade.class.php?modo=start&idcliente=";
@@ -43,7 +44,8 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 
 	const AZIONE_RICERCA_CLIENTE   = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
 	const AZIONE_RICERCA_FORNITORE = "../anagrafica/ricercaFornitoreFacade.class.php?modo=go";
-
+	const AZIONE_RICERCA_MERCATO   = "../anagrafica/ricercaMercatoFacade.class.php?modo=go";
+	
 	// Errori e messaggi
 
 	const ERRORE_CODICE_FORNITORE		= "<br>&ndash; Manca il codice del fornitore";
@@ -62,6 +64,7 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const CREA_CLIENTE_TEMPLATE		   = "Obj_creaclientetemplate";
 	const MODIFICA_CLIENTE_TEMPLATE    = "Obj_modificaclientetemplate";
 	const MODIFICA_FORNITORE_TEMPLATE  = "Obj_modificafornitoretemplate";
+	const RICERCA_MERCATO_TEMPLATE     = "Obj_ricercamercatotemplate";
 	
 	// Metodi
 

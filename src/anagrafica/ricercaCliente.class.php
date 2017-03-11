@@ -21,8 +21,8 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	public function getInstance() {
-
+	public function getInstance()
+	{
 		if (!isset($_SESSION[self::RICERCA_CLIENTE])) $_SESSION[self::RICERCA_CLIENTE] = serialize(new RicercaCliente());
 		return unserialize($_SESSION[self::RICERCA_CLIENTE]);
 	}

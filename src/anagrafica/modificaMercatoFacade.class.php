@@ -1,21 +1,15 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/anagrafica:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/anagrafica:/var/www/html/chopin/src/utility');
 require_once 'modificaMercato.class.php';
+require_once 'anagrafica.controller.class.php';
 
 session_start();
+xdebug_disable();
 
-$modificaMercato = ModificaMercato::getInstance();
+$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(ModificaMercato::getInstance()));
 
-if ($_GET["modo"] == "go") {
-
-	$_SESSION["idmercato"] = $_REQUEST["idmercato_mod"];
-	$_SESSION["codmercato"] = $_REQUEST["codmercato_mod"];
-	$_SESSION["desmercato"] = $_REQUEST["desmercato_mod"];
-	$_SESSION["cittamercato"] = $_REQUEST["cittamercato_mod"];
-	$_SESSION["codneg"] = $_REQUEST["codneg_mod"];
-	
-	$modificaMercato->go();
-}
+$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+$controller->start();
 
 ?>

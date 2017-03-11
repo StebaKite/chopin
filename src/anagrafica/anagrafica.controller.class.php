@@ -2,26 +2,33 @@
 
 require_once 'fornitore.class.php';
 require_once 'cliente.class.php';
+require_once 'mercato.class.php';
 
 class AnagraficaController {
 
 	public static $anagraficaFunction = null;
-
+	private $request;
+	
 	// Oggetti
 
 	const FORNITORE = "Obj_fornitore";
 	const CLIENTE = "Obj_cliente";
+	const MERCATO = "Obj_mercato";
 
 	// Metodi
 
 	public function __construct(AnagraficaBusinessInterface $anagraficaFunction) {
 		$this->anagraficaFunction = $anagraficaFunction;
+		$this->setRequest(null);
 	}
 
 	public function start() {
 
+		if ($this->getRequest() == null) $this->setRequest($_REQUEST["modo"]);		
+		
 		$fornitore = Fornitore::getInstance();
 		$cliente = Cliente::getInstance();
+		$mercato = Mercato::getInstance();
 		
 		if (isset($_REQUEST["codfornitore"])) {
 			$fornitore->setDesFornitore($_REQUEST["desfornitore"]);
@@ -46,6 +53,13 @@ class AnagraficaController {
 			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente"]);
 		}
 
+		if (isset($_REQUEST["codmercato"])) {
+			$mercato->setCodMercato($_REQUEST["codmercato"]);
+			$mercato->setDesMercato($_REQUEST["desmercato"]);
+			$mercato->setCittaMercato($_REQUEST["cittamercato"]);
+			$mercato->setCodNegozio($_REQUEST["codneg"]);
+		}
+		
 		if (isset($_REQUEST["codfisc"])) {
 			$cliente->setCodFisc($_REQUEST["codfisc"]);
 		}
@@ -62,13 +76,37 @@ class AnagraficaController {
 		if (isset($_REQUEST["idfornitore"])) {
 			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
 		}
+
+		if (isset($_REQUEST["idmercato"])) {
+			$mercato->setIdMercato($_REQUEST["idmercato"]);
+		}
+		
+		if (isset($_REQUEST["idmercato_mod"])) {
+			$mercato->setIdMercato($_REQUEST["idmercato_mod"]);
+			$mercato->setCodMercato($_REQUEST["codmercato_mod"]);
+			$mercato->setDesMercato($_REQUEST["desmercato_mod"]);
+			$mercato->setCittaMercato($_REQUEST["cittamercato_mod"]);
+			$mercato->setCodNegozio($_REQUEST["codneg_mod"]);					
+		}
+		
+		// Serializzo in sessione gli oggetti modificati
 		
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		$_SESSION[self::CLIENTE] = serialize($cliente);
+		$_SESSION[self::MERCATO] = serialize($mercato);
 		
-		if ($_REQUEST["modo"] == "start") { $this->anagraficaFunction->start(); }
-		if ($_REQUEST["modo"] == "go") { $this->anagraficaFunction->go();}
+		if ($this->getRequest() == "start") { $this->anagraficaFunction->start(); }
+		if ($this->getRequest() == "go") 	{ $this->anagraficaFunction->go();}
 	}
+
+    public function getRequest(){
+        return $this->request;
+    }
+
+    public function setRequest($request){
+        $this->request = $request;
+    }
+
 }
 
 ?>

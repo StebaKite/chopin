@@ -8,6 +8,7 @@ interface CoreInterface extends MainNexus6Interface
 	const CLIENTE = "Obj_cliente";
 	const SOTTOCONTO = "Obj_sottoconto";
 	const CATEGORIA_CLIENTE = "Obj_categoriacliente";
+	const MERCATO = "Obj_mercato";
 }
 
 ?>

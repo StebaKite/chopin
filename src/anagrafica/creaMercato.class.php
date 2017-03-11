@@ -2,79 +2,61 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'mercato.class.php';
+require_once 'ricercaMercato.class.php';
+require_once 'anagrafica.controller.class.php';
 
 class CreaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	public static $_instance = null;
-
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaMercato();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CREA_MERCATO])) $_SESSION[self::CREA_MERCATO] = serialize(new CreaMercato());
+		return unserialize($_SESSION[self::CREA_MERCATO]);
 	}
 
 	public function start() {}
 	
 	public function go() {
-	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'ricercaMercato.class.php';
-	
-		$utility = Utility::getInstance();
-		$db = Database::getInstance();
 		
-		// Aggiornamento del DB ------------------------------
-
-		if ($this->creaMercato($db, $utility)) {
-
-			unset($_SESSION["codmercato"]);
-			unset($_SESSION["desmercato"]);
-			unset($_SESSION["cittamercato"]);
-			unset($_SESSION["codneg"]);
-		}
-			
-		$ricercaMercato = RicercaMercato::getInstance();
-		$ricercaMercato->start();			
+		$this->creaMercato();			
+		
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
+		
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->setRequest("start");
+		$controller->start();
 	}
 
-	private function creaMercato($db, $utility) {
-	
-		$codmercato = $_SESSION["codmercato"];
-		$desmercato = str_replace("'","''",$_SESSION["desmercato"]);
-		$cittamercato = str_replace("'","''",$_SESSION["cittamercato"]);
-		$codneg = $_SESSION["codneg"];
+	private function creaMercato() {
+
+		$db = Database::getInstance();
+		$mercato = Mercato::getInstance();
 		
-		if ($this->inserisciMercato($db, $utility, $codmercato, $desmercato, $cittamercato, $codneg)) {
-			$_SESSION["messaggioCreazione"] = "Nuovo mercato creato con successo";
+		$desMercato = str_replace("'","''",$mercato->getDesMercato());
+		$mercato->setDesMercato($desMercato);
+		
+		$cittamercato = str_replace("'","''",$mercato->getCittaMercato());
+		$mercato->setCittaMercato($cittamercato);
+		
+		if ($mercato->nuovo($db)) {
+			$_SESSION["messaggioCreazione"] = self::CREA_MERCATO_OK;
 			return TRUE;
 		}
 		else {
-			error_log("Errore inserimento mercato");
 			unset($_SESSION["messaggioCreazione"]);
 			return FALSE;				
 		}

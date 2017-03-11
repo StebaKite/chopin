@@ -1,35 +1,24 @@
 <?php
 
 require_once 'anagrafica.abstract.class.php';
+require_once 'anagrafica.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'mercato.class.php';
 
-class RicercaMercatoTemplate extends AnagraficaAbstract {
+class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
-	private static $_instance = null;
-
-	private static $pagina = "/anagrafica/ricercaMercato.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	function __construct()
+	{	
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaMercatoTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_MERCATO_TEMPLATE])) $_SESSION[self::RICERCA_MERCATO_TEMPLATE] = serialize(new RicercaMercatoTemplate());
+		return unserialize($_SESSION[self::RICERCA_MERCATO_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
@@ -37,17 +26,14 @@ class RicercaMercatoTemplate extends AnagraficaAbstract {
 
 	public function displayPagina() {
 	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+		$mercato = Mercato::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_MERCATO;
 		$risultato_ricerca = "";
 	
-		if (isset($_SESSION["mercatiTrovati"])) {
+		if ($mercato->getQtaMercati() > 0) {
 	
 			$risultato_ricerca =
 			"	<thead>" .
@@ -63,12 +49,9 @@ class RicercaMercatoTemplate extends AnagraficaAbstract {
 			"	</thead>" .
 			"	<tbody>";
 	
-			$mercatiTrovati = $_SESSION["mercatiTrovati"];
-			$numMercati = 0;
+			foreach($mercato->getMercati() as $row) {
 	
-			foreach(pg_fetch_all($mercatiTrovati) as $row) {
-	
-				if ($row['tot_registrazioni_mercato'] == 0) {
+				if ($row[$mercato::QTA_REGISTRAZIONI_MERCATO] == 0) {
 					$parms = trim($row['id_mercato']) . "#" . trim($row['cod_mercato']) . "#" . str_replace("'", "@", trim($row['des_mercato'])) . "#" . str_replace("'", "@", trim($row['citta_mercato'])) . "#" . trim($row['cod_negozio']);
 					$bottoneModifica = "<a class='tooltip' onclick='modificaMercato(" . '"' . $parms . '"' . ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 					$bottoneCancella = "<a class='tooltip' onclick='cancellaMercato(" . trim($row['id_mercato']) . "," . trim($row['cod_mercato']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
@@ -79,8 +62,7 @@ class RicercaMercatoTemplate extends AnagraficaAbstract {
 					$bottoneCancella = "&nbsp;";
 				}
 	
-				$numMercati ++;
-				$risultato_ricerca = $risultato_ricerca .
+				$risultato_ricerca .= 
 				"<tr>" .
 				"	<td>" . trim($row['cod_mercato']) . "</td>" .
 				"	<td>" . trim($row['des_mercato']) . "</td>" .
@@ -91,17 +73,15 @@ class RicercaMercatoTemplate extends AnagraficaAbstract {
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$_SESSION['numMercatiTrovati'] = $numMercati;
-			$risultato_ricerca = $risultato_ricerca . "</tbody>";
+			$risultato_ricerca .= "</tbody>";
 		}
 		else {
 	
 		}
 	
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%azione%' => $_SESSION[self::AZIONE_RICERCA_MERCATO],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 	

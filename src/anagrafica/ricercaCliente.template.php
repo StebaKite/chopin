@@ -87,9 +87,6 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE_RICERCA_CLIENTE],
-// 				'%codcliente%' => $_SESSION[self::CODICE_CLIENTE],
-// 				'%elenco_categorie_cliente%' => $_SESSION[SELF::CATEGORIE_CLIENTE],
-//				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 
