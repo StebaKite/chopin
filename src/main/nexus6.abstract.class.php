@@ -193,8 +193,12 @@ abstract class Nexus6Abstract {
 			if ($array["riepiloghi_item_4"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
 			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
 			$riepiloghi .= "<li><hr/></li>";			
+=======
+			$riepiloghi .= "<li><hr/></li>";
+>>>>>>> feature/anagrafica
 =======
 			$riepiloghi .= "<li><hr/></li>";
 >>>>>>> feature/anagrafica
