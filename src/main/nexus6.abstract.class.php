@@ -18,7 +18,7 @@ abstract class Nexus6Abstract {
 	public static $elenco_clienti;
 	public static $elenco_conti;
 	public static $elenco_mercati;
-	
+
 	public static $errorStyle = "border-color:#ff0000; border-width:1px;";
 
 	public static $sourceFolder = "/chopin/src/saldi/";
@@ -194,8 +194,12 @@ abstract class Nexus6Abstract {
 			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
 			$riepiloghi .= "<li><hr/></li>";			
+=======
+			$riepiloghi .= "<li><hr/></li>";
+>>>>>>> feature/anagrafica
 =======
 			$riepiloghi .= "<li><hr/></li>";
 >>>>>>> feature/anagrafica
