@@ -3,6 +3,7 @@
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.presentation.interface.php';
 require_once 'utility.class.php';
+require_once 'cliente.class.php';
 
 class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
@@ -29,13 +30,14 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 
 		// Template --------------------------------------------------------------
 
+		$cliente = Cliente::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_CLIENTE;
 		$risultato_ricerca = "";
 
-		if (isset($_SESSION[self::CLIENTI])) {
+		if ($cliente->getQtaClienti() > 0) {
 
 			$risultato_ricerca =
 			"	<thead>" .
@@ -53,36 +55,30 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 			"	</thead>" .
 			"	<tbody>";
 
-			$clientiTrovati = $_SESSION[self::CLIENTI];
-			$numClienti = 0;
+			foreach($cliente->getClienti() as $row) {
 
-			foreach(pg_fetch_all($clientiTrovati) as $row) {
-
-				if ($row['tot_registrazioni_cliente'] == 0) {
+				if ($row[$cliente::QTA_REGISTRAZIONI_CLIENTE] == 0) {
 					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
 					$bottoneCancella = self::CANCELLA_CLIENTE_HREF . trim($row['id_cliente']) . "," . trim($row['cod_cliente']) . self::CANCELLA_CLIENTE_ICON;
-				}
-				else {
+				} else {
 					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 
-				$numClienti ++;
-				$risultato_ricerca = $risultato_ricerca .
+				$risultato_ricerca .= 
 				"<tr>" .
-				"	<td>" . trim($row[self::CODICE_CLIENTE]) . "</td>" .
-				"	<td>" . trim($row[self::DESCRIZIONE_CLIENTE]) . "</td>" .
-				"	<td>" . trim($row[self::INDIRIZZO_CLIENTE]) . "</td>" .
-				"	<td>" . trim($row[self::CITTA_CLIENTE]) . "</td>" .
-				"	<td>" . trim($row[self::CAP_CLIENTE]) . "</td>" .
-				"	<td>" . trim($row[self::TIP_ADDEBITO]) . "</td>" .
-				"	<td>" . trim($row[self::QTA_REGISTRAZIONI_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::COD_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::DES_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::DES_INDIRIZZO_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::DES_CITTA_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::CAP_CLIENTE]) . "</td>" .
+				"	<td>" . trim($row[$cliente::TIP_ADDEBITO]) . "</td>" .
+				"	<td>" . trim($row[$cliente::QTA_REGISTRAZIONI_CLIENTE]) . "</td>" .
 				"	<td id='icons'>" . $bottoneModifica . "</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$_SESSION[self::QTA_CLIENTI] = $numClienti;
-			$risultato_ricerca = $risultato_ricerca . "</tbody>";
+			$risultato_ricerca .= "</tbody>";
 		}
 		else {
 
@@ -91,9 +87,6 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE_RICERCA_CLIENTE],
-				'%codcliente%' => $_SESSION[self::CODICE_CLIENTE],
-				'%elenco_categorie_cliente%' => $_SESSION[SELF::CATEGORIE_CLIENTE],
-				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 
