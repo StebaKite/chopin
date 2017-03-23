@@ -107,7 +107,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 										
 					if ($this->isNew($db, $utility, $datareg, $negozio, $contoCorrispettivo[0], $importo10)) {
 						$corrispettiviInseriti ++;
-						$dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo10, $iva10);
+						$dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo10, $iva10, 0.1);
 						if (!$this->creaCorrispettivoNegozio($db, $utility, $datareg, $negozio, $causale, $stareg, $dettagliInseriti)) {
 							$_SESSION["messaggioImportFileErr"] = "Errore imprevisto, ripristino eseguito";
 							break;
@@ -120,7 +120,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 					
 					if ($this->isNew($db, $utility, $datareg, $negozio, $contoCorrispettivo[0], $importo22)) {
 						$corrispettiviInseriti ++;
-						$dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22);
+						$dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22, 0.22);
 						if (!$this->creaCorrispettivoNegozio($db, $utility, $datareg, $negozio, $causale, $stareg, $dettagliInseriti)) {
 							$_SESSION["messaggioImportFileErr"] = "Errore imprevisto, ripristino eseguito";
 							break;
@@ -140,7 +140,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 		$importaExcelCorrispettivoNegozioStep1->start();
 	}
 	
-	private function generaDettagliCorrispettivo($array, $importo, $aliquota) {
+	private function generaDettagliCorrispettivo($array, $importo, $aliquota, $moltiplicatoreAliquota) {
 
 		$dettagliInseriti = array();
 		$dettaglio = array();
@@ -171,7 +171,7 @@ class ImportaExcelCorrispettivoNegozioStep2 extends primanotaAbstract {
 		$dettaglio = array();
 		
 		$imponibile = round($importo / $aliquota, 2);
-		$iva = round($imponibile * (round($aliquota / 10,1)), 2);
+		$iva = round(($imponibile * $moltiplicatoreAliquota), 2);
 
 		// sistemazione della squadratura generata dagli arrotondamenti
 		$differenza = round($importo - ($imponibile + $iva),2);

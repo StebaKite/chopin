@@ -216,6 +216,7 @@ $( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
 				var datareg = $("#datareg").val();
 				var codneg = $("input[name=codneg]:checked").val();
 				var conto = $("#conti").val();
+				var causale = $("#causale").val();
 				var importo = $("#importo").val();
 				
 				var xmlhttp = new XMLHttpRequest();
@@ -233,7 +234,7 @@ $( "#nuovo-dettaglio-corrispettivo-form" ).dialog({
 			        }		
 			        
 			    } 
-			    xmlhttp.open("GET", "controlloCorrispettivoFacade.class.php?modo=start&datareg=" + datareg + "&codneg=" + codneg + "&conto=" + conto + "&importo=" + importo, true);
+			    xmlhttp.open("GET", "controlloCorrispettivoFacade.class.php?modo=start&datareg=" + datareg + "&codneg=" + codneg + "&conto=" + conto + "&causale=" + causale + "&importo=" + importo, true);
 			    xmlhttp.send();				
 
 				$( this ).dialog( "close" );

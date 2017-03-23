@@ -43,7 +43,7 @@ class ControlloCorrispettivo extends PrimanotaAbstract {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 			
-		$result = $this->cercaCorrispettivo($db, $utility, $_SESSION["datareg"], $_SESSION["codneg"], $_SESSION["conto"], $_SESSION["importo"]);
+		$result = $this->cercaCorrispettivo($db, $utility, $_SESSION["datareg"], $_SESSION["codneg"], $_SESSION["conto"], $_SESSION["causale"], $_SESSION["importo"]);
 			
 		if ($result) {
 			if (pg_num_rows($result) > 0) {
