@@ -99,8 +99,8 @@ abstract class Nexus6Abstract {
 
 		$array = $utility->getConfig();
 
-		$menu = "";
-
+		$menu = "<li style='width: 70px;'><img src='../../images/unicorn.png' style='width: 50%'/></li>";;
+		
 		// H o m e --------------------------------------
 
 		$home = "";
@@ -192,20 +192,8 @@ abstract class Nexus6Abstract {
 			if ($array["riepiloghi_item_3"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/riepilogoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_3_name"] . "</a></li>";
 			if ($array["riepiloghi_item_4"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
 			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
-			$riepiloghi .= "<li><hr/></li>";			
-=======
 			$riepiloghi .= "<li><hr/></li>";
->>>>>>> feature/anagrafica
-=======
-			$riepiloghi .= "<li><hr/></li>";
->>>>>>> feature/anagrafica
-=======
-			$riepiloghi .= "<li><hr/></li>";
->>>>>>> feature/anagrafica
 			if ($array["riepiloghi_item_5"] == "Y") $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
 			if ($array["riepiloghi_item_6"] == "Y") $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
 			$riepiloghi .= "</ul></li>";
@@ -225,7 +213,7 @@ abstract class Nexus6Abstract {
 			$fatture .= "</ul></li>";
 		}
 		$menu .= $fatture;
-
+		
 		return $menu;
 	}
 
@@ -680,10 +668,10 @@ abstract class Nexus6Abstract {
 		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
 
 		if (strpos($users, $array['usernameProdLogin']) === false) {
-			$_SESSION["ambiente"] = "Ambiente di TEST";
+			$_SESSION["ambiente"] = "TEST";
 		}
 		else {
-			$_SESSION["ambiente"] = "Ambiente di PRODUZIONE";
+			$_SESSION["ambiente"] = "PROD";
 		}
 	}
 

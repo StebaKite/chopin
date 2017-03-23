@@ -26,7 +26,7 @@ $(document).ready( function () {
                    "previous":   "Precedente"
                }
         },
-        "lengthMenu": [ 10, 15, 20, 25, 50, 75, 100, "All" ]
+        "lengthMenu": [ 15, 20, 25, 50, 75, 100, "All" ]
     } );
 } );
 
@@ -35,12 +35,6 @@ $(document).ready( function () {
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina% %catconto% &ndash; %desconto% / %dessottoconto%</h2>
-
-		<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
-			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
-			<input type="hidden" name="categoria" value='%categoria%' >
-			<input type="hidden" name="tipoconto" value='%tipoconto%' >
-		</form>
 		<br>		
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" width="100%" cellpadding="5px">
@@ -79,17 +73,31 @@ $(document).ready( function () {
 		<br>
 		%risultato_ricerca%		
 		<br>
-	</div>		
-		<form class="tooltip" method="post" id="estraipdf" action="../configurazioni/estraiPdfMastrinoContoFacade.class.php?modo=start" >
-			%bottoneEstraiPdf%
-			<input type="hidden" name="datareg_da" value='%datareg_da%' />
-			<input type="hidden" name="datareg_a" value='%datareg_a%' />
-			<input type="hidden" name="codconto" value='%codconto%' />
-			<input type="hidden" name="codsottoconto" value='%codsottoconto%' />
-			<input type="hidden" name="codneg_sel" value='%codneg_sel%' />
-			<input type="hidden" name="catconto" value='%catconto%' />
-			<input type="hidden" name="desconto" value='%desconto%' />
-			<input type="hidden" name="dessottoconto" value='%dessottoconto%' />
-			<input type="hidden" name="saldiInclusi" value='%saldiInclusi%' />
-		</form>
+	</div>	
+	<table style="margin-left: 5px;">
+		<tr>
+			<td>
+				<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
+					<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+					<input type="hidden" name="categoria" value='%categoria%' >
+					<input type="hidden" name="tipoconto" value='%tipoconto%' >
+				</form>
+			</td>
+			<td>
+				<form class="tooltip" method="post" id="estraipdf" action="../configurazioni/estraiPdfMastrinoContoFacade.class.php?modo=start" >
+					%bottoneEstraiPdf%
+					<input type="hidden" name="datareg_da" value='%datareg_da%' />
+					<input type="hidden" name="datareg_a" value='%datareg_a%' />
+					<input type="hidden" name="codconto" value='%codconto%' />
+					<input type="hidden" name="codsottoconto" value='%codsottoconto%' />
+					<input type="hidden" name="codneg_sel" value='%codneg_sel%' />
+					<input type="hidden" name="catconto" value='%catconto%' />
+					<input type="hidden" name="desconto" value='%desconto%' />
+					<input type="hidden" name="dessottoconto" value='%dessottoconto%' />
+					<input type="hidden" name="saldiInclusi" value='%saldiInclusi%' />
+				</form>
+			</td>
+		</tr>
+	</table>	
+	
 				

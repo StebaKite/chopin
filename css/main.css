@@ -3,8 +3,11 @@ body {
 	padding: 0px;
 	font-family: Ubuntu;
 	font-size: 13px;
-	background-color: #ffffff;
-	background-color: #d9d4d4;
+	background-image: url("../images/archicinema006.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+/*	background-color: #ffffff; 
+	background-color: #d9d4d4; */
 	color: #515151;
 }
 	
@@ -16,7 +19,7 @@ frame {
 }
 
 .totali {
-	margin-left: 20px;de
+	margin-left: 20px;
 	margin-right: 20px;
 }
 
@@ -92,6 +95,8 @@ h1 {
 	text-align: center;
 	font-size: 2em;
 	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+	color: #3399FF;
+	
 }
 h2 {
 	margin-top: 10px;
@@ -303,7 +308,8 @@ div.scroll-categorie {
 	border-collapse:collapse; 
 	border: 7px solid #ececec;
 	border-radius: 4px;
-	background-color: #ffffff;		
+	background-color: #babdb6;	
+	opacity: 0.8;	
 }
 .datiCreateSottile {
 	border: 2px solid #ececec;
@@ -486,6 +492,7 @@ div.scroll-categorie {
 	background: #bfbfbf;
 	width: 99%;
 	height: 50px;
+	margin-top: 10px;
 	margin-left: 5px;
 	margin-right: 5px;
 	border-top: 1px solid #ececec;

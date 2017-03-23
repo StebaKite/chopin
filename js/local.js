@@ -751,7 +751,7 @@ $( "#cancella-mercato-form" ).dialog({
 $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 450,
+	width: 500,
 	buttons: [
 		{
 			text: "Ok",
@@ -818,7 +818,7 @@ $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 $( "#generaMastrino-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 400,
+	width: 450,
 	buttons: [
 		{
 			text: "Ok",
@@ -939,8 +939,22 @@ $( "#nuovo-sottoconto-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
-				aggiungiSottoconto();
-				$( this ).dialog( "close" );					
+				
+				var codsottoconto = $("#codsottoconto").val();
+				var dessottoconto = $("#dessottoconto").val();
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	if (xmlhttp.responseText == "Dettaglio ok") {
+							aggiungiSottoconto();			        		
+			        	}
+			        }
+			    }
+			    xmlhttp.open("GET", "aggiungiNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );           				
 			}
 		},
 		{
@@ -1862,9 +1876,10 @@ function modificaGruppoSottoconto(indgruppo,codsottoconto) {
 	$( "#modifica-sottoconto-modificagruppo-form" ).dialog( "open" );
 }
 
-function cancellaSottoconto(codsottoconto) {
+function cancellaSottoconto(codsottoconto,codconto) {
 	
 	$( "#codsottoconto_del" ).val(codsottoconto);
+	$( "#codconto_del" ).val(codconto);
 	$( "#cancella-sottoconto-modificaconto-form" ).dialog( "open" );
 }
 

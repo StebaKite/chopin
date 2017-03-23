@@ -19,10 +19,6 @@ function normalizzaCampo(campo) {
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
-		
-		<form method="post" id="back" action="../anagrafica/ricercaFornitoreFacade.class.php?modo=start" >
-			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
-		</form>
 		<br>
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px">
@@ -79,6 +75,13 @@ function normalizzaCampo(campo) {
 			</table>
 		</form>
 	</div>
-</div>
-
-<br/>
+	<br/>
+	<table style="margin-left: 5px;">
+		<tr>
+			<td>		
+				<form method="post" id="back" action="../anagrafica/ricercaFornitoreFacade.class.php?modo=start" >
+					<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+				</form>
+			</td>
+		</tr>
+	</table>	

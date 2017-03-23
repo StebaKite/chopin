@@ -1,88 +1,77 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.business.interface.php';
+require_once 'generaMastrinoConto.template.php';
+require_once 'ricercaConto.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'sottoconto.class.php';
 
-class GeneraMastrinoConto extends ConfigurazioniAbstract {
 
-	private static $_instance = null;
-
-	public static $azioneGeneraMastrinoConto = "../configurazioni/generaMastrinoContoFacade.class.php?modo=go";
-	public static $queryRicercaRegistrazioniConto = "/configurazioni/ricercaRegistrazioniConto.sql";
-	public static $queryRicercaRegistrazioniContoConSaldi = "/configurazioni/ricercaRegistrazioniContoConSaldi.sql";
+class GeneraMastrinoConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
+{
 	
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new GeneraMastrinoConto();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::ESTRAI_MASTRINO])) $_SESSION[self::ESTRAI_MASTRINO] = serialize(new GeneraMastrinoConto());
+		return unserialize($_SESSION[self::ESTRAI_MASTRINO]);
 	}
 
-	public function start() {}
+	public function start() { $this->go(); }
 	
-	public function go() {
+	public function go() {	
 	
-		require_once 'generaMastrinoConto.template.php';
-		require_once 'ricercaConto.class.php';
-		require_once 'utility.class.php';
-	
-		// Template
+		$sottoconto = Sottoconto::getInstance();
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-	
-		unset($_SESSION["registrazioniTrovate"]);
-		unset($_SESSION['bottoneEstraiPdf']);
 	
 		$generaMastrinoContoTemplate = GeneraMastrinoContoTemplate::getInstance();
 	
-		if ($this->ricercaDati($utility)) {
+		if ($sottoconto->cercaRegistrazioni($db)) {
 	
-			if (isset($_SESSION['registrazioniTrovate'])) {
+			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);				
+			
+			if ($sottoconto->getQtaRegistrazioniTrovate() > 0) {
 				
 				$this->preparaPagina($generaMastrinoContoTemplate);
 
 				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 				echo $utility->tailTemplate($template);
 				
 				$generaMastrinoContoTemplate->displayPagina();
 				
-				$_SESSION["messaggio"] = "Mastrino del Conto generato!";
+				$_SESSION[self::MESSAGGIO] = self::GENERA_MASTRINO_OK;
 				
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 				echo $utility->tailTemplate($template);
 				
-				include(self::$piede);				
+				include($this->piede);				
 			}
 			else {
 
-				$_SESSION["messaggioGeneraMastrino"] = "Nessuna registrazione trovata!";
+				$_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO] = self::REGISTRAZIONI_NON_TROVATE;
+
+				$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 				
-				$ricercaConto = RicercaConto::getInstance();
-				$ricercaConto->go();
+				$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+				$controller->setRequest("go");
+				$controller->start();
 			}
 		}
 		else {
@@ -90,81 +79,27 @@ class GeneraMastrinoConto extends ConfigurazioniAbstract {
 			$this->preparaPagina($generaMastrinoContoTemplate);
 
 			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 				
 			$generaMastrinoContoTemplate->displayPagina();
 	
-			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
 	
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
 	
-			include(self::$piede);
+			include($this->piede);
 		}
-	}
-
-	public function ricercaDati($utility) {
-	
-		require_once 'database.class.php';
-	
-		$filtro = "";
-		$filtroSaldo = "";
-	
-		if (($_SESSION['datareg_da'] != "") & ($_SESSION['datareg_a'] != "")) {
-			$filtro .= "AND registrazione.dat_registrazione between '" . $_SESSION['datareg_da'] . "' and '" . $_SESSION['datareg_a'] . "'" ;
-			$filtroSaldo .= "AND saldo.dat_saldo = '" . $_SESSION['datareg_da'] . "'" ;
-		}
-
-		if ($_SESSION['codneg_sel'] != "") {
-			$filtro .= " AND registrazione.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
-			$filtroSaldo .= " AND saldo.cod_negozio = '" . $_SESSION['codneg_sel'] . "'" ;
-		}
-		
-		$replace = array(
-				'%cod_conto%' => trim($_SESSION["codconto"]),
-				'%cod_sottoconto%' => trim($_SESSION["codsottoconto"]),
-				'%filtro_date%' => $filtro,
-				'%filtro_date_saldo%' => $filtroSaldo
-		);
-	
-		$array = $utility->getConfig();
-		
-		if ($_SESSION['saldiInclusi'] == "S") {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniContoConSaldi;				
-		}
-		else {
-			$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniConto;
-		}
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-	
-		// esegue la query
-	
-		$db = Database::getInstance();
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['registrazioniTrovate'] = $result;
-			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";				
-		}
-		else {
-			unset($_SESSION['registrazioniTrovate']);
-			unset($_SESSION['bottoneEstraiPdf']);			
-		}
-		return $result;
 	}
 	
 	public function preparaPagina($generaMastrinoContoTemplate) {
 	
-		require_once 'utility.class.php';
-	
-		$_SESSION["azione"] = self::$azioneGeneraMastrinoConto;
-		$_SESSION["confermaTip"] = "%ml.cercaTip%";
-		$_SESSION["titoloPagina"] = "%ml.mastrinoConto%";
-	}
-	
+		$_SESSION[self::AZIONE] = self::AZIONE_GENERA_MASTRINO;
+		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
+		$_SESSION[self::TITOLO_PAGINA] = "%ml.mastrinoConto%";
+	}	
 }
 
 ?>

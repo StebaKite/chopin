@@ -1,35 +1,25 @@
 	<?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'conto.class.php';
+require_once 'sottoconto.class.php';
 
-class RicercaContoTemplate extends ConfigurazioniAbstract {
+class RicercaContoTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface {
 
-	private static $_instance = null;
-
-	private static $pagina = "/configurazioni/ricercaConto.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaContoTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_CONTO_TEMPLATE])) $_SESSION[self::RICERCA_CONTO_TEMPLATE] = serialize(new RicercaContoTemplate());
+		return unserialize($_SESSION[self::RICERCA_CONTO_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
@@ -37,18 +27,18 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 
 	public function displayPagina() {
 
-		require_once 'utility.class.php';
-
 		// Template --------------------------------------------------------------
 
+		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_CONTO;
 		$risultato_ricerca = "";
 
-		if (isset($_SESSION["contiTrovati"])) {
-				
+		if ($conto->getQtaConti() > 0) {
+
 			$risultato_ricerca =
 			"<table id='conti' class='display'>" .
 			"	<thead>" .
@@ -65,82 +55,75 @@ class RicercaContoTemplate extends ConfigurazioniAbstract {
 			"		</tr>" .
 			"	</thead>" .
 			"	<tbody>";
-				
-			$contiTrovati = $_SESSION["contiTrovati"];
-			$numConti = 0;
 
-			foreach(pg_fetch_all($contiTrovati) as $row) {
+			foreach($conto->getConti()  as $row) {
 
 				if (trim($row['tipo']) == 'C') {
 
-					if ($row['tot_registrazioni_conto'] == 0) {
+					if ($row[self::NUM_REG_CONTO] == 0) {
 						$class = "class='parentAperto'";
-						$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaContoFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-						$bottoneCancella = "<a class='tooltip' onclick='cancellaConto(" . trim($row['cod_conto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";						
+						$bottoneModifica = self::MODIFICA_CONTO_HREF . trim($row[$conto::COD_CONTO]) . self::MODIFICA_CONTO_ICON;
+						$bottoneCancella = self::CANCELLA_CONTO_HREF . trim($row[$conto::COD_CONTO]) . self::CANCELLA_CONTO_ICON;
 					}
 					else {
 						$class = "class='parent'";
-						$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaContoFacade.class.php?modo=start&codconto=" . trim($row['cod_conto']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+						$bottoneModifica = self::MODIFICA_CONTO_HREF . trim($row[$conto::COD_CONTO]) . self::MODIFICA_CONTO_ICON;
 						$bottoneCancella = "&nbsp;";
 					}
 
-					$numConti ++;
-					$risultato_ricerca = $risultato_ricerca .
+					$risultato_ricerca .=
 					"<tr class='dt-bold'>" .
-					"	<td>" . trim($row['cod_conto']) . "</td>" .
-					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
-					
-					"	<td>" . trim($row['cod_conto']) . "</td>" .
+					"	<td>" . trim($row[$conto::COD_CONTO]) . "</td>" .
+					"	<td>" . trim($row[$sottoconto::COD_SOTTOCONTO]) . "</td>" .
+
+					"	<td>" . trim($row[$conto::COD_CONTO]) . "</td>" .
 					"	<td></td>" .
-					"	<td>" . trim($row['des_conto']) . "</td>" .
-					"	<td>" . trim($row['cat_conto']) . "</td>" .
-					"	<td>" . trim($row['tip_conto']) . "</td>" .
+					"	<td>" . trim($row[$conto::DES_CONTO]) . "</td>" .
+					"	<td>" . trim($row[$conto::CAT_CONTO]) . "</td>" .
+					"	<td>" . trim($row[$conto::TIP_CONTO]) . "</td>" .
 					"	<td id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
-						
+
 				}
 				elseif (trim($row['tipo']) == 'S') {
 
-					$bottoneMastrino = "<a class='tooltip' onclick='generaMastrino(" . trim($row['cod_conto']) . "," . (string)trim($row['cod_sottoconto']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
-					
+					$bottoneMastrino = self::GENERA_MASTRINO_HREF . trim($row[$conto::COD_CONTO]) . "," . (string)trim($row[$sottoconto::COD_SOTTOCONTO]) . self::GENERA_MASTRINO_ICON;
+
 					$class = "class='child-" . trim($row['cod_conto']) . "'";
 					$id = "id='child'";
 
-					$risultato_ricerca = $risultato_ricerca .
+					$risultato_ricerca .=
 					"<tr>" .
-					"	<td>" . trim($row['cod_conto']) . "</td>" .
-					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
-					
+					"	<td>" . trim($row[$conto::COD_CONTO]) . "</td>" .
+					"	<td>" . trim($row[$sottoconto::COD_SOTTOCONTO]) . "</td>" .
+
 					"	<td></td>" .
-					"	<td>" . trim($row['cod_sottoconto']) . "</td>" .
-					"	<td><i>" . trim($row['des_sottoconto']) . "</i></td>" .
+					"	<td>" . trim($row[$sottoconto::COD_SOTTOCONTO]) . "</td>" .
+					"	<td><i>" . trim($row[$sottoconto::DES_SOTTOCONTO]) . "</i></td>" .
 					"	<td></td>" .
 					"	<td></td>" .
-					"	<td><i>" . trim($row['tot_registrazioni_sottoconto']) . "</i></td>" .
+					"	<td><i>" . trim($row[self::NUM_REG_SOTTOCONTO]) . "</i></td>" .
 					"	<td id='icons'>" . $bottoneMastrino . "</td>" .
 					"</tr>";
 				}
 
 			}
-			$_SESSION['numContiTrovati'] = $numConti;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
+			$risultato_ricerca .= "</tbody></table>";
 		}
-		
+
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
+				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%azione%' => $_SESSION[self::AZIONE],
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%datareg_da%' => "",
 				'%datareg_a%' => "",
-				'%contoeconomicoselected%' => ($_SESSION["categoria"] == "Conto Economico") ? "selected" : "",
-				'%statopatrimonialeselected%' => ($_SESSION["categoria"] == "Stato Patrimoniale") ? "selected" : "",
-				'%dareselected%' => ($_SESSION["tipoconto"] == "Dare") ? "selected" : "",
-				'%avereselected%' => ($_SESSION["tipoconto"] == "Avere") ? "selected" : "",
+				'%contoeconomicoselected%' => ($conto->getCatConto() == "Conto Economico") ? "selected" : "",
+				'%statopatrimonialeselected%' => ($conto->getCatConto() == "Stato Patrimoniale") ? "selected" : "",
+				'%dareselected%' => ($conto->getTipConto() == "Dare") ? "selected" : "",
+				'%avereselected%' => ($conto->getTipConto() == "Avere") ? "selected" : "",
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-
-		$utility = Utility::getInstance();
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

@@ -14,10 +14,6 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const TITOLO = "titoloPagina";
 	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
 
-	// Tips
-
-	const TIP_CONFERMA = "confermaTip";
-
 	// Pagine
 
 	const PAGINA_RICERCA_CLIENTE    = "/anagrafica/ricercaCliente.form.html";

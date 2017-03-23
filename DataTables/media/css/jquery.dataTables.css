@@ -1,12 +1,17 @@
 /*
  * Table styles
  */
+table {
+	opacity: 0.8;
+}
+ 
 table.dataTable {
   width: 100%;
   margin: 0 auto;
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
+  
   /*
    * Header and footer styles
    */
@@ -470,7 +475,7 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_info,
 .dataTables_wrapper .dataTables_processing,
 .dataTables_wrapper .dataTables_paginate {
-  color: #333;
+  color: #FFF;
 }
 .dataTables_wrapper .dataTables_scroll {
   clear: both;

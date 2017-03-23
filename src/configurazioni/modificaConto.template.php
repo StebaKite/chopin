@@ -1,40 +1,39 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
+require_once 'conto.class.php';
+require_once 'sottoconto.class.php';
+require_once 'utility.class.php';
 
-class ModificaContoTemplate extends ConfigurazioniAbstract {
+class ModificaContoTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+{
 
-	private static $_instance = null;
-
-	private static $pagina = "/configurazioni/modificaConto.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaContoTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CONTO_TEMPLATE])) $_SESSION[self::MODIFICA_CONTO_TEMPLATE] = serialize(new ModificaContoTemplate());
+		return unserialize($_SESSION[self::MODIFICA_CONTO_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
 	public function controlliLogici() {
-	
+		
+		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
+		
 		$esito = TRUE;
 		$msg = "<br>";
 	
@@ -42,68 +41,57 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 		 * Controllo presenza dati obbligatori
 		 */
 	
-		if ($_SESSION["desconto"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione del conto";
+		if ($conto->getDesConto() == "") {
+			$msg = $msg . self::ERRORE_DESCRIZIONE_CONTO;
 			$esito = FALSE;
 		}
 		
-		if ($_SESSION["sottocontiInseriti"] == "") {
-			$msg = $msg . "<br>&ndash; Mancano i sottoconti";
+		if ($sottoconto->getSottocontiInseriti() == "") {
+			$msg = $msg . self::ERRORE_ASSENZA_SOTTOCONTI;
 			$esito = FALSE;
 		}
-		
-		// ----------------------------------------------
 		
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
+			unset($_SESSION[self::MESSAGGIO]);
 		}	
 		return $esito;
 	}
 
 	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+
+		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_MODIFICA_CONTO;
 	
-		/**
-		 * Prepara la tabella dei dettagli della registrazione da iniettare in pagina
-		 */
-	
-		$result = $_SESSION["elencoSottoconti"];
-	
-		$elencoSottoconti = pg_fetch_all($result);
 		$tbodySottoconti = "";
 	
-		foreach ($elencoSottoconti as $row) {
+		foreach ($sottoconto->getSottoconti() as $row) {
 	
-			$bottoneCancella = "<td width='28' align='right'>" . $row["totale_registrazioni_sottoconto"] . "</td>";
+			$bottoneCancella = "<td width='28' align='right'>" . $row[self::NUM_REG_SOTTOCONTO] . "</td>";
 			
-			if ($row["totale_registrazioni_sottoconto"] == 0) {
-				$bottoneCancella = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(" . $row["cod_sottoconto"] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
+			if ($row[self::NUM_REG_SOTTOCONTO] == 0) {
+				$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $conto->getCodConto() . self::CANCELLA_SOTTOCONTO_ICON ;
 			}
 
-			if ($row["ind_gruppo"] == "") $indGruppo = "&ndash;&ndash;&ndash;";			
-			elseif ($row["ind_gruppo"] == "NS") $indGruppo = "&ndash;&ndash;&ndash;";
-			elseif ($row["ind_gruppo"] == "CF") $indGruppo = "Costi Fissi";
-			elseif ($row["ind_gruppo"] == "CV") $indGruppo = "Costi Variabili";
-			elseif ($row["ind_gruppo"] == "RC") $indGruppo = "Ricavi";
+			if ($row[Sottoconto::IND_GRUPPO] == "") $indGruppo = "&ndash;&ndash;&ndash;";			
+			elseif ($row[Sottoconto::IND_GRUPPO] == self::NESSUNO) $indGruppo = "&ndash;&ndash;&ndash;";
+			elseif ($row[Sottoconto::IND_GRUPPO] == self::COSTI_FISSI) $indGruppo = "Costi Fissi";
+			elseif ($row[Sottoconto::IND_GRUPPO] == self::COSTI_VARIABILI) $indGruppo = "Costi Variabili";
+			elseif ($row[Sottoconto::IND_GRUPPO] == self::RICAVI) $indGruppo = "Ricavi";
 
 			
 			$tbodySottoconti = $tbodySottoconti .
 			"<tr>" .
-			"	<td>" . $row["cod_sottoconto"] . "</td>" .
-			"	<td>" . $row["des_sottoconto"] . "</td>" .			
+			"	<td>" . $row[Sottoconto::COD_SOTTOCONTO] . "</td>" .
+			"	<td>" . $row[Sottoconto::DES_SOTTOCONTO] . "</td>" .			
 			"	<td>" . $indGruppo . "</td>" .			
-			"	<td id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(" . '"' . $row["ind_gruppo"] . '","' . $row["cod_sottoconto"] . '"' . ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>" .
+			self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . '"' . $row[Sottoconto::IND_GRUPPO] . '","' . $row[Sottoconto::COD_SOTTOCONTO] . '"' . self::MODIFICA_GRUPPO_SOTTOCONTO_ICON .
 			$bottoneCancella .
 			"</tr>";
 		}
@@ -112,19 +100,19 @@ class ModificaContoTemplate extends ConfigurazioniAbstract {
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%codconto%' => $_SESSION["codconto"],
-				'%desconto%' => str_replace("'", "&apos;", $_SESSION["desconto"]),
-				'%contoeco_checked%' => (trim($_SESSION["catconto"]) == "Conto Economico") ? "checked" : "",
-				'%contopat_checked%' => (trim($_SESSION["catconto"]) == "Stato Patrimoniale") ? "checked" : "",
-				'%dare_checked%' => (trim($_SESSION["tipconto"]) == "Dare") ? "checked" : "",
-				'%avere_checked%' => (trim($_SESSION["tipconto"]) == "Avere") ? "checked" : "",
-				'%presenzaSi_checked%' => (trim($_SESSION["indpresenza"]) == "S") ? "checked" : "",
-				'%presenzaNo_checked%' => (trim($_SESSION["indpresenza"]) == "N") ? "checked" : "",
-				'%sottocontiSi_checked%' => (trim($_SESSION["indvissottoconti"]) == "S") ? "checked" : "",
-				'%sottocontiNo_checked%' => (trim($_SESSION["indvissottoconti"]) == "N") ? "checked" : "",
-				'%numrigabilancio%' => ($_SESSION["numrigabilancio"] != "") ? $_SESSION["numrigabilancio"] : 0,
-				'%categoria%' => $_SESSION["categoria"],
-				'%tipoconto%' => $_SESSION["tipoconto"],
+				'%codconto%' => $conto->getCodConto(),
+				'%desconto%' => str_replace("'", "&apos;", $conto->getDesConto()),
+				'%contoeco_checked%' => (trim($conto->getCatConto()) == self::CONTO_ECONOMICO) ? "checked" : "",
+				'%contopat_checked%' => (trim($conto->getCatConto()) == self::STATO_PATRIMONIALE) ? "checked" : "",
+				'%dare_checked%' => (trim($conto->getTipConto()) == self::DARE) ? "checked" : "",
+				'%avere_checked%' => (trim($conto->getTipConto()) == self::AVERE) ? "checked" : "",
+				'%presenzaSi_checked%' => (trim($conto->getIndPresenzaInBilancio()) == "S") ? "checked" : "",
+				'%presenzaNo_checked%' => (trim($conto->getIndPresenzaInBilancio()) == "N") ? "checked" : "",
+				'%sottocontiSi_checked%' => (trim($conto->getIndVisibilitaSottoconti()) == "S") ? "checked" : "",
+				'%sottocontiNo_checked%' => (trim($conto->getIndVisibilitaSottoconti()) == "N") ? "checked" : "",
+				'%numrigabilancio%' => ($conto->getNumRigaBilancio() != "") ? $conto->getNumRigaBilancio() : 0,
+				'%categoria%' => $conto->getCatConto(),
+				'%tipoconto%' => $conto->getTipConto(),
 				'%tbody_sottoconti%' => $tbodySottoconti
 		);
 	

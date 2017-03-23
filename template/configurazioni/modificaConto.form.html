@@ -43,12 +43,6 @@ $(document).ready( function () {
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
-		
-		<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
-			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
-			<input type="hidden" name="categoria" value='%categoria%' >			
-			<input type="hidden" name="tipoconto" value='%tipoconto%' >			
-		</form>
 		<br>
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px" width="70%">
@@ -133,6 +127,18 @@ $(document).ready( function () {
 		</form>
 	</div>
 </div>
+<br/>
+<table style="margin-left: 5px;">
+	<tr>
+		<td>
+			<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaContoFacade.class.php?modo=go" >
+				<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+				<input type="hidden" name="categoria" value='%categoria%' >			
+				<input type="hidden" name="tipoconto" value='%tipoconto%' >			
+			</form>
+		</td>
+	</tr>
+</table>	
 
 <div id="nuovo-sottoconto-modificaconto-form" title="Nuovo Sottoconto"> 
 	<form method="post" id="nuovoSottoconto" action="../configurazioni/inserisciSottocontoFacade.class.php?modo=go" >
@@ -165,6 +171,7 @@ $(document).ready( function () {
 <div id="cancella-sottoconto-modificaconto-form" title="Cancella Sottoconto"> 
 	<form method="post" id="cancellaSottoconto" action="../configurazioni/cancellaSottocontoFacade.class.php?modo=go" >
 		<p>Elimino il sottoconto ?</p>
+		<input type="hidden" id="codconto_del" name="codconto_del">
 		<input type="hidden" id="codsottoconto_del" name="codsottoconto_del">
 	</form>
 </div>

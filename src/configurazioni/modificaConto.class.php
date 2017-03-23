@@ -1,53 +1,47 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.business.interface.php';
+require_once 'modificaConto.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'conto.class.php';
+require_once 'sottoconto.class.php';
 
-class ModificaConto extends ConfigurazioniAbstract {
+class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-	private static $_instance = null;
-
-	public static $azioneModificaConto = "../configurazioni/modificaContoFacade.class.php?modo=go";
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaConto();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CONTO])) $_SESSION[self::MODIFICA_CONTO] = serialize(new ModificaConto());
+		return unserialize($_SESSION[self::MODIFICA_CONTO]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'modificaConto.template.php';
-		require_once 'utility.class.php';
-
+	public function start()
+	{
+		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
+		
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		$this->prelevaConto($utility);
-		$this->prelevaSottoconti($utility);
+		
+		$conto->leggi($db);
+		$_SESSION[self::CONTO] = serialize($conto);
+		
+		$sottoconto->setCodConto($conto->getCodConto());
+		$sottoconto->leggi($db);
+		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 		
 		$modificaContoTemplate = ModificaContoTemplate::getInstance();
 		$this->preparaPagina($modificaContoTemplate);
@@ -55,50 +49,42 @@ class ModificaConto extends ConfigurazioniAbstract {
 		// Compone la pagina
 		
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 		
 		$modificaContoTemplate->displayPagina();
 		
 		if (isset($_SESSION["messaggio"])) {
-			if ($_SESSION["messaggio"] == "Conto salvato con successo") {
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+			if ($_SESSION[self::MESSAGGIO] == self::MSG_DA_CREAZIONE_CONTO) {
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 				echo $utility->tailTemplate($template);
 			}
 			else {
-				if ($_SESSION["messaggio"] == "Attenzione: conto non inserito!") {
-					self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				if ($_SESSION[self::MESSAGGIO] == self::ERRORE_CREAZIONE_CONTO) {
+					self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 					echo $utility->tailTemplate($template);						
 				}
 			}			
-			unset($_SESSION["messaggio"]);
-		}
-		
-		include(self::$piede);
+			unset($_SESSION[self::MESSAGGIO]);
+		}		
+		include($this->piede);
 	}
 
 	public function go() {
 
-		require_once 'modificaConto.template.php';
-		require_once 'utility.class.php';
-		
-		/**
-		 * Crea una array dei sottoconti
-		 */
+		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
-		$this->prelevaSottoconti($utility);
-
-		$result = $_SESSION["elencoSottoconti"];
 		
-		$sottoconti = pg_fetch_all($result);
-		$sott = "";
+		$sottoConti = "";
 		
-		foreach ($sottoconti as $row) {
-			$sott = $sott . trim($row["cod_sottoconto"]) . "#" . trim($row["des_sottoconto"]) . ",";
+		foreach ($sottoconto->getSottoconti() as $row) {
+			$sott .= trim($row[Sottoconto::COD_SOTTOCONTO]) . "#" . trim($row[Sottoconto::DES_SOTTOCONTO]) . ",";
 		}
-		$_SESSION['sottocontiInseriti'] = $sott;
+		$sottoconto->setSottocontiInseriti($sott);
+		
+		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 
 		$modificaContoTemplate = ModificaContoTemplate::getInstance();
 		
@@ -108,114 +94,63 @@ class ModificaConto extends ConfigurazioniAbstract {
 		
 			if ($this->aggiornaConto($utility)) {
 
-				$_SESSION["messaggio"] = "Conto salvato con successo";
+				$_SESSION[self::MESSAGGIO] = self::MSG_DA_CREAZIONE_CONTO;
 				
 				$this->preparaPagina($modificaContoTemplate);
-				
-				include(self::$testata);
+
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+				echo $this->utility->tailTemplate($template);
+
 				$modificaContoTemplate->displayPagina();
 				
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 				echo $utility->tailTemplate($template);
 					
-				include(self::$piede);				
+				include($this->piede);				
 			}
 			else {
 					
 				$this->preparaPagina($modificaContoTemplate);
 			
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 				echo $utility->tailTemplate($template);
 				
 				$modificaContoTemplate->displayPagina();
 			
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 				echo $utility->tailTemplate($template);
 			
-				include(self::$piede);
+				include($this->piede);
 			}
 		}		
 	}
 
-	public function prelevaConto($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->leggiConto($db, $utility, $_SESSION["codconto"]);
-	
-		if ($result) {
-	
-			$conto = pg_fetch_all($result);
-			foreach ($conto as $row) {
-	
-				$_SESSION["desconto"] = $row["des_conto"];
-				$_SESSION["catconto"] = $row["cat_conto"];
-				$_SESSION["tipconto"] = $row["tip_conto"];
-				$_SESSION["indpresenza"] = $row["ind_presenza_in_bilancio"];
-				$_SESSION["indvissottoconti"] = $row["ind_visibilita_sottoconti"];
-				$_SESSION["numrigabilancio"] = $row["num_riga_bilancio"];
-			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati conto : " . $_SESSION["codconto"] . " <<<<<<<<" );
-		}
-	}
-
-	public function prelevaSottoconti($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->leggiSottoconti($db, $utility, $_SESSION["codconto"]);
-	
-		if ($result) {
-			$_SESSION["elencoSottoconti"] = $result;
-		}
-		else {
-			error_log(">>>>>> Errore prelievo sottoconti del conto : " . $_SESSION["codconto"] . " <<<<<<<<" );
-		}
-	}
-
 	public function aggiornaConto($utility) {
 
-		require_once 'database.class.php';
-		
+		$conto = Conto::getInstance();
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
-		$codconto = $_SESSION["codconto"];
-		$desconto = $_SESSION["desconto"];
-		$catconto = $_SESSION["catconto"];
-		$tipconto = $_SESSION["tipconto"];
-		$indpresenza = $_SESSION["indpresenza"];
-		$indvissottoconti = $_SESSION["indvissottoconti"];
-		$numrigabilancio = $_SESSION["numrigabilancio"];
-		
+		$conto->setDesConto(str_replace("'","''",$conto->getDesConto()));
 
-		if ($this->updateConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvissottoconti, $numrigabilancio)) {
+		if ($conto->aggiorna($db)) {
 		
 			$db->commitTransaction();
 			return TRUE;
 		}
 		else {
 			$db->rollbackTransaction();
-			error_log("Errore aggiornamento conto, eseguito Rollback");
 			return FALSE;
 		}
 	}
 	
 	public function preparaPagina($modificaContoTemplate) {
 	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$modificaContoTemplate->setAzione(self::$azioneModificaConto);
+		$modificaContoTemplate->setAzione(self::AZIONE_MODIFICA_CONTO);
 		$modificaContoTemplate->setConfermaTip("%ml.salvaTip%");
 		$modificaContoTemplate->setTitoloPagina("%ml.modificaConto%");
 	}
