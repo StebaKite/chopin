@@ -11,6 +11,7 @@ if ($_GET["modo"] == "start") {
 	$_SESSION["datareg"] = $_REQUEST["datareg"];
 	$_SESSION["codneg"] = $_REQUEST["codneg"];
 	$_SESSION["conto"] = $_REQUEST["conto"];
+	$_SESSION["causale"] = $_REQUEST["causale"];
 	$_SESSION["importo"] = $_REQUEST["importo"];
 	$controlloCorrispettivo->start();
 }

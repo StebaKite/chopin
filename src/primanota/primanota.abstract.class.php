@@ -895,13 +895,14 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $conto
 	 * @param unknown $importo
 	 */
-	public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $importo) {
+	public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $causale, $importo) {
 
 		$array = $utility->getConfig();
 		$replace = array(
 				'%dat_registrazione%' => trim($datareg),
 				'%cod_negozio%' => trim($codneg),
 				'%cod_conto%' => substr(trim($conto),0,3),
+				'%cod_causale%' => trim($causale),
 				'%imp_registrazione%' => str_replace(",", ".", trim($importo))
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
