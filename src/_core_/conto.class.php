@@ -37,7 +37,9 @@ class Conto implements CoreInterface {
 	const RICERCA_CONTO		= "/configurazioni/ricercaConto.sql";
 	const LEGGI_CONTO		= "/configurazioni/leggiConto.sql";
 	const AGGIORNA_CONTO	= "/configurazioni/updateConto.sql";
-
+	const INSERISCI_CONTO	= "/configurazioni/creaConto.sql";
+	const CANCELLA_CONTO	= "/configurazioni/deleteConto.sql";
+	
 	// Metodi
 
 	function __construct() {
@@ -132,7 +134,51 @@ class Conto implements CoreInterface {
 		$result = $db->execSql($sql);
 		return $result;
 	}
+
+	public function prepara() {
+		
+		$this->setCodConto(null);
+		$this->setDesConto(null);
+		$this->setCatConto(null);
+		$this->setTipConto(null);
+		$this->setDatCreazioneConto(null);
+		$this->setIndPresenzaInBilancio(null);
+		$this->setNumRigaBilancio(null);
+		$this->setIndVisibilitaSottoconti(null);
+	}
+
+	public function inserisci($db) {
 	
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%cod_conto%' => $this->getCodConto(),
+				'%des_conto%' => str_replace("'", "''", $this->getDesConto()),
+				'%cat_conto%' => $this->getCatConto(),
+				'%tip_conto%' => $this->getTipConto(),
+				'%ind_presenza_in_bilancio%' => $this->getIndPresenzaInBilancio(),
+				'%ind_visibilita_sottoconti%' => $this->getIndVisibilitaSottoconti(),
+				'%num_riga_bilancio%' => $this->getNumRigaBilancio()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CONTO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	public function cancella($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$replace = array(
+				'%cod_conto%' => $this->getCodConto()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CONTO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+	}
 	
 	// Getters eSetters
 

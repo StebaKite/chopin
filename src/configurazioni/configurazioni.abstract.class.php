@@ -8,9 +8,7 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
 	// Query ---------------------------------------------------------------
 
-	public static $queryCreaConto = "/configurazioni/creaConto.sql";
 	public static $queryUpdateSottoConto = "/configurazioni/updateSottoconto.sql";
-	public static $queryDeleteConto = "/configurazioni/deleteConto.sql";
 	public static $queryCreaCausale = "/configurazioni/creaCausale.sql";
 	public static $queryLeggiCausale = "/configurazioni/leggiCausale.sql";
 	public static $queryUpdateCausale = "/configurazioni/updateCausale.sql";
@@ -37,33 +35,6 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
 	// Metodi comuni di utilita della prima note ---------------------------
 
-	/**
-	 * Questo metodo permette di inserire un conto in tabella
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $codconto
-	 * @param unknown $desconto
-	 * @param unknown $catconto
-	 * @param unknown $tipconto
-	 * @return unknown
-	 */
-	public function inserisciConto($db, $utility, $codconto, $desconto, $catconto, $tipconto, $indpresenza, $indvisibilitasottoconti, $numrigabilancio) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_conto%' => trim($codconto),
-				'%des_conto%' => str_replace("'", "''", trim($desconto)),
-				'%cat_conto%' => trim($catconto),
-				'%tip_conto%' => trim($tipconto),
-				'%ind_presenza_in_bilancio%' => trim($indpresenza),
-				'%ind_visibilita_sottoconti%' => trim($indvisibilitasottoconti),
-				'%num_riga_bilancio%' => trim($numrigabilancio)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaConto;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
 
 
 	/**
@@ -85,23 +56,6 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 		return $result;
-	}
-
-	/**
-	 * Questo metodo cancella un conto
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $codconto
-	 */
-	public function cancellaConto($db, $utility, $codconto) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_conto%' => trim($codconto)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteConto;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
 	}
 
 	/**

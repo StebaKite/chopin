@@ -25,6 +25,7 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 	const PAGINA_RICERCA_CONTO    	= "/configurazioni/ricercaConto.form.html";
 	const PAGINA_MODIFICA_CONTO		= "/configurazioni/modificaConto.form.html";
 	const PAGINA_GENERA_MASTRINO	= "/configurazioni/generaMastrinoConto.form.html";
+	const PAGINA_CREA_CONTO			= "/configurazioni/creaConto.form.html";
 
 	// Bottoni
 
@@ -47,12 +48,16 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 
 	// Errori e messaggi
 
+	const ERRORE_CODICE_CONTO			= "<br>&ndash; Manca il codice del conto";
+	const ERRORE_CODICE_CONTO_NUMERICO	= "<br>&ndash; Il codice conto deve essere numerico";
+	const ERRORE_CODICE_CONTO_INVALIDO	= "<br>&ndash; Il codice conto deve essere maggiore di 100";
  	const ERRORE_DESCRIZIONE_CONTO		= "<br>&ndash; Manca la descrizione del conto";
  	const ERRORE_ASSENZA_SOTTOCONTI		= "<br>&ndash; Mancano i sottoconti";
 
 	// Oggetti
 
 	const RICERCA_CONTO_TEMPLATE    = "Obj_ricercacontotemplate";
+	const CREA_CONTO_TEMPLATE		= "Obj_creacontotemplate";
 	const MODIFICA_CONTO_TEMPLATE	= "Obj_modificacontotemplate";
 	const GENERA_MASTRINO_TEMPLATE	= "Obj_generamastrinotemplate";
 	

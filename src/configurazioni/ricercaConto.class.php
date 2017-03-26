@@ -9,7 +9,6 @@ require_once 'conto.class.php';
 
 class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
 {
-
 	function __construct()
 	{
 		$this->root = $_SERVER['DOCUMENT_ROOT'];

@@ -33,6 +33,8 @@ class Sottoconto implements CoreInterface {
 	private $saldiInclusi;
 	private $registrazioniTrovate;
 	private $qtaRegistrazioniTrovate;
+
+	private $nuoviSottoconti = array();		// utilizzata per accumulare i sottoconti durante la creazione del conto
 	
 	// Queries
 	
@@ -153,6 +155,28 @@ class Sottoconto implements CoreInterface {
 		return $result;
 	}
 	
+	public function aggiungiNuovoSottoconto() {
+		$item = array($this->getCodSottoconto(), $this->getDesSottoconto());		
+		array_push($this->nuoviSottoconti, $item);
+		sort($this->nuoviSottoconti);		
+	}
+	
+	public function togliNuovoSottoconto() {
+
+		$nuoviSottocontiDiff = array();
+
+		foreach ($this->getNuoviSottoconti() as $unSottoconto) {
+			if ($unSottoconto[0] != $this->getCodSottoconto()) {
+				array_push($nuoviSottocontiDiff, $unSottoconto);
+			}			
+		}		
+		$this->setNuoviSottoconti($nuoviSottocontiDiff);
+	}
+
+	public function preparaNuoviSottoconti() {
+		$this->setNuoviSottoconti(array());		
+	}
+	
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -271,6 +295,15 @@ class Sottoconto implements CoreInterface {
 
     public function setQtaRegistrazioniTrovate($qtaRegistrazioniTrovate){
         $this->qtaRegistrazioniTrovate = $qtaRegistrazioniTrovate;
+    }
+
+
+    public function getNuoviSottoconti(){
+        return $this->nuoviSottoconti;
+    }
+
+    public function setNuoviSottoconti($nuoviSottoconti){
+        $this->nuoviSottoconti = $nuoviSottoconti;
     }
 
 }

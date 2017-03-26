@@ -946,9 +946,8 @@ $( "#nuovo-sottoconto-form" ).dialog({
 				var xmlhttp = new XMLHttpRequest();
 			    xmlhttp.onreadystatechange = function() {
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			        	if (xmlhttp.responseText == "Dettaglio ok") {
-							aggiungiSottoconto();			        		
-			        	}
+			        	var sottocontiTable = xmlhttp.responseText;
+		        		$("#sottocontiTable").html(sottocontiTable);
 			        }
 			    }
 			    xmlhttp.open("GET", "aggiungiNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
@@ -1842,31 +1841,17 @@ function cancellaDettaglioIncasso(idconto) {
 //Funzioni per i conti e sottoconti
 //---------------------------------------------------------------
 
-function cancellaSottocontoPagina(codsottoconto) {
-
-	$("#" + codsottoconto).remove();	
+function cancellaSottocontoPagina(codsottoconto, dessottoconto) {
 	
-	var rowCount = $("#sottoconti tbody tr").length;
-	
-	if (rowCount == 0) {
-		$( "#sottoconti-head thead tr" ).remove();		
-		$( "#sottoconti-head" ).removeClass("datiCreateSottile");
-	}
-	
-	var c = parseInt(codsottoconto.toString());
-	var index = jQuery.inArray(c,indexSottocontiInseriti);
-	if (index == -1) {
-		var cc = codsottoconto.toString();
-		var index = jQuery.inArray(cc,indexSottocontiInseriti);
-	}	
-	
-	if (index > -1) {
-		indexSottocontiInseriti.splice(index, 1);
-		aggiornaIndexSottocontiInseriti(indexSottocontiInseriti);
-
-		sottocontiInseriti.splice(index, 1);				
-		aggiornaSottocontiInseriti(sottocontiInseriti);
-	}
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var sottocontiTable = xmlhttp.responseText;
+    		$("#sottocontiTable").html(sottocontiTable);
+        }
+    }
+    xmlhttp.open("GET", "togliNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
+    xmlhttp.send();				
 }
 
 function modificaGruppoSottoconto(indgruppo,codsottoconto) {

@@ -1,63 +1,4 @@
-<body>
-
-<script type="text/javascript">
-
-var indexSottocontiInseriti = [%arrayIndexSottocontiInseriti%];
-var sottocontiInseriti = [%arraySottocontiInseriti%];
-
-function aggiungiSottoconto() {
-
-	var codsottoconto = $("#codsottoconto").val();
-	var dessottoconto = $("#dessottoconto").val();
-
-	if (codsottoconto.substring(0,1) != "0") {
-		var rowCount = $('#sottoconti tr').length;
-		
-		if (rowCount == 0) {
-			$( "#sottoconti-head thead" ).append("<tr>" + 
-				"<th width='100' align='center'>Sottoconto</th>" + 
-				"<th width='400' align='left'>Descrizione</th>" + 
-				"<th width='23'>&nbsp;</th>" +
-				"</tr>");
-			$( "#sottoconti-head" ).addClass("datiCreateSottile");
-		}
-			
-		$( "#sottoconti tbody" ).append( "<tr id='" + codsottoconto + "'>" +
-	        "<td width='107' align='center'>" + codsottoconto + "</td>" +
-	        "<td width='407' align='left'>" + dessottoconto + "</td>" +
-	    	"<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" + codsottoconto + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
-	      "</tr>" );
-		
-		var elemento = codsottoconto + "#" + dessottoconto;
-		addSottoconto(elemento);
-		
-		$("#codsottoconto").val("");
-		$("#dessottoconto").val("");					
-	}
-}
-
-function addSottoconto(elemento) {
-	
-	sottocontiInseriti.push(elemento);
-	aggiornaSottocontiInseriti(sottocontiInseriti);
-
-	var cc = elemento.split("#");	
-	var conto = cc[0].toString();
-	
-	indexSottocontiInseriti.push(conto);
-	aggiornaIndexSottocontiInseriti(indexSottocontiInseriti);
-}
-
-function aggiornaSottocontiInseriti(sottocontiInseriti) {
-	$("#sottocontiInseriti").val(sottocontiInseriti);
-}
-
-function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
-	$("#indexSottocontiInseriti").val(indexSottocontiInseriti);
-}
-
-</script>
-	
+<body>	
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -116,14 +57,7 @@ function aggiornaIndexSottocontiInseriti(indexSottocontiInseriti) {
 					</tr>
 					<tr>
 						<td colspan="4">
-							<table id="sottoconti-head" class='result'>
-							    <thead>%thead_sottoconti%</thead>
-							</table>
-							<div class='scroll-sottoconti'>
-								<table id="sottoconti" class="datiCreateSottile">
-								    <tbody>%tbody_sottoconti%</tbody>
-								</table>			
-							</div>	
+							<table id="sottocontiTable" class='result'>%sottocontiTable%</table>
 						</td>
 					</tr>										
 				</tbody>

@@ -39,7 +39,7 @@ class ConfigurazioniController
  			$conto->setTipConto($_REQUEST["dareavere"]);
  			$conto->setIndPresenzaInBilancio($_REQUEST["indpresenza"]);
  			$conto->setIndVisibilitaSottoconti($_REQUEST["indvissottoconti"]);
- 			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio"]); 			
+ 			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio"]); 		
  		}
  		
  		if (isset($_REQUEST["codsottoconto_del"])) {

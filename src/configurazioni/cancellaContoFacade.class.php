@@ -1,16 +1,15 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
 require_once 'cancellaConto.class.php';
+require_once 'configurazioni.controller.class.php';
 
 session_start();
+xdebug_disable();
 
-$cancellaConto = CancellaConto::getInstance();
+$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(CancellaConto::getInstance()));
 
-if ($_GET["modo"] == "go") {
-
-	$_SESSION["codconto"] = $_POST["codconto"];
-	$cancellaConto->start();
-}
+$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+$controller->start();
 
 ?>
