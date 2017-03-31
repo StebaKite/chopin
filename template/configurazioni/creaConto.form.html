@@ -1,4 +1,45 @@
-<body>	
+<script>
+function setNumeroRigaBilancio(nn) {
+	$( "#slider-posizione-bilancio" ).slider( "value", nn );	
+    $( "#numrigabilancio" ).val( $( "#slider-posizione-bilancio" ).slider( "value" ) );
+}
+</script>
+
+<body onload=setNumeroRigaBilancio(%numrigabilancio%)>
+
+<script type="text/javascript">
+
+$(document).ready( function () {
+    $('#sottocontiTable').dataTable( {
+    	"order": [[0, 'asc']],
+    	"columnDefs": [
+    	          	{"targets": 0, "orderable": false },
+    	          	{"targets": 1, "orderable": false },
+    	       	    {"targets": 2, "orderable": false }
+    	       		],    	
+        "lengthMenu": [ 5 ],
+   		"language": {
+            "lengthMenu": "Visualizza _MENU_ righe per pagina",
+            "zeroRecords": "La ricerca non ha prodotto risultati",
+            "info": "Pagina _PAGE_ di _PAGES_",
+            "infoEmpty": "La ricerca non ha prodotto risultati",
+            "infoFiltered": "(righe filtrate da _MAX_ totali)",
+            "search": "Cerca:",
+            "paginate": {
+                "first":      "Prima",
+                "last":       "Ultima",
+                "next":       "Prossima",
+                "previous":   "Precedente"
+            }
+     	},     
+     	"searching": false,
+     	"paginate": false,
+        "info": false        
+    } );
+} );
+
+</script>
+
 <div id="body">
 	<div id="main">
 		<h2>%titoloPagina%</h2>
@@ -55,6 +96,7 @@
 						
 						</td>
 					</tr>
+					<tr><td><h2>Sottoconti</h2></td></tr>
 					<tr>
 						<td colspan="4">
 							<table id="sottocontiTable" class='result'>%sottocontiTable%</table>
