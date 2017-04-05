@@ -36,23 +36,14 @@ $(document).ready( function () {
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina%</h2>
-		
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td class="td">%ml.codcausale% :</td>
-						<td class="tooltip"><input type="text" name="causale" size="6" maxlength="4" value='%causale%' ></td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
+		<table style="width:100%;">
+			<tbody>
+				<tr>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right"><button id="nuova-causale" class="button">%ml.nuovacausale%</button></td>
+				</tr>
+			</tbody>
+		</table>
 		<br>
 		%risultato_ricerca%		
 	</div>	
@@ -62,5 +53,32 @@ $(document).ready( function () {
 		<p>Elimino la causale e tutte le sue configurazioni ?</p>
 		<input type="hidden" id="codcausale" name="codcausale">
   </form>
+</div>
+		
+<div id="nuova-causale-form" title="Nuova Causale"> 
+	<form method="post" id="nuovaCausale" action="../configurazioni/creaCausaleFacade.class.php?modo=go" >
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.codcausale% :</td>
+					<td class="tooltip"><input type="text" id="codcausale" name="codcausale" size="6" maxlength="4" value='%codcausale%'></td>
+				</tr>
+				<tr>
+					<td>%ml.descausale% :</td>
+					<td class="tooltip"><input type="text" id="descausale" name="descausale" size="70" maxlength="100" value='%descausale%'></td>
+				</tr>
+				<tr>
+					<td>%ml.catcausale% :</td>						
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="generi" name="catcausale" value="GENERI" checked ><label for="generi">%ml.generi%</label>
+							<input type="radio" id="incpag" name="catcausale" value="INCPAG" ><label for="incpag">%ml.incpag%</label>
+							<input type="radio" id="corris" name="catcausale" value="CORRIS" ><label for="corris">%ml.corris%</label>
+						</div>
+					</td>					
+				</tr>								
+			</tbody>
+		</table> 	 
+	</form>
 </div>
 		

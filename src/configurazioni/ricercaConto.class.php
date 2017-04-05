@@ -80,6 +80,10 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO] . "<br>" . "Trovati " . $conto->getQtaConti() . " conti";
 				unset($_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO]);
 			}
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $conto->getQtaConti() . " conti";
+				unset($_SESSION[self::MSG_DA_CREAZIONE]);
+			}
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
 			}

@@ -32,22 +32,18 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 		// Template
 		
 		$fornitore = Fornitore::getInstance();
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-	
 		$ricercaFornitoreTemplate = RicercaFornitoreTemplate::getInstance();
-	
-		$fornitore->setFornitori(null);
-		
-		if ($fornitore->load(Database::getInstance())) {
 
-			$_SESSION[self::FORNITORE] = serialize($fornitore);
-				
-			$this->preparaPagina($ricercaFornitoreTemplate);
-				
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
+		$this->preparaPagina($ricercaFornitoreTemplate);
+		
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+		echo $utility->tailTemplate($template);
+		
+		if ($this->refreshFornitori($db, $fornitore)) {
 			
 			$ricercaFornitoreTemplate->displayPagina();
 	
@@ -57,6 +53,10 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
+			}
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
+				unset($_SESSION[self::MSG_DA_CREAZIONE]);
 			}
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
@@ -72,30 +72,32 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 			}
 	
 			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
 		}
 		else {
-	
-			$this->preparaPagina($ricercaFornitoreTemplate);
 				
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$ricercaFornitoreTemplate->displayPagina();
-	
-			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-	
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
 		}
+		
+		include($this->piede);
 	}
 
-	public function go() {}
+	public function go() {
+		$this->start();
+	}
+
+	private function refreshFornitori($db, $fornitore) {
+	
+		if (sizeof($fornitore->getFornitori()) == 0) {
+	
+			if (!$fornitore->load($db)) {
+				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+				return false;
+			}
+			$_SESSION[self::FORNITORE] = serialize($fornitore);
+		}
+		return true;
+	}
 	
 	private function preparaPagina() {
 	

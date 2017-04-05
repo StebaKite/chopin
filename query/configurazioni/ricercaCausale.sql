@@ -18,5 +18,4 @@ FROM contabilita.causale as causale
 		   GROUP BY cod_causale
 		) AS t2
 	  ON t2.cod_causale = causale.cod_causale 	
-%cod_causale%
 ORDER BY causale.cod_causale

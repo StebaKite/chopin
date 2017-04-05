@@ -37,17 +37,15 @@ $(document).ready( function () {
 <div id="body">
 
 	<div id="main">
-		<h2>%titoloPagina%</h2>
-		<table>
-			<tfoot>
+		<table style="width:100%;">
+			<tbody>
 				<tr>
-					<td class="tooltip">
-						<button id="nuovo-mercato" class="button" title="%ml.nuovomercato%" >%ml.nuovomercato%</button>
-					</td>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right"><button id="nuovo-mercato" class="button">%ml.nuovomercato%</button></td>
 				</tr>
-			</tfoot>
+			</tbody>
 		</table>
-		<br/><br/>		
+		<br/>		
 		<table id="mercati" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
 	</div>	
 </div>

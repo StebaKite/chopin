@@ -37,10 +37,20 @@ $(document).ready( function () {
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina%</h2>
+		<table style="width:100%;">
+			<tbody>
+				<tr>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right">
+						<form action="../configurazioni/creaContoFacade.class.php">
+							<button id="nuovo-conto" class="button">%ml.nuovoconto%</button></td>
+ 						</form>					
+				</tr>
+			</tbody>
+		</table>
 		
 		<form method="post" action="%azione%" >
-			<table class="datiCreate" width="100%" cellpadding="5px">
+			<table class="datiCreate" cellpadding="5px">
 				<tbody>
 					<tr style="float:left;">
 						<td class="td">%ml.catconto% :</td>

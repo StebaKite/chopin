@@ -1,175 +1,117 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.business.interface.php';
+require_once 'ricercaCausale.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'causale.class.php';
 
-class RicercaCausale extends ConfigurazioniAbstract {
+class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
+{
 
-	private static $_instance = null;
-
-	public static $azioneRicercaCausale = "../configurazioni/ricercaCausaleFacade.class.php?modo=go";
-	public static $queryRicercaCausale = "/configurazioni/ricercaCausale.sql";
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaCausale();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_CAUSALE])) $_SESSION[self::RICERCA_CAUSALE] = serialize(new RicercaCausale());
+		return unserialize($_SESSION[self::RICERCA_CAUSALE]);
 	}
 
-	public function start() {
+	public function start()
+	{
+		$this->go();
+	}
 
-		require_once 'ricercaCausale.template.php';
-		require_once 'utility.class.php';
-
-		// Template
+	public function go()
+	{		
+		$causale = Causale::getInstance();
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		unset($_SESSION["causaliTrovate"]);
-		$_SESSION["codcausale"] = "";
-
+		$array = $utility->getConfig();		
 		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
+
 		$this->preparaPagina($ricercaCausaleTemplate);
-
-		// compone la pagina
-			
+		
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
-		$ricercaCausaleTemplate->displayPagina();
-		include(self::$piede);
-	}
-
-	public function go() {
-
-		require_once 'ricercaCausale.template.php';
-		require_once 'utility.class.php';
 		
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		unset($_SESSION["causaliTrovate"]);
-		
-		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
-		
-		if ($this->ricercaDati($utility)) {
-				
-			$this->preparaPagina($ricercaCausaleTemplate);
-				
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-
+		if ($this->refreshCausali($db, $causale)) {
+			
 			$ricercaCausaleTemplate->displayPagina();
-		
+			
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
-			*/
-			if (isset($_SESSION["messaggioCancellazione"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovate " . $_SESSION['numCausaliTrovate'] . " causali";
-				unset($_SESSION["messaggioCancellazione"]);
+			 */
+			
+			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
+				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
+			}
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
+				unset($_SESSION[self::MSG_DA_CREAZIONE]);
 			}
 			else {
-				$_SESSION["messaggio"] = "Trovate " . $_SESSION['numCausaliTrovate'] . " causali";
-			}
+				$_SESSION[self::MESSAGGIO] = "Trovate " . $causale->getQtaCausali() . " causali";
+			}	
+			
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 				
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				
-			if ($_SESSION['numCausaliTrovate'] > 0) {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+			if ($causale->getQtaCausali() > 0) {
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			}
 			else {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
-		
+			
 			echo $utility->tailTemplate($template);
-		
-			include(self::$piede);
-		}
+		}			
 		else {
-		
-			$this->preparaPagina($ricercaCausaleTemplate);
-		
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-			$ricercaCausaleTemplate->displayPagina();
-				
-			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle causali" ;
-				
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		
-			include(self::$piede);
-		}		
-	}
-
-	public function ricercaDati($utility) {
+			
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);			
+		}
 	
-		require_once 'database.class.php';
-
-		$causale = "";
-		
-		if ($_SESSION['causale'] != "") {
-			$causale = "WHERE causale.cod_causale = '" . $_SESSION['causale'] . "'";
-		}
-		
-		$replace = array(
-				'%cod_causale%' => $causale
-		);
-		
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaCausale;
-		
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
-		// esegue la query
-		
-		$db = Database::getInstance();
-		$result = $db->getData($sql);
-		
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['causaliTrovate'] = $result;
-		}
-		else {
-			unset($_SESSION['causaliTrovate']);
-			$_SESSION['numCausaliTrovate'] = 0;
-		}		
-		return $result;
+		include($this->piede);
 	}
 
+	/**
+	 * Questo metodo osserva il contenuto dell'array causali dell'oggetto. Se è vuoto lo ricarica e 
+	 * ri-serializza l'oggetto in sessione, se è pieno non fa nulla e lascia l'array esistente
+	 * @param unknown $db
+	 * @param unknown $causale
+	 * @return boolean
+	 */
+	private function refreshCausali($db, $causale) {
+
+		if (sizeof($causale->getCausali()) == 0) {
+				
+			if (!$causale->load($db)) {		
+				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;					
+				return false;
+			}
+			$_SESSION[self::CAUSALE] = serialize($causale);
+		}
+		return true;
+	}
+	
 	public function preparaPagina($ricercaCausaleTemplate) {
 	
-		require_once 'utility.class.php';
-	
-		$_SESSION["azione"] = self::$azioneRicercaCausale;
-		$_SESSION["confermaTip"] = "%ml.cercaTip%";
-		$_SESSION["titoloPagina"] = "%ml.ricercaCausale%";
+		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_CAUSALE;
+		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
+		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaCausale%";
 	}
 }
 

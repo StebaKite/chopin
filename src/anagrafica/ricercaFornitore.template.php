@@ -89,12 +89,18 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 			}
 			$risultato_ricerca .= "</tbody>";
 		}
-		else {
 		
-		}
+		$fornitore->prepara();
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%codfornitore%' => $fornitore->getCodFornitore(),
+				'%desfornitore%' => $fornitore->getDesFornitore(),
+				'%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),
+				'%cittafornitore%' => $fornitore->getDesCittaFornitore(),
+				'%capfornitore%' => $fornitore->getCapFornitore(),
+				'%tipoaddebito%' => $fornitore->getTipAddebito(),	
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 		

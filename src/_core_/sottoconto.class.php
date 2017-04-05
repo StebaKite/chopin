@@ -69,6 +69,11 @@ class Sottoconto implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		
+		if ($result) {
+			$this->leggi($db);		// refresh dei sottoconti caricati
+			$_SESSION[self::SOTTOCONTO] = serialize($this);
+		}
 		return $result;
 	}
 
@@ -82,8 +87,12 @@ class Sottoconto implements CoreInterface {
 				'%cod_sottoconto%' => $this->getCodSottoconto()
 		);
 		$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_SOTTOCONTO;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);		
+		
+		if ($db->getData($sql)) {
+			$this->leggi($db);		// refresh dei sottoconti caricati
+			$_SESSION[self::SOTTOCONTO] = serialize($this);
+		}
 	}	
 	
 	public function leggi($db) {

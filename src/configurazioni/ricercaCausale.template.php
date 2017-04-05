@@ -1,35 +1,24 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'causale.class.php';
 
-class RicercaCausaleTemplate extends ConfigurazioniAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/configurazioni/ricercaCausale.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+class RicercaCausaleTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaCausaleTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_CAUSALI_TEMPLATE])) $_SESSION[self::RICERCA_CAUSALI_TEMPLATE] = serialize(new RicercaCausaleTemplate());
+		return unserialize($_SESSION[self::RICERCA_CAUSALI_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
@@ -37,17 +26,16 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 
 	public function displayPagina() {
 	
-		require_once 'utility.class.php';
-	
 		// Template --------------------------------------------------------------
 	
+		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_CAUSALE;
 		$risultato_ricerca = "";
 	
-		if (isset($_SESSION["causaliTrovate"])) {
+		if ($causale->getQtaCausali() > 0) {
 	
 			$risultato_ricerca =
 			"<table id='causali' class='display'>" .
@@ -63,58 +51,51 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract {
 			"	</thead>" .
 			"	<tbody>";
 	
-			$causaliTrovate = $_SESSION["causaliTrovate"];
-			$numCausali = 0;
-	
-			foreach(pg_fetch_all($causaliTrovate) as $row) {
+			foreach($causale->getCausali() as $row) {
 				
-				if ($row['tot_conti_causale'] == 0) {
+				if ($row[self::NUM_CONTI_CAUSALE] == 0) {
 					$class = "class='errato'";
 				}
 				else {
 					$class = "class=''";
 				}				
 				
-				if ($row['tot_registrazioni_causale'] == 0) {
-					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
-					$bottoneCancella = "<a class='tooltip' onclick='cancellaCausale(" . trim($row['cod_causale']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+				if ($row[self::NUM_REG_CAUSALE] == 0) {
+					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_CAUSALE_ICON; 
+					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . "&descausale=" . trim($row[$causale::DES_CAUSALE]) . self::CONFIGURA_CAUSALE_ICON; 
+					$bottoneCancella = self::CANCELLA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::CANCELLA_CAUSALE_ICON;
 				}
 				else {
-					$bottoneModifica = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneConfigura = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=" . trim($row['cod_causale']) . "&descausale=" . trim($row['des_causale']) . "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_CAUSALE_ICON;
+					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . "&descausale=" . trim($row[$causale::DES_CAUSALE]) . self::CONFIGURA_CAUSALE_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 
-				$numCausali ++;
-				$risultato_ricerca = $risultato_ricerca .
+				$risultato_ricerca .= 
 				"<tr>" .
-				"	<td>" . trim($row['cod_causale']) . "</td>" .
-				"	<td>" . trim($row['des_causale']) . "</td>" .
-				"	<td>" . trim($row['cat_causale']) . "</td>" .
-				"	<td>" . trim($row['tot_registrazioni_causale']) . "</td>" .
-				"	<td>" . trim($row['tot_conti_causale']) . "</td>" .
+				"	<td>" . trim($row[$causale::COD_CAUSALE]) . "</td>" .
+				"	<td>" . trim($row[$causale::DES_CAUSALE]) . "</td>" .
+				"	<td>" . trim($row[$causale::CAT_CAUSALE]) . "</td>" .
+				"	<td>" . trim($row[self::NUM_REG_CAUSALE]) . "</td>" .
+				"	<td>" . trim($row[self::NUM_CONTI_CAUSALE]) . "</td>" .
 				"	<td id='icons'>" . $bottoneModifica . "</td>" .
 				"	<td id='icons'>" . $bottoneConfigura . "</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";		
 			}
-			$_SESSION['numCausaliTrovate'] = $numCausali;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
-		}
-		else {
-	
+			$risultato_ricerca .= "</tbody></table>";
 		}
 	
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%causale%' => $_SESSION["causale"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
-				'%risultato_ricerca%' => $risultato_ricerca
+				'%titoloPagina%' => $_SESSION[self::TITOLO],
+				'%azione%' => $_SESSION[self::AZIONE],
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+				'%causale%' => $causale->getCodCausale(),
+				'%risultato_ricerca%' => $risultato_ricerca,
+				'%codcausale%' => $causale->getCodCausale(),
+				'%descausale%' => $causale->getDesCausale(),
+				'%catcausale%' => $causale->getCatCausale()
 		);
-	
-		$utility = Utility::getInstance();
 	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

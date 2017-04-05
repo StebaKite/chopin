@@ -59,6 +59,10 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 			}
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
+				unset($_SESSION[self::MSG_DA_CREAZIONE]);
+			}
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $cliente->getQtaClienti() . " clienti";
 			}
@@ -96,7 +100,9 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		}
 	}
 	
-	public function go() {}
+	public function go() {
+		$this->start();
+	}
 	
 	private function preparaPagina($ricercaCausaleTemplate) {
 	

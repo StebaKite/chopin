@@ -142,7 +142,6 @@ abstract class Nexus6Abstract {
 		if ($array["anagrafiche"] == "Y") {
 			$anagrafiche .= "<li><a>" . $array["anagrafiche_menu_title"] . "</a>";
 			$anagrafiche .= "<ul>";
-			if ($array["anagrafiche_item_1"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/creaFornitoreFacade.class.php?modo=start'>" . $array["anagrafiche_item_1_name"] . "</a></li>";
 			if ($array["anagrafiche_item_2"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/creaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_2_name"] . "</a></li>";
 			if ($array["anagrafiche_item_3"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaFornitoreFacade.class.php?modo=start'>" . $array["anagrafiche_item_3_name"] . "</a></li>";
 			if ($array["anagrafiche_item_4"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_4_name"] . "</a></li>";
@@ -158,9 +157,7 @@ abstract class Nexus6Abstract {
 		if ($array["configurazioni"] == "Y") {
 			$configurazioni .= "<li><a>" . $array["configurazioni_menu_title"] . "</a>";
 			$configurazioni .= "<ul>";
-			if ($array["configurazioni_item_1"] == "Y") $configurazioni .= "<li><a href='../configurazioni/creaContoFacade.class.php?modo=start'>" . $array["configurazioni_item_1_name"] . "</a></li>";
 			if ($array["configurazioni_item_2"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaContoFacade.class.php?modo=start'>" . $array["configurazioni_item_2_name"] . "</a></li>";
-			if ($array["configurazioni_item_3"] == "Y") $configurazioni .= "<li><a href='../configurazioni/creaCausaleFacade.class.php?modo=start'>" . $array["configurazioni_item_3_name"] . "</a></li>";
 			if ($array["configurazioni_item_4"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaCausaleFacade.class.php?modo=start'>" . $array["configurazioni_item_4_name"] . "</a></li>";
 			if ($array["configurazioni_item_5"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=start'>" . $array["configurazioni_item_5_name"] . "</a></li>";
 			$configurazioni .= "</ul></li>";

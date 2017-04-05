@@ -2,6 +2,7 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.presentation.interface.php';
+require_once "categoriaCliente.class.php";
 require_once 'utility.class.php';
 require_once 'cliente.class.php';
 
@@ -31,6 +32,9 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 		// Template --------------------------------------------------------------
 
 		$cliente = Cliente::getInstance();
+		$categoriaCliente = CategoriaCliente::getInstance();
+		$categoriaCliente->load();
+		
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -64,7 +68,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
-
+				
 				$risultato_ricerca .= 
 				"<tr>" .
 				"	<td>" . trim($row[$cliente::COD_CLIENTE]) . "</td>" .
@@ -80,13 +84,23 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 			}
 			$risultato_ricerca .= "</tbody>";
 		}
-		else {
 
-		}
-
+		$cliente->prepara();
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE_RICERCA_CLIENTE],
+				'%elenco_categorie_cliente%' => $categoriaCliente->getElencoCategorieCliente(),
+				'%codcliente%' => $cliente->getCodCliente(),
+				'%descliente%' => $cliente->getDesCliente(),
+				'%indcliente%' => $cliente->getDesIndirizzoCliente(),
+				'%cittacliente%' => $cliente->getDesCittaCliente(),
+				'%capcliente%' => $cliente->getCapCliente(),
+				'%tipoaddebito%' => $cliente->getTipAddebito(),
+				'%codpiva%' => $cliente->getCodPiva(),
+				'%codfisc%' => $cliente->getCodFisc(),
+				'%catcliente%' => $cliente->getCatCliente(),
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

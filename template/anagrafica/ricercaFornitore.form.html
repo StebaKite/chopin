@@ -31,13 +31,78 @@ $(document).ready( function () {
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina%</h2>
+		<table style="width:100%;">
+			<tbody>
+				<tr>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right"><button id="nuovo-fornitore" class="button">%ml.nuovofornitore%</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<br/>
 		<table id="fornitori" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
 	</div>	
 		
-<div id="cancella-fornitore-form" title="Cancella Fornitore"> 
-	<form method="post" id="cancellaFornitore" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
-		<p>Elimino il fornitore ?</p>
-		<input type="hidden" id="idfornitore" name="idfornitore">
-	</form>
-</div>		
+	<div id="nuovo-fornitore-form" title="Nuovo Fornitore"> 
+		<form method="post" id="nuovoFornitore" action="../anagrafica/creaFornitoreFacade.class.php?modo=go" >
+
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codfornitore% :</td>
+						<td class="tooltip">
+							<input type="text" id="codfornitore" name="codfornitore" size="12" maxlength="10" value='%codfornitore%' onblur="controllaCodiceFornitore();" />&nbsp;&nbsp;&nbsp;
+							<i>(Codice fornitore proposto disponibile)</i>
+						</td>
+					</tr>
+					<tr>
+						<td>%ml.desfornitore% :</td>
+						<td class="tooltip" colspan="2"><input type="text" id="desfornitore" name="desfornitore" size="70" maxlength="100" value='%desfornitore%' onblur="normalizzaCampo('desfornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.indfornitore% :</td>
+						<td class="tooltip" colspan="2"><input type="text" id="indfornitore" name="indfornitore" size="70" maxlength="200" value='%indfornitore%' onblur="normalizzaCampo('indfornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.cittafornitore% :</td>
+						<td class="tooltip" colspan="2"><input type="text" id="cittafornitore" name="cittafornitore" size="70" maxlength="100" value='%cittafornitore%' onblur="normalizzaCampo('cittafornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.capfornitore% :</td>
+						<td class="tooltip" colspan="2"><input type="text" id="capfornitore" name="capfornitore" size="7" maxlength="5" value='%capfornitore%' onblur="normalizzaCampo('capfornitore');"></td>
+					</tr>	
+					<tr>
+						<td>%ml.tipaddebito% :</td>						
+						<td colspan="2">
+							<div class="radioset" >
+								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">%ml.bonifico%</label>
+								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" ><label for="riba">%ml.riba%</label>
+								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" ><label for="rimdiretta">%ml.rimdiretta%</label>
+								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" ><label for="assegnobancario">%ml.assegnobancario%</label>
+								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" ><label for="addebitodiretto">%ml.addebitodiretto%</label>
+							</div>
+						</td>					
+					</tr>	
+					<tr>
+						<td>
+							<p>
+								<label for="amount">%ml.numggscafatt% :</label>
+								<input type="text" id="numggscadenzafattura" name="numggscadenzafattura" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">
+							</p>
+						</td>
+						<td colspan="2">
+							<div id="slider-gg-scadenza-fattura">
+						</td>
+					</tr>				
+				</tbody>
+			</table>
+			
+		</form>
+	</div>
+					
+	<div id="cancella-fornitore-form" title="Cancella Fornitore"> 
+		<form method="post" id="cancellaFornitore" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
+			<p>Elimino il fornitore ?</p>
+			<input type="hidden" id="idfornitore" name="idfornitore">
+		</form>
+	</div>		
