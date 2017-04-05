@@ -2,7 +2,9 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'anagrafica.controller.class.php';
 require_once 'creaFornitore.template.php';
+require_once 'ricercaFornitore.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 require_once 'fornitore.class.php';
@@ -54,64 +56,16 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 
 		if ($creaFornitoreTemplate->controlliLogici()) {
 
-			// Aggiornamento del DB ------------------------------
-
 			if ($this->creaFornitore()) {
-
-				$fornitore = Fornitore::getInstance();
-				$fornitore->prepara();
-
-				$_SESSION[self::FORNITORE] = serialize($fornitore);
-
-				$_SESSION["messaggio"] = self::CREA_FORNITORE_OK;
-
-				$this->preparaPagina($creaFornitoreTemplate);
-
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-
-				$creaFornitoreTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $this->utility->tailTemplate($template);
-
-				include($this->piede);
+				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_FORNITORE_OK;
 			}
-			else {
-
-				$this->preparaPagina($creaFornitoreTemplate);
-
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-
-				$creaFornitoreTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $this->utility->tailTemplate($template);
-
-				include($this->piede);
-			}
+			else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREA_FORNITORE;
 		}
-		else {
+		else $_SESSION[self::MSG_DA_CREAZIONE] = $_SESSION[self::MESSAGGIO];
 
-			$this->preparaPagina($creaFornitoreTemplate);
-
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-			$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-			echo $this->utility->tailTemplate($template);
-
-			$creaFornitoreTemplate->displayPagina();
-
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $this->utility->tailTemplate($template);
-
-			include($this->piede);
-		}
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->start();
 	}
 
 	private function creaFornitore()
@@ -132,7 +86,6 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 			return TRUE;
 		}
 		$db->rollbackTransaction();
-		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREA_FORNITORE;
 		return FALSE;
 	}
 

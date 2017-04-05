@@ -12,6 +12,7 @@ interface CoreInterface extends MainNexus6Interface
 	const MERCATO					= "Obj_mercato";
 	const REGISTRAZIONE				= "Obj_registrazione";
 	const DETTAGLIO_REGISTRAZIONE 	= "Obj_dettaglioregistrazione";
+	const CAUSALE					= "Obj_causale";
 }
 
 ?>

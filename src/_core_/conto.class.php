@@ -164,6 +164,10 @@ class Conto implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		if ($result) {
+			$this->load($db);	// refresh dei conti caricati
+			$_SESSION[self::CONTO] = serialize($this);
+		}
 		return $result;
 	}
 
@@ -177,7 +181,11 @@ class Conto implements CoreInterface {
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+
+		if ($db->getData($sql)) {
+			$this->load($db);		// refresh dei conti caricati
+			$_SESSION[self::CONTO] = serialize($this);
+		}
 	}
 	
 	// Getters eSetters

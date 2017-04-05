@@ -3,6 +3,7 @@
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
 require_once 'creaConto.template.php';
+require_once 'ricercaConto.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'conto.class.php';
@@ -64,56 +65,15 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		if ($creaContoTemplate->controlliLogici()) {
 				
 			if ($this->creaConto($utility,$conto,$sottoconto)) {
-
-				$_SESSION[self::MESSAGGIO] = self::CREA_CONTO_OK;
-				
-				$this->preparaPagina($creaContoTemplate);
-
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-				echo $utility->tailTemplate($template);
-
-				$creaContoTemplate->displayPagina();
-				
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include($this->piede);
+				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_CONTO_OK;
 			}
-			else {
-
-				$this->preparaPagina($creaContoTemplate);
-
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-				echo $utility->tailTemplate($template);
-
-				$creaContoTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
-				
-				include($this->piede);
-			}
+			else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_CONTO;
 		}
-		else {
-				
-			$this->preparaPagina($creaContoTemplate);
+		else $_SESSION[self::MSG_DA_CREAZIONE] = self::MESSAGGIO;
 
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$creaContoTemplate->displayPagina();
-
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-			
-			include($this->piede);
-		}
+		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
+		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+		$controller->start();
 	}
 
 	public function creaConto($utility,$conto,$sottoconto)

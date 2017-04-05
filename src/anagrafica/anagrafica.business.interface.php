@@ -48,6 +48,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 
 	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
 	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
+	const MSG_DA_CREAZIONE = "messaggioCreazione";
 	const ERRORE_CREA_FORNITORE = "Fornitore già esistente, inserimento fallito";
 	const ERRORE_CREA_CLIENTE = "Cliente già esistente, inserimento fallito";
 	const CREA_FORNITORE_OK = "Fornitore salvato con successo";

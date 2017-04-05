@@ -36,7 +36,7 @@ class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 
 		$conto->cancella($db);
 
-		$_SESSION["messaggioCancellazione"] = self::CANCELLA_CONTO_OK;
+		$_SESSION[self::MSG_DA_CANCELLAZIONE] = self::CANCELLA_CONTO_OK;
 		
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);

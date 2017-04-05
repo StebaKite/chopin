@@ -9,11 +9,11 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 	// Query ---------------------------------------------------------------
 
 	public static $queryUpdateSottoConto = "/configurazioni/updateSottoconto.sql";
-	public static $queryCreaCausale = "/configurazioni/creaCausale.sql";
+	
 	public static $queryLeggiCausale = "/configurazioni/leggiCausale.sql";
 	public static $queryUpdateCausale = "/configurazioni/updateCausale.sql";
-	public static $queryDeleteCausale = "/configurazioni/deleteCausale.sql";
 	public static $queryLeggiContiCausale = "/configurazioni/leggiContiCausale.sql";
+	
 	public static $queryLeggiContiDisponibili = "/configurazioni/leggiContiDisponibili.sql";
 	public static $queryCreaConfigurazioneCausale = "/configurazioni/creaConfigurazioneCausale.sql";
 	public static $queryDeleteConfigurazioneCausale = "/configurazioni/deleteConfigurazioneCausale.sql";
@@ -58,28 +58,6 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 * Questo metodo inserisce una causale
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $codcausale
-	 * @param unknown $descausale
-	 * @param unknown $catcausale
-	 * @return unknown
-	 */
-	public function inserisciCausale($db, $utility, $codcausale, $descausale, $catcausale) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_causale%' => trim($codcausale),
-				'%des_causale%' => trim($descausale),
-				'%cat_causale%' => trim($catcausale)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCausale;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
 
 	/**
 	 * Questo metodo legge una causale
@@ -121,23 +99,6 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
-	}
-
-	/**
-	 * Questo metodo cancella una causale
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $codcausale
-	 */
-	public function cancellaCausale($db, $utility, $codcausale) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cod_causale%' => trim($codcausale)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteCausale;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
 	}
 
 	/**

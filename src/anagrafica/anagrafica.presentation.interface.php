@@ -3,7 +3,7 @@
 require_once 'nexus6.main.interface.php';
 
 interface AnagraficaPresentationInterface extends MainNexus6Interface {
-
+	
 	// Nomi
 
 	const CLIENTI = "clientiTrovati";
@@ -14,6 +14,11 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const TITOLO = "titoloPagina";
 	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
 
+	// Oggetti
+	
+	const FORNITORE = "Obj_fornitore";
+	const CLIENTE = "Obj_cliente";
+	
 	// Pagine
 
 	const PAGINA_RICERCA_CLIENTE    = "/anagrafica/ricercaCliente.form.html";

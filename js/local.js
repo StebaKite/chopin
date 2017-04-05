@@ -965,7 +965,6 @@ $( "#nuovo-sottoconto-form" ).dialog({
 	]
 });
 
-// Link to open the dialog
 $( "#nuovo-sottoconto" ).click(function( event ) {
 	$( "#nuovo-sottoconto-form" ).dialog( "open" );
 	event.preventDefault();
@@ -1049,6 +1048,84 @@ $( "#nuovo-dett-fattura-cliente" ).click(function( event ) {
 	event.preventDefault();
 });
 
+
+$( "#nuova-causale" ).click(function( event ) {
+	$( "#nuova-causale-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuova-causale-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 750,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovaCausale").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+$( "#nuovo-fornitore" ).click(function( event ) {
+	$( "#nuovo-fornitore-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuovo-fornitore-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 1000,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovoFornitore").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+$( "#nuovo-cliente" ).click(function( event ) {
+	$( "#nuovo-cliente-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuovo-cliente-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 900,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovoCliente").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
 
 // ----------------------------------------------------
 // Link per la sottomissione del form elenco eventi

@@ -84,6 +84,8 @@ class Mercato implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_MERCATO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		
+		if ($result) $this->load($db);		// refresh dei mercati caricati
 		return $result;
 	}
 
@@ -116,6 +118,8 @@ class Mercato implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_MERCATO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
+
+		if ($result) $this->load($db);		// refresh dei mercati caricati
 		return $result;
 	}
 	

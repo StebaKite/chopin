@@ -2,7 +2,9 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
+require_once 'anagrafica.controller.class.php';
 require_once 'creaCliente.template.php';
+require_once 'ricercaCliente.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 require_once 'cliente.class.php';
@@ -56,65 +58,16 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
 
 		if ($creaClienteTemplate->controlliLogici()) {
 
-			// Aggiornamento del DB ------------------------------
-
 			if ($this->creaCliente()) {
-
-				$cliente = Cliente::getInstance();
-				$cliente->prepara();
-
-
-				$_SESSION[self::CLIENTE] = serialize($cliente);
-
-				$_SESSION["messaggio"] = self::CREA_CLIENTE_OK;
-
-				$this->preparaPagina($creaClienteTemplate);
-
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-
-				$creaClienteTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $this->utility->tailTemplate($template);
-
-				include($this->piede);
+				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_CLIENTE_OK;
 			}
-			else {
-
-				$this->preparaPagina($creaClienteTemplate);
-
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-
-				$creaClienteTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $this->utility->tailTemplate($template);
-
-				include($this->piede);
-			}
+			else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREA_CLIENTE;
 		}
-		else {
+		else $_SESSION[self::MSG_DA_CREAZIONE] = $_SESSION[self::MESSAGGIO];
 
-			$this->preparaPagina($creaClienteTemplate);
-
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-			$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-			echo $this->utility->tailTemplate($template);
-
-			$creaClienteTemplate->displayPagina();
-
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $this->utility->tailTemplate($template);
-
-			include($this->piede);
-		}
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->start();
 	}
 
 	private function creaCliente($utility)

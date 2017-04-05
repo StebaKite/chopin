@@ -2,6 +2,7 @@
 
 require_once 'conto.class.php';
 require_once 'sottoconto.class.php';
+require_once 'causale.class.php';
 
 class ConfigurazioniController
 {
@@ -12,6 +13,7 @@ class ConfigurazioniController
 
 	const CONTO = "Obj_conto";
 	const SOTTOCONTO = "Obj_sottoconto";
+	const CAUSALE = "Obj_causale";
 
 	// Metodi
 
@@ -22,10 +24,14 @@ class ConfigurazioniController
 
 	public function start() {
 
-		if ($this->getRequest() == null) $this->setRequest($_REQUEST["modo"]);
+		if ($this->getRequest() == null) {
+			if (isset($_REQUEST["modo"])) $this->setRequest($_REQUEST["modo"]);
+			else $this->setRequest("start");
+		}
 
 		$conto = Conto::getInstance();
 		$sottoconto = Sottoconto::getInstance();
+		$causale = Causale::getInstance();
 
 		if (isset($_REQUEST["categoria"])) {
  			$conto->setCatConto($_REQUEST["categoria"]);
@@ -67,10 +73,17 @@ class ConfigurazioniController
  			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto"]);
  		}
  		
+ 		if (isset($_REQUEST["codcausale"])) {
+ 			$causale->setCodCausale($_REQUEST["codcausale"]);
+ 			$causale->setDesCausale($_REQUEST["descausale"]);
+ 			$causale->setCatCausale($_REQUEST["catcausale"]);
+ 		}
+ 		
 		// Serializzo in sessione gli oggetti modificati
 
  		$_SESSION[self::CONTO] = serialize($conto);
  		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+ 		$_SESSION[self::CAUSALE] = serialize($causale);
  			
 		if ($this->getRequest() == "start") { $this->configurazioniFunction->start(); }
 		if ($this->getRequest() == "go") 	{ $this->configurazioniFunction->go();}

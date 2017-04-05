@@ -90,7 +90,10 @@ class Fornitore implements CoreInterface {
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
+		if ($db->execSql($sql)) {
+			$this->load($db);	// refresh dei clienti caricati
+			$_SESSION[self::FORNITORE] = serialize($this);
+		}
 
 		/**
 		 * Creo anche il conto per il fornitore.
@@ -171,7 +174,10 @@ class Fornitore implements CoreInterface {
 	
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+		if ($db->getData($sql)) {
+			$this->load($db);	// refresh dei fornitori caricati
+			$_SESSION[self::FORNITORE] = serialize($this);
+		}
 	}
 
 	public function leggi($db)

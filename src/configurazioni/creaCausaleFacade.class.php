@@ -1,24 +1,14 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
 require_once 'creaCausale.class.php';
+require_once 'configurazioni.controller.class.php';
 
 session_start();
 
-$creaCausale = CreaCausale::getInstance();
+$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(CreaCausale::getInstance()));
 
-if ($_GET["modo"] == "start") {
-	
-	$creaCausale->start();
-}
-
-if ($_GET["modo"] == "go") {
-
-	$_SESSION["codcausale"] = $_REQUEST["codcausale"];
-	$_SESSION["descausale"] = $_REQUEST["descausale"];
-	$_SESSION["catcausale"] = $_REQUEST["catcausale"];
-	
-	$creaCausale->go();
-}
+$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+$controller->start();
 
 ?>
