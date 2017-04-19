@@ -1,175 +1,119 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.business.interface.php';
+require_once 'ricercaProgressivoFattura.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'progressivoFattura.class.php';
 
-class RicercaProgressivoFattura extends ConfigurazioniAbstract {
 
-	private static $_instance = null;
+class RicercaProgressivoFattura extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-	public static $azioneRicercaProgressivoFattura = "../configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=go";
-	public static $queryRicercaProgressivoFattura = "/configurazioni/ricercaProgressivoFattura.sql";
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaProgressivoFattura();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA])) $_SESSION[self::RICERCA_PROGRESSIVO_FATTURA] = serialize(new RicercaProgressivoFattura());
+		return unserialize($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA]);
 	}
 
-	public function start() {
+	public function start()
+	{
+		$this->go();
+	}
 
-		require_once 'ricercaProgressivoFattura.template.php';
-		require_once 'utility.class.php';
-		
-		// Template
+	public function go()
+	{
+		$progressivoFattura = ProgressivoFattura::getInstance();
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		unset($_SESSION["progressiviTrovati"]);
-		$_SESSION["catcliente"] = "";
-		
+		$array = $utility->getConfig();	
 		$ricercaProgressivoFatturaTemplate = RicercaProgressivoFatturaTemplate::getInstance();
+
 		$this->preparaPagina($ricercaProgressivoFatturaTemplate);
-		
-		// compone la pagina
+
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
+		
+		if ($this->refreshProgressiviFattura($db, $progressivoFattura)) {
+							
+			$ricercaProgressivoFatturaTemplate->displayPagina();
 
-		$ricercaProgressivoFatturaTemplate->displayPagina();
-		include(self::$piede);
-	}
+			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
+				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
+			}
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
+				unset($_SESSION[self::MSG_DA_CREAZIONE]);
+			}
+			else {
+				$_SESSION[self::MESSAGGIO] = "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
+			}
+				
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+				
+			if ($progressivoFattura->getQtaProgressiviFattura() > 0) {
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			}
+			else {
+				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+			}
 
-	public function go() {
-	
-		require_once 'ricercaProgressivoFattura.template.php';
-		require_once 'utility.class.php';
-	
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		unset($_SESSION["clientiTrovati"]);
-	
-		$ricercaProgressivoFatturaTemplate = RicercaProgressivoFatturaTemplate::getInstance();
-	
-		if ($this->ricercaDati($utility)) {
+			echo $utility->tailTemplate($template);
+			
+			include($this->piede);
+		}
+		else {
 	
 			$this->preparaPagina($ricercaProgressivoFatturaTemplate);
 
 			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 			echo $utility->tailTemplate($template);
 				
 			$ricercaProgressivoFatturaTemplate->displayPagina();
-
-			$_SESSION["messaggio"] = "Trovati " . $_SESSION['numProgressiviTrovati'] . " progressivi fattura";
-
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				
-			if ($_SESSION['numProgressiviTrovati'] > 0) {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			}
-				
+	
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+	
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-	
-			include(self::$piede);
-		}
-		else {
-	
-			$this->preparaPagina($ricercaProgressivoFatturaTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-				
-			$$ricercaProgressivoFatturaTemplate->displayPagina();
-	
-			$_SESSION["messaggio"] = "Errore fatale durante la lettura delle categorie clienti" ;
-	
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-	
-			include(self::$piede);
+			
+			include($this->piede);
 		}
 	}
-	
-	public function ricercaDati($utility) {
-	
-		require_once 'database.class.php';
-	
-		$filtro = "";
 
-		if ($_SESSION['catcliente'] != "") {
-			$filtro .= "AND progressivo_fattura.cat_cliente = '" . $_SESSION['catcliente'] . "'";
+	private function refreshProgressiviFattura($db, $progressivoFattura) {
+	
+		if (sizeof($progressivoFattura->getProgressiviFattura()) == 0) {
+	
+			if (!$progressivoFattura->load($db)) {
+				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+				return false;
+			}
+			$_SESSION[self::PROGRESIVO_FATTURA] = serialize($progressivoFattura);
 		}
-		
-		$replace = array(
-				'%filtri_progressivi_fattura%' => $filtro
-		);
-	
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaProgressivoFattura;
-	
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-	
-		// esegue la query
-	
-		$db = Database::getInstance();
-		$result = $db->getData($sql);
-	
-		if (pg_num_rows($result) > 0) {
-			$_SESSION['progressiviTrovati'] = $result;
-		}
-		else {
-			unset($_SESSION['progressiviTrovati']);
-			$_SESSION['numProgressiviTrovati'] = 0;
-		}
-		return $result;
+		return true;
 	}
 	
 	public function preparaPagina($ricercaProgressivoFatturaTemplate) {
 	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$_SESSION["azione"] = self::$azioneRicercaProgressivoFattura;
-		$_SESSION["confermaTip"] = "%ml.cercaTip%";
-		$_SESSION["titoloPagina"] = "%ml.ricercaProgressivoFattura%";
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		
-		// Prelievo delle categorie -------------------------------------------------------------
-		
-		$_SESSION['elenco_categorie_cliente'] = $this->caricaCategorieCliente($utility, $db);		
+		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_PROGRESSIVO_FATTURA;
+		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
+		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaProgressivoFattura%";
 	}
 }
 

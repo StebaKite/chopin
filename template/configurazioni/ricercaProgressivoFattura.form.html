@@ -32,28 +32,14 @@ $(document).ready( function () {
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina%</h2>
-		
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.categoria% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCategoria" id="catcliente" name="catcliente" >
-								<option value="">%ml.tutti%</option>
-								%elenco_categorie_cliente%
-							</select>
-						</td>
-						<td class="tooltip" colspan="4"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
+		<table style="width:100%;">
+			<tbody>
+				<tr>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right"><button id="nuovo-progressivo" class="button">%ml.nuovoprogressivo%</button></td>
+				</tr>
+			</tbody>
+		</table>	
 		<br>
 		%risultato_ricerca%		
 	</div>

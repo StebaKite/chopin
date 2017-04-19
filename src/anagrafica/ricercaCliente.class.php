@@ -32,22 +32,18 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		// Template
 		
 		$cliente = Cliente::getInstance();		
+		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
 		$ricercaClienteTemplate = RicercaClienteTemplate::getInstance();
-		
-		$cliente->setClienti(null);
-		
-		if ($cliente->load(Database::getInstance())) {
-	
-			$_SESSION[self::CLIENTE] = serialize($cliente);
-				
-			$this->preparaPagina($ricercaClienteTemplate);
 
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
+		$this->preparaPagina($ricercaClienteTemplate);
+
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+		echo $utility->tailTemplate($template);
+
+		if ($this->refreshClienti($db, $cliente)) {
 				
 			$ricercaClienteTemplate->displayPagina();
 	
@@ -77,31 +73,31 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 			}
 	
 			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
 		}
 		else {
-	
-			$this->preparaPagina($ricercaClienteTemplate);
-
-			$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-				
-			$ricercaClienteTemplate->displayPagina();
-	
-			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-	
+		
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
 		}
+		
+		include($this->piede);
 	}
 	
 	public function go() {
 		$this->start();
+	}
+
+	private function refreshClienti($db, $cliente) {
+	
+		if (sizeof($cliente->getClienti()) == 0) {
+	
+			if (!$cliente->load($db)) {
+				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+				return false;
+			}
+			$_SESSION[self::CLIENTE] = serialize($cliente);
+		}
+		return true;
 	}
 	
 	private function preparaPagina($ricercaCausaleTemplate) {

@@ -50,11 +50,7 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
 		if ($this->refreshCausali($db, $causale)) {
 			
 			$ricercaCausaleTemplate->displayPagina();
-			
-			/**
-			 * Gestione del messaggio proveniente dalla cancellazione
-			 */
-			
+						
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);

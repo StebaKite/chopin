@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.presentation.interface.php';

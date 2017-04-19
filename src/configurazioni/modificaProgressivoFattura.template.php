@@ -1,35 +1,30 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once "configurazioni.presentation.interface.php";
+require_once "progressivoFattura.class.php";
+require_once 'utility.class.php';
 
-class ModificaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
+class ModificaProgressivoFatturaTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+{
 
-	private static $_instance = null;
-
-	private static $pagina = "/configurazioni/modificaProgressivoFattura.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+		
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaProgressivoFatturaTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::AGGIORNA_PROGRESSIVO_FATTURA_TEMPLATE])) $_SESSION[self::AGGIORNA_PROGRESSIVO_FATTURA_TEMPLATE] = serialize(new ModificaProgressivoFatturaTemplate());
+		return unserialize($_SESSION[self::AGGIORNA_PROGRESSIVO_FATTURA_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
@@ -37,14 +32,6 @@ class ModificaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
 	
 		$esito = TRUE;
 		$msg = "<br>";
-	
-
-		
-		
-		
-		
-		
-		// ----------------------------------------------
 	
 		if ($msg != "<br>") {
 			$_SESSION["messaggio"] = $msg;
@@ -58,27 +45,22 @@ class ModificaProgressivoFatturaTemplate extends ConfigurazioniAbstract {
 
 	public function displayPagina() {
 	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+		$progressivoFattura = ProgressivoFattura::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 	
-		$form = self::$root . $array['template'] . self::$pagina;
+		$form = $this->root . $array['template'] . self::PAGINA_AGGIORNA_PROGRESSIVO_FATTURA;
 	
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
-				'%catcliente%' => $_SESSION["catcliente"],
-				'%codneg%' => $_SESSION["codneg"],
-				'%numfatt%' => $_SESSION["numfatt"],
-				'%notatesta%' => str_replace("'", "&apos;", $_SESSION["notatesta"]),				
-				'%notapiede%' => str_replace("'", "&apos;", $_SESSION["notapiede"])
+				'%catcliente%' => $progressivoFattura->getCatCliente(),
+				'%codneg%' => $progressivoFattura->getNegProgr(),
+				'%numfatt%' => $progressivoFattura->getNumFatturaUltimo(),
+				'%notatesta%' => str_replace("'", "&apos;", $progressivoFattura->getNotaTestaFattura()),				
+				'%notapiede%' => str_replace("'", "&apos;", $progressivoFattura->getNotaPiedeFattura())
 		);
-	
-		$utility = Utility::getInstance();
 	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

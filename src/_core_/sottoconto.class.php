@@ -5,11 +5,11 @@ require_once 'database.class.php';
 require_once 'utility.class.php';
 
 class Sottoconto implements CoreInterface {
-	
+
 	private $root;
 
 	// Nomi colonne tabella Sottoconto
-	
+
 	const COD_CONTO = "cod_conto";
 	const COD_SOTTOCONTO = "cod_sottoconto";
 	const DES_SOTTOCONTO = "des_sottoconto";
@@ -17,16 +17,16 @@ class Sottoconto implements CoreInterface {
 	const IND_GRUPPO = "ind_gruppo";
 
 	// dati sottoconto
-	
+
 	private $cod_conto;
 	private $cod_sottoconto;
 	private $des_sottoconto;
 	private $dat_creazione_sottoconto;
 	private $ind_gruppo;
 	private $sottoconti;
-	private $qtaSottoconti;	
+	private $qtaSottoconti;
 	private $sottocontiInseriti;
-	
+
 	private $dataRegistrazioneDa;		// dati di filtro per la generazione del mastrino
 	private $dataRegistrazioneA;
 	private $codNegozio;
@@ -35,23 +35,24 @@ class Sottoconto implements CoreInterface {
 	private $qtaRegistrazioniTrovate;
 
 	private $nuoviSottoconti = array();		// utilizzata per accumulare i sottoconti durante la creazione del conto
-	
+
 	// Queries
-	
+
 	const CREA_SOTTOCONTO     = "/configurazioni/creaSottoconto.sql";
 	const CANCELLA_SOTTOCONTO = "/configurazioni/deleteSottoconto.sql";
 	const LEGGI_SOTTOCONTI    = "/configurazioni/leggiSottoconti.sql";
 	const RICERCA_REGISTRAZIONI_CONTO = "/configurazioni/ricercaRegistrazioniConto.sql";
 	const RICERCA_REGISTRAZIONI_CONTO_SALDI = "/configurazioni/ricercaRegistrazioniContoConSaldi.sql";
-	
+	const AGGIORNA_SOTTOCONTO = "/configurazioni/updateSottoconto.sql";
+
 	// Metodi
-	
+
 	function __construct() {
 		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
 	}
-	
+
 	public function getInstance() {
-	
+
 		if (!isset($_SESSION[self::SOTTOCONTO])) $_SESSION[self::SOTTOCONTO] = serialize(new Sottoconto());
 		return unserialize($_SESSION[self::SOTTOCONTO]);
 	}
@@ -60,7 +61,7 @@ class Sottoconto implements CoreInterface {
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_conto%' => $this->getCodConto(),
 				'%cod_sottoconto%' => $this->getCodSottoconto(),
@@ -69,34 +70,34 @@ class Sottoconto implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
-		if ($result) {
-			$this->leggi($db);		// refresh dei sottoconti caricati
-			$_SESSION[self::SOTTOCONTO] = serialize($this);
-		}
+
+// 		if ($result) {
+// 			$this->leggi($db);		// refresh dei sottoconti caricati
+// 			$_SESSION[self::SOTTOCONTO] = serialize($this);
+// 		}
 		return $result;
 	}
 
 	public function cancella($db) {
-	
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_conto%' => $this->getCodConto(),
 				'%cod_sottoconto%' => $this->getCodSottoconto()
 		);
 		$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_SOTTOCONTO;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);		
-		
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+
 		if ($db->getData($sql)) {
 			$this->leggi($db);		// refresh dei sottoconti caricati
 			$_SESSION[self::SOTTOCONTO] = serialize($this);
 		}
-	}	
-	
+	}
+
 	public function leggi($db) {
-	
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -106,7 +107,7 @@ class Sottoconto implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SOTTOCONTI;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		
+
 		if ($result) {
 			$this->setSottoconti(pg_fetch_all($result));
 			$this->setQtaSottoconti(pg_num_rows($result));
@@ -116,43 +117,43 @@ class Sottoconto implements CoreInterface {
 			$this->setQtaSottoconti(null);
 		}
 	}
-	
+
 	public function cercaRegistrazioni($db) {
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$filtro = "";
 		$filtroSaldo = "";
-		
+
 		if (($this->getDataRegistrazioneDa() != "") & ($this->getDataRegistrazioneA() != "")) {
 			$filtro .= "and registrazione.dat_registrazione between '" . $this->getDataRegistrazioneDa() . "' and '" . $this->getDataRegistrazioneA() . "'" ;
 			$filtroSaldo .= "and saldo.dat_saldo = '" . $this->getDataRegistrazioneDa() . "'" ;
 		}
-		
+
 		if ($this->getCodNegozio() != "") {
 			$filtro .= " and registrazione.cod_negozio = '" . $this->getCodNegozio() . "'" ;
 			$filtroSaldo .= " and saldo.cod_negozio = '" . $this->getCodNegozio() . "'" ;
 		}
-		
+
 		$replace = array(
 				'%cod_conto%' => trim($this->getCodConto()),
 				'%cod_sottoconto%' => trim($this->getCodSottoconto()),
 				'%filtro_date%' => $filtro,
 				'%filtro_date_saldo%' => $filtroSaldo
 		);
-		
+
 		if ($this->getSaldiInclusi() == "S") {
 			$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_REGISTRAZIONI_CONTO_SALDI;
 		}
 		else {
 			$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_REGISTRAZIONI_CONTO;
 		}
-		
+
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
+
 		$result = $db->getData($sql);
-		
+
 		if (pg_num_rows($result) > 0) {
 			$this->setRegistrazioniTrovate(pg_fetch_all($result));
 			$this->setQtaRegistrazioniTrovate(pg_num_rows($result));
@@ -163,29 +164,67 @@ class Sottoconto implements CoreInterface {
 		}
 		return $result;
 	}
-	
-	public function aggiungiNuovoSottoconto() {
-		$item = array($this->getCodSottoconto(), $this->getDesSottoconto());		
-		array_push($this->nuoviSottoconti, $item);
-		sort($this->nuoviSottoconti);		
-	}
-	
-	public function togliNuovoSottoconto() {
 
+	/**
+	 * Questo metodo viene utilizzato dalla creazione di un nuovo conto per tenere in memoria tutti i
+	 * sottoconti inseriti
+	 */
+	public function aggiungiNuovoSottoconto($db)
+	{
+		$item = array($this->getCodSottoconto(), $this->getDesSottoconto());
+		array_push($this->nuoviSottoconti, $item);
+		sort($this->nuoviSottoconti);
+	}
+
+	/**
+	 * Questo metodo viene utilizzato dalla modifica conto per aggiungere un sottoconto
+	 */
+	public function aggiungi($db)
+	{
+		$this->inserisci($db);
+		$item = array($this->getCodConto(), $this->getCodSottoconto(), $this->getDesSottoconto());
+		array_push($this->nuoviSottoconti, $item);
+		sort($this->nuoviSottoconti);
+	}
+
+	public function togliNuovoSottoconto()
+	{
 		$nuoviSottocontiDiff = array();
 
 		foreach ($this->getNuoviSottoconti() as $unSottoconto) {
 			if ($unSottoconto[0] != $this->getCodSottoconto()) {
 				array_push($nuoviSottocontiDiff, $unSottoconto);
-			}			
-		}		
+			}
+		}
 		$this->setNuoviSottoconti($nuoviSottocontiDiff);
 	}
 
 	public function preparaNuoviSottoconti() {
-		$this->setNuoviSottoconti(array());		
+		$this->setNuoviSottoconti(array());
 	}
-	
+
+	public function aggiorna($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%cod_conto%' => trim($codconto),
+				'%cod_sottoconto%' => trim($codsottoconto),
+				'%ind_gruppo%' => trim($indgruppo)
+		);
+
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SOTTOCONTO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->leggi($db);		// refresh dei sottoconti caricati
+			$_SESSION[self::SOTTOCONTO] = serialize($this);
+		}
+		return $result;
+	}
+
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -196,7 +235,7 @@ class Sottoconto implements CoreInterface {
 	public function getRoot() {
 		return $this->root;
 	}
-	
+
 	public function setCodConto($cod_conto) {
 		$this->cod_conto = $cod_conto;
 	}

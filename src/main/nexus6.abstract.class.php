@@ -142,7 +142,6 @@ abstract class Nexus6Abstract {
 		if ($array["anagrafiche"] == "Y") {
 			$anagrafiche .= "<li><a>" . $array["anagrafiche_menu_title"] . "</a>";
 			$anagrafiche .= "<ul>";
-			if ($array["anagrafiche_item_2"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/creaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_2_name"] . "</a></li>";
 			if ($array["anagrafiche_item_3"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaFornitoreFacade.class.php?modo=start'>" . $array["anagrafiche_item_3_name"] . "</a></li>";
 			if ($array["anagrafiche_item_4"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_4_name"] . "</a></li>";
 			if ($array["anagrafiche_item_5"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaMercatoFacade.class.php?modo=start'>" . $array["anagrafiche_item_5_name"] . "</a></li>";
