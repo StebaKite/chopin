@@ -1,66 +1,41 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
+require_once 'sottoconto.class.php';
+require_once 'modificaConto.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
 
-class InserisciSottoconto extends ConfigurazioniAbstract {
+class InserisciSottoconto extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 
-	private static $_instance = null;
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new InserisciSottoconto();
-
-		return self::$_instance;
+	public static function getInstance()
+	{
+		if (!isset($_SESSION[self::INSERISCI_SOTTOCONTO])) $_SESSION[self::INSERISCI_SOTTOCONTO] = serialize(new InserisciSottoconto());
+		return unserialize($_SESSION[self::INSERISCI_SOTTOCONTO]);
 	}
-
-	// ------------------------------------------------
 
 	public function go() {
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'modificaConto.class.php';
-		
-		$utility = Utility::getInstance();
+		$sottoconto = Sottoconto::getInstance();
 		$db = Database::getInstance();
-		
-		$db->beginTransaction();
-		
-		if ($this->inserisciSottoconto($db, $utility, $_SESSION["codconto"], $_SESSION["codsottoconto"], $_SESSION["dessottoconto"], $_SESSION["indgruppo"] )) {
-			$db->commitTransaction();
-			$_SESSION["messaggio"] = "Conto salvato con successo";				
-		}
-		else {
-			$db->rollbackTransaction();
-			error_log("Errore inserimento sottoconto, eseguito Rollback");
-			$_SESSION["messaggio"] = "Attenzione: conto non inserito!";				
-		}
-		
-		$modificaConto = ModificaConto::getInstance();
-		$modificaConto->start();		
+		$sottoconto->aggiungi($db);
+
+		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
+		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+		$controller->start();
 	}
 }
 

@@ -1,88 +1,75 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
+require_once 'causale.class.php';
+require_once 'utility.class.php';
 
-class ModificaCausaleTemplate extends ConfigurazioniAbstract {
+class ModificaCausaleTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 
-	private static $_instance = null;
-
-	private static $pagina = "/configurazioni/modificaCausale.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaCausaleTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CAUSALE_TEMPLATE])) $_SESSION[self::MODIFICA_CAUSALE_TEMPLATE] = serialize(new ModificaCausaleTemplate());
+		return unserialize($_SESSION[self::MODIFICA_CAUSALE_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
 	public function controlliLogici() {
-	
+
 		$esito = TRUE;
 		$msg = "<br>";
-	
+
 		if ($_SESSION["descausale"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione della causale";
+			$msg .= self::ERRORE_DESCRIZIONE_CAUSALE;
 			$esito = FALSE;
 		}
-	
-		// ----------------------------------------------
-	
+
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
+			unset($_SESSION[self::MESSAGGIO]);
 		}
-	
+
 		return $esito;
 	}
 
 	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+
+		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
-	
+
+		$form = $this->root . $array['template'] . self::PAGINA_MODIFICA_CAUSALE;
+
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%causale%' => $_SESSION["causale"],
-				'%codcausale%' => $_SESSION["codcausale"],
-				'%descausale%' => $_SESSION["descausale"],
-				'%generi_checked%' => (trim($_SESSION["catcausale"]) == "GENERI") ? "checked" : "",
-				'%incpag_checked%' => (trim($_SESSION["catcausale"]) == "INCPAG") ? "checked" : "",
-				'%corris_checked%' => (trim($_SESSION["catcausale"]) == "CORRIS") ? "checked" : ""				
+				'%codcausale%' => $causale->getCodCausale(),
+				'%descausale%' => $causale->getDesCausale(),
+				'%generi_checked%' => (trim($causale->getCatCausale()) == "GENERI") ? "checked" : "",
+				'%incpag_checked%' => (trim($causale->getCatCausale()) == "INCPAG") ? "checked" : "",
+				'%corris_checked%' => (trim($causale->getCatCausale()) == "CORRIS") ? "checked" : ""
 		);
-	
-		$utility = Utility::getInstance();
-	
+
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
 }
-	
+
 ?>

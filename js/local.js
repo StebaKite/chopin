@@ -795,7 +795,7 @@ $( "#cancella-sottoconto-modificaconto-form" ).dialog({
 $( "#nuovo-sottoconto-modificaconto-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 600,
+	width: 650,
 	height: 250,
 	buttons: [
 		{

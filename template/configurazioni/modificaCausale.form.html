@@ -2,12 +2,19 @@
 
 <div id="body">
 	<div id="main">
-		<h2>%titoloPagina%</h2>
-
-		<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaCausaleFacade.class.php?modo=go" >
-			<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
-			<input type="hidden" name="causale" value='%causale%' >
-		</form>
+		<table style="width:100%;">
+			<tbody>
+				<tr>
+					<td align="left"><h2>%titoloPagina%</h2></td>
+					<td align="right">
+						<form class="tooltip" method="post" id="back" action="../configurazioni/ricercaCausaleFacade.class.php?modo=go" >
+							<button id="indietro" class="button" title="%ml.indietroTip%" onclick="back()" >%ml.indietro%</button>
+							<input type="hidden" name="causale" value='%causale%' >
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		<br>
 		<form method="post" action="%azione%" >
 			<table class="datiCreate" cellpadding="5px">

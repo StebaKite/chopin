@@ -117,7 +117,9 @@ class Cliente implements CoreInterface {
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		if ($db->execSql($sql)) {
+		$result = $db->execSql($sql);
+		
+		if ($result) {
 			$this->load($db);	// refresh dei clienti caricati
 			$_SESSION[self::CLIENTE] = serialize($this);
 		}
@@ -248,6 +250,8 @@ class Cliente implements CoreInterface {
 			 * @var array $conto
 			 */
 			$utility = Utility::getInstance();
+			$array = $utility->getConfig();
+
 			$sottoconto = Sottoconto::getInstance();
 			$conto = explode(",", $array["contiCliente"]);
 			
@@ -259,14 +263,21 @@ class Cliente implements CoreInterface {
 					$sottoconto->cancella($db);
 				}
 			}
-			
+
+			$replace = array(
+					'%id_cliente%' => $this->getIdCliente()
+			);
+				
 			$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CLIENTE;
 			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-			if ($db->getData($sql)) {
+			$result = $db->getData($sql);
+			
+			if ($result) {
 				$this->load($db);	// refresh dei clienti caricati	
 				$_SESSION[self::CLIENTE] = serialize($this);
 			}
 		}
+		return $result;
 	}
 
 	public function update($db) {

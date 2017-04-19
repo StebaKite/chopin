@@ -1,16 +1,15 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
 require_once 'includiContoCausale.class.php';
+require_once 'configurazioni.controller.class.php';
 
 session_start();
+xdebug_disable();
 
-$includiContoCausale = IncludiContoCausale::getInstance();
+$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(IncludiContoCausale::getInstance()));
 
-if ($_GET["modo"] == "start") {
-
-	$_SESSION["codconto"] = $_GET["codconto"];
-	$includiContoCausale->start();
-}
+$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+$controller->start();
 
 ?>

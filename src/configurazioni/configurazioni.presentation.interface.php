@@ -24,12 +24,16 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 
 	// Pagine
 
-	const PAGINA_RICERCA_CONTO    	= "/configurazioni/ricercaConto.form.html";
-	const PAGINA_MODIFICA_CONTO		= "/configurazioni/modificaConto.form.html";
-	const PAGINA_GENERA_MASTRINO	= "/configurazioni/generaMastrinoConto.form.html";
-	const PAGINA_CREA_CONTO			= "/configurazioni/creaConto.form.html";
-	const PAGINA_RICERCA_CAUSALE	= "/configurazioni/ricercaCausale.form.html";
-	const PAGINA_CREA_CAUSALE		= "/configurazioni/creaCausale.form.html";
+	const PAGINA_RICERCA_CONTO = "/configurazioni/ricercaConto.form.html";
+	const PAGINA_MODIFICA_CONTO = "/configurazioni/modificaConto.form.html";
+	const PAGINA_GENERA_MASTRINO = "/configurazioni/generaMastrinoConto.form.html";
+	const PAGINA_CREA_CONTO = "/configurazioni/creaConto.form.html";
+	const PAGINA_RICERCA_CAUSALE = "/configurazioni/ricercaCausale.form.html";
+	const PAGINA_CREA_CAUSALE = "/configurazioni/creaCausale.form.html";
+	const PAGINA_RICERCA_PROGRESSIVO_FATTURA = "/configurazioni/ricercaProgressivoFattura.form.html";
+	const PAGINA_AGGIORNA_PROGRESSIVO_FATTURA = "/configurazioni/modificaProgressivoFattura.form.html";
+	const PAGINA_CONFIGURA_CAUSALE = "/configurazioni/configuraCausale.form.html";
+	const PAGINA_MODIFICA_CAUSALE = "/configurazioni/modificaCausale.form.html";
 
 	// Bottoni
 
@@ -51,7 +55,15 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 	const CONFIGURA_CAUSALE_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
 	const CANCELLA_CAUSALE_HREF = "<a class='tooltip' onclick='cancellaCausale(";
 	const CANCELLA_CAUSALE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
-	
+
+	const MODIFICA_PROGRESSIVO_HREF = "<a class='tooltip' href='../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=start&catcliente=";
+	const MODIFICA_PROGRESSIVO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+
+	const ESCLUDI_CONTO_HREF = "<a class='tooltip' href='escludiContoCausaleFacade.class.php?modo=start&codconto=";
+	const ESCLUDI_CONTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.escludiContoTip%'><span class='ui-icon ui-icon-minus'></span></li></a>";
+	const INCLUDI_CONTO_HREF = "<a class='tooltip' href='includiContoCausaleFacade.class.php?modo=start&codconto=";
+	const INCLUDI_CONTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.includiContoTip%'><span class='ui-icon ui-icon-plus'></span></li></a>";
+
 	// Actions
 
 	const AZIONE_RICERCA_CONTO = "../configurazioni/ricercaContoFacade.class.php?modo=go";
@@ -70,13 +82,18 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 
 	// Oggetti
 
-	const RICERCA_CONTO_TEMPLATE    = "Obj_ricercacontotemplate";
-	const CREA_CONTO_TEMPLATE		= "Obj_creacontotemplate";
-	const MODIFICA_CONTO_TEMPLATE	= "Obj_modificacontotemplate";
-	const GENERA_MASTRINO_TEMPLATE	= "Obj_generamastrinotemplate";
-	const RICERCA_CAUSALI_TEMPLATE	= "Obj_ricercacausalitemplate";
-	const CREA_CAUSALE_TEMPLATE		= "Obj_creacausaletemplate";
-	
+	const RICERCA_CONTO_TEMPLATE    			= "Obj_ricercacontotemplate";
+	const CREA_CONTO_TEMPLATE					= "Obj_creacontotemplate";
+	const MODIFICA_CONTO_TEMPLATE				= "Obj_modificacontotemplate";
+	const GENERA_MASTRINO_TEMPLATE				= "Obj_generamastrinotemplate";
+	const RICERCA_CAUSALI_TEMPLATE				= "Obj_ricercacausalitemplate";
+	const CREA_CAUSALE_TEMPLATE					= "Obj_creacausaletemplate";
+	const RICERCA_PROGRESSIVO_FATTURA_TEMPLATE	= "Obj_ricercaprogressivofatturatemplate";
+	const AGGIORNA_PROGRESSIVO_FATTURA_TEMPLATE = "Obj_aggiornaprogressivofatturatemplate";
+	const CONFIGURA_CAUSALE_TEMPLATE 			= "Obj_configuracausaletemplate";
+	const MODIFICA_CAUSALE_TEMPLATE				= "Obj_modificacausaletemplate";
+	CONST INSERISCI_SOTTOCONTO					= "Obj_inseriscisottoconto";
+
 	// Metodi
 
 	public function getInstance();

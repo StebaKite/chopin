@@ -13,6 +13,8 @@ interface CoreInterface extends MainNexus6Interface
 	const REGISTRAZIONE				= "Obj_registrazione";
 	const DETTAGLIO_REGISTRAZIONE 	= "Obj_dettaglioregistrazione";
 	const CAUSALE					= "Obj_causale";
+	const CONFIGURAZIONE_CAUSALE	= "Obj_configurazionecausale";
+	const PROGRESSIVO_FATTURA		= "Obj_progressivofattura";
 }
 
 ?>

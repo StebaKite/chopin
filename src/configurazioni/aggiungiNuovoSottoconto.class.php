@@ -3,6 +3,7 @@
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
 require_once 'utility.class.php';
+require_once 'database.class.php';
 require_once 'sottoconto.class.php';
 
 class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
@@ -27,10 +28,11 @@ class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements Configur
 
 	public function start()
 	{
+		$db = Database::getInstance();
 		$sottoconto = Sottoconto::getInstance();
-		$sottoconto->aggiungiNuovoSottoconto();
+		$sottoconto->aggiungiNuovoSottoconto($db);
 		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
-		
+
 		$tableSottoconti =
 		"<table id='sottoconti-head' class='result'>" .
 			"<thead>" .
@@ -41,7 +43,7 @@ class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements Configur
 				"</tr>" .
 			"</thead>" .
 			"<tbody>";
-		
+
 		foreach ($sottoconto->getNuoviSottoconti() as $tableRow) {
 
 			$tableSottoconti .= "<tr id='" . $tableRow[0] . "'>";
@@ -52,10 +54,10 @@ class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements Configur
 			$tableSottoconti .= "><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
 			$tableSottoconti .= "</tr>";
 		}
-		
-		$tableSottoconti .= "</tbody></table>";		
-		echo $tableSottoconti;		
-	}	
+
+		$tableSottoconti .= "</tbody></table>";
+		echo $tableSottoconti;
+	}
 
 	public function go()
 	{

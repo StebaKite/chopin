@@ -57,6 +57,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const MODIFICA_MERCATO_OK = "Mercato modificato con successo";
 	const CANCELLA_MERCATO_OK = "Mercato cancellato con successo";
 	const CANCELLA_CLIENTE_OK = "Cliente cancellato";
+	const ERRORE_CANCELLA_CLIENTE = "Errore, cliente non cancellato";
 
 	// Metodi
 
