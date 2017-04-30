@@ -5,6 +5,7 @@ require_once 'configurazioni.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'configuraCausale.class.php';
+require_once 'configurazioneCausale.class.php';
 
 class IncludiContoCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 

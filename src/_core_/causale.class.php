@@ -15,6 +15,11 @@ class Causale implements CoreInterface {
 	const DAT_INSERIMENTO = "dat_inserimento";
 	const CAT_CAUSALE = "cat_causale";
 
+	// Nomi colonne aggiunte o ricavate
+
+	const QTA_REGISTRAZIONI_CAUSALE = "tot_registrazioni_causale";
+	const QTA_CONTI_CAUSALE = "tot_conti_causale";
+
 	// dati causale
 
 	private $codCausale;
@@ -29,11 +34,20 @@ class Causale implements CoreInterface {
 
 	// Queries
 
-	const RICERCA_CAUSALE			= "/configurazioni/ricercaCausale.sql";
-	const CREA_CAUSALE				= "/configurazioni/creaCausale.sql";
-	const CANCELLA_CAUSALE			= "/configurazioni/deleteCausale.sql";
-	const LEGGI_CAUSALE				= "/configurazioni/leggiCausale.sql";
-	const AGGIORNA_CAUSALE 			= "/configurazioni/updateCausale.sql";
+	const RICERCA_CAUSALE	= "/configurazioni/ricercaCausale.sql";
+	const CREA_CAUSALE		= "/configurazioni/creaCausale.sql";
+	const CANCELLA_CAUSALE	= "/configurazioni/deleteCausale.sql";
+	const LEGGI_CAUSALE		= "/configurazioni/leggiCausale.sql";
+	const AGGIORNA_CAUSALE 	= "/configurazioni/updateCausale.sql";
+
+//	Colonne dell'array dalla query di lettura
+//
+// 	cod_causale,
+// 	des_causale,
+// 	cat_causale,
+// 	dat_inserimento,
+// 	tot_registrazioni_causale,
+// 	tot_conti_causale
 
 	// Metodi
 
@@ -90,7 +104,16 @@ class Causale implements CoreInterface {
 		$result = $db->execSql($sql);
 
 		if ($result) {
-			$this->load($db);		// refresh delle causali caricate
+			$item = array(
+				self::COD_CAUSALE => $this->getCodCausale(),
+				self::DES_CAUSALE => $this->getDesCausale(),
+				self::CAT_CAUSALE => $this->getCatCausale(),
+				self::DAT_INSERIMENTO => $this->getDatInserimento(),
+				self::QTA_REGISTRAZIONI_CAUSALE => 0,
+				self::QTA_CONTI_CAUSALE => 0
+			);
+			array_push($this->causali, $item);
+			sort($this->causali);
 			$_SESSION[self::CAUSALE] = serialize($this);
 		}
 		return $result;
@@ -108,7 +131,13 @@ class Causale implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
 		if ($db->getData($sql)) {
-			$this->load($db);		// refresh delle causali caricate
+			$causaliDiff = array();
+			foreach ($this->getCausali() as $unaCausale) {
+				if (trim($unaCausale[self::COD_CAUSALE]) != trim($this->getCodCausale())) {
+					array_push($causaliDiff, $unaCausale);
+				}
+			}
+			$this->setCausali($causaliDiff);
 			$_SESSION[self::CAUSALE] = serialize($this);
 		}
 	}
@@ -131,7 +160,24 @@ class Causale implements CoreInterface {
 		$result = $db->execSql($sql);
 
 		if ($result) {
-			$this->load($db);		// refresh delle causali caricate
+			$causaliDiff = array();
+			foreach ($this->getCausali() as $unaCausale) {
+				if (trim($unaCausale[self::COD_CAUSALE]) != trim($this->getCodCausale())) {
+					array_push($causaliDiff, $unaCausale);
+				}
+				else {
+					$item = array(
+							self::COD_CAUSALE => $this->getCodCausale(),
+							self::DES_CAUSALE => $this->getDesCausale(),
+							self::CAT_CAUSALE => $this->getCatCausale(),
+							self::DAT_INSERIMENTO => $this->getDatInserimento(),
+							self::QTA_REGISTRAZIONI_CAUSALE => $this->getQtaRegistrazioniCausale(),
+							self::QTA_CONTI_CAUSALE => $this->getQtaContiCausale()
+					);
+					array_push($causaliDiff, $item);
+				}
+			}
+			$this->setCausali($causaliDiff);
 			$_SESSION[self::CAUSALE] = serialize($this);
 		}
 		return $result;
@@ -155,10 +201,62 @@ class Causale implements CoreInterface {
 			foreach ($causale as $row) {
 				$this->setDesCausale(trim($row[self::DES_CAUSALE]));
 				$this->setCatCausale(trim($row[self::CAT_CAUSALE]));
+				$this->setQtaRegistrazioniCausale(trim($row[self::QTA_REGISTRAZIONI_CAUSALE]));
+				$this->setQtaContiCausale(trim($row[self::QTA_CONTI_CAUSALE]));
 			}
 		}
 		return $result;
 	}
+
+	public function aggiornaQuantitaConti($quantita)
+	{
+		$causaliDiff = array();
+		foreach ($this->getCausali() as $unaCausale) {
+			if (trim($unaCausale[self::COD_CAUSALE]) != trim($this->getCodCausale())) {
+				array_push($causaliDiff, $unaCausale);
+			}
+			else {
+				$nuovaQtaConti = $unaCausale[self::QTA_CONTI_CAUSALE] + $quantita;
+				$item = array(
+						self::COD_CAUSALE => $unaCausale[self::COD_CAUSALE],
+						self::DES_CAUSALE => $unaCausale[self::DES_CAUSALE],
+						self::CAT_CAUSALE => $unaCausale[self::CAT_CAUSALE],
+						self::DAT_INSERIMENTO => $unaCausale[self::DAT_INSERIMENTO],
+						self::QTA_REGISTRAZIONI_CAUSALE => $unaCausale[self::QTA_REGISTRAZIONI_CAUSALE],
+						self::QTA_CONTI_CAUSALE => $nuovaQtaConti
+				);
+				array_push($causaliDiff, $item);
+			}
+		}
+		$this->setCausali($causaliDiff);
+		$_SESSION[self::CAUSALE] = serialize($this);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// Getters & Setters
 

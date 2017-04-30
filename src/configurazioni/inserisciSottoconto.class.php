@@ -1,13 +1,13 @@
 <?php
 
 require_once 'configurazioni.abstract.class.php';
-require_once 'configurazioni.presentation.interface.php';
+require_once 'configurazioni.business.interface.php';
 require_once 'sottoconto.class.php';
 require_once 'modificaConto.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 
-class InserisciSottoconto extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface
+class InserisciSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
 {
 	function __construct()
 	{
@@ -21,11 +21,13 @@ class InserisciSottoconto extends ConfigurazioniAbstract implements Configurazio
 		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	public static function getInstance()
+	public function getInstance()
 	{
 		if (!isset($_SESSION[self::INSERISCI_SOTTOCONTO])) $_SESSION[self::INSERISCI_SOTTOCONTO] = serialize(new InserisciSottoconto());
 		return unserialize($_SESSION[self::INSERISCI_SOTTOCONTO]);
 	}
+
+	public function start() {}
 
 	public function go() {
 

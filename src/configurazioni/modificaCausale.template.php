@@ -29,10 +29,11 @@ class ModificaCausaleTemplate extends ConfigurazioniAbstract implements Configur
 
 	public function controlliLogici() {
 
+		$causale = Causale::getInstance();
 		$esito = TRUE;
 		$msg = "<br>";
 
-		if ($_SESSION["descausale"] == "") {
+		if ($causale->getDesCausale() == "") {
 			$msg .= self::ERRORE_DESCRIZIONE_CAUSALE;
 			$esito = FALSE;
 		}
@@ -43,7 +44,6 @@ class ModificaCausaleTemplate extends ConfigurazioniAbstract implements Configur
 		else {
 			unset($_SESSION[self::MESSAGGIO]);
 		}
-
 		return $esito;
 	}
 

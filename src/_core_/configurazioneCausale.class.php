@@ -3,6 +3,7 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'causale.class.php';
 
 class ConfigurazioneCausale implements CoreInterface {
 
@@ -92,6 +93,7 @@ class ConfigurazioneCausale implements CoreInterface {
 
 	public function inserisciConto($db)
 	{
+		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -108,12 +110,16 @@ class ConfigurazioneCausale implements CoreInterface {
 			$this->loadContiConfigurati($db);		// refresh dei conti configurati sulla causale
 			$this->loadContiConfigurabili($db);		// refresh dei conti configurabili
 			$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($this);
+
+			$causale->setCodCausale(trim($this->getCodCausale()));
+			$causale->aggiornaQuantitaConti(+1);
 		}
 		return $result;
 	}
 
-	public function cancellaConto($db) {
-
+	public function cancellaConto($db)
+	{
+		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -130,6 +136,9 @@ class ConfigurazioneCausale implements CoreInterface {
 			$this->loadContiConfigurati($db);		// refresh dei conti configurati sulla causale
 			$this->loadContiConfigurabili($db);		// refresh dei conti configurabili
 			$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($this);
+
+			$causale->setCodCausale(trim($this->getCodCausale()));
+			$causale->aggiornaQuantitaConti(-1);
 		}
 		return $result;
 	}

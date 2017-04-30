@@ -55,6 +55,19 @@ class ConfigurazioniController
  			$configurazioneCausale->setCodConto($_REQUEST["codconto"]);
  		}
 
+ 		if (isset($_REQUEST["codconto_mod"])) {
+ 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_mod"]);
+ 			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto_mod"]);
+ 			$sottoconto->setQtaRegistrazioniTrovate($_REQUEST["totregsottoconto_mod"]);
+ 			$sottoconto->setIndGruppo($_REQUEST["indgruppo_mod"]);
+ 		}
+
+ 		if (isset($_REQUEST["codsottoconto_new"])) {
+ 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_new"]);
+ 			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto_new"]);
+ 			$sottoconto->setIndGruppo($_REQUEST["indgruppo_new"]);
+ 		}
+
  		if (isset($_REQUEST["codsottoconto_del"])) {
  			$sottoconto->setCodConto($_REQUEST["codconto_del"]);
  			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_del"]);

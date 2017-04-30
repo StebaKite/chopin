@@ -75,7 +75,7 @@ class ModificaContoTemplate extends ConfigurazioniAbstract implements Configuraz
 			$bottoneCancella = "<td width='28' align='right'>" . $row[self::NUM_REG_SOTTOCONTO] . "</td>";
 
 			if ($row[self::NUM_REG_SOTTOCONTO] == 0) {
-				$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $conto->getCodConto() . self::CANCELLA_SOTTOCONTO_ICON ;
+				$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $sottoconto->getCodConto() . self::CANCELLA_SOTTOCONTO_ICON ;
 			}
 
 			if ($row[Sottoconto::IND_GRUPPO] == "") $indGruppo = "&ndash;&ndash;&ndash;";
@@ -85,12 +85,12 @@ class ModificaContoTemplate extends ConfigurazioniAbstract implements Configuraz
 			elseif ($row[Sottoconto::IND_GRUPPO] == self::RICAVI) $indGruppo = "Ricavi";
 
 
-			$tbodySottoconti = $tbodySottoconti .
+			$tbodySottoconti .=
 			"<tr>" .
 			"	<td>" . $row[Sottoconto::COD_SOTTOCONTO] . "</td>" .
 			"	<td>" . $row[Sottoconto::DES_SOTTOCONTO] . "</td>" .
 			"	<td>" . $indGruppo . "</td>" .
-			self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . '"' . $row[Sottoconto::IND_GRUPPO] . '","' . $row[Sottoconto::COD_SOTTOCONTO] . '"' . self::MODIFICA_GRUPPO_SOTTOCONTO_ICON .
+			self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . '"' . $row[Sottoconto::IND_GRUPPO] . '","' . $row[Sottoconto::COD_SOTTOCONTO] . '","' . $row[Sottoconto::DES_SOTTOCONTO] . '","' . $row[self::NUM_REG_SOTTOCONTO] . '"' . self::MODIFICA_GRUPPO_SOTTOCONTO_ICON .
 			$bottoneCancella .
 			"</tr>";
 		}
@@ -101,12 +101,16 @@ class ModificaContoTemplate extends ConfigurazioniAbstract implements Configuraz
 				'%confermaTip%' => $this->getConfermaTip(),
 				'%codconto%' => $conto->getCodConto(),
 				'%desconto%' => str_replace("'", "&apos;", $conto->getDesConto()),
+				'%categoria%' => $conto->getCatConto(),
 				'%contoeco_checked%' => (trim($conto->getCatConto()) == self::CONTO_ECONOMICO) ? "checked" : "",
 				'%contopat_checked%' => (trim($conto->getCatConto()) == self::STATO_PATRIMONIALE) ? "checked" : "",
+				'%dareavere%' => $conto->getTipConto(),
 				'%dare_checked%' => (trim($conto->getTipConto()) == self::DARE) ? "checked" : "",
 				'%avere_checked%' => (trim($conto->getTipConto()) == self::AVERE) ? "checked" : "",
+				'%indpresenza%' => $conto->getIndPresenzaInBilancio(),
 				'%presenzaSi_checked%' => (trim($conto->getIndPresenzaInBilancio()) == "S") ? "checked" : "",
 				'%presenzaNo_checked%' => (trim($conto->getIndPresenzaInBilancio()) == "N") ? "checked" : "",
+				'%indvissottoconti%' => $conto->getIndVisibilitaSottoconti(),
 				'%sottocontiSi_checked%' => (trim($conto->getIndVisibilitaSottoconti()) == "S") ? "checked" : "",
 				'%sottocontiNo_checked%' => (trim($conto->getIndVisibilitaSottoconti()) == "N") ? "checked" : "",
 				'%numrigabilancio%' => ($conto->getNumRigaBilancio() != "") ? $conto->getNumRigaBilancio() : 0,

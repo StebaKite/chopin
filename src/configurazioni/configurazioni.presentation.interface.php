@@ -92,7 +92,6 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 	const AGGIORNA_PROGRESSIVO_FATTURA_TEMPLATE = "Obj_aggiornaprogressivofatturatemplate";
 	const CONFIGURA_CAUSALE_TEMPLATE 			= "Obj_configuracausaletemplate";
 	const MODIFICA_CAUSALE_TEMPLATE				= "Obj_modificacausaletemplate";
-	CONST INSERISCI_SOTTOCONTO					= "Obj_inseriscisottoconto";
 
 	// Metodi
 

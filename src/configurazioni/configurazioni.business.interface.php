@@ -30,6 +30,8 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
     const CONFIGURA_CAUSALE = "Obj_configuracausale";
     const INCLUDI_CONTO_CAUSALE = "Obj_includicontocausale";
     const ESCLUDI_CONTO_CAUSALE = "Obj_escludicontocausale";
+    const INSERISCI_SOTTOCONTO = "Obj_inseriscisottoconto";
+    const MODIFICA_GRUPPO_SOTTOCONTO = "Obj_modificagrupposottoconto";
 
 	// Actions
 
@@ -48,6 +50,7 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 	// Errori e messaggi
 
  	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
+ 	const ERRORE_SCRITTURA = "Errore fatale durante la scrittura dei dati";
  	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
  	const MSG_DA_CREAZIONE = "messaggioCreazione";
  	const MSG_DA_GENERAZIONE_MASTRINO = "messaggioGeneraMastrino";

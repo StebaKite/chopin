@@ -1931,9 +1931,11 @@ function cancellaSottocontoPagina(codsottoconto, dessottoconto) {
     xmlhttp.send();				
 }
 
-function modificaGruppoSottoconto(indgruppo,codsottoconto) {
+function modificaGruppoSottoconto(indgruppo,codsottoconto,dessottoconto,totregsottoconto) {
 		
-	$( "#codsottoconto" ).val(codsottoconto);
+	$( "#codsottoconto_mod" ).val(codsottoconto);
+	$( "#dessottoconto_mod" ).val(dessottoconto);
+	$( "#totregsottoconto_mod" ).val(totregsottoconto);
 	$( "#" + indgruppo).prop('checked', true).button("refresh");
 	$( "#modifica-sottoconto-modificagruppo-form" ).dialog( "open" );
 }
