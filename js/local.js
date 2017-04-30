@@ -1012,8 +1012,8 @@ $( "#nuovo-dett-fattura-aziende" ).click(function( event ) {
 $( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 510,
-	height: 420,
+	width: 550,
+	height: 440,
 	buttons: [
 		{
 			text: "Ok",
