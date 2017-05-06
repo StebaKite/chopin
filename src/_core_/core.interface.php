@@ -1,5 +1,7 @@
 <?php
 
+require_once 'nexus6.main.interface.php';
+
 interface CoreInterface extends MainNexus6Interface
 {
 	// Oggetti
@@ -15,6 +17,7 @@ interface CoreInterface extends MainNexus6Interface
 	const CAUSALE					= "Obj_causale";
 	const CONFIGURAZIONE_CAUSALE	= "Obj_configurazionecausale";
 	const PROGRESSIVO_FATTURA		= "Obj_progressivofattura";
+	const SCADENZA_FORNITORE		= "Obj_scadenzafornitore";
 }
 
 ?>

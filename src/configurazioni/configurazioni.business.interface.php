@@ -49,8 +49,6 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 
 	// Errori e messaggi
 
- 	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
- 	const ERRORE_SCRITTURA = "Errore fatale durante la scrittura dei dati";
  	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
  	const MSG_DA_CREAZIONE = "messaggioCreazione";
  	const MSG_DA_GENERAZIONE_MASTRINO = "messaggioGeneraMastrino";

@@ -42,7 +42,7 @@ class CancellaPagamento extends ScadenzeAbstract {
 
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-		require_once 'ricercaScadenze.class.php';
+		require_once 'ricercaScadenzeFornitore.class.php';
 
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();

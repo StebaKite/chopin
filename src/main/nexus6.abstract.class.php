@@ -100,7 +100,7 @@ abstract class Nexus6Abstract {
 		$array = $utility->getConfig();
 
 		$menu = "<li style='width: 70px;'><img src='../../images/unicorn.png' style='width: 50%'/></li>";;
-		
+
 		// H o m e --------------------------------------
 
 		$home = "";
@@ -170,7 +170,7 @@ abstract class Nexus6Abstract {
 		if ($array["scadenze"] == "Y") {
 			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
 			$scadenze .= "<ul>";
-			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
+			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
 			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
 			$scadenze .= "</ul></li>";
 		}
@@ -209,7 +209,7 @@ abstract class Nexus6Abstract {
 			$fatture .= "</ul></li>";
 		}
 		$menu .= $fatture;
-		
+
 		return $menu;
 	}
 
