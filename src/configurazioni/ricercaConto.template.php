@@ -103,7 +103,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract implements Configurazi
 					"	<td><i>" . trim($row[$sottoconto::DES_SOTTOCONTO]) . "</i></td>" .
 					"	<td></td>" .
 					"	<td></td>" .
-					"	<td><i>" . trim($row[self::NUM_REG_SOTTOCONTO]) . "</i></td>" .
+					"	<td><i>" . trim($row[Sottoconto::NUM_REG_SOTTOCONTO]) . "</i></td>" .
 					"	<td id='icons'>" . $bottoneMastrino . "</td>" .
 					"</tr>";
 				}

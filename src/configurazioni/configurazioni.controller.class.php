@@ -56,10 +56,13 @@ class ConfigurazioniController
  		}
 
  		if (isset($_REQUEST["codconto_mod"])) {
- 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_mod"]);
- 			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto_mod"]);
- 			$sottoconto->setQtaRegistrazioniTrovate($_REQUEST["totregsottoconto_mod"]);
- 			$sottoconto->setIndGruppo($_REQUEST["indgruppo_mod"]);
+ 			$conto->setCodConto($_REQUEST["codconto_mod"]);
+ 			$conto->setDesConto($_REQUEST["desconto_mod"]);
+ 			$conto->setCatConto($_REQUEST["categoria_mod"]);
+ 			$conto->setTipConto($_REQUEST["dareavere_mod"]);
+ 			$conto->setIndPresenzaInBilancio($_REQUEST["indpresenza_mod"]);
+ 			$conto->setIndVisibilitaSottoconti($_REQUEST["indvissottoconti_mod"]);
+ 			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio_mod"]);
  		}
 
  		if (isset($_REQUEST["codsottoconto_new"])) {

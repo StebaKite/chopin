@@ -27,68 +27,68 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
 
 		$conto = Conto::getInstance();
 		$sottoconto = Sottoconto::getInstance();
-		
+
 		$esito = TRUE;
-		$msg = "<br>";
-		
+		$msg = "ERRORE";
+
 		/**
 		 * Controllo presenza dati obbligatori
 		 */
-		
-		if ($conto->getCodConto() == "") {			
-			$msg = $msg . self::ERRORE_CODICE_CONTO;
+
+		if ($conto->getCodConto() == "") {
+			$msg .= self::ERRORE_CODICE_CONTO;
 			$esito = FALSE;
 		}
 		else {
 			if (!is_numeric($conto->getCodConto())) {
-				$msg = $msg . self::ERRORE_CODICE_CONTO_NUMERICO;
+				$msg .= self::ERRORE_CODICE_CONTO_NUMERICO;
 				$esito = FALSE;
 			}
 			else {
 				if ($conto->getCodConto() < 100) {
-					$msg = $msg . self::ERRORE_CODICE_CONTO_INVALIDO;
-					$esito = FALSE;						
+					$msg .= self::ERRORE_CODICE_CONTO_INVALIDO;
+					$esito = FALSE;
 				}
 			}
 		}
-		
+
 		if ($conto->getDesConto() == "") {
-			$msg = $msg . self::ERRORE_DESCRIZIONE_CONTO;
+			$msg .= self::ERRORE_DESCRIZIONE_CONTO;
 			$esito = FALSE;
 		}
 
 		if (sizeof($sottoconto->getNuoviSottoconti()) == 0) {
-			$msg = $msg . self::ERRORE_ASSENZA_SOTTOCONTI;
+			$msg .= self::ERRORE_ASSENZA_SOTTOCONTI;
 			$esito = FALSE;
 		}
 
 		// ----------------------------------------------
-		
-		if ($msg != "<br>") {
+
+		if ($msg != "ERRORE") {
 			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
 			unset($_SESSION[self::MESSAGGIO]);
 		}
-		
+
 		return $esito;
 	}
 
 	public function displayPagina() {
-	
+
 		$conto = Conto::getInstance();
 		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$form = $this->root . $array['template'] . self::PAGINA_CREA_CONTO;
-	
+
 		/**
 		 * Prepara la tabella dei dettagli inseriti
 		 */
 
 		$sottocontiTable = "";
-		
+
 		if (sizeof($sottoconto->getNuoviSottoconti()) > 0) {
 
 			$sottocontiTable =
@@ -100,9 +100,9 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
 			"</tr>" .
 			"</thead>" .
 			"<tbody>";
-			
+
 			foreach ($sottoconto->getNuoviSottoconti() as $unSottoconto) {
-					
+
 				$sottocontiTable .=
 				"<tr id='" . $unSottoconto[0] . "'>" .
 				"<td width='110' align='center'>" . $unSottoconto[0] . "</td>" .
@@ -110,11 +110,11 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
 				"<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(" . $unSottoconto[0] . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
 				"</tr>";
 			}
-			
+
 			$sottocontiTable .= "</tbody>";
 			$class_dettagli = "datiCreateSottile";
 		}
-			
+
 		$replace = array(
 				'%titoloPagina%' => $this->getTitoloPagina(),
 				'%azione%' => $this->getAzione(),
@@ -124,7 +124,7 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
 				'%class_dettagli%' => $class_dettagli,
 				'%sottocontiTable%' => $sottocontiTable
 		);
-	
+
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}

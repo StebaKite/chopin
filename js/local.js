@@ -948,6 +948,7 @@ $( "#nuovo-sottoconto-form" ).dialog({
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			        	var sottocontiTable = xmlhttp.responseText;
 		        		$("#sottocontiTable").html(sottocontiTable);
+		        		$("#sottocontiTable_mod").html(sottocontiTable);
 			        }
 			    }
 			    xmlhttp.open("GET", "aggiungiNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
@@ -965,10 +966,10 @@ $( "#nuovo-sottoconto-form" ).dialog({
 	]
 });
 
-$( "#nuovo-sottoconto" ).click(function( event ) {
-	$( "#nuovo-sottoconto-form" ).dialog( "open" );
-	event.preventDefault();
-});
+//$( "#nuovo-sottoconto" ).click(function( event ) {
+//	$( "#nuovo-sottoconto-form" ).dialog( "open" );
+//	event.preventDefault();
+//});
 
 //Modifica registrazione : cancella scadenza
 $( "#cancella-scadenza-modificareg-form" ).dialog({
@@ -1070,6 +1071,69 @@ $( "#nuova-causale-form" ).dialog({
 			text: "Cancel",
 			click: function() {
 				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+$( "#nuovo-conto" ).click(function( event ) {
+	$( "#nuovo-conto-form" ).dialog( "open" );
+	event.preventDefault();
+});
+
+$( "#nuovo-conto-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 750,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovoConto").submit();				
+			}
+		},
+		{
+			text: "Nuovo sottoconto",
+			click: function() {
+				$( "#nuovo-sottoconto-form" ).dialog( "open" );
+				event.preventDefault();
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+				$("#annullaNuovoConto").submit();
+			}
+		}
+	]
+});
+
+$( "#modifica-conto-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 750,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#modificaConto").submit();
+			}
+		},
+		{
+			text: "Nuovo sottoconto",
+			click: function() {
+				$( "#nuovo-sottoconto-form" ).dialog( "open" );
+				event.preventDefault();
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+				$("#annullaModificaConto").submit();
 			}
 		}
 	]
@@ -1204,6 +1268,21 @@ $(function() {
       }
     });
     $( "#numrigabilancio" ).val( $( "#slider-posizione-bilancio" ).slider( "value" ) );
+  });
+
+
+$(function() {
+    $( "#slider-posizione-bilancio_mod" ).slider({
+      range: "max",
+      min: 0,
+      max: 100,
+      value: 1,
+      step: 1,
+      slide: function( event, ui ) {
+        $( "#numrigabilancio_mod" ).val( ui.value );
+      }
+    });
+    $( "#numrigabilancio_mod" ).val( $( "#slider-posizione-bilancio_mod" ).slider( "value" ) );
   });
 
 
@@ -1917,6 +1996,64 @@ function cancellaDettaglioIncasso(idconto) {
 //---------------------------------------------------------------
 //Funzioni per i conti e sottoconti
 //---------------------------------------------------------------
+
+function modificaConto(codconto) {
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var response = xmlhttp.responseText;
+        	
+        	var datiPagina = response.split("|");
+    		$("#sottocontiTable_mod").html(datiPagina[0]);
+    		$("#codconto_mod").val(datiPagina[1]);
+    		$("#desconto_mod").val(datiPagina[2]);    
+    		
+    		if (datiPagina[3] == "Conto Economico") {
+    			$("#contoeco_mod").attr("checked", "checked").button("refresh");
+    		}
+    		else {
+        		if (datiPagina[3] == "Stato Patrimoniale") {
+        			$("#contopat_mod").attr("checked", "checked").button("refresh");
+        		}    			
+    		}
+    		
+    		if (datiPagina[4] == "Dare") {
+    			$("#dare_mod").attr("checked", "checked").button("refresh");
+    		}
+    		else {
+        		if (datiPagina[4] == "Avere") {
+        			$("#avere_mod").attr("checked", "checked").button("refresh");
+        		}    			
+    		}
+    		
+    		if (datiPagina[5] == "S") {
+    			$("#presenzaSi_mod").attr("checked", "checked").button("refresh");
+    		}
+    		else {
+        		if (datiPagina[5] == "N") {
+        			$("#presenzaNo_mod").attr("checked", "checked").button("refresh");
+        		}    			
+    		}
+    		
+    		if (datiPagina[6] == "S") {
+    			$("#sottocontiSi_mod").attr("checked", "checked").button("refresh");
+    		}
+    		else {
+        		if (datiPagina[6] == "N") {
+        			$("#sottocontiNo_mod").attr("checked", "checked").button("refresh");
+        		}    			
+    		}
+
+    		$("#numrigabilancio_mod").val(datiPagina[7]);
+    		$("#slider-posizione-bilancio_mod").slider( "value", datiPagina[7] );	
+    		
+    		$( "#modifica-conto-form" ).dialog( "open" );
+        }
+    }
+    xmlhttp.open("GET", "modificaContoFacade.class.php?modo=start&codconto=" + codconto, true);
+    xmlhttp.send();				
+}
 
 function cancellaSottocontoPagina(codsottoconto, dessottoconto) {
 	

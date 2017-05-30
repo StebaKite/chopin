@@ -41,10 +41,7 @@ $(document).ready( function () {
 			<tbody>
 				<tr>
 					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right">
-						<form action="../configurazioni/creaContoFacade.class.php">
-							<button id="nuovo-conto" class="button">%ml.nuovoconto%</button></td>
- 						</form>					
+					<td align="right"><button id="nuovo-conto" class="button">%ml.nuovoconto%</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -82,57 +79,219 @@ $(document).ready( function () {
 		%risultato_ricerca%		
 	</div>		
 		
-<div id="cancella-conto-form" title="Cancella Conto"> 
-	<form method="post" id="cancellaConto" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >
-		<p>Elimino il conto e tutti i suoi sottoconti ?</p>
-		<input type="hidden" id="codconto" name="codconto">
-  </form>
-</div>
-		
-<div id="generaMastrino-form" title="Genera Mastrino"> 
-	<form method="post" id="generaMastrino" action="../configurazioni/generaMastrinoContoFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<thead>
-				<tr>
-					<td class="td">%ml.conto% :</td>
-					<td><span id="id_codcontogenera"></span></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.codsottoconto% :</td>
-					<td><span id="id_codsottocontogenera"></span></td>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>%ml.negozio% :</td>
-					<td class="tooltip">
-						<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
-							<option value="">%ml.tutti%</option>
-							<option value="VIL" selected>%ml.villa%</option>
-							<option value="BRE" >%ml.brembate%</option>
-							<option value="TRE" >%ml.trezzo%</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="saldiInclusi" name="saldiInclusi" value="S" ><label for="saldiInclusi">%ml.saldiInclusi%</label>
-							<input type="radio" id="saldiEsclusi" name="saldiInclusi" value="N" checked ><label for="saldiEsclusi">%ml.saldiEsclusi%</label>
-						</div>
-					</td>					
-				</tr>									
-				<tr>
-					<td class="td">%ml.da% :&nbsp;</td>
-					<td class="tooltip">
-						<input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' >&nbsp;&nbsp;&nbsp;
-					    %ml.a% :&nbsp;<input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' >
-					</td>
-				</tr>
-			</tbody>
-		</table>	
-  </form>
-</div>
+	<div id="cancella-conto-form" title="Cancella Conto"> 
+		<form method="post" id="cancellaConto" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >
+			<p>Elimino il conto e tutti i suoi sottoconti ?</p>
+			<input type="hidden" id="codconto" name="codconto">
+	  	</form>
+	</div>
 
+	<div id="nuovo-conto-form" title="Nuovo Conto"> 
+		<form method="post" id="nuovoConto" action="../configurazioni/creaContoFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td class="tooltip">%ml.conto% :
+							<input type="text" id="codconto" name="codconto" size="5" maxlength="3" />
+							<input type="text" id="desconto" name="desconto" size="70" maxlength="100" />
+						</td>
+					</tr>			
+					<tr>
+						<td colspan="2">
+							<div class="radioset" >
+								<input type="radio" id="contoeco" name="categoria" value="Conto Economico" checked ><label for="contoeco">%ml.contoeco%</label>
+								<input type="radio" id="contopat" name="categoria" value="Stato Patrimoniale" ><label for="contopat">%ml.contopat%</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" id="dare" name="dareavere" value="Dare" checked ><label for="dare">%ml.dare%</label>
+								<input type="radio" id="avere" name="dareavere" value="Avere" ><label for="avere">%ml.avere%</label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+						
+							<h2>Opzioni di bilancio</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="presenzaSi" name="indpresenza" value="S" checked ><label for="presenzaSi">%ml.presenteInBilancio%</label>
+												<input type="radio" id="presenzaNo" name="indpresenza" value="N" ><label for="presenzaNo">%ml.assenteInBilancio%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="sottocontiSi" name="indvissottoconti" value="S" checked ><label for="sottocontiSi">%ml.presenzaSottoconti%</label>
+												<input type="radio" id="sottocontiNo" name="indvissottoconti" value="N" ><label for="sottocontiNo">%ml.assenzaSottoconti%</label>
+											</div>
+										</td>				
+									</tr>
+									<tr>
+										<td>
+											<label for="amount">%ml.numrigabilancio% :</label>
+											<input type="text" id="numrigabilancio" name="numrigabilancio" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">												
+										</td>
+										<td colspan="2"><div id="slider-posizione-bilancio"></div>
+									</tr>				
+								</tbody>								
+							</table>
+						
+						</td>
+					</tr>
+					<tr><td><h2>Sottoconti</h2></td></tr>
+					<tr>
+						<td colspan="4">
+							<table id="sottocontiTable" class='result'></table>
+						</td>
+					</tr>										
+				</tbody>
+			</table>
+		</form>
+	</div>	
+
+	<div id="nuovo-sottoconto-form" title="Nuovo Sottoconto"> 
+		<form>
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codsottoconto% :</td>
+						<td class="tooltip"><input type="text" id="codsottoconto" name="codsottoconto" size="5" maxlength="3" ></td>
+					</tr>					
+					<tr>
+						<td>%ml.dessottoconto% :</td>
+						<td class="tooltip"><input type="text" id="dessottoconto" name="dessottoconto" size="50" maxlength="100" ></td>
+					</tr>					
+				</tbody>
+			</table> 	 
+	  </form>
+	</div>
 		
+	<div id="generaMastrino-form" title="Genera Mastrino"> 
+		<form method="post" id="generaMastrino" action="../configurazioni/generaMastrinoContoFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<thead>
+					<tr>
+						<td class="td">%ml.conto% :</td>
+						<td><span id="id_codcontogenera"></span></td>
+					</tr>
+					<tr>
+						<td class="td">%ml.codsottoconto% :</td>
+						<td><span id="id_codsottocontogenera"></span></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>%ml.negozio% :</td>
+						<td class="tooltip">
+							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
+								<option value="">%ml.tutti%</option>
+								<option value="VIL" selected>%ml.villa%</option>
+								<option value="BRE" >%ml.brembate%</option>
+								<option value="TRE" >%ml.trezzo%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="saldiInclusi" name="saldiInclusi" value="S" ><label for="saldiInclusi">%ml.saldiInclusi%</label>
+								<input type="radio" id="saldiEsclusi" name="saldiInclusi" value="N" checked ><label for="saldiEsclusi">%ml.saldiEsclusi%</label>
+							</div>
+						</td>					
+					</tr>									
+					<tr>
+						<td class="td">%ml.da% :&nbsp;</td>
+						<td class="tooltip">
+							<input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' >&nbsp;&nbsp;&nbsp;
+						    %ml.a% :&nbsp;<input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' >
+						</td>
+					</tr>
+				</tbody>
+			</table>	
+	  </form>
+	</div>
+
+	<div id="modifica-conto-form" title="Modifica Conto"> 
+		<form method="post" id="modificaConto" action="../configurazioni/modificaContoFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td colspan="2" class="tooltip">%ml.conto% :
+							<input type="text" id="codconto_mod" name="codconto_mod" size="5" maxlength="3" readonly="readonly" >
+							<input type="text" id="desconto_mod" name="desconto_mod" size="75" maxlength="100"  >
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h2>Tipo conto</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="contoeco_mod" name="categoria_mod" value="Conto Economico" ><label for="contoeco_mod">%ml.contoeco%</label>
+												<input type="radio" id="contopat_mod" name="categoria_mod" value="Stato Patrimoniale" ><label for="contopat_mod">%ml.contopat%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="dare_mod" name="dareavere_mod" value="Dare" ><label for="dare_mod">%ml.dare%</label>
+												<input type="radio" id="avere_mod" name="dareavere_mod" value="Avere" ><label for="avere_mod">%ml.avere%</label>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>			
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" >
+							<h2>Opzioni di bilancio</h2>
+							<table class="datiCreate" cellpadding="5px">
+								<tbody>
+									<tr>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="presenzaSi_mod" name="indpresenza_mod" value="S" ><label for="presenzaSi_mod">%ml.presenteInBilancio%</label>
+												<input type="radio" id="presenzaNo_mod" name="indpresenza_mod" value="N" ><label for="presenzaNo_mod">%ml.assenteInBilancio%</label>
+											</div>
+										</td>
+										<td>
+											<div class="radioset" >
+												<input type="radio" id="sottocontiSi_mod" name="indvissottoconti_mod" value="S" ><label for="sottocontiSi_mod">%ml.presenzaSottoconti%</label>
+												<input type="radio" id="sottocontiNo_mod" name="indvissottoconti_mod" value="N" ><label for="sottocontiNo_mod">%ml.assenzaSottoconti%</label>
+											</div>
+										</td>				
+									</tr>
+									<tr>
+										<td>
+											<label for="amount">%ml.numrigabilancio% :</label>
+											<input type="text" id="numrigabilancio_mod" name="numrigabilancio_mod" size="3" readonly  style="border:0; color:#f6931f; font-weight:bold;">
+										</td>
+										<td colspan="2"><div id="slider-posizione-bilancio_mod"></div>
+									</tr>				
+								</tbody>								
+							</table>					
+						</td>
+					</tr>
+					<tr><td colspan="2" ><h2>Sottoconti</h2></td></tr>
+					<tr>
+						<td colspan="2">
+							<table id="sottocontiTable_mod" class='result'></table>
+						</td>
+					</tr>										
+				</tbody>
+			</table>
+		</form>
+	</div>
+
+	<div id="annulla-modifica-conto-form" > 
+		<form method="post" id="annullaModificaConto" action="../configurazioni/ricercaContoFacade.class.php?modo=start" ></form>
+	</div>	
+
+	<div id="annulla-nuovo-conto-form" > 
+		<form method="post" id="annullaNuovoConto" action="../configurazioni/ricercaContoFacade.class.php?modo=start" ></form>
+	</div>	
+	

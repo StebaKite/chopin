@@ -21,7 +21,6 @@ abstract class Nexus6Abstract {
 
 	public static $errorStyle = "border-color:#ff0000; border-width:1px;";
 
-	public static $sourceFolder = "/chopin/src/saldi/";
 
 	// Query ------------------------------------------------------------------------------
 
@@ -36,7 +35,6 @@ abstract class Nexus6Abstract {
 	public static $queryAggiornaSaldo = "/saldi/aggiornaSaldo.sql";
 	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
 	public static $queryCancellaSaldo = "/saldi/cancellaSaldo.sql";
-	public static $queryCambioStatoLavoroPianificato = "/main/cambioStatoLavoroPianificato.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
 	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";
 
@@ -47,9 +45,6 @@ abstract class Nexus6Abstract {
 	public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
 	public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
 	public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
-
-	public static $queryLeggiRegistrazione = "/primanota/leggiRegistrazione.sql";
-	public static $queryDeleteRegistrazione = "/primanota/deleteRegistrazione.sql";
 
 	// Setters -----------------------------------------------------------------------------
 
@@ -525,48 +520,6 @@ abstract class Nexus6Abstract {
 		$this->eseguiLavoriPianificati($db, $lavoriPianificati, $project_root);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $pklavoro
-	 * @param unknown $stato
-	 * @return unknown
-	 */
-	public function cambioStatoLavoroPianificato($db, $utility, $pklavoro, $stato) {
-
-		$replace = array(
-				'%sta_lavoro%' => $stato,
-				'%pk_lavoro_pianificato%' => $pklavoro
-		);
-
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::$queryCambioStatoLavoroPianificato;
-
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		return $result;
-	}
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @return unknown
-	 */
-	public function leggiLavoriPianificati($db, $utility) {
-
-		$replace = array();
-
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLavoriPianificati;
-
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		return $result;
-	}
 
 	public function leggiLavoriPianificatiBatchMode($db, $utility, $project_root) {
 
@@ -600,57 +553,6 @@ abstract class Nexus6Abstract {
 		return $result;
 	}
 
-	public function eseguiLavoriPianificati($db, $lavoriPianificati, $project_root) {
-
-		$rows = pg_fetch_all($lavoriPianificati);
-		$_SESSION["lavoriPianificati"] = $rows;
-
-		$oggi = date("Y/m/d");
-
-		foreach($rows as $row) {
-
-			if ((strtotime($row['dat_lavoro']) <= strtotime($oggi)) && ($row['sta_lavoro'] == "00")) {
-
-				$this->eseguiLavoro($db, $row, $project_root);
-			}
-		}
-	}
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $row
-	 * @return boolean
-	 */
-	public function eseguiLavoro($db, $row, $project_root) {
-
-		$className = trim($row['cla_esecuzione_lavoro']);
-		$fileClass = $project_root . self::$sourceFolder . trim($row['fil_esecuzione_lavoro']) . '.class.php';
-
-		if (file_exists($fileClass)) {
-
-			require_once trim($row['fil_esecuzione_lavoro']) . '.class.php';
-
-			if (class_exists($className)) {
-				$instance = new $className();
-				$_SESSION["dataEsecuzioneLavoro"] = str_replace("-", "/", $row["dat_lavoro"]);
-				if ($instance->start($db, $row['pk_lavoro_pianificato'])) {
-					return TRUE;
-				}
-				else {
-					return FALSE;
-				}
-			}
-			else {
-				echo "Il nome classe '" . $className . "' non è definito, lavoro non eseguito";
-				return FALSE;
-			}
-		}
-		else {
-			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
-			return FALSE;
-		}
-	}
 
 
 
@@ -735,42 +637,6 @@ abstract class Nexus6Abstract {
 		return $scadenze;
 	}
 
-	/**
-	 * Questo metodo legge una registrazione
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
-	public function leggiRegistrazione($db, $utility, $idregistrazione) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_dettaglioregistrazione
-	 */
-	public function cancellaRegistrazione($db, $utility, $id_registrazione) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($id_registrazione)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryDeleteRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
 }
 
 ?>

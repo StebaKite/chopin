@@ -18,6 +18,9 @@ interface CoreInterface extends MainNexus6Interface
 	const CONFIGURAZIONE_CAUSALE	= "Obj_configurazionecausale";
 	const PROGRESSIVO_FATTURA		= "Obj_progressivofattura";
 	const SCADENZA_FORNITORE		= "Obj_scadenzafornitore";
+	const SCADENZA_CLIENTE			= "Obj_scadenzacliente";
+	const SALDO						= "Obj_saldo";
+	const LAVORO_PIANIFICATO		= "Obj_lavoropianificato";
 }
 
 ?>

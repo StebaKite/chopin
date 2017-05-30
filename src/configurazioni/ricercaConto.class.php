@@ -30,10 +30,13 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 	public function start() {
 
 		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$conto->setConti(null);
+		$sottoconto->preparaNuoviSottoconti();
+		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 
 		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
 		$this->preparaPagina($ricercaContoTemplate);
@@ -73,16 +76,20 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 			 */
 
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $conto->getQtaConti() . " conti";
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 			}
 			elseif (isset($_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO] . "<br>" . "Trovati " . $conto->getQtaConti() . " conti";
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
 				unset($_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO]);
 			}
-			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $conto->getQtaConti() . " conti";
-				unset($_SESSION[self::MSG_DA_CREAZIONE]);
+			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE_CONTO])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE_CONTO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
+				unset($_SESSION[self::MSG_DA_CREAZIONE_CONTO]);
+			}
+			elseif (isset($_SESSION[self::MSG_DA_MODIFICA_CONTO])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA_CONTO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
+				unset($_SESSION[self::MSG_DA_MODIFICA_CONTO]);
 			}
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
@@ -90,15 +97,20 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 
-			if ($conto->getQtaConti() > 0) {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+			if ($pos === false) {
+				if ($conto->getQtaConti() > 0) {
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+				}
+				else {
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+				}
 			}
 			else {
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
 
 			echo $utility->tailTemplate($template);
-
 			include($this->piede);
 		}
 		else {

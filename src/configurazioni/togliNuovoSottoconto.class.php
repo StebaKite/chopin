@@ -30,9 +30,9 @@ class TogliNuovoSottoconto extends ConfigurazioniAbstract implements Configurazi
 		$sottoconto = Sottoconto::getInstance();
 		$sottoconto->togliNuovoSottoconto();
 		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
-	
+
 		$tableSottoconti = "";
-		
+
 		if (sizeof($sottoconto->getNuoviSottoconti()) > 0) {
 			$tableSottoconti =
 			"<table id='sottoconti-head' class='result'>" .
@@ -44,26 +44,26 @@ class TogliNuovoSottoconto extends ConfigurazioniAbstract implements Configurazi
 			"</tr>" .
 			"</thead>" .
 			"<tbody>";
-			
+
 			foreach ($sottoconto->getNuoviSottoconti() as $tableRow) {
-			
+
 				$tableSottoconti .= "<tr id='" . $tableRow[0] . "'>";
-				$tableSottoconti .= "<td width='107' align='center'>" . $tableRow[0] . "</td>";
-				$tableSottoconti .= "<td width='407' align='left'>" . $tableRow[1] . "</td>";
+				$tableSottoconti .= "<td width='107' align='center'>" . $tableRow[Sottoconto::COD_SOTTOCONTO] . "</td>";
+				$tableSottoconti .= "<td width='407' align='left'>" . $tableRow[Sottoconto::DES_SOTTOCONTO] . "</td>";
 				$tableSottoconti .= "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottocontoPagina(";
-				$tableSottoconti .= $tableRow[0];
+				$tableSottoconti .= $tableRow[Sottoconto::COD_SOTTOCONTO];
 				$tableSottoconti .= ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
 				$tableSottoconti .= "</tr>";
-			}			
-			$tableSottoconti .= "</tbody></table>";				
+			}
+			$tableSottoconti .= "</tbody></table>";
 		}
 		echo $tableSottoconti;
 	}
-	
+
 	public function go()
 	{
 		$this->start();
-	}	
+	}
 }
 
 ?>
