@@ -33,7 +33,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const MODIFICA_FORNITORE = "Obj_modificafornitore";
 	const MODIFICA_MERCATO = "Obj_modificamercato";
 	const RICERCA_MERCATO = "Obj_ricercamercato";
-	
+
 	// Actions
 
 	const AZIONE_RICERCA_CLIENTE    = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
@@ -43,10 +43,9 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const AZIONE_MODIFICA_CLIENTE   = "../anagrafica/modificaClienteFacade.class.php?modo=go";
 	const AZIONE_MODIFICA_FORNITORE = "../anagrafica/modificaFornitoreFacade.class.php?modo=go";
 	const AZIONE_RICERCA_MERCATO    = "../anagrafica/ricercaMercatoFacade.class.php?modo=go";
-	
+
 	// Errori e messaggi
 
-	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
 	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
 	const MSG_DA_CREAZIONE = "messaggioCreazione";
 	const ERRORE_CREA_FORNITORE = "Fornitore già esistente, inserimento fallito";

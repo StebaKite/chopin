@@ -1,17 +1,15 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/scadenze:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/scadenze:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility');
 require_once 'cancellaPagamento.class.php';
+require_once 'scadenze.controller.class.php';
 
 session_start();
+xdebug_disable();
 
-$cancellaPagamento = CancellaPagamento::getInstance();
+$_SESSION["Obj_scadenzecontroller"] = serialize(new ScadenzeController(CancellaPagamento::getInstance()));
 
-if ($_GET["modo"] == "go") {
-
-	$_SESSION["idScadenza"] = $_REQUEST["idScadenza"];
-	$_SESSION["idPagamento"] = $_REQUEST["idPagamento"];
-	$cancellaPagamento->start();
-}
+$controller = unserialize($_SESSION["Obj_scadenzecontroller"]);
+$controller->start();
 
 ?>

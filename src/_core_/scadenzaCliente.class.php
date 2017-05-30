@@ -4,41 +4,41 @@ require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 
-class ScadenzaFornitore implements CoreInterface {
+class ScadenzaCliente implements CoreInterface {
 
 	private $root;
 
-	// Nomi colonne tabella Scadenza
+	// Nomi colonne tabella ScadenzaCliente
 
-	const ID_SCADENZA = "id_scadenza";
-	const ID_REGISTRAZIONE = "id_registrazione";
-	const DAT_SCADENZA = "dat_scadenza";
-	const IMP_IN_SCADENZA = "imp_in_scadenza";
-	const NOTA_SCADENZA = "nota_scadenza";
-	const TIP_ADDEBITO = "tip_addebito";
-	const COD_NEGOZIO = "cod_negozio";
-	const ID_FORNITORE = "id_fornitore";
-	const NUM_FATTURA = "num_fattura";
-	const STA_SCADENZA = "sta_scadenza";
-	const ID_PAGAMENTO = "id_pagamento";
+	const ID_SCADENZA = 'id_scadenza';
+	const ID_REGISTRAZIONE = 'id_registrazione';
+	const DAT_REGISTRAZIONE = 'dat_registrazione';
+	const IMP_REGISTRAZIONE = 'imp_registrazione';
+	const NOTA = 'nota';
+	const TIP_ADDEBITO = 'tip_addebito';
+	const COD_NEGOZIO = 'cod_negozio';
+	const ID_CLIENTE = 'id_cliente';
+	const NUM_FATTURA = 'num_fattura';
+	const STA_SCADENZA = 'sta_scadenza';
+	const ID_INCASSO = 'id_incasso';
 
 	// altri nomi generati
 
 	const DAT_SCADENZA_YYYYMMDD = "dat_scadenza_yyyymmdd";
 
-	// dati scadenza
+	// dati scadenzaCliente
 
 	private $idScadenza;
 	private $idRegistrazione;
-	private $datScadenza;
-	private $impInScadenza;
-	private $notaScadenza;
+	private $datRegistrazione;
+	private $impRegistrazione;
+	private $nota;
 	private $tipAddebito;
 	private $codNegozio;
-	private $idFornitore;
+	private $idCliente;
 	private $numFattura;
 	private $staScadenza;
-	private $idPagamento;
+	private $idIncasso;
 
 	private $scadenze;
 	private $qtaScadenze;
@@ -52,8 +52,7 @@ class ScadenzaFornitore implements CoreInterface {
 
 	// Queries
 
-	const CERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.sql";
-	const CAMBIO_STATO_SCADENZA_FORNITORE = "/scadenze/updateStatoScadenzaFornitore.sql";
+	const CERCA_SCADENZE_CLIENTE = "/scadenze/ricercaScadenzeCliente.sql";
 
 	// Metodi
 
@@ -63,94 +62,61 @@ class ScadenzaFornitore implements CoreInterface {
 
 	public function getInstance() {
 
-		if (!isset($_SESSION[self::SCADENZA_FORNITORE])) $_SESSION[self::SCADENZA_FORNITORE] = serialize(new ScadenzaFornitore());
-		return unserialize($_SESSION[self::SCADENZA_FORNITORE]);
+		if (!isset($_SESSION[self::SCADENZA_CLIENTE])) $_SESSION[self::SCADENZA_CLIENTE] = serialize(new ScadenzaCliente());
+		return unserialize($_SESSION[self::SCADENZA_CLIENTE]);
 	}
 
-	public function prepara() {
-
+	public function prepara()
+	{
 		$this->setDatScadenzaDa(date("d/m/Y"));
 		$this->setDatScadenzaA(date("d/m/Y"));
 		$this->setCodNegozioSel("VIL");
 		$this->setScadenze(null);
 	}
 
-	public function load($db) {
-
-		/**
-		 * Colonne array scadenze
-		 *
-		 * 	id_scadenza,
-		 *	id_registrazione,
-		 *  id_fornitore,
-		 *	sta_registrazione,
-		 *	des_fornitore,
-		 *	dat_scadenza_yyyymmdd,
-		 *	dat_scadenza,
-		 *	dat_scadenza_originale,
-		 *	imp_in_scadenza,
-		 *	nota_scadenza,
-		 *	tip_addebito,
-		 *	num_fattura,
-		 *	sta_scadenza,
-		 *	id_pagamento
-		 */
-
+	public function load($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$filtro = "";
 
 		if (($this->getDatScadenzaDa() != "") & ($this->getDatScadenzaA() != "")) {
-			$filtro = "AND scadenza.dat_scadenza between '" . $this->getDatScadenzaDa() . "' and '" . $this->getDatScadenzaA() . "'" ;
+			$filtro = "AND scadenza_cliente.dat_registrazione between '" . $this->getDatScadenzaDa() . "' and '" . $this->getDatScadenzaA() . "'" ;
 		}
 
 		if ($this->getCodNegozioSel() != "") {
-			$filtro .= " AND scadenza.cod_negozio = '" . $this->getCodNegozioSel() . "'" ;
+			$filtro .= " AND scadenza_cliente.cod_negozio = '" . $this->getCodNegozioSel() . "'" ;
 		}
 
 		if ($this->getStaScadenzaSel() != "") {
-			$filtro .= " AND scadenza.sta_scadenza = '" . $this->getStaScadenzaSel() . "'" ;
+			$filtro .= " AND scadenza_cliente.sta_scadenza = '" . $this->getStaScadenzaSel() . "'" ;
 		}
 
 		$replace = array(
 				'%filtro_date%' => $filtro
 		);
 
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_FORNITORE;
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 
 		if ($result) {
 			$this->setScadenze(pg_fetch_all($result));
 			$this->setQtaScadenze(pg_num_rows($result));
+//			$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
 		} else {
 			$this->setScadenze(null);
 			$this->setQtaScadenze(null);
+//			unset($_SESSION['bottoneEstraiPdf']);
 		}
 		return $result;
 	}
 
-	public function cambiaStato($db) {
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		$replace = array(
-				'%id_scadenza%' => trim($this->getIdScadenza()),
-				'%sta_scadenza%' => trim($this->getStaScadenza())
-		);
-
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_FORNITORE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-	}
 
 
 
-	/************************************************************************
-	 * Getters e setters
-	 */
+	// Getters & Setters
 
     public function getRoot(){
         return $this->root;
@@ -176,28 +142,28 @@ class ScadenzaFornitore implements CoreInterface {
         $this->idRegistrazione = $idRegistrazione;
     }
 
-    public function getDatScadenza(){
-        return $this->datScadenza;
+    public function getDatRegistrazione(){
+        return $this->datRegistrazione;
     }
 
-    public function setDatScadenza($datScadenza){
-        $this->datScadenza = $datScadenza;
+    public function setDatRegistrazione($datRegistrazione){
+        $this->datRegistrazione = $datRegistrazione;
     }
 
-    public function getImpInScadenza(){
-        return $this->impInScadenza;
+    public function getImpRegistrazione(){
+        return $this->impRegistrazione;
     }
 
-    public function setImpInScadenza($impInScadenza){
-        $this->impInScadenza = $impInScadenza;
+    public function setImpRegistrazione($impRegistrazione){
+        $this->impRegistrazione = $impRegistrazione;
     }
 
-    public function getNotaScadenza(){
-        return $this->notaScadenza;
+    public function getNota(){
+        return $this->nota;
     }
 
-    public function setNotaScadenza($notaScadenza){
-        $this->notaScadenza = $notaScadenza;
+    public function setNota($nota){
+        $this->nota = $nota;
     }
 
     public function getTipAddebito(){
@@ -216,12 +182,12 @@ class ScadenzaFornitore implements CoreInterface {
         $this->codNegozio = $codNegozio;
     }
 
-    public function getIdFornitore(){
-        return $this->idFornitore;
+    public function getIdCliente(){
+        return $this->idCliente;
     }
 
-    public function setIdFornitore($idFornitore){
-        $this->idFornitore = $idFornitore;
+    public function setIdCliente($idCliente){
+        $this->idCliente = $idCliente;
     }
 
     public function getNumFattura(){
@@ -240,48 +206,13 @@ class ScadenzaFornitore implements CoreInterface {
         $this->staScadenza = $staScadenza;
     }
 
-    public function getIdPagamento(){
-        return $this->idPagamento;
+    public function getIdIncasso(){
+        return $this->idIncasso;
     }
 
-    public function setIdPagamento($idPagamento){
-        $this->idPagamento = $idPagamento;
+    public function setIdIncasso($idIncasso){
+        $this->idIncasso = $idIncasso;
     }
-
-
-    public function getDatScadenzaDa(){
-        return $this->datScadenzaDa;
-    }
-
-    public function setDatScadenzaDa($datScadenzaDa){
-        $this->datScadenzaDa = $datScadenzaDa;
-    }
-
-    public function getDatScadenzaA(){
-        return $this->datScadenzaA;
-    }
-
-    public function setDatScadenzaA($datScadenzaA){
-        $this->datScadenzaA = $datScadenzaA;
-    }
-
-
-    public function getCodNegozioSel(){
-        return $this->codNegozioSel;
-    }
-
-    public function setCodNegozioSel($codNegozioSel){
-        $this->codNegozioSel = $codNegozioSel;
-    }
-
-    public function getStaScadenzaSel(){
-        return $this->staScadenzaSel;
-    }
-
-    public function setStaScadenzaSel($staScadenzaSel){
-        $this->staScadenzaSel = $staScadenzaSel;
-    }
-
 
     public function getScadenze(){
         return $this->scadenze;
@@ -299,6 +230,37 @@ class ScadenzaFornitore implements CoreInterface {
         $this->qtaScadenze = $qtaScadenze;
     }
 
-}
+    public function getDatScadenzaDa(){
+        return $this->datScadenzaDa;
+    }
 
+    public function setDatScadenzaDa($datScadenzaDa){
+        $this->datScadenzaDa = $datScadenzaDa;
+    }
+
+    public function getDatScadenzaA(){
+        return $this->datScadenzaA;
+    }
+
+    public function setDatScadenzaA($datScadenzaA){
+        $this->datScadenzaA = $datScadenzaA;
+    }
+
+    public function getCodNegozioSel(){
+        return $this->codNegozioSel;
+    }
+
+    public function setCodNegozioSel($codNegozioSel){
+        $this->codNegozioSel = $codNegozioSel;
+    }
+
+    public function getStaScadenzaSel(){
+        return $this->staScadenzaSel;
+    }
+
+    public function setStaScadenzaSel($staScadenzaSel){
+        $this->staScadenzaSel = $staScadenzaSel;
+    }
+
+}
 ?>

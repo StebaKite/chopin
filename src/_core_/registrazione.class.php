@@ -7,9 +7,9 @@ require_once 'utility.class.php';
 class Registrazione implements CoreInterface {
 
 	private $root;
-	
+
 	// Nomi colonne tabella Registrazione
-	
+
 	const ID_REGISTRAZIONE	= "id_registrazione";
 	const DAT_SCADENZA		= "dat_scadenza";
 	const DES_REGISTRAZIONE	= "des_registrazione";
@@ -22,10 +22,13 @@ class Registrazione implements CoreInterface {
 	const STA_REGISTRAZIONE	= "sta_registrazione";
 	const COD_NEGOZIO		= "cod_negozio";
 	const ID_MERCATO		= "id_mercato";
-	
+
+	// altri nomi generati
+
+	const DAT_REGISTRAZIONE_YYYYMMDD = "dat_registrazione_yyyymmdd";
 
 	// dati registrazione
-	
+
 	private $idRegistrazione;
 	private $datScadenza;
 	private $desRegistrazione;
@@ -40,26 +43,72 @@ class Registrazione implements CoreInterface {
 	private $idMercato;
 
 	// Queries
-	
-	
+
+	const LEGGI_REGISTRAZIONE = "/primanota/leggiRegistrazione.sql";
+	const CANCELLA_REGISTRAZIONE = "/primanota/deleteRegistrazione.sql";
+
 	// Metodi
-	
+
 	function __construct() {
 		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
 	}
-	
+
 	public function getInstance() {
-	
+
 		if (!isset($_SESSION[self::REGISTRAZIONE])) $_SESSION[self::REGISTRAZIONE] = serialize(new Registrazione());
 		return unserialize($_SESSION[self::REGISTRAZIONE]);
 	}
-	
-	
-	
-	
-	
-	
-	
+
+	public function leggi($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione())
+		);
+
+		$sqlTemplate = $this->root . $array['query'] . self::LEGGI_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			foreach (pg_fetch_all($result) as $row) {
+				$this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
+				$this->setDatScadenza($row[self::DAT_SCADENZA]);
+				$this->setDesRegistrazione($row[self::DES_REGISTRAZIONE]);
+				$this->setIdFornitore($row[self::ID_FORNITORE]);
+				$this->setIdCliente($row[self::ID_CLIENTE]);
+				$this->setCodCausale($row[self::COD_CAUSALE]);
+				$this->setNumFattura($row[self::NUM_FATTURA]);
+				$this->setDatRegistrazione($row[self::DAT_REGISTRAZIONE]);
+				$this->setDatInserimento($row[self::DAT_INSERIMENTO]);
+				$this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
+				$this->setCodNegozio($row[self::COD_NEGOZIO]);
+				$this->setIdMercato($row[self::ID_MERCATO]);
+			}
+		}
+		return $result;
+	}
+
+	public function cancella($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione())
+		);
+
+		$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+
+
+
 
     public function getRoot(){
         return $this->root;
@@ -165,5 +214,5 @@ class Registrazione implements CoreInterface {
         $this->idMercato = $idMercato;
     }
 }
-	
+
 ?>

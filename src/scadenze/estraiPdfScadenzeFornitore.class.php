@@ -5,13 +5,9 @@ require_once 'scadenze.business.interface.php';
 require_once 'utility.class.php';
 require_once 'pdfScadenze.class.php';
 require_once 'database.class.php';
-require_once 'scadenzaCliente.class.php';
 
-class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusinessInterface
+class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusinessInterface
 {
-
-	public static $azioneRicercaScadenzeCliente = "../scadenze/ricercaScadenzeClienteFacade.class.php?modo=go";
-	public static $queryRicercaScadenzeCliente = "/scadenze/ricercaScadenzeCliente.sql";
 
 	function __construct()
 	{
@@ -27,13 +23,12 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
 
 	public function getInstance()
 	{
-		if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE])) $_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE] = serialize(new EstraiPdfScadenzeCliente());
-		return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE]);
+		if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE])) $_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE] = serialize(new EstraiPdfScadenzeFornitore());
+		return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE]);
 	}
 
 	public function start()
 	{
-
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -56,14 +51,14 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
 
 	public function generaSezioneIntestazione($pdf)
 	{
-		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 
-		$pdf->setTitle("Scadenze clienti dal " . $scadenzaCliente->getDatScadenzaDa() . " al " . $scadenzaCliente->getDatScadenzaA());
+		$pdf->setTitle("Scadenze fornitori dal " . $scadenzaFornitore->getDatScadenzaDa() . " al " . $scadenzaFornitore->getDatScadenzaA());
 
 		$negozio = self::EMPTYSTRING;
-		$negozio = ($scadenzaCliente->getCodNegozioSel() == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
-		$negozio = ($scadenzaCliente->getCodNegozioSel() == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
-		$negozio = ($scadenzaCliente->getCodNegozioSel() == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
+		$negozio = ($scadenzaFornitore->getCodNegozioSel() == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
+		$negozio = ($scadenzaFornitore->getCodNegozioSel() == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
+		$negozio = ($scadenzaFornitore->getCodNegozioSel() == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
 
 		if ($negozio != self::EMPTYSTRING) $pdf->setTitle1("Negozio di " . $negozio);
 		else $pdf->setTitle1("Tutti i negozi");
@@ -73,13 +68,13 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
 
 	public function generaSezioneTabellaScadenze($pdf, $utility)
 	{
-		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 
 		$pdf->AddPage('L');
 
-		$header = array("Data", "Cliente", "Nota", "Tipo Addebito", "Stato", "Importo");
+		$header = array("Data", "Fornitore", "Nota", "Tipo Addebito", "Stato", "Importo");
 		$pdf->SetFont('Arial','',9);
-		$pdf->ScadenzeClientiTable($header, $scadenzaCliente->getScadenze());
+		$pdf->ScadenzeTable($header, $scadenzaFornitore->getScadenze());
 
 		return $pdf;
 	}

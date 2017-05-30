@@ -1,83 +1,70 @@
 <?php
 
 require_once 'scadenze.abstract.class.php';
+require_once 'scadenze.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'scadenzaCliente.class.php';
+require_once 'cliente.class.php';
+require_once 'registrazione.class.php';
 
-class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/scadenze/ricercaScadenzeCliente.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+class RicercaScadenzeClienteTemplate extends ScadenzeAbstract implements ScadenzePresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaScadenzeClienteTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE_TEMPLATE])) $_SESSION[self::RICERCA_SCADENZE_CLIENTE_TEMPLATE] = serialize(new RicercaScadenzeClienteTemplate());
+		return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE_TEMPLATE]);
 	}
-
-	// template ------------------------------------------------
 
 	public function inizializzaPagina() {}
 
-	public function controlliLogici() {
+	public function controlliLogici()
+	{
+		$scadenzaCliente = ScadenzaCliente::getInstance();
 
 		$esito = TRUE;
 		$msg = "<br>";
-		
+
 		/**
 		 * Controllo presenza dati obbligatori
 		 */
-		
-		if ($_SESSION["datascad_da"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di inizio ricerca";
+
+		if ($scadenzaCliente->getDatScadenzaDa() == "") {
+			$msg .= self::ERRORE_DATA_INIZIO_RICERCA;
 			$esito = FALSE;
 		}
-		
-		if ($_SESSION["datascad_a"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di fine ricerca";
+
+		if ($scadenzaCliente->getDatScadenzaA() == "") {
+			$msg .= SELF::ERRORE_DATA_FINE_RICERCA;
 			$esito = FALSE;
 		}
-		
-		// ----------------------------------------------
-		
+
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
+			unset($_SESSION[self::MESSAGGIO]);
 		}
-		
-		return $esito;		
+		return $esito;
 	}
 
-	public function displayPagina() {
-
-		require_once 'utility.class.php';
-		
-		// Template --------------------------------------------------------------
-		
+	public function displayPagina()
+	{
+		$scadenzaCliente = ScadenzaCliente::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
-		$form = self::$root . $array['template'] . self::$pagina;
+
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_SCADENZE_CLIENTE;
 		$risultato_ricerca = "";
-		
-		if (isset($_SESSION["scadenzeClienteTrovate"])) {
-		
+
+		if ($scadenzaCliente->getQtaScadenze() > 0)
+		{
 			$risultato_ricerca =
 			"<table id='scadenze' class='display'>" .
 			"	<thead>" .
@@ -95,69 +82,66 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"		<th></th>" .
 			"	</thead>" .
 			"	<tbody>";
-		
-			$scadenzeClienteTrovate = $_SESSION["scadenzeClienteTrovate"];
-			$numScadenze = 0;
-		
-			$idcliente_break = ""; 
+
+			$idcliente_break = "";
 			$datregistrazione_break = "";
 			$totale_cliente = 0;
 			$totale_scadenze = 0;
-			
-			foreach(pg_fetch_all($scadenzeClienteTrovate) as $row) {
-		
+
+			foreach($scadenzaCliente->getScadenze() as $row) {
+
 				if (($idcliente_break == "") && ($datregistrazione_break == "")) {
-					$idcliente_break = trim($row['id_cliente']);
-					$datregistrazione_break = trim($row['dat_registrazione']);
-					$descliente = trim($row['des_cliente']);
-					$datregistrazione  = trim($row['dat_registrazione']);
-					$descliente2 = trim($row['des_cliente']);
-					$datregistrazione2  = trim($row['dat_registrazione_yyyymmdd']);
+					$idcliente_break = trim($row[ScadenzaCliente::ID_CLIENTE]);
+					$datregistrazione_break = trim($row[ScadenzaCliente::DAT_REGISTRAZIONE]);
+					$descliente = trim($row[Cliente::DES_CLIENTE]);
+					$datregistrazione  = trim($row[ScadenzaCliente::DAT_REGISTRAZIONE]);
+					$descliente2 = trim($row[Cliente::DES_CLIENTE]);
+					$datregistrazione2  = trim($row[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]);
 				}
-				
-				if (trim($row['sta_registrazione']) == "00") {
+
+				if (trim($row[Registrazione::STA_REGISTRAZIONE]) == self::REGISTRAZIONE_APERTA) {
 					$class = "class=''";
-					$bottoneModificaRegistrazione = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaFattura%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneModificaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . trim($row[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_REGISTRAZIONE_ICON;
 				}
 				else {
 					$class = "class=''";
-					$bottoneModificaRegistrazione = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-search'></span></li></a>";
+					$bottoneModificaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . trim($row[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_REGISTRAZIONE_ICON;
+					$bottoneModificaRegistrazione = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($row[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_REGISTRAZIONE_ICON;
 				}
-				
-				if (trim($row['nota']) != "") {$nota = trim($row['nota']);}
-				else {$nota = "&ndash;&ndash;&ndash;";} 
 
-				if (trim($row['tip_addebito']) != "") {$tipaddebito = trim($row['tip_addebito']);}
+				if (trim($row[ScadenzaCliente::NOTA]) != "") {$nota = trim($row[ScadenzaCliente::NOTA]);}
+				else {$nota = "&ndash;&ndash;&ndash;";}
+
+				if (trim($row[ScadenzaCliente::TIP_ADDEBITO]) != "") {$tipaddebito = trim($row[ScadenzaCliente::TIP_ADDEBITO]);}
 				else {$tipaddebito = "&ndash;&ndash;&ndash;";}
 
-				if (trim($row['sta_scadenza']) == "00") {
+				if (trim($row[ScadenzaCliente::STA_SCADENZA]) == self::SCADENZA_APERTA) {
 					$stascadenza = "Da Incassare";
 					$tdclass = "class='dt-ko'";
 					$bottoneModificaIncasso = "";
 					$bottoneCancellaIncasso = "";
 				}
-				
-				if (trim($row['sta_scadenza']) == "10") {
+
+				if (trim($row[ScadenzaCliente::STA_SCADENZA]) == self::SCADENZA_CHIUSA) {
 					$stascadenza = "Incassato";
 					$tdclass = "class='dt-ok'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
-					$bottoneCancellaIncasso = "<a class='tooltip' onclick='cancellaIncasso(" . trim($row['id_scadenza']) . "," . trim($row['id_incasso']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
+					$bottoneModificaIncasso = self::MODIFICA_INCASSO_HREF . trim($row[Registrazione::ID_REGISTRAZIONE]) . "&idIncasso=" . trim($row[ScadenzaCliente::ID_INCASSO]) . self::MODIFICA_INCASSO_ICON;
+					$bottoneCancellaIncasso = self::CANCELLA_INCASSO_HREF . trim($row[ScadenzaCliente::ID_SCADENZA]) . "," . trim($row[ScadenzaCliente::ID_INCASSO]) . self::CANCELLA_INCASSO_ICON ;
 				}
 
-				if (trim($row['sta_scadenza']) == "02") {
+				if (trim($row[ScadenzaCliente::STA_SCADENZA]) == self::SCADENZA_RIMANDATA) {
 					$stascadenza = "Posticipato";
 					$tdclass = "class='dt-chiuso'";
-					$bottoneModificaIncasso = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "&idIncasso=" . trim($row['id_incasso']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
-					$bottoneCancellaIncasso = "<a class='tooltip' onclick='cancellaIncasso(" . trim($row['id_scadenza']) . "," . trim($row['id_incasso']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
-					}
-				
-				$numfatt = trim($row['num_fattura']);
-				
-				$numScadenze ++;
-				
-				if ((trim($row['id_cliente']) != $idcliente_break) | (trim($row['dat_registrazione']) != $datregistrazione_break)) {
+					$bottoneModificaIncasso = self::MODIFICA_INCASSO_HREF . trim($row[Registrazione::ID_REGISTRAZIONE]) . "&idIncasso=" . trim($row[ScadenzaCliente::ID_INCASSO]) . self::MODIFICA_INCASSO_ICON;
+					$bottoneCancellaIncasso = self::CANCELLA_INCASSO_HREF . trim($row[ScadenzaCliente::ID_SCADENZA]) . "," . trim($row[ScadenzaCliente::ID_INCASSO]) . self::CANCELLA_INCASSO_ICON ;
+				}
 
-					$risultato_ricerca = $risultato_ricerca .
+				$numfatt = trim($row[ScadenzaCliente::NUM_FATTURA]);
+				$bottoneEstraiPdf = self::BOTTONE_ESTRAI_PDF;
+
+				if ((trim($row[ScadenzaCliente::ID_CLIENTE]) != $idcliente_break) | (trim($row[ScadenzaCliente::DAT_REGISTRAZIONE]) != $datregistrazione_break)) {
+
+					$risultato_ricerca .=
 					"<tr class='dt-subtotale'>" .
 					"	<td class='dt-center'>" . $datregistrazione2 . "</td>" .
 					"	<td>" . $descliente2 . "</td>" .
@@ -172,16 +156,16 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 					"	<td id='icons'></td>" .
 					"	<td id='icons'></td>" .
 					"</tr>";
-					
-					$descliente = trim($row['des_cliente']);
-					$datregistrazione  = trim($row['dat_registrazione']);
-					$descliente2 = trim($row['des_cliente']);
-					$datregistrazione2  = trim($row['dat_registrazione_yyyymmdd']);
-						
-					$idcliente_break = trim($row['id_cliente']);
-					$datregistrazione_break = trim($row['dat_registrazione']);
-						
-					$totale_scadenze += $totale_cliente;  
+
+					$descliente = trim($row[Cliente::DES_CLIENTE]);
+					$datregistrazione  = trim($row[ScadenzaCliente::DAT_REGISTRAZIONE]);
+					$descliente2 = trim($row[Cliente::DES_CLIENTE]);
+					$datregistrazione2  = trim($row[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]);
+
+					$idcliente_break = trim($row[Cliente::ID_CLIENTE]);
+					$datregistrazione_break = trim($row[ScadenzaCliente::DAT_REGISTRAZIONE]);
+
+					$totale_scadenze += $totale_cliente;
 					$totale_cliente = 0;
 				}
 
@@ -195,15 +179,15 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 				"	<td class='dt-center'>" . $numfatt . "</td>" .
 				"	<td class='dt-center'>" . $tipaddebito . "</td>" .
 				"	<td " . $tdclass . ">" . $stascadenza . "</td>" .
-				"	<td class='dt-right'>" . number_format(trim($row['imp_registrazione']), 2, ',', '.') . "</td>" .
+				"	<td class='dt-right'>" . number_format(trim($row[ScadenzaCliente::IMP_REGISTRAZIONE]), 2, ',', '.') . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
 				"	<td id='icons'>" . $bottoneModificaIncasso . "</td>" .
 				"	<td id='icons'>" . $bottoneCancellaIncasso . "</td>" .
 				"</tr>";
-				
+
 				$descliente = "";
 				$datregistrazione = "";
-				$totale_cliente += trim($row['imp_registrazione']);						
+				$totale_cliente += trim($row[ScadenzaCliente::IMP_REGISTRAZIONE]);
 			}
 
 			$risultato_ricerca = $risultato_ricerca .
@@ -221,7 +205,7 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"</tr>";
-			
+
 			$totale_scadenze += $totale_cliente;
 
 			$risultato_ricerca = $risultato_ricerca .
@@ -239,33 +223,29 @@ class RicercaScadenzeClienteTemplate extends ScadenzeAbstract {
 			"	<td id='icons'></td>" .
 			"	<td id='icons'></td>" .
 			"</tr>";
-			
-			$_SESSION['numScadenzeClienteTrovate'] = $numScadenze;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";
+
+			$risultato_ricerca .= "</tbody></table>";
 		}
 		else {
-		
+			$risultato_ricerca = self::EMPTYSTRING;
 		}
-		
+
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%datascad_da%' => $_SESSION["datascad_da"],
-				'%datascad_a%' => $_SESSION["datascad_a"],
-				'%codneg_sel%' => $_SESSION["codneg_sel"],
-				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
-				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
-				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%00-selected%' => ($_SESSION["statoscad_sel"] == "00") ? "selected" : "",
-				'%10-selected%' => ($_SESSION["statoscad_sel"] == "10") ? "selected" : "",
-				'%02-selected%' => ($_SESSION["statoscad_sel"] == "02") ? "selected" : "",
-				'%confermaTip%' => $_SESSION["confermaTip"],
-				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
+				'%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+				'%azione%' => $_SESSION[self::AZIONE],
+				'%datascad_da%' => $scadenzaCliente->getDatScadenzaDa(),
+				'%datascad_a%' => $scadenzaCliente->getDatScadenzaA(),
+				'%codneg_sel%' => $scadenzaCliente->getCodNegozioSel(),
+				'%villa-selected%' => ($scadenzaCliente->getCodNegozioSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%brembate-selected%' => ($scadenzaCliente->getCodNegozioSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%trezzo-selected%' => ($scadenzaCliente->getCodNegozioSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%00-selected%' => ($scadenzaCliente->getStaScadenzaSel() == self::SCADENZA_APERTA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%10-selected%' => ($scadenzaCliente->getStaScadenzaSel() == self::SCADENZA_CHIUSA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%02-selected%' => ($scadenzaCliente->getStaScadenzaSel() == self::SCADENZA_RIMANDATA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+				'%bottoneEstraiPdf%' => $bottoneEstraiPdf,
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-		
-		$utility = Utility::getInstance();
-		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}

@@ -1,94 +1,84 @@
 <?php
 
 require_once 'scadenze.abstract.class.php';
+require_once 'scadenze.business.interface.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'scadenzaFornitore.class.php';
+require_once 'registrazione.class.php';
+require_once 'lavoroPianificato.class.php';
+require_once 'ricercaScadenzeFornitore.class.php';
 
-class CancellaPagamento extends ScadenzeAbstract {
+class CancellaPagamento extends ScadenzeAbstract implements ScadenzeBusinessInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 
-	private static $_instance = null;
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		$this->testata = $this->root . $this->array[self::TESTATA];
+		$this->piede = $this->root . $this->array[self::PIEDE];
+		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CancellaPagamento();
-
-			return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CANCELLA_PAGAMENTO])) $_SESSION[self::CANCELLA_PAGAMENTO] = serialize(new CancellaPagamento());
+		return unserialize($_SESSION[self::CANCELLA_PAGAMENTO]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'ricercaScadenzeFornitore.class.php';
-
-		$utility = Utility::getInstance();
+	public function go()
+	{
+		$lavoroPianificato = LavoroPianificato::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
+		$registrazione = Registrazione::getInstance();
 		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+
+		$db->beginTransaction();
 
 		/**
 		 * Prelevo la data del pagamento da cancellare per ricalcolare i saldi
 		 */
 
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idPagamento"]);
-
-		$db->beginTransaction();
-
-		if ($result) {
-
-			$registrazione = pg_fetch_all($result);
-			foreach ($registrazione as $row) {
-				$datareg = $row["dat_registrazione"];
-			}
-		}
-
-		$this->cancellaRegistrazione($db, $utility, $_SESSION["idPagamento"]);
+		$registrazione->leggi($db);		// prelevo la data del pagamento per ricalcolare i saldi
+		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+		$registrazione->cancella($db);	// cancello il pagamento
 
 		/**
 		 * Ripristino lo stato della scadenza in "Da Pagare"
 		 * L'id del pagamento associato viene settato a null dalla delete rule definita sulla fk
 		 */
+		$scadenzaFornitore->setStaScadenza(self::SCADENZA_APERTA);
+		$scadenzaFornitore->cambiaStato($db);
 
-		$this->cambiaStatoScadenzaFornitore($db, $utility, $_SESSION["idScadenza"], "00");		
-		
 		/**
-		 * Rigenero i saldi
+		 * Setto le date di riporto saldo come da eseguire sulla base della data di registrazione del
+		 * pagamento
 		 */
 
 		$array = $utility->getConfig();
-			
-		$dataRegistrazione = strtotime(str_replace('/', '-', $datareg));
+
+		$lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $registrazione->getDatRegistrazione()));
 
 		if ($array['lavoriPianificatiAttivati'] == "Si") {
-			$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);
+			$lavoroPianificato->settaDaEseguire($db);
+			$_SESSION[self::LAVORO_PIANIFICATO] = serialize($lavoroPianificato);
 		}
-			
+
 		$db->commitTransaction();
 
-		$_SESSION["messaggioCancellazione"] = "Pagamento cancellato, scadenza ripristinata";
-		$ricercaScadenze = RicercaScadenze::getInstance();
-		$ricercaScadenze->go();
+		$_SESSION[self::MSG_DA_CANCELLAZIONE] = self::CANCELLA_PAGAMENTO_OK;
+
+		$_SESSION["Obj_scadenzecontroller"] = serialize(new ScadenzeController(RicercaScadenzeFornitore::getInstance()));
+		$controller = unserialize($_SESSION["Obj_scadenzecontroller"]);
+		$controller->start();
+	}
+
+	public function start() {
+		$this->go();
 	}
 }
 

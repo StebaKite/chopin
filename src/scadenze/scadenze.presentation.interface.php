@@ -10,7 +10,8 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 
 	// Pagine
 
-	const PAGINA_RICERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenze.form.html";
+	const PAGINA_RICERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.form.html";
+	const PAGINA_RICERCA_SCADENZE_CLIENTE = "/scadenze/ricercaScadenzeCliente.form.html";
 
 	// Bottoni
 
@@ -22,6 +23,11 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 	const MODIFICA_PAGAMENTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
 	const CANCELLA_PAGAMENTO_HREF = "<a class='tooltip' onclick='cancellaPagamento(";
 	const CANCELLA_PAGAMENTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaPagamento%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
+	const MODIFICA_INCASSO_HREF = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=";
+	const MODIFICA_INCASSO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
+	const CANCELLA_INCASSO_HREF = "<a class='tooltip' onclick='cancellaIncasso(";
+	const CANCELLA_INCASSO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
+
 
 	// Errori e messaggi
 
@@ -35,12 +41,14 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 	const SCADENZA_CHIUSA = "10";
 	const SCADENZA_SOSPESA = "  ";
 	const SCADENZA_RIMANDATA = "02";
+	const REGISTRAZIONE_APERTA = "00";
 	const ERRORE_DATA_INIZIO_RICERCA  = "<br>&ndash; Manca la data di inizio ricerca";
 	const ERRORE_DATA_FINE_RICERCA  = "<br>&ndash; Manca la data di fine ricerca";
 
 	// Oggetti
 
 	const RICERCA_SCADENZE_FORNITORE_TEMPLATE = "Obj_ricercascadenzefornitoretemplate";
+	const RICERCA_SCADENZE_CLIENTE_TEMPLATE = "Obj_ricercascadenzeclientetemplate";
 
 	// Metodi
 

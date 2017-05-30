@@ -99,6 +99,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 					$idfornitore_break = trim($row[ScadenzaFornitore::ID_FORNITORE]);
 					$datscadenza_break = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
 					$desfornitore = trim($row[Fornitore::DES_FORNITORE]);
+					$numfatt = trim($row[ScadenzaFornitore::NUM_FATTURA]);
 					$datscadenza  = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
 					$desfornitore2 = trim($row[Fornitore::DES_FORNITORE]);
 					$datscadenza2  = trim($row[ScadenzaFornitore::DAT_SCADENZA_YYYYMMDD]);
@@ -169,6 +170,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 
 					$desfornitore = trim($row[Fornitore::DES_FORNITORE]);
 					$datscadenza  = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
+					$numfatt = trim($row[ScadenzaFornitore::NUM_FATTURA]);
 					$desfornitore2 = trim($row[Fornitore::DES_FORNITORE]);
 					$datscadenza2  = trim($row[ScadenzaFornitore::DAT_SCADENZA_YYYYMMDD]);
 
@@ -256,9 +258,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 				'%bottoneEstraiPdf%' => $bottoneEstraiPdf,
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-
-		$utility = Utility::getInstance();
-
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 		}

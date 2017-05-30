@@ -116,8 +116,8 @@ class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusin
 		include($this->piede);
 	}
 
-	public function preparaPagina() {
-
+	public function preparaPagina()
+	{
 		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_SCADENZE_FORNITORE;
 		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
 		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaScadenze%";
