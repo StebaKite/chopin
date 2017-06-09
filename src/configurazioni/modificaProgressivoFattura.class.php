@@ -2,7 +2,7 @@
 
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
-require_once 'modificaProgressivoFattura.template.php';
+require_once 'ricercaProgressivoFattura.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'progressivoFattura.class.php';
@@ -14,7 +14,7 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
+
 		$this->testata = $this->root . $this->array[self::TESTATA];
 		$this->piede = $this->root . $this->array[self::PIEDE];
 		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
@@ -29,67 +29,59 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
 
 	public function start()
 	{
-		
+
 		$progressivoFattura = ProgressivoFattura::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		
+
 		$progressivoFattura->leggi($db);
 		$_SESSION[self::PROGRESIVO_FATTURA] = serialize($progressivoFattura);
-		
-		$modificaProgressivoFatturaTemplate = ModificaProgressivoFatturaTemplate::getInstance();
-		$this->preparaPagina($modificaProgressivoFatturaTemplate);
-			
-		// Compone la pagina
-		
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
-		
-		$modificaProgressivoFatturaTemplate->displayPagina();
-		include($this->piede);
+
+		$datiPagina =
+		$progressivoFattura->getCatCliente() . "|" .
+		$progressivoFattura->getNegProgr() . "|" .
+		$progressivoFattura->getNumFatturaUltimo() . "|" .
+		$progressivoFattura->getNotaTestaFattura() . "|" .
+		$progressivoFattura->getNotaPiedeFattura();
+
+		echo $datiPagina;
 	}
 
 	public function go()
 	{
 		$progressivoFattura = ProgressivoFattura::getInstance();
 		$db = Database::getInstance();
-		$utility = Utility::getInstance();	
-		
-		$modificaProgressivoFatturaTemplate = ModificaProgressivoFatturaTemplate::getInstance();
-		$this->preparaPagina($modificaProgressivoFatturaTemplate);
-		
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
-		
-		if ($modificaProgressivoFatturaTemplate->controlliLogici()) {
-	
+		$utility = Utility::getInstance();
+
+		if ($this->controlliLogici($progressivoFattura)) {
+
+			// Aggiornamento del DB ------------------------------
+
 			if ($progressivoFattura->update($db)) {
-	
-				$_SESSION[self::MESSAGGIO] = self::AGGIORNA_PROGRESSIVO_OK;
-				$modificaProgressivoFatturaTemplate->displayPagina();
-	
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-			}
-			else {
-				$modificaProgressivoFatturaTemplate->displayPagina();
-				
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO] = self::AGGIORNA_PROGRESSIVO_OK;
 			}
 		}
-		include($this->piede);
+		else {
+			$_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO] = $_SESSION[self::MESSAGGIO];
+		}
+
+		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaProgressivoFattura::getInstance()));
+		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+		$controller->start();
 	}
-	
-	public function preparaPagina($modificaProgressivoFatturaTemplate)
-	{
-		$modificaProgressivoFatturaTemplate->setAzione(self::AZIONE_MODIFICA_PROGRESSIVO_FATTURA);
-		$modificaProgressivoFatturaTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaProgressivoFatturaTemplate->setTitoloPagina("%ml.modificaProgressivoFattura%");
+
+	public function controlliLogici($progressivoFattura) {
+
+		$esito = TRUE;
+		$msg = "<br>";
+
+		if ($msg != "<br>") {
+			$_SESSION["messaggio"] = $msg;
+		}
+		else {
+			unset($_SESSION["messaggio"]);
+		}
+		return $esito;
 	}
 }
 

@@ -21,7 +21,6 @@ abstract class Nexus6Abstract {
 
 	public static $errorStyle = "border-color:#ff0000; border-width:1px;";
 
-
 	// Query ------------------------------------------------------------------------------
 
 	public static $queryRicercaCausali = "/primanota/ricercaCausali.sql";

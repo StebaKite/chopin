@@ -43,3 +43,33 @@ $(document).ready( function () {
 		<br>
 		%risultato_ricerca%		
 	</div>
+
+	<div id="modifica-progressivo-form" title="Modifica Progressivo"> 
+		<form method="post" id="modificaProgressivo" action="../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.categoria% :</td>
+						<td class="tooltip"><input type="text" id="catcliente" name="catcliente" size="10" maxlength="4" readonly="readonly" ></td>
+					</tr>
+					<tr>
+						<td>%ml.negozio% :</td>
+						<td class="tooltip"><input type="text" id="codnegozio" name="codnegozio" size="10" maxlength="3" readonly="readonly" ></td>
+					</tr>
+					<tr>
+						<td>%ml.numfatt% :</td>
+						<td class="tooltip"><input type="text" id="numfatt" name="numfatt" size="10" maxlength="10" ></td>
+					</tr>
+					<tr>
+						<td>%ml.notatesta% :</td>
+						<td class="tooltip"><textarea id="notatesta" name="notatesta" rows="4" cols="90" title="%ml.notafatturaTip%"></textarea></td>
+					</tr>
+					<tr>
+						<td>%ml.notapiede% :</td>
+						<td class="tooltip"><textarea id="notapiede" name="notapiede" rows="4" cols="90" title="%ml.notafatturaTip%"></textarea></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>	
+	</div>	
+	

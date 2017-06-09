@@ -49,7 +49,7 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implement
 
 			foreach($progressivoFattura->getProgressiviFattura() as $row) {
 
-				$bottoneModifica = self::MODIFICA_PROGRESSIVO_HREF . trim($row[ProgressivoFattura::CAT_CLIENTE]) . "&codneg=" . trim($row[ProgressivoFattura::NEG_PROGR]) . self::MODIFICA_PROGRESSIVO_ICON;
+				$bottoneModifica = self::MODIFICA_PROGRESSIVO_HREF . trim($row[ProgressivoFattura::CAT_CLIENTE]) . ",&apos;" . trim($row[ProgressivoFattura::NEG_PROGR]) . "&apos;" . self::MODIFICA_PROGRESSIVO_ICON;
 
 				$risultato_ricerca .=
 				"<tr>" .
