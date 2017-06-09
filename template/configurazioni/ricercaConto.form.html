@@ -30,8 +30,8 @@ $(document).ready( function () {
                }
         },
         "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+    });    
+});
 
 </script>
 
@@ -75,15 +75,22 @@ $(document).ready( function () {
 				</tfoot>
 			</table>
 		</form>
-		<br>
-		%risultato_ricerca%		
 	</div>		
+	<br>
+	%risultato_ricerca%		
 		
 	<div id="cancella-conto-form" title="Cancella Conto"> 
 		<form method="post" id="cancellaConto" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >
 			<p>Elimino il conto e tutti i suoi sottoconti ?</p>
 			<input type="hidden" id="codconto" name="codconto">
 	  	</form>
+	</div>
+
+	<div id="cancella-sottoconto-modificaconto-form" title="Cancella Sottoconto"> 
+		<form>
+			<input type="hidden" id="codconto_del" name="codconto_del">
+			<input type="hidden" id="codsottoconto_del" name="codsottoconto_del">
+		</form>
 	</div>
 
 	<div id="nuovo-conto-form" title="Nuovo Conto"> 
@@ -210,7 +217,7 @@ $(document).ready( function () {
 					</tr>
 				</tbody>
 			</table>	
-	  </form>
+		</form>
 	</div>
 
 	<div id="modifica-conto-form" title="Modifica Conto"> 
@@ -279,7 +286,7 @@ $(document).ready( function () {
 					<tr><td colspan="2" ><h2>Sottoconti</h2></td></tr>
 					<tr>
 						<td colspan="2">
-							<table id="sottocontiTable_mod" class='result'></table>
+							<div class="scroll-sottoconti"><table id="sottocontiTable_mod" class="result"></table></div>
 						</td>
 					</tr>										
 				</tbody>
@@ -294,4 +301,18 @@ $(document).ready( function () {
 	<div id="annulla-nuovo-conto-form" > 
 		<form method="post" id="annullaNuovoConto" action="../configurazioni/ricercaContoFacade.class.php?modo=start" ></form>
 	</div>	
+	
+	<div id="modifica-sottoconto-modificagruppo-form" title="Gruppo Sottoconto"> 
+		<form>
+			<input type="text" id="codconto_modgru" name="codconto_modgru" readonly />
+			<input type="text" id="codsottoconto_modgru" name="codsottoconto_modgru" readonly />
+			<input type="hidden" id="totregsottoconto_modgru" name="totregsottoconto_modgru" />
+			<div class="radioset" >
+				<input type="radio" id="NS" name="indgruppo_modgru" value="NS" ><label for="NS">%ml.ns%</label>
+				<input type="radio" id="CF" name="indgruppo_modgru" value="CF" ><label for="CF">%ml.cf%</label>
+				<input type="radio" id="CV" name="indgruppo_modgru" value="CV" ><label for="CV">%ml.cv%</label>
+				<input type="radio" id="RC" name="indgruppo_modgru" value="RC" ><label for="RC">%ml.rc%</label>
+			</div>
+		</form>
+	</div>
 	

@@ -45,11 +45,11 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		if ($creaContoTemplate->controlliLogici()) {
 
 			if ($this->creaConto($utility,$conto,$sottoconto)) {
-				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_CONTO_OK;
+				$_SESSION[self::MSG_DA_CREAZIONE_CONTO] = self::CREA_CONTO_OK;
 			}
-			else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_CONTO;
+			else $_SESSION[self::MSG_DA_CREAZIONE_CONTO] = self::ERRORE_CREAZIONE_CONTO;
 		}
-		else $_SESSION[self::MSG_DA_CREAZIONE] = $_SESSION[self::MESSAGGIO];
+		else $_SESSION[self::MSG_DA_CREAZIONE_CONTO] = $_SESSION[self::MESSAGGIO];
 
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
@@ -63,11 +63,12 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 
 		if ($conto->inserisci($db)) {
 
-			foreach ($sottoconto->getNuoviSottoconti() as $unSottoconto) {
+			foreach ($sottoconto->getSottoconti() as $unSottoconto) {
 
 				$sottoconto->setCodConto($conto->getCodConto());
 				$sottoconto->setCodSottoconto($unSottoconto[Sottoconto::COD_SOTTOCONTO]);
 				$sottoconto->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+				$sottoconto->setIndGruppo($unSottoconto[Sottoconto::IND_GRUPPO]);
 
 				$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 
@@ -80,6 +81,7 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 
 			$db->commitTransaction();
 			$sottoconto->preparaNuoviSottoconti();	// svuoto l'array dei sottoconti inseriti
+			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 			return TRUE;
 		}
 		$db->rollbackTransaction();

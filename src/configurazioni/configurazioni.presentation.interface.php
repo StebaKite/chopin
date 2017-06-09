@@ -10,10 +10,7 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 	const QTA_CONTI = "numContiTrovati";
 	const TITOLO = "titoloPagina";
 	const NUM_REG_CONTO = "tot_registrazioni_conto";
-	const NESSUNO = "NS";
-	const COSTI_FISSI = "CF";
-	const COSTI_VARIABILI = "CV";
-	const RICAVI = "RC";
+
 	const CONTO_ECONOMICO = "Conto Economico";
 	const STATO_PATRIMONIALE = "Stato Patrimoniale";
 	const DARE = "Dare";
@@ -51,8 +48,8 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 	const CANCELLA_CAUSALE_HREF = "<a class='tooltip' onclick='cancellaCausale(";
 	const CANCELLA_CAUSALE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 
-	const MODIFICA_PROGRESSIVO_HREF = "<a class='tooltip' href='../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=start&catcliente=";
-	const MODIFICA_PROGRESSIVO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+	const MODIFICA_PROGRESSIVO_HREF = "<a class='tooltip' onclick='modificaProgressivoFattura(";
+	const MODIFICA_PROGRESSIVO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 
 	const ESCLUDI_CONTO_HREF = "<a class='tooltip' href='escludiContoCausaleFacade.class.php?modo=start&codconto=";
 	const ESCLUDI_CONTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.escludiContoTip%'><span class='ui-icon ui-icon-minus'></span></li></a>";

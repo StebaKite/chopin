@@ -57,7 +57,7 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
 			$esito = FALSE;
 		}
 
-		if (sizeof($sottoconto->getNuoviSottoconti()) == 0) {
+		if (sizeof($sottoconto->getSottoconti()) == 0) {
 			$msg .= self::ERRORE_ASSENZA_SOTTOCONTI;
 			$esito = FALSE;
 		}

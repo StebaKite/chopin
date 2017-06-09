@@ -4,13 +4,6 @@ require_once 'nexus6.main.interface.php';
 
 interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 
-	// Nomi
-
-	const NESSUNO = "NS";
-	const COSTI_FISSI = "CF";
-	const COSTI_VARIABILI = "CV";
-	const RICAVI = "RC";
-
 	// Oggetti
 
 	const CONTO = "Obj_conto";
@@ -54,22 +47,19 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 	const AZIONE_CONFIGURA_CAUSALE = "../configurazioni/configuraCausaleFacade.class.php?modo=go";
 	const AZIONE_MODIFICA_CAUSALE = "../configurazioni/modificaCausaleFacade.class.php?modo=go";
 
-	// Bottoni
-
-	const CANCELLA_SOTTOCONTO_HREF = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(";
-	const CANCELLA_SOTTOCONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
-	const MODIFICA_GRUPPO_SOTTOCONTO_HREF = "<td id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(";
-	const MODIFICA_GRUPPO_SOTTOCONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>";
-
 	// Errori e messaggi
 
  	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
  	const MSG_DA_CREAZIONE_CONTO = "messaggioCreazione";
+ 	const MSG_DA_CREAZIONE_PROGRESSIVO = "messaggioCreazione";
  	const MSG_DA_GENERAZIONE_MASTRINO = "messaggioGeneraMastrino";
  	const MSG_DA_MODIFICA_CONTO = "messaggioModifica";
+ 	const MSG_DA_MODIFICA_PROGRESSIVO = "messaggioModifica";
 
- 	const ERRORE_CREAZIONE_CONTO = "Attenzione: conto gia' esistente!";
+ 	const ERRORE_CREAZIONE_CONTO = "ERRORE: conto gia' esistente!";
+ 	const ERRORE_DESCRIZIONE_CONTO = "ERRORE: manca la descrizione del conto";
  	const ERRORE_CREAZIONE_CAUSALE = "Causale già esistente, inserimento fallito";
+ 	const ERRORE_SOTTOCONTI_MANCANTI = "ERRORE: mancano i sottoconti";
  	const GENERA_MASTRINO_OK = "Mastrino del conto generato!";
  	const REGISTRAZIONI_NON_TROVATE = "Nessuna registrazione trovata!";
  	const CREA_CONTO_OK = "Conto salvato con successo";

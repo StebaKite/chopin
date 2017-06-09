@@ -69,6 +69,10 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 				$_SESSION[self::MSG_DA_MODIFICA_CONTO] = self::MODIFICA_CONTO_OK;
 			}
 		}
+		else {
+			$_SESSION[self::MSG_DA_MODIFICA_CONTO] = $_SESSION[self::MESSAGGIO];
+		}
+
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();
@@ -88,6 +92,7 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 					$sottoconto->setCodConto($conto->getCodConto());
 					$sottoconto->setCodSottoconto($unSottoconto[Sottoconto::COD_SOTTOCONTO]);
 					$sottoconto->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+					$sottoconto->setIndGruppo($unSottoconto[Sottoconto::IND_GRUPPO]);
 					$sottoconto->inserisci($db);
 				}
 			}
@@ -118,6 +123,11 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 			$esito = FALSE;
 		}
 
+		if ($sottoconto->getQtaSottoconti() == 0) {
+			$msg = $msg . self::ERRORE_SOTTOCONTI_MANCANTI;
+			$esito = FALSE;
+		}
+
 		if ($msg != "<br>") {
 			$_SESSION[self::MESSAGGIO] = $msg;
 		}
@@ -126,58 +136,6 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		}
 		return $esito;
 	}
-
-	public function makeTabellaSottoconti($conto, $sottoconto)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		$tbody = "";
-		$thead =
-			"<thead>" .
-			"	<tr>" .
-			"		<th width='100' align='center'>Sottoconto</th>" .
-			"		<th width='400' align='left'>Descrizione</th>" .
-			"		<th width='18'>Gruppo</th>" .
-			"		<th>&nbsp;</th>" .
-			"		<th>&nbsp;</th>" .
-			"	</tr>" .
-		    "</thead>";
-
-		foreach ($sottoconto->getSottoconti() as $row)
-		{
-			$bottoneCancella = "<td width='28' align='right'>" . $row[Sottoconto::NUM_REG_SOTTOCONTO] . "</td>";
-
-			if ($row[Sottoconto::NUM_REG_SOTTOCONTO] == 0) {
-				$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $sottoconto->getCodConto() . self::CANCELLA_SOTTOCONTO_ICON ;
-			}
-
-			if ($row[Sottoconto::IND_GRUPPO] == "") $indGruppo = "&ndash;&ndash;&ndash;";
-			elseif ($row[Sottoconto::IND_GRUPPO] == self::NESSUNO) $indGruppo = "&ndash;&ndash;&ndash;";
-			elseif ($row[Sottoconto::IND_GRUPPO] == self::COSTI_FISSI) $indGruppo = "Costi Fissi";
-			elseif ($row[Sottoconto::IND_GRUPPO] == self::COSTI_VARIABILI) $indGruppo = "Costi Variabili";
-			elseif ($row[Sottoconto::IND_GRUPPO] == self::RICAVI) $indGruppo = "Ricavi";
-
-			$tbody .=
-			"<tr>" .
-			"	<td>" . $row[Sottoconto::COD_SOTTOCONTO] . "</td>" .
-			"	<td>" . $row[Sottoconto::DES_SOTTOCONTO] . "</td>" .
-			"	<td>" . $indGruppo . "</td>" .
-			self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . '"' . $row[Sottoconto::IND_GRUPPO] . '","' . $row[Sottoconto::COD_SOTTOCONTO] . '","' . $row[Sottoconto::DES_SOTTOCONTO] . '","' . $row[Sottoconto::NUM_REG_SOTTOCONTO] . '"' . self::MODIFICA_GRUPPO_SOTTOCONTO_ICON .
-			$bottoneCancella .
-			"</tr>";
-		}
-
-		return "<table id='sottocontiTable_mod' class='result'>" . $thead . $tbody . "</table>";
-	}
-
-
-// 	public function preparaPagina($modificaContoTemplate) {
-
-// 		$modificaContoTemplate->setAzione(self::AZIONE_MODIFICA_CONTO);
-// 		$modificaContoTemplate->setConfermaTip("%ml.salvaTip%");
-// 		$modificaContoTemplate->setTitoloPagina("%ml.modificaConto%");
-// 	}
 }
 
 ?>

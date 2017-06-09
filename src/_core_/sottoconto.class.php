@@ -69,7 +69,8 @@ class Sottoconto implements CoreInterface {
 		$replace = array(
 				'%cod_conto%' => $this->getCodConto(),
 				'%cod_sottoconto%' => $this->getCodSottoconto(),
-				'%des_sottoconto%' => $this->getDesSottoconto()
+				'%des_sottoconto%' => $this->getDesSottoconto(),
+				'%ind_gruppo%' => $this->getIndGruppo()
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -96,6 +97,7 @@ class Sottoconto implements CoreInterface {
 				if (trim($unSottoconto[self::COD_SOTTOCONTO]) != trim($this->getCodSottoconto())) {
 					array_push($sottocontiDiff, $unSottoconto);
 				}
+				else $this->setQtaSottoconti($this->getQtaSottoconti() - 1);
 			}
 			$this->setSottoconti($sottocontiDiff);
 			$_SESSION[self::SOTTOCONTO] = serialize($this);
@@ -119,8 +121,8 @@ class Sottoconto implements CoreInterface {
 			$this->setQtaSottoconti(pg_num_rows($result));
 		}
 		else {
-			$this->setSottoconti(null);
-			$this->setQtaSottoconti(null);
+			$this->setSottoconti(array());
+			$this->setQtaSottoconti(0);
 		}
 	}
 
@@ -171,46 +173,54 @@ class Sottoconto implements CoreInterface {
 		return $result;
 	}
 
-	/**
-	 * Questo metodo viene utilizzato dalla creazione di un nuovo conto per tenere in memoria tutti i
-	 * sottoconti inseriti
-	 */
-	public function aggiungiNuovoSottoconto()
+	public function aggiungi()
 	{
 		$item = array(
+				Sottoconto::COD_CONTO => trim($this->getCodConto()),
 				Sottoconto::COD_SOTTOCONTO => trim($this->getCodSottoconto()),
 				Sottoconto::DES_SOTTOCONTO => trim($this->getDesSottoconto()),
+				Sottoconto::DAT_CREAZIONE_SOTTOCONTO => null,		// è il valore che permetterà di inserire il sottoconto
+				Sottoconto::IND_GRUPPO => "NS",
+				Sottoconto::NUM_REG_SOTTOCONTO => 0
 		);
-		array_push($this->nuoviSottoconti, $item);
-		sort($this->nuoviSottoconti);
+
+		if ($this->getQtaSottoconti() == 0) {
+			$resultset = array();
+			array_push($resultset, $item);
+			$this->setSottoconti($resultset);
+		}
+		else {
+			array_push($this->sottoconti, $item);
+			sort($this->sottoconti);
+		}
+		$this->setQtaSottoconti($this->getQtaSottoconti() + 1);
 	}
 
 	/**
 	 * Questo metodo viene utilizzato dalla modifica conto per aggiungere un sottoconto
 	 */
-	public function aggiungi()
-	{
-		$item = array(
-				Sottoconto::COD_SOTTOCONTO => $this->getCodSottoconto(),
-				Sottoconto::DES_SOTTOCONTO => $this->getDesSottoconto(),
-		);
-		array_push($this->sottocontiInseriti, $item);
-	}
+// 	public function aggiungi()
+// 	{
+// 		$item = array(
+// 				Sottoconto::COD_SOTTOCONTO => $this->getCodSottoconto(),
+// 				Sottoconto::DES_SOTTOCONTO => $this->getDesSottoconto(),
+// 		);
+// 		array_push($this->sottocontiInseriti, $item);
+// 	}
 
-	public function togliNuovoSottoconto()
-	{
-		$nuoviSottocontiDiff = array();
+// 	public function togliNuovoSottoconto()
+// 	{
+// 		$nuoviSottocontiDiff = array();
 
-		foreach ($this->getNuoviSottoconti() as $unSottoconto) {
-			if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) != trim($this->getCodSottoconto())) {
-				array_push($nuoviSottocontiDiff, $unSottoconto);
-			}
-		}
-		$this->setNuoviSottoconti($nuoviSottocontiDiff);
-	}
+// 		foreach ($this->getNuoviSottoconti() as $unSottoconto) {
+// 			if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) != trim($this->getCodSottoconto())) {
+// 				array_push($nuoviSottocontiDiff, $unSottoconto);
+// 			}
+// 		}
+// 		$this->setNuoviSottoconti($nuoviSottocontiDiff);
+// 	}
 
 	public function preparaNuoviSottoconti() {
-		$this->setNuoviSottoconti(array());
 		$this->setQtaSottoconti(0);
 		$this->setSottoconti(array());
 	}
@@ -240,10 +250,10 @@ class Sottoconto implements CoreInterface {
 					$item = array(
 							Sottoconto::COD_CONTO => $this->getCodConto(),
 							Sottoconto::COD_SOTTOCONTO => $this->getCodSottoconto(),
-							Sottoconto::DES_SOTTOCONTO => $this->getDesSottoconto(),
-							Sottoconto::DAT_CREAZIONE_SOTTOCONTO => $this->getDatCreazioneSottoconto(),
+							Sottoconto::DES_SOTTOCONTO => $unSottoconto[Sottoconto::DES_SOTTOCONTO],
+							Sottoconto::DAT_CREAZIONE_SOTTOCONTO => $unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO],
 							Sottoconto::IND_GRUPPO => $this->getIndGruppo(),
-							'totale_registrazioni_sottoconto' => $this->getQtaRegistrazioniTrovate()
+							Sottoconto::NUM_REG_SOTTOCONTO => $unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]
 					);
 					array_push($sottocontiDiff, $item);
 				}
@@ -252,6 +262,20 @@ class Sottoconto implements CoreInterface {
 			$_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
 		}
 		return $result;
+	}
+
+	public function searchSottoconto($unSottoconto)
+	{
+		foreach ($this->getSottoconti() as $row) {
+
+			if ((trim($row[Sottoconto::COD_CONTO]) != trim($unSottoconto[Sottoconto::COD_CONTO]))
+			and	(trim($row[Sottoconto::COD_SOTTOCONTO]) != trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]))) {
+				$this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+				$this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
+				$this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
+				break;
+			}
+		}
 	}
 
 	/************************************************************************

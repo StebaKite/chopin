@@ -426,7 +426,7 @@ $( "#nuovo-dettaglio-modificareg-form" ).dialog({
 				        		
 				        	}
 				        	else {
-					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+				        		$( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
 				        	}
 				        }		
 				        
@@ -756,30 +756,23 @@ $( "#modifica-sottoconto-modificagruppo-form" ).dialog({
 		{
 			text: "Ok",
 			click: function() {
+				
+				var codconto = $("#codconto_modgru").val();
+				var codsottoconto = $("#codsottoconto_modgru").val();
+				var indgruppo = $("input[name=indgruppo_modgru]:checked").val();				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	var sottocontiTable_mod = xmlhttp.responseText;
+		        		$("#sottocontiTable_mod").html(sottocontiTable_mod);
+		        		var sottocontiTable = sottocontiTable_mod.replace("sottocontiTable_mod","sottocontiTable")
+		        		$("#sottocontiTable").html(sottocontiTable);
+			        }
+			    }
+			    xmlhttp.open("GET", "modificaGruppoSottocontoFacade.class.php?modo=start&codconto_modgru=" + codconto + "&codsottoconto_modgru=" + codsottoconto + "&indgruppo_modgru=" + indgruppo, true);
+			    xmlhttp.send();				
+				
 				$(this).dialog('close');
-         $("#modificaGruppoSottoconto").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-//Modifica conto : cancella sottoconto
-$( "#cancella-sottoconto-modificaconto-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 300,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-           $("#cancellaSottoconto").submit();				
 			}
 		},
 		{
@@ -1134,6 +1127,27 @@ $( "#modifica-conto-form" ).dialog({
 			click: function() {
 				$( this ).dialog( "close" );
 				$("#annullaModificaConto").submit();
+			}
+		}
+	]
+});
+
+$( "#modifica-progressivo-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 900,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#modificaProgressivo").submit();
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
 			}
 		}
 	]
@@ -2055,33 +2069,53 @@ function modificaConto(codconto) {
     xmlhttp.send();				
 }
 
-function cancellaSottocontoPagina(codsottoconto, dessottoconto) {
+function modificaProgressivoFattura(catCliente, codNegozio) {
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var response = xmlhttp.responseText;
+        	
+        	var datiPagina = response.split("|");
+        	
+    		$("#catcliente").val(datiPagina[0]);
+    		$("#codnegozio").val(datiPagina[1]);
+    		$("#numfatt").val(datiPagina[2]);    
+    		$("#notatesta").val(datiPagina[3]);    
+    		$("#notapiede").val(datiPagina[4]);    
+    		
+    		$( "#modifica-progressivo-form" ).dialog( "open" );
+        }
+    }
+    xmlhttp.open("GET", "modificaProgressivoFatturaFacade.class.php?modo=start&catcliente=" + catCliente + "&codnegozio=" + codNegozio, true);
+    xmlhttp.send();				
+}
+
+function cancellaSottoconto(codsottoconto, codconto, funzione) {
 	
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         	var sottocontiTable = xmlhttp.responseText;
-    		$("#sottocontiTable").html(sottocontiTable);
+    		$("#sottocontiTable" + funzione).html(sottocontiTable);
         }
     }
-    xmlhttp.open("GET", "togliNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
+    xmlhttp.open("GET", "togliNuovoSottocontoFacade.class.php?modo=start&codsottoconto_del=" + codsottoconto + "&codconto_del=" + codconto, true);
     xmlhttp.send();				
 }
 
-function modificaGruppoSottoconto(indgruppo,codsottoconto,dessottoconto,totregsottoconto) {
+function modificaGruppoSottoconto(indgruppo,codconto,codsottoconto) {
 		
-	$( "#codsottoconto_mod" ).val(codsottoconto);
-	$( "#dessottoconto_mod" ).val(dessottoconto);
-	$( "#totregsottoconto_mod" ).val(totregsottoconto);
+	$( "#codconto_modgru" ).val(codconto);
+	$( "#codsottoconto_modgru" ).val(codsottoconto);
+	
+	$( "#NS").prop('checked', false).button("refresh");
+	$( "#CF").prop('checked', false).button("refresh");
+	$( "#CV").prop('checked', false).button("refresh");
+	$( "#RC").prop('checked', false).button("refresh");
+	
 	$( "#" + indgruppo).prop('checked', true).button("refresh");
 	$( "#modifica-sottoconto-modificagruppo-form" ).dialog( "open" );
-}
-
-function cancellaSottoconto(codsottoconto,codconto) {
-	
-	$( "#codsottoconto_del" ).val(codsottoconto);
-	$( "#codconto_del" ).val(codconto);
-	$( "#cancella-sottoconto-modificaconto-form" ).dialog( "open" );
 }
 
 function cancellaConto(codconto) {

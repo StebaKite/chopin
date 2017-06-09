@@ -65,6 +65,12 @@ class ConfigurazioniController
  			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio_mod"]);
  		}
 
+ 		if (isset($_REQUEST["codconto_modgru"])) {
+ 			$sottoconto->setCodConto($_REQUEST["codconto_modgru"]);
+ 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_modgru"]);
+ 			$sottoconto->setIndGruppo($_REQUEST["indgruppo_modgru"]);
+ 		}
+
  		if (isset($_REQUEST["codsottoconto_new"])) {
  			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_new"]);
  			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto_new"]);
@@ -109,7 +115,7 @@ class ConfigurazioniController
 
  		if (isset($_REQUEST["catcliente"])) {
  			$progressivoFattura->setCatCliente($_REQUEST["catcliente"]);
- 			$progressivoFattura->setNegProgr($_REQUEST["codneg"]);
+ 			$progressivoFattura->setNegProgr($_REQUEST["codnegozio"]);
  			$progressivoFattura->setNumFatturaUltimo($_REQUEST["numfatt"]);
  			$progressivoFattura->setNotaTestaFattura($_REQUEST["notatesta"]);
  			$progressivoFattura->setNotaPiedeFattura($_REQUEST["notapiede"]);
