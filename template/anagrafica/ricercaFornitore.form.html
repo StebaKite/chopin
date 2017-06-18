@@ -27,6 +27,13 @@ $(document).ready( function () {
     } );
 } );
 
+function normalizzaCampo(campo)
+{
+	var c = $("#" + campo).val();
+	var cNorm = c.trim().replace("&", "e");
+	$("#" + campo).val(cNorm);	
+}
+
 </script>
 
 <div id="body">
@@ -75,7 +82,7 @@ $(document).ready( function () {
 						<td>%ml.tipaddebito% :</td>						
 						<td colspan="2">
 							<div class="radioset" >
-								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">%ml.bonifico%</label>
+								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">Bonifico</label>
 								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" ><label for="riba">%ml.riba%</label>
 								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" ><label for="rimdiretta">%ml.rimdiretta%</label>
 								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" ><label for="assegnobancario">%ml.assegnobancario%</label>
@@ -106,3 +113,55 @@ $(document).ready( function () {
 			<input type="hidden" id="idfornitore" name="idfornitore">
 		</form>
 	</div>		
+	
+	<div id="modifica-fornitore-form" title="Modifica Fornitore">
+		<form method="post" id="modificaFornitore" action="../anagrafica/modificaFornitoreFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.codfornitore% :</td>
+						<td class="tooltip"><input type="text" id="codfornitore_mod" name="codfornitore_mod" size="12" maxlength="10" readonly="readonly" ></td>
+					</tr>	
+					<tr>
+						<td>%ml.desfornitore% :</td>
+						<td class="tooltip"><input type="text" id="desfornitore_mod" name="desfornitore_mod" size="70" maxlength="100" onblur="normalizzaCampo('desfornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.indfornitore% :</td>
+						<td class="tooltip"><input type="text" id="indfornitore_mod" name="indfornitore_mod" size="70" maxlength="200" onblur="normalizzaCampo('indfornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.cittafornitore% :</td>
+						<td class="tooltip"><input type="text" id="cittafornitore_mod" name="cittafornitore_mod" size="70" maxlength="100" onblur="normalizzaCampo('cittafornitore');"></td>
+					</tr>			
+					<tr>
+						<td>%ml.capfornitore% :</td>
+						<td class="tooltip"><input type="text" id="capfornitore_mod" name="capfornitore_mod" size="7" maxlength="5" onblur="normalizzaCampo('capfornitore');"></td>
+					</tr>	
+					<tr>
+						<td>%ml.tipaddebito% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="bonifico_mod" name="tipoaddebito_mod" value="BONIFICO"/><label for="bonifico_mod">Bonifico</label>
+								<input type="radio" id="riba_mod" name="tipoaddebito_mod" value="RIBA"/><label for="riba_mod">Ri.Ba.</label>
+								<input type="radio" id="rimdiretta_mod" name="tipoaddebito_mod" value="RIM_DIR"/><label for="rimdiretta_mod">Rimessa diretta</label>
+								<input type="radio" id="assegnobancario_mod" name="tipoaddebito_mod" value="ASS_BAN"/><label for="assegnobancario_mod">Assegno bancario</label>
+								<input type="radio" id="addebitodiretto_mod" name="tipoaddebito_mod" value="ADD_DIR"/><label for="addebitodiretto_mod">Addebito diretto</label>
+							</div>
+						</td>					
+					</tr>
+					<tr>
+						<td>
+							<p>
+								<label for="amount">%ml.numggscafatt% :</label>
+								<input type="text" id="numggscadenzafattura_mod" name="numggscadenzafattura_mod" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">
+							</p>
+						</td>
+						<td>
+							<div id="slider-gg-scadenza-fattura_mod">
+						</td>
+					</tr>				
+				</tbody>
+			</table>
+		</form>
+	</div>

@@ -3,6 +3,7 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'conto.class.php';
 require_once 'sottoconto.class.php';
 
 class Fornitore implements CoreInterface {
@@ -21,7 +22,7 @@ class Fornitore implements CoreInterface {
 	const DAT_CREAZIONE = "dat_creazione";
 	const NUM_GG_SCADENZA_FATTURA = "num_gg_scadenza_fattura";
 	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
-	
+
 	// Dati fornitore
 
 	private $id_fornitore;
@@ -36,10 +37,10 @@ class Fornitore implements CoreInterface {
 	private $qtaRegistrazioniFornitore;
 
 	// Altri dati funzionali
-	
+
 	private $fornitori;
 	private $qtaFornitori;
-	
+
 	// Queries
 
 	const ULTIMO_CODICE_FORNITORE = "/anagrafica/leggiUltimoCodiceFornitore.sql";
@@ -49,7 +50,7 @@ class Fornitore implements CoreInterface {
 	const AGGIORNA_FORNITORE = "/anagrafica/updateFornitore.sql";
 	const QUERY_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.sql";
 	const LEGGI_FORNITORE_X_ID = "/anagrafica/leggiIdFornitore.sql";
-	
+
 	// Metodi
 
 	function __construct() {
@@ -90,8 +91,9 @@ class Fornitore implements CoreInterface {
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		if ($db->execSql($sql)) {
-			$this->load($db);	// refresh dei clienti caricati
+		$result = $db->execSql($sql);
+		if ($result) {
+			$this->load($db);	// refresh dei fornitori caricati
 			$_SESSION[self::FORNITORE] = serialize($this);
 		}
 
@@ -107,6 +109,10 @@ class Fornitore implements CoreInterface {
 
 			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 			$result = $sottoconto->inserisci($db);
+
+			$conto = Conto::getInstance();
+			$conto->load($db);		// refresh dei conti caricati
+			$_SESSION[self::CONTO] = serialize($conto);
 		}
 		return $result;
 	}
@@ -125,14 +131,14 @@ class Fornitore implements CoreInterface {
 	}
 
 	public function load($db) {
-	
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-	
+
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if ($result) {
 			$this->setFornitori(pg_fetch_all($result));
 			$this->setQtaFornitori(pg_num_rows($result));
@@ -147,31 +153,31 @@ class Fornitore implements CoreInterface {
 	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_fornitore%' => $this->getIdFornitore()
 		);
-	
+
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		/**
 		 * Cancello il conto del fornitore
 		 * @var array $conto
 		 */
 		$sottoconto = Sottoconto::getInstance();
 		$conto = explode(",", $array["contiFornitore"]);
-		
+
 		foreach(pg_fetch_all($result) as $row) {
-		
+
 			foreach ($conto as $contoFornitori) {
 				$sottoconto->setCodConto($contoFornitori);
 				$sottoconto->setCodSottoconto($row['cod_fornitore']);
 				$sottoconto->cancella($db);
 			}
 		}
-	
+
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		if ($db->getData($sql)) {
@@ -190,7 +196,7 @@ class Fornitore implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		
+
 		foreach(pg_fetch_all($result) as $row) {
 			$this->setCodFornitore($row[self::COD_FORNITORE]);
 			$this->setDesFornitore($row[self::DES_FORNITORE]);
@@ -204,12 +210,12 @@ class Fornitore implements CoreInterface {
 		}
 		return $result;
 	}
-	
+
 	public function update($db)
 	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_fornitore%' => $this->getIdFornitore(),
 				'%cod_fornitore%' => $this->getCodFornitore(),
@@ -223,9 +229,13 @@ class Fornitore implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		if ($result) {
+			$this->load($db);	// refresh dei clienti caricati
+			$_SESSION[self::FORNITORE] = serialize($this);
+		}
 		return $result;
 	}
-	
+
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -236,7 +246,7 @@ class Fornitore implements CoreInterface {
 	public function setRoot($root) {
 		$this->root = $root;
 	}
-	
+
 	public function setIdFornitore($id_fornitore) {
 		$this->id_fornitore = $id_fornitore;
 	}
@@ -299,14 +309,14 @@ class Fornitore implements CoreInterface {
 	public function getNumGgScadenzaFattura() {
 		return $this->num_gg_scadenza_fattura;
 	}
-	
+
 	public function getFornitori() {
 		return $this->fornitori;
 	}
 	public function setFornitori($fornitori) {
 		$this->fornitori = $fornitori;
 	}
-	
+
 	public function getQtaFornitori() {
 		return $this->qtaFornitori;
 	}
@@ -320,7 +330,7 @@ class Fornitore implements CoreInterface {
 	public function setQtaRegistrazioniFornitore($qtaRegistrazioniFornitore) {
 		$this->qtaRegistrazioniFornitore = $qtaRegistrazioniFornitore;
 	}
-	
+
 }
 
 ?>

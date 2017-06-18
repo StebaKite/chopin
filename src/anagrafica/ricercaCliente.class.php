@@ -14,7 +14,7 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
+
 		$this->testata = $this->root . $this->array[self::TESTATA];
 		$this->piede = $this->root . $this->array[self::PIEDE];
 		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
@@ -28,10 +28,10 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 	}
 
 	public function start() {
-		
+
 		// Template
-		
-		$cliente = Cliente::getInstance();		
+
+		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
@@ -44,13 +44,13 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		echo $utility->tailTemplate($template);
 
 		if ($this->refreshClienti($db, $cliente)) {
-				
+
 			$ricercaClienteTemplate->displayPagina();
-	
+
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
 			 */
-			
+
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
 				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
@@ -59,38 +59,42 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
 				unset($_SESSION[self::MSG_DA_CREAZIONE]);
 			}
+			elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
+				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
+				unset($_SESSION[self::MSG_DA_MODIFICA]);
+			}
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $cliente->getQtaClienti() . " clienti";
 			}
-	
+
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-	
+
 			if ($cliente->getQtaClienti() > 0) {
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			}
 			else {
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
-	
+
 			echo $utility->tailTemplate($template);
 		}
 		else {
-		
+
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 		}
-		
+
 		include($this->piede);
 	}
-	
+
 	public function go() {
 		$this->start();
 	}
 
 	private function refreshClienti($db, $cliente) {
-	
+
 		if (sizeof($cliente->getClienti()) == 0) {
-	
+
 			if (!$cliente->load($db)) {
 				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
 				return false;
@@ -99,9 +103,9 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		}
 		return true;
 	}
-	
+
 	private function preparaPagina($ricercaCausaleTemplate) {
-	
+
 		$_SESSION["azione"] = self::AZIONE_RICERCA_CLIENTE;
 		$_SESSION["confermaTip"] = "%ml.cercaTip%";
 		$_SESSION["titoloPagina"] = "%ml.ricercaCliente%";

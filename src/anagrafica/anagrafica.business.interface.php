@@ -48,10 +48,13 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 
 	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
 	const MSG_DA_CREAZIONE = "messaggioCreazione";
+	const MSG_DA_MODIFICA = "messaggioModifica";
 	const ERRORE_CREA_FORNITORE = "Fornitore già esistente, inserimento fallito";
 	const ERRORE_CREA_CLIENTE = "Cliente già esistente, inserimento fallito";
 	const CREA_FORNITORE_OK = "Fornitore salvato con successo";
 	const CREA_CLIENTE_OK = "Cliente salvato con successo";
+	const MODIFICA_FORNITORE_OK = "Fornitore salvato con successo";
+	const MODIFICA_CLIENTE_OK = "Cliente salvato con successo";
 	const CREA_MERCATO_OK = "Nuovo mercato creato con successo";
 	const MODIFICA_MERCATO_OK = "Mercato modificato con successo";
 	const CANCELLA_MERCATO_OK = "Mercato cancellato con successo";

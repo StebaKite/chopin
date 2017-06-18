@@ -1179,6 +1179,48 @@ $( "#nuovo-fornitore-form" ).dialog({
 	]
 });
 
+$( "#modifica-fornitore-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 1000,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#modificaFornitore").submit();
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+$( "#modifica-cliente-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 900,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#modificaCliente").submit();
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
 $( "#nuovo-cliente" ).click(function( event ) {
 	$( "#nuovo-cliente-form" ).dialog( "open" );
 	event.preventDefault();
@@ -1265,6 +1307,20 @@ $(function() {
       step: 10,
       slide: function( event, ui ) {
         $( "#numggscadenzafattura" ).val( ui.value );
+      }
+    });
+    $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
+  });
+
+$(function() {
+    $( "#slider-gg-scadenza-fattura_mod" ).slider({
+      range: "max",
+      min: 0,
+      max: 120,
+      value: 30,
+      step: 10,
+      slide: function( event, ui ) {
+        $( "#numggscadenzafattura_mod" ).val( ui.value );
       }
     });
     $( "#numggscadenzafattura" ).val( $( "#slider-gg-scadenza-fattura" ).slider( "value" ) );
@@ -2088,6 +2144,118 @@ function modificaProgressivoFattura(catCliente, codNegozio) {
         }
     }
     xmlhttp.open("GET", "modificaProgressivoFatturaFacade.class.php?modo=start&catcliente=" + catCliente + "&codnegozio=" + codNegozio, true);
+    xmlhttp.send();				
+}
+
+function modificaFornitore(idFornitore) {
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var response = xmlhttp.responseText;
+        	
+        	var datiPagina = response.split("|");
+    		$("#codfornitore_mod").val(datiPagina[0]);
+    		$("#desfornitore_mod").val(datiPagina[1]);
+    		$("#indfornitore_mod").val(datiPagina[2]);
+    		$("#cittafornitore_mod").val(datiPagina[3]);
+    		$("#capfornitore_mod").val(datiPagina[4]);
+
+			$("#bonifico_mod").prop("checked", false).button("refresh");
+			$("#riba_mod").prop("checked", false).button("refresh");
+			$("#rimdiretta_mod").prop("checked", false).button("refresh");
+			$("#assegnobancario_mod").prop("checked", false).button("refresh");
+			$("#addebitodiretto_mod").prop("checked", false).button("refresh");
+
+    		if (datiPagina[5] == "BONIFICO") {
+    			$("#bonifico_mod").prop("checked", true).button("refresh");
+    		}
+    		else {
+        		if (datiPagina[5] == "RIBA") {
+        			$("#riba_mod").prop("checked", true).button("refresh");
+        		}
+        		else {
+            		if (datiPagina[5] == "RIM_DIR") {
+            			$("#rimdiretta_mod").prop("checked", true).button("refresh");
+            		}
+            		else {
+                		if (datiPagina[5] == "ASS_BAN") {
+                			$("#assegnobancario_mod").prop("checked", true).button("refresh");
+                		}
+                		else {
+                    		if (datiPagina[5] == "ADD_DIR") {
+                    			$("#addebitodiretto_mod").prop("checked", true).button("refresh");
+                    		}
+                		}
+            		}
+        		}
+    		}
+    		
+    		$("#tipoaddebito_mod").val(datiPagina[5]);
+    		$("#numggscadenzafattura_mod").val(datiPagina[6]);
+    		$( "#slider-gg-scadenza-fattura_mod" ).slider( "value", datiPagina[6] );	
+        	
+    		$( "#modifica-fornitore-form" ).dialog( "open" );
+        }
+    }
+    xmlhttp.open("GET", "modificaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore, true);
+    xmlhttp.send();				
+}
+
+function modificaCliente(idCliente) {
+	
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var response = xmlhttp.responseText;
+        	
+        	var datiPagina = response.split("|");
+    		$("#codcliente_mod").val(datiPagina[0]);
+    		$("#descliente_mod").val(datiPagina[1]);
+    		$("#indcliente_mod").val(datiPagina[2]);
+    		$("#cittacliente_mod").val(datiPagina[3]);
+    		$("#capcliente_mod").val(datiPagina[4]);
+
+			$("#bonifico_mod").prop("checked", false).button("refresh");
+			$("#riba_mod").prop("checked", false).button("refresh");
+			$("#rimdiretta_mod").prop("checked", false).button("refresh");
+			$("#assegnobancario_mod").prop("checked", false).button("refresh");
+			$("#addebitodiretto_mod").prop("checked", false).button("refresh");
+
+    		if (datiPagina[5] == "BONIFICO") {
+    			$("#bonifico_mod").prop("checked", true).button("refresh");
+    		}
+    		else {
+        		if (datiPagina[5] == "RIBA") {
+        			$("#riba_mod").prop("checked", true).button("refresh");
+        		}
+        		else {
+            		if (datiPagina[5] == "RIM_DIR") {
+            			$("#rimdiretta_mod").prop("checked", true).button("refresh");
+            		}
+            		else {
+                		if (datiPagina[5] == "ASS_BAN") {
+                			$("#assegnobancario_mod").prop("checked", true).button("refresh");
+                		}
+                		else {
+                    		if (datiPagina[5] == "ADD_DIR") {
+                    			$("#addebitodiretto_mod").prop("checked", true).button("refresh");
+                    		}
+                		}
+            		}
+        		}
+    		}
+    		
+    		$("#tipoaddebito_mod").val(datiPagina[5]);
+    		$("#codpiva_mod").val(datiPagina[6]);
+    		$("#codfisc_mod").val(datiPagina[7]);	
+    		$("#catcliente_mod").html(datiPagina[8]);
+            $("#catcliente_mod").selectmenu( "refresh" );
+        	
+    		$( "#modifica-cliente-form" ).dialog( "open" );
+        }
+    }
+    xmlhttp.open("GET", "modificaClienteFacade.class.php?modo=start&idcliente=" + idCliente, true);
     xmlhttp.send();				
 }
 

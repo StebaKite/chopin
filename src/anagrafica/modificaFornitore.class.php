@@ -2,23 +2,19 @@
 
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
-require_once 'modificaFornitore.template.php';
+require_once 'anagrafica.controller.class.php';
+require_once 'ricercaFornitore.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 require_once 'fornitore.class.php';
 
 class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	function __construct() {
-
+	function __construct()
+	{
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -27,83 +23,58 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 		return unserialize($_SESSION[self::MODIFICA_FORNITORE]);
 	}
 
-	public function start() {
-
-		$modificaFornitoreTemplate = ModificaFornitoreTemplate::getInstance();
-		$this->preparaPagina($modificaFornitoreTemplate);
-		
-		$db = Database::getInstance();
+	public function start()
+	{
 		$fornitore = Fornitore::getInstance();
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+
 		$fornitore->leggi($db);
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
-				
-		// Compone la pagina
-		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-		echo $this->utility->tailTemplate($template);
-		
-		$modificaFornitoreTemplate->displayPagina();
-		include($this->piede);
+
+		$datiPagina =
+		trim($fornitore->getCodFornitore()) . "|" .
+		trim($fornitore->getDesFornitore()) . "|" .
+		trim($fornitore->getDesIndirizzoFornitore()) . "|" .
+		trim($fornitore->getDesCittaFornitore()) . "|" .
+		trim($fornitore->getCapFornitore()) . "|".
+		trim($fornitore->getTipAddebito()) . "|" .
+		trim($fornitore->getNumGgScadenzaFattura());
+
+		echo $datiPagina;
 	}
-	
-	public function go() {
 
-		$modificaFornitoreTemplate = ModificaFornitoreTemplate::getInstance();
-		
-		if ($modificaFornitoreTemplate->controlliLogici()) {
-		
-			// Aggiornamento del DB ------------------------------
-		
-			if ($this->aggiornaFornitore()) {
-		
-				$_SESSION["messaggio"] = "Fornitore salvato con successo";
-		
-				$this->preparaPagina($modificaFornitoreTemplate);
+	public function go()
+	{
+		$fornitore = Fornitore::getInstance();
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
 
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-				
-				$modificaFornitoreTemplate->displayPagina();
+		if ($this->controlliLogici($fornitore)) {
 
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $this->utility->tailTemplate($template);
-									
-				include($this->piede);
-			}
-			else {
-					
-				$this->preparaPagina($modificaFornitoreTemplate);
-
-				$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-				echo $this->utility->tailTemplate($template);
-				
-				$modificaFornitoreTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $this->utility->tailFile($this->utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $this->utility->tailTemplate($template);
-					
-				include($this->piede);
+			if ($this->aggiornaFornitore($db, $fornitore)) {
+				$_SESSION[self::MSG_DA_MODIFICA] = self::MODIFICA_FORNITORE_OK;
 			}
 		}
+		else {
+			$_SESSION[self::MSG_DA_MODIFICA] = $_SESSION[self::MESSAGGIO];
+		}
+
+		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));
+		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+		$controller->start();
 	}
 
-	private function aggiornaFornitore($utility) {
-
-		$fornitore = Fornitore::getInstance();
-		
-		$db = Database::getInstance();
+	private function aggiornaFornitore($db, $fornitore)
+	{
 		$db->beginTransaction();
 
 		/**
 		 * Metto il doppio apostrofo e gli apici dove servono
 		 */
-		
-		$fornitore->setDesFornitore(str_replace("'","''",$fornitore->getDesFornitore()));		
-		
+
+		$fornitore->setDesFornitore(str_replace("'","''",$fornitore->getDesFornitore()));
+
 		$indirizzo = ($fornitore->getDesIndirizzoFornitore() != "") ? "'" . $fornitore->getDesIndirizzoFornitore() . "'" : "null" ;
 		$fornitore->setDesIndirizzoFornitore($indirizzo);
 
@@ -112,9 +83,9 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 
 		$cap = ($fornitore->getCapFornitore() != "") ? "'" . $fornitore->getCapFornitore() . "'" : "null" ;
 		$fornitore->setCapFornitore($cap);
-	
+
 		if ($fornitore->update($db)) {
-	 
+
 			$db->commitTransaction();
 			return TRUE;
 		}
@@ -124,13 +95,33 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 			return FALSE;
 		}
 	}
-	
-	private function preparaPagina($modificaFornitoreTemplate) {
-	
-		$modificaFornitoreTemplate->setAzione(self::AZIONE_MODIFICA_FORNITORE);
-		$modificaFornitoreTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaFornitoreTemplate->setTitoloPagina("%ml.modificaFornitore%");
+
+	public function controlliLogici($fornitore)
+	{
+		$esito = TRUE;
+		$msg = "<br>";
+
+		/**
+		 * Controllo presenza dati obbligatori
+		 */
+
+		if ($fornitore->getCodFornitore() == "") {
+			$msg = $msg . "<br>&ndash; Manca il codice del fornitore";
+			$esito = FALSE;
+		}
+
+		if ($fornitore->getDesFornitore() == "") {
+			$msg = $msg . "<br>&ndash; Manca la descrizione del fornitore";
+			$esito = FALSE;
+		}
+
+		// ----------------------------------------------
+
+		if ($msg != "<br>")	$_SESSION["messaggio"] = $msg;
+		else unset($_SESSION["messaggio"]);
+
+		return $esito;
 	}
 }
-		
+
 ?>

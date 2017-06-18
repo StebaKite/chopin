@@ -59,9 +59,9 @@ class CategoriaCliente implements CoreInterface
 		foreach(pg_fetch_all($result) as $row) {
 
 			if (trim($row['cat_cliente']) == trim($cliente->getCatCliente()))
-				$elecat .= "<option value='" . $row[self::CAT_CLIENTE] . "' selected >" . $row[self::DES_CATEGORIA] . "</option>";
+				$elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "' selected >" . trim($row[self::DES_CATEGORIA]) . "</option>";
 			else
-				$elecat .= "<option value='" . $row[self::CAT_CLIENTE] . "'>" . $row[self::DES_CATEGORIA] . "</option>";
+				$elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "'>" . trim($row[self::DES_CATEGORIA]) . "</option>";
 		}
 		$this->setElencoCategorieCliente($elecat);
     }

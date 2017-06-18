@@ -1,37 +1,72 @@
 <script type="text/javascript">
 
-function controllaUnivocitaPiva() {
+function controllaUnivocitaPiva(funzione) {
 
-	var codpiva = $("#codpiva").val();
-	var descliente = $("#descliente").val();
+	if (funzione == "new") {
+		var codpiva = $("#codpiva").val();
+		var descliente = $("#descliente").val();
 
-	if (codpiva != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#esitoControlloUnivocitaPiva" ).html(xmlhttp.responseText);
-	            $( "#esitoPivaCliente" ).val(xmlhttp.responseText);
-	        }
-	    } 
-	    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
-	    xmlhttp.send();		
+		if (codpiva != "") {
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#esitoControlloUnivocitaPiva" ).html(xmlhttp.responseText);
+		            $( "#esitoPivaCliente" ).val(xmlhttp.responseText);
+		        }
+		    } 
+		    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
+		    xmlhttp.send();		
+		}		
+	}
+	else {
+		var codpiva = $("#codpiva_mod").val();
+		var descliente = $("#descliente_mod").val();
+
+		if (codpiva != "") {
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#esitoControlloUnivocitaPiva_mod" ).html(xmlhttp.responseText);
+		            $( "#esitoPivaCliente_mod" ).val(xmlhttp.responseText);
+		        }
+		    } 
+		    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
+		    xmlhttp.send();		
+		}				
 	}
 }
 
-function controllaUnivocitaCfis() {
+function controllaUnivocitaCfis(funzione) {
 
-	var codfisc = $("#codfisc").val();
+	if (funzione == "new") {
+		var codfisc = $("#codfisc").val();
 
-	if (codfisc != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#esitoControlloUnivocitaCfis" ).html(xmlhttp.responseText);
-	            $( "#esitoCfisCliente" ).val(xmlhttp.responseText);
-	        }
-	    } 
-	    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
-	    xmlhttp.send();		
+		if (codfisc != "") {
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#esitoControlloUnivocitaCfis" ).html(xmlhttp.responseText);
+		            $( "#esitoCfisCliente" ).val(xmlhttp.responseText);
+		        }
+		    } 
+		    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
+		    xmlhttp.send();		
+		}		
+	}
+	else {
+		var codfisc = $("#codfisc_mod").val();
+
+		if (codfisc != "") {
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.onreadystatechange = function() {
+		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		            $( "#esitoControlloUnivocitaCfis_mod" ).html(xmlhttp.responseText);
+		            $( "#esitoCfisCliente_mod" ).val(xmlhttp.responseText);
+		        }
+		    } 
+		    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
+		    xmlhttp.send();		
+		}		
 	}
 }
 
@@ -136,14 +171,14 @@ $(document).ready( function () {
 					<tr>
 						<td>%ml.pivacliente% :</td>
 						<td class="tooltip">
-							<input type="text" id="codpiva" name="codpiva" size="15" maxlength="11" value='%codpiva%' onblur="controllaUnivocitaPiva();" >&nbsp;&nbsp;&nbsp;
+							<input type="text" id="codpiva" name="codpiva" size="15" maxlength="11" value='%codpiva%' onblur="controllaUnivocitaPiva('new');" >&nbsp;&nbsp;&nbsp;
 							<i id="esitoControlloUnivocitaPiva">&nbsp;</i>
 						</td>
 					</tr>					
 					<tr>
 						<td>%ml.cfiscliente% :</td>
 						<td class="tooltip">
-							<input type="text" id="codfisc" name="codfisc" size="20" maxlength="16" value='%codfisc%' onblur="controllaUnivocitaCfis();" >&nbsp;&nbsp;&nbsp;
+							<input type="text" id="codfisc" name="codfisc" size="20" maxlength="16" value='%codfisc%' onblur="controllaUnivocitaCfis('new');" >&nbsp;&nbsp;&nbsp;
 							<i id="esitoControlloUnivocitaCfis">&nbsp;</i>
 						</td>
 					</tr>					
@@ -159,6 +194,69 @@ $(document).ready( function () {
 		<form method="post" id="cancellaCliente" action="../anagrafica/cancellaClienteFacade.class.php?modo=start" >
 			<p>Elimino il cliente ?</p>
 			<input type="hidden" id="idcliente" name="idcliente">
+		</form>
+	</div>
+
+	<div id="modifica-cliente-form" title="Modifica Cliente"> 
+		<form method="post" id="modificaCliente" action="../anagrafica/modificaClienteFacade.class.php?modo=go" >
+			<table class="datiCreate" cellpadding="5px">
+				<tbody>
+					<tr>
+						<td>%ml.categoria% :</td>
+						<td class="tooltip">
+							<select class="selectmenuCategoria" id="catcliente_mod" name="catcliente_mod" ></select>
+						</td>
+					</tr>					
+					<tr>
+						<td>%ml.codcliente% :</td>
+						<td class="tooltip"><input type="text" id="codcliente_mod" name="codcliente_mod" size="12" maxlength="10"/></td>
+					</tr>
+					<tr>
+						<td>%ml.descliente% :</td>
+						<td class="tooltip"><input type="text" id="descliente_mod" name="descliente_mod" size="70" maxlength="100" onblur="normalizzaCampo('descliente');"/></td>
+					</tr>			
+					<tr>
+						<td>%ml.desindirizzocliente% :</td>
+						<td class="tooltip"><input type="text" id="indcliente_mod" name="indcliente_mod" size="70" maxlength="200" onblur="normalizzaCampo('indcliente');"/></td>
+					</tr>			
+					<tr>
+						<td>%ml.descittacliente% :</td>
+						<td class="tooltip"><input type="text" id="cittacliente_mod" name="cittacliente_mod" size="70" maxlength="100" onblur="normalizzaCampo('cittacliente');"/></td>
+					</tr>			
+					<tr>
+						<td>%ml.capcliente% :</td>
+						<td class="tooltip"><input type="text" id="capcliente_mod" name="capcliente_mod" size="7" maxlength="5" onblur="normalizzaCampo('capcliente');"/></td>
+					</tr>	
+					<tr>
+						<td>%ml.tipaddebito% :</td>						
+						<td>
+							<div class="radioset" >
+								<input type="radio" id="bonifico_mod" name="tipoaddebito_mod" value="BONIFICO" /><label for="bonifico_mod">Bonifico</label>
+								<input type="radio" id="riba_mod" name="tipoaddebito_mod" value="RIBA" /><label for="riba_mod">Ri.Ba.</label>
+								<input type="radio" id="rimdiretta_mod" name="tipoaddebito_mod" value="RIM_DIR" /><label for="rimdiretta_mod">Rimessa diretta</label>
+								<input type="radio" id="assegnobancario_mod" name="tipoaddebito_mod" value="ASS_BAN" /><label for="assegnobancario_mod">Assegno bancario</label>
+								<input type="radio" id="addebitodiretto_mod" name="tipoaddebito_mod" value="ADD_DIR" /><label for="addebitodiretto_mod">Addebito diretto</label>
+							</div>
+						</td>					
+					</tr>
+					<tr>
+						<td>%ml.pivacliente% :</td>
+						<td class="tooltip">
+							<input type="text" id="codpiva_mod" name="codpiva_mod" size="15" maxlength="11" onblur="controllaUnivocitaPiva('mod');" />&nbsp;&nbsp;&nbsp;
+							<i id="esitoControlloUnivocitaPiva_mod">&nbsp;</i>
+						</td>
+					</tr>					
+					<tr>
+						<td>%ml.cfiscliente% :</td>
+						<td class="tooltip">
+							<input type="text" id="codfisc_mod" name="codfisc_mod" size="20" maxlength="16" onblur="controllaUnivocitaCfis('mod');" />&nbsp;&nbsp;&nbsp;
+							<i id="esitoControlloUnivocitaCfis_mod">&nbsp;</i>
+						</td>
+					</tr>					
+				</tbody>
+			</table>
+			<input type="hidden" id="esitoPivaCliente_mod" name="esitoPivaCliente_mod" />
+			<input type="hidden" id="esitoCfisCliente_mod" name="esitoCfisCliente_mod" />		
 		</form>
 	</div>
 		

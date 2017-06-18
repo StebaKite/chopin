@@ -3,7 +3,7 @@
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
 require_once 'anagrafica.controller.class.php';
-require_once 'creaFornitore.template.php';
+//require_once 'creaFornitore.template.php';
 require_once 'ricercaFornitore.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
@@ -33,28 +33,28 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 
 	public function start()
 	{
-		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
-		$this->preparaPagina($creaFornitoreTemplate);
+		$this->go();
 
-		$fornitore = Fornitore::getInstance();
-		$fornitore->prepara();
+// 		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
+// 		$this->preparaPagina($creaFornitoreTemplate);
 
-		$_SESSION[self::FORNITORE] = serialize($fornitore);
+// 		$fornitore = Fornitore::getInstance();
+// 		$fornitore->prepara();
 
-		// Compongo la pagina
-		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-		echo $this->utility->tailTemplate($template);
+// 		$_SESSION[self::FORNITORE] = serialize($fornitore);
 
-		$creaFornitoreTemplate->displayPagina();
-		include($this->piede);
+// 		// Compongo la pagina
+// 		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
+// 		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
+// 		echo $this->utility->tailTemplate($template);
+
+// 		$creaFornitoreTemplate->displayPagina();
+// 		include($this->piede);
 	}
 
 	public function go()
 	{
-		$creaFornitoreTemplate = CreaFornitoreTemplate::getInstance();
-
-		if ($creaFornitoreTemplate->controlliLogici()) {
+		if ($this->controlliLogici()) {
 
 			if ($this->creaFornitore()) {
 				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_FORNITORE_OK;
@@ -76,7 +76,7 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 		$fornitore->setDesFornitore($descrizione);
 
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
-		
+
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
@@ -89,12 +89,44 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
 		return FALSE;
 	}
 
-	private function preparaPagina($creaFornitoreTemplate)
+	public function controlliLogici()
 	{
-		$creaFornitoreTemplate->setAzione(self::AZIONE_CREA_FORNITORE);
-		$creaFornitoreTemplate->setConfermaTip("%ml.confermaCreaFornitore%");
-		$creaFornitoreTemplate->setTitoloPagina("%ml.creaNuovoFornitore%");
+		$fornitore = Fornitore::getInstance();
+
+		$esito = TRUE;
+		$msg = "<br>";
+
+		/**
+		 * Controllo presenza dati obbligatori
+		 */
+
+		if ($fornitore->getCodFornitore() == "") {
+			$msg = $msg . self::ERRORE_CODICE_FORNITORE;
+			$esito = FALSE;
+		}
+
+		if ($fornitore->getDesFornitore() == "") {
+			$msg = $msg . self::ERRORE_DESCRIZIONE_FORNITORE;
+			$esito = FALSE;
+		}
+
+		// ----------------------------------------------
+
+		if ($msg != "<br>") {
+			$_SESSION[self::MESSAGGIO] = $msg;
+		}
+		else {
+			unset($_SESSION[self::MESSAGGIO]);
+		}
+		return $esito;
 	}
+
+// 	private function preparaPagina($creaFornitoreTemplate)
+// 	{
+// 		$creaFornitoreTemplate->setAzione(self::AZIONE_CREA_FORNITORE);
+// 		$creaFornitoreTemplate->setConfermaTip("%ml.confermaCreaFornitore%");
+// 		$creaFornitoreTemplate->setTitoloPagina("%ml.creaNuovoFornitore%");
+// 	}
 }
 
 ?>

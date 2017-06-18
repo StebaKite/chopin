@@ -8,7 +8,7 @@ class AnagraficaController {
 
 	public static $anagraficaFunction = null;
 	private $request;
-	
+
 	// Oggetti
 
 	const FORNITORE = "Obj_fornitore";
@@ -24,12 +24,12 @@ class AnagraficaController {
 
 	public function start() {
 
-		if ($this->getRequest() == null) $this->setRequest($_REQUEST["modo"]);		
-		
+		if ($this->getRequest() == null) $this->setRequest($_REQUEST["modo"]);
+
 		$fornitore = Fornitore::getInstance();
 		$cliente = Cliente::getInstance();
 		$mercato = Mercato::getInstance();
-		
+
 		if (isset($_REQUEST["codfornitore"])) {
 			$fornitore->setDesFornitore($_REQUEST["desfornitore"]);
 			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore"]);
@@ -37,6 +37,15 @@ class AnagraficaController {
 			$fornitore->setCapFornitore($_REQUEST["capfornitore"]);
 			$fornitore->setTipAddebito($_REQUEST["tipoaddebito"]);
 			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura"]);
+		}
+
+		if (isset($_REQUEST["codfornitore_mod"])) {
+			$fornitore->setDesFornitore($_REQUEST["desfornitore_mod"]);
+			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore_mod"]);
+			$fornitore->setDesCittaFornitore($_REQUEST["cittafornitore_mod"]);
+			$fornitore->setCapFornitore($_REQUEST["capfornitore_mod"]);
+			$fornitore->setTipAddebito($_REQUEST["tipoaddebito_mod"]);
+			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura_mod"]);
 		}
 
 		if (isset($_REQUEST["codcliente"])) {
@@ -53,13 +62,26 @@ class AnagraficaController {
 			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente"]);
 		}
 
+		if (isset($_REQUEST["codcliente_mod"])) {
+			$cliente->setDesCliente($_REQUEST["descliente_mod"]);
+			$cliente->setDesIndirizzoCliente($_REQUEST["indcliente_mod"]);
+			$cliente->setDesCittaCliente($_REQUEST["cittacliente_mod"]);
+			$cliente->setCapCliente($_REQUEST["capcliente_mod"]);
+			$cliente->setTipAddebito($_REQUEST["tipoaddebito_mod"]);
+			$cliente->setCodPiva($_REQUEST["codpiva_mod"]);
+			$cliente->setCodFisc($_REQUEST["codfisc_mod"]);
+			$cliente->setCatCliente($_REQUEST["catcliente_mod"]);
+			$cliente->setEsitoPivaCliente($_REQUEST["esitoPivaCliente_mod"]);
+			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente_mod"]);
+		}
+
 		if (isset($_REQUEST["codmercato"])) {
 			$mercato->setCodMercato($_REQUEST["codmercato"]);
 			$mercato->setDesMercato($_REQUEST["desmercato"]);
 			$mercato->setCittaMercato($_REQUEST["cittamercato"]);
 			$mercato->setCodNegozio($_REQUEST["codneg"]);
 		}
-		
+
 		if (isset($_REQUEST["codfisc"])) {
 			$cliente->setCodFisc($_REQUEST["codfisc"]);
 		}
@@ -80,21 +102,21 @@ class AnagraficaController {
 		if (isset($_REQUEST["idmercato"])) {
 			$mercato->setIdMercato($_REQUEST["idmercato"]);
 		}
-		
+
 		if (isset($_REQUEST["idmercato_mod"])) {
 			$mercato->setIdMercato($_REQUEST["idmercato_mod"]);
 			$mercato->setCodMercato($_REQUEST["codmercato_mod"]);
 			$mercato->setDesMercato($_REQUEST["desmercato_mod"]);
 			$mercato->setCittaMercato($_REQUEST["cittamercato_mod"]);
-			$mercato->setCodNegozio($_REQUEST["codneg_mod"]);					
+			$mercato->setCodNegozio($_REQUEST["codneg_mod"]);
 		}
-		
+
 		// Serializzo in sessione gli oggetti modificati
-		
+
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		$_SESSION[self::CLIENTE] = serialize($cliente);
 		$_SESSION[self::MERCATO] = serialize($mercato);
-		
+
 		if ($this->getRequest() == "start") { $this->anagraficaFunction->start(); }
 		if ($this->getRequest() == "go") 	{ $this->anagraficaFunction->go();}
 	}

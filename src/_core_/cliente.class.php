@@ -3,6 +3,7 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'conto.class.php';
 require_once 'sottoconto.class.php';
 
 class Cliente implements CoreInterface {
@@ -23,7 +24,7 @@ class Cliente implements CoreInterface {
 	const COD_FISC = "cod_fisc";
 	const CAT_CLIENTE = "cat_cliente";
 	const QTA_REGISTRAZIONI_CLIENTE = "tot_registrazioni_cliente";
-	
+
 	// dati Cliente
 
 	private $id_cliente;
@@ -47,7 +48,7 @@ class Cliente implements CoreInterface {
 	private $clienti;
 	private $qtaClienti;
 	private $qtaRegistrazioniCliente;
-	
+
 	// Queries
 
 	const LEGGI_ULTIMO_CODICE_CLIENTE = "/anagrafica/leggiUltimoCodiceCliente.sql";
@@ -59,7 +60,7 @@ class Cliente implements CoreInterface {
 	const LEGGI_CLIENTE_X_ID = "/anagrafica/leggiIdCliente.sql";
 	const CANCELLA_CLIENTE = "/anagrafica/deleteCliente.sql";
 	const AGGIORNA_CLIENTE = "/anagrafica/updateCliente.sql";
-	
+
 	// Metodi
 
 	function __construct() {
@@ -118,7 +119,7 @@ class Cliente implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
+
 		if ($result) {
 			$this->load($db);	// refresh dei clienti caricati
 			$_SESSION[self::CLIENTE] = serialize($this);
@@ -136,10 +137,14 @@ class Cliente implements CoreInterface {
 
 			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 			$result = $sottoconto->inserisci($db);
+
+			$conto = Conto::getInstance();
+			$conto->load($db);		// refresh dei conti caricati
+			$_SESSION[self::CONTO] = serialize($conto);
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo cerca un cliente tramite il suo codice fiscale
 	 * @param $db
@@ -148,15 +153,15 @@ class Cliente implements CoreInterface {
 	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_fisc%' => $this->getCodFisc(),
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_CODICE_FISCALE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
+
 		if (pg_num_rows($db->getData($sql)) > 0) {
-			$this->setCfiscEsistente("true");	
+			$this->setCfiscEsistente("true");
 		}
 	}
 
@@ -164,42 +169,42 @@ class Cliente implements CoreInterface {
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_piva%' => trim($codpiva),
 				'%id_cliente%' => trim($idcliente)
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_PARTITA_IVA;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
+
 		if (pg_num_rows($db->getData($sql)) > 0) {
-			$this->setPivaEsistente("true");			
+			$this->setPivaEsistente("true");
 		}
 	}
-	
+
 	public function cercaConDescrizione($db) {
-		
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%des_cliente%' => trim($this->getDesCliente())
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DESCRIZIONE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
+
 		foreach(pg_fetch_all($result) as $row) {
 			$this->setIdCliente($row['id_cliente']);
 		}
 	}
-	
+
 	public function load($db) {
 
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_CLIENTE;	
+
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 
@@ -214,14 +219,14 @@ class Cliente implements CoreInterface {
 	}
 
 	public function leggi($db) {
-		
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_cliente%' => $this->getIdCliente()
 		);
-		
+
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CLIENTE_X_ID;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
@@ -241,9 +246,9 @@ class Cliente implements CoreInterface {
 		}
 		return $result;
 	}
-	
+
 	public function cancella($db) {
-	
+
 		if ($this->leggi($db)) {
 			/**
 			 * Cancello il conto del cliente
@@ -254,9 +259,9 @@ class Cliente implements CoreInterface {
 
 			$sottoconto = Sottoconto::getInstance();
 			$conto = explode(",", $array["contiCliente"]);
-			
+
 			foreach(pg_fetch_all($result) as $row) {
-			
+
 				foreach ($conto as $contoClienti) {
 					$sottoconto->setCodConto($contoClienti);
 					$sottoconto->setCodSottoconto($this->getCodCliente());
@@ -267,13 +272,13 @@ class Cliente implements CoreInterface {
 			$replace = array(
 					'%id_cliente%' => $this->getIdCliente()
 			);
-				
+
 			$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CLIENTE;
 			$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 			$result = $db->getData($sql);
-			
+
 			if ($result) {
-				$this->load($db);	// refresh dei clienti caricati	
+				$this->load($db);	// refresh dei clienti caricati
 				$_SESSION[self::CLIENTE] = serialize($this);
 			}
 		}
@@ -281,10 +286,10 @@ class Cliente implements CoreInterface {
 	}
 
 	public function update($db) {
-	
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_cliente%' => $this->getIdCliente(),
 				'%cod_cliente%' => $this->getCodCliente(),
@@ -300,9 +305,15 @@ class Cliente implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+
+		if ($result) {
+			$this->load($db);	// refresh dei clienti caricati
+			$_SESSION[self::CLIENTE] = serialize($this);
+		}
+
 		return $result;
-	}	
-	
+	}
+
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -385,7 +396,7 @@ class Cliente implements CoreInterface {
 	public function setEsitoPivaCliente($esitoPivaCliente) {
 	    $this->esitoPivaCliente = $esitoPivaCliente;
 	}
-	public function getEsitoCfisCliente() {	
+	public function getEsitoCfisCliente() {
 	    return $this->esitoCfisCliente;
 	}
 	public function setEsitoCfisCliente($esitoCfisCliente) {
@@ -420,7 +431,7 @@ class Cliente implements CoreInterface {
 	}
 	public function setQtaRegistrazioniCliente($qtaRegistrazioniCliente) {
 		$this->qtaRegistrazioniCliente = $qtaRegistrazioniCliente;
-	}	
+	}
 }
 
 ?>

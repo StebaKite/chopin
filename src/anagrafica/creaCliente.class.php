@@ -3,7 +3,6 @@
 require_once 'anagrafica.abstract.class.php';
 require_once 'anagrafica.business.interface.php';
 require_once 'anagrafica.controller.class.php';
-require_once 'creaCliente.template.php';
 require_once 'ricercaCliente.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
@@ -32,31 +31,13 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
 
 	public function start()
 	{
-		$creaClienteTemplate = CreaClienteTemplate::getInstance();
-		$this->preparaPagina($creaClienteTemplate);
-
-		$cliente = Cliente::getInstance();
-		$categoriaCliente = CategoriaCliente::getInstance();
-		$cliente->prepara();
-		$categoriaCliente->load();
-
-		$_SESSION[self::CLIENTE] = serialize($cliente);
-		$_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
-
-		// Compone la pagina
-		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($this->utility)) : array('%amb%' => $this->getEnvironment ( $this->array, $_SESSION ), '%menu%' => $this->makeMenu($this->utility)));
-		$template = $this->utility->tailFile($this->utility->getTemplate($this->testata), $replace);
-		echo $this->utility->tailTemplate($template);
-
-		$creaClienteTemplate->displayPagina();
-		include($this->piede);
+		$this->go();
 	}
 
 	public function go()
 	{
-		$creaClienteTemplate = CreaClienteTemplate::getInstance();
 
-		if ($creaClienteTemplate->controlliLogici()) {
+		if ($this->controlliLogici()) {
 
 			if ($this->creaCliente()) {
 				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_CLIENTE_OK;
@@ -110,11 +91,65 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
 		return FALSE;
 	}
 
-	private function preparaPagina($creaClienteTemplate)
+	public function controlliLogici()
 	{
-		$creaClienteTemplate->setAzione(self::AZIONE_CREA_CLIENTE);
-		$creaClienteTemplate->setConfermaTip("%ml.confermaCreaCliente%");
-		$creaClienteTemplate->setTitoloPagina("%ml.creaNuovoCliente%");
+		$cliente = Cliente::getInstance();
+
+		$esito = TRUE;
+		$msg = "<br>";
+
+		/**
+		 * Controllo presenza dati obbligatori
+		 */
+
+		if ($cliente->getCatCliente() == "") {
+			$msg = $msg . self::ERRORE_CATEGORIA_CLIENTE;
+			$esito = FALSE;
+		}
+
+		if ($cliente->getCodCliente() == "") {
+			$msg = $msg . self::ERRORE_CODICE_CLIENTE;
+			$esito = FALSE;
+		}
+
+		if ($cliente->getDesCliente() == "") {
+			$msg = $msg . self::ERRORE_DESCRIZIONE_CLIENTE;
+			$esito = FALSE;
+		}
+
+		// 		if ($_SESSION["codfisc"] != "") {
+
+		// 			include_once 'cf.class.php';
+
+		// 			$cf = new CodiceFiscale();
+		// 			$cf->SetCF($_SESSION["codfisc"]);
+		// 			if (!($cf->GetCodiceValido())) {
+		// 				$msg = $msg . "<br>&ndash; Codice fiscale non corretto";
+		// 				$esito = FALSE;
+		// 			}
+		// 		}
+
+		if (($cliente->getEsitoPivaCliente() != "P.iva Ok!") and ($cliente->getEsitoPivaCliente() != "")) {
+			$msg = $msg . self::ERRORE_PIVA_CLIENTE;
+			$cliente->setCodPiva(null);
+			$esito = FALSE;
+		}
+
+		if (($cliente->getEsitoCfisCliente() != "C.fisc Ok!") and ($cliente->getEsitoCfisCliente() != "")) {
+			$msg = $msg . self::ERRORE_CFISC_CLIENTE;
+			$cliente->setCodFisc(null);
+			$esito = FALSE;
+		}
+
+		// ----------------------------------------------
+
+		if ($msg != "<br>") {
+			$_SESSION[self::MESSAGGIO] = $msg;
+		}
+		else {
+			unset($_SESSION[self::MESSAGGIO]);
+		}
+		return $esito;
 	}
 }
 
