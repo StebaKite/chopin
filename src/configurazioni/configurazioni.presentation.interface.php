@@ -41,20 +41,15 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
  	const GENERA_MASTRINO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.mastrino%'><span class='ui-icon ui-icon-document'></span></li></a>";
 	const ESTRAI_PDF = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
 
-	const MODIFICA_CAUSALE_HREF = "<a class='tooltip' href='../configurazioni/modificaCausaleFacade.class.php?modo=start&codcausale=";
-	const MODIFICA_CAUSALE_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-	const CONFIGURA_CAUSALE_HREF = "<a class='tooltip' href='../configurazioni/configuraCausaleFacade.class.php?modo=start&codcausale=";
-	const CONFIGURA_CAUSALE_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
+	const MODIFICA_CAUSALE_HREF = "<a class='tooltip' onclick='modificaCausale(";
+	const MODIFICA_CAUSALE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+	const CONFIGURA_CAUSALE_HREF = "<a class='tooltip' onclick='configuraCausale(";
+	const CONFIGURA_CAUSALE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.configura%'><span class='ui-icon ui-icon-wrench'></span></li></a>";
 	const CANCELLA_CAUSALE_HREF = "<a class='tooltip' onclick='cancellaCausale(";
 	const CANCELLA_CAUSALE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 
 	const MODIFICA_PROGRESSIVO_HREF = "<a class='tooltip' onclick='modificaProgressivoFattura(";
 	const MODIFICA_PROGRESSIVO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-
-	const ESCLUDI_CONTO_HREF = "<a class='tooltip' href='escludiContoCausaleFacade.class.php?modo=start&codconto=";
-	const ESCLUDI_CONTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.escludiContoTip%'><span class='ui-icon ui-icon-minus'></span></li></a>";
-	const INCLUDI_CONTO_HREF = "<a class='tooltip' href='includiContoCausaleFacade.class.php?modo=start&codconto=";
-	const INCLUDI_CONTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.includiContoTip%'><span class='ui-icon ui-icon-plus'></span></li></a>";
 
 	// Actions
 

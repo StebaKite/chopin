@@ -4,7 +4,7 @@ require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
-require_once 'configuraCausale.class.php';
+//require_once 'configuraCausale.class.php';
 require_once 'configurazioneCausale.class.php';
 
 class IncludiContoCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
@@ -14,11 +14,6 @@ class IncludiContoCausale extends ConfigurazioniAbstract implements Configurazio
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -35,9 +30,13 @@ class IncludiContoCausale extends ConfigurazioniAbstract implements Configurazio
 
 		$configurazioneCausale->inserisciConto($db);
 
-		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ConfiguraCausale::getInstance()));
-		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
-		$controller->start();
+		$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+
+		$datiPagina =
+		trim($this->makeTableContiConfigurati($configurazioneCausale)) . "|" .
+		trim($this->makeTableContiConfigurabili($configurazioneCausale));
+
+		echo $datiPagina;
 	}
 
 	public function go() {}

@@ -13,11 +13,6 @@ class EscludiContoCausale extends ConfigurazioniAbstract implements Configurazio
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -34,9 +29,13 @@ class EscludiContoCausale extends ConfigurazioniAbstract implements Configurazio
 
 		$configurazioneCausale->cancellaConto($db);
 
-		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ConfiguraCausale::getInstance()));
-		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
-		$controller->start();
+		$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+
+		$datiPagina =
+		trim($this->makeTableContiConfigurati($configurazioneCausale)) . "|" .
+		trim($this->makeTableContiConfigurabili($configurazioneCausale));
+
+		echo $datiPagina;
 	}
 
 	public function go() {}

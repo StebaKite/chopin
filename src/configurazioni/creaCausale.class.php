@@ -16,7 +16,7 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
+
 		$this->testata = $this->root . $this->array[self::TESTATA];
 		$this->piede = $this->root . $this->array[self::PIEDE];
 		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
@@ -37,22 +37,22 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 	public function go()
 	{
 		$causale = Causale::getInstance();
-		$utility = Utility::getInstance();	
+		$utility = Utility::getInstance();
 		$creaCausaleTemplate = CreaCausaleTemplate::getInstance();
-	
+
 		if ($creaCausaleTemplate->controlliLogici()) {
-	
+
 			if ($this->creaCausale($utility, $causale)) {
-				$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_CAUSALE_OK;				
+				$_SESSION[self::MSG_DA_CREAZIONE_CAUSALE] = self::CREA_CAUSALE_OK;
 			}
 			else {
-				$_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_CAUSALE;
+				$_SESSION[self::MSG_DA_CREAZIONE_CAUSALE] = self::ERRORE_CREAZIONE_CAUSALE;
 			}
 		}
 		else {
-			$_SESSION[self::MSG_DA_CREAZIONE] = $_SESSION[self::MESSAGGIO];
+			$_SESSION[self::MSG_DA_CREAZIONE_CAUSALE] = $_SESSION[self::MESSAGGIO];
 		}
-		
+
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();
@@ -62,17 +62,17 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 	{
 		$db = Database::getInstance();
 		$db->beginTransaction();
-		
+
 		if ($causale->inserisci($db)) {
-	
+
 			$db->commitTransaction();
 			return TRUE;
 		}
 		$db->rollbackTransaction();
 		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREAZIONE_CAUSALE;
 		return false;
-	}	
-	
+	}
+
 	public function preparaPagina($creaCausaleTemplate)
 	{
 		$creaCausaleTemplate->setAzione(self::AZIONE_CREA_CAUSALE);
@@ -80,5 +80,5 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 		$creaCausaleTemplate->setTitoloPagina("%ml.creaNuovaCausale%");
 	}
 }
-		
+
 ?>

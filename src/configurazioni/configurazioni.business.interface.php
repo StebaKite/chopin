@@ -55,11 +55,22 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
  	const MSG_DA_GENERAZIONE_MASTRINO = "messaggioGeneraMastrino";
  	const MSG_DA_MODIFICA_CONTO = "messaggioModifica";
  	const MSG_DA_MODIFICA_PROGRESSIVO = "messaggioModifica";
+ 	const MSG_DA_CREAZIONE_CAUSALE = "messaggioCreazione";
+ 	const MSG_DA_MODIFICA_CAUSALE = "messaggioModifica";
 
  	const ERRORE_CREAZIONE_CONTO = "ERRORE: conto gia' esistente!";
  	const ERRORE_DESCRIZIONE_CONTO = "ERRORE: manca la descrizione del conto";
- 	const ERRORE_CREAZIONE_CAUSALE = "Causale già esistente, inserimento fallito";
+ 	const ERRORE_CREAZIONE_CAUSALE = "ERRORE: causale già esistente, inserimento fallito";
  	const ERRORE_SOTTOCONTI_MANCANTI = "ERRORE: mancano i sottoconti";
+ 	const ERRORE_CODICE_CONTO				= "ERRORE: manca il codice del conto";
+ 	const ERRORE_CODICE_CONTO_NUMERICO		= "ERRORE: il codice conto deve essere numerico";
+ 	const ERRORE_CODICE_CONTO_INVALIDO		= "ERRORE: il codice conto deve essere maggiore di 100";
+ 	const ERRORE_ASSENZA_SOTTOCONTI			= "ERRORE: mancano i sottoconti";
+ 	const ERRORE_CODICE_CAUSALE				= "ERRORE: manca il codice della causale";
+ 	const ERRORE_CODICE_CAUSALE_NUMERICO	= "ERRORE: il codice causale deve essere numerico";
+ 	const ERRORE_CODICE_CAUSALE_INVALIDO	= "ERRORE: il codice causale deve essere maggiore di 1000";
+ 	const ERRORE_DESCRIZIONE_CAUSALE		= "ERRORE: manca la descrizione della causale";
+
  	const GENERA_MASTRINO_OK = "Mastrino del conto generato!";
  	const REGISTRAZIONI_NON_TROVATE = "Nessuna registrazione trovata!";
  	const CREA_CONTO_OK = "Conto salvato con successo";

@@ -34,8 +34,6 @@ interface MainNexus6Interface {
 	const VILLA = "VIL";
 	const TREZZO = "TRE";
 	const BREMBATE = "BRE";
-	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
-	const ERRORE_SCRITTURA = "Errore fatale durante la scrittura dei dati";
 
 	// Bottoni
 

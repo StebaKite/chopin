@@ -2,7 +2,7 @@
 
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
-require_once 'modificaCausale.template.php';
+require_once 'ricercaCausale.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'causale.class.php';
@@ -14,11 +14,6 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -36,16 +31,12 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
 		$causale->leggi($db);
 		$_SESSION[self::CAUSALE] = serialize($causale);
 
-		$modificaCausaleTemplate = ModificaCausaleTemplate::getInstance();
-		$this->preparaPagina($modificaCausaleTemplate);
+		$datiPagina =
+		trim($causale->getCodCausale()) . "|" .
+		trim($causale->getDesCausale()) . "|" .
+		trim($causale->getCatCausale());
 
-		// Compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
-
-		$modificaCausaleTemplate->displayPagina();
-		include($this->piede);
+		echo $datiPagina;
 	}
 
 	public function go()
@@ -53,41 +44,42 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
 		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
-		$modificaCausaleTemplate = ModificaCausaleTemplate::getInstance();
 
-		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
-
-		$this->preparaPagina($modificaCausaleTemplate);
-
-		if ($modificaCausaleTemplate->controlliLogici()) {
+		if ($this->controlliLogici($causale)) {
 
 			if ($causale->aggiorna($db)) {
-				$_SESSION[self::MESSAGGIO] = self::AGGIORNA_CAUSALE_OK;
-				$modificaCausaleTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = self::AGGIORNA_CAUSALE_OK;
 			}
 			else {
-				$this->preparaPagina($modificaCausaleTemplate);
-				$modificaCausaleTemplate->displayPagina();
-
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = $_SESSION[self::MESSAGGIO];
 			}
 		}
-		include($this->piede);
+		else {
+			$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = $_SESSION[self::MESSAGGIO];
+		}
+
+		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
+		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+		$controller->start();
 	}
 
-	public function preparaPagina($modificaCausaleTemplate)
+	public function controlliLogici($causale)
 	{
-		$modificaCausaleTemplate->setAzione(self::AZIONE_MODIFICA_CAUSALE);
-		$modificaCausaleTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaCausaleTemplate->setTitoloPagina("%ml.modificaCausale%");
+		$esito = TRUE;
+		$msg = "<br>";
+
+		if ($causale->getDesCausale() == "") {
+			$msg .= self::ERRORE_DESCRIZIONE_CAUSALE;
+			$esito = FALSE;
+		}
+
+		if ($msg != "<br>") {
+			$_SESSION[self::MESSAGGIO] = $msg;
+		}
+		else {
+			unset($_SESSION[self::MESSAGGIO]);
+		}
+		return $esito;
 	}
 }
 

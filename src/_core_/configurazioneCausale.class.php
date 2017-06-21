@@ -63,7 +63,7 @@ class ConfigurazioneCausale implements CoreInterface {
 			$this->setQtaContiConfigurati(pg_num_rows($result));
 		} else {
 			$this->setContiConfigurati(null);
-			$this->setQtaContiConfigurati(null);
+			$this->setQtaContiConfigurati(0);
 		}
 		return $result;
 	}
@@ -86,7 +86,7 @@ class ConfigurazioneCausale implements CoreInterface {
 			$this->setQtaContiConfigurabili(pg_num_rows($result));
 		} else {
 			$this->setContiConfigurabili(null);
-			$this->setQtaContiConfigurabili(null);
+			$this->setQtaContiConfigurabili(0);
 		}
 		return $result;
 	}

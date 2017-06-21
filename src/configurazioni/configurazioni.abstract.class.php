@@ -18,6 +18,11 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 	const MODIFICA_GRUPPO_SOTTOCONTO_HREF = "<td id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(";
 	const MODIFICA_GRUPPO_SOTTOCONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>";
 
+	const ESCLUDI_CONTO_HREF = "<a class='tooltip' onclick='escludiConto(";
+	const ESCLUDI_CONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.escludiContoTip%'><span class='ui-icon ui-icon-minus'></span></li></a>";
+	const INCLUDI_CONTO_HREF = "<a class='tooltip' onclick='includiConto(";
+	const INCLUDI_CONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.includiContoTip%'><span class='ui-icon ui-icon-plus'></span></li></a>";
+
 	// Metodi comuni di utilita della prima note ---------------------------
 
 	public function makeTabellaSottoconti($conto, $sottoconto)
@@ -67,6 +72,74 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 			$tbody .= "</tbody>";
 		}
 		return "<table id='sottocontiTable_mod' class='result'>" . $thead . $tbody . "</table>";
+	}
+
+	public function makeTableContiConfigurati($configurazioneCausale)
+	{
+		if ($configurazioneCausale->getQtaContiConfigurati() > 0) {
+			$elencoContiConfigurati = "<table class='result' id='elencoContiConfigurati'><tbody>";
+			foreach ($configurazioneCausale->getContiConfigurati() as $row) {
+
+				$bottoneEscludi = self::ESCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::ESCLUDI_CONTO_ICON;
+
+				$elencoContiConfigurati .= "<tr " . $class . ">";
+				$elencoContiConfigurati .= "<td align='center' width='68'>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>";
+				$elencoContiConfigurati .= "<td align='left' width='400'>" . $row[Conto::DES_CONTO] . "</td>";
+				$elencoContiConfigurati .= "<td width='20' id='icons'>" . $bottoneEscludi . "</td>";
+				$elencoContiConfigurati .= "</tr>";
+			}
+			$elencoContiConfigurati .= "</tbody></table></div>";
+		}
+		else {
+			$elencoContiConfigurati = "<p>La causale non ha conti configurati</p>";
+		}
+		return $elencoContiConfigurati;
+	}
+
+	public function makeTableContiConfigurabili($configurazioneCausale)
+	{
+		if ($configurazioneCausale->getQtaContiConfigurabili() > 0) {
+			$elencoContiConfigurabili = "<table class='result' id='elencoContiDisponibili'><tbody>";
+			foreach ($configurazioneCausale->getContiConfigurabili() as $row) {
+
+				$bottoneIncludi = self::INCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::INCLUDI_CONTO_ICON;
+
+				$elencoContiConfigurabili .= "<tr " . $class . ">";
+				$elencoContiConfigurabili .= "<td width='25' id='icons'>" . $bottoneIncludi . "</td>";
+				$elencoContiConfigurabili .= "<td align='center' width='68'>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>";
+				$elencoContiConfigurabili .= "<td align='left' width='400'>" . $row[Conto::DES_CONTO] . "</td>";
+				$elencoContiConfigurabili .= "</tr>";
+			}
+			$elencoContiConfigurabili .= "</tbody></table></div>";
+		}
+		else {
+			$elencoContiConfigurabili = "<p>Non ci sono conti disponibili da includere nella causale</p>";
+		}
+		return $elencoContiConfigurabili;
+	}
+
+	public function refreshContiConfigurati($db, $configurazioneCausale)
+	{
+		$CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
+
+		if (!$configurazioneCausale->loadContiConfigurati($db)) {
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+			return false;
+		}
+		$_SESSION[$CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+		return true;
+	}
+
+	public function refreshContiConfigurabili($db, $configurazioneCausale)
+	{
+		$CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
+
+		if (!$configurazioneCausale->loadContiConfigurabili($db)) {
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+			return false;
+		}
+		$_SESSION[$CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+		return true;
 	}
 
 	// Getters e Setters ---------------------------------------------------
