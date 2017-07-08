@@ -56,6 +56,21 @@ function aggiungiDettaglio() {
 	var iva = $("#iva").val();
 	var ivaNormalizzato = iva.trim().replace(",", ".");
 	
+	var aliquota = $("input[name=aliquota]:checked").val();
+	
+	if (aliquota == "1.05") {
+		var aliq = 5;		
+	}
+	if (aliquota == "1.10") {
+		var aliq = 10;		
+	}
+	if (aliquota == "1.22") {
+		var aliq = 22;		
+	}
+	if (aliquota == "1") {
+		var aliq = "";		
+	}
+	
 	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
         "<td class='dt-center'>" + quantita + "</td>" +
         "<td>" + articoloNormalizzato + "</td>" +
@@ -66,7 +81,7 @@ function aggiungiDettaglio() {
     	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
       "</tr>" );
 	
-	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato;
+	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato + "#" + aliq;
 	addDett(elemento, contatore);
 	
 	$("#quantita").val("");

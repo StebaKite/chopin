@@ -189,20 +189,23 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 					"IMPORTO U." => $e[3],
 					"TOTALE"     => $e[4],
 					"IMPONIBILE" => $e[5],
-					"IVA"        => $e[6]
-			);
+					"IVA"        => $e[6],
+					"%IVA"       => $e[7]
+				);
 	
 			$fattura->aggiungiLineaLiberaAziendaConsortile($w, $linea);
 	
 			$tot_dettagli += $e[4];
 			$tot_imponibile += $e[5];
 			$tot_iva += $e[6];
+			$aliq_iva = $e[7];
 		}	
 		
 		$_SESSION["tot_dettagli"] = $tot_dettagli;
 		$_SESSION["tot_imponibile"] = $tot_imponibile;
 		$_SESSION["tot_iva"] = $tot_iva;	
-
+		$_SESSION["aliquota_iva"] = $aliq_iva;
+		
 		/**
 		 * Closing line
 		 */
@@ -216,7 +219,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract {
 	}
 	
 	public function sezioneTotali($fattura) {
-		$fattura->totaliFatturaAziendaConsortile($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"]);
+		$fattura->totaliFatturaAziendaConsortile($_SESSION["tot_dettagli"], $_SESSION["tot_imponibile"], $_SESSION["tot_iva"], $_SESSION["aliquota_iva"]);
 		return $fattura;
 	}
 	

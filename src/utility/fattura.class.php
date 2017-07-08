@@ -175,34 +175,46 @@ class Fattura extends FPDF {
 		$this->SetXY( $r1 + ($r2-$r1)/2 -5 , $y1+1 );
 		$this->SetFont( "Arial", "B", 10);
 		$this->Cell(10,4, "DESTINATARIO", 0,0, "C");
-
+		$this->Ln();
+		
 		$this->SetFont( "Arial", "", 12);
-
-		$this->SetXY( $r1 + 5, $y1 + 8 );
+		$this->SetX( $r1 + 5 );
+		
 		$this->Cell(10,5,$titolo, 0,0, "");
+		$this->Ln();
+		
+		$_descliente = explode("\\", $descliente);
 
-		$this->SetXY( $r1 + 5, $y1 + 13 );
-		$this->Cell(10,5,$descliente, 0,0, "");
-
-		$this->SetXY( $r1 + 5, $y1 + 18 );
+		foreach ($_descliente as $unaParte) {
+			$this->SetX( $r1 + 5 );
+			$this->Cell(10,5,$unaParte, 0,0, "");
+			$this->Ln();
+		}
+		
+		$this->SetX( $r1 + 5 );
 		$this->Cell(10,5,$indirizzocliente, 0,0, "");
-
-		$this->SetXY( $r1 + 5, $y1 + 23 );
+		$this->Ln();
+		
+		$this->SetX( $r1 + 5 );
 		$this->Cell(10,5,$capcliente . " " . $cittacliente, 0,0, "");
-
+		$this->Ln();
+		
 		if ($cfiscliente == $pivacliente) {
-			$this->SetXY( $r1 + 5, $y1 + 28 );
-			$this->Cell(10,5,"P.iva/C.F. : " . $pivacliente, 0,0, "");
+			$this->SetX( $r1 + 5 );
+			$this->Cell(10,5,"P.IVA/C.F. : " . $pivacliente, 0,0, "");
+			$this->Ln();
 		}
 		else {
 			if ($pivacliente != "") {
-				$this->SetXY( $r1 + 5, $y1 + 28 );
-				$this->Cell(10,5,"P.iva : " . $pivacliente, 0,0, "");
+				$this->SetX( $r1 + 5 );
+				$this->Cell(10,5,"P.IVA : " . $pivacliente, 0,0, "");
+				$this->Ln();
 			}
 
 			if ($cfiscliente != "") {
-				$this->SetXY( $r1 + 5, $y1 + 33 );
+				$this->SetX( $r1 + 5 );
 				$this->Cell(10,5,"C.F. : " . $cfiscliente, 0,0, "");
+				$this->Ln();
 			}
 		}
 	}
