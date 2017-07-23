@@ -3,6 +3,7 @@
 require_once 'core.interface.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
+require_once 'sottoconto.class.php';
 
 class Causale implements CoreInterface {
 
@@ -39,15 +40,16 @@ class Causale implements CoreInterface {
 	const CANCELLA_CAUSALE	= "/configurazioni/deleteCausale.sql";
 	const LEGGI_CAUSALE		= "/configurazioni/leggiCausale.sql";
 	const AGGIORNA_CAUSALE 	= "/configurazioni/updateCausale.sql";
+	const RICERCA_CONTI_CAUSALE = "/configurazioni/ricercaContiCausale.sql";
 
-//	Colonne dell'array dalla query di lettura
-//
-// 	cod_causale,
-// 	des_causale,
-// 	cat_causale,
-// 	dat_inserimento,
-// 	tot_registrazioni_causale,
-// 	tot_conti_causale
+	//	Colonne dell'array dalla query di lettura
+	//
+	// 	cod_causale,
+	// 	des_causale,
+	// 	cat_causale,
+	// 	dat_inserimento,
+	// 	tot_registrazioni_causale,
+	// 	tot_conti_causale
 
 	// Metodi
 
@@ -80,6 +82,29 @@ class Causale implements CoreInterface {
 			$this->setQtaCausali(null);
 		}
 		return $result;
+	}
+
+	public function caricaCausali($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array();
+		$elencoCausali = "";
+
+		if (sizeof($this->getQtaCausali()) == 0) {
+			$this->load($db);
+			$_SESSION[self::CAUSALE] = serialize($this);
+		}
+
+		foreach ($this->getCausali() as $unaCausale) {
+			if (trim($unaCausale[Causale::COD_CAUSALE]) == trim($this->getCodCausale())) {
+				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "' selected >" . trim($unaCausale[Causale::COD_CAUSALE]) . " - " . trim($unaCausale[Causale::DES_CAUSALE]) . "</option>";
+			}
+			else {
+				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "'>" . trim($unaCausale[Causale::COD_CAUSALE]) . " - " . trim($unaCausale[Causale::DES_CAUSALE]) . "</option>";
+			}
+		}
+		return $elencoCausali;
 	}
 
 	public function prepara()
@@ -232,31 +257,33 @@ class Causale implements CoreInterface {
 		$_SESSION[self::CAUSALE] = serialize($this);
 	}
 
+	public function loadContiConfigurati($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
+		$replace = array('%cod_causale%' => $this->getCodCausale());
 
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_CONTI_CAUSALE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
 
+		$conti = "<select class='selectmenuConto' id='conti' name='conto_dett'><option value=''></option>";
+		$qtaContiCausale = pg_num_rows($result);
+		$contiCausale = pg_fetch_all($result);
+		$this->setQtaContiCausale(0);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if ($qtaContiCausale > 0) {
+			$this->setQtaContiCausale($qtaContiCausale);
+			$this->setContiCausale($contiCausale);
+			foreach ($contiCausale as $unConto) {
+				$conti .= "<option value='" . trim($unConto[Sottoconto::COD_CONTO]) . "." . trim($unConto[Sottoconto::COD_SOTTOCONTO]) . " - " . trim($unConto[Sottoconto::DES_SOTTOCONTO]) . "'>" . trim($unConto[Sottoconto::DES_SOTTOCONTO]) . "</option>" ;
+			}
+		}
+		$conti .= "</select>";
+		$this->setContiCausale($conti);
+		return $result;
+	}
 
 	// Getters & Setters
 

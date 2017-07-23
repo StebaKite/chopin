@@ -46,6 +46,7 @@ class Fornitore implements CoreInterface {
 	const ULTIMO_CODICE_FORNITORE = "/anagrafica/leggiUltimoCodiceFornitore.sql";
 	const LEGGI_FORNITORE = "/anagrafica/ricercaCodiceFornitore.sql";
 	const CREA_FORNITORE = "/anagrafica/creaFornitore.sql";
+	const CERCA_DESCRIZIONE = "/anagrafica/trovaDescFornitore.sql";
 	const CANCELLA_FORNITORE = "/anagrafica/deleteFornitore.sql";
 	const AGGIORNA_FORNITORE = "/anagrafica/updateFornitore.sql";
 	const QUERY_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.sql";
@@ -234,6 +235,22 @@ class Fornitore implements CoreInterface {
 			$_SESSION[self::FORNITORE] = serialize($this);
 		}
 		return $result;
+	}
+
+	public function cercaConDescrizione($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array('%des_fornitore%' => trim($this->getDesFornitore()));
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DESCRIZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		foreach(pg_fetch_all($result) as $row) {
+			$this->setIdFornitore($row[Fornitore::ID_FORNITORE]);
+		}
+		$_SESSION[self::FORNITORE] = serialize($this);
 	}
 
 	/************************************************************************

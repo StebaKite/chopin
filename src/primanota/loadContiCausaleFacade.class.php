@@ -1,16 +1,15 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/primanota:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/primanota:/var/www/html/chopin/src/utility');
 require_once 'loadContiCausale.class.php';
+require_once 'primanota.controller.class.php';
 
 session_start();
+xdebug_disable();
 
-$loadContiCausale = LoadContiCausale::getInstance();
+$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(LoadContiCausale::getInstance()));
 
-if ($_GET["modo"] == "start") {
-	$_SESSION["causale"] = $_REQUEST["causale"];
-	$_SESSION["desconto"] = $_REQUEST["desconto"];
-	$loadContiCausale->start();
-}
+$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+$controller->start();
 
 ?>

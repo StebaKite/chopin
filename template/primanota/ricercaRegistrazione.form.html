@@ -1,10 +1,58 @@
+<script type="text/javascript">
+
+var elencoFornitori = [%elenco_fornitori%];
+var elencoClienti = [%elenco_clienti%];
+
+$(document).ready( function () {
+    $('#registrazioni').dataTable( {
+    	"order": [[1, 'desc'],[0, 'asc'],[2, 'asc'] ],
+    	"columnDefs": [
+       	    {"targets": 0, "orderable": false, "visible": false },
+       	    {"targets": 1, "orderable": false, "visible": false },
+    	    {"targets": 2, "orderable": false, "visible": false },
+    	    {"targets": 3, "orderable": false },
+    	    {"targets": 4, "orderable": false },
+    	    {"targets": 5, "orderable": false },
+    	    {"targets": 6, "orderable": false },
+    	    {"targets": 7, "orderable": false },
+    	    {"targets": 8, "orderable": false },
+    	    {"targets": 9, "orderable": false }
+    		],
+   		"language": {
+               "lengthMenu": "Visualizza _MENU_ righe per pagina",
+               "zeroRecords": "La ricerca non ha prodotto risultati",
+               "info": "Pagina _PAGE_ di _PAGES_",
+               "infoEmpty": "La ricerca non ha prodotto risultati",
+               "infoFiltered": "(righe filtrate da _MAX_ totali)",
+               "search": "Cerca:",
+               "paginate": {
+                   "first":      "Prima",
+                   "last":       "Ultima",
+                   "next":       "Prossima",
+                   "previous":   "Precedente"
+               }
+        },
+        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
+    } );
+} );
+
+</script>		
+
 <div id="body">  
 <div id="main">
-
-<h2>%titoloPagina%</h2>
+	<table style="width:100%;">
+		<tbody>
+			<tr>
+				<td align="left"><h2>%titoloPagina%</h2></td>
+				<td align="right"><button id="nuova-registrazione" class="button">%ml.nuovaregistrazione%</button></td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+</div>	
 
 <form method="post" action="%azione%" >
-	<table class="datiCreate" width="100%">
+	<table class="datiCreate" cellpadding="5px">
 		<tbody>
 			<tr style="float: left;">
 				<td>%ml.negozio% :</td>
@@ -42,46 +90,141 @@
 </div>	<!-- Div id="main" -->
 </div>	<!-- Div id="body" -->
 
+		
+<div id="nuova-registrazione-form" title="Nuova Registrazione"> 
+	<form method="post" id="nuovaRegistrazione" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
+		<table class="datiCreate">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataRegistrazione" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizione" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datareg% :</td>
+					<td id="tddatareg_cre"><input class="dataregpicker" type="text" id="datareg_cre" name="datareg_cre" size="10" maxlength="10" onblur="validaNuovaRegistrazione()" onchange="validaNuovaRegistrazione()" /></td>
+					<td id="descreg_cre_label" >%ml.descreg% : </td>
+					<td id="tddescreg_cre"><input type="text" id="descreg_cre" name="descreg_cre" size="50" maxlength="200" onblur="validaNuovaRegistrazione()" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCausale" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNegozio" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codcau% :</td>
+					<td class="tooltip" id="tdcausale_cre">
+						<select class="selectmenuCausaleCre" id="causale_cre" name="causale_cre" >
+							<option value=""></option>
+							%elenco_causali_cre%
+						</select>
+					</td>
+					<td>%ml.negozio% :</td>						
+					<td class="tooltip" id="tdnegozio_cre">
+						<div class="radioset" >
+							<input type="radio" id="villa_cre" name="codneg_cre" checked value="VIL" ><label for="villa_cre">%ml.villa%</label>
+							<input type="radio" id="brembate_cre" name="codneg_cre" value="BRE" ><label for="brembate_cre">%ml.brembate%</label>
+							<input type="radio" id="trezzo_cre" name="codneg_cre" value="TRE" ><label for="trezzo_cre">%ml.trezzo%</label>
+						</div>
+					</td>					
+				</tr>					
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloFornitore" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCliente" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codforn% :</td>
+					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onblur="validaNuovaRegistrazione()" /></div></td>
+					
+					<td>%ml.codclie% :</td>
+					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onblur="validaNuovaRegistrazione()" /></div></td>
+				</tr>					
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFattura" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td id="datascad_cre_label" class="td" valign="top">%ml.datascad% :</td>
+					<td id="tddatascad_cre" >
+						<table id="scadenzesuppl_cre" class="result"></table>
+					</td>
+					<td id="numfatt_cre_label" valign="top">%ml.numfatt% :</td>
+					<td id="tdnumfatt_cre" valign="top"><input type="text" id="numfatt_cre" name="numfatt_cre" size="10" maxlength="35" onblur="validaNuovaRegistrazione()" /></td>
+				</tr>
+				<tr><td><h2>Dettagli</h2></td></tr>										
+				<tr>
+					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagli" >&nbsp;</i></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td id="tddettagli_cre" colspan="4">
+						<table id="dettagli_cre" class="result"></table>			
+					</td>
+				</tr>										
+			</tbody>
+		</table>
+	</form>
+</div>	
+
+<div id="nuovo-dettaglio-registrazione-form" title="Nuovo Dettaglio Registrazione">
+	<table class="datiCreate" cellpadding="5px">
+		<tbody>
+			<tr>
+				<td></td>
+				<td class="tdmessage"><i class="message" id="messaggioControlloImportoDettaglio" >&nbsp;</i></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>%ml.importo% :</td>
+				<td class="tooltip"><input type="text" id="importo_dett_cre" name="importo_dett_cre" size="20" maxlength="20" onkeypress="controllaImportoDettaglio()" ></td>
+			</tr>					
+			<tr>
+				<td>%ml.conto% :</td>
+				<td><select class='selectmenuConto' id="conti" name="conto_dett"></select></td>
+			</tr>	
+			<tr>
+				<td>
+					<div class="radioset" >
+						<input type="radio" id="dare_dett_cre" name="dareavere_dett_cre" value="D" checked ><label for="dare_dett_cre">%ml.dare%</label>
+						<input type="radio" id="avere_dett_cre" name="dareavere_dett_cre" value="A" ><label for="avere_dett_cre">%ml.avere%</label>
+					</div>
+				</td>					
+			</tr>					
+		</tbody>
+	</table> 	
+</div>
+
 <div id="cancella-registrazione-form" title="Cancella Registrazione"> 
 	<form method="post" id="cancellaRegistrazione" action="../primanota/cancellaRegistrazioneFacade.class.php?modo=go" >
 		<p>Elimino la registrazione e i suoi dettagli ?</p>
 		<input type="hidden" id="idRegistrazione" name="idRegistrazione">
-  </form>
+	</form>
 </div>
 
-<script type="text/javascript">
-
-$(document).ready( function () {
-    $('#registrazioni').dataTable( {
-    	"order": [[1, 'desc'],[0, 'asc'],[2, 'asc'] ],
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": false, "visible": false },
-       	    {"targets": 1, "orderable": false, "visible": false },
-    	    {"targets": 2, "orderable": false, "visible": false },
-    	    {"targets": 3, "orderable": false },
-    	    {"targets": 4, "orderable": false },
-    	    {"targets": 5, "orderable": false },
-    	    {"targets": 6, "orderable": false },
-    	    {"targets": 7, "orderable": false },
-    	    {"targets": 8, "orderable": false },
-    	    {"targets": 9, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
-
-</script>		
+<div id="nuova-data-scadenza-form" title="Nuova data scadenza"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataScadenza" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloImportoScadenza" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datascad% :</td>
+					<td class="tooltip"><input class="datepicker" type="text" id="newdatascad_cre" name="newdatascad_cre" size="10" maxlength="10" /></td>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="newimpscad_cre" name="newimpscad_cre" size="20" maxlength="20" onkeypress="controllaImportoScadenza()" ></td>
+				</tr>			
+			</tbody>
+		</table> 	 
+  </form>
+</div>

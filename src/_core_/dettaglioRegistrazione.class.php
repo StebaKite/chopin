@@ -28,8 +28,14 @@ class DettaglioRegistrazione implements CoreInterface {
 	private $codSottoconto;
 	private $datInserimento;
 
+	private $dettagliRegistrazione;
+	private $qtaDettagliRegistrazione;
+	private $totDare;
+	private $totAvere;
+
 	// Queries
 
+	const CREA_DETTAGLIO_REGISTRAZIONE = "/primanota/creaDettaglioRegistrazione.sql";
 
 	// Metodi
 
@@ -43,13 +49,90 @@ class DettaglioRegistrazione implements CoreInterface {
 		return unserialize($_SESSION[self::DETTAGLIO_REGISTRAZIONE]);
 	}
 
+	public function prepara()
+	{
+		$this->setDettagliRegistrazione(null);
+		$this->setQtaDettagliRegistrazione(0);
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+	}
 
+	public function aggiungi()
+	{
+		$item = array(
+				DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => trim($this->getIdDettaglioRegistrazione()),
+				DettaglioRegistrazione::ID_REGISTRAZIONE => 0,
+				DettaglioRegistrazione::IMP_REGISTRAZIONE => trim($this->getImpRegistrazione()),
+				DettaglioRegistrazione::IND_DAREAVERE => trim($this->getIndDareavere()),
+				DettaglioRegistrazione::COD_CONTO => trim($this->getCodConto()),
+				DettaglioRegistrazione::COD_SOTTOCONTO => trim($this->getCodSottoconto()),
+				DettaglioRegistrazione::DAT_INSERIMENTO => date("Y/m/d")
+		);
 
+		if ($this->getQtaDettagliRegistrazione() == 0) {
+			$resultset = array();
+			array_push($resultset, $item);
+			$this->setDettagliRegistrazione($resultset);
+		}
+		else {
+			array_push($this->dettagliRegistrazione, $item);
+			sort($this->dettagliRegistrazione);
+		}
+		$this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() + 1);
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+	}
 
+	public function cancella()
+	{
+		$dettagliDiff = array();
+		foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+			$conto = explode(" - ", trim($unDettaglio[self::COD_CONTO]));
+			if ($conto[0] != trim($this->getCodConto())) {
+				array_push($dettagliDiff, $unDettaglio);
+			}
+			else $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
+		}
+		$this->setDettagliRegistrazione($dettagliDiff);
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+	}
 
+	public function inserisci($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione()),
+				'%imp_registrazione%' => trim($this->getImpRegistrazione()),
+				'%ind_dareavere%' => trim($this->getIndDareavere()),
+				'%cod_conto%' => trim($this->getCodConto()),
+				'%cod_sottoconto%' => trim($this->getCodSottoconto())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_DETTAGLIO_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
 
+	public function verificaQuadratura()
+	{
+		if ($this->getQtaDettagliRegistrazione() > 0)
+		{
+			$totale = 0;
+			$totDare = 0;
+			$totAvere = 0;
+			foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+				$importo = trim($unDettaglio[self::IMP_REGISTRAZIONE]);
+				$indDareAvere = trim($unDettaglio[self::IND_DAREAVERE]);
+				if ($indDareAvere == "D") $totDare += $importo;
+				if ($indDareAvere == "A") $totAvere += $importo;
+			}
+			$totale = round($totDare, 2) - round($totAvere, 2);
 
+			if ($totale == 0) return true;
+			else return false;
+		}
+		else return false;
+	}
 
     public function getRoot(){
         return $this->root;
@@ -114,6 +197,39 @@ class DettaglioRegistrazione implements CoreInterface {
     public function setDatInserimento($datInserimento){
         $this->datInserimento = $datInserimento;
     }
+
+    public function getDettagliRegistrazione(){
+        return $this->dettagliRegistrazione;
+    }
+
+    public function setDettagliRegistrazione($dettagliRegistrazione){
+        $this->dettagliRegistrazione = $dettagliRegistrazione;
+    }
+
+    public function getQtaDettagliRegistrazione(){
+        return $this->qtaDettagliRegistrazione;
+    }
+
+    public function setQtaDettagliRegistrazione($qtaDettagliRegistrazione){
+        $this->qtaDettagliRegistrazione = $qtaDettagliRegistrazione;
+    }
+
+    public function getTotDare(){
+        return $this->totDare;
+    }
+
+    public function setTotDare($totDare){
+        $this->totDare = $totDare;
+    }
+
+    public function getTotAvere(){
+        return $this->totAvere;
+    }
+
+    public function setTotAvere($totAvere){
+        $this->totAvere = $totAvere;
+    }
+
 }
 
 ?>

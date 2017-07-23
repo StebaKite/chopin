@@ -11,4 +11,4 @@ select
   		   where cod_causale = '%cod_causale%'
   		) as t1
   		on t1.cod_conto = sottoconto.cod_conto
-  order by sottoconto.cod_conto, sottoconto.cod_sottoconto
+  order by sottoconto.des_sottoconto

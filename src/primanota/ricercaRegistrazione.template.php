@@ -1,84 +1,71 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'dettaglioRegistrazione.class.php';
+require_once 'causale.class.php';
+require_once 'cliente.class.php';
+require_once 'fornitore.class.php';
+require_once 'sottoconto.class.php';
 
-class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
-
-	private static $_instance = null;
-
-	private static $pagina = "/primanota/ricercaRegistrazione.form.html";
-
-	//-----------------------------------------------------------------------------
-
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements PrimanotaPresentationInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new RicercaRegistrazioneTemplate();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE])) $_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE] = serialize(new RicercaRegistrazioneTemplate());
+		return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]);
 	}
 
-	// template ------------------------------------------------
-	
 	public function inizializzaPagina() {}
-	
-	public function controlliLogici() {
-		
+
+	public function controlliLogici()
+	{
+
+		$registrazione = Registrazione::getInstance();
 		$esito = TRUE;
 		$msg = "<br>";
-		
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
-		
-		if ($_SESSION["datareg_da"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di inizio ricerca";
-			$esito = FALSE;
-		}
-
-		if ($_SESSION["datareg_a"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di fine ricerca";
-			$esito = FALSE;
-		}
 
 		// ----------------------------------------------
-		
+
+
+		// ----------------------------------------------
+
 		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
+			$_SESSION[self::MESSAGGIO] = $msg;
 		}
 		else {
-			unset($_SESSION["messaggio"]);
+			unset($_SESSION[self::MESSAGGIO]);
 		}
-		
+
 		return $esito;
 	}
 
-	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
+	public function displayPagina()
+	{
+		$registrazione = Registrazione::getInstance();
+		$causale = Causale::getInstance();
+		$cliente = Cliente::getInstance();
+		$fornitore = Fornitore::getInstance();
+
 		$utility = Utility::getInstance();
+		$db = Database::getInstance();
 		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
+
+		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_REGISTRAZIONE;
 		$risultato_ricerca = "";
-		
-		if (isset($_SESSION["registrazioniTrovate"])) {
-			
-			$risultato_ricerca = 
+
+		if ($registrazione->getQtaRegistrazioni() > 0) {
+
+			$risultato_ricerca =
 			"<table id='registrazioni' class='display' width='100%'>" .
 			"	<thead>" .
 			"		<tr>" .
@@ -95,162 +82,162 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract {
 			"		</tr>" .
 			"	</thead>" .
 			"	<tbody>";
-			
-			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
-			$numReg = 0;			
-						
-			foreach(pg_fetch_all($registrazioniTrovate) as $row) {
 
-				if (trim($row['tipo']) == 'R') {					
+			foreach($registrazione->getRegistrazioni() as $unaRegistrazione) {
 
-					switch ($row['sta_registrazione']) {
-						case ("00"): {
+				if (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_REGISTRAZIONE) {
+
+					/**
+					 * Imposto i bottoni validi sulla riga della registrazione
+					 */
+
+					switch ($unaRegistrazione[Registrazione::STA_REGISTRAZIONE]) {
+						case (self::REGISTRAZIONE_APERTA): {
 
 							$class = "class='dt-ok'";
-								
-							switch ($row['cod_causale']) {
-								case ($array['corrispettiviMercato']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+
+							switch ($unaRegistrazione[Registrazione::COD_CAUSALE]) {
+								case ($array[self::CORRISPETTIVO_MERCATO]): {
+									$bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
-								case ($array['corrispettiviNegozio']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+								case ($array[self::CORRISPETTIVO_NEGOZIO]): {
+									$bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_CORRISPETTIVO_NEGOZIO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
-								case ($array['pagamentoFornitori']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+								case ($array[self::PAGAMENTO]): {
+									$bottoneVisualizza = self::VISUALIZZA_PAGAMENTO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = "&nbsp;";
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
-								case ($array['incassoFattureClienti']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+								case ($array[self::INCASSO]): {
+									$bottoneVisualizza = self::VISUALIZZA_INCASSO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = "&nbsp;";
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
 								default: {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+									$bottoneVisualizza = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
 							}
 							break;
 						}
-						case ("02"): {
-							
+						case (self::REGISTRAZIONE_ERRATA): {
+
 							$class = "class='dt-ko'";
-							
+
 							switch ($row['cod_causale']) {
-								case ($array['corrispettiviMercato']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+								case ($array[self::CORRISPETTIVO_MERCATO]): {
+									$bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
-								case ($array['corrispettiviNegozio']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+								case ($array[self::CORRISPETTIVO_NEGOZIO]): {
+									$bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_CORRISPETTIVO_NEGOZIO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
-								case ($array['pagamentoFornitori']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+								case ($array[self::PAGAMENTO]): {
+									$bottoneVisualizza = self::VISUALIZZA_PAGAMENTO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = "&nbsp;";
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
-								case ($array['incassoFattureClienti']): {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
+								case ($array[self::INCASSO]): {
+									$bottoneVisualizza = self::VISUALIZZA_INCASSO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = "&nbsp;";
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
 								default: {
-									$bottoneVisualizza = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-									$bottoneModifica = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=" . trim($row['id_registrazione']) . "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-									$bottoneCancella = "<a class='tooltip' onclick='cancellaRegistrazione(" . trim($row['id_registrazione']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+									$bottoneVisualizza = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+									$bottoneModifica = self::MODIFICA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
 									break;
 								}
 							}
-							
 							break;
 						}
 						default: {
 							$class = "class='dt-chiuso'";
 							$bottoneVisualizza = "&nbsp;";
 							$bottoneModifica = "&nbsp;";
-							$bottoneCancella = "&nbsp;";								
+							$bottoneCancella = "&nbsp;";
 							break;
 						}
 					}
-					
-					$numReg ++; 
-					$risultato_ricerca = $risultato_ricerca .
+
+					$risultato_ricerca .=
 					"<tr " . $class . ">" .
-					"	<td>" . trim($row['id_registrazione']) . "</td>" .
-					"	<td>" . trim($row['dat_registrazione_yyyymmdd']) . "</td>" .
-					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .					
-					"	<td>" . trim($row['dat_registrazione']) . "</td>" .
-					"	<td class='td-left'>" . trim($row['num_fattura']) . "</td>" .
-					"	<td>" . trim($row['des_registrazione']) . "</td>" .
-					"	<td>" . trim($row['cod_causale']) . " - " . trim($row['des_causale']) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE]) . "</td>" .
+					"	<td class='td-left'>" . trim($unaRegistrazione[Registrazione::NUM_FATTURA]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::COD_CAUSALE]) . " &ndash; " . trim($unaRegistrazione[Causale::DES_CAUSALE]) . "</td>" .
 					"	<td id='icons'>" . $bottoneVisualizza . "</td>" .
 					"	<td id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td id='icons'>" . $bottoneCancella . "</td>" .
-					"</tr>";						
-					
-				}
-				elseif (trim($row['tipo']) == 'D') {
-						
-					$risultato_ricerca = $risultato_ricerca .
-					"<tr>" .
-					"	<td>" . trim($row['id_registrazione']) . "</td>" .
-					"	<td>" . trim($row['dat_registrazione_yyyymmdd']) . "</td>" .
-					"	<td>" . trim($row['id_dettaglio_registrazione']) . "</td>" .
-					"	<td class='dt-right'>" . trim($row['ind_dareavere']) . "</td>" .						
-					"	<td class='dt-right'>" . trim($row['imp_registrazione']) .  "</td>" .
-					"	<td><i>" . trim($row['cod_conto']) . trim($row['cod_sottoconto']) . " - " . trim($row['des_sottoconto']) . "</i></td>" .
-					"	<td></td>" .					
-					"	<td></td>" .					
-					"	<td></td>" .					
-					"	<td></td>" .					
 					"</tr>";
-						
-				}				
-				
+
+				}
+				elseif (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_DETTAGLIO_REGISTRAZIONE) {
+
+					$risultato_ricerca .=
+					"<tr>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
+					"	<td class='dt-right'>" . trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "</td>" .
+					"	<td class='dt-right'>" . trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) .  "</td>" .
+					"	<td><i>" . trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) . trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " . trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . "</i></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"	<td></td>" .
+					"</tr>";
+
+				}
 			}
-			$_SESSION['numRegTrovate'] = $numReg;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table>";			
+			$risultato_ricerca .= "</tbody></table>";
 		}
-		else {
-			
-		}
-			
+
+		$causale->setCodCausale("");
+		$elencoCausali = $causale->caricaCausali($db);
+		$fornitore->load($db);
+		$cliente->load($db);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+
 		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],				
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%numfatt%' => $_SESSION["numfatt"],
-				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
-				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
-				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%elenco_causali%' => $_SESSION["elenco_causali"],
+				'%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+				'%azione%' => $_SESSION[self::AZIONE],
+				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+				'%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
+				'%datareg_a%' => $registrazione->getDatRegistrazioneA(),
+				'%villa-selected%' => ($registrazione->getCodNegozioSel() == "VIL") ? "selected" : "",
+				'%brembate-selected%' => ($registrazione->getCodNegozioSel() == "BRE") ? "selected" : "",
+				'%trezzo-selected%' => ($registrazione->getCodNegozioSel() == "TRE") ? "selected" : "",
+				'%elenco_causali%' => $elencoCausali,
+				'%elenco_causali_cre%' => $elencoCausali,
+				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
+				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-	
-		$utility = Utility::getInstance();
-	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}
-}	
+}
 
 ?>

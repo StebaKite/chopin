@@ -42,6 +42,7 @@ class ScadenzaCliente implements CoreInterface {
 
 	private $scadenze;
 	private $qtaScadenze;
+	private $importoScadenza;
 
 	// fitri di ricerca
 
@@ -71,7 +72,9 @@ class ScadenzaCliente implements CoreInterface {
 		$this->setDatScadenzaDa(date("d/m/Y"));
 		$this->setDatScadenzaA(date("d/m/Y"));
 		$this->setCodNegozioSel("VIL");
-		$this->setScadenze(null);
+		$this->setQtaScadenze(0);
+		$this->setScadenze("");
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 	}
 
 	public function load($db)
@@ -113,8 +116,25 @@ class ScadenzaCliente implements CoreInterface {
 		return $result;
 	}
 
+	public function aggiungi()
+	{
+		$item = array(
+				ScadenzaCliente::DAT_REGISTRAZIONE=> $this->getDatRegistrazione(),
+				ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+		);
 
-
+		if ($this->getQtaScadenze() == 0) {
+			$resultset = array();
+			array_push($resultset, $item);
+			$this->setScadenze($resultset);
+		}
+		else {
+			array_push($this->scadenze, $item);
+			sort($this->scadenze);
+		}
+		$this->setQtaScadenze($this->getQtaScadenze() + 1);
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	}
 
 	// Getters & Setters
 
@@ -260,6 +280,15 @@ class ScadenzaCliente implements CoreInterface {
 
     public function setStaScadenzaSel($staScadenzaSel){
         $this->staScadenzaSel = $staScadenzaSel;
+    }
+
+
+    public function getImportoScadenza(){
+        return $this->importoScadenza;
+    }
+
+    public function setImportoScadenza($importoScadenza){
+        $this->importoScadenza = $importoScadenza;
     }
 
 }

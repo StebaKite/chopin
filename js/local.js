@@ -174,6 +174,12 @@ function pad(num, size) {
     while (s.length < size) s = "0" + s;
     return s;
 }
+
+function isNumeric(val) {
+	var pattern = /^[-+]?(\d+|\d+\.\d*|\d*\.\d+)$/;
+	return pattern.test(val);
+}
+
 // ---------------------------------------------------------------
 // Funzioni per la registrazione e i dettagli
 // ---------------------------------------------------------------
@@ -202,11 +208,11 @@ $('.nav li').hover(
 // Campi autocomplete
 // ---------------------------------------------------------
 
-$( "#fornitore" ).autocomplete({
+$( "#fornitore_cre" ).autocomplete({
  	source: elencoFornitori
 });	
 
-$( "#cliente" ).autocomplete({
+$( "#cliente_cre" ).autocomplete({
  	source: elencoClienti
 });	
 

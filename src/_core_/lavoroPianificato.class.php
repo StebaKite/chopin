@@ -48,6 +48,7 @@ class LavoroPianificato implements CoreInterface {
 
 	const LOAD_LAVORI_PIANIFICATI = "/main/lavoriPianificati.sql";
 	const CAMBIO_STATO = "/main/cambioStatoLavoroPianificato.sql";
+	const LEGGI_LAVORI_ANNO_CORRENTE = "/main/lavoriPianificatiAnnoCorrente.sql";
 
 	// Metodi
 
@@ -186,6 +187,34 @@ class LavoroPianificato implements CoreInterface {
 			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
 			return false;
 		}
+	}
+	/**
+	 *
+	 * @param unknown $db
+	 * @param unknown $utility
+	 * @return unknown
+	 */
+	public function loadAnnoCorrente($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array();
+
+		$sqlTemplate = $this->root . $array['query'] . self::LEGGI_LAVORI_ANNO_CORRENTE;
+
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			$this->setLavoriPianificati(pg_fetch_all($result));
+			$this->setQtaLavoriPianificati(pg_num_rows($result));
+		}
+		else {
+			$this->setLavoriPianificati(null);
+			$this->setQtaLavoriPianificati(0);
+		}
+		return $result;
 	}
 
 	// Getters e Setters

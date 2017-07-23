@@ -43,7 +43,7 @@ assenzaSottoconti = Non visibili
 anteprima = Anteprima
 attivo = Attivo
 passivo = Passivo
-nuovaDataScad = Nuova Scadenza
+nuovaDataScad = Nuova scadenza
 saldiInclusi = Saldi inclusi
 saldiEsclusi = Esclusi
 soloContoEconomico = Solo Conto Economico
@@ -75,6 +75,7 @@ nuovoconto = Nuovo conto
 nuovofornitore = Nuovo fornitore
 nuovocliente = Nuovo cliente
 nuovoprogressivo = Nuovo progressivo
+nuovaregistrazione = Nuova
 ;
 ; Tips ---------------------------------
 ;

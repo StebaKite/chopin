@@ -1,8 +1,7 @@
 <?php
-require_once 'nexus6.presentation.interface.php';
 
-interface RiepiloghiPresentationInterface extends Nexus6PresentationInterface {
-		
+interface RiepiloghiPresentationInterface {
+
 	public function tabellaTotaliRiepilogoNegozi($tipoTotale);
 }
 

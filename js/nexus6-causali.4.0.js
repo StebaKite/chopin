@@ -188,38 +188,6 @@ function escludiConto(codConto) {
 
 //---------------------------------------------------------------------------------			
 
-$( ".selectmenuCausale" )
-	.selectmenu({change:
-		function(){
-			var causale = $("#causale").val();
-			
-			if (causale != "") {
-	        	$( "#tdcausale").removeClass("inputFieldError");	
-	            $( "#esitoCausale" ).val("");			
-				$( "#messaggioControlloCausale" ).html("");
-			}
-			else {
-				$("#messaggioControlloCausale").html("Dato errato");
-				$("#tdcausale").addClass("inputFieldError");	
-			}
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#conti" ).html(xmlhttp.responseText);
-	                $( "#conti" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 150})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-//---------------------------------------------------------------------------------			
-
 $( ".selectmenuCausaleRapido" )
 	.selectmenu({change:
 		function(){

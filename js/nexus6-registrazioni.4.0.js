@@ -2,79 +2,95 @@
 // Registrazioni
 //---------------------------------------------------------------------------------				
 
-//---------------------------------------------------------------------------------				
-//Dettaglio Registrazione
-//---------------------------------------------------------------------------------
-$( "#nuovo-dett" ).click(function( event ) {
-	$( "#nuovo-dettaglio-form" ).dialog( "open" );
-	event.preventDefault();
+//---------------------------------------------------------------------------------		
+// Creazione di una nuova registrazione
+//---------------------------------------------------------------------------------		
+$( "#nuova-registrazione" ).click(function( event ) {
+	$("#button-ok-nuova-registrazione-form").button("disable");
+	$("#button-dettaglio-nuova-registrazione-form").button("disable");
+	$("#button-dettaglio-nuova-scadenza-form").button("disable");
+	
+	$("#descreg_cre").hide();
+	$("#descreg_cre_label").hide();
+	$("#scadenzesuppl_cre").hide();
+	$("#datascad_cre_label").hide();
+	$("#numfatt_cre_label").hide();
+	$("#numfatt_cre").hide();
+	$("#nuova-registrazione-form").dialog("open");
 });
 
-$( "#nuovo-dettaglio-form" ).dialog({
+$( "#nuova-registrazione-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 1000,
+	buttons: [
+		{
+			id: "button-ok-nuova-registrazione-form",
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovaRegistrazione").submit();				
+			}
+		},
+		{
+			id: "button-dettaglio-nuova-scadenza-form",
+			text: "Nuova scadenza",
+			click: function() {	
+				$("#datascad_cre" ).val("");
+				$("#newimpscad_cre").val("");
+				$("#button-nuova-scadenza-form").button("disable");
+				$("#nuova-data-scadenza-form").dialog( "open" );
+			}
+		},
+		{
+			id: "button-dettaglio-nuova-registrazione-form",
+			text: "Nuovo Dettaglio",
+			click: function() {				
+				$("#button-Ok-nuovo-dettaglio-form").button("disable");
+				$("#importo_dett_cre").val("");
+				$("#nuovo-dettaglio-registrazione-form").dialog( "open" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+
+$( "#nuovo-dettaglio-registrazione-form" ).dialog({
 	autoOpen: false,
 	modal: true,
 	width: 550,
-	height: 400,
+	height: 250,
 	buttons: [
 		{
+			id: "button-Ok-nuovo-dettaglio-form",
 			text: "Ok",
 			click: function() {
-				
-				// Controllo congruenza conto dettaglio
-				
-				var conto = $("#conti").val();
-				var fornitore = $("#fornitore").val();
-				var cliente = $("#cliente").val();
 
-				// Fornitore
-				
-				if (fornitore != "") {
+				if($('#dare_dett_cre').is(':checked')) { var D_A = $("#dare_dett_cre").val(); }
+				if($('#avere_dett_cre').is(':checked')) { var D_A = $("#avere_dett_cre").val(); }
 
-					var xmlhttp = new XMLHttpRequest();
-				    xmlhttp.onreadystatechange = function() {
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				        	if (xmlhttp.responseText == "Dettaglio ok") {
-								
-								aggiungiDettaglio();
-					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
-				        		
-				        	}
-				        	else {
-					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
-				        	}
-				        }		
-				        
-				    } 
-				    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
-				    xmlhttp.send();
-				}
-
-				// Cliente
+				var conto = $("#conti").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
+				var idconto = conto.substring(0, 6);
+				var importo = $("#importo_dett_cre").val();
+				var importoNormalizzato = importo.trim().replace(",", ".");
 				
-				else if (cliente != "") {
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	var sottocontiTable = xmlhttp.responseText;
+		        		$("#dettagli_cre").html(sottocontiTable);
+		        		controllaDettagliRegistrazione("tddettagli_cre", "causale_cre");
+		        	}
+			    }
+			    xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+			    xmlhttp.send();				
 
-					var xmlhttp = new XMLHttpRequest();
-				    xmlhttp.onreadystatechange = function() {
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				        	if (xmlhttp.responseText == "Dettaglio ok") {
-								
-								aggiungiDettaglio();
-					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
-				        		
-				        	}
-				        	else {
-					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
-				        	}
-				        }		
-				        
-				    } 
-				    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
-				    xmlhttp.send();
-				}
-				else {
-					aggiungiDettaglio();
-				}
-				
 				$( this ).dialog( "close" );
 			}
 		},
@@ -87,24 +103,343 @@ $( "#nuovo-dettaglio-form" ).dialog({
 	]
 });
 
-//---------------------------------------------------------------------------------				
+function controllaImportoDettaglio() {
+	
+	var importo = $("#importo_dett_cre").val();
+	
+	if (isNumeric(importo)) {
+       	$("#importo_dett_cre").removeClass("inputFieldError");
+		$("#messaggioControlloImportoDettaglio").html("");		
+		$("#button-Ok-nuovo-dettaglio-form").button("enable");	
+	}
+	else {		
+       	$("#importo_dett_cre").addClass("inputFieldError");
+		$("#messaggioControlloImportoDettaglio").html("Importo non valido");		
+		$("#button-Ok-nuovo-dettaglio-form").button("disable");
+	}	
+}
 
-$( "#nuova-data-scad" ).click(function( event ) {
-	$( "#datascad" ).val("");	
-	$( "#nuova-data-scadenza-form" ).dialog( "open" );
-	event.preventDefault();
-});
+//---------------------------------------------------------------------------------		
+// CREA REGISTRAZIONE : controllo campi in pagina
+//---------------------------------------------------------------------------------		
+
+function validaNuovaRegistrazione()
+{
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
+	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
+	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
+	 */
+	var esito = "";
+	
+	controllaDataRegistrazione("datareg_cre", "tddatareg_cre");
+	if ($("#esitoControlloDataRegistrazione").text() == "") 
+		esito = esito + "1"; else esito = esito + "0";
+
+	if ($("#descreg_cre").val() != "") {
+		if (controllaDescrizione("descreg_cre", "tddescreg_cre")) 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+	
+	if (controllaClienteFornitore("fornitore_cre", "cliente_cre", "tdfornitore_cre", "tdcliente_cre", "tdnumfatt_cre")) 
+		esito = esito + "1"; else esito = esito + "0";
+	
+	if (($("#fornitore_cre").val() != "") || $("#cliente_cre").val() != "") {
+		if (controllaNumeroFattura("numfatt_cre", "tdnumfatt_cre")) 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+	
+	if ($("#fornitore_cre").val() != "") {
+		controllaNumeroFatturaFornitore("fornitore_cre", "numfatt_cre", "datareg_cre", "tdnumfatt_cre");
+		if ($("#messaggioControlloNumeroFattura").text() == "") 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+
+	if ($("#cliente_cre").val() != "") {
+		controllaNumeroFatturaCliente("cliente_cre", "numfatt_cre", "datareg_cre", "tdnumfatt_cre");
+		if ($("#messaggioControlloNumeroFattura").text() == "") esito = esito + "1"; else esito = esito + "0";
+	}
+
+	if ($("#causale_cre").val() != "") {
+		controllaDettagliRegistrazione("tddettagli_cre", "causale_cre"); 
+		if ($("#messaggioControlloDettagli").text() == "") 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+		
+	$("#messaggioControlloDataRegistrazione" ).html(esito);
+		
+	if (esito == "111111") {
+		$("#button-ok-nuova-registrazione-form").button("enable");
+	} else {
+		$("#button-ok-nuova-registrazione-form").button("disable");	
+	}
+}
+
+//---------------------------------------------------------------------------------		
+function controllaDataRegistrazione(campoDat, campoDatErr)
+{
+	/**
+	 * La data registrazione è obbligatoria
+	 * Il controllo sulla data registrazione verificha che la data immessa cada all'interno
+	 * di uno dei mesi in linea. I mesi in linea coincidono con le date pianificate di riporto saldo
+	 * 
+	 */
+	var datareg = $("#" + campoDat).val();
+	
+	
+	if (datareg != "") {
+		
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {	            
+	            if (xmlhttp.responseText != "") {
+		            $("#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);	            	
+	            	$("#" + campoDatErr).addClass("inputFieldError");
+	            }
+	            else {
+	            	$("#" + campoDatErr).removeClass("inputFieldError");	
+	                $("#esitoControlloDataRegistrazione").html("");
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&" + campoDat + "=" + datareg, true);
+	    xmlhttp.send();		
+	}
+	else {
+		$("#" + campoDatErr).addClass("inputFieldError");
+		$("#messaggioControlloDataRegistrazione").html("Dato errato");
+	}
+}
+
+//---------------------------------------------------------------------------------		
+function controllaDescrizione(campoDes, campoDesErr)
+{
+	/**
+	 * La descrizione della registrazione è obbligatoria
+	 */
+	if ($("#" + campoDes).val() != "") {
+		$("#" + campoDesErr).removeClass("inputFieldError");	
+		$("#messaggioControlloDescrizione" ).html("");
+		return true;
+	}
+	else {
+		$("#" + campoDesErr).addClass("inputFieldError");
+		$("#messaggioControlloDescrizione").html("Dato errato");
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------
+
+function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliErr, campoFatErr)
+{
+	/**
+	 * Il cliente e il fornitore sono mutualmente esclusivi
+	 * Possono mancare entrambi
+	 */
+	if (($("#" + campoForn).val() != "") && ($("#" + campoCli).val() != "")) {
+
+		$("#" + campoFornErr).addClass("inputFieldError");			
+		$("#" + campoCliErr).addClass("inputFieldError");							
+		$("#messaggioControlloFornitore" ).html("Dato errato");
+		$("#messaggioControlloCliente" ).html("Dato errato");
+		$("#button-dettaglio-nuova-scadenza-form").button("disable");
+		$("#scadenzesuppl_cre").hide();
+		$("#datascad_cre_label").hide();
+		$("#numfatt_cre_label").hide();
+		$("#numfatt_cre").hide();
+		return false;
+	}
+	else if (($("#" + campoForn).val() == "") && ($("#" + campoCli).val() == "")){
+		$("#datascad_cre_label").hide();
+		$("#button-dettaglio-nuova-scadenza-form").button("disable");
+		$("#scadenzesuppl_cre").hide();
+		$("#datascad_cre_label").hide();
+		$("#numfatt_cre_label").hide();
+		$("#numfatt_cre").hide();
+		return false;		
+	}
+	else {
+		$("#" + campoFornErr).removeClass("inputFieldError");	
+		$("#" + campoCliErr).removeClass("inputFieldError");	
+		$("#" + campoFatErr).removeClass("inputFieldError");	
+		$("#messaggioControlloFornitore" ).html("");
+		$("#messaggioControlloCliente" ).html("");				
+		$("#messaggioControlloNumeroFattura" ).html("");
+		$("#button-dettaglio-nuova-scadenza-form").button("enable");
+		$("#scadenzesuppl_cre").show();
+		$("#datascad_cre_label").show();
+		$("#numfatt_cre_label").show();
+		$("#numfatt_cre").show();
+		return true;		
+	}
+}
+
+//---------------------------------------------------------------------
+
+function controllaNumeroFattura(campoFat, campoFatErr)
+{
+	var numfatt = $("#" + campoFat).val();
+
+	if (numfatt != "") {
+		$("#" + campoFatErr).removeClass("inputFieldError");			
+		$("#messaggioControlloNumeroFattura" ).html("");
+		return true;
+	}
+	else {
+		$("#" + campoFatErr).addClass("inputFieldError");			
+		$("#messaggioControlloNumeroFattura" ).html("Immetti in numero fattura");
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------
+
+function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat, campoFattErr)
+{
+	/**
+	 * La fattura del fornitore immessa deve essere univoca
+	 */
+	var fornitore = $("#" + campoForn).val();
+	var numfatt = $("#" + campoFat).val();
+	var datareg = $("#" + campoDat).val();
+	
+	if ((numfatt != "") && (datareg != "") ) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {	            
+	            if (xmlhttp.responseText != "") { 
+	            	$("#" + campoFattErr).addClass("inputFieldError");
+		            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
+	            }
+	            else {
+	            	$( "#" + campoFattErr).removeClass("inputFieldError");	
+		            $( "#messaggioControlloNumeroFattura" ).html("");
+	            }	            
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&desfornitore=" + fornitore + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+	    xmlhttp.send();		
+	}
+	else return true;
+}
+
+//---------------------------------------------------------------------
+
+function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat, campoFattErr)
+{
+	/**
+	 * La fattura del fornitore immessa deve essere univoca
+	 */
+	var cliente = $("#" + campoCli).val();
+	var numfatt = $("#" + campoFat).val();
+	var datareg = $("#" + campoDat).val();
+	
+	if ((numfatt != "") && (datareg != "")) {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") { 
+	            	$("#" + campoFattErr).addClass("inputFieldError");
+		            $( "#messaggioControlloNumeroFattura" ).html(xmlhttp.responseText);
+	            }
+	            else {
+	            	$( "#" + campoFattErr).removeClass("inputFieldError");	
+		            $( "#messaggioControlloNumeroFattura" ).html("");
+	            }	            
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&descliente=" + cliente + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+	    xmlhttp.send();		
+	}
+	else return true;
+}
+
+//---------------------------------------------------------------------
+
+function controllaDettagliRegistrazione(campoDetErr)
+{
+	/**
+	 * I dettagli della registrazione devono essere presenti
+	 * Gli importi del Dare e Avere devono quadrare
+	 */
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+            if (xmlhttp.responseText != "") { 
+            	$("#" + campoDetErr).addClass("inputFieldError");
+    			$("#messaggioControlloDettagli").html("Immetti i dettagli");			
+            }
+            else {
+            	$("#descreg_cre").show();
+            	$("#descreg_cre_label").show();            	
+            	$("#" + campoDetErr).removeClass("inputFieldError");	
+    			$("#messaggioControlloDettagli").html("");			
+            }	            
+        }
+    } 
+    xmlhttp.open("GET", "verificaDettagliRegistrazioneFacade.class.php?modo=start", true);
+    xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------				
+//  funzioni x le scadenze
+//---------------------------------------------------------------------------------				
 
 $( "#nuova-data-scadenza-form" ).dialog({
 	autoOpen: false,
 	modal: true,
 	width: 550,
-	height: 150,
+	height: 180,
 	buttons: [
 		{
+			id: "button-nuova-scadenza-form",
 			text: "Ok",
 			click: function() {
-				aggiungiScadenzaSupplementare();
+
+				var datascad = $("#newdatascad_cre").val();				
+				var impscad  = $("#newimpscad_cre").val();
+				var fornitore = $("#fornitore_cre").val();
+				var cliente = $("#cliente_cre").val();
+				
+				if (fornitore != "")
+				{	
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				            if (xmlhttp.responseText != "") {
+				            	$("#datascad_cre_label").show();
+				        		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+				            }
+				            else {
+				            	$("#datascad_cre_label").hide();
+				        		$("#scadenzesuppl_cre").html("");
+				        		$("#scadenzesuppl_cre").hide();
+				            }	            
+				        }				        
+				    } 
+				    xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&datascad_for=" + datascad + "&impscad_for=" + impscad, true);
+				    xmlhttp.send();
+				}
+				else if (cliente != "")
+				{
+					var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				            if (xmlhttp.responseText != "") { 
+				            	$("#datascad_cre_label").show();
+				        		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+				            }
+				            else {
+				            	$("#datascad_cre_label").hide();
+				        		$("#scadenzesuppl_cre").html("");
+				        		$("#scadenzesuppl_cre").hide();
+				            }	            
+				        }
+				    } 
+				    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&datascad_cli=" + datascad + "&impscad_cli=" + impscad, true);
+				    xmlhttp.send();	
+				} 
 				$( this ).dialog( "close" );
 			}
 		},
@@ -116,6 +451,22 @@ $( "#nuova-data-scadenza-form" ).dialog({
 		}
 	]
 });
+
+function controllaImportoScadenza() {
+	
+	var importo = $("#newimpscad_cre").val();
+	
+	if (isNumeric(importo)) {
+       	$("#newimpscad_cre").removeClass("inputFieldError");
+		$("#messaggioControlloImportoScadenza").html("");		
+		$("#button-nuova-scadenza-form").button("enable");	
+	}
+	else {		
+       	$("#newimpscad_cre").addClass("inputFieldError");
+		$("#messaggioControlloImportoScadenza").html("Importo non valido");		
+		$("#button-nuova-scadenza-form").button("disable");
+	}	
+}
 
 //---------------------------------------------------------------------------------				
 
@@ -229,6 +580,20 @@ $( "#nuova-scadenza-modificareg-form" ).dialog({
 		}
 	]
 });
+
+//---------------------------------------------------------------------------------
+function cancellaDettaglioNuovaRegistrazione(codConto) {
+
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        	var sottocontiTable = xmlhttp.responseText;
+    		$("#dettagli_cre").html(sottocontiTable);
+        }
+    }
+    xmlhttp.open("GET", "cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codConto, true);
+    xmlhttp.send();				
+}
 
 //---------------------------------------------------------------------------------				
 
@@ -398,42 +763,6 @@ $( "#cliente_regrap" ).change(function() {
 });
 
 //---------------------------------------------------------------------------------	
-/**
- * Il controllo sulla data registrazione verificha che la data immessa cada all'interno
- * di uno dei mesi in linea. I mesi in linea coincidono con le date pianificate di riporto saldo
- * 
- */
-$( "#datareg" ).change(function() {
-	
-	var datareg = $("#datareg").val();
-
-	if (datareg != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);
-	            $( "#esitoControlloDataRegistrazione" ).val(xmlhttp.responseText);
-	            
-	            if (xmlhttp.responseText != "") 
-	            	$("#tddatareg").addClass("inputFieldError");			            	
-	            else {
-	            	$( "#tddatareg").removeClass("inputFieldError");	
-	                $( "#esitoControlloDataRegistrazione" ).val("");
-	            }
-	            
-	        }
-	    }
-	    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
-	    xmlhttp.send();		
-	}
-	else {
-        $( "#messaggioControlloDataRegistrazione" ).html("Dato errato");
-        $( "#esitoControlloDataRegistrazione" ).val("Dato errato");		
-    	$( "#tddatareg" ).addClass("inputFieldError");			            	
-	}
-});
-
-//---------------------------------------------------------------------------------	
 
 $( "#cliente" ).change(function() {
 	
@@ -454,6 +783,11 @@ $( "#cliente" ).change(function() {
 //---------------------------------------------------------------------------------	
 
 $( ".selectmenuCausale" )
+	.selectmenu({width: 350})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuCausaleCre" )
 	.selectmenu({width: 350})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
@@ -590,3 +924,38 @@ function cancellaDettaglioPagina(idconto) {
  		aggiornaDettaglioInseriti(dettInseriti);
 	}
 }
+
+//---------------------------------------------------------------------------------			
+
+$( ".selectmenuCausaleCre" )
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale_cre").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale_cre").removeClass("inputFieldError");	
+				$( "#messaggioControlloCausale" ).html("");
+				
+				var xmlhttp = new XMLHttpRequest();
+		        xmlhttp.onreadystatechange = function() {
+		            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		                $( "#conti" ).html(xmlhttp.responseText);
+		                $( "#conti" ).selectmenu( "refresh" );
+		            	$("#button-dettaglio-nuova-registrazione-form").button("enable");	                
+		            	validaNuovaRegistrazione();
+		            }
+		        }
+		        xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+		        xmlhttp.send();			
+								
+			}
+			else {
+				$("#tdcausale_cre").addClass("inputFieldError");	
+				$("#messaggioControlloCausale").html("Dato errato");
+            	$("#button-dettaglio-nuova-registrazione-form").button("disable");	                
+			}
+		}
+	})
+	.selectmenu({width: 300})
+	.selectmenu("menuWidget")
+	.addClass("overflow");

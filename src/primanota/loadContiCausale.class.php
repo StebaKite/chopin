@@ -1,78 +1,34 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'causale.class.php';
 
-class LoadContiCausale extends PrimanotaAbstract {
-
-	public static $replace;
-	public static $queryRicercaConti = "/primanota/ricercaConti.sql";
-	public static $queryRicercaContiDescrizione = "/primanota/ricercaContiDescrizione.sql";
-
-	private static $_instance = null;
-
+class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
 	function __construct() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new LoadContiCausale();
-
-			return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::LOAD_CONTI_CAUSALE])) $_SESSION[self::LOAD_CONTI_CAUSALE] = serialize(new LoadContiCausale());
+		return unserialize($_SESSION[self::LOAD_CONTI_CAUSALE]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		require_once 'configurazioneCausale.php';
-		
+	public function start()
+	{
+		$causale = Causale::getInstance();
 		$db = Database::getInstance();
-		$utility = Utility::getInstance();
 
-		$array = $utility->getConfig();
-
-		self::$replace = array(
-				'%cod_causale%' => trim($_SESSION["causale"])
-		);
-
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConti;
-
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
-
-		$conti= array();
-		unset($_SESSION['dettagliInseriti']);
-		
-		/**
-		 * Escludo dal caricamento tutti i clienti e i fornitori. 
-		 * Perchè verrà caricato nei dettagli solo il conto fornitore/cliente selezioanto.
-		 */
-		foreach(pg_fetch_all($result) as $row) {	
-			if (!strstr($array['contiFornitore'], trim($row['cod_conto'])) && (!strstr($array['contiCliente'], trim($row['cod_conto'])))) {
-				$unconto = array($row['cod_conto'], $row['cod_sottoconto'], $row['des_sottoconto']);
-				array_push($conti, $unconto);
-			}
-		}
-		$_SESSION['dettagliInseriti'] = $conti;
-		echo "Conti_Ok";
+		if ($causale->loadContiConfigurati($db)) echo $causale->getContiCausale();
+		else echo EMPTYSTRING;
+	}
+	public function go() {
+		$this->start();
 	}
 }
 

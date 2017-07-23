@@ -17,11 +17,6 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -87,13 +82,6 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		$db->rollbackTransaction();
 		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREAZIONE_CONTO;
 		return FALSE;
-	}
-
-	public function preparaPagina($creaContoTemplate) {
-
-		$creaContoTemplate->setAzione(self::AZIONE_CREA_CONTO);
-		$creaContoTemplate->setConfermaTip("%ml.confermaCreaConto%");
-		$creaContoTemplate->setTitoloPagina("%ml.creaNuovoConto%");
 	}
 }
 

@@ -1,73 +1,48 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'fornitore.class.php';
 
-class CercaFatturaFornitore extends PrimanotaAbstract {
-
-	public static $replace;
-
-	private static $_instance = null;
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+class CercaFatturaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CercaFatturaFornitore();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CERCA_FATTURA_FORNITORE])) $_SESSION[self::CERCA_FATTURA_FORNITORE] = serialize(new CercaFatturaFornitore());
+		return unserialize($_SESSION[self::CERCA_FATTURA_FORNITORE]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-		
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
+	public function start()
+	{
+		$fornitore = Fornitore::getInstance();
+		$registrazione = Registrazione::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-		$db->beginTransaction();
-		
-		if ($_SESSION["causale"] != "1100") {
-			$id_fornitore = $this->leggiDescrizioneFornitore($db, $utility, str_replace("'", "''", $_SESSION["idfornitore"]));			
-			$result = $this->cercaFatturaFornitore($db, $utility, $id_fornitore, $_SESSION["numfatt"], $_SESSION["datareg"]);
-			
-			if ($result){
-				if (pg_num_rows($result) > 0) {
-					foreach(pg_fetch_all($result) as $row) {
-						echo "Fattura gi&agrave; esistente";
-						break;
-					}
-				}
-				else {
-					echo "";
-				}
-			}
-			else {
-				echo "Errore controllo!";
-			}				
+		$array = $utility->getConfig();
+
+		if ($registrazione->getCodCausale() != $array['pagamentoFornitori']) {
+			$fornitore->setDesFornitore($registrazione->getDesFornitore());
+			$fornitore->cercaConDescrizione($db);
+			$registrazione->setIdFornitore($fornitore->getIdFornitore());
+			if ($registrazione->cercaFatturaFornitore($db)) echo "Fattura gi&agrave; esistente";
+			else echo "";
 		}
-		else {
-			echo "";
-		}
-		$db->commitTransaction();	
+		else echo "";
+	}
+
+	public function go() {
+		$this->start();
 	}
 }
-				
+
 ?>

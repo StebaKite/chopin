@@ -195,8 +195,9 @@ class Cliente implements CoreInterface {
 		$result = $db->execSql($sql);
 
 		foreach(pg_fetch_all($result) as $row) {
-			$this->setIdCliente($row['id_cliente']);
+			$this->setIdCliente($row[Cliente::ID_CLIENTE]);
 		}
+		$_SESSION[CLIENTE] = serialize($this);
 	}
 
 	public function load($db) {

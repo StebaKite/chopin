@@ -42,6 +42,7 @@ class ScadenzaFornitore implements CoreInterface {
 
 	private $scadenze;
 	private $qtaScadenze;
+	private $importoScadenza;
 
 	// fitri di ricerca
 
@@ -54,6 +55,7 @@ class ScadenzaFornitore implements CoreInterface {
 
 	const CERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.sql";
 	const CAMBIO_STATO_SCADENZA_FORNITORE = "/scadenze/updateStatoScadenzaFornitore.sql";
+	const CREA_SCADENZA = "/scadenze/creaScadenzaFornitore.sql";
 
 	// Metodi
 
@@ -67,16 +69,18 @@ class ScadenzaFornitore implements CoreInterface {
 		return unserialize($_SESSION[self::SCADENZA_FORNITORE]);
 	}
 
-	public function prepara() {
-
+	public function prepara()
+	{
 		$this->setDatScadenzaDa(date("d/m/Y"));
 		$this->setDatScadenzaA(date("d/m/Y"));
 		$this->setCodNegozioSel("VIL");
-		$this->setScadenze(null);
+		$this->setQtaScadenze(0);
+		$this->setScadenze("");
+		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	}
 
-	public function load($db) {
-
+	public function load($db)
+	{
 		/**
 		 * Colonne array scadenze
 		 *
@@ -131,8 +135,8 @@ class ScadenzaFornitore implements CoreInterface {
 		return $result;
 	}
 
-	public function cambiaStato($db) {
-
+	public function cambiaStato($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
@@ -146,7 +150,47 @@ class ScadenzaFornitore implements CoreInterface {
 		$result = $db->execSql($sql);
 	}
 
+	public function inserisci($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione()),
+				'%dat_scadenza%' => trim($this->getDatScadenza()),
+				'%imp_in_scadenza%' => trim($this->getImpInScadenza()),
+				'%nota_in_scadenza%' => trim($this->getNotaScadenza()),
+				'%tip_addebito%' => trim($this->getTipAddebito()),
+				'%cod_negozio%' => trim($this->getCodNegozio()),
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%num_fattura%' => trim($this->getNumFattura()),
+				'%sta_scadenza%' => trim($this->getStaScadenza())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+	public function aggiungi()
+	{
+		$item = array(
+				ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
+				ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+		);
+
+		if ($this->getQtaScadenze() == 0) {
+			$resultset = array();
+			array_push($resultset, $item);
+			$this->setScadenze($resultset);
+		}
+		else {
+			array_push($this->scadenze, $item);
+			sort($this->scadenze);
+		}
+		$this->setQtaScadenze($this->getQtaScadenze() + 1);
+		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	}
 
 	/************************************************************************
 	 * Getters e setters
@@ -297,6 +341,15 @@ class ScadenzaFornitore implements CoreInterface {
 
     public function setQtaScadenze($qtaScadenze){
         $this->qtaScadenze = $qtaScadenze;
+    }
+
+
+    public function getImportoScadenza(){
+        return $this->importoScadenza;
+    }
+
+    public function setImportoScadenza($importoScadenza){
+        $this->importoScadenza = $importoScadenza;
     }
 
 }

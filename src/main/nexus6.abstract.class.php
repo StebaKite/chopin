@@ -35,7 +35,6 @@ abstract class Nexus6Abstract {
 	public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
 	public static $queryCancellaSaldo = "/saldi/cancellaSaldo.sql";
 	public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
-	public static $queryLavoriPianificatiAnnoCorrente = "/main/lavoriPianificatiAnnoCorrente.sql";
 
 	public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	public static $queryRicercaMercati = "/configurazioni/leggiTuttiMercati.sql";
@@ -207,12 +206,6 @@ abstract class Nexus6Abstract {
 		return $menu;
 	}
 
-	// Altri metodi di utilità ------------------------------------------------------------
-
-	/**
-	 * Questo metodo determiona se l'anno è bisestile
-	 * @param unknown $anno
-	 */
 	public function isAnnoBisestile($anno) {
 
 		$annoBisestile = false;
@@ -223,108 +216,54 @@ abstract class Nexus6Abstract {
 		return $annoBisestile;
 	}
 
-	/**
-	 *
-	 * @param $data
-	 * @param $carattereSeparatore
-	 * @param $gioniDaSommare
-	 * @return una data in formatto d-m-Y aumentata di N giorni
-	 */
 	public function sommaGiorniData($data, $carattereSeparatore, $giorniDaSommare) {
 
 		list($giorno, $mese, $anno) = explode($carattereSeparatore, $data);
 		return date("d/m/Y",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
 	}
 
-	/**
-	 *
-	 * @param unknown $data
-	 * @param unknown $carattereSeparatore
-	 * @param unknown $giorniDaSommare
-	 * @return string
-	 */
 	public function sommaGiorniDataYMD($data, $carattereSeparatore, $giorniDaSommare) {
 
 		list($anno, $mese, $giorno) = explode($carattereSeparatore, $data);
 		return date("Y/m/d",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
 	}
 
-	/**
-	 * Questo metodo carica una categoria di causali
-	 *
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return string
-	 */
-	public function caricaCausali($utility, $db, $categoria) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%cat_causale%' => trim($categoria)
-		);
-
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaCausali;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-
-		while ($row = pg_fetch_row($result)) {
-			if ($row[0] == $_SESSION["causale"]) {
-				self::$elenco_causali = self::$elenco_causali . "<option value='" . $row[0] . "' selected >" . $row[0] . " - " . $row[1] . "</option>";
-			}
-			else {
-				self::$elenco_causali = self::$elenco_causali . "<option value='" . $row[0] . "'>" . $row[0] . " - " . $row[1] . "</option>";
-			}
+	public function caricaElencoFornitori($fornitore)
+	{
+		$elencoFornitori = "";
+		foreach ($fornitore->getFornitori() as $unFornitore) {
+			$elencoFornitori .= '"' . $unFornitore[Fornitore::DES_FORNITORE] . '",';
 		}
-		return self::$elenco_causali;
+		return $elencoFornitori;
 	}
 
-	// Metodi comuni per accessi sul DB  ----------------------------------------
-
-	/**
-	 *
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return string
-	 */
-	public function caricaFornitori($utility, $db) {
-
-		$array = $utility->getConfig();
-
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaFornitori;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
-
-		/**
-		 * Prepara un elenco da inserire in una array javascript adatta per un campo autocomplete
-		 */
-		while ($row = pg_fetch_row($result)) {
-			self::$elenco_fornitori = self::$elenco_fornitori . '"' . $row[2] . '",';
+	public function caricaElencoClienti($cliente)
+	{
+		$elencoClienti = "";
+		foreach ($cliente->getClienti() as $unCliente) {
+			$elencoClienti .= '"' . $unCliente[Cliente::DES_CLIENTE] . '",';
 		}
-		return self::$elenco_fornitori;
+		return $elencoClienti;
 	}
 
-	/**
-	 *
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return string
-	 */
-	public function caricaClienti($utility, $db) {
+	// *******************************************
+	// *******************************************
+	// *******************************************
 
-		$array = $utility->getConfig();
 
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaClienti;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
 
-		/**
-		 * Prepara un elenco da inserire in una array javascript adatta per un campo autocomplete
-		 */
-		while ($row = pg_fetch_row($result)) {
-			self::$elenco_clienti = self::$elenco_clienti . '"' . $row[2] . '",';
-		}
-		return self::$elenco_clienti;
-	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * Questo metodo carica tutti i conti configurati su una causale
@@ -332,47 +271,47 @@ abstract class Nexus6Abstract {
 	 * @param unknown $db
 	 * @return string
 	 */
-	public function caricaConti($utility, $db) {
+// 	public function caricaConti($utility, $db) {
 
-		$array = $utility->getConfig();
-		self::$replace = array(
-				'%cod_causale%' => trim($_SESSION["causale"])
-		);
+// 		$array = $utility->getConfig();
+// 		self::$replace = array(
+// 				'%cod_causale%' => trim($_SESSION["causale"])
+// 		);
 
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaConti;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
+// 		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaConti;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+// 		$result = $db->getData($sql);
 
-		while ($row = pg_fetch_row($result)) {
-			self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . $row[1] . " - " . $row[2] . "'>" . $row[2] ;
-		}
-		return self::$elenco_conti;
-	}
+// 		while ($row = pg_fetch_row($result)) {
+// 			self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . $row[1] . " - " . $row[2] . "'>" . $row[2] ;
+// 		}
+// 		return self::$elenco_conti;
+// 	}
 
 	/**
 	 * Questo metodo carica tutti i conti esistenti nel piano dei conti
 	 * @param unknown $utility
 	 * @param unknown $db
 	 */
-	public function caricaTuttiConti($utility, $db) {
+// 	public function caricaTuttiConti($utility, $db) {
 
-		$array = $utility->getConfig();
-		self::$replace = array();
+// 		$array = $utility->getConfig();
+// 		self::$replace = array();
 
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiTuttiConti;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
+// 		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiTuttiConti;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+// 		$result = $db->getData($sql);
 
-		while ($row = pg_fetch_row($result)) {
-			if ($row[0] . " - " . $row[1] == $_SESSION["conto_sel"]) {
-				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "' selected>" . $row[0].$row[1] . " - " . $row[2] ;
-			}
-			else {
-				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "'>" . $row[0].$row[1] . " - " . $row[2] ;
-			}
-		}
-		return self::$elenco_conti;
-	}
+// 		while ($row = pg_fetch_row($result)) {
+// 			if ($row[0] . " - " . $row[1] == $_SESSION["conto_sel"]) {
+// 				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "' selected>" . $row[0].$row[1] . " - " . $row[2] ;
+// 			}
+// 			else {
+// 				self::$elenco_conti = self::$elenco_conti . "<option value='" . $row[0] . " - " . $row[1] . "'>" . $row[0].$row[1] . " - " . $row[2] ;
+// 			}
+// 		}
+// 		return self::$elenco_conti;
+// 	}
 
 	/**
 	 * Questo metodo carica tutti i mercati
@@ -441,85 +380,6 @@ abstract class Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 * Questo metodo recupera l'id di un fornitore accedendo con la descrizione
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $desfornitore
-	 * @return string
-	 */
-	public function leggiDescrizioneFornitore($db, $utility, $desfornitore) : string {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%des_fornitore%' => trim($desfornitore)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryTrovaDescrizioneFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		error_log($sql);
-
-		$rows = pg_fetch_all($result);
-
-		foreach($rows as $row) {
-			$descrizione_fornitore = $row['id_fornitore'];
-		}
-		return $descrizione_fornitore;
-	}
-
-	/**
-	 * Questo metodo recupera l'id di un cliente accedendo con la descrizione
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $descliente
-	 * @return string
-	 */
-	public function leggiDescrizioneCliente($db, $utility, $descliente) : string {
-
-	}
-
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-	 */
-	public function rigenerazioneSaldi($db, $utility, $dataRegistrazione, $project_root) {
-
-		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
-
-		if ($lavoriPianificati) {
-			$rows = pg_fetch_all($lavoriPianificati);
-
-			foreach($rows as $row) {
-
-				/**
-				 * Se la registrazione ha una data di registrazione che cade all'interno di un mese per il quale è già
-				 * stato riportato il saldo allora devo aggiornare tutti i riporti da quella data riporto in poi
-				 *
-				 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese
-				 */
-
-				if (date("d", strtotime($row['dat_lavoro'])) == "01") {
-					if ((strtotime($row['dat_lavoro']) >= $dataRegistrazione) && ($row['sta_lavoro'] == "10")) {
-						$this->cambioStatoLavoroPianificato($db, $utility, $row['pk_lavoro_pianificato'], '00');
-					}
-				}
-			}
-		}
-
-		/**
-		 * Riestrazione dei lavori pianificati a valle della verifica e aggiornamento stati ed riesecuzione dei lavori
-		 * Attenzione che vengono rieseguiti tutti i lavori pianificati anche quelli che non riguardano l'aggiornamento
-		 * dei saldi. E' importante che i lavori pianificabili siano rieseguibili.
-		 */
-		$lavoriPianificati = $this->leggiLavoriPianificati($db, $utility);
-		$this->eseguiLavoriPianificati($db, $lavoriPianificati, $project_root);
-	}
-
-
 	public function leggiLavoriPianificatiBatchMode($db, $utility, $project_root) {
 
 		$replace = array();
@@ -532,28 +392,6 @@ abstract class Nexus6Abstract {
 
 		return $result;
 	}
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @return unknown
-	 */
-	public function leggiLavoriPianificatiAnnoCorrente($db, $utility) {
-
-		$replace = array();
-
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLavoriPianificatiAnnoCorrente;
-
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		return $result;
-	}
-
-
-
 
 	/**
 	 * Questo metodo determina l'ambiente sulla bae degli utenti preenti loggati

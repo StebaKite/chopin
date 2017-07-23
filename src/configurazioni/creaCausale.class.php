@@ -16,11 +16,6 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -71,13 +66,6 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 		$db->rollbackTransaction();
 		$_SESSION[self::MESSAGGIO] = self::ERRORE_CREAZIONE_CAUSALE;
 		return false;
-	}
-
-	public function preparaPagina($creaCausaleTemplate)
-	{
-		$creaCausaleTemplate->setAzione(self::AZIONE_CREA_CAUSALE);
-		$creaCausaleTemplate->setConfermaTip("%ml.confermaCreaCausale%");
-		$creaCausaleTemplate->setTitoloPagina("%ml.creaNuovaCausale%");
 	}
 }
 
