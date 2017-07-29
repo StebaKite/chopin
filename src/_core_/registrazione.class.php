@@ -217,6 +217,8 @@ class Registrazione implements CoreInterface {
 			$this->setIdRegistrazione($db->getLastIdUsed());		// l'id generato dall'inserimento
 		}
 		$_SESSION[self::REGISTRAZIONE] = serialize($this);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		return $result;
 	}
 

@@ -60,7 +60,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		if ($registrazione->inserisci($db)) {
 
 			foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
-				$this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio, $scadenzaFornitore, $scadenzaCliente);
+				$this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio);
 			}
 
 			/**
@@ -76,7 +76,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 			}
 			else {
 				if ($registrazione->getIdCliente() != null) {
-					if ($scadenzaCliente->getDatScadenza() != "") {
+					if ($scadenzaCliente->getDatRegistrazione() != "") {
 						if (!$this->creaScadenzeCliente($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaCliente)) {
 							$db->rollbackTransaction();
 							return false;
@@ -99,7 +99,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		}
 	}
 
-	public function creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio, $scadenzaFornitore)
+	public function creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)
 	{
 		$_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);	// il codconto del dettaglio contiene anche la descrizione
 		$conto = explode(".", $_cc[0]);		// conto e sottoconto separati da un punto
@@ -109,23 +109,6 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		$dettaglioRegistrazione->setCodSottoconto($conto[1]);
 		$dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
 		$dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
-
-		/**
-		 * Preparo l'importo in scadenza
-		 */
-
-		$array = $utility->getConfig();
-
-		if ($registrazione->getIdFornitore() != null) {
-			if (strstr($array['contiFornitore'], $conto[0])) {
-				$scadenzaFornitore->setImportoScadenza($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
-			}
-		}
-		elseif ($registrazione->getIdCliente() != null) {
-			if (strstr($array['contiCliente'], $conto[0])) {
-				$scadenzaCliente->setImportoScadenza($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
-			}
-		}
 
 		if (!$dettaglioRegistrazione->inserisci($db)) {
 			$db->rollbackTransaction();
@@ -150,7 +133,6 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		/**
 		 * Inserisco tutte le scadenza aggiunte nella tabella
 		 */
-
 		if ($scadenzaFornitore->getQtaScadenze() > 0)
 		{
 			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
@@ -167,8 +149,10 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 					 *  parziale della data in scadenza
 					 */
 					$importo_in_scadenza = (strstr($array['notaDiAccredito'], $registrazione->getCodCausale())) ? $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] * (-1) : $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA];
-					$scadenzaFornitore->setImportoScadenza($importo_in_scadenza);
+					$scadenzaFornitore->setImpInScadenza($importo_in_scadenza);
 					$scadenzaFornitore->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
+					$scadenzaFornitore->setNumFattura($registrazione->getNumFattura());
+
 					if (!$scadenzaFornitore->inserisci($db)) {
 						return false;
 					}
@@ -178,17 +162,45 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		return true;
 	}
 
-	public function creaScadenzeCliente($db, $registrazione)
+	public function creaScadenzeCliente($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaCliente)
 	{
 		$cliente = Cliente::getInstance();
+		$cliente->leggi($db);
 
+		$scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
+		$scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
+		$scadenzaCliente->setStaScadenza("00");
+		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
+		$scadenzaCliente->setNota($registrazione->getDesRegistrazione());
+		$scadenzaCliente->setCodNegozio($registrazione->getCodNegozio());
+		$scadenzaCliente->setNumFattura($registrazione->getNumFattura());
 
+		/**
+		 * Inserisco tutte le scadenza aggiunte nella tabella
+		 */
+		if ($scadenzaCliente->getQtaScadenze() > 0)
+		{
+			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 
-		if (!$this->creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt)) {
-			$db->rollbackTransaction();
-			error_log("Errore inserimento scadenza cliente, eseguito Rollback");
-			return FALSE;
+			foreach ($scadenzaCliente->getScadenze() as $unaScadenza)
+			{
+				$data = str_replace("'", "", $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);			// la datascad arriva con gli apici per il db
+				$dataScadenza = strtotime(str_replace('/', '-', $data));							// cambio i separatori altrimenti la strtotime non funziona
+
+				if ($dataScadenza > $dataRegistrazione) {
+					$importo_in_scadenza = $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE];
+					$scadenzaCliente->setImportoScadenza($importo_in_scadenza);
+					$scadenzaCliente->setDatRegistrazione($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);
+					$scadenzaCliente->setNumFattura($registrazione->getNumFattura());
+
+					if (!$scadenzaCliente->inserisci($db)) {
+						return false;
+					}
+				}
+			}
 		}
+		return true;
 	}
 
 	public function ricalcolaSaldi($db, $datRegistrazione)
@@ -203,115 +215,29 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		}
 	}
 
-	private function creaScadenzaFornitore($db, $utility, $fornitore, $datascad, $datareg, $causale, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
-
-		if ($_SESSION['datascad'] != "") {
-
-			$data = str_replace("'", "", $datascad);					// la datascad arriva con gli apici per il db
-			$dataScadenza = strtotime(str_replace('/', '-', $data));	// cambio i separatori altrimenti la strtotime non funziona
-
-			$data1 = str_replace("'", "", $datareg);					// la datareg arriva con gli apici per il db
-			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
-
-			$tipAddebito_fornitore = "";
-			$staScadenza = "00"; 	// aperta
-
-			if ($dataScadenza > $dataRegistrazione) {
-
-				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-				foreach(pg_fetch_all($result_fornitore) as $row) {
-					$tipAddebito_fornitore = $row['tip_addebito'];
-				}
-
-				if ($this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_fornitore, $codneg, $fornitore, trim($numfatt), $staScadenza)) {
-					return true;
-				}
-				else return false;
-			}
-			else return true;
-		}
-		else {
-
-			if ($_SESSION['scadenzeInserite'] != "") {
-
-				$tipAddebito_fornitore = "";
-				$staScadenza = "00"; 	// aperta
-
-				$result_fornitore = $this->leggiIdFornitore($db, $utility, $fornitore);
-				foreach(pg_fetch_all($result_fornitore) as $row) {
-					$tipAddebito_fornitore = $row['tip_addebito'];
-				}
-
-				$d = explode(",", $_SESSION['scadenzeInserite']);
-				$progrFattura = 0;
-
-				foreach($d as $ele) {
-
-					$e = explode("#",$ele);
-					$datascad = ($e[1] != "") ? "'" . $e[1] . "'" : "null" ;
-					$progrFattura += 1;
-					$numfatt_generato = "'" . $_SESSION["numfatt"] . "." . $progrFattura . "'";
-
-					/**
-					 *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in modo che venga sottratto al totale
-					 *  parziale della data in scadenza
-					 */
-					$array = $utility->getConfig();
-					$importo_in_scadenza = (strstr($array['notaDiAccredito'], $causale)) ? $e[2] * (-1) : $e[2];
-
-					if (!$this->inserisciScadenza($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza,
-						$descreg, $tipAddebito_fornitore, $codneg, $fornitore, $numfatt_generato, $staScadenza)) {
-						return false;
-					}
-				}
-			}
-			return true;
-		}
-	}
-
-	private function creaScadenzaCliente($db, $utility, $cliente, $datascad, $datareg, $importo_in_scadenza, $descreg, $codneg, $numfatt) {
-
-		$tipAddebito_cliente = "";
-		$staScadenza = "00"; 	// aperta
-
-		$result_cliente = $this->leggiIdCliente($db, $utility, $cliente);
-		foreach(pg_fetch_all($result_cliente) as $row) {
-			$tipAddebito_cliente = $row['tip_addebito'];
-		}
-
-		if ($datascad == "null") {
-			$datascad = $datareg;
-		}
-
-		if ($this->inserisciScadenzaCliente($db, $utility, $_SESSION['idRegistrazione'], $datascad, $importo_in_scadenza, $descreg, $tipAddebito_cliente, $codneg, $cliente, trim($numfatt), $staScadenza)) {
-			return true;
-		}
-		else return false;
-	}
-
 	public function preparaPagina($creaRegistrazioneTemplate) {
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
+// 		require_once 'database.class.php';
+// 		require_once 'utility.class.php';
 
 		$creaRegistrazioneTemplate->setAzione(self::$azioneCreaRegistrazione);
 		$creaRegistrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
 		$creaRegistrazioneTemplate->setTitoloPagina("%ml.creaNuovaRegistrazione%");
 
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
+// 		$db = Database::getInstance();
+// 		$utility = Utility::getInstance();
 
-		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
+// 		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
 
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
-		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
-		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
+// 		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
+// 		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
+// 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
 
-		/**
-		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
-		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
-		 */
-		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
+// 		/**
+// 		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
+// 		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
+// 		 */
+// 		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
 	}
 }
 

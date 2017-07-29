@@ -56,6 +56,8 @@ class ScadenzaFornitore implements CoreInterface {
 	const CERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.sql";
 	const CAMBIO_STATO_SCADENZA_FORNITORE = "/scadenze/updateStatoScadenzaFornitore.sql";
 	const CREA_SCADENZA = "/scadenze/creaScadenzaFornitore.sql";
+	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaFornitore.sql";
+	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "/scadenze/aggiornaImportoScadenzaFornitore.sql";
 
 	// Metodi
 
@@ -175,8 +177,10 @@ class ScadenzaFornitore implements CoreInterface {
 	public function aggiungi()
 	{
 		$item = array(
+				ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
 				ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
 				ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+				ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura()
 		);
 
 		if ($this->getQtaScadenze() == 0) {
@@ -190,6 +194,87 @@ class ScadenzaFornitore implements CoreInterface {
 		}
 		$this->setQtaScadenze($this->getQtaScadenze() + 1);
 		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	}
+
+	public function cancella($db)
+	{
+		/**
+		 * Cancello la scadenza dalla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+
+		$replace = array(
+				'%dat_scadenza%' => $dataScad,
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%num_fattura%' => trim($this->getNumFattura())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_SCADENZA;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			/**
+			 * Elimino la scadenza dalla griglia in pagina
+			 */
+			$scadenzeDiff = array();
+			foreach ($this->getScadenze() as $unaScadenza) {
+				if ( ($unaScadenza[ScadenzaFornitore::ID_FORNITORE] != trim($this->getIdFornitore()))
+				or   ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
+				or   ($unaScadenza[ScadenzaFornitore::NUM_FATTURA]  != trim($this->getNumFattura())) )
+				{
+					array_push($scadenzeDiff, $unaScadenza);
+				}
+				else $this->setQtaScadenze($this->getQtaScadenze() - 1);
+			}
+			$this->setScadenze($scadenzeDiff);
+			$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+		}
+		return $result;
+	}
+
+	public function aggiornaImporto($db)
+	{
+		/**
+		 * Aggiorno l'importo in scadenza sulla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+
+		$replace = array(
+				'%imp_in_scadenza%' => $this->getImpInScadenza(),
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%dat_scadenza%' => $dataScad,
+				'%num_fattura%' => $this->getNumFattura()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			$scadenzeDiff = array();
+			foreach ($this->getScadenze() as $unaScadenza) {
+
+				if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
+					array_push($scadenzeDiff, $unaScadenza);
+				else {
+					$item = array (
+						ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
+						ScadenzaFornitore::DAT_SCADENZA => $unaScadenza[ScadenzaFornitore::DAT_SCADENZA],
+						ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+						ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA]
+					);
+					array_push($scadenzeDiff, $item);
+				}
+			}
+			$this->setScadenze($scadenzeDiff);
+			$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+		}
+		return $result;
 	}
 
 	/************************************************************************

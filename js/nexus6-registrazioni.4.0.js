@@ -85,7 +85,7 @@ $( "#nuovo-dettaglio-registrazione-form" ).dialog({
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			        	var sottocontiTable = xmlhttp.responseText;
 		        		$("#dettagli_cre").html(sottocontiTable);
-		        		controllaDettagliRegistrazione("tddettagli_cre", "causale_cre");
+		        		controllaDettagliRegistrazione("tddettagli_cre");
 		        	}
 			    }
 			    xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
@@ -161,12 +161,10 @@ function validaNuovaRegistrazione()
 	}
 
 	if ($("#causale_cre").val() != "") {
-		controllaDettagliRegistrazione("tddettagli_cre", "causale_cre"); 
+		controllaDettagliRegistrazione("tddettagli_cre"); 
 		if ($("#messaggioControlloDettagli").text() == "") 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
-		
-	$("#messaggioControlloDataRegistrazione" ).html(esito);
 		
 	if (esito == "111111") {
 		$("#button-ok-nuova-registrazione-form").button("enable");
@@ -186,7 +184,6 @@ function controllaDataRegistrazione(campoDat, campoDatErr)
 	 */
 	var datareg = $("#" + campoDat).val();
 	
-	
 	if (datareg != "") {
 		
 		var xmlhttp = new XMLHttpRequest();
@@ -198,7 +195,7 @@ function controllaDataRegistrazione(campoDat, campoDatErr)
 	            }
 	            else {
 	            	$("#" + campoDatErr).removeClass("inputFieldError");	
-	                $("#esitoControlloDataRegistrazione").html("");
+		            $("#messaggioControlloDataRegistrazione" ).html("");	            	
 	            }
 	        }
 	    }
@@ -257,6 +254,8 @@ function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliEr
 		$("#datascad_cre_label").hide();
 		$("#numfatt_cre_label").hide();
 		$("#numfatt_cre").hide();
+		$("#" + campoFatErr).removeClass("inputFieldError");	
+		$("#messaggioControlloNumeroFattura" ).html("");
 		return false;		
 	}
 	else {
@@ -382,6 +381,42 @@ function controllaDettagliRegistrazione(campoDetErr)
     xmlhttp.send();		
 }
 
+function modificaImportoDettaglioRegistrazione(conto, sottoconto, importo, idDettaglio)
+{
+	if (conto != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") { 
+		        	var sottocontiTable = xmlhttp.responseText;
+	        		$("#dettagli_cre").html(sottocontiTable);
+	        		controllaDettagliRegistrazione("tddettagli_cre");
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importo + "&iddettaglio=" + idDettaglio, true);
+	    xmlhttp.send();
+	}
+}
+
+function modificaSegnoDettaglioRegistrazione(conto, sottoconto, segno, idDettaglio)
+{
+	if (conto != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") {
+		        	var sottocontiTable = xmlhttp.responseText;
+	        		$("#dettagli_cre").html(sottocontiTable);
+	        		controllaDettagliRegistrazione("tddettagli_cre");
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiornaSegnoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
+	    xmlhttp.send();
+	}
+}
+
 //---------------------------------------------------------------------------------				
 //  funzioni x le scadenze
 //---------------------------------------------------------------------------------				
@@ -401,6 +436,7 @@ $( "#nuova-data-scadenza-form" ).dialog({
 				var impscad  = $("#newimpscad_cre").val();
 				var fornitore = $("#fornitore_cre").val();
 				var cliente = $("#cliente_cre").val();
+				var numfatt = $("#numfatt_cre").val();
 				
 				if (fornitore != "")
 				{	
@@ -418,7 +454,7 @@ $( "#nuova-data-scadenza-form" ).dialog({
 				            }	            
 				        }				        
 				    } 
-				    xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&datascad_for=" + datascad + "&impscad_for=" + impscad, true);
+				    xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
 				    xmlhttp.send();
 				}
 				else if (cliente != "")
@@ -437,7 +473,7 @@ $( "#nuova-data-scadenza-form" ).dialog({
 				            }	            
 				        }
 				    } 
-				    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&datascad_cli=" + datascad + "&impscad_cli=" + impscad, true);
+				    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&datascad_cli=" + datascad + "&cliente=" + cliente + "&impscad_cli=" + impscad + "&numfatt=" + numfatt, true);
 				    xmlhttp.send();	
 				} 
 				$( this ).dialog( "close" );
@@ -466,6 +502,65 @@ function controllaImportoScadenza() {
 		$("#messaggioControlloImportoScadenza").html("Importo non valido");		
 		$("#button-nuova-scadenza-form").button("disable");
 	}	
+}
+
+function cancellaNuovaScadenzaFornitore(idFornitore, datScad, numFatt)
+{
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+    		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+        }
+    } 
+    xmlhttp.open("GET", "cancellaScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore + "&datascad_for=" + datScad + "&numfatt=" + numFatt, true);
+    xmlhttp.send();		
+}
+
+function cancellaNuovaScadenzaCliente(idCliente, datScad, numFatt)
+{
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+    		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+        }
+    } 
+    xmlhttp.open("GET", "cancellaScadenzaClienteFacade.class.php?modo=start&idcliente=" + idCliente + "&datascad_cli=" + datScad + "&numfatt=" + numFatt, true);
+    xmlhttp.send();		
+}
+
+function modificaImportoScadenzaFornitore(idfornitore,datascad,numfatt,importo)
+{
+	if (datascad != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") { 
+		        	var scadenzeTable = xmlhttp.responseText;
+		    		$("#scadenzesuppl_cre").html(scadenzeTable);
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importo, true);
+	    xmlhttp.send();
+	}
+}
+
+
+function modificaImportoScadenzaCliente(idcliente,datascad,numfatt,importo)
+{
+	if (datascad != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") { 
+		        	var scadenzeTable = xmlhttp.responseText;
+		    		$("#scadenzesuppl_cre").html(scadenzeTable);
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiornaImportoScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_cli=" + datascad + "&numfatt=" + numfatt + "&impscad_cli=" + importo, true);
+	    xmlhttp.send();
+	}
 }
 
 //---------------------------------------------------------------------------------				

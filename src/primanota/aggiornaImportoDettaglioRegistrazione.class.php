@@ -6,7 +6,7 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'dettaglioRegistrazione.class.php';
 
-class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface
+class AggiornaImportoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface
 {
 	function __construct() {
 
@@ -15,8 +15,8 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
 
 	public function getInstance()
 	{
-		if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE])) $_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiungiNuovoDettaglioRegistrazione());
-		return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE]);
+		if (!isset($_SESSION[self::AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE])) $_SESSION[self::AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaImportoDettaglioRegistrazione());
+		return unserialize($_SESSION[self::AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE]);
 	}
 
 	public function start() {
@@ -25,10 +25,9 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
 
 	public function go()
 	{
+		$db = Database::getInstance();
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-		$dettaglioRegistrazione->setIdRegistrazione(0);
-		$dettaglioRegistrazione->aggiungi();
+		$dettaglioRegistrazione->aggiornaImporto($db);
 		echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
 	}
 }

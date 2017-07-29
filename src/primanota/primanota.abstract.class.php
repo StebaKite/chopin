@@ -75,14 +75,24 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 			foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio)
 			{
-				$codConto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+				$contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+				$codConto = explode(".", $contoComposto[0]);
+				$idDettaglio = $unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE];
+
 				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href . $codConto[0] . $cancella_icon;
+
+				$onModifyImporto = "onkeyup='modificaImportoDettaglioRegistrazione(" . $codConto[0] . "," . $codConto[1] . ",this.value," . $idDettaglio . ")'";
+				$onModifySegno   = "onkeyup='modificaSegnoDettaglioRegistrazione(" . $codConto[0] . "," . $codConto[1] . ",this.value," . $idDettaglio . ")'";
 
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unDettaglio[DettaglioRegistrazione::COD_CONTO] . "</td>" .
-				"	<td align='right'>" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "</td>" .
-				"	<td align='center'>" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "</td>" .
+				"	<td align='right'>" .
+				"		<input type='text' size='15' maxlength='10' " . $onModifyImporto . " value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+				"	</td>" .
+				"	<td align='center'>" .
+				"		<input type='text' size='2' maxlength='1' " . $onModifySegno . " value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+				"	</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
@@ -90,7 +100,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		}
 		return "<table id='dettagli_cre' class='result'>" . $thead . $tbody . "</table>";
 	}
-
 
 	public function makeTabellaScadenzeFornitore($scadenzaFornitore)
 	{
@@ -114,13 +123,64 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 			foreach ($scadenzaFornitore->getScadenze() as $unaScadenza)
 			{
-				$datScadenza = $unaScadenza[ScadenzaFornitore::DAT_SCADENZA];
-				$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $datScadenza . $cancella_icon;
+				$idFornitore = $unaScadenza[ScadenzaFornitore::ID_FORNITORE];
+				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]));							// cambio i separatori altrimenti la strtotime non funziona
+				$numFatt = $unaScadenza[ScadenzaFornitore::NUM_FATTURA];
+
+				$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $idFornitore . ",'" .$dataScadenza . "'," . $numFatt . $cancella_icon;
+
+				$onModifyImporto = "onkeyup='modificaImportoScadenzaFornitore(" . $idFornitore . "," . $dataScadenza . "," . $numFatt . ",this.value)'";
 
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
-				"	<td align='right'>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+				"	<td align='right'>" .
+				"		<input type='text' size='15' maxlength='10' " . $onModifyImporto . " value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
+				"	</td>" .
+				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"</tr>";
+			}
+			$tbody .= "</tbody>";
+		}
+		return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+	}
+
+	public function makeTabellaScadenzeCliente($scadenzaCliente)
+	{
+		$cancella_nuova_scadenza_cliente_href = "<a class='tooltip' onclick='cancellaNuovaScadenzaCliente(";
+		$cancella_icon = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+
+		$thead = "";
+		$tbody = "";
+
+		if ($scadenzaCliente->getQtaScadenze() > 0) {
+
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='80'>Data</th>" .
+			"		<th width='80' align='right'>Importo</th>" .
+			"		<th>&nbsp;</th>" .
+			"	</tr>" .
+			"</thead>";
+
+			foreach ($scadenzaCliente->getScadenze() as $unaScadenza)
+			{
+				$idCliente = $unaScadenza[ScadenzaCliente::ID_CLIENTE];
+				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]));
+				$numFatt = $unaScadenza[ScadenzaCliente::NUM_FATTURA];
+
+				$bottoneCancella = $cancella_nuova_scadenza_cliente_href . $idCliente . "," .$dataScadenza . "," . $numFatt . $cancella_icon;
+
+				$onModifyImporto = "onkeyup='modificaImportoScadenzaCliente(" . $idCliente . "," . $dataScadenza . "," . $numFatt . ",this.value)'";
+
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+				"	<td align='right'>" .
+				"		<input type='text' size='15' maxlength='10' " . $onModifyImporto . " value='" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "'></input>" .
+				"	</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
@@ -157,18 +217,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	/** *******************************************************************************
 	 ** *******************************************************************************
 	 ** *******************************************************************************
-	 *
-
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idRegistrazione
-	 * @param unknown $conto
-	 * @param unknown $sottoConto
-	 * @param unknown $importo
-	 * @param unknown $d_a
-	 * @return unknown
 	 */
 	public function inserisciDettaglioRegistrazione($db, $utility, $idRegistrazione, $conto, $sottoConto, $importo, $d_a) {
 
@@ -188,20 +236,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Il metodo aggiorna i dati di una scadenza per un fornitore
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idScadenza
-	 * @param unknown $idRegistrazione
-	 * @param unknown $datascad
-	 * @param unknown $importo
-	 * @param unknown $descreg
-	 * @param unknown $tipaddebito
-	 * @param unknown $codneg
-	 * @param unknown $fornitore
-	 * @param unknown $numfatt
-	 * @param unknown $staScadenza
-	 * @return unknown
 	 */
 	public function aggiornaScadenza($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo,
 			$descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
@@ -245,20 +279,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Il metodo aggiorna i dati di una scadenza per un cliente
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idScadenza
-	 * @param unknown $idRegistrazione
-	 * @param unknown $datascad
-	 * @param unknown $importo
-	 * @param unknown $descreg
-	 * @param unknown $tipaddebito
-	 * @param unknown $codneg
-	 * @param unknown $cliente
-	 * @param unknown $numfatt
-	 * @param unknown $staScadenza
-	 * @return unknown
 	 */
 	public function aggiornaScadenzaCliente($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo,
 			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
@@ -299,10 +319,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Questo metodo dissocia un pagamento dalla registrazione originale sullo scadenziario fornitori
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idScadenza
-	 * @return unknown
 	 */
 	public function dissociaPagamentoScadenza($db, $utility, $idScadenza) {
 
@@ -318,10 +334,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Questo metodo dissocia un incasso dalla registrazione originale sullo scadenziario clienti
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idScadenza
-	 * @return unknown
 	 */
 	public function dissociaIncassoScadenza($db, $utility, $idScadenza) {
 
@@ -337,68 +349,43 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Il metodo cancella una scadenza di una registrazione
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idScadenza
-	 * @return unknown
 	 */
-	public function cancellaScadenzaRegistrazione($db, $utility, $idScadenza) {
+// 	public function cancellaScadenzaRegistrazione($db, $utility, $idScadenza) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_scadenza%' => trim($idScadenza),
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_scadenza%' => trim($idScadenza),
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaRegistrazione;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->getData($sql);
+// 		return $result;
+// 	}
 
 	/**
 	 * Il metodo inserisce una scadenza per il cliente
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idRegistrazione
-	 * @param unknown $datareg
-	 * @param unknown $importo
-	 * @param unknown $descreg
-	 * @param unknown $tipaddebito
-	 * @param unknown $codneg
-	 * @param unknown $cliente
-	 * @param unknown $numfatt
-	 * @param unknown $staScadenza
-	 * @return unknown
 	 */
-	public function inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datareg, $importo,
-			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
+// 	public function inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datareg, $importo,
+// 			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idRegistrazione),
-				'%dat_registrazione%' => trim($datareg),
-				'%imp_registrazione%' => trim($importo),
-				'%nota%' => trim($descreg),
-				'%tip_addebito%' => trim($tipaddebito),
-				'%cod_negozio%' => trim($codneg),
-				'%id_cliente%' => $cliente,
-				'%num_fattura%' => trim($numfatt),
-				'%sta_scadenza%' => trim($staScadenza)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenzaCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($idRegistrazione),
+// 				'%dat_registrazione%' => trim($datareg),
+// 				'%imp_registrazione%' => trim($importo),
+// 				'%nota%' => trim($descreg),
+// 				'%tip_addebito%' => trim($tipaddebito),
+// 				'%cod_negozio%' => trim($codneg),
+// 				'%id_cliente%' => $cliente,
+// 				'%num_fattura%' => trim($numfatt),
+// 				'%sta_scadenza%' => trim($staScadenza)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenzaCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
 	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
 
 		$array = $utility->getConfig();
@@ -411,32 +398,18 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
-	public function leggiScadenzeRegistrazione($db, $utility, $idregistrazione) {
+// 	public function leggiScadenzeRegistrazione($db, $utility, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeRegistrazione;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->getData($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_registrazione
-	 * @param unknown $stareg
-	 */
 	public function updateStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
 
 		$array = $utility->getConfig();
@@ -449,22 +422,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		$result = $db->getData($sql);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_registrazione
-	 * @param unknown $totaleDare
-	 * @param unknown $descreg
-	 * @param unknown $datascad
-	 * @param unknown $datareg
-	 * @param unknown $numfatt
-	 * @param unknown $causale
-	 * @param unknown $fornitore
-	 * @param unknown $cliente
-	 * @param unknown $stareg
-	 * @return boolean
-	 */
 	public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare,
 			$descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg,
 			$codneg, $staScadenza, $idmercato) {
@@ -490,12 +447,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_dettaglioregistrazione
-	 */
 	public function cancellaDettaglioRegistrazione($db, $utility, $id_dettaglioregistrazione) {
 
 		$array = $utility->getConfig();
@@ -507,13 +458,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		$result = $db->getData($sql);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @return unknown
-	 */
 	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
 
 		$array = $utility->getConfig();
@@ -526,13 +470,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 * @return unknown
-	 */
 	public function prelevaScadenzeAperteCliente($db, $utility, $idcliente) {
 
 		$array = $utility->getConfig();
@@ -545,14 +482,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
 	public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
 
 		$array = $utility->getConfig();
@@ -579,98 +508,56 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 * @param unknown $idincasso
-	 * @return unknown
-	 */
-	public function leggiScadenzaCliente($db, $utility, $idcliente, $idincasso) {
+// 	public function leggiScadenzaCliente($db, $utility, $idcliente, $idincasso) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => trim($idcliente),
-				'%id_incasso%' => trim($idincasso)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaScadenzaCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_cliente%' => trim($idcliente),
+// 				'%id_incasso%' => trim($idincasso)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaScadenzaCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @param unknown $idpagamento
-	 * @return unknown
-	 */
-	public function leggiScadenzaFornitore($db, $utility, $idfornitore, $idpagamento) {
+// 	public function leggiScadenzaFornitore($db, $utility, $idfornitore, $idpagamento) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore),
-				'%id_pagamento%' => trim($idpagamento)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaScadenzaFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_fornitore%' => trim($idfornitore),
+// 				'%id_pagamento%' => trim($idpagamento)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaScadenzaFornitore;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @param unknown $idpagamento
-	 * @return unknown
-	 */
-	public function scadenzaFornitore($db, $utility, $idregistrazione) {
+// 	public function scadenzaFornitore($db, $utility, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaFornitore;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idregistrazione
-	 * @return unknown
-	 */
-	public function scadenzaCliente($db, $utility, $idregistrazione) {
+// 	public function scadenzaCliente($db, $utility, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryScadenzaCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idRegistrazione
-	 * @param unknown $datascad
-	 * @param unknown $codneg
-	 * @param unknown $idfornitore
-	 * @param unknown $numfatt
-	 * @return unknown
-	 */
 	public function trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $idfornitore, $numfatt) {
 
 		$array = $utility->getConfig();
@@ -687,16 +574,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idRegistrazione
-	 * @param unknown $datascad
-	 * @param unknown $codneg
-	 * @param unknown $idfornitore
-	 * @param unknown $numfatt
-	 */
 	public function trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $idcliente, $numfatt) {
 
 		$array = $utility->getConfig();
@@ -713,59 +590,34 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idfornitore
-	 * @param unknown $numeroFattura
-	 * @param unknown $statoScadenza
-	 * @param unknown $idregistrazione\
-	 */
-	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
+// 	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => (int)$idfornitore,
-				'%num_fattura%' => trim($numeroFattura),
-				'%sta_scadenza%' => trim($statoScadenza),
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_fornitore%' => (int)$idfornitore,
+// 				'%num_fattura%' => trim($numeroFattura),
+// 				'%sta_scadenza%' => trim($statoScadenza),
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenza;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 * @param unknown $numeroFattura
-	 * @param unknown $statoScadenza
-	 * @param unknown $idregistrazione
-	 */
-	public function cambiaStatoScadenzaCliente($db, $utility, $idcliente, $numeroFattura, $statoScadenza, $idregistrazione) {
+// 	public function cambiaStatoScadenzaCliente($db, $utility, $idcliente, $numeroFattura, $statoScadenza, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => (int)$idcliente,
-				'%num_fattura%' => trim($numeroFattura),
-				'%sta_scadenza%' => trim($statoScadenza),
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenzaCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_cliente%' => (int)$idcliente,
+// 				'%num_fattura%' => trim($numeroFattura),
+// 				'%sta_scadenza%' => trim($statoScadenza),
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoScadenzaCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_registrazione
-	 * @param unknown $stareg
-	 */
 	public function cambioStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
 
 		$array = $utility->getConfig();
@@ -778,47 +630,28 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		$result = $db->execSql($sql);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_registrazione
-	 */
-	public function cancellaScadenzaFornitore($db, $utility, $id_registrazione) {
+// 	public function cancellaScadenzaFornitore($db, $utility, $id_registrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($id_registrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenza;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		return $db->execSql($sql);
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($id_registrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenza;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		return $db->execSql($sql);
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_registrazione
-	 */
-	public function cancellaScadenzaCliente($db, $utility, $id_registrazione) {
+// 	public function cancellaScadenzaCliente($db, $utility, $id_registrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($id_registrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		return $db->execSql($sql);
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($id_registrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		return $db->execSql($sql);
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_cliente
-	 * @param unknown $num_fattura
-	 */
 	public function prelevaIdRegistrazioneOriginaleCliente($db, $utility, $id_cliente, $num_fattura) {
 
 		$array = $utility->getConfig();
@@ -831,13 +664,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $db->execSql($sql);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $id_fornitore
-	 * @param unknown $num_fattura
-	 */
 	public function prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $id_fornitore, $num_fattura) {
 
 		$array = $utility->getConfig();
@@ -850,15 +676,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $db->execSql($sql);
 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $datareg
-	 * @param unknown $codneg
-	 * @param unknown $conto
-	 * @param unknown $importo
-	 */
 	public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $importo) {
 
 		$array = $utility->getConfig();
@@ -916,10 +733,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 
 	/**
 	 * Questo metodo preleva il capoconto di un fornitore accedendo con il codice fornitore che corrisponde al sottoconto
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $cod_fornitore
-	 * @return resultset
 	 */
 	public function leggiContoFornitore($db, $utility, $cod_fornitore) {
 

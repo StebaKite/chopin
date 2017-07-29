@@ -105,7 +105,7 @@ $(document).ready( function () {
 					<td class="td">%ml.datareg% :</td>
 					<td id="tddatareg_cre"><input class="dataregpicker" type="text" id="datareg_cre" name="datareg_cre" size="10" maxlength="10" onblur="validaNuovaRegistrazione()" onchange="validaNuovaRegistrazione()" /></td>
 					<td id="descreg_cre_label" >%ml.descreg% : </td>
-					<td id="tddescreg_cre"><input type="text" id="descreg_cre" name="descreg_cre" size="50" maxlength="200" onblur="validaNuovaRegistrazione()" /></td>
+					<td id="tddescreg_cre"><input type="text" id="descreg_cre" name="descreg_cre" size="50" maxlength="200" onkeypress="validaNuovaRegistrazione()" /></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -138,10 +138,10 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onblur="validaNuovaRegistrazione()" /></div></td>
+					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" /></div></td>
 					
 					<td>%ml.codclie% :</td>
-					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onblur="validaNuovaRegistrazione()" /></div></td>
+					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" /></div></td>
 				</tr>					
 				<tr>
 					<td></td>

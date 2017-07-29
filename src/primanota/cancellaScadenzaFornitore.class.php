@@ -4,10 +4,9 @@ require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
-require_once 'fornitore.class.php';
 require_once 'scadenzaFornitore.class.php';
 
-class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
+class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
 {
 	function __construct() {
 
@@ -16,8 +15,8 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 
 	public function getInstance()
 	{
-		if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE])) $_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE] = serialize(new AggiungiNuovaScadenzaFornitore());
-		return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE]);
+		if (!isset($_SESSION[self::CANCELLA_SCADENZA_FORNITORE])) $_SESSION[self::CANCELLA_SCADENZA_FORNITORE] = serialize(new CancellaScadenzaFornitore());
+		return unserialize($_SESSION[self::CANCELLA_SCADENZA_FORNITORE]);
 	}
 
 	public function start() {
@@ -27,12 +26,8 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 	public function go()
 	{
 		$db = Database::getInstance();
-		$fornitore = Fornitore::getInstance();
-		$fornitore->cercaConDescrizione($db);
-
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-		$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
-		$scadenzaFornitore->aggiungi();
+		$scadenzaFornitore->cancella($db);
 		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
 	}
 }

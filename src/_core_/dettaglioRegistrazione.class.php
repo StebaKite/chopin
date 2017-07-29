@@ -36,6 +36,8 @@ class DettaglioRegistrazione implements CoreInterface {
 	// Queries
 
 	const CREA_DETTAGLIO_REGISTRAZIONE = "/primanota/creaDettaglioRegistrazione.sql";
+	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "/primanota/aggiornaImportoDettaglioRegistrazione.sql";
+	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "/primanota/aggiornaSegnoDettaglioRegistrazione.sql";
 
 	// Metodi
 
@@ -60,7 +62,7 @@ class DettaglioRegistrazione implements CoreInterface {
 	{
 		$item = array(
 				DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => trim($this->getIdDettaglioRegistrazione()),
-				DettaglioRegistrazione::ID_REGISTRAZIONE => 0,
+				DettaglioRegistrazione::ID_REGISTRAZIONE => $this->getIdRegistrazione(),
 				DettaglioRegistrazione::IMP_REGISTRAZIONE => trim($this->getImpRegistrazione()),
 				DettaglioRegistrazione::IND_DAREAVERE => trim($this->getIndDareavere()),
 				DettaglioRegistrazione::COD_CONTO => trim($this->getCodConto()),
@@ -132,6 +134,94 @@ class DettaglioRegistrazione implements CoreInterface {
 			else return false;
 		}
 		else return false;
+	}
+
+	public function aggiornaImporto($db)
+	{
+		/**
+		 * Aggiorno l'importo sulla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%imp_registrazione%' => $this->getImpRegistrazione(),
+				'%id_dettaglio_registrazione%' => trim($this->getIdDettaglioRegistrazione()),
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			$dettagliDiff = array();
+			foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+
+				$contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+				$codConto = explode(".", $contoComposto[0]);
+
+				if (($codConto[0] != trim($this->getCodConto())) or	($codConto[1] != trim($this->getCodSottoconto())) )
+					array_push($dettagliDiff, $unDettaglio);
+				else {
+					$item = array(
+							DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE],
+							DettaglioRegistrazione::ID_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_REGISTRAZIONE],
+							DettaglioRegistrazione::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+							DettaglioRegistrazione::IND_DAREAVERE => $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE],
+							DettaglioRegistrazione::COD_CONTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO],
+							DettaglioRegistrazione::COD_SOTTOCONTO => $unDettaglio[DettaglioRegistrazione::COD_SOTTOCONTO],
+							DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO]
+					);
+					array_push($dettagliDiff, $item);
+				}
+			}
+			$this->setDettagliRegistrazione($dettagliDiff);
+			$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+		}
+		return $result;
+	}
+
+	public function aggiornaSegno($db)
+	{
+		/**
+		 * Aggiorno l'importo sulla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%ind_dareavere%' => $this->getIndDareavere(),
+				'%id_dettaglio_registrazione%' => trim($this->getIdDettaglioRegistrazione()),
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			$dettagliDiff = array();
+			foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+
+				$contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+				$codConto = explode(".", $contoComposto[0]);
+
+				if (($codConto[0] != trim($this->getCodConto())) or	($codConto[1] != trim($this->getCodSottoconto())) )
+					array_push($dettagliDiff, $unDettaglio);
+					else {
+						$item = array(
+								DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE],
+								DettaglioRegistrazione::ID_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_REGISTRAZIONE],
+								DettaglioRegistrazione::IMP_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE],
+								DettaglioRegistrazione::IND_DAREAVERE => $this->getIndDareavere(),
+								DettaglioRegistrazione::COD_CONTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO],
+								DettaglioRegistrazione::COD_SOTTOCONTO => $unDettaglio[DettaglioRegistrazione::COD_SOTTOCONTO],
+								DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO]
+						);
+						array_push($dettagliDiff, $item);
+					}
+			}
+			$this->setDettagliRegistrazione($dettagliDiff);
+			$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+		}
+		return $result;
 	}
 
     public function getRoot(){

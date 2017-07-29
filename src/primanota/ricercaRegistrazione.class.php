@@ -64,11 +64,18 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 	public function go()
 	{
 		$registrazione = Registrazione::getInstance();
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$registrazione->preparaFiltri();
+		$dettaglioRegistrazione->prepara();
+		$scadenzaCliente->prepara();
+		$scadenzaFornitore->prepara();
+
 		$ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($ricercaRegistrazioneTemplate);
 
@@ -104,12 +111,13 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 
-				if ($registrazione->getQtaRegistrazioni() > 0) {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+				$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+				if ($pos === false) {
+					if ($registrazione->getQtaRegistrazioni() > 0)
+						$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 				}
-				else {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				}
+				else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 
 				echo $utility->tailTemplate($template);
 			}

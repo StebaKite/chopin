@@ -5,6 +5,8 @@ require_once 'causale.class.php';
 require_once 'dettaglioRegistrazione.class.php';
 require_once 'scadenzaFornitore.class.php';
 require_once 'scadenzaCliente.class.php';
+require_once 'fornitore.class.php';
+require_once 'cliente.class.php';
 
 class PrimanotaController
 {
@@ -40,6 +42,8 @@ class PrimanotaController
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$fornitore = Fornitore::getInstance();
+		$cliente = Cliente::getInstance();
 
 		if (isset($_REQUEST["datareg_da"])) {
 			$registrazione->setDatRegistrazioneDa($_REQUEST["datareg_da"]);
@@ -51,8 +55,16 @@ class PrimanotaController
 
 		if (isset($_REQUEST["importo"])) {
 			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
+			$dettaglioRegistrazione->setCodSottoconto($_REQUEST["codsottoconto"]);
 			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo"]);
-			$dettaglioRegistrazione->setIndDareavere($_REQUEST["dareAvere"]);
+			$dettaglioRegistrazione->setIdDettaglioRegistrazione($_REQUEST["iddettaglio"]);
+		}
+
+		if (isset($_REQUEST["dareAvere"])) {
+			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
+			$dettaglioRegistrazione->setCodSottoconto($_REQUEST["codsottoconto"]);
+			$dettaglioRegistrazione->setIndDareavere(strtoupper($_REQUEST["dareAvere"]));
+			$dettaglioRegistrazione->setIdDettaglioRegistrazione($_REQUEST["iddettaglio"]);
 		}
 
 		if (isset($_REQUEST["codconto"])) {
@@ -74,30 +86,6 @@ class PrimanotaController
 			$registrazione->setCodNegozio($_REQUEST["codneg_cre"]);
 			$registrazione->setDesFornitore($_REQUEST["fornitore_cre"]);
 			$registrazione->setDesCliente($_REQUEST["cliente_cre"]);
-
-			// Scadenza singola
-// 			if ($_REQUEST["datascad_cre"] != "")
-// 				$registrazione->setDatScadenza($_REQUEST["datascad_cre"]);
-// 			else {
-// 				// Multiscadenza
-// 				if ($scadenzaFornitore->getQtaScadenze() > 0) {
-// 					if ($registrazione->getDesFornitore() != "") {
-// 						foreach ($scadenzaFornitore->getScadenze() as $unaScadenza) {
-// 							$registrazione->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
-// 							break;
-// 						}
-// 					}
-// 					elseif ($registrazione->getDesCliente() != "") {
-// 						foreach ($scadenzaCliente->getScadenze() as $unaScadenza) {
-// 							$registrazione->setDatScadenza($unaScadenza[ScadenzaCliente::DAT_SCADENZA]);
-// 							break;
-// 						}
-// 					}
-// 				}
-// 				// non e' stata immessa una data scadenza
-// 				else $registrazione->setDatScadenza("");
-// 			}
-
 			$registrazione->setNumFattura($_REQUEST["numfatt_cre"]);
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato("");
@@ -116,13 +104,19 @@ class PrimanotaController
 		}
 
 		if (isset($_REQUEST["datascad_for"])) {
+			$fornitore->setDesFornitore($_REQUEST["fornitore"]);
+			$scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);
 			$scadenzaFornitore->setDatScadenza($_REQUEST["datascad_for"]);
 			$scadenzaFornitore->setImpInScadenza($_REQUEST["impscad_for"]);
+			$scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
 		}
 
 		if (isset($_REQUEST["datascad_cli"])) {
-			$scadenzaCliente->setDatScadenza($_REQUEST["datascad_for"]);
-			$scadenzaCliente->setImpInScadenza($_REQUEST["impscad_for"]);
+			$cliente->setDesCliente($_REQUEST["cliente"]);
+			$scadenzaCliente->setIdCliente($_REQUEST["idcliente"]);
+			$scadenzaCliente->setDatRegistrazione($_REQUEST["datascad_cli"]);
+			$scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli"]);
+			$scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
 		}
 
 		// Serializzo in sessione gli oggetti modificati
@@ -132,6 +126,8 @@ class PrimanotaController
 		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 		$_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
 
 		if ($this->getRequest() == "start") { $this->primanotaFunction->start(); }
 		if ($this->getRequest() == "go") 	{ $this->primanotaFunction->go();}

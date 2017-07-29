@@ -12,6 +12,8 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 
 	const RICERCA_REGISTRAZIONE = "Obj_ricercaregistraione";
 	const CREA_REGISTRAZIONE = "Obj_crearegistrazione";
+	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
+	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
 	const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
 	const CANCELLA_DETTAGLIO_REGISTRAZIONE = "Obj_cancelladettaglioregistrazione";
 	const LOAD_CONTI_CAUSALE = "Obj_loadconticausale";
@@ -20,6 +22,11 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const VERIFICA_DETTAGLI_REGISTRAZIONE = "Obj_verificadettagliregistrazione";
 	const CONTROLLA_DATA_REGISTRAZIONE = "Obj_controlladataregistrazione";
 	const AGGIUNGI_SCADENZA_FORNITORE = "Obj_aggiungiscadenzafornitore";
+	const AGGIUNGI_SCADENZA_CLIENTE = "Obj_aggiungiscadenzacliente";
+	const CANCELLA_SCADENZA_FORNITORE = "Obj_cancellascadenzafornitore";
+	const CANCELLA_SCADENZA_CLIENTE = "Obj_cancellascadenzacliente";
+	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "Obj_aggiornaimportoscadenzafornitore";
+	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "Obj_aggiornaimportoscadenzacliente";
 
 	// Actions
 

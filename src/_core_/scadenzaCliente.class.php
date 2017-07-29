@@ -54,6 +54,9 @@ class ScadenzaCliente implements CoreInterface {
 	// Queries
 
 	const CERCA_SCADENZE_CLIENTE = "/scadenze/ricercaScadenzeCliente.sql";
+	const CREA_SCADENZA = "/scadenze/creaScadenzaCliente.sql";
+	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaCliente.sql";
+	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "/scadenze/aggiornaImportoScadenzaCliente.sql";
 
 	// Metodi
 
@@ -119,8 +122,10 @@ class ScadenzaCliente implements CoreInterface {
 	public function aggiungi()
 	{
 		$item = array(
-				ScadenzaCliente::DAT_REGISTRAZIONE=> $this->getDatRegistrazione(),
+				ScadenzaCliente::ID_CLIENTE => $this->getIdCliente(),
+				ScadenzaCliente::DAT_REGISTRAZIONE => $this->getDatRegistrazione(),
 				ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+				ScadenzaCliente::NUM_FATTURA => $this->getNumFattura()
 		);
 
 		if ($this->getQtaScadenze() == 0) {
@@ -134,6 +139,110 @@ class ScadenzaCliente implements CoreInterface {
 		}
 		$this->setQtaScadenze($this->getQtaScadenze() + 1);
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	}
+
+	public function inserisci($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione()),
+				'%dat_registrazione%' => trim($this->getDatRegistrazione()),
+				'%imp_registrazione%' => trim($this->getImpRegistrazione()),
+				'%nota%' => trim($this->getNota()),
+				'%tip_addebito%' => trim($this->getTipAddebito()),
+				'%cod_negozio%' => trim($this->getCodNegozio()),
+				'%id_cliente%' => trim($this->getIdCliente()),
+				'%num_fattura%' => trim($this->getNumFattura()),
+				'%sta_scadenza%' => trim($this->getStaScadenza())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
+	}
+
+
+	public function cancella($db)
+	{
+		/**
+		 * Cancello la scadenza dalla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$dataReg = date("d/m/Y", trim($this->getDatRegistrazione()));
+
+		$replace = array(
+				'%dat_registrazione%' => $dataReg,
+				'%id_cliente%' => trim($this->getIdCliente()),
+				'%num_fattura%' => trim($this->getNumFattura())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_SCADENZA;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			/**
+			 * Elimino la scadenza dalla griglia in pagina
+			 */
+			$scadenzeDiff = array();
+			foreach ($this->getScadenze() as $unaScadenza) {
+				if ( ($unaScadenza[ScadenzaCliente::ID_CLIENTE] != trim($this->getIdCliente()))
+				or   ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataReg)
+				or   ($unaScadenza[ScadenzaCliente::NUM_FATTURA]  != trim($this->getNumFattura())) )
+				{
+					array_push($scadenzeDiff, $unaScadenza);
+				}
+				else $this->setQtaScadenze($this->getQtaScadenze() - 1);
+			}
+			$this->setScadenze($scadenzeDiff);
+			$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+		}
+		return $result;
+	}
+
+	public function aggiornaImporto($db)
+	{
+		/**
+		 * Aggiorno l'importo in scadenza sulla tabella DB
+		 */
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+
+		$replace = array(
+				'%imp_in_scadenza%' => $this->getImpRegistrazione(),
+				'%id_fornitore%' => trim($this->getIdCliente()),
+				'%dat_registrazione%' => $dataScad,
+				'%num_fattura%' => $this->getNumFattura()
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		if ($result) {
+			$scadenzeDiff = array();
+			foreach ($this->getScadenze() as $unaScadenza) {
+
+				if ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataScad)
+					array_push($scadenzeDiff, $unaScadenza);
+					else {
+						$item = array (
+								ScadenzaCliente::ID_CLIENTE => $unaScadenza[ScadenzaCliente::ID_CLIENTEù],
+								ScadenzaCliente::DAT_REGISTRAZIONE => $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE],
+								ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+								ScadenzaCliente::NUM_FATTURA => $unaScadenza[ScadenzaCliente::NUM_FATTURA]
+						);
+						array_push($scadenzeDiff, $item);
+					}
+			}
+			$this->setScadenze($scadenzeDiff);
+			$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+		}
+		return $result;
 	}
 
 	// Getters & Setters
