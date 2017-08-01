@@ -15,6 +15,8 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
 	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
 	const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
+	const AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE = "Obj_aggiunginuovodettagliocontofornitore";
+	const AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE = "Obj_aggiunginuovodettagliocontocliente";
 	const CANCELLA_DETTAGLIO_REGISTRAZIONE = "Obj_cancelladettaglioregistrazione";
 	const LOAD_CONTI_CAUSALE = "Obj_loadconticausale";
 	const CERCA_FATTURA_FORNITORE = "Obj_cercafatturafornitore";

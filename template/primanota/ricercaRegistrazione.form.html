@@ -138,10 +138,9 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" /></div></td>
-					
+					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value)" /></div></td>	
 					<td>%ml.codclie% :</td>
-					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" /></div></td>
+					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value)" /></div></td>
 				</tr>					
 				<tr>
 					<td></td>

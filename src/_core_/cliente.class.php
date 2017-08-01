@@ -196,6 +196,7 @@ class Cliente implements CoreInterface {
 
 		foreach(pg_fetch_all($result) as $row) {
 			$this->setIdCliente($row[Cliente::ID_CLIENTE]);
+			$this->setCodCliente($row[Cliente::COD_CLIENTE]);
 		}
 		$_SESSION[CLIENTE] = serialize($this);
 	}

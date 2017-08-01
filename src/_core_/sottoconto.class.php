@@ -264,12 +264,25 @@ class Sottoconto implements CoreInterface {
 		return $result;
 	}
 
-	public function searchSottoconto($unSottoconto)
-	{
-		foreach ($this->getSottoconti() as $row) {
+// 	public function searchSottoconto($unSottoconto)
+// 	{
+// 		foreach ($this->getSottoconti() as $row) {
 
-			if ((trim($row[Sottoconto::COD_CONTO]) != trim($unSottoconto[Sottoconto::COD_CONTO]))
-			and	(trim($row[Sottoconto::COD_SOTTOCONTO]) != trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]))) {
+// 			if ((trim($row[Sottoconto::COD_CONTO]) != trim($unSottoconto[Sottoconto::COD_CONTO]))
+// 			and	(trim($row[Sottoconto::COD_SOTTOCONTO]) != trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]))) {
+// 				$this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+// 				$this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
+// 				$this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
+// 				break;
+// 			}
+// 		}
+// 	}
+
+	public function searchSottoconto($sottoconto)
+	{
+		foreach ($this->getSottoconti() as $unSottoconto)
+		{
+			if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) == trim($sottoconto)) {
 				$this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
 				$this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
 				$this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
@@ -277,6 +290,7 @@ class Sottoconto implements CoreInterface {
 			}
 		}
 	}
+
 
 	/************************************************************************
 	 * Getters e setters

@@ -79,7 +79,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$codConto = explode(".", $contoComposto[0]);
 				$idDettaglio = $unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE];
 
-				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href . $codConto[0] . $cancella_icon;
+				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href . $contoComposto[0] . $cancella_icon;
 
 				$onModifyImporto = "onkeyup='modificaImportoDettaglioRegistrazione(" . $codConto[0] . "," . $codConto[1] . ",this.value," . $idDettaglio . ")'";
 				$onModifySegno   = "onkeyup='modificaSegnoDettaglioRegistrazione(" . $codConto[0] . "," . $codConto[1] . ",this.value," . $idDettaglio . ")'";

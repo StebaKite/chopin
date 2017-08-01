@@ -417,6 +417,47 @@ function modificaSegnoDettaglioRegistrazione(conto, sottoconto, segno, idDettagl
 	}
 }
 
+function aggiungiDettaglioContoFornitore(fornitore)
+{
+	if (fornitore != "")
+	{
+		var fornitoreNorm = fornitore.replace("&","");		// tolgo eventuali & nella ragione sociale
+
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") {
+		        	var sottocontiTable = xmlhttp.responseText;
+	        		$("#dettagli_cre").html(sottocontiTable);
+	        		controllaDettagliRegistrazione("tddettagli_cre");
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&desfornitore=" + fornitoreNorm, true);
+	    xmlhttp.send();
+	}
+}
+
+function aggiungiDettaglioContoCliente(cliente)
+{
+	if (cliente != "") {
+		var clienteNorm = cliente.replace("&","");		// tolgo eventuali & nella ragione sociale
+
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            if (xmlhttp.responseText != "") {
+		        	var sottocontiTable = xmlhttp.responseText;
+	        		$("#dettagli_cre").html(sottocontiTable);
+	        		controllaDettagliRegistrazione("tddettagli_cre");
+	            }
+	        }
+	    }
+	    xmlhttp.open("GET", "aggiungiNuovoDettaglioContoClienteFacade.class.php?modo=go&descliente=" + clienteNorm, true);
+	    xmlhttp.send();		
+	}
+}
+
 //---------------------------------------------------------------------------------				
 //  funzioni x le scadenze
 //---------------------------------------------------------------------------------				
@@ -903,122 +944,6 @@ $('#numeroFatturaFornitore').change(function() {
     xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
     xmlhttp.send();				
 });
-
-//---------------------------------------------------------------------------------	
-
-function cancellaScadenzaSupplementarePagina(dataScadenza) {
-	
-	$("#" + dataScadenza).remove();	
-	
- 	var rowCount = $("#scadenzesuppl tbody tr").length;
-	
-	if (rowCount == 0) {
-		$( "#scadenzesuppl thead tr" ).remove();		
-		$( "#scadenzesuppl" ).removeClass("datiCreateSottile");
-	}
-
-	var c = parseInt(dataScadenza.toString());
-	var index = jQuery.inArray(c,indexScadenzeInserite);
-	if (index == -1) {
-		var cc = dataScadenza.toString();
-		var index = jQuery.inArray(cc,indexScadenzeInserite);
-	}	
-	
-	if (index > -1) {
-		indexScadenzeInserite.splice(index, 1);
-		aggiornaIndexScadenzeInserite(indexScadenzeInserite);
-
-		scadenzeInserite.splice(index, 1);				
-		aggiornaScadenzeInserite(scadenzeInserite);
-	}	
-}
-
-//---------------------------------------------------------------------------------	
-
-function cancellaDettaglioPagina(idconto) {
-	
-	$("#" + idconto).remove();	
-	
- 	var rowCount = $("#dettagli tbody tr").length;
-	
-	if (rowCount == 1) {
-		$( "#dettagli thead tr" ).remove();		
-		$( "#dettagli" ).removeClass("display");
-	}
-	
-	var c = parseInt(idconto.toString());
-	var index = jQuery.inArray(c,indexDettInseriti);
-	if (index == -1) {
-		var cc = idconto.toString();
-		var index = jQuery.inArray(cc,indexDettInseriti);
-	}	
-	
-	if (index > -1) {
- 		indexDettInseriti.splice(index, 1);
- 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
-
- 		dettInseriti.splice(index, 1);				
- 		aggiornaDettaglioInseriti(dettInseriti);
-	}
-}
-
-//---------------------------------------------------------------------------------	
-
-function cancellaDettaglioPagina(idconto) {
-	
-	$("#" + idconto).remove();	
-	
- 	var rowCount = $("#dettagli tbody tr").length;
-	
-	if (rowCount == 1) {
-		$( "#dettagli thead tr" ).remove();		
-		$( "#dettagli" ).removeClass("display");
-	}
-	
-	var c = parseInt(idconto.toString());
-	var index = jQuery.inArray(c,indexDettInseriti);
-	if (index == -1) {
-		var cc = idconto.toString();
-		var index = jQuery.inArray(cc,indexDettInseriti);
-	}	
-	
-	if (index > -1) {
- 		indexDettInseriti.splice(index, 1);
- 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
-
- 		dettInseriti.splice(index, 1);				
- 		aggiornaDettaglioInseriti(dettInseriti);
-	}
-}
-
-//---------------------------------------------------------------------------------	
-
-function cancellaDettaglioPagina(idconto) {
-	
-	$("#" + idconto).remove();	
-	
- 	var rowCount = $("#dettagli tbody tr").length;
-	
-	if (rowCount == 1) {
-		$( "#dettagli thead tr" ).remove();		
-		$( "#dettagli" ).removeClass("display");
-	}
-	
-	var c = parseInt(idconto.toString());
-	var index = jQuery.inArray(c,indexDettInseriti);
-	if (index == -1) {
-		var cc = idconto.toString();
-		var index = jQuery.inArray(cc,indexDettInseriti);
-	}	
-	
-	if (index > -1) {
- 		indexDettInseriti.splice(index, 1);
- 		aggiornaIndexDettaglioInseriti(indexDettInseriti);
-
- 		dettInseriti.splice(index, 1);				
- 		aggiornaDettaglioInseriti(dettInseriti);
-	}
-}
 
 //---------------------------------------------------------------------------------			
 

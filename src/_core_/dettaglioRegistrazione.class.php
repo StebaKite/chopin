@@ -88,7 +88,7 @@ class DettaglioRegistrazione implements CoreInterface {
 		$dettagliDiff = array();
 		foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
 			$conto = explode(" - ", trim($unDettaglio[self::COD_CONTO]));
-			if ($conto[0] != trim($this->getCodConto())) {
+			if (trim($conto[0]) != trim($this->getCodConto())) {
 				array_push($dettagliDiff, $unDettaglio);
 			}
 			else $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
@@ -159,7 +159,7 @@ class DettaglioRegistrazione implements CoreInterface {
 				$contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
 				$codConto = explode(".", $contoComposto[0]);
 
-				if (($codConto[0] != trim($this->getCodConto())) or	($codConto[1] != trim($this->getCodSottoconto())) )
+				if ((trim($codConto[0]) != trim($this->getCodConto())) or (trim($codConto[1]) != trim($this->getCodSottoconto())) )
 					array_push($dettagliDiff, $unDettaglio);
 				else {
 					$item = array(
