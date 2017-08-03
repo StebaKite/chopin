@@ -470,18 +470,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return $result;
 	}
 
-	public function prelevaScadenzeAperteCliente($db, $utility, $idcliente) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => trim($idcliente)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
-
 	public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
 
 		$array = $utility->getConfig();

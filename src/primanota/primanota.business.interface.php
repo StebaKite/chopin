@@ -29,6 +29,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CANCELLA_SCADENZA_CLIENTE = "Obj_cancellascadenzacliente";
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "Obj_aggiornaimportoscadenzafornitore";
 	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "Obj_aggiornaimportoscadenzacliente";
+	const RICERCA_SCADENZE_CLIENTE_APERTE = "Obj_ricercascadenzeclienteaperte";
 
 	// Actions
 

@@ -128,10 +128,13 @@ class DettaglioRegistrazione implements CoreInterface {
 				if ($indDareAvere == "D") $totDare += $importo;
 				if ($indDareAvere == "A") $totAvere += $importo;
 			}
-			$totale = round($totDare, 2) - round($totAvere, 2);
 
-			if ($totale == 0) return true;
-			else return false;
+			if (($totDare == 0) and ($totAvere == 0)) return false;
+			else {
+				$totale = round($totDare, 2) - round($totAvere, 2);
+				if ($totale == 0) return true;
+				else return false;
+			}
 		}
 		else return false;
 	}

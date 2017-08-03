@@ -48,6 +48,8 @@ class Cliente implements CoreInterface {
 	private $clienti;
 	private $qtaClienti;
 	private $qtaRegistrazioniCliente;
+	private $scadenzeAperte;
+	private $qtaScadenzeAperte;
 
 	// Queries
 
@@ -316,6 +318,33 @@ class Cliente implements CoreInterface {
 		return $result;
 	}
 
+	public function prelevaScadenzeAperteCliente($db) {
+
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_cliente%' => trim($this->getIdCliente())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::$queryLeggiScadenzeAperteCliente;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setClienti(pg_fetch_all($result));
+			$this->setQtaClienti(pg_num_rows($result));
+		} else {
+			$this->setClienti(null);
+			$this->setQtaClienti(null);
+		}
+		return $result;
+
+
+
+
+		return $result;
+	}
+
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -434,6 +463,13 @@ class Cliente implements CoreInterface {
 	public function setQtaRegistrazioniCliente($qtaRegistrazioniCliente) {
 		$this->qtaRegistrazioniCliente = $qtaRegistrazioniCliente;
 	}
+	public function getQtaScadenzeAperte() {
+		return $this->qtaScadenzeAperte;
+	}
+	public function setQtaScadenzeAperte($qtaScadenzeAperte) {
+		$this->qtaScadenzeAperte = $qtaScadenzeAperte;
+	}
+
 }
 
 ?>

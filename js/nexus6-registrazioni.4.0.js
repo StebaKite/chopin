@@ -132,8 +132,8 @@ function validaNuovaRegistrazione()
 	 */
 	var esito = "";
 	
-	controllaDataRegistrazione("datareg_cre", "tddatareg_cre");
-	if ($("#esitoControlloDataRegistrazione").text() == "") 
+	controllaDataRegistrazione("datareg_cre", "tddatareg_cre", "messaggioControlloDataRegistrazione");
+	if ($("#messaggioControlloDataRegistrazione").text() == "") 
 		esito = esito + "1"; else esito = esito + "0";
 
 	if ($("#descreg_cre").val() != "") {
@@ -174,7 +174,8 @@ function validaNuovaRegistrazione()
 }
 
 //---------------------------------------------------------------------------------		
-function controllaDataRegistrazione(campoDat, campoDatErr)
+
+function controllaDataRegistrazione(campoDat, campoDatErr, campoMsg)
 {
 	/**
 	 * La data registrazione è obbligatoria
@@ -190,21 +191,21 @@ function controllaDataRegistrazione(campoDat, campoDatErr)
 	    xmlhttp.onreadystatechange = function() {
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {	            
 	            if (xmlhttp.responseText != "") {
-		            $("#messaggioControlloDataRegistrazione" ).html(xmlhttp.responseText);	            	
+		            $("#" + campoMsg).html(xmlhttp.responseText);	            	
 	            	$("#" + campoDatErr).addClass("inputFieldError");
 	            }
 	            else {
+		            $("#" + campoMsg).html("");	            	
 	            	$("#" + campoDatErr).removeClass("inputFieldError");	
-		            $("#messaggioControlloDataRegistrazione" ).html("");	            	
 	            }
 	        }
 	    }
-	    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&" + campoDat + "=" + datareg, true);
+	    xmlhttp.open("GET", "controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
 	    xmlhttp.send();		
 	}
 	else {
+		$("#" + campoMsg).html("Dato errato");
 		$("#" + campoDatErr).addClass("inputFieldError");
-		$("#messaggioControlloDataRegistrazione").html("Dato errato");
 	}
 }
 
@@ -367,7 +368,7 @@ function controllaDettagliRegistrazione(campoDetErr)
         if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
             if (xmlhttp.responseText != "") { 
             	$("#" + campoDetErr).addClass("inputFieldError");
-    			$("#messaggioControlloDettagli").html("Immetti i dettagli");			
+    			$("#messaggioControlloDettagli").html("Completa i dettagli");			
             }
             else {
             	$("#descreg_cre").show();

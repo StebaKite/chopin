@@ -92,7 +92,7 @@ abstract class Nexus6Abstract {
 
 		$array = $utility->getConfig();
 
-		$menu = "<li style='width: 70px;'><img src='../../images/unicorn.png' style='width: 50%'/></li>";;
+		$menu = "<li style='width: 70px;'><img src='../../images/unicorn.png' style='width: 50%;'/></li>";
 
 		// H o m e --------------------------------------
 

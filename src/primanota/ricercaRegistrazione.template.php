@@ -231,6 +231,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 				'%trezzo-selected%' => ($registrazione->getCodNegozioSel() == "TRE") ? "selected" : "",
 				'%elenco_causali%' => $elencoCausali,
 				'%elenco_causali_cre%' => $elencoCausali,
+				'%elenco_causali_inc_cre%' => $elencoCausali,
 				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
 				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
 				'%risultato_ricerca%' => $risultato_ricerca

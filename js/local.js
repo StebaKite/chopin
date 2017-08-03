@@ -216,6 +216,10 @@ $( "#cliente_cre" ).autocomplete({
  	source: elencoClienti
 });	
 
+$( "#cliente_inc_cre" ).autocomplete({
+ 	source: elencoClienti
+});	
+
 $( "#fornitore_regrap" ).autocomplete({
  	source: elencoFornitori
 });	

@@ -79,6 +79,10 @@ class PrimanotaController
 			$causale->setCodCausale($_REQUEST["causale"]);
 		}
 
+		if (isset($_REQUEST["datareg"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg"]);
+		}
+
 		if (isset($_REQUEST["datareg_cre"])) {
 			$registrazione->setDatRegistrazione($_REQUEST["datareg_cre"]);
 			$registrazione->setDesRegistrazione($_REQUEST["descreg_cre"]);

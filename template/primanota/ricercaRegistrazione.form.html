@@ -44,7 +44,10 @@ $(document).ready( function () {
 		<tbody>
 			<tr>
 				<td align="left"><h2>%titoloPagina%</h2></td>
-				<td align="right"><button id="nuova-registrazione" class="button">%ml.nuovaregistrazione%</button></td>
+				<td align="right">
+					<button id="nuova-registrazione" class="button">%ml.nuovaregistrazione%</button>
+					<button id="nuovo-incasso" class="button">%ml.nuovoincasso%</button>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -226,4 +229,111 @@ $(document).ready( function () {
 			</tbody>
 		</table> 	 
   </form>
+</div>
+
+<div id="nuovo-incasso-form" title="Nuovo Incasso"> 
+	<form method="post" id="nuovoIncasso" action="../primanota/creaIncassoFacade.class.php?modo=go" >
+		<table class="datiCreate">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataIncasso" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneIncasso" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datareg% :</td>
+					<td id="tddatareg_inc_cre"><input class="dataregpicker" type="text" id="datareg_inc_cre" name="datareg_inc_cre" size="10" maxlength="10" onblur="validaNuovoIncasso()" onchange="validaNuovoIncasso()" /></td>
+					<td id="descreg_inc_cre_label" >%ml.descreg% : </td>
+					<td id="tddescreg_inc_cre"><input type="text" id="descreg_inc_cre" name="descreg_inc_cre" size="50" maxlength="200" onblur="controllaDescrizione()" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleIncasso" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioIncasso" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codcau% :</td>
+					<td class="tooltip" id="tdcausale_inc_cre">
+						<select class="selectmenuCausaleIncCre" id="causale_inc_cre" name="causale_inc_cre" >
+							<option value=""></option>
+							%elenco_causali_inc_cre%
+						</select>
+					</td>
+					<td>%ml.negozio% :</td>						
+					<td id="tdnegozio_inc_cre">
+						<div class="radioset" >
+							<input type="radio" id="villa_inc_cre" name="codneg_inc_cre" checked value="VIL" ><label for="villa_inc_cre">%ml.villa%</label>
+							<input type="radio" id="brembate_inc_cre" name="codneg_inc_cre" value="BRE" ><label for="brembate_inc_cre">%ml.brembate%</label>
+							<input type="radio" id="trezzo_inc_cre" name="codneg_inc_cre" value="TRE" ><label for="trezzo_inc_cre">%ml.trezzo%</label>
+						</div>
+					</td>					
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloClienteIncasso" >&nbsp;</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>%ml.codclie% :</td>
+					<td id="tdcliente_inc_cre"><div><input class="scadenzeAperteCliente" type="text" id="cliente_inc_cre" name="cliente_inc_cre" size="40" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value)"  /></div></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFatturaIncasso" >&nbsp;</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>%ml.numfatt% :</td>
+					<td id="tdnumfatt" colspan="4">
+						<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">
+						%elenco_scadenze_cliente%
+						</select>						
+					</td>	
+				</tr>
+				<tr><td><h2>Dettagli</h2></td></tr>										
+				<tr>
+					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliIncasso" >&nbsp;</i></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td id="tddettagli_inc_cre" colspan="4">
+						<table id="dettagli_inc_cre" class="result"></table>			
+					</td>
+				</tr>										
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<div id="nuovo-dettaglio-incasso-form" title="Nuovo Dettaglio"> 
+	<form>
+		<table class="datiCreate" style="cellpadding: 5px;">
+			<tbody>
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importo_inc_cre" name="importo_inc_cre" size="20" maxlength="20" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.cercaConto% :</td>
+					<td><input type="text" id="conto_ricerca" name="conto_ricerca" width=200 onkeyup="cercaContiCausale(this.value)"></td>
+				</tr>	
+				<tr>
+					<td>%ml.conto% :</td>
+					<td><select class='selectmenuConto' id="conti_inc_cre"></select></td>
+				</tr>	
+				<tr>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="dare_inc_cre" name="dareavere_inc_cre" value="D" checked ><label for="dare_inc_cre">%ml.dare%</label>
+							<input type="radio" id="avere_inc_cre" name="dareavere_inc_cre" value="A" ><label for="avere_inc_cre">%ml.avere%</label>
+						</div>
+					</td>					
+				</tr>
+			</tbody>
+		</table> 	 
+	</form>
 </div>
