@@ -9,7 +9,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $messaggio;
 
 	// Query ---------------------------------------------------------------
-	
+
 	public static $queryLeggiFornitore = "/anagrafica/ricercaCodiceFornitore.sql";
 	public static $queryLeggiPivaCliente = "/anagrafica/ricercaPivaCliente.sql";
 	public static $queryLeggiCfisCliente = "/anagrafica/ricercaCfisCliente.sql";
@@ -26,39 +26,21 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	public static $queryCreaMercato = "/anagrafica/creaMercato.sql";
 	public static $queryDeleteMercato = "/anagrafica/deleteMercato.sql";
 	public static $queryUpdateMercato = "/anagrafica/updateMercato.sql";
-	
-	function __construct() {
-	}
-	
-	private function  __clone() { }
-	
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-	
-			self::$_instance = new AnagraficaAbstract();
-	
-		return self::$_instance;
-	}
-	
+
 	// Getters e Setters ---------------------------------------------------
-	
+
 	public function setMessaggio($messaggio) {
 		self::$messaggio = $messaggio;
 	}
-	
+
 	// ------------------------------------------------
-	
+
 	public function getMessaggio() {
 		return self::$messaggio;
 	}
-	
+
 	// Metodi comuni di utilita della prima nota ---------------------------
-	
+
 	/**
 	 * Questo metodo cerca un fornitore tramite il codice fornitore
 	 * @param unknown $db
@@ -67,7 +49,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function cercaCodiceFornitore($db, $utility, $codfornitore) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_fornitore%' => trim($codfornitore)
@@ -95,7 +77,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiPivaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		return $result;		
+		return $result;
 	}
 
 	/**
@@ -106,7 +88,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function cercaCodiceFiscaleCliente($db, $utility, $codfisc) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_fisc%' => trim($codfisc),
@@ -116,7 +98,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$result = $db->getData($sql);
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo inserisce un fornitore
 	 * @param unknown $db
@@ -145,11 +127,11 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
+
 		/**
 		 * Creo anche il conto per il fornitore
 		 */
-		
+
 		$result = $this->inserisciSottoconto($db, $utility, '215', $codfornitore, $desfornitore);
 		return $result;
 	}
@@ -170,20 +152,20 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiIdFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		
+
 		/**
 		 * Cancello il conto del fornitore
 		 * @var array $conto
 		 */
 		$conto = explode(",", $array["contiFornitore"]);
-		
+
 		foreach(pg_fetch_all($result) as $row) {
-		
+
 			foreach ($conto as $contoFornitori) {
 				$this->cancellaSottoconto($db, $utility, $contoFornitori, $row['cod_fornitore']);
 			}
 		}
-		
+
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
@@ -249,16 +231,16 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%tip_addebito%' => trim($tipoaddebito),
 				'%cod_piva%' => trim($codpiva),
 				'%cod_fisc%' => trim($codfisc),
-				'%cat_cliente%' => trim($catcliente)	
+				'%cat_cliente%' => trim($catcliente)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
+
 		/**
 		 * Creo anche il conto per il cliente
 		 */
-		
+
 		$result = $this->inserisciSottoconto($db, $utility, '120', $codcliente, $descliente);
 		return $result;
 	}
@@ -270,7 +252,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @param unknown $idcliente
 	 */
 	public function cancellaCliente($db, $utility, $idcliente) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_cliente%' => trim($idcliente)
@@ -285,19 +267,19 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		 * @var array $conto
 		 */
 		$conto = explode(",", $array["contiCliente"]);
-		
+
 		foreach(pg_fetch_all($result) as $row) {
 
-			foreach ($conto as $contoClienti) {				
+			foreach ($conto as $contoClienti) {
 				$this->cancellaSottoconto($db, $utility, $contoClienti, $row['cod_cliente']);
 			}
 		}
-		
+
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
-	
+
 	/**
 	 * Il metodo aggiorna i dati del cliente
 	 * @param unknown $db
@@ -315,7 +297,7 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function updateCliente($db, $utility, $idcliente, $codcliente, $descliente, $indcliente, $cittacliente, $capcliente, $tipoaddebito, $codpiva, $codfisc, $catcliente) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%id_cliente%' => trim($idcliente),
@@ -327,14 +309,14 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 				'%tip_addebito%' => trim($tipoaddebito),
 				'%cod_piva%' => trim($codpiva),
 				'%cod_fisc%' => trim($codfisc),
-				'%cat_cliente%' => trim($catcliente)	
+				'%cat_cliente%' => trim($catcliente)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo preleva l'ultimo codoce cliente utilizzato
 	 * @param unknown $utility
@@ -345,15 +327,15 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiUltimoCodiceCliente;
-		$sql = $utility->getTemplate($sqlTemplate);		
+		$sql = $utility->getTemplate($sqlTemplate);
 		$rows = pg_fetch_all($db->getData($sql));
-				
+
 		foreach($rows as $row) {
 			$result = $row['cod_cliente_ult'];
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo preleva l'ultimo codice fornitore utilizzato
 	 * @param unknown $utility
@@ -366,17 +348,17 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiUltimoCodiceFornitore;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$rows = pg_fetch_all($db->getData($sql));
-		
+
 		foreach($rows as $row) {
 			$result = $row['cod_fornitore_ult'];
 		}
 		return $result;
-		
-	}	
+
+	}
 
 	/**
 	 * Questo metodo crea un nuovo mercato
-	 * 
+	 *
 	 * @param unknown $db
 	 * @param unknown $utility
 	 * @param unknown $codmercato
@@ -396,10 +378,10 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 	}
-	
+
 	/**
 	 * Questo metodo cancella un mercato
-	 * 
+	 *
 	 * @param unknown $db
 	 * @param unknown $utility
 	 * @param unknown $idmercato
@@ -412,9 +394,9 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteMercato;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);		
+		$result = $db->getData($sql);
 	}
-	
+
 	public function updateMercato($db, $utility, $idmercato, $codmercato, $desmercato, $cittamercato, $codneg) {
 
 		$array = $utility->getConfig();
@@ -428,8 +410,8 @@ abstract class AnagraficaAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateMercato;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-		return $result;		
+		return $result;
 	}
 }
-	
+
 ?>

@@ -1,5 +1,5 @@
 select 
-	t2.des_mercato || ' - ' || t2.citta_mercato as des_mercato,
+	t2.des_mercato as des_mercato,
 	extract(month from t1.dat_registrazione) as mm_registrazione,
 	coalesce(sum(t3.imp_registrazione),0) as imp_ricavo_mercato
   from contabilita.registrazione as t1
@@ -17,4 +17,4 @@ select
  and   t3.cod_conto = '400'
  and   t3.cod_sottoconto = '20'	
  group by mm_registrazione, t2.des_mercato, t2.citta_mercato 		
- order by mm_registrazione
+ order by des_mercato, mm_registrazione

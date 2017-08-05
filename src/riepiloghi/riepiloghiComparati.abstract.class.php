@@ -17,26 +17,6 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	public static $queryRicaviComparatiConSaldi = "/riepiloghi/ricaviComparatiConSaldi.sql";
 	public static $queryAttivoComparati = "/riepiloghi/attivoComparati.sql";
 	public static $queryPassivoComparati = "/riepiloghi/passivoComparati.sql";
-	
-	
-
-	function __construct() {
-	}
-
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new PrimanotaAbstract();
-
-		return self::$_instance;
-	}
 
 	// Getters e Setters ---------------------------------------------------
 
@@ -60,19 +40,19 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @return unknown
 	 */
 	public function ricercaCostiComparati($utility, $db, $replace) {
-	
+
 		$array = $utility->getConfig();
-	
+
 		if ($_SESSION['saldiInclusi'] == "S") {
 			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiComparatiConSaldi;
 		}
 		else {
 			$sqlTemplate = self::$root . $array['query'] . self::$queryCostiComparati;
 		}
-	
+
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['costiComparati'] = $result;
 			$_SESSION['numCostiComparatiTrovati'] = pg_num_rows($result);
@@ -92,19 +72,19 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @return unknown
 	 */
 	public function ricercaRicaviComparati($utility, $db, $replace) {
-	
+
 		$array = $utility->getConfig();
-	
+
 		if ($_SESSION['saldiInclusi'] == "S") {
 			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviComparatiConSaldi;
 		}
 		else {
 			$sqlTemplate = self::$root . $array['query'] . self::$queryRicaviComparati;
 		}
-	
+
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['ricaviComparati'] = $result;
 			$_SESSION['numRicaviComparatiTrovati'] = pg_num_rows($result);
@@ -115,7 +95,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo estrae le attivita' di tutti i negozi e mette il resultset in sessione
 	 * @param unknown $utility
@@ -123,12 +103,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $replace
 	 */
 	public function ricercaAttivoComparati($utility, $db, $replace) {
-	
+
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryAttivoComparati;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['attivoComparati'] = $result;
 			$_SESSION['numAttivoComparatiTrovati'] = pg_num_rows($result);
@@ -139,7 +119,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo estrae le passività di tutti i negozi e mette il resultset in sessione
 	 * @param unknown $utility
@@ -147,12 +127,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $replace
 	 */
 	public function ricercaPassivoComparati($utility, $db, $replace) {
-	
+
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryPassivoComparati;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['passivoComparati'] = $result;
 			$_SESSION['numPassivoComparatiTrovati'] = pg_num_rows($result);
@@ -164,26 +144,26 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		return $result;
 	}
 
-// 	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {	
+// 	public function ricercaCostiMargineContribuzione($utility, $db, $replace) {
 // 		return true;
 // 	}
-	
+
 // 	public function ricercaRicaviMargineContribuzione($utility, $db, $replace) {
 // 		return true;
 // 	}
-	
-// 	public function ricercaCostiFissi($utility, $db, $replace) {		
+
+// 	public function ricercaCostiFissi($utility, $db, $replace) {
 // 		return true;
 // 	}
-		
+
 	/**
 	 * Questo metodo costruisce una tabella html dei costi comparati
 	 * @param unknown $dati
 	 */
 	public function makeTableCostiComparati($array, $dati) {
-		
+
 		$sottocontiCostiVariabili = ($array['sottocontiCostiVariabili'] != "") ? explode(",", $array['sottocontiCostiVariabili']) : "";
-			
+
 		$risultato_costi =
 		"<table class='result'>" .
 		"	<thead>" .
@@ -197,32 +177,32 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<div class='scroll-riepilogo-negozi'>" .
 		"	<table class='result'>" .
 		"		<tbody>";
-	
+
 		$numReg = 0;
 		$totaleCosti = 0;
 		$desconto_break = "";
-		
+
 		$totaleConto_Bre = 0;
 		$totaleConto_Tre = 0;
 		$totaleConto_Vil = 0;
-		
+
 		$totale_Bre = 0;
 		$totale_Tre = 0;
 		$totale_Vil = 0;
-			
+
 		foreach(pg_fetch_all($dati) as $row) {
-	
+
 			$totaleConto = trim($row['tot_conto']);
 			$totaleCosti += $totaleConto;
-					
+
 			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
-				
+
 			$numReg ++;
-	
+
 			if (trim($row['des_conto']) != $desconto_break ) {
-	
+
 				if ($desconto_break != "") {
 
 					$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
@@ -231,7 +211,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 					$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-					
+
 					$risultato_costi .=
 					"<tr>" .
 					"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -240,27 +220,27 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
 					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
-					
+
 					$totaleConto_Bre = 0;
 					$totaleConto_Tre = 0;
 					$totaleConto_Vil = 0;
-				}	
-				
+				}
+
 				$desconto_break = trim($row['des_conto']);
 			}
-			
+
 			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
 		}
-		
+
 		$totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 		$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_costi .=
 		"<tr>" .
 		"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -277,7 +257,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totBre = ($totale_Bre != 0) ? number_format($totale_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totale_Tre != 0) ? number_format($totale_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totale_Vil != 0) ? number_format($totale_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
 		$tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
@@ -289,35 +269,35 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
-		
-		
+
+
+
 		$_SESSION['numCostiTrovati'] = $numReg;
 		$risultato_costi = $risultato_costi . "</tbody>";
-	
+
 		$risultato_costi = $risultato_costi . "</table></div>";
-	
+
 		/**
-		 * Metto in sessione il totale costi di ciascun negozio 
+		 * Metto in sessione il totale costi di ciascun negozio
 		 */
-		
+
 		$_SESSION['totaleCosti_Bre'] = $totale_Bre;
 		$_SESSION['totaleCosti_Tre'] = $totale_Tre;
 		$_SESSION['totaleCosti_Vil'] = $totale_Vil;
 		$_SESSION['totaleCosti'] = $totale;
-		
+
 		return $risultato_costi;
 	}
-	
+
 	/**
-	 * Questo metodo costruisce una tabella html dei ricavi comparati 
+	 * Questo metodo costruisce una tabella html dei ricavi comparati
 	 * @param unknown $array
 	 * @param unknown $dati
 	 */
 	public function makeTableRicaviComparati($array, $dati) {
-		
+
 		$sottocontiRicavi = ($array['sottocontiRicavi'] != "") ? explode(",", $array['sottocontiRicavi']) : "";
-	
+
 		$risultato_ricavi =
 		"<table class='result'>" .
 		"	<thead>" .
@@ -331,38 +311,38 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<div class='scroll-riepilogo-negozi'>" .
 		"	<table class='result'>" .
 		"		<tbody>";
-		
+
 		$numReg = 0;
 		$totaleRicavi = 0;
 		$desconto_break = "";
-		
+
 		$totaleConto_Bre = 0;
 		$totaleConto_Tre = 0;
 		$totaleConto_Vil = 0;
-		
+
 		$totale_Bre = 0;
 		$totale_Tre = 0;
 		$totale_Vil = 0;
-			
+
 		foreach(pg_fetch_all($dati) as $row) {
-				
+
 			$totaleConto = trim($row['tot_conto']);
 			$totaleRicavi += $totaleConto;
 
 			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
-			
+
 			$numReg ++;
-			
+
 			if (trim($row['des_conto']) != $desconto_break ) {
-			
+
 				if ($desconto_break != "") {
-			
+
 					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-			
+
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
@@ -379,22 +359,22 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					$totaleConto_Tre = 0;
 					$totaleConto_Vil = 0;
 				}
-					
+
 				$desconto_break = trim($row['des_conto']);
 			}
-						
+
 			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
-		}		
-						
+		}
+
 		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_ricavi .=
 		"<tr>" .
 		"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -403,18 +383,18 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		/**
 		 * Totale complessivo di colonna
 		 */
-		
+
 		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_ricavi .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.ricavi%</td>" .
@@ -423,21 +403,21 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		$_SESSION['numRicaviTrovati'] = $numReg;
 		$risultato_ricavi = $risultato_ricavi . "</tbody>";
-		
+
 		$risultato_ricavi = $risultato_ricavi . "</table></div>";
-		
+
 		/**
 		 * Metto in sessione il totale ricavi perchè servirà all'estrazione in PDF per stampare la tabella dei totali
 		 */
-		
+
 		$_SESSION['totaleRicavi_Bre'] = abs($totale_Bre);
 		$_SESSION['totaleRicavi_Tre'] = abs($totale_Tre);
 		$_SESSION['totaleRicavi_Vil'] = abs($totale_Vil);
 		$_SESSION['totaleRicavi'] = abs($totale);
-				
+
 		return $risultato_ricavi;
 	}
 
@@ -447,7 +427,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $dati
 	 */
 	public function makeTableAttivoComparati($array, $dati) {
-		
+
 		$risultato_attivo =
 		"<table class='result'>" .
 		"	<thead>" .
@@ -461,41 +441,41 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<div class='scroll-riepilogo-negozi'>" .
 		"	<table class='result'>" .
 		"		<tbody>";
-	
+
 		$numReg = 0;
 		$totaleAttivo = 0;
 		$desconto_break = "";
-		
+
 		$totaleConto_Bre = 0;
 		$totaleConto_Tre = 0;
 		$totaleConto_Vil = 0;
-		
+
 		$totale_Bre = 0;
 		$totale_Tre = 0;
 		$totale_Vil = 0;
-	
+
 		foreach(pg_fetch_all($dati) as $row) {
-			
+
 			$totaleConto = trim($row['tot_conto']);
 			$totaleAttivo += $totaleConto;
-			
+
 			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
-				
+
 			$numReg ++;
-					
+
 			if (trim($row['des_conto']) != $desconto_break ) {
-	
+
 				if ($desconto_break != "") {
 
 					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-						
+
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-					
+
 					$risultato_attivo .=
 					"<tr>" .
 					"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -504,15 +484,15 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
 					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
-					
+
 					$totaleConto_Bre = 0;
 					$totaleConto_Tre = 0;
-					$totaleConto_Vil = 0;						
+					$totaleConto_Vil = 0;
 				}
-				
+
 				$desconto_break = trim($row['des_conto']);
 			}
-				
+
 			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
@@ -521,10 +501,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_attivo .=
 		"<tr>" .
 		"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -533,18 +513,18 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		/**
 		 * Totale complessivo di colonna
 		 */
-		
+
 		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_attivo .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.attivo%</td>" .
@@ -553,24 +533,24 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		$_SESSION['numAttiviTrovati'] = $numReg;
 		$risultato_attivo = $risultato_attivo . "</tbody>";
-		
+
 		$risultato_attivo = $risultato_attivo . "</table></div>";
-		
+
 		/**
-		 * Metto in sessione i totali attivi 
+		 * Metto in sessione i totali attivi
 		 */
-		
+
 		$_SESSION['totaleAttivo_Bre'] = abs($totale_Bre);
 		$_SESSION['totaleAttivo_Tre'] = abs($totale_Tre);
 		$_SESSION['totaleAttivo_Vil'] = abs($totale_Vil);
 		$_SESSION['totaleAttivo'] = abs($totale);
-		
+
 		return $risultato_attivo;
 	}
-	
+
 	/**
 	 * Questo metodo costruisce una tabella html delle passività comparate
 	 * @param unknown $array
@@ -591,7 +571,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"<div class='scroll-riepilogo-negozi'>" .
 		"	<table class='result'>" .
 		"		<tbody>";
-	
+
 		$numReg = 0;
 		$totalePassivo = 0;
 		$desconto_break = "";
@@ -599,33 +579,33 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleConto_Bre = 0;
 		$totaleConto_Tre = 0;
 		$totaleConto_Vil = 0;
-		
+
 		$totale_Bre = 0;
 		$totale_Tre = 0;
 		$totale_Vil = 0;
-		
+
 		foreach(pg_fetch_all($dati) as $row) {
-				
+
 			$totaleConto = trim($row['tot_conto']);
 			$totalePassivo += $totaleConto;
 
 			if (trim($row['cod_negozio']) == "BRE") $totale_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totale_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totale_Vil += $totaleConto;
-			
+
 			$numReg ++;
-					
+
 			if (trim($row['des_conto']) != $desconto_break ) {
-	
+
 				if ($desconto_break != "") {
-					
+
 					$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 					$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-					
+
 					$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 					$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-						
+
 					$risultato_passivo .=
 					"<tr>" .
 					"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -634,15 +614,15 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 					"	<td width='108' align='right'>" . $totVil . "</td>" .
 					"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 					"</tr>";
-						
+
 					$totaleConto_Bre = 0;
 					$totaleConto_Tre = 0;
 					$totaleConto_Vil = 0;
 				}
-				
+
 				$desconto_break = trim($row['des_conto']);
 			}
-					
+
 			if (trim($row['cod_negozio']) == "BRE") $totaleConto_Bre += $totaleConto;
 			if (trim($row['cod_negozio']) == "TRE") $totaleConto_Tre += $totaleConto;
 			if (trim($row['cod_negozio']) == "VIL") $totaleConto_Vil += $totaleConto;
@@ -651,10 +631,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_passivo .=
 		"<tr>" .
 		"	<td width='308' align='left'>" . $desconto_break . "</td>" .
@@ -663,18 +643,18 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		/**
 		 * Totale complessivo di colonna
 		 */
-		
+
 		$totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 		$totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$totale = $totale_Bre + $totale_Tre + $totale_Vil;
 		$tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-		
+
 		$risultato_passivo .=
 		"<tr>" .
 		"	<td class='enlarge' width='308' align='left'>%ml.totale% %ml.passivo%</td>" .
@@ -683,24 +663,24 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"	<td class='mark' width='108' align='right'>" . $totVil . "</td>" .
 		"	<td class='mark' width='108' align='right'>" . $tot . "</td>" .
 		"</tr>";
-		
+
 		$_SESSION['numAttiviTrovati'] = $numReg;
 		$risultato_passivo = $risultato_passivo . "</tbody>";
-		
+
 		$risultato_passivo = $risultato_passivo . "</table></div>";
-		
+
 		/**
 		 * Metto in sessione i totali attivi
 		 */
-		
+
 		$_SESSION['totalePassivo_Bre'] = abs($totale_Bre);
 		$_SESSION['totalePassivo_Tre'] = abs($totale_Tre);
 		$_SESSION['totalePassivo_Vil'] = abs($totale_Vil);
 		$_SESSION['totalePassivo'] = abs($totale);
-		
+
 		return $risultato_passivo;
 	}
-	
+
 	/**
 	 * Questo metodo costruisce una tabella html per i risultati del calcolo dell' MCT
 	 * @param unknown $costoVariabile
@@ -708,7 +688,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $costoFisso
 	 */
 	public function makeTableMargineContribuzione() {
-			
+
 		$margineContribuzione = "";
 		$totaleCostiVariabili = 0;
 		$totaleRicavi = 0;
@@ -716,7 +696,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotale = 0;
 		$marginePercentuale = 0;
 		$ricaricoPercentuale = 0;
-		
+
 		// Villa ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliVIL = 0;
@@ -725,26 +705,26 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleVIL = 0;
 		$marginePercentualeVIL = 0;
 		$ricaricoPercentualeVIL = 0;
-		
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
 			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiVIL']) as $row) {
 			$totaleRicaviVIL = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoVIL']) as $row) {
 			$totaleCostiFissiVIL = trim($row['totalecostofisso']);
 		}
-		
+
 		$margineTotaleVIL = abs($totaleRicaviVIL) - $totaleCostiVariabiliVIL;
 		$marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
 		$ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
 
 		$totaleRicavi += abs($totaleRicaviVIL);
-		$totaleCostiVariabili += $totaleCostiVariabiliVIL;	
-		
+		$totaleCostiVariabili += $totaleCostiVariabiliVIL;
+
 		// Trezzo ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliTRE = 0;
@@ -753,26 +733,26 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleTRE = 0;
 		$marginePercentualeTRE = 0;
 		$ricaricoPercentualeTRE = 0;
-		
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
 			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiTRE']) as $row) {
 			$totaleRicaviTRE = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoTRE']) as $row) {
 			$totaleCostiFissiTRE = trim($row['totalecostofisso']);
 		}
-		
+
 		$margineTotaleTRE = abs($totaleRicaviTRE) - $totaleCostiVariabiliTRE;
 		$marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
 		$ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
 
 		$totaleRicavi += abs($totaleRicaviTRE);
 		$totaleCostiVariabili += $totaleCostiVariabiliTRE;
-		
+
 		// Brembate ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliBRE = 0;
@@ -781,19 +761,19 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotaleBRE = 0;
 		$marginePercentualeBRE = 0;
 		$ricaricoPercentualeBRE = 0;
-		
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
 			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiBRE']) as $row) {
 			$totaleRicaviBRE = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoBRE']) as $row) {
 			$totaleCostiFissiBRE = trim($row['totalecostofisso']);
 		}
-		
+
 		$margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
 		$marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
 		$ricaricoPercentualeBRE = ($margineTotaleBRE * 100) / abs($totaleCostiVariabiliBRE);
@@ -806,11 +786,11 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$margineTotale = abs($totaleRicavi) - $totaleCostiVariabili;
 		$marginePercentuale = ($margineTotale * 100 ) / abs($totaleRicavi);
 		$ricaricoPercentuale = ($margineTotale * 100) / abs($totaleCostiVariabili);
-		
+
 		/**
-		 * Creo la tabella 
+		 * Creo la tabella
 		 */
-		
+
 		$margineContribuzione =
 		"<table class='result'>" .
 		"	<thead>" .
@@ -858,10 +838,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
-		
-		return $margineContribuzione;		
+
+		return $margineContribuzione;
 	}
-	
+
 	/**
 	 * Questo metodo costruisce una tabella html per i risultati del calcolo del BEP
 	 * @param unknown $costoVariabile
@@ -891,7 +871,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		 * CT sono i costi totali e quindi CT = CF + CV
 		 *
 		 */
-		
+
 		$tabellaBep = "";
 
 		$totaleCostiVariabili = 0;
@@ -899,34 +879,34 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissi = 0;
 		$incidenzaCostiVariabiliSulFatturato = 0;
 		$bep = 0;
-		
+
 		// Villa ---------------------------------------------------------------------
-		
+
 		$totaleCostiVariabiliVIL = 0;
 		$totaleRicaviVIL = 0;
 		$totaleCostiFissiVIL = 0;
 		$incidenzaCostiVariabiliSulFatturatoVIL = 0;
-		$bepVIL = 0;		
-		
+		$bepVIL = 0;
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileVIL']) as $row) {
 			$totaleCostiVariabiliVIL = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiVIL']) as $row) {
 			$totaleRicaviVIL = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoVIL']) as $row) {
 			$totaleCostiFissiVIL = trim($row['totalecostofisso']);
 		}
-		
+
 		$incidenzaCostiVariabiliSulFatturatoVIL = 1 - ($totaleCostiVariabiliVIL / abs($totaleRicaviVIL));
 		$bepVIL = $totaleCostiFissiVIL / round($incidenzaCostiVariabiliSulFatturatoVIL, 2);
 
 		$totaleCostiVariabili += $totaleCostiVariabiliVIL;
 		$totaleRicavi += $totaleRicaviVIL;
-		$totaleCostiFissi += $totaleCostiFissiVIL;		
-		
+		$totaleCostiFissi += $totaleCostiFissiVIL;
+
 		// Trezzo ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliTRE = 0;
@@ -934,26 +914,26 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissiTRE = 0;
 		$incidenzaCostiVariabiliSulFatturatoTRE = 0;
 		$bepTRE = 0;
-		
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileTRE']) as $row) {
 			$totaleCostiVariabiliTRE = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiTRE']) as $row) {
 			$totaleRicaviTRE = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoTRE']) as $row) {
 			$totaleCostiFissiTRE = trim($row['totalecostofisso']);
 		}
-		
+
 		$incidenzaCostiVariabiliSulFatturatoTRE = 1 - ($totaleCostiVariabiliTRE / abs($totaleRicaviTRE));
 		$bepTRE = $totaleCostiFissiTRE / round($incidenzaCostiVariabiliSulFatturatoTRE, 2);
 
 		$totaleCostiVariabili += $totaleCostiVariabiliTRE;
 		$totaleRicavi += $totaleRicaviTRE;
 		$totaleCostiFissi += $totaleCostiFissiTRE;
-		
+
 		// Brembate ---------------------------------------------------------------------
 
 		$totaleCostiVariabiliBRE = 0;
@@ -961,35 +941,35 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		$totaleCostiFissiBRE = 0;
 		$incidenzaCostiVariabiliSulFatturatoBRE = 0;
 		$bepBRE = 0;
-		
+
 		foreach(pg_fetch_all($_SESSION['costoVariabileBRE']) as $row) {
 			$totaleCostiVariabiliBRE = trim($row['totalecostovariabile']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['ricavoVenditaProdottiBRE']) as $row) {
 			$totaleRicaviBRE = trim($row['totalericavovendita']);
 		}
-		
+
 		foreach(pg_fetch_all($_SESSION['costoFissoBRE']) as $row) {
 			$totaleCostiFissiBRE = trim($row['totalecostofisso']);
 		}
-		
+
 		$incidenzaCostiVariabiliSulFatturatoBRE = 1 - ($totaleCostiVariabiliBRE / abs($totaleRicaviBRE));
 		$bepBRE = $totaleCostiFissiBRE / round($incidenzaCostiVariabiliSulFatturatoBRE, 2);
 
 		$totaleCostiVariabili += $totaleCostiVariabiliBRE;
 		$totaleRicavi += $totaleRicaviBRE;
 		$totaleCostiFissi += $totaleCostiFissiBRE;
-		
+
 		// BEP totale negozi -----------------------------------------------------
-		
+
 		$incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
 		$bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
-		
+
 		/**
 		 * tabella del BEP
 		 */
-		
+
 		$tabellaBep =
 		"<table class='result'>" .
 		"	<thead>" .
@@ -1037,8 +1017,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 		"		</tr>" .
 		"   </tbody>" .
 		"</table>" ;
-		
-		return $tabellaBep;		
+
+		return $tabellaBep;
 	}
 	/**
 	 * Questo metodo preleva i costi variabili di ciascun negozio
@@ -1046,151 +1026,150 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract {
 	 * @param unknown $db
 	 */
 	public function ricercaCostiVariabiliNegozi($utility, $db) {
-	
+
 		// Villa -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'VIL'"
 		);
-	
+
 		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['costoVariabile'])) {
 				$_SESSION['costoVariabileVIL'] = $_SESSION['costoVariabile'];
 			}
 		}
-	
+
 		// Trezzo ----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'TRE'"
 		);
-	
+
 		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['costoVariabile'])) {
 				$_SESSION['costoVariabileTRE'] = $_SESSION['costoVariabile'];
 			}
 		}
-	
+
 		// Brembate -------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'BRE'"
 		);
-	
+
 		if ($this->ricercaCostiMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['costoVariabile'])) {
 				$_SESSION['costoVariabileBRE'] = $_SESSION['costoVariabile'];
 			}
 		}
 	}
-	
+
 	/**
 	 * Questo metodo preleva i costi fissi di ciascun negozio
 	 * @param unknown $utility
 	 * @param unknown $db
 	 */
 	public function ricercaCostiFissiNegozi($utility, $db) {
-	
+
 		// Villa -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'VIL'"
 		);
-	
+
 		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
 			if (isset($_SESSION['costoFisso'])) {
 				$_SESSION['costoFissoVIL'] = $_SESSION['costoFisso'];
 			}
 		}
-	
+
 		// Trezzo -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'TRE'"
 		);
-	
+
 		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
 			if (isset($_SESSION['costoFisso'])) {
 				$_SESSION['costoFissoTRE'] = $_SESSION['costoFisso'];
 			}
 		}
-	
+
 		// Brembate -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'BRE'"
 		);
-	
+
 		if ($this->ricercaCostiFissi($utility, $db, $replace)) {
 			if (isset($_SESSION['costoFisso'])) {
 				$_SESSION['costoFissoBRE'] = $_SESSION['costoFisso'];
 			}
 		}
 	}
-	
+
 	/**
 	 * Questo metodo preleva i ricavi di ciascun negozio
 	 * @param unknown $utility
 	 * @param unknown $db
 	 */
 	public function ricercaRicaviFissiNegozi($utility, $db) {
-	
+
 		// Villa -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'VIL'"
 		);
-	
+
 		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['ricavoVenditaProdotti'])) {
 				$_SESSION['ricavoVenditaProdottiVIL'] = $_SESSION['ricavoVenditaProdotti'];
 			}
 		}
-	
+
 		// Trezzo -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'TRE'"
 		);
-	
+
 		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['ricavoVenditaProdotti'])) {
 				$_SESSION['ricavoVenditaProdottiTRE'] = $_SESSION['ricavoVenditaProdotti'];
 			}
 		}
-	
+
 		// Brembate -----------------------------------------------------
-	
+
 		$replace = array(
 				'%datareg_da%' => $_SESSION["datareg_da"],
 				'%datareg_a%' => $_SESSION["datareg_a"],
 				'%codnegozio%' => "'BRE'"
 		);
-	
+
 		if ($this->ricercaRicaviMargineContribuzione($utility, $db, $replace)) {
 			if (isset($_SESSION['ricavoVenditaProdotti'])) {
 				$_SESSION['ricavoVenditaProdottiBRE'] = $_SESSION['ricavoVenditaProdotti'];
 			}
 		}
-	}	
-}		
+	}
+}
 
 ?>
-		
-	
+
