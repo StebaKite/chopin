@@ -47,22 +47,22 @@ class AndamentoMercatiTemplate extends RiepiloghiAbstract {
 		$form = self::$root . $array['template'] . self::$pagina;
 
 		$mercatiTabs = array();
-		
+
 		$negozi = explode(",", $array["negozi"]);
 		foreach($negozi as $negozio) {
-			
-			$vociRicavo = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviMercato_" . $negozio]);
-			if (count($vociRicavo) > 0) {	
+
+			$vociRicavo = $_SESSION["elencoVociAndamentoRicaviMercato_" . $negozio];
+			if (count($vociRicavo) > 0) {
 				$mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($vociRicavo);
-			}					
+			}
 		}
 
 		/** ******************************************
 		 * Costruisco il box delle tabs
 		 */
-		
+
 		$tabs = "";
-		if (count($mercatiTabs) > 0) {			
+		if (count($mercatiTabs) > 0) {
 			$tabs = $this->makeTabsAndamentoMercati($mercatiTabs, $negoziTabs);
 		}
 

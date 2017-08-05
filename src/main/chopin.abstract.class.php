@@ -63,21 +63,6 @@ abstract class ChopinAbstract {
 		self::$root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ChopinAbstract();
-
-		return self::$_instance;
-	}
-
 	// Setters -----------------------------------------------------------------------------
 
 	public function setTestata($testata) {

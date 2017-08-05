@@ -5,54 +5,36 @@ require_once 'chopin.abstract.class.php';
 abstract class SaldiAbstract extends ChopinAbstract {
 
 	private static $_instance = null;
-	
+
 	public static $messaggio;
-	
-	// Query --------------------------------------------------------------- 
-	
+
+	// Query ---------------------------------------------------------------
+
 	public static $queryRicercaConto = "/saldi/ricercaConto.sql";
 	public static $queryLeggiContiStatoPatrimoniale = "/saldi/ricercaContiStatoPatrimoniale.sql";
 	public static $queryLeggiContiContoEconomico = "/saldi/ricercaContiContoEconomico.sql";
 	public static $queryRicercaDateRiportoSaldi = "/saldi/ricercaDateRiportoSaldi.sql";
-	public static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";	
-	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";	
+	public static $queryLeggiSaldi = "/saldi/ricercaSaldi.sql";
+	public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
 	public static $queryPrelevaTuttiConti = "/configurazioni/leggiTuttiConti.sql";
 	public static $queryCreaLavoroPianificato = "/main/creaLavoroPianificato.sql";
-	
-	function __construct() {
-	}
-	
-	private function  __clone() { }
-	
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-	
-			self::$_instance = new SaldiAbstract();
-	
-		return self::$_instance;
-	}
-	
+
 	// Getters e Setters ---------------------------------------------------
 
 	public function setMessaggio($messaggio) {
 		self::$messaggio = $messaggio;
 	}
-	
+
 	// ------------------------------------------------
-	
+
 	public function getMessaggio() {
 		return self::$messaggio;
-	}	
-	
+	}
+
 	/**
 	 * Metodi comuni di utilita della prima note
 	 */
-	
+
 	/**
 	 * Se il saldo c'è già sulla tabella viene aggiornato altrimenti viene inserito
 	 * @param unknown $db
@@ -67,35 +49,35 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
-	
+
 		$result = $this->leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo);
-		
+
 		if (pg_num_rows($result) > 0) {
-				
+
 			/**
 			 * Se il saldo calcolato è significativo, aggiorno il saldo del conto
-			 * altrimenti elimino il saldo del conto 
+			 * altrimenti elimino il saldo del conto
 			 */
-			
-			if ($impsaldo != 0) {		
-				$result = $this->aggiornaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);			
+
+			if ($impsaldo != 0) {
+				$result = $this->aggiornaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);
 			} else {
 				$result = $this->cancellaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo);
 			}
 		}
 		else {
-			
+
 			/**
 			 * Se il saldo calcolato è significativo, creo il saldo del conto
 			 */
 
 			if ($impsaldo != 0) {
-				$result = $this->creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);				
-			}					
+				$result = $this->creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere);
+			}
 		}
 		return $result;
 	}
-	
+
 	/**
 	 *
 	 * @param unknown $db
@@ -107,7 +89,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function leggiSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_negozio%' => $codnegozio,
@@ -142,7 +124,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCancellaSaldo;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		return $result;		
+		return $result;
 	}
 
 	/**
@@ -188,7 +170,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	 * @param unknown $inddareavere
 	 */
 	public function creaSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
-		
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_negozio%' => $codnegozio,
@@ -204,59 +186,59 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-	
+
 	/**
 	 * Questo metodo preleva tutti i conti esistenti
 	 * @param unknown $db
 	 * @param unknown $utility
-	 */	
+	 */
 	public function prelevaConti($db, $utility) {
-	
+
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaConto;
-		
+
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->execSql($sql);
-		
+
 		return $result;
 	}
-	
+
 	public function prelevaStatoPatrimoniale($db, $utility) {
 
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiStatoPatrimoniale;
-		
+
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->execSql($sql);
-		
+
 		return $result;
 	}
 
 	public function prelevaContoEconomico($db, $utility) {
-	
+
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiContiContoEconomico;
-	
+
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->execSql($sql);
-	
+
 		return $result;
 	}
-	
-	
-	
+
+
+
 	public function caricaDateRiportoSaldo($utility, $db) {
-	
+
 		$array = $utility->getConfig();
-	
+
 		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaDateRiportoSaldi;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->getData($sql);
-		
+
 		$elencoDateRiportoSaldi = "";
 
 		foreach(pg_fetch_all($result) as $row) {
-		
+
 			if ($row['dat_saldo'] == $_SESSION["datarip_saldo"]) {
 				$elencoDateRiportoSaldi .= "<option value='" . $row['dat_saldo'] . "' selected >" . date("d/m/Y",strtotime($row['dat_saldo'])) . "</option>";
 			}
@@ -266,21 +248,21 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		}
 		return $elencoDateRiportoSaldi;
 	}
-	
+
 	public function leggiSaldi($db, $utility, $codneg, $datarip) {
-	
+
 		$replace = array(
 				'%cod_negozio%' => $codneg,
 				'%dat_saldo%' => $datarip
 		);
-	
+
 		$array = $utility->getConfig();
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiSaldi;
-	
+
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		
+
 		$result = $db->getData($sql);
-		
+
 		if (pg_num_rows($result) > 0) {
 			$_SESSION['saldiTrovati'] = $result;
 			$_SESSION['numSaldiTrovati'] = pg_num_rows($result);
@@ -288,12 +270,12 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		else {
 			unset($_SESSION['saldiTrovati']);
 			$_SESSION['numSaldiTrovati'] = 0;
-		}	
+		}
 		return $result;
 	}
-	
+
 	public function creaNuovoSaldo($db, $utility, $codneg, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $dareavere) {
-		
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%cod_negozio%' => trim($codneg),
@@ -311,23 +293,23 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param unknown $utility
 	 * @param unknown $db
 	 * @return string
 	 */
 	public function caricaTuttiConti($utility, $db) {
-	
+
 		$array = $utility->getConfig();
-	
+
 		$sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaTuttiConti;
 		$sql = $utility->getTemplate($sqlTemplate);
 		$result = $db->getData($sql);
-	
+
 		foreach(pg_fetch_all($result) as $row) {
-			
+
 			$conto = $row['cod_conto'] . '-' . $row['cod_sottoconto'];
-			
+
 			if ($conto == $_SESSION["codconto"]) {
 				$elenco_conti .= "<option value='" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . "' selected >" . $row['cod_conto'] . '-' . $row['cod_sottoconto'] . ' : ' . $row['des_conto'] . ' - ' . $row['des_sottoconto'] . "</option>" ;
 			}
@@ -337,9 +319,9 @@ abstract class SaldiAbstract extends ChopinAbstract {
 		}
 		return $elenco_conti;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param unknown $db
 	 * @param unknown $utility
 	 * @param unknown $dat_lavoro
@@ -350,7 +332,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 	 * @return unknown
 	 */
 	public function inserisciLavoroPianificato($db, $utility, $dat_lavoro, $des_lavoro, $fil_esecuzione_lavoro, $cla_esecuzione_lavoro, $sta_lavoro) {
-	
+
 		$array = $utility->getConfig();
 		$replace = array(
 				'%dat_lavoro%' => $dat_lavoro,
@@ -360,7 +342,7 @@ abstract class SaldiAbstract extends ChopinAbstract {
 				'%sta_lavoro%' => $sta_lavoro
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaLavoroPianificato;
-	
+
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 		return $result;
