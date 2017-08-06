@@ -1196,6 +1196,7 @@ $( "#fornitore" ).change(function() {
 	
 	var desfornitore = $("#fornitore").val();
 	var datareg = $("#datareg").val();
+	var codneg = $("#codneg").val();
 	var form = $("#pagamentoForm").val();
 	
 	if (desfornitore != "") {
@@ -1209,7 +1210,7 @@ $( "#fornitore" ).change(function() {
 		            $( "#select2" ).selectmenu( "refresh" );
 		        }
 		    }
-		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore + "&codneg=" + codneg, true);
 		    xmlhttp.send();		
 		}
 		else {
@@ -1312,6 +1313,7 @@ $( "#datareg" ).change(function() {
 $( ".scadenzeAperteFornitore" ).change(function() {
 	
 	var desforn = $("#fornitore").val();
+	var codneg = $("#codneg").val();
 	
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -1320,7 +1322,7 @@ $( ".scadenzeAperteFornitore" ).change(function() {
             $( "#select2" ).selectmenu( "refresh" );
         }
     }
-    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desforn, true);
+    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desforn + "&codneg=" + codneg, true);
     xmlhttp.send();		
 });
 
@@ -1342,6 +1344,7 @@ $('input[type=radio][name=codneg]').change(function() {
 $( ".scadenzeAperteCliente" ).change(function() {
 
 	var descli = $("#cliente").val();
+	var codneg = $("#codneg").val();
 		
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -1350,7 +1353,7 @@ $( ".scadenzeAperteCliente" ).change(function() {
             $( "#select2" ).selectmenu( "refresh" );
         }
     }
-    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descli, true);
+    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descli=" + descli + "&codneg=" + codneg, true);
     xmlhttp.send();			
 })
 

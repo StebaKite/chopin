@@ -492,11 +492,12 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $idfornitore
 	 * @return unknown
 	 */
-	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
+	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore, $codneg) {
 
 		$array = $utility->getConfig();
 		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
+				'%id_fornitore%' => trim($idfornitore),
+				'%cod_negozio%' => trim($codneg)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteFornitore;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
@@ -511,11 +512,12 @@ abstract class PrimanotaAbstract extends ChopinAbstract {
 	 * @param unknown $idcliente
 	 * @return unknown
 	 */
-	public function prelevaScadenzeAperteCliente($db, $utility, $idcliente) {
+	public function prelevaScadenzeAperteCliente($db, $utility, $idcliente, $codnegozio) {
 
 		$array = $utility->getConfig();
 		$replace = array(
-				'%id_cliente%' => trim($idcliente)
+				'%id_cliente%' => trim($idcliente),
+				'%cod_negozio%' => trim($codnegozio)
 		);
 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteCliente;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);

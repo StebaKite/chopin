@@ -36,29 +36,28 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract {
 	// ------------------------------------------------
 
 	public function start() {
-	
+
 		require_once 'database.class.php';
 		require_once 'utility.class.php';
-	
+
 		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">';
 
 		if ($_SESSION["descli"] != "") {
 			$db = Database::getInstance();
 			$utility = Utility::getInstance();
-	
+
 			$db->beginTransaction();
 			$_SESSION["idcliente"] = $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["descli"]));
-			$db->commitTransaction();
-			
-			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
-	
+
+			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"], $_SESSION["negozio"]);
+
 			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';				
-			}		
+				$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
+			}
 		}
-		
-		$options .= '</select>';		
-		echo $options;		
+		$options .= '</select>';
+		$db->commitTransaction();
+		echo $options;
 	}
 }
 
