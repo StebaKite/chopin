@@ -1,9 +1,15 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'fornitore.class.php';
+require_once 'registrazione.class.php';
+require_once 'scadenzaFornitore.class.php';
 
-class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
-
+class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
 	public static $ggMese = array(
 			'01' => '31',
 			'02' => '28',
@@ -17,78 +23,57 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract {
 			'10' => '31',
 			'11' => '30',
 			'12' => '31',
-	);	
-	
-	public static $replace;
+	);
 
-	private static $_instance = null;
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CalcolaDataScadenzaFornitore();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE])) $_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE] = serialize(new CalcolaDataScadenzaFornitore());
+		return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE]);
 	}
 
-	// ------------------------------------------------
-
-	public function start() {
-		
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
+	public function start()
+	{
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
+		$registrazione = Registrazione::getInstance();
+		$fornitore = Fornitore::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 
-		$db->beginTransaction();
-		$idfornitore = $this->leggiDescrizioneFornitore($db, $utility, $_SESSION["desfornitore"]);
-		$db->commitTransaction();
-		
-		$result_fornitore = $this->prelevaIdFornitore($db, $utility, $idfornitore); 
-		
-		foreach(pg_fetch_all($result_fornitore) as $row) {
-			$num_gg_scadenza_fattura = $row['num_gg_scadenza_fattura'];
-		}
+		$fornitore->setDesFornitore($registrazione->getDesFornitore());
+		$fornitore->cercaConDescrizione($db);
 
 		/**
-		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza 
+		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza
 		 */
-		if ($num_gg_scadenza_fattura > 0) {
+		if ($fornitore->getNumGgScadenzaFattura() > 0) {
 			/**
-			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore, alla data ottenuta viene sostituito il
-			 * giorno con l'ultimo giorno del mese corrispondente
+			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore,
+			 * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
 			 */
-			
-			$dataScadenza = $this->sommaGiorniData($_SESSION["datareg"], "/", $num_gg_scadenza_fattura);
-			
+			$dataScadenza = $this->sommaGiorniData($registrazione->getDatRegistrazione(), "/", $fornitore->getNumGgScadenzaFattura());
+
 			$data = explode("/",$dataScadenza);
 			$mese = $data[1];
 			$anno = $data[2];
-			
-			echo SELF::$ggMese[$mese]."/".$mese."/".$anno;				
+
+			$scadenzaFornitore->setDatScadenza(SELF::$ggMese[$mese]."/".$mese."/".$anno);
+			$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
+			$scadenzaFornitore->setImpInScadenza(0);
+			$scadenzaFornitore->setNumFattura("0");
+			$scadenzaFornitore->aggiungi();
+
+			echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
 		}
 		else {
 			echo "";
 		}
 	}
+	public function go() {}
 }
-				
+
 ?>

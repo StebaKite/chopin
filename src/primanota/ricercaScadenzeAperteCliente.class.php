@@ -32,24 +32,18 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
 		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
 
-		$cliente->setDesCliente($registrazione->getDesCliente());
 		$cliente->cercaConDescrizione($db);
-
+		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
+		$scadenzaCliente->trovaScadenzeDaIncassare($db);
 
 		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">';
 
-
-
-			$db->beginTransaction();
-			$_SESSION["idcliente"] = $this->leggiDescrizioneCliente($db, $utility, str_replace("'", "''", $_SESSION["descli"]));
-			$db->commitTransaction();
-
-			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
-
-			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
+		if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0)
+		{
+			foreach($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza) {
+				$options .= '<option value="' . trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) . '" >Ft.' . trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) . ' - &euro; ' . trim($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]) . ' - (' . trim($unaScadenza[ScadenzaCliente::NOTA]) . ')</option>';
 			}
-
+		}
 		$options .= '</select>';
 		echo $options;
 	}

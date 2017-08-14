@@ -45,6 +45,8 @@ class PrimanotaController
 		$fornitore = Fornitore::getInstance();
 		$cliente = Cliente::getInstance();
 
+		// Registrazione fatture
+
 		if (isset($_REQUEST["datareg_da"])) {
 			$registrazione->setDatRegistrazioneDa($_REQUEST["datareg_da"]);
 			$registrazione->setDatRegistrazioneA($_REQUEST["datareg_a"]);
@@ -121,6 +123,24 @@ class PrimanotaController
 			$scadenzaCliente->setDatRegistrazione($_REQUEST["datascad_cli"]);
 			$scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli"]);
 			$scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
+		}
+
+		// Registrazione incasso
+
+		if (isset($_REQUEST["descliente_inc_cre"])) {
+			$cliente->setDesCliente($_REQUEST["descliente_inc_cre"]);
+			$scadenzaCliente->setCodNegozioSel($_REQUEST["codnegozio_inc_cre"]);
+		}
+
+		if (isset($_REQUEST["datareg_inc_cre"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_inc_cre"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_inc_cre"]);
+			$registrazione->setCodCausale($_REQUEST["causale_inc_cre"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_inc_cre"]);
+			$registrazione->setDesCliente($_REQUEST["cliente_inc_cre"]);
+			$registrazione->setNumFattura($_REQUEST["numfatt_inc_cre"]);
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato("");
 		}
 
 		// Serializzo in sessione gli oggetti modificati

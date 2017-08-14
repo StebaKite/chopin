@@ -23,7 +23,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	public static $queryDeleteDettaglioRegistrazione = "/primanota/deleteDettaglioRegistrazione.sql";
 
 	public static $queryLeggiScadenzeAperteFornitore = "/primanota/ricercaScadenzeAperteFornitore.sql";
-	public static $queryLeggiScadenzeAperteCliente = "/primanota/ricercaScadenzeAperteCliente.sql";
 	public static $queryLeggiScadenzeFornitore = "/primanota/ricercaScadenzeFornitore.sql";
 	public static $queryLeggiScadenzeCliente = "/primanota/ricercaScadenzeCliente.sql";
 	public static $queryPrelevaScadenzaCliente = "/primanota/leggiScadenzaCliente.sql";
@@ -187,6 +186,18 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			$tbody .= "</tbody>";
 		}
 		return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+	}
+
+	public function ricalcolaSaldi($db, $datRegistrazione)
+	{
+		$lavoroPianificato = LavoroPianificato::getInstance();
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		if ($array['lavoriPianificatiAttivati'] == "Si") {
+			$lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $datRegistrazione));
+			$lavoroPianificato->settaDaEseguire($db);
+		}
 	}
 
 	// Getters e Setters ---------------------------------------------------
@@ -459,15 +470,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	}
 
 	public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
-
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_fornitore%' => trim($idfornitore)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeAperteFornitore;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
 	}
 
 	public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {

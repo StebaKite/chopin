@@ -1,286 +1,121 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'primanota.controller.class.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'dettaglioRegistrazione.class.php';
+require_once 'causale.class.php';
+require_once 'ricercaRegistrazione.class.php';
+require_once 'scadenzaCliente.class.php';
+require_once 'cliente.class.php';
+require_once 'lavoroPianificato.class.php';
 
-class CreaIncasso extends primanotaAbstract {
 
-	private static $_instance = null;
-	private static $categoria_causali = 'GENERI';
-	
-	public static $azioneCreaIncasso = "../primanota/creaIncassoFacade.class.php?modo=go";
+class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+	}
 
-	function __construct() {
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CREA_INCASSO])) $_SESSION[self::CREA_INCASSO] = serialize(new CreaIncasso());
+		return unserialize($_SESSION[self::CREA_INCASSO]);
+	}
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+	public function start()
+	{
+		$this->go();
+	}
 
-		require_once 'utility.class.php';
-
+	public function go()
+	{
+		$registrazione = Registrazione::getInstance();
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
 
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+		if ($this->creaIncasso($utility, $registrazione, $dettaglioRegistrazione))
+			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_INCASSO_OK;
+		else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+
+		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+		$controller->start();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CreaIncasso();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-	
-		require_once 'creaIncasso.template.php';
-		require_once 'utility.class.php';
-		
-		$utility = Utility::getInstance();
-		
-		$creaIncassoTemplate = CreaIncassoTemplate::getInstance();
-		$this->preparaPagina($creaIncassoTemplate);
-	
-		// Data del giorno preimpostata solo in entrata -------------------------
-	
-		if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
-		unset($_SESSION["descreg"]);
-		unset($_SESSION["numfatt"]);
-		unset($_SESSION["codneg"]);
-		unset($_SESSION["causale"]);
-		unset($_SESSION["cliente"]);
-		unset($_SESSION["descli"]);
-		unset($_SESSION["dettagliInseriti"]);
-		unset($_SESSION["indexDettagliInseriti"]);
-		unset($_SESSION["elenco_scadenze_cliente"]);
-	
-		// Compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
-
-		$creaIncassoTemplate->displayPagina();
-		include(self::$piede);
-	}
-
-	public function go() {
-
-		require_once 'creaIncasso.template.php';
-		require_once 'utility.class.php';
-		
-		$utility = Utility::getInstance();
-		
-		$creaIncassoTemplate = CreaIncassoTemplate::getInstance();
-		if ($creaIncassoTemplate->controlliLogici()) {
-		
-			// Aggiornamento del DB ------------------------------
-				
-			if ($this->creaIncasso($utility)) {
-		
-				$_SESSION["messaggio"] = "Incasso salvato con successo";
-				
-				if (!isset($_SESSION["datareg"])) { $_SESSION["datareg"] = date("d/m/Y"); }
-				unset($_SESSION["descreg"]);
-				unset($_SESSION["numfatt"]);
-				unset($_SESSION["codneg"]);
-				unset($_SESSION["causale"]);
-				unset($_SESSION["cliente"]);
-				unset($_SESSION["descli"]);
-				unset($_SESSION["dettagliInseriti"]);
-				unset($_SESSION["indexDettagliInseriti"]);
-				unset($_SESSION["elenco_scadenze_cliente"]);
-		
-				$this->preparaPagina($creaIncassoTemplate);
-		
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
-				
-				$creaIncassoTemplate->displayPagina();
-		
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
-			}
-		}
-		else {
-				
-			$this->preparaPagina($creaIncassoTemplate);
-		
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-			
-			$creaIncassoTemplate->displayPagina();
-		
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		
-			include(self::$piede);
-		}
-	}
-		
-	public function CreaIncasso($utility) {
-	
-		require_once 'database.class.php';
-	
+	public function creaIncasso($utility, $registrazione, $dettaglioRegistrazione)
+	{
+		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
 		$db->beginTransaction();
-	
-		/**
-		 * Crea l'incasso
-		*/
-	
-		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
-		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
-		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];
-		$stareg = "00";
-		$cliente = ($_SESSION["idcliente"] != "") ? $_SESSION["idcliente"] : "null" ;
-			
-		if ($this->inserisciRegistrazione($db, $utility, $descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $codneg, $stareg, 'null')) {
 
-			$d = explode(",", $_SESSION['dettagliInseriti']);
-			
-			foreach($d as $ele) {
-					
-				$e = explode("#",$ele);
-				$cc = explode(" - ", $e[0]);
-			
-				$conto = substr(trim($cc[0]), 0, 3);
-				$sottoConto = substr(trim($cc[0]), 3);
-				$importo = $e[1];
-				$d_a = $e[2];
-			
-				if (!$this->inserisciDettaglioRegistrazione($db, $utility, $_SESSION['idRegistrazione'], $conto, $sottoConto, $importo, $d_a)) {
-					$db->rollbackTransaction();
-					error_log("Errore inserimento dettaglio registrazione, eseguito Rollback");
-					return FALSE;
-				}
+		if ($registrazione->inserisci($db))
+		{
+			foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+				$this->creaDettaglioIncasso($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio);
 			}
-				
+
 			/**
 			 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
 			 */
-			
-			$d = explode(",", $_SESSION["numfatt"]);
-	
-			foreach($d as $numeroFattura) {
-				$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-				$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idRegistrazione']);					
+			$riconciliazioneFattureOkay = true;
+
+			foreach($registrazione->getNumFattura() as $unNumeroFattura)
+			{
+				$scadenzaCliente->setIdCliente($cliente->getIdCliente());
+				$scadenzaCliente->setIdIncasso($registrazione->getIdRegistrazione());
+				$scadenzaCliente->setStaScadenza("10");		// incassata
+				$scadenzaCliente->setNumFattura($unNumeroFattura);
+				if (!$scadenzaCliente->cambiaStato($db))
+				{
+					$riconciliazioneFattureOkay = false;
+					break;
+				}
 			}
-			
-			/**
-			 * Chiudo la registrazione della fattura emessa.
-			 * In sessione ho l'ID dell'incasso appena inserito (idRegistrazione), devo recuperare l'ID della
-			 * registrazione della fattura originale, lo prendo dalla scadenza che ho appena chiuso
+
+			/***
+			 * Ricalcolo i saldi dei conti
 			 */
-
-// 			$result_scadenza_cliente = $this->leggiScadenzaCliente($db, $utility, $cliente, $_SESSION['idRegistrazione']);
-				
-// 			if ($result_scadenza_cliente) {
-
-// 				foreach(pg_fetch_all($result_scadenza_cliente) as $row) {
-// 					$idregistrazione = $row['id_registrazione'];		// l'id della fattura emessa
-// 				}
-				
-// 				$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');		// OK				
-// 			}
-
-			/**
-			 * Rigenerazione dei saldi
-			 */
-			$array = $utility->getConfig();
-			
-			if ($array['lavoriPianificatiAttivati'] == "Si") {
-				$this->rigenerazioneSaldi($db, $utility, strtotime(str_replace('/', '-', str_replace("'", "", $datareg))));
+			if ($riconciliazioneFattureOkay) {
+				$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+				$db->commitTransaction();
+				return true;
 			}
-			
-			$db->commitTransaction();
-			return TRUE;
+			else {
+				$db->rollbackTransaction();
+				return false;
+			}
 		}
 		else {
 			$db->rollbackTransaction();
-			error_log("Errore inserimento registrazione, eseguito Rollback");
-			return FALSE;
+			return false;
 		}
 	}
 
-	public function preparaPagina($creaIncassoTemplate) {
-	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$creaIncassoTemplate->setAzione(self::$azioneCreaIncasso);
-		$creaIncassoTemplate->setConfermaTip("%ml.confermaCreaIncasso%");
-		$creaIncassoTemplate->setTitoloPagina("%ml.creaNuovoIncasso%");
-	
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-	
-		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
-	
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
-		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-	
-		/**
-		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
-		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
-		*/
-		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
+	public function creaDettaglioIncasso($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)
+	{
+		$_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);	// il codconto del dettaglio contiene anche la descrizione
+		$conto = explode(".", $_cc[0]);		// conto e sottoconto separati da un punto
 
-		/**
-		 * Prepara il selectmenu delle scadenze aperte.
-		 * Come per i conti, l'ajax non interviene se c'è un errore logico e la pagina viene ripresentata
-		 */
-		if (isset($_SESSION["idcliente"])) {
-			$db = Database::getInstance();
-			$utility = Utility::getInstance();
-			
-			$options = '';
-			
-			$result_scadenze_cliente = $this->prelevaScadenzeAperteCliente($db, $utility, $_SESSION["idcliente"]);
-			
-			$d = explode(",", $_SESSION["numfatt"]);
-				
-			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $this->setFatturaSelezionata($d, trim($row['num_fattura'])) . '>Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';		
-			}
-			
-			$_SESSION["elenco_scadenze_cliente"] = $options;
+		$dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
+		$dettaglioRegistrazione->setCodConto($conto[0]);
+		$dettaglioRegistrazione->setCodSottoconto($conto[1]);
+		$dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
+		$dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
+
+		if (!$dettaglioRegistrazione->inserisci($db)) {
+			$db->rollbackTransaction();
+			return false;
 		}
-		else {
-			$_SESSION["elenco_scadenze_cliente"] = "";
-		}		
+		return true;
 	}
-	
-	public function setFatturaSelezionata($fattureSelezionate, $numFatt) {
-		
-		$selected = "";
-		
-		foreach($fattureSelezionate as $numeroFattura) {
-			if ($numeroFattura == $numFatt) {
-				$selected = "selected";
-				break;
-			}
-		}
-		return $selected;		
-	}	
 }
-	
-?>	
-	
+
+?>

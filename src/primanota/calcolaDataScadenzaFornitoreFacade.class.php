@@ -1,16 +1,14 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/primanota:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
 require_once 'calcolaDataScadenzaFornitore.class.php';
+require_once 'primanota.controller.class.php';
 
 session_start();
 
-$calcolaDataScadenzaFornitore = CalcolaDataScadenzaFornitore::getInstance();
+$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(CalcolaDataScadenzaFornitore::getInstance()));
 
-if ($_GET["modo"] == "start") {
-	$_SESSION["desfornitore"] = $_REQUEST["desfornitore"];
-	$_SESSION["datareg"] = $_REQUEST["datareg"];	
-	$calcolaDataScadenzaFornitore->start();
-}
+$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+$controller->start();
 
 ?>

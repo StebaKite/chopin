@@ -44,6 +44,9 @@ class ScadenzaCliente implements CoreInterface {
 	private $qtaScadenze;
 	private $importoScadenza;
 
+	private $scadenzeDaIncassare;
+	private $qtaScadenzeDaIncassare;
+
 	// fitri di ricerca
 
 	private $datScadenzaDa;
@@ -57,6 +60,8 @@ class ScadenzaCliente implements CoreInterface {
 	const CREA_SCADENZA = "/scadenze/creaScadenzaCliente.sql";
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaCliente.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "/scadenze/aggiornaImportoScadenzaCliente.sql";
+	const RICERCA_SCADENZE_DA_INCASSARE = "/scadenze/ricercaScadenzeAperteCliente.sql";
+	const CAMBIO_STATO_SCADENZA_CLIENTE = "/scadenze/updateStatoScadenzaCliente.sql";
 
 	// Metodi
 
@@ -139,6 +144,24 @@ class ScadenzaCliente implements CoreInterface {
 		}
 		$this->setQtaScadenze($this->getQtaScadenze() + 1);
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	}
+
+	public function cambiaStato($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_incasso%' => trim($this->getIdIncasso()),
+				'%sta_scadenza%' => trim($this->getStaScadenza()),
+				'%id_cliente%' => trim($this->getIdCliente()),
+				'%num_fattura%' => trim($this->getNumFattura())
+		);
+
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_CLIENTE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+		return $result;
 	}
 
 	public function inserisci($db)
@@ -242,6 +265,29 @@ class ScadenzaCliente implements CoreInterface {
 			$this->setScadenze($scadenzeDiff);
 			$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 		}
+		return $result;
+	}
+
+	public function trovaScadenzeDaIncassare($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_cliente%' => trim($this->getIdCliente()),
+				'%cod_negozio%' => trim($this->getCodNegozioSel())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_DA_INCASSARE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setScadenzeDaIncassare(pg_fetch_all($result));
+			$this->setQtaScadenzeDaIncassare(pg_num_rows($result));
+		} else {
+			$this->setScadenzeDaIncassare(null);
+			$this->setQtaScadenzeDaIncassare(0);
+		}
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 		return $result;
 	}
 
@@ -398,6 +444,23 @@ class ScadenzaCliente implements CoreInterface {
 
     public function setImportoScadenza($importoScadenza){
         $this->importoScadenza = $importoScadenza;
+    }
+
+
+    public function getScadenzeDaIncassare(){
+        return $this->scadenzeDaIncassare;
+    }
+
+    public function setScadenzeDaIncassare($scadenzeDaIncassare){
+        $this->scadenzeDaIncassare = $scadenzeDaIncassare;
+    }
+
+    public function getQtaScadenzeDaIncassare(){
+        return $this->qtaScadenzeDaIncassare;
+    }
+
+    public function setQtaScadenzeDaIncassare($qtaScadenzeDaIncassare){
+        $this->qtaScadenzeDaIncassare = $qtaScadenzeDaIncassare;
     }
 
 }

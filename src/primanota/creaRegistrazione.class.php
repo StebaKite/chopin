@@ -202,43 +202,6 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		}
 		return true;
 	}
-
-	public function ricalcolaSaldi($db, $datRegistrazione)
-	{
-		$lavoroPianificato = LavoroPianificato::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		if ($array['lavoriPianificatiAttivati'] == "Si") {
-			$lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $datRegistrazione));
-			$lavoroPianificato->settaDaEseguire($db);
-		}
-	}
-
-	public function preparaPagina($creaRegistrazioneTemplate) {
-
-// 		require_once 'database.class.php';
-// 		require_once 'utility.class.php';
-
-		$creaRegistrazioneTemplate->setAzione(self::$azioneCreaRegistrazione);
-		$creaRegistrazioneTemplate->setConfermaTip("%ml.confermaCreaRegistrazione%");
-		$creaRegistrazioneTemplate->setTitoloPagina("%ml.creaNuovaRegistrazione%");
-
-// 		$db = Database::getInstance();
-// 		$utility = Utility::getInstance();
-
-// 		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
-
-// 		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
-// 		$_SESSION['elenco_fornitori'] = $this->caricaFornitori($utility, $db);
-// 		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-
-// 		/**
-// 		 * Prepara la valorizzazione dei conti per la causale. L'ajax di pagina interviene solo sulla selezione
-// 		 * della causale ma se viene fatta la submit del form i conti del dialogo non vengono più valorizzati
-// 		 */
-// 		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
-	}
 }
 
 ?>

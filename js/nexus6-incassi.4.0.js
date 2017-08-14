@@ -47,29 +47,29 @@ $( "#nuovo-dettaglio-incasso-form" ).dialog({
 	autoOpen: false,
 	modal: true,
 	width: 550,
-	height: 400,
+	height: 250,
 	buttons: [
 		{
 			text: "Ok",
 			click: function() {
 
-				if($('#dare_dett_cre').is(':checked')) { var D_A = $("#dare_dett_cre").val(); }
-				if($('#avere_dett_cre').is(':checked')) { var D_A = $("#avere_dett_cre").val(); }
+				if($('#dare_inc_cre').is(':checked')) { var D_A = $("#dare_inc_cre").val(); }
+				if($('#avere_inc_cre').is(':checked')) { var D_A = $("#avere_inc_cre").val(); }
 
-				var conto = $("#conti").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
+				var conto = $("#conti_inc_cre").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
 				var idconto = conto.substring(0, 6);
-				var importo = $("#importo_dett_cre").val();
+				var importo = $("#importo_inc_cre").val();
 				var importoNormalizzato = importo.trim().replace(",", ".");
 				
 				var xmlhttp = new XMLHttpRequest();
 			    xmlhttp.onreadystatechange = function() {
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			        	var sottocontiTable = xmlhttp.responseText;
-		        		$("#dettagli_cre").html(sottocontiTable);
-		        		controllaDettagliRegistrazione("tddettagli_cre");
+			        	var dettagliTable = xmlhttp.responseText;
+		        		$("#dettagli_inc_cre").html(dettagliTable);
+		        		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
 		        	}
 			    }
-			    xmlhttp.open("GET", "aggiungiNuovoDettaglioIncassoFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+			    xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
 			    xmlhttp.send();				
 
 				$( this ).dialog( "close" );
@@ -84,9 +84,8 @@ $( "#nuovo-dettaglio-incasso-form" ).dialog({
 	]
 });
 
-
 //---------------------------------------------------------------------------------		
-//CREA REGISTRAZIONE : controllo campi in pagina
+// CREA NUOVO INCASSO : controllo campi in pagina
 //---------------------------------------------------------------------------------		
 
 function validaNuovoIncasso()
@@ -103,16 +102,16 @@ function validaNuovoIncasso()
 		esito = esito + "1"; else esito = esito + "0";
 
 	if ($("#descreg_inc_cre").val() != "") {
-		if (controllaDescrizione("descreg_inc_cre", "tddescreg_inc_cre")) 
+		if (controllaDescrizione("descreg_inc_cre", "tddescreg_inc_cre", "messaggioControlloDescrizioneIncasso")) 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 
 	if ($("#causale_inc_cre").val() != "") {
-		controllaDettagliRegistrazione("tddettagli_inc_cre"); 
-		if ($("#messaggioControlloDettagli").text() == "") 
+		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
+		if ($("#messaggioControlloDettagliIncasso").text() == "") 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
-		
+	
 	if (esito == "111") {
 		$("#button-ok-nuovo-incasso-form").button("enable");
 	} else {
@@ -122,21 +121,11 @@ function validaNuovoIncasso()
 
 //---------------------------------------------------------------------------------		
 
-function cercaContiCausale(desconto) {
+function controllaNegozio_inc_cre(codNegozio) {
 
-	var causale = $("#causale_inc_cre").val();
-
-	if ((causale != "") && (desconto != "")) {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	        	$( "#conti_inc_cre" ).html(xmlhttp.responseText);
-              $( "#conti_inc_cre" ).selectmenu( "refresh" );	        	
-	        }
-	    } 
-	    xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale + "&desconto=" + desconto, true);
-	    xmlhttp.send();		
-	}	
+	if (codNegozio != "") {
+		$("#cliente_inc_cre").val("");
+	}
 }
 
 //---------------------------------------------------------------------------------			
@@ -174,6 +163,79 @@ $( ".selectmenuCausaleIncCre" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
+//---------------------------------------------------------------------------------	
+
+$( ".scadenzeAperteCliente" ).keyup(function() {
+
+	var descliente = $("#cliente_inc_cre").val();
+	if($('#villa_inc_cre').is(':checked')) var codnegozio = $("#villa_inc_cre").val();
+	if($('#brembate_inc_cre').is(':checked')) var codnegozio = $("#brembate_inc_cre").val();
+	if($('#trezzo_inc_cre').is(':checked')) var codnegozio = $("#trezzo_inc_cre").val();
+
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	            $( "#select2" ).html(xmlhttp.responseText);
+//	            $( "#select2" ).selectmenu( "refresh" );
+	        }
+	    }
+	    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_cre=" + descliente + "&codnegozio_inc_cre=" + codnegozio, true);
+	    xmlhttp.send();
+	}
+})		
+
+//---------------------------------------------------------------------------------	
+
+$( ".selectmenuCausaleIncassi" )
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale_inc_cre").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale_inc_cre").removeClass("inputFieldError");	
+				$( "#messaggioControlloCausaleIncasso" ).html("");
+			}
+			else {
+				$("#messaggioControlloCausaleIncasso").html("Dato errato");
+				$("#tdcausale_inc_cre").addClass("inputFieldError");	
+			}
+		
+			var xmlhttp = new XMLHttpRequest();
+	        xmlhttp.onreadystatechange = function() {
+	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	                $( "#conti_inc_cre" ).html(xmlhttp.responseText);
+	                $( "#conti_inc_cre" ).selectmenu( "refresh" );
+	            }
+	        }
+	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+	        xmlhttp.send();			
+		}
+	})
+	.selectmenu({width: 300})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+//---------------------------------------------------------------------------------	
+
+$(".numfatt-cliente-multiple").select2().on("change", function() {
+	var numfatt = $("#select2").val();
+	if (numfatt == undefined) {
+		$("#messaggioControlloNumeroFattura").html("Dato errato");
+		$("#tdnumfatt").addClass("inputFieldError");			
+	}
+	else {
+		if (numfatt .length > 0) {
+	    	$( "#tdnumfatt").removeClass("inputFieldError");	
+	        $( "#esitoNumfatt" ).val("");			
+			$( "#messaggioControlloNumeroFattura" ).html("");
+		}
+		else {
+			$("#messaggioControlloNumeroFattura").html("Dato errato");
+			$("#tdnumfatt").addClass("inputFieldError");	
+		}		
+	}
+})	
 
 
 
@@ -266,77 +328,6 @@ $( "#cancella-incasso-form" ).dialog({
 		}
 	]
 });
-
-//---------------------------------------------------------------------------------	
-
-$( ".scadenzeAperteCliente" ).change(function() {
-
-	var descliente = $("#cliente_inc_cre").val();
-
-	if (descliente != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#select2" ).html(xmlhttp.responseText);
-	            $( "#select2" ).selectmenu( "refresh" );
-	        }
-	    }
-	    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente=" + descliente, true);
-	    xmlhttp.send();
-	}
-})		
-
-//---------------------------------------------------------------------------------	
-
-$( ".selectmenuCausaleIncassi" )
-	.selectmenu({change:
-		function(){
-			var causale = $("#causale_inc_cre").val();
-			
-			if (causale != "") {
-	        	$( "#tdcausale_inc_cre").removeClass("inputFieldError");	
-				$( "#messaggioControlloCausaleIncasso" ).html("");
-			}
-			else {
-				$("#messaggioControlloCausaleIncasso").html("Dato errato");
-				$("#tdcausale_inc_cre").addClass("inputFieldError");	
-			}
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#conti_inc_cre" ).html(xmlhttp.responseText);
-	                $( "#conti_inc_cre" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 300})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-//---------------------------------------------------------------------------------	
-
-$(".numfatt-cliente-multiple").select2().on("change", function() {
-	var numfatt = $("#select2").val();
-	if (numfatt == undefined) {
-		$("#messaggioControlloNumeroFattura").html("Dato errato");
-		$("#tdnumfatt").addClass("inputFieldError");			
-	}
-	else {
-		if (numfatt .length > 0) {
-	    	$( "#tdnumfatt").removeClass("inputFieldError");	
-	        $( "#esitoNumfatt" ).val("");			
-			$( "#messaggioControlloNumeroFattura" ).html("");
-		}
-		else {
-			$("#messaggioControlloNumeroFattura").html("Dato errato");
-			$("#tdnumfatt").addClass("inputFieldError");	
-		}		
-	}
-})	
 
 //---------------------------------------------------------------------------------	
 function cancellaDettaglioIncasso(idconto) {

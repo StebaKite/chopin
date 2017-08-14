@@ -314,7 +314,9 @@ div.scroll-categorie {
 	border: 7px solid #ececec;
 	border-radius: 4px;
 	background-color: #babdb6;	
-	opacity: 0.8;	
+	opacity: 0.8;
+	margin-left: 5px;
+	margin-right: 5px;	
 }
 .datiCreateSottile {
 	border: 2px solid #ececec;
@@ -531,7 +533,7 @@ div.scroll-categorie {
 }
 
 .nav li a:hover {
-	color: #ffffff;
+	color: #a46313;
 }
 
 /*=== submenu ===*/
@@ -560,5 +562,5 @@ div.scroll-categorie {
 }
 
 .nav ul li a:hover {
-	color: #ffffff;
+	color: #a46313;
 }
