@@ -7,6 +7,7 @@ $( "#nuovo-incasso" ).click(function( event ) {
 	$("#button-dettaglio-nuovo-incasso-form").button("disable");
 	$("#descreg_inc_cre").hide();
 	$("#descreg_inc_cre_label").hide();
+	$("#dettagli_inc_cre").hide();
 
 	$("#nuovo-incasso-form").dialog("open");
 });
@@ -37,6 +38,18 @@ $("#nuovo-incasso-form").dialog({
 			text: "Cancel",
 			click: function() {
 				$( this ).dialog( "close" );
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	document.getElementById("nuovoIncasso").reset();
+			        	$("#select2").select2("val", "");			        	
+		            	$("#tddettagli_inc_cre").removeClass("inputFieldError");	
+		    			$("#messaggioControlloDettagliIncasso").html("");			
+			        }
+			    }
+			    xmlhttp.open("GET", "annullaNuovoIncassoFacade.class.php?modo=start", true);
+			    xmlhttp.send();		
 			}
 		}
 	]
@@ -46,8 +59,8 @@ $("#nuovo-incasso-form").dialog({
 $( "#nuovo-dettaglio-incasso-form" ).dialog({
 	autoOpen: false,
 	modal: true,
-	width: 550,
-	height: 250,
+	width: 580,
+	height: 300,
 	buttons: [
 		{
 			text: "Ok",
@@ -143,7 +156,7 @@ $( ".selectmenuCausaleIncCre" )
 		        xmlhttp.onreadystatechange = function() {
 		            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		                $("#conti_inc_cre").html(xmlhttp.responseText);
-		                $("#conti_inc_cre").selectmenu( "refresh" );
+//		                $("#conti_inc_cre").selectmenu( "refresh" );
 		            	$("#button-dettaglio-nuovo-incasso-form").button("enable");	                
 		            	validaNuovoIncasso();
 		            }
@@ -177,7 +190,6 @@ $( ".scadenzeAperteCliente" ).keyup(function() {
 	    xmlhttp.onreadystatechange = function() {
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            $( "#select2" ).html(xmlhttp.responseText);
-//	            $( "#select2" ).selectmenu( "refresh" );
 	        }
 	    }
 	    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_cre=" + descliente + "&codnegozio_inc_cre=" + codnegozio, true);
@@ -187,66 +199,31 @@ $( ".scadenzeAperteCliente" ).keyup(function() {
 
 //---------------------------------------------------------------------------------	
 
-$( ".selectmenuCausaleIncassi" )
-	.selectmenu({change:
-		function(){
-			var causale = $("#causale_inc_cre").val();
-			
-			if (causale != "") {
-	        	$( "#tdcausale_inc_cre").removeClass("inputFieldError");	
-				$( "#messaggioControlloCausaleIncasso" ).html("");
-			}
-			else {
-				$("#messaggioControlloCausaleIncasso").html("Dato errato");
-				$("#tdcausale_inc_cre").addClass("inputFieldError");	
-			}
-		
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#conti_inc_cre" ).html(xmlhttp.responseText);
-	                $( "#conti_inc_cre" ).selectmenu( "refresh" );
-	            }
-	        }
-	        xmlhttp.open("GET", "leggiContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-	        xmlhttp.send();			
-		}
-	})
-	.selectmenu({width: 300})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-//---------------------------------------------------------------------------------	
-
 $(".numfatt-cliente-multiple").select2().on("change", function() {
 	var numfatt = $("#select2").val();
 	if (numfatt == undefined) {
-		$("#messaggioControlloNumeroFattura").html("Dato errato");
-		$("#tdnumfatt").addClass("inputFieldError");			
+		$("#messaggioControlloNumeroFatturaIncasso").html("Dato errato");
+		$("#tdnumfatt_inc_cre").addClass("inputFieldError");			
 	}
 	else {
-		if (numfatt .length > 0) {
-	    	$( "#tdnumfatt").removeClass("inputFieldError");	
-	        $( "#esitoNumfatt" ).val("");			
-			$( "#messaggioControlloNumeroFattura" ).html("");
+		if (numfatt.length > 0) {
+	    	$( "#tdnumfatt_inc_cre").removeClass("inputFieldError");	
+			$( "#messaggioControlloNumeroFatturaIncasso" ).html("");
 		}
 		else {
-			$("#messaggioControlloNumeroFattura").html("Dato errato");
-			$("#tdnumfatt").addClass("inputFieldError");	
+			$("#messaggioControlloNumeroFatturaIncasso").html("Dato errato");
+			$("#tdnumfatt_inc_cre").addClass("inputFieldError");	
 		}		
 	}
 })	
 
 
 
-
-
-
-
-
 //---------------------------------------
 //---------------------------------------
 //---------------------------------------
+
+
 
 //---------------------------------------------------------------------------------				
 

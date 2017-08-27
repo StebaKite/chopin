@@ -247,6 +247,10 @@ class Fornitore implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
+		$this->setIdFornitore("");
+		$this->setCodFornitore("");
+		$this->setNumGgScadenzaFattura("0");
+
 		foreach(pg_fetch_all($result) as $row) {
 			$this->setIdFornitore($row[Fornitore::ID_FORNITORE]);
 			$this->setCodFornitore($row[Fornitore::COD_FORNITORE]);

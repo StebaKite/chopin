@@ -48,8 +48,8 @@ class Cliente implements CoreInterface {
 	private $clienti;
 	private $qtaClienti;
 	private $qtaRegistrazioniCliente;
-	private $scadenzeAperte;
-	private $qtaScadenzeAperte;
+	private $scadenzeDaIncassare;
+	private $qtaScadenzeDaIncassare;
 
 	// Queries
 
@@ -463,13 +463,18 @@ class Cliente implements CoreInterface {
 	public function setQtaRegistrazioniCliente($qtaRegistrazioniCliente) {
 		$this->qtaRegistrazioniCliente = $qtaRegistrazioniCliente;
 	}
-	public function getQtaScadenzeAperte() {
-		return $this->qtaScadenzeAperte;
+	public function setQtaScadenzeDaIncassare($qtaScadenzeDaIncassare){
+		$this->qtaScadenzeDaIncassare = $qtaScadenzeDaIncassare;
 	}
-	public function setQtaScadenzeAperte($qtaScadenzeAperte) {
-		$this->qtaScadenzeAperte = $qtaScadenzeAperte;
+	public function getQtaScadenzeDaIncassare() {
+		return $this->qtaScadenzeDaIncassare;
 	}
-
+    public function getScadenzeDaIncassare(){
+        return $this->scadenzeDaIncassare;
+    }
+    public function setScadenzeDaIncassare($scadenzeDaIncassare){
+        $this->scadenzeDaIncassare = $scadenzeDaIncassare;
+    }
 }
 
 ?>

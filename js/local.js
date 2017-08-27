@@ -94,11 +94,9 @@ $( ".selectmenuCliente" )
 	.addClass("overflow");
 
 $( ".selectmenuConto" )
-	.selectmenu({width: 200})
+	.selectmenu({width: 300})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
-
-
 
 $( ".selectmenuContoCambioConto" )
 	.selectmenu({width: 400})
@@ -130,22 +128,21 @@ $( ".selectCategoriaConti" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( ".selectmenuConti" )
-	.selectmenu({ width: 500 })
+$( ".selectmenuContiInc" )
+	.selectmenu({ width: 450 })
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+$( ".selectmenuContiPag" )
+	.selectmenu({ width: 450 })
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
 
-$( ".selectmenuTipoConto" ).selectmenu({ width: 100 });
-$( ".selectmenuCategoria" ).selectmenu({ width: 150 });
-$( ".selectmenuConto" ).selectmenu({ width: 300 });
-$( ".selectmenuContoCambioConto" ).selectmenu({ width: 350 });
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });
 $( ".selectannoesercizio" ).selectmenu({ width: 70 });
 $( ".selectmenuDataRipSaldo" ).selectmenu({ width: 150 });
-$( ".selectmenuCategoria" ).selectmenu({ width: 250 });
-$( ".selectmenuCliente" ).selectmenu({ width: 350 });
 
 // -----------------------------------------------------------------
 // Ajax su campi di input
@@ -218,6 +215,10 @@ $( "#cliente_cre" ).autocomplete({
 
 $( "#cliente_inc_cre" ).autocomplete({
  	source: elencoClienti
+});	
+
+$( "#fornitore_pag_cre" ).autocomplete({
+ 	source: elencoFornitori
 });	
 
 $( "#fornitore_regrap" ).autocomplete({

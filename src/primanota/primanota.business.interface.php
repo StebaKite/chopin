@@ -13,6 +13,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const RICERCA_REGISTRAZIONE = "Obj_ricercaregistraione";
 	const CREA_REGISTRAZIONE = "Obj_crearegistrazione";
 	const CREA_INCASSO = "Obj_creaincasso";
+	const CREA_PAGAMENTO = "Obj_creapagamento";
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
 	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
 	const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
@@ -32,6 +33,10 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "Obj_aggiornaimportoscadenzafornitore";
 	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "Obj_aggiornaimportoscadenzacliente";
 	const RICERCA_SCADENZE_CLIENTE_APERTE = "Obj_ricercascadenzeclienteaperte";
+	const RICERCA_SCADENZE_FORNITORE_APERTE = "Obj_ricercascadenzefornitoreaperte";
+	const ANNULLA_NUOVA_REGISTRAZIONE = "Obj_annullanuovaregistrazione";
+	const ANNULLA_NUOVO_INCASSO = "Obj_annullanuovoincasso";
+	const ANNULLA_NUOVO_PAGAMENTO = "Obj_annullanuovopagamento";
 
 	// Actions
 
@@ -45,6 +50,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 
 	const CREA_REGISTRAZIONE_OK = "Registrazione salvata con successo";
 	const CREA_INCASSO_OK = "Incasso salvato con successo";
+	const CREA_PAGAMENTO_OK = "Pagamento salvato con successo";
 	const ERRORE_CREAZIONE_REGISTRAZIONE = "ERRORE : registrazione non creata";
 
 	const ERRORE_LETTURA = "Errore fatale durante la lettura delle registrazioni" ;

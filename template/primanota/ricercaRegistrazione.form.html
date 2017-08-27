@@ -47,6 +47,7 @@ $(document).ready( function () {
 				<td align="right">
 					<button id="nuova-registrazione" class="button">%ml.nuovaregistrazione%</button>
 					<button id="nuovo-incasso" class="button">%ml.nuovoincasso%</button>
+					<button id="nuovo-pagamento" class="button">%ml.nuovopagamento%</button>
 				</td>
 			</tr>
 		</tbody>
@@ -141,7 +142,7 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value)" /></div></td>	
+					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></div></td>	
 					<td>%ml.codclie% :</td>
 					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></div></td>
 				</tr>					
@@ -288,7 +289,7 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.numfatt% :</td>
-					<td id="tdnumfatt" colspan="4">
+					<td id="tdnumfatt_inc_cre" colspan="4">
 						<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2" name="numfatt_inc_cre[]" >
 						%elenco_scadenze_cliente%
 						</select>						
@@ -319,7 +320,7 @@ $(document).ready( function () {
 				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>
-					<td><select class='selectmenuConto' id="conti_inc_cre"></select></td>
+					<td><select class="selectmenuContiInc" id="conti_inc_cre" name="conti_inc_cre"></select></td>
 				</tr>	
 				<tr>
 					<td></td>
@@ -330,6 +331,111 @@ $(document).ready( function () {
 						</div>
 					</td>					
 				</tr>
+			</tbody>
+		</table> 	 
+	</form>
+</div>
+
+<div id="nuovo-pagamento-form" title="Nuovo Pagamento"> 
+	<form method="post" id="nuovoPagamento" action="../primanota/creaPagamentoFacade.class.php?modo=go" >
+		<table class="datiCreate">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataPagamento" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizionePagamento" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datareg% :</td>
+					<td id="tddatareg_pag_cre"><input class="dataregpicker" type="text" id="datareg_pag_cre" name="datareg_pag_cre" size="10" maxlength="10" onblur="validaNuovoPagamento()" onchange="validaNuovoPagamento()" /></td>
+					<td id="descreg_pag_cre_label">%ml.descreg% :</td>
+					<td id="tddescreg_pag_cre"><input type="text" id="descreg_pag_cre" name="descreg_pag_cre" size="50" maxlength="200" onkeypress="validaNuovoPagamento()" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCausalePagamento" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioPagamento" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codcau% :</td>
+					<td class="tooltip" id="tdcausale_pag_cre">
+						<select class="selectmenuCausalePagCre" id="causale_pag_cre" name="causale_pag_cre" >
+							<option value=""></option>
+							%elenco_causali_pag_cre%
+						</select>
+					</td>
+					<td>%ml.negozio% :</td>						
+					<td id="tdnegozio_pag_cre">
+						<div class="radioset" >
+							<input type="radio" id="villa_pag_cre" name="codneg_pag_cre" value="VIL" checked onchange="controllaNegozio_pag_cre(this.value)" ><label for="villa_pag_cre">%ml.villa%</label>
+							<input type="radio" id="brembate_pag_cre" name="codneg_pag_cre" value="BRE" onchange="controllaNegozio_pag_cre(this.value)"><label for="brembate_pag_cre">%ml.brembate%</label>
+							<input type="radio" id="trezzo_pag_cre" name="codneg_pag_cre" value="TRE" onchange="controllaNegozio_pag_cre(this.value)"><label for="trezzo_pag_cre">%ml.trezzo%</label>
+						</div>
+					</td>					
+				</tr>					
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloFornitorePagamento" >&nbsp;</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>%ml.codforn% :</td>
+					<td id="tdfornitore_pag_cre"><div><input class="scadenzeAperteFornitore" type="text" id="fornitore_pag_cre" name="fornitore_pag_cre" size="40" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre','messaggioControlloDettagliPagamento','descreg_pag_cre','descreg_pag_cre_label')" /></div></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFatturaPagamento" >&nbsp;</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>%ml.numfatt% :</td>
+					<td id="tdnumfatt_pag_cre" colspan="4">
+						<select class="numfatt-fornitore-multiple" multiple="multiple" style="width: 600px" id="numfatt_pag_cre" name="numfatt_pag_cre[]" >
+						%elenco_scadenze_fornitore%
+						</select>						
+					</td>	
+				</tr>
+				<tr><td><h2>Dettagli</h2></td></tr>										
+				<tr>
+					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliPagamento" >&nbsp;</i></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td id="tddettagli_pag_cre" colspan="4">
+						<table id="dettagli_pag_cre" class="result"></table>			
+					</td>
+				</tr>										
+			</tbody>
+		</table>
+	</form>
+</div>
+
+
+<div id="nuovo-dettaglio-pagamento-form" title="Nuovo Dettaglio"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importo_pag_cre" name="importo_pag_cre" size="20" maxlength="20" ></td>
+				</tr>					
+				<tr>
+					<td>%ml.conto% :</td>
+					<td><select class="selectmenuContiPag" id="conti_pag_cre" name="conti_pag_cre"></select></td>
+				</tr>	
+				<tr>
+					<td></td>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="dare_pag_cre" name="dareavere_pag_cre" value="D" checked ><label for="dare_pag_cre">%ml.dare%</label>
+							<input type="radio" id="avere_pag_cre" name="dareavere_pag_cre" value="A" ><label for="avere_pag_cre">%ml.avere%</label>
+						</div>
+					</td>					
+				</tr>					
 			</tbody>
 		</table> 	 
 	</form>

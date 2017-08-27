@@ -98,10 +98,10 @@ class Causale implements CoreInterface {
 
 		foreach ($this->getCausali() as $unaCausale) {
 			if (trim($unaCausale[Causale::COD_CAUSALE]) == trim($this->getCodCausale())) {
-				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "' selected >" . trim($unaCausale[Causale::COD_CAUSALE]) . " - " . trim($unaCausale[Causale::DES_CAUSALE]) . "</option>";
+				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "' selected >" . trim($unaCausale[Causale::DES_CAUSALE]) . " (" . trim($unaCausale[Causale::COD_CAUSALE]) . ")" . "</option>";
 			}
 			else {
-				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "'>" . trim($unaCausale[Causale::COD_CAUSALE]) . " - " . trim($unaCausale[Causale::DES_CAUSALE]) . "</option>";
+				$elencoCausali .= "<option value='" . trim($unaCausale[Causale::COD_CAUSALE]) . "'>" . trim($unaCausale[Causale::DES_CAUSALE]) . " (" . trim($unaCausale[Causale::COD_CAUSALE]) . ")" . "</option>";
 			}
 		}
 		return $elencoCausali;

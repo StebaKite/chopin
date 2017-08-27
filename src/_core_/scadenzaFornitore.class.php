@@ -40,8 +40,8 @@ class ScadenzaFornitore implements CoreInterface {
 	private $staScadenza;
 	private $idPagamento;
 
-	private $scadenze;
-	private $qtaScadenze;
+	private $scadenzeDaPagare;
+	private $qtaScadenzeDaPagare;
 	private $importoScadenza;
 
 	// fitri di ricerca
@@ -58,6 +58,7 @@ class ScadenzaFornitore implements CoreInterface {
 	const CREA_SCADENZA = "/scadenze/creaScadenzaFornitore.sql";
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaFornitore.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "/scadenze/aggiornaImportoScadenzaFornitore.sql";
+	const RICERCA_SCADENZE_DA_PAGARE = "/scadenze/ricercaScadenzeAperteFornitore.sql";
 
 	// Metodi
 
@@ -76,8 +77,8 @@ class ScadenzaFornitore implements CoreInterface {
 		$this->setDatScadenzaDa(date("d/m/Y"));
 		$this->setDatScadenzaA(date("d/m/Y"));
 		$this->setCodNegozioSel("VIL");
-		$this->setQtaScadenze(0);
-		$this->setScadenze("");
+		$this->setQtaScadenzeDaPagare(0);
+		$this->setScadenzeDaPagare("");
 		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	}
 
@@ -128,11 +129,11 @@ class ScadenzaFornitore implements CoreInterface {
 		$result = $db->getData($sql);
 
 		if ($result) {
-			$this->setScadenze(pg_fetch_all($result));
-			$this->setQtaScadenze(pg_num_rows($result));
+			$this->setScadenzeDaPagare(pg_fetch_all($result));
+			$this->setQtaScadenzeDaPagare(pg_num_rows($result));
 		} else {
-			$this->setScadenze(null);
-			$this->setQtaScadenze(null);
+			$this->setScadenzeDaPagare(null);
+			$this->setQtaScadenzeDaPagare(null);
 		}
 		return $result;
 	}
@@ -143,13 +144,18 @@ class ScadenzaFornitore implements CoreInterface {
 		$array = $utility->getConfig();
 
 		$replace = array(
-				'%id_scadenza%' => trim($this->getIdScadenza()),
-				'%sta_scadenza%' => trim($this->getStaScadenza())
+				'%id_pagamento%' => trim($this->getIdPagamento()),
+				'%sta_scadenza%' => trim($this->getStaScadenza()),
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%num_fattura%' => trim($this->getNumFattura()),
+				'%dat_scadenza%' => trim($this->getDatScadenza())
 		);
 
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_FORNITORE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+
+		return $result;
 	}
 
 	public function inserisci($db)
@@ -183,16 +189,16 @@ class ScadenzaFornitore implements CoreInterface {
 				ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura()
 		);
 
-		if ($this->getQtaScadenze() == 0) {
+		if ($this->getQtaScadenzeDaPagare() == 0) {
 			$resultset = array();
 			array_push($resultset, $item);
-			$this->setScadenze($resultset);
+			$this->setScadenzeDaPagare($resultset);
 		}
 		else {
-			array_push($this->scadenze, $item);
-			sort($this->scadenze);
+			array_push($this->scadenzeDaPagare, $item);
+			sort($this->scadenzeDaPagare);
 		}
-		$this->setQtaScadenze($this->getQtaScadenze() + 1);
+		$this->setQtaScadenzeDaPagare($this->getQtaScadenzeDaPagare() + 1);
 		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	}
 
@@ -220,16 +226,16 @@ class ScadenzaFornitore implements CoreInterface {
 			 * Elimino la scadenza dalla griglia in pagina
 			 */
 			$scadenzeDiff = array();
-			foreach ($this->getScadenze() as $unaScadenza) {
+			foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
 				if ( ($unaScadenza[ScadenzaFornitore::ID_FORNITORE] != trim($this->getIdFornitore()))
 				or   ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
 				or   ($unaScadenza[ScadenzaFornitore::NUM_FATTURA]  != trim($this->getNumFattura())) )
 				{
 					array_push($scadenzeDiff, $unaScadenza);
 				}
-				else $this->setQtaScadenze($this->getQtaScadenze() - 1);
+				else $this->setQtaScadenzeDaPagare($this->getQtaScadenzeDaPagare() - 1);
 			}
-			$this->setScadenze($scadenzeDiff);
+			$this->setScadenzeDaPagare($scadenzeDiff);
 			$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 		}
 		return $result;
@@ -257,7 +263,7 @@ class ScadenzaFornitore implements CoreInterface {
 
 		if ($result) {
 			$scadenzeDiff = array();
-			foreach ($this->getScadenze() as $unaScadenza) {
+			foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
 
 				if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
 					array_push($scadenzeDiff, $unaScadenza);
@@ -271,9 +277,32 @@ class ScadenzaFornitore implements CoreInterface {
 					array_push($scadenzeDiff, $item);
 				}
 			}
-			$this->setScadenze($scadenzeDiff);
+			$this->setScadenzeDaPagare($scadenzeDiff);
 			$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 		}
+		return $result;
+	}
+
+	public function trovaScadenzeDaPagare($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%cod_negozio%' => trim($this->getCodNegozioSel())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_DA_PAGARE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setScadenzeDaPagare(pg_fetch_all($result));
+			$this->setQtaScadenzeDaPagare(pg_num_rows($result));
+		} else {
+			$this->setScadenzeDaPagare(null);
+			$this->setQtaScadenzeDaPagare(0);
+		}
+		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 		return $result;
 	}
 
@@ -412,20 +441,20 @@ class ScadenzaFornitore implements CoreInterface {
     }
 
 
-    public function getScadenze(){
-        return $this->scadenze;
+    public function getScadenzeDaPagare(){
+        return $this->scadenzeDaPagare;
     }
 
-    public function setScadenze($scadenze){
-        $this->scadenze = $scadenze;
+    public function setScadenzeDaPagare($scadenze){
+        $this->scadenzeDaPagare = $scadenze;
     }
 
-    public function getQtaScadenze(){
-        return $this->qtaScadenze;
+    public function getQtaScadenzeDaPagare(){
+        return $this->qtaScadenzeDaPagare;
     }
 
-    public function setQtaScadenze($qtaScadenze){
-        $this->qtaScadenze = $qtaScadenze;
+    public function setQtaScadenzeDaPagare($qtaScadenze){
+        $this->qtaScadenzeDaPagare = $qtaScadenze;
     }
 
 

@@ -96,8 +96,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
+			return "<table id='dettagli_cre' class='result'>" . $thead . $tbody . "</table>";
 		}
-		return "<table id='dettagli_cre' class='result'>" . $thead . $tbody . "</table>";
+		return "";
 	}
 
 	public function makeTabellaScadenzeFornitore($scadenzaFornitore)
@@ -108,7 +109,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		$thead = "";
 		$tbody = "";
 
-		if ($scadenzaFornitore->getQtaScadenze() > 0) {
+		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
 
 			$tbody = "<tbody>";
 			$thead =
@@ -120,13 +121,13 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			"	</tr>" .
 			"</thead>";
 
-			foreach ($scadenzaFornitore->getScadenze() as $unaScadenza)
+			foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
 			{
 				$idFornitore = $unaScadenza[ScadenzaFornitore::ID_FORNITORE];
 				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]));							// cambio i separatori altrimenti la strtotime non funziona
 				$numFatt = $unaScadenza[ScadenzaFornitore::NUM_FATTURA];
 
-				$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $idFornitore . ",'" .$dataScadenza . "'," . $numFatt . $cancella_icon;
+				$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $idFornitore . "," .$dataScadenza . "," . $numFatt . $cancella_icon;
 
 				$onModifyImporto = "onkeyup='modificaImportoScadenzaFornitore(" . $idFornitore . "," . $dataScadenza . "," . $numFatt . ",this.value)'";
 
@@ -140,8 +141,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
+			return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
 		}
-		return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+		return "";
 	}
 
 	public function makeTabellaScadenzeCliente($scadenzaCliente)
@@ -152,7 +154,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		$thead = "";
 		$tbody = "";
 
-		if ($scadenzaCliente->getQtaScadenze() > 0) {
+		if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
 
 			$tbody = "<tbody>";
 			$thead =
@@ -164,7 +166,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			"	</tr>" .
 			"</thead>";
 
-			foreach ($scadenzaCliente->getScadenze() as $unaScadenza)
+			foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
 			{
 				$idCliente = $unaScadenza[ScadenzaCliente::ID_CLIENTE];
 				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]));
@@ -184,8 +186,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
+			return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
 		}
-		return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+		return "";
 	}
 
 	public function ricalcolaSaldi($db, $datRegistrazione)

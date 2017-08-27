@@ -49,20 +49,24 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
 			$fornitore->setDesFornitore($registrazione->getDesFornitore());
 			$fornitore->cercaConDescrizione($db);
 
-			// prelevo i codici dei conti fornitori in configurazione
-			$contoFornitori = explode(",", $array["contiFornitore"]);
-			$sottoconto->setCodConto($contoFornitori[0]);	// fornitori nazionali
+			if ($fornitore->getCodFornitore() != "")
+			{
+				// prelevo i codici dei conti fornitori in configurazione
+				$contoFornitori = explode(",", $array["contiFornitore"]);
+				$sottoconto->setCodConto($contoFornitori[0]);	// fornitori nazionali
 
-			// cerco il sottoconto corrispondene al fornitore
-			$sottoconto->leggi($db);
-			$sottoconto->searchSottoconto($fornitore->getCodFornitore());
+				// cerco il sottoconto corrispondene al fornitore
+				$sottoconto->leggi($db);
+				$sottoconto->searchSottoconto($fornitore->getCodFornitore());
 
-			// compongo la colonna "conto" da inserire nel dettaglio
-			$dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
-			$dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
-			$dettaglioRegistrazione->aggiungi();
+				// compongo la colonna "conto" da inserire nel dettaglio
+				$dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
+				$dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
+				$dettaglioRegistrazione->aggiungi();
+			}
+			echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
 		}
-		echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
+		echo "";
 	}
 }
 

@@ -133,12 +133,12 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		/**
 		 * Inserisco tutte le scadenza aggiunte nella tabella
 		 */
-		if ($scadenzaFornitore->getQtaScadenze() > 0)
+		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
 		{
 			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
 			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 
-			foreach ($scadenzaFornitore->getScadenze() as $unaScadenza)
+			foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
 			{
 				$data = str_replace("'", "", $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);			// la datascad arriva con gli apici per il db
 				$dataScadenza = strtotime(str_replace('/', '-', $data));							// cambio i separatori altrimenti la strtotime non funziona
@@ -178,12 +178,12 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		/**
 		 * Inserisco tutte le scadenza aggiunte nella tabella
 		 */
-		if ($scadenzaCliente->getQtaScadenze() > 0)
+		if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0)
 		{
 			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
 			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
 
-			foreach ($scadenzaCliente->getScadenze() as $unaScadenza)
+			foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
 			{
 				$data = str_replace("'", "", $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);			// la datascad arriva con gli apici per il db
 				$dataScadenza = strtotime(str_replace('/', '-', $data));							// cambio i separatori altrimenti la strtotime non funziona

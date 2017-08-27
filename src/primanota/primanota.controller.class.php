@@ -143,6 +143,24 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 
+		// Registrazione pagamento
+
+		if (isset($_REQUEST["desfornitore_pag_cre"])) {
+			$fornitore->setDesFornitore($_REQUEST["desfornitore_pag_cre"]);
+			$scadenzaFornitore->setCodNegozioSel($_REQUEST["codnegozio_pag_cre"]);
+		}
+
+		if (isset($_REQUEST["datareg_pag_cre"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_pag_cre"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_pag_cre"]);
+			$registrazione->setCodCausale($_REQUEST["causale_pag_cre"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_pag_cre"]);
+			$registrazione->setDesCliente($_REQUEST["cliente_pag_cre"]);
+			$registrazione->setNumFattura($_REQUEST["numfatt_pag_cre"]);
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato("");
+		}
+
 		// Serializzo in sessione gli oggetti modificati
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);

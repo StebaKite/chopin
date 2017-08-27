@@ -47,6 +47,8 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 		$fornitore->setDesFornitore($registrazione->getDesFornitore());
 		$fornitore->cercaConDescrizione($db);
 
+		$scadenzaFornitore->setQtaScadenzeDaPagare(0);
+		$scadenzaFornitore->setScadenzeDaPagare("");
 		/**
 		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza
 		 */
