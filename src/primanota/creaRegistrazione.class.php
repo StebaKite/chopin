@@ -56,42 +56,53 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		$scadenzaCliente = ScadenzaCliente::getInstance();
 		$db = Database::getInstance();
 		$db->beginTransaction();
+		$dettagli_ok = true;
 
 		if ($registrazione->inserisci($db)) {
 
 			foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
-				$this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio);
+				if ($this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)) {}
+				else {
+					$dettagli_ok = false;
+					break;
+				}
 			}
 
 			/**
 			 * Inserisco le eventuali scadenze del fornitore o del cliente
 			 */
-			if ($registrazione->getIdFornitore() != null) {
-				if ($scadenzaFornitore->getDatScadenza() != "") {
-					if (!$this->creaScadenzeFornitore($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore)) {
-						$db->rollbackTransaction();
-						return false;
-					}
-				}
-			}
-			else {
-				if ($registrazione->getIdCliente() != null) {
-					if ($scadenzaCliente->getDatRegistrazione() != "") {
-						if (!$this->creaScadenzeCliente($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaCliente)) {
+			if ($dettagli_ok)
+			{
+				if ($registrazione->getIdFornitore() != null) {
+					if ($scadenzaFornitore->getDatScadenza() != "") {
+						if (!$this->creaScadenzeFornitore($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore)) {
 							$db->rollbackTransaction();
 							return false;
 						}
 					}
 				}
+				else {
+					if ($registrazione->getIdCliente() != null) {
+						if ($scadenzaCliente->getDatRegistrazione() != "") {
+							if (!$this->creaScadenzeCliente($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaCliente)) {
+								$db->rollbackTransaction();
+								return false;
+							}
+						}
+					}
+				}
+
+				/***
+				 * Ricalcolo i saldi dei conti
+				 */
+				$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+				$db->commitTransaction();
+				return true;
 			}
-
-			/***
-			 * Ricalcolo i saldi dei conti
-			 */
-			$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
-
-			$db->commitTransaction();
-			return true;
+			else {
+				$db->rollbackTransaction();
+				return false;
+			}
 		}
 		else {
 			$db->rollbackTransaction();

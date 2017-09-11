@@ -16,9 +16,9 @@ class Mercato implements CoreInterface {
 	const CITTA_MERCATO = "citta_mercato";
 	const COD_NEGOZIO = "cod_negozio";
 	const QTA_REGISTRAZIONI_MERCATO = "tot_registrazioni_mercato";
-	
+
 	// dati Mercato
-	
+
 	private $idMercato;
 	private $codMercato;
 	private $desMercato;
@@ -26,40 +26,41 @@ class Mercato implements CoreInterface {
 	private $codNegozio;
 	private $mercati;
 	private $qtaMercati;
-	
+
 	// Altri dati funzionali
 
 
 	// Queries
-	
+
 	const RICERCA_MERCATI   = "/anagrafica/ricercaMercato.sql";
 	const CREA_MERCATO 		= "/anagrafica/creaMercato.sql";
 	const AGGIORNA_MERCATO  = "/anagrafica/updateMercato.sql";
 	const CANCELLA_MERCATO  = "/anagrafica/deleteMercato.sql";
-	
+	const RICERCA_MERCATI_NEGOZIO = "/anagrafica/ricercaMercatiNegozio.sql";
+
 	// Metodi
-	
+
 	function __construct() {
 		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
 	}
-	
+
 	public function getInstance()
 	{
 		if (!isset($_SESSION[self::MERCATO])) $_SESSION[self::MERCATO] = serialize(new Mercato());
 		return unserialize($_SESSION[self::MERCATO]);
 	}
 
-	public function load($db) {
-	
+	public function load($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$replace = array();
-		
+
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_MERCATI;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
-	
+
 		if ($result) {
 			$this->setMercati(pg_fetch_all($result));
 			$this->setQtaMercati(pg_num_rows($result));
@@ -70,11 +71,11 @@ class Mercato implements CoreInterface {
 		return $result;
 	}
 
-	public function nuovo($db) {
-
+	public function nuovo($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%cod_mercato%' => $this->getCodMercato(),
 				'%des_mercato%' => $this->getDesMercato(),
@@ -84,16 +85,16 @@ class Mercato implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_MERCATO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
-		
+
 		if ($result) $this->load($db);		// refresh dei mercati caricati
 		return $result;
 	}
 
-	public function aggiorna($db) {
-	
+	public function aggiorna($db)
+	{
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_mercato%' => trim($this->getIdMercato()),
 				'%cod_mercato%' => trim($this->getCodMercato()),
@@ -108,10 +109,10 @@ class Mercato implements CoreInterface {
 	}
 
 	public function cancella($db) {
-	
+
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
+
 		$replace = array(
 				'%id_mercato%' => $this->getIdMercato()
 		);
@@ -122,10 +123,33 @@ class Mercato implements CoreInterface {
 		if ($result) $this->load($db);		// refresh dei mercati caricati
 		return $result;
 	}
-	
+
+	public function cercaMercatiNegozio($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%cod_negozio%' => $this->getCodNegozio()
+		);
+
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_MERCATI_NEGOZIO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setMercati(pg_fetch_all($result));
+			$this->setQtaMercati(pg_num_rows($result));
+		} else {
+			$this->setMercati(null);
+			$this->setQtaMercati(null);
+		}
+		return $result;
+	}
+
 	/**
 	 * Getters & Setters
-	 */		
+	 */
 
     public function getRoot(){
         return $this->root;

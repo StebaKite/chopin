@@ -7,6 +7,7 @@ require_once 'scadenzaFornitore.class.php';
 require_once 'scadenzaCliente.class.php';
 require_once 'fornitore.class.php';
 require_once 'cliente.class.php';
+require_once 'mercato.class.php';
 
 class PrimanotaController
 {
@@ -22,6 +23,7 @@ class PrimanotaController
 	const SCADENZA_CLIENTE = "Obj_scadenzacliente";
 	const FORNITORE = "Obj_fornitore";
 	const CLIENTE = "Obj_cliente";
+	const MERCATO = "Obj_mercato";
 
 	// Metodi
 
@@ -44,6 +46,7 @@ class PrimanotaController
 		$scadenzaCliente = ScadenzaCliente::getInstance();
 		$fornitore = Fornitore::getInstance();
 		$cliente = Cliente::getInstance();
+		$mercato = Mercato::getInstance();
 
 		// Registrazione fatture
 
@@ -161,6 +164,31 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 
+		// Registrazione corrispettivo mercato
+
+		if (isset($_REQUEST["codneg_cormer_cre"])) {
+			$mercato->setCodNegozio($_REQUEST["codneg_cormer_cre"]);
+		}
+
+		if (isset($_REQUEST["codconto_cormer_cre"])) {
+			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_cormer_cre"]);
+			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_cormer_cre"]);
+			$dettaglioRegistrazione->setAliquota($_REQUEST["aliquota_cormer_cre"]);
+			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_cormer_cre"]);
+			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_cormer_cre"]);
+		}
+
+		if (isset($_REQUEST["datareg_cormer_cre"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_cormer_cre"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_cormer_cre"]);
+			$registrazione->setCodCausale($_REQUEST["causale_cormer_cre"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_cormer_cre"]);
+			$registrazione->setDesCliente("");
+			$registrazione->setNumFattura("");
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato($_REQUEST["mercati_cormer_cre"]);
+		}
+
 		// Serializzo in sessione gli oggetti modificati
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
@@ -170,6 +198,7 @@ class PrimanotaController
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		$_SESSION[self::CLIENTE] = serialize($cliente);
+		$_SESSION[self::MERCATO] = serialize($mercato);
 
 		if ($this->getRequest() == "start") { $this->primanotaFunction->start(); }
 		if ($this->getRequest() == "go") 	{ $this->primanotaFunction->go();}

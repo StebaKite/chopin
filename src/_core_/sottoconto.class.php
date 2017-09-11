@@ -289,8 +289,8 @@ class Sottoconto implements CoreInterface {
 				break;
 			}
 		}
+		$_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
 	}
-
 
 	/************************************************************************
 	 * Getters e setters

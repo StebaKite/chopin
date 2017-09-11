@@ -32,6 +32,9 @@ class DettaglioRegistrazione implements CoreInterface {
 	private $qtaDettagliRegistrazione;
 	private $totDare;
 	private $totAvere;
+	private $aliquota;
+	private $impIva;
+	private $imponibile;
 
 	// Queries
 
@@ -321,6 +324,33 @@ class DettaglioRegistrazione implements CoreInterface {
 
     public function setTotAvere($totAvere){
         $this->totAvere = $totAvere;
+    }
+
+
+    public function getAliquota(){
+        return $this->aliquota;
+    }
+
+    public function setAliquota($aliquota){
+        $this->aliquota = $aliquota;
+    }
+
+
+    public function getImpIva(){
+        return $this->impIva;
+    }
+
+    public function setImpIva($impIva){
+        $this->impIva = $impIva;
+    }
+
+
+    public function getImponibile(){
+        return $this->imponibile;
+    }
+
+    public function setImponibile($imponibile){
+        $this->imponibile = $imponibile;
     }
 
 }
