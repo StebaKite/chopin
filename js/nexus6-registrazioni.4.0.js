@@ -410,9 +410,13 @@ function modificaImportoDettaglioRegistrazione(conto,sottoconto,importo,idDettag
 	        		$("#dettagli_cre").html(dettagliTable);			// registrazione
 	        		$("#dettagli_inc_cre").html(dettagliTable);		// incassi
 	        		$("#dettagli_pag_cre").html(dettagliTable);		// pagamenti
+	        		$("#dettagli_cormer_cre").html(dettagliTable);	// corrispettivi mercato
+	        		$("#dettagli_corneg_cre").html(dettagliTable);	// corrispettivi negozio
 	        		controllaDettagliRegistrazione("tddettagli_cre","messaggioControlloDettagli","descreg_cre","descreg_cre_label");
 	        		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
 	        		controllaDettagliRegistrazione("tddettagli_pag_cre","messaggioControlloDettagliPagamento","descreg_pag_cre","descreg_pag_cre_label");
+	        		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
+	        		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
 	            }
 	        }
 	    }
@@ -432,9 +436,13 @@ function modificaSegnoDettaglioRegistrazione(conto,sottoconto,segno,idDettaglio)
 	        		$("#dettagli_cre").html(dettagliTable);			// registrazione
 	        		$("#dettagli_inc_cre").html(dettagliTable);		// incasso
 	        		$("#dettagli_pag_cre").html(dettagliTable);		// incasso
+	        		$("#dettagli_cormer_cre").html(dettagliTable);	// corrispettivi mercato
+	        		$("#dettagli_corneg_cre").html(dettagliTable);	// corrispettivi negozio
 	        		controllaDettagliRegistrazione("tddettagli_cre","messaggioControlloDettagli","descreg_cre","descreg_cre_label");
 	        		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
 	        		controllaDettagliRegistrazione("tddettagli_pag_cre","messaggioControlloDettagliPagamento","descreg_pag_cre","descreg_pag_cre_label");
+	        		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
+	        		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
 	            }
 	        }
 	    }

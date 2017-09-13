@@ -189,6 +189,27 @@ class PrimanotaController
 			$registrazione->setIdMercato($_REQUEST["mercati_cormer_cre"]);
 		}
 
+		// Registrazione corrispettivo negozio
+
+		if (isset($_REQUEST["codconto_corneg_cre"])) {
+			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_corneg_cre"]);
+			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_corneg_cre"]);
+			$dettaglioRegistrazione->setAliquota($_REQUEST["aliquota_corneg_cre"]);
+			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_corneg_cre"]);
+			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_corneg_cre"]);
+		}
+
+		if (isset($_REQUEST["datareg_corneg_cre"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_corneg_cre"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_corneg_cre"]);
+			$registrazione->setCodCausale($_REQUEST["causale_corneg_cre"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_corneg_cre"]);
+			$registrazione->setDesCliente("");
+			$registrazione->setNumFattura("");
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato("");
+		}
+
 		// Serializzo in sessione gli oggetti modificati
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);

@@ -547,3 +547,95 @@ $(document).ready( function () {
   </form>
 </div>
 
+
+<div id="nuovo-corrispettivo-negozio-form" title="Nuovo Corrispettivo Negozio"> 
+	<form method="post" id="nuovoCorrispettivoNegozio" action="../primanota/creaCorrispettivoNegozioFacade.class.php?modo=go" >
+		<table class="datiCreate">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataCorrispettivoNegozio" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneCorrispettivoNegozio" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datareg% :</td>
+					<td id="tddatareg_corneg_cre"><input class="dataregpicker" type="text" id="datareg_corneg_cre" name="datareg_corneg_cre" size="10" maxlength="10" onblur="validaNuovoCorrispettivoNegozio()" onchange="validaNuovoCorrispettivoNegozio()" /></td>
+					<td id="descreg_corneg_cre_label">%ml.descreg% :</td>
+					<td id="tddescreg_corneg_cre"><input type="text" id="descreg_corneg_cre" name="descreg_corneg_cre" size="50" maxlength="200" onkeypress="validaNuovoCorrispettivoNegozio()" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleCorrispettivoNegozio" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioCorrispettivoNegozio" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codcau% :</td>
+					<td class="tooltip" id="tdcausale_corneg_cre">
+						<select class="selectmenuCausaleCorNegCre" id="causale_corneg_cre" name="causale_corneg_cre" >
+							<option value=""></option>
+							%elenco_causali_corneg_cre%
+						</select>
+					</td>
+					<td>%ml.negozio% :</td>						
+					<td id="tdnegozio_corneg_cre">
+						<div class="radioset" >
+							<input type="radio" id="villa_corneg_cre" name="codneg_corneg_cre" value="VIL" /><label for="villa_corneg_cre">%ml.villa%</label>
+							<input type="radio" id="brembate_corneg_cre" name="codneg_corneg_cre" value="BRE" /><label for="brembate_corneg_cre">%ml.brembate%</label>
+							<input type="radio" id="trezzo_corneg_cre" name="codneg_corneg_cre" value="TRE" /><label for="trezzo_corneg_cre">%ml.trezzo%</label>
+						</div>
+					</td>					
+				</tr>
+				<tr><td><h2>Dettagli</h2></td></tr>										
+				<tr>
+					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliCorrispettivoNegozio" >&nbsp;</i></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td id="tddettagli_corneg_cre" colspan="4">
+						<table id="dettagli_corneg_cre" class="result"></table>			
+					</td>
+				</tr>										
+			</tbody>
+		</table>
+	</form>
+</div>		
+
+<div id="nuovo-dettaglio-corrispettivonegozio-form" title="Nuovo Dettaglio Corrispettivo Negozio"> 
+	<form>
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td>%ml.importo% :</td>
+					<td class="tooltip"><input type="text" id="importo_corneg_cre" name="importo_corneg_cre" size="10" maxlength="20" onblur="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')" ></td>
+					<td>
+						<div class="radioset" >
+							<input type="radio" id="aliquota10_corneg_cre" name="aliquota_corneg_cre" value="1.10" checked onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')"><label for="aliquota10_corneg_cre">%ml.aliquota10%</label>
+							<input type="radio" id="aliquota20_corneg_cre" name="aliquota_corneg_cre" value="1.22" onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')"><label for="aliquota20_corneg_cre">%ml.aliquota22%</label>
+						</div>
+					</td>					
+				</tr>
+				<tr>
+					<td>%ml.iva% :</td>
+					<td class="tooltip"><input type="text" id="iva_corneg_cre" name="iva_corneg_cre" size="10" maxlength="20"></td>				
+				</tr>				
+				<tr>
+					<td>%ml.imponibile% :</td>
+					<td class="tooltip"><input type="text" id="imponibile_corneg_cre" name="imponibile_corneg_cre" size="10" maxlength="20"></td>
+				</tr>				
+				<tr>
+					<td>%ml.conto% :</td>
+					<td colspan="2">
+						<select class='selectmenuContiCor' id="conti_corneg_cre">%elenco_conti%</select>
+					</td>
+				</tr>	
+			</tbody>
+			<tfood>
+				<tr style="font-weight:bolder; color:red;">
+					<td colspan="4"><p id="msgquad_corneg_cre"></p></td>
+				</tr>
+			</tfood>
+		</table>
+	</form>	
+</div>

@@ -235,6 +235,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 				'%elenco_causali_inc_cre%' => $elencoCausali,
 				'%elenco_causali_pag_cre%' => $elencoCausali,
 				'%elenco_causali_cormer_cre%' => $elencoCausali,
+				'%elenco_causali_corneg_cre%' => $elencoCausali,
 				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
 				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
 				'%risultato_ricerca%' => $risultato_ricerca

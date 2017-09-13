@@ -40,6 +40,8 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const LEGGI_MERCATI_NEGOZIO = "Obj_leggimercatinegozio";
 	const AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO = "Obj_aggiungidettagliocorrispettivomercato";
 	const CREA_CORRISPETTIVO_MERCATO = "Obj_creacorrispettivomercato";
+	const AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO = "Obj_aggiungidettagliocorrispettivonegozio";
+	const CREA_CORRISPETTIVO_NEGOZIO = "Obj_creacorrispettivonegozio";
 
 	// Actions
 

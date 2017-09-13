@@ -7,7 +7,7 @@ require_once 'database.class.php';
 require_once 'dettaglioRegistrazione.class.php';
 require_once 'sottoconto.class.php';
 
-class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract implements PrimanotaBusinessInterface
+class AggiungiNuovoDettaglioCorrispettivoNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface
 {
 	function __construct() {
 
@@ -16,8 +16,8 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
 
 	public function getInstance()
 	{
-		if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO])) $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO] = serialize(new AggiungiNuovoDettaglioCorrispettivoMercato());
-		return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO]);
+		if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO])) $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO] = serialize(new AggiungiNuovoDettaglioCorrispettivoNegozio());
+		return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO]);
 	}
 
 	public function start() {

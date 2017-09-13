@@ -42,7 +42,7 @@ $("#nuovo-corrispettivo-mercato-form").dialog({
 				var xmlhttp = new XMLHttpRequest();
 			    xmlhttp.onreadystatechange = function() {
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			        	document.getElementById("nuovoPagamento").reset();
+			        	document.getElementById("nuovoCorrispettivoMercato").reset();
 		            	$("#tddettagli_cormer_cre").removeClass("inputFieldError");	
 		    			$("#messaggioControlloDettagliCorrispettivoMercato").html("");			
 			        }
@@ -105,6 +105,109 @@ $( "#nuovo-dettaglio-corrispettivomercato-form" ).dialog({
 
 //---------------------------------------------------------------------------------			
 
+$( "#nuovo-corrispettivo-negozio" ).click(function( event ) {
+	$("#button-ok-nuovo-corrispettivonegozio-form").button("disable");
+	$("#button-dettaglio-nuovo-corrispettivonegozio-form").button("disable");
+	$("#descreg_corneg_cre").hide();
+	$("#descreg_corneg_cre_label").hide();
+	$("#dettagli_corneg_cre").hide();
+
+	$("#nuovo-corrispettivo-negozio-form").dialog("open");
+});
+
+$("#nuovo-corrispettivo-negozio-form").dialog({
+	autoOpen: false,
+	modal: true,
+	width: 1000,
+	buttons: [
+		{
+			id: "button-ok-nuovo-corrispettivonegozio-form",
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#nuovoCorrispettivoNegozio").submit();				
+			}
+		},
+		{
+			id: "button-dettaglio-nuovo-corrispettivonegozio-form",
+			text: "Nuovo Dettaglio",
+			click: function() {				
+				$("#button-Ok-dettaglio-nuovo-corrispettivonegozio-form").button("disable");
+				$("#importo_detcorneg_cre").val("");
+				$("#nuovo-dettaglio-corrispettivonegozio-form").dialog( "open" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	document.getElementById("nuovoCorrispettivoNegozio").reset();
+		            	$("#tddettagli_corneg_cre").removeClass("inputFieldError");	
+		    			$("#messaggioControlloDettagliCorrispettivoNegozio").html("");			
+			        }
+			    }
+			    xmlhttp.open("GET", "annullaNuovoCorrispettivoNegozioFacade.class.php?modo=start", true);
+			    xmlhttp.send();		
+			}
+		}
+	]
+});
+
+//---------------------------------------------------------------------------------			
+
+$( "#nuovo-dettaglio-corrispettivonegozio-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 580,
+	height: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+
+				var importo = $("#importo_corneg_cre").val();
+				var importoNormalizzato = importo.trim().replace(",", ".");
+				var imponibile = $("#imponibile_corneg_cre").val();
+				var imponibileNormalizzato = imponibile.trim().replace(",", ".");
+				var iva = $("#iva_corneg_cre").val();
+				var ivaNormalizzato = iva.trim().replace(",", ".");
+				
+				if($('#aliquota10_corneg_cre').is(':checked')) { var aliquota = $("#aliquota10_corneg_cre").val(); }
+				if($('#aliquota20_corneg_cre').is(':checked')) { var aliquota = $("#aliquota20_corneg_cre").val(); }
+
+				var conto = $("#conti_corneg_cre").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
+				var idconto = conto.substring(0, 6);
+				
+				var xmlhttp = new XMLHttpRequest();
+			    xmlhttp.onreadystatechange = function() {
+			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			        	var dettagliTable = xmlhttp.responseText;
+		        		$("#dettagli_corneg_cre").html(dettagliTable);
+		        		$("#dettagli_corneg_cre").show();
+		        		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
+		        	}
+			    }
+			    xmlhttp.open("GET", "aggiungiNuovoDettaglioCorrispettivoNegozioFacade.class.php?modo=go&codconto_corneg_cre=" + idconto + "&aliquota_corneg_cre=" + aliquota + "&importo_corneg_cre=" + importoNormalizzato + "&iva_corneg_cre=" + ivaNormalizzato + "&imponibile_corneg_cre=" + imponibileNormalizzato , true);
+			    xmlhttp.send();				
+
+				$( this ).dialog( "close" );
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
+
+//---------------------------------------------------------------------------------			
+
 $( ".selectmenuCausaleCorMerCre" )
 	.selectmenu({change:
 		function(){
@@ -151,6 +254,42 @@ $('input[type=radio][name=codneg_cormer_cre]').change(function() {
     xmlhttp.open("GET", "leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_cre=" + this.value, true);
     xmlhttp.send();			
 });
+
+//---------------------------------------------------------------------------------			
+
+$( ".selectmenuCausaleCorNegCre" )
+	.selectmenu({change:
+		function(){
+			var causale = $("#causale_corneg_cre").val();
+			
+			if (causale != "") {
+	        	$( "#tdcausale_corneg_cre").removeClass("inputFieldError");	
+				$( "#messaggioControlloCausaleCorrispettivoNegozio" ).html("");
+				
+				var xmlhttp = new XMLHttpRequest();
+		        xmlhttp.onreadystatechange = function() {
+		            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		                $("#conti_corneg_cre").html(xmlhttp.responseText);
+		            	$("#button-dettaglio-nuovo-corrispettivonegozio-form").button("enable");	                
+		            	validaNuovoCorrispettivoNegozio();
+		            }
+		        }
+		        xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+		        xmlhttp.send();			
+								
+			}
+			else {
+				$("#tdcausale_corneg_cre").addClass("inputFieldError");	
+				$("#messaggioControlloCausaleCorrispettivoNegozio").html("Dato errato");
+				$("#button-dettaglio-nuovo-corrispettivonegozio-form").button("disable");	                
+			}
+		}
+	})
+	.selectmenu({width: 300})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+//---------------------------------------------------------------------------------			
 
 function calcolaImponibile(campoImporto, campoAliquota, campoImponibile, campoIva, msgSquadratura)
 {	
@@ -221,6 +360,41 @@ function validaNuovoCorrispettivoMercato()
 		$("#button-ok-nuovo-corrispettivomercato-form").button("enable");
 	} else {
 		$("#button-ok-nuovo-corrispettivomercato-form").button("disable");	
+	}
+}
+
+//---------------------------------------------------------------------------------		
+//CREA NUOVO CORRISPETTIVO NEGOZIO : controllo campi in pagina
+//---------------------------------------------------------------------------------		
+
+function validaNuovoCorrispettivoNegozio()
+{
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
+	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
+	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
+	 */
+	var esito = "";
+	
+	controllaDataRegistrazione("datareg_corneg_cre", "tddatareg_corneg_cre", "messaggioControlloDataCorrispettivoNegozio");
+	if ($("#messaggioControlloDataCorrispettivoNegozio").text() == "") 
+		esito = esito + "1"; else esito = esito + "0";
+
+	if ($("#descreg_corneg_cre").val() != "") {
+		if (controllaDescrizione("descreg_corneg_cre", "tddescreg_corneg_cre", "messaggioControlloDescrizioneCorrispettivoNegozio")) 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+
+	if ($("#causale_corneg_cre").val() != "") {
+		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
+		if ($("#messaggioControlloCausaleCorrispettivoNegozio").text() == "") 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+	
+	if (esito == "111") {
+		$("#button-ok-nuovo-corrispettivonegozio-form").button("enable");
+	} else {
+		$("#button-ok-nuovo-corrispettivonegozio-form").button("disable");	
 	}
 }
 
