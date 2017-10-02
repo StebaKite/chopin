@@ -1428,7 +1428,9 @@ class Pdf extends FPDF implements UtilityComponentInterface
 		$totaleUtilePerdita = 0;
 		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
 		$classe = array('','','','','','','','','','','','');					// dodici mesi
-
+		$progrUtilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);	     		// dodici mesi
+		$progrClasse = array('','','','','','','','','','','','');		      	// dodici mesi
+		
 		/**
 		 * Calcolo l'utile o la perdita per ciascun mese
 		 */
@@ -1437,6 +1439,11 @@ class Pdf extends FPDF implements UtilityComponentInterface
 			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
 			if ($utilePerditaMesi[$i] < 0) $classe[$i] = "ko";
 			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];
+			
+			for ($j = $i; $j < 13; $j++) {
+			    $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
+			    if ($progrUtilePerditaMesi[$j] < 0) $progrClasse[$j] = "ko";
+			}
 		}
 
 		/**
@@ -1444,8 +1451,10 @@ class Pdf extends FPDF implements UtilityComponentInterface
 		 */
 
 		$fill = !$fill;
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
 		$this->SetFont('','',10);
-		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Differenza Ricavi - Costi"),'LR',0,'L',$fill);
+		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Diff. Ricavi - Costi MESE"),'LR',0,'L',$fill);
 		for ($i = 1; $i < 13; $i++) {
 			if ($utilePerditaMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
 			else {
@@ -1468,6 +1477,32 @@ class Pdf extends FPDF implements UtilityComponentInterface
 		$this->Cell($w[$i],8, number_format($totaleUtilePerdita, 0, ',', '.'),'LR',0,'R',$fill);
 		$this->Ln();
 
+        // Seconda riga : progressivo Ricavi-Costi
+        
+		$fill = !$fill;
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('','',10);
+		$this->Cell($w[0],8, iconv('UTF-8', 'windows-1252', "Diff. Ricavi - Costi PROGRESSIVO"),'LR',0,'L',$fill);
+		for ($i = 1; $i < 13; $i++) {
+		    if ($progrUtilePerditaMesi[$i] == 0) $this->Cell($w[$i],8, "---",'LR',0,'R',$fill);
+		    else {
+		        if ($progrClasse[$i] == 'ko') {
+		            $this->SetTextColor(255,0,0);
+		            $this->SetFont('','B',10);
+		        }
+		        
+		        $this->Cell($w[$i],8, number_format($progrUtilePerditaMesi[$i], 0, ',', '.'),'LR',0,'R',$fill);
+		        $this->SetTextColor(0);
+		        $this->SetFont('','',10);
+		    }
+		}
+		$this->SetFont('','B',10);
+		
+		$this->Cell($w[$i],8, "",'LR',0,'R',$fill);
+		$this->Ln();
+		
+		
 		$this->Cell(array_sum($w),0,'','T');
 	}
 
