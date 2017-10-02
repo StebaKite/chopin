@@ -111,7 +111,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 								}
 								case ($array[self::PAGAMENTO]): {
 									$bottoneVisualizza = self::VISUALIZZA_PAGAMENTO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
-									$bottoneModifica = "&nbsp;";
+									$bottoneModifica = self::MODIFICA_PAGAMENTO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
@@ -232,9 +232,11 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 				'%trezzo-selected%' => ($registrazione->getCodNegozioSel() == "TRE") ? "selected" : "",
 				'%elenco_causali%' => $elencoCausali,
 				'%elenco_causali_cre%' => $elencoCausali,
+				'%elenco_causali_mod%' => $elencoCausali,
 				'%elenco_causali_inc_cre%' => $elencoCausali,
 				'%elenco_causali_pag_cre%' => $elencoCausali,
-				'%elenco_causali_cormer_cre%' => $elencoCausali,
+                '%elenco_causali_pag_mod%' => $elencoCausali,
+                '%elenco_causali_cormer_cre%' => $elencoCausali,
 				'%elenco_causali_corneg_cre%' => $elencoCausali,
 				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
 				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),

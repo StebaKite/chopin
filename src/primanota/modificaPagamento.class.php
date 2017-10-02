@@ -1,68 +1,76 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'modificaPagamento.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'registrazione.class.php';
+require_once 'fornitore.class.php';
+require_once 'cliente.class.php';
+require_once 'scadenzaFornitore.class.php';
+require_once 'scadenzaCliente.class.php';
+require_once 'causale.class.php';
 
-class ModificaPagamento extends primanotaAbstract {
-
-	private static $_instance = null;
-	private static $categoria_causali = 'GENERI';
-
-	public static $azioneModificaPagamento = "../primanota/modificaPagamentoFacade.class.php?modo=go";
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessInterface
+{
+	function __construct()
+	{
+	    $this->root = $_SERVER['DOCUMENT_ROOT'];
+	    $this->utility = Utility::getInstance();
+	    $this->array = $this->utility->getConfig();
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaPagamento();
-
-		return self::$_instance;
+	public function getInstance()
+	{
+	    if (!isset($_SESSION[self::MODIFICA_PAGAMENTO])) $_SESSION[self::MODIFICA_PAGAMENTO] = serialize(new ModificaPagamento());
+	    return unserialize($_SESSION[self::MODIFICA_PAGAMENTO]);
 	}
+	
+	public function start()
+	{
+	    $datiPagina = "";
+	    $registrazione = Registrazione::getInstance();
+	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $fornitore = Fornitore::getInstance();
+	    $scadenzaFornitore = ScadenzaFornitore::getInstance();
+	    $causale = Causale::getInstance();
+	    
+	    $utility = Utility::getInstance();
+	    $db = Database::getInstance();
+	    
+	    $registrazione->leggi($db);
+	    $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+	    
+        $fornitore->setIdFornitore($registrazione->getIdFornitore());
+        $fornitore->leggi($db);
+        $scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
+        
+        $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());        
+        $scadenzaFornitore->trovaScadenzeDaPagare($db);
+        $registrazione->setNumFattureDaPagare($this->makeTabellaFattureDaPagare($scadenzaFornitore,"scadenze_aperte_pag_mod"));
 
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'modificaPagamento.template.php';
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$this->prelevaDatiPagamento($utility);
-		$this->prelevaDatiDettagliPagamento($utility);
-
-		/**
-		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la
-		 * quale redirigere l'utente dopo la modifica
-		 */
-		$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
-
-		$modificaPagamentoTemplate = ModificaPagamentoTemplate::getInstance();
-		$this->preparaPagina($modificaPagamentoTemplate);
-
-		// Compone la pagina
-		include(self::$testata);
-		$modificaPagamentoTemplate->displayPagina();
-		include(self::$piede);
+        $scadenzaFornitore->trovaScadenzePagate($db);
+        $registrazione->setNumFatturePagate($this->makeTabellaFatturePagate($scadenzaFornitore,"scadenze_chiuse_pag_mod"));
+                
+	    $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
+	    $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
+	    
+	    $causale->setCodCausale($registrazione->getCodCausale());
+	    $causale->loadContiConfigurati($db);
+	    	
+	    $datiPagina = trim($registrazione->getDatRegistrazione()) . "|" 
+	        . trim($registrazione->getDesRegistrazione()) . "|"
+	        . trim($registrazione->getCodCausale()) . "|"
+	        . trim($registrazione->getCodNegozio()) . "|"
+	        . trim($fornitore->getDesFornitore()) . "|"
+	        . trim($registrazione->getNumFattureDaPagare()) . "|"
+	        . trim($registrazione->getNumFatturePagate()) . "|"
+	        . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione, "dettagli_mod")) . "|"
+	        . trim($causale->getContiCausale())
+	    ;
+	    
+	    echo $datiPagina;
 	}
 
 	public function go() {

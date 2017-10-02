@@ -25,7 +25,6 @@ interface ScadenzeBusinessInterface extends MainNexus6Interface {
 
 	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
 	const MSG_DA_MODIFICA = "messaggioModifica";
-	const SCADENZA_APERTA = "00";
 
 	// Errori e messaggi
 

@@ -3,11 +3,10 @@ body {
 	padding: 0px;
 	font-family: Ubuntu;
 	font-size: 13px;
-	background-image: url("../images/archicinema006.jpg");
-	background-repeat: no-repeat;
+/*	background-image: url("../images/archicinema006.jpg");
+	background-repeat: no-repeat; */
 	background-size: cover;
-/*	background-color: #ffffff; 
-	background-color: #d9d4d4; */
+	background-color: #d9d4d4; 
 	color: #515151;
 }
 	
@@ -311,9 +310,9 @@ div.scroll-categorie {
 }	
 .result, .ricerca, .dettaglio, .datiCreate {
 	border-collapse:collapse; 
-	border: 7px solid #ececec;
+	border: 5px solid #ececec;
 	border-radius: 4px;
-	background-color: #babdb6;	
+	background-color: #d9d4d4;	
 	opacity: 0.8;
 	margin-left: 5px;
 	margin-right: 5px;	

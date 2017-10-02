@@ -1,6 +1,7 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
+require_once 'lavoroPianificato.class.php';
 
 abstract class PrimanotaAbstract extends Nexus6Abstract {
 
@@ -50,8 +51,88 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	public static $messaggio;
 
 	// Metodi comuni di utilita della prima note ---------------------------
-
-	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione)
+	
+	public function makeTabellaFattureDaPagare($scadenzeFornitore, $idTable)
+	{
+	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
+	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
+	    
+	    $bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $scadenzeFornitore->getIdScadenza() . $aggiungi_icon;
+	    
+	    $thead = "";
+	    $tbody = "";
+	    
+	    if ($scadenzeFornitore->getQtaScadenzeDaPagare() > 0) {
+	        
+	        $tbody = "<tbody>";
+	        $thead =
+	        "<thead>" .
+	        "	<tr>" .
+	        "		<th width='20'>&nbsp;</th>" .
+	        "		<th width='50'>Num.Fat.</th>" .
+	        "		<th width='50'>Data</th>" .
+	        "		<th width='50' align='center'>Importo</th>" .
+	        "		<th width='200'>Nota</th>" .
+	        "	</tr>" .
+	        "</thead>";
+	        
+	        foreach ($scadenzeFornitore->getScadenzeDaPagare() as $unaScadenza)
+	        {
+	            $tbody .=
+	            "<tr>" .
+	            "	<td id='icons'>" . $bottoneAggiungiFatturaPagata . "</td>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+	            "	<td align='center'>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+	            "</tr>";
+	        }
+	        $tbody .= "</tbody>";
+	    }
+        return "<table id='" . $idTable . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+	}	    
+	
+	public function makeTabellaFatturePagate($scadenzeFornitore, $idTable)
+	{
+	    $rimuovi_fattura_pagata_href = "<a class='tooltip' onclick='rimuoviFatturaPagata(";
+	    $rimuovi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-minus'></span></li></a>";
+	    
+	    $bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $scadenzeFornitore->getIdScadenza() . $rimuovi_icon;
+	    
+	    $thead = "";
+	    $tbody = "";
+	    
+	    if ($scadenzeFornitore->getQtaScadenzePagate() > 0) {
+	        
+	        $tbody = "<tbody>";
+	        $thead =
+	        "<thead>" .
+	        "	<tr>" .
+	        "		<th width='50'>Num.Fat.</th>" .
+	        "		<th width='50'>Data</th>" .
+	        "		<th width='50' align='center'>Importo</th>" .
+	        "		<th width='200'>Nota</th>" .
+	        "		<th width='20'>&nbsp;</th>" .
+	        "	</tr>" .
+	        "</thead>";
+	        
+	        foreach ($scadenzeFornitore->getScadenzePagate() as $unaScadenza)
+	        {
+	            $tbody .=
+	            "<tr>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+	            "	<td align='center'>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+	            "	<td>" . $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+	            "	<td id='icons'>" . $bottoneRimuoviFatturaPagata . "</td>" .
+	            "</tr>";
+	        }
+	        $tbody .= "</tbody>";
+	    }
+	    return "<table id='" . $idTable . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+	}
+	
+	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione, $idTable)
 	{
 		$cancella_dettaglio_nuova_registrazione_href = "<a class='tooltip' onclick='cancellaDettaglioNuovaRegistrazione(";
 		$cancella_icon = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
@@ -65,7 +146,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			$thead =
 			"<thead>" .
 			"	<tr>" .
-			"		<th width='500'>Conto</th>" .
+			"		<th width='600'>Conto</th>" .
 			"		<th width='150' align='right'>Importo</th>" .
 			"		<th align='center'>D/A</th>" .
 			"		<th>&nbsp;</th>" .
@@ -96,15 +177,19 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
-			return "<table id='dettagli_cre' class='result'>" . $thead . $tbody . "</table>";
+			return "<table id='" . $idTable . "' class='result'>" . $thead . $tbody . "</table>";
 		}
 		return "";
 	}
 
-	public function makeTabellaScadenzeFornitore($scadenzaFornitore)
+	public function makeTabellaScadenzeFornitore($scadenzaFornitore, $idTable)
 	{
+		$cancellaLocked = "<li class='ui-state-default ui-corner-all'><span class='ui-icon ui-icon-locked'></span></li>";
 		$cancella_nuova_scadenza_fornitore_href = "<a class='tooltip' onclick='cancellaNuovaScadenzaFornitore(";
-		$cancella_icon = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+		$cancella_icon = ")'><li class='ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'></span></li></a>";
+
+		$data_ko = "class='ko'";
+		$data_ok = "class='ok'";
 
 		$thead = "";
 		$tbody = "";
@@ -116,7 +201,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			"<thead>" .
 			"	<tr>" .
 			"		<th width='80'>Data</th>" .
-			"		<th width='80' align='right'>Importo</th>" .
+			"		<th width='60'>Stato</th>" .
+			"		<th width='80'>Importo</th>" .
 			"		<th>&nbsp;</th>" .
 			"	</tr>" .
 			"</thead>";
@@ -127,13 +213,22 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]));							// cambio i separatori altrimenti la strtotime non funziona
 				$numFatt = $unaScadenza[ScadenzaFornitore::NUM_FATTURA];
 
-				$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $idFornitore . "," .$dataScadenza . "," . $numFatt . $cancella_icon;
-
 				$onModifyImporto = "onkeyup='modificaImportoScadenzaFornitore(" . $idFornitore . "," . $dataScadenza . "," . $numFatt . ",this.value)'";
+				$stato = ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == "10") ? "Pagata" : "Da Pagare";
+
+				if ($stato == "Da Pagare") {
+					$tdclass = $data_ko;
+					$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $idFornitore . "," .$dataScadenza . "," . $numFatt . $cancella_icon;
+				}
+				else {
+					$tdclass = $data_ok;
+					$bottoneCancella = $cancellaLocked;
+				}
 
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+				"	<td " . $tdclass . ">" . $stato . "</td>" .
 				"	<td align='right'>" .
 				"		<input type='text' size='15' maxlength='10' " . $onModifyImporto . " value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
 				"	</td>" .
@@ -141,12 +236,12 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
-			return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+			return "<table id='" . $idTable . "' class='result'>" . $thead . $tbody . "</table>";
 		}
 		return "";
 	}
 
-	public function makeTabellaScadenzeCliente($scadenzaCliente)
+	public function makeTabellaScadenzeCliente($scadenzaCliente, $idTable)
 	{
 		$cancella_nuova_scadenza_cliente_href = "<a class='tooltip' onclick='cancellaNuovaScadenzaCliente(";
 		$cancella_icon = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
@@ -186,7 +281,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
-			return "<table id='scadenzesuppl_cre' class='result'>" . $thead . $tbody . "</table>";
+			return "<table id='". $idTable . "' class='result'>" . $thead . $tbody . "</table>";
 		}
 		return "";
 	}
@@ -492,17 +587,17 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 // 		return $result;
 // 	}
 
-	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
+// 	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_registrazione%' => trim($idregistrazione)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiDettagliRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_registrazione%' => trim($idregistrazione)
+// 		);
+// 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiDettagliRegistrazione;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->getData($sql);
+// 		return $result;
+// 	}
 
 // 	public function leggiScadenzeRegistrazione($db, $utility, $idregistrazione) {
 

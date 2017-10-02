@@ -26,8 +26,9 @@ class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
 
 	public function go()
 	{
+		$db = Database::getInstance();
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$dettaglioRegistrazione->cancella();
+		$dettaglioRegistrazione->cancella($db);
 		echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
 	}
 }

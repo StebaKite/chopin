@@ -128,6 +128,20 @@ class PrimanotaController
 			$scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
 		}
 
+		if (isset($_REQUEST["idreg"])) {
+			$registrazione->setIdRegistrazione($_REQUEST["idreg"]);
+		}
+
+		if (isset($_REQUEST["datareg_mod"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_mod"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_mod"]);
+			$registrazione->setCodCausale($_REQUEST["causale_mod"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_mod"]);
+			$registrazione->setDesFornitore($_REQUEST["fornitore_mod"]);
+			$registrazione->setDesCliente($_REQUEST["cliente_mod"]);
+			$registrazione->setNumFattura($_REQUEST["numfatt_mod"]);
+		}
+
 		// Registrazione incasso
 
 		if (isset($_REQUEST["descliente_inc_cre"])) {
@@ -163,7 +177,24 @@ class PrimanotaController
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato("");
 		}
-
+		
+		if (isset($_REQUEST["idpag"])) {
+		    $registrazione->setIdRegistrazione($_REQUEST["idpag"]);
+		}
+		
+		if (isset($_REQUEST["datareg_pag_mod"])) {
+		    $registrazione->setDatRegistrazione($_REQUEST["datareg_pag_mod"]);
+		    $registrazione->setDesRegistrazione($_REQUEST["descreg_pag_mod"]);
+		    $registrazione->setCodCausale($_REQUEST["causale_pag_mod"]);
+		    $registrazione->setCodNegozio($_REQUEST["codneg_pag_mod"]);
+		    $registrazione->setDesFornitore($_REQUEST["fornitore_pag_mod"]);
+		    $registrazione->setNumFattura($_REQUEST["numfatt_pag_mod"]);
+		}
+		
+		if (isset($_REQUEST["idscad"])) {
+		    $scadenzaFornitore->setIdScadenza($_REQUEST["idscad"]);
+		}
+		
 		// Registrazione corrispettivo mercato
 
 		if (isset($_REQUEST["codneg_cormer_cre"])) {

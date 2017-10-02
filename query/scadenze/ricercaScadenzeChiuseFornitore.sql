@@ -12,7 +12,5 @@ select
 	id_pagamento
 		
 from contabilita.scadenza
-where id_fornitore = %id_fornitore%
-and cod_negozio = '%cod_negozio%'
-and sta_scadenza = '00'
+where id_pagamento = %id_registrazione%
 order by dat_scadenza desc

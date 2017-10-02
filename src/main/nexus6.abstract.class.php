@@ -313,72 +313,72 @@ abstract class Nexus6Abstract {
 // 		return self::$elenco_conti;
 // 	}
 
-	/**
-	 * Questo metodo carica tutti i mercati
-	 *
-	 * @param unknown $utility
-	 * @param unknown $db
-	 * @return string
-	 */
-	public function caricaMercati($utility, $db) {
+// 	/**
+// 	 * Questo metodo carica tutti i mercati
+// 	 *
+// 	 * @param unknown $utility
+// 	 * @param unknown $db
+// 	 * @return string
+// 	 */
+// 	public function caricaMercati($utility, $db) {
 
-		$array = $utility->getConfig();
+// 		$array = $utility->getConfig();
 
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercati;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
+// 		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercati;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+// 		$result = $db->getData($sql);
 
-		while ($row = pg_fetch_row($result)) {
-			if ($row[0] == $_SESSION["idmercato"]) {
-				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[2] . "</option>";
-			}
-			else {
-				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[2] . "</option>";
-			}
-		}
-		return self::$elenco_mercati;
-	}
+// 		while ($row = pg_fetch_row($result)) {
+// 			if ($row[0] == $_SESSION["idmercato"]) {
+// 				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[2] . "</option>";
+// 			}
+// 			else {
+// 				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[2] . "</option>";
+// 			}
+// 		}
+// 		return self::$elenco_mercati;
+// 	}
 
-	public function caricaMercatiNegozio($utility, $db) {
+// 	public function caricaMercatiNegozio($utility, $db) {
 
-		$array = $utility->getConfig();
-		self::$replace = array(
-				'%cod_negozio%' => trim($_SESSION["codneg"])
-		);
+// 		$array = $utility->getConfig();
+// 		self::$replace = array(
+// 				'%cod_negozio%' => trim($_SESSION["codneg"])
+// 		);
 
-		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercatiNegozio;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
-		$result = $db->getData($sql);
+// 		$sqlTemplate = $this->root . $array['query'] . self::$queryRicercaMercatiNegozio;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), self::$replace);
+// 		$result = $db->getData($sql);
 
-		while ($row = pg_fetch_row($result)) {
-			if ($row[0] == $_SESSION["idmercato"]) {
-				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[1] . "</option>";
-			}
-			else {
-				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[1] . "</option>";
-			}
-		}
-		return self::$elenco_mercati;
-	}
+// 		while ($row = pg_fetch_row($result)) {
+// 			if ($row[0] == $_SESSION["idmercato"]) {
+// 				self::$elenco_mercati .= "<option value='" . $row[0] . "' selected>" . $row[1] . "</option>";
+// 			}
+// 			else {
+// 				self::$elenco_mercati .= "<option value='" . $row[0] . "'>" . $row[1] . "</option>";
+// 			}
+// 		}
+// 		return self::$elenco_mercati;
+// 	}
 
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @param unknown $idcliente
-	 * @return unknown
-	 */
-	public function leggiIdCliente($db, $utility, $idcliente) {
+// 	/**
+// 	 *
+// 	 * @param unknown $db
+// 	 * @param unknown $utility
+// 	 * @param unknown $idcliente
+// 	 * @return unknown
+// 	 */
+// 	public function leggiIdCliente($db, $utility, $idcliente) {
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_cliente%' => trim($idcliente)
-		);
-		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdCliente;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+// 		$array = $utility->getConfig();
+// 		$replace = array(
+// 				'%id_cliente%' => trim($idcliente)
+// 		);
+// 		$sqlTemplate = $this->root . $array['query'] . self::$queryLeggiIdCliente;
+// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+// 		$result = $db->execSql($sql);
+// 		return $result;
+// 	}
 
 	public function leggiLavoriPianificatiBatchMode($db, $utility, $project_root) {
 

@@ -113,7 +113,7 @@ confermaTip = Conferma esecuzione lavoro
 ; Funzioni -----------------------------
 ;
 creaNuovaRegistrazione = Nuova Registrazione
-ricercaRegistrazione = Ricerca Registrazione
+ricercaRegistrazione = Ricerca Operazione
 modificaRegistrazione = Modifica Registrazione
 modificaCorrispettivoMercato = Modifica Corrispettivo Mercato
 modificaCorrispettivoNegozio = Modifica Corrispettivo Negozio

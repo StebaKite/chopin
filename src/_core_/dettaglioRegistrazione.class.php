@@ -39,8 +39,10 @@ class DettaglioRegistrazione implements CoreInterface {
 	// Queries
 
 	const CREA_DETTAGLIO_REGISTRAZIONE = "/primanota/creaDettaglioRegistrazione.sql";
+	const CERCA_DETTAGLI_REGISTRAZIONE = "/primanota/leggiDettagliRegistrazione.sql";
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "/primanota/aggiornaImportoDettaglioRegistrazione.sql";
 	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "/primanota/aggiornaSegnoDettaglioRegistrazione.sql";
+	const CANCELLA_DETTAGLIO_REGISTRAZIONE = "/primanota/deleteDettaglioRegistrazione.sql";
 
 	// Metodi
 
@@ -59,6 +61,28 @@ class DettaglioRegistrazione implements CoreInterface {
 		$this->setDettagliRegistrazione(null);
 		$this->setQtaDettagliRegistrazione(0);
 		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+	}
+
+	public function leggiDettagliRegistrazione($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DETTAGLI_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setDettagliRegistrazione(pg_fetch_all($result));
+			$this->setQtaDettagliRegistrazione(pg_num_rows($result));
+		} else {
+			$this->setDettagliRegistrazione(null);
+			$this->setQtaDettagliRegistrazione(0);
+		}
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+		return $result;
 	}
 
 	public function aggiungi()
@@ -86,7 +110,7 @@ class DettaglioRegistrazione implements CoreInterface {
 		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
 	}
 
-	public function cancella()
+	public function cancella($db)
 	{
 		$dettagliDiff = array();
 		foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
@@ -94,7 +118,20 @@ class DettaglioRegistrazione implements CoreInterface {
 			if (trim($conto[0]) != trim($this->getCodConto())) {
 				array_push($dettagliDiff, $unDettaglio);
 			}
-			else $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
+			else {
+				$utility = Utility::getInstance();
+				$array = $utility->getConfig();
+				$replace = array(
+						'%id_dettaglio_registrazione%' => trim($unDettaglio[self::ID_DETTAGLIO_REGISTRAZIONE])
+				);
+
+				$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_DETTAGLIO_REGISTRAZIONE;
+				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+				$result = $db->execSql($sql);
+
+				if ($result)
+					$this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
+			}
 		}
 		$this->setDettagliRegistrazione($dettagliDiff);
 		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);

@@ -39,6 +39,8 @@ class Registrazione implements CoreInterface {
 	private $idCliente;
 	private $codCausale;
 	private $numFattura;
+	private $numFatturePagate;
+	private $numFattureDaPagare;
 	private $datRegistrazione;
 	private $datInserimento;
 	private $staRegistrazione;
@@ -62,6 +64,7 @@ class Registrazione implements CoreInterface {
 	const CANCELLA_REGISTRAZIONE = "/primanota/deleteRegistrazione.sql";
 	const RICERCA_REGISTRAZIONE = "/primanota/ricercaRegistrazione.sql";
 	const CREA_REGISTRAZIONE = "/primanota/creaRegistrazione.sql";
+	const AGGIORNA_REGISTRAZIONE = "/primanota/updateRegistrazione.sql";
 	const CERCA_FATTURA_FORNITORE = "/primanota/ricercaFatturaFornitore.sql";
 	const CERCA_FATTURA_CLIENTE = "/primanota/ricercaFatturaCliente.sql";
 
@@ -93,13 +96,13 @@ class Registrazione implements CoreInterface {
 		if ($result) {
 			foreach (pg_fetch_all($result) as $row) {
 				$this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
-				$this->setDatScadenza($row[self::DAT_SCADENZA]);
-				$this->setDesRegistrazione($row[self::DES_REGISTRAZIONE]);
+				$this->setDatScadenza(trim($row[self::DAT_SCADENZA]));
+				$this->setDesRegistrazione(trim($row[self::DES_REGISTRAZIONE]));
 				$this->setIdFornitore($row[self::ID_FORNITORE]);
 				$this->setIdCliente($row[self::ID_CLIENTE]);
 				$this->setCodCausale($row[self::COD_CAUSALE]);
 				$this->setNumFattura($row[self::NUM_FATTURA]);
-				$this->setDatRegistrazione($row[self::DAT_REGISTRAZIONE]);
+				$this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
 				$this->setDatInserimento($row[self::DAT_INSERIMENTO]);
 				$this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
 				$this->setCodNegozio($row[self::COD_NEGOZIO]);
@@ -216,6 +219,49 @@ class Registrazione implements CoreInterface {
 		if ($result) {
 			$this->setIdRegistrazione($db->getLastIdUsed());		// l'id generato dall'inserimento
 		}
+		$_SESSION[self::REGISTRAZIONE] = serialize($this);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		return $result;
+	}
+
+	public function aggiorna($db)
+	{
+		$utility = Utility::getInstance();
+		$cliente = Cliente::getInstance();
+		$fornitore = Fornitore::getInstance();
+
+		$cliente->setDesCliente($this->getDesCliente());
+		$fornitore->setDesFornitore($this->getDesFornitore());
+
+		if ($this->getDesCliente() != "") {
+			$cliente->cercaConDescrizione($db);
+			$this->setIdCliente($cliente->getIdCliente());
+		}
+		if ($this->getDesFornitore() != "") {
+			$fornitore->cercaConDescrizione($db);
+			$this->setIdFornitore($fornitore->getIdFornitore());
+		}
+
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione()),
+				'%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
+				'%dat_scadenza%' => ($this->getDatScadenza() != "") ? "'" . $this->getDatScadenza() . "'" : "null",
+				'%dat_registrazione%' => ($this->getDatRegistrazione() != "") ? "'" . $this->getDatRegistrazione() . "'" : "null" ,
+				'%dat_inserimento%' => date("Y-m-d H:i:s"),
+				'%num_fattura%' => ($this->getNumFattura() != "") ? "'" . $this->getNumFattura() . "'" : "null" ,
+				'%cod_causale%' => $this->getCodCausale(),
+				'%id_fornitore%' => ($fornitore->getIdFornitore() != "") ? "'" . $fornitore->getIdFornitore() . "'" : "null" ,
+				'%id_cliente%' => ($cliente->getIdCliente() != "") ? "'" . $cliente->getIdCliente() . "'" : "null" ,
+				'%sta_registrazione%' => $this->getStaRegistrazione(),
+				'%cod_negozio%' => ($this->getCodNegozio() != "") ? "'" . $this->getCodNegozio() . "'" : "null",
+				'%id_mercato%' => ($this->getIdMercato() != "") ? "'" . $this->getIdMercato() . "'" : "null"
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
 		$_SESSION[self::REGISTRAZIONE] = serialize($this);
 		$_SESSION[self::CLIENTE] = serialize($cliente);
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
@@ -433,6 +479,25 @@ class Registrazione implements CoreInterface {
 
     public function setDesFornitore($desFornitore){
         $this->desFornitore = $desFornitore;
+    }
+
+
+    public function getNumFatturePagate(){
+        return $this->numFatturePagate;
+    }
+
+    public function setNumFatturePagate($numFatturePagate){
+        $this->numFatturePagate = $numFatturePagate;
+        return $this;
+    }
+
+    public function getNumFattureDaPagare(){
+        return $this->numFattureDaPagare;
+    }
+
+    public function setNumFattureDaPagare($numFattureDaPagare){
+        $this->numFattureDaPagare = $numFattureDaPagare;
+        return $this;
     }
 
 }

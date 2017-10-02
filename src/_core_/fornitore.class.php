@@ -250,11 +250,14 @@ class Fornitore implements CoreInterface {
 		$this->setIdFornitore("");
 		$this->setCodFornitore("");
 		$this->setNumGgScadenzaFattura("0");
+		$this->setTipAddebito("");
 
-		foreach(pg_fetch_all($result) as $row) {
+		foreach(pg_fetch_all($result) as $row)
+		{
 			$this->setIdFornitore($row[Fornitore::ID_FORNITORE]);
 			$this->setCodFornitore($row[Fornitore::COD_FORNITORE]);
 			$this->setNumGgScadenzaFattura($row[Fornitore::NUM_GG_SCADENZA_FATTURA]);
+			$this->setTipAddebito($row[Fornitore::TIP_ADDEBITO]);
 		}
 		$_SESSION[self::FORNITORE] = serialize($this);
 	}

@@ -42,7 +42,11 @@ class ScadenzaFornitore implements CoreInterface {
 
 	private $scadenzeDaPagare;
 	private $qtaScadenzeDaPagare;
+	private $scadenzePagate;
+	private $qtaScadenzePagate;
 	private $importoScadenza;
+	private $idFornitoreOrig;
+	private $numFatturaOrig;
 
 	// fitri di ricerca
 
@@ -54,12 +58,15 @@ class ScadenzaFornitore implements CoreInterface {
 	// Queries
 
 	const CERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.sql";
+	const CERCA_SCADENZE_REGISTRAZIONE = "/scadenze/ricercaScadenzeFornitoreRegistrazione.sql";
 	const CAMBIO_STATO_SCADENZA_FORNITORE = "/scadenze/updateStatoScadenzaFornitore.sql";
 	const CREA_SCADENZA = "/scadenze/creaScadenzaFornitore.sql";
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaFornitore.sql";
+	const AGGIORNA_SCADENZA = "/scadenze/aggiornaScadenzaFornitore.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "/scadenze/aggiornaImportoScadenzaFornitore.sql";
 	const RICERCA_SCADENZE_DA_PAGARE = "/scadenze/ricercaScadenzeAperteFornitore.sql";
-
+	const RICERCA_SCADENZE_PAGATE = "/scadenze/ricercaScadenzeChiuseFornitore.sql";
+	
 	// Metodi
 
 	function __construct() {
@@ -138,6 +145,28 @@ class ScadenzaFornitore implements CoreInterface {
 		return $result;
 	}
 
+	public function trovaScadenzeRegistrazione($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setScadenzeDaPagare(pg_fetch_all($result));
+			$this->setQtaScadenzeDaPagare(pg_num_rows($result));
+		} else {
+			$this->setScadenzeDaPagare(null);
+			$this->setQtaScadenzeDaPagare(0);
+		}
+		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+		return $result;
+	}
+
 	public function cambiaStato($db)
 	{
 		$utility = Utility::getInstance();
@@ -152,6 +181,33 @@ class ScadenzaFornitore implements CoreInterface {
 		);
 
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_FORNITORE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->execSql($sql);
+
+		return $result;
+	}
+
+	public function aggiorna($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione()),
+				'%dat_scadenza%' => trim($this->getDatScadenza()),
+				'%imp_in_scadenza%' => trim($this->getImpInScadenza()),
+				'%nota_scadenza%' => trim($this->getNotaScadenza()),
+				'%tip_addebito%' => trim($this->getTipAddebito()),
+				'%cod_negozio%' => trim($this->getCodNegozio()),
+				'%id_fornitore%' => trim($this->getIdFornitore()),
+				'%id_fornitore_orig%' => trim($this->getIdFornitoreOrig()),
+				'%num_fattura%' => trim($this->getNumFattura()),
+				'%num_fattura_orig%' => trim($this->getNumFatturaOrig()),
+				'%sta_scadenza%' => trim($this->getStaScadenza()),
+				'%id_pagamento%' => trim($this->getIdPagamento())
+		);
+
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SCADENZA;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
@@ -227,9 +283,9 @@ class ScadenzaFornitore implements CoreInterface {
 			 */
 			$scadenzeDiff = array();
 			foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
-				if ( ($unaScadenza[ScadenzaFornitore::ID_FORNITORE] != trim($this->getIdFornitore()))
-				or   ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
-				or   ($unaScadenza[ScadenzaFornitore::NUM_FATTURA]  != trim($this->getNumFattura())) )
+				if ( (trim($unaScadenza[ScadenzaFornitore::ID_FORNITORE]) != trim($this->getIdFornitore()))
+				or   (trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) != $dataScad)
+				or   (trim($unaScadenza[ScadenzaFornitore::NUM_FATTURA])  != trim($this->getNumFattura())) )
 				{
 					array_push($scadenzeDiff, $unaScadenza);
 				}
@@ -244,7 +300,7 @@ class ScadenzaFornitore implements CoreInterface {
 	public function aggiornaImporto($db)
 	{
 		/**
-		 * Aggiorno l'importo in scadenza sulla tabella DB
+		 * Aggiorno l'importo in scadenza in scadenziario fornitori
 		 */
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
@@ -261,6 +317,10 @@ class ScadenzaFornitore implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
+		/*
+		 * Se tutto ok tolgo la scadenza nell'array delle scadenze
+		 */
+
 		if ($result) {
 			$scadenzeDiff = array();
 			foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
@@ -269,10 +329,16 @@ class ScadenzaFornitore implements CoreInterface {
 					array_push($scadenzeDiff, $unaScadenza);
 				else {
 					$item = array (
-						ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
+						ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],
 						ScadenzaFornitore::DAT_SCADENZA => $unaScadenza[ScadenzaFornitore::DAT_SCADENZA],
 						ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
-						ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA]
+						ScadenzaFornitore::NOTA_SCADENZA => $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA],
+						ScadenzaFornitore::TIP_ADDEBITO => $unaScadenza[ScadenzaFornitore::TIP_ADDEBITO],
+						ScadenzaFornitore::COD_NEGOZIO => $unaScadenza[ScadenzaFornitore::COD_NEGOZIO],
+						ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
+						ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA],
+						ScadenzaFornitore::STA_SCADENZA => $unaScadenza[ScadenzaFornitore::STA_SCADENZA],
+						ScadenzaFornitore::ID_PAGAMENTO => $unaScadenza[ScadenzaFornitore::ID_PAGAMENTO]
 					);
 					array_push($scadenzeDiff, $item);
 				}
@@ -306,6 +372,28 @@ class ScadenzaFornitore implements CoreInterface {
 		return $result;
 	}
 
+	public function trovaScadenzePagate($db)
+	{
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    $replace = array(
+	        '%id_registrazione%' => trim($this->getIdRegistrazione()),	        
+	    );
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_PAGATE;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->getData($sql);
+	    
+	    if ($result) {
+	        $this->setScadenzePagate(pg_fetch_all($result));
+	        $this->setQtaScadenzePagate(pg_num_rows($result));
+	    } else {
+	        $this->setScadenzePagate(null);
+	        $this->setQtaScadenzePagate(0);
+	    }
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	    return $result;
+	}
+	
 	/************************************************************************
 	 * Getters e setters
 	 */
@@ -464,6 +552,43 @@ class ScadenzaFornitore implements CoreInterface {
 
     public function setImportoScadenza($importoScadenza){
         $this->importoScadenza = $importoScadenza;
+    }
+
+
+    public function getIdFornitoreOrig(){
+        return $this->idFornitoreOrig;
+    }
+
+    public function setIdFornitoreOrig($idFornitoreOrig){
+        $this->idFornitoreOrig = $idFornitoreOrig;
+    }
+
+
+    public function getNumFatturaOrig(){
+        return $this->numFatturaOrig;
+    }
+
+    public function setNumFatturaOrig($numFatturaOrig){
+        $this->numFatturaOrig = $numFatturaOrig;
+    }
+
+
+    public function getScadenzePagate(){
+        return $this->scadenzePagate;
+    }
+
+    public function setScadenzePagate($scadenzePagate){
+        $this->scadenzePagate = $scadenzePagate;
+        return $this;
+    }
+
+    public function getQtaScadenzePagate(){
+        return $this->qtaScadenzePagate;
+    }
+
+    public function setQtaScadenzePagate($qtaScadenzePagate){
+        $this->qtaScadenzePagate = $qtaScadenzePagate;
+        return $this;
     }
 
 }

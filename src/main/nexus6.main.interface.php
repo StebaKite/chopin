@@ -35,6 +35,20 @@ interface MainNexus6Interface {
 	const TREZZO = "TRE";
 	const BREMBATE = "BRE";
 
+	// Costanti comuni
+
+	const EURO = 'EURO';
+	const SCADENZA_APERTA = "00";
+	const SCADENZA_CHIUSA = "10";
+	const SCADENZA_RIMANDATA = '02';
+
+	const SCADENZA_DAPAGARE = "Da Pagare";
+	const SCADENZA_PAGATA = "Pagato";
+	const SCADENZA_POSTICIPATA = "Posticipato";
+
+	const CONTO_IN_DARE = "Dare";
+	const CONTO_IN_AVERE = "Avere";
+
 	// Bottoni
 
 	const BOTTONE_ESTRAI_PDF = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";

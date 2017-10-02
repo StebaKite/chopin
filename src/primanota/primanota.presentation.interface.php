@@ -28,13 +28,13 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 
 	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a class='tooltip' href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=";
 	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_REGISTRAZIONE_HREF = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-
-
+	const MODIFICA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='modificaRegistrazione(";
+	const MODIFICA_PAGAMENTO_HREF = "<a class='tooltip' onclick='modificaPagamento(";
+	
 	const CANCELLA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='cancellaRegistrazione(";
 
 	const VISUALIZZA_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-	const MODIFICA_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+	const MODIFICA_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
 	const CANCELLA_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 
 	// Actions

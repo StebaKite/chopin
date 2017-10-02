@@ -8,10 +8,13 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 
 	const REGISTRAZIONE = "Obj_registrazione";
 	const CAUSALE		= "Obj_causale";
-	const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
 
+	const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
 	const RICERCA_REGISTRAZIONE = "Obj_ricercaregistraione";
 	const CREA_REGISTRAZIONE = "Obj_crearegistrazione";
+	const MODIFICA_REGISTRAZIONE = "Obj_modificaregistrazione";
+	const MODIFICA_PAGAMENTO = "Obj_modificapagamento";
+	
 	const CREA_INCASSO = "Obj_creaincasso";
 	const CREA_PAGAMENTO = "Obj_creapagamento";
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
@@ -39,12 +42,14 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const ANNULLA_NUOVO_PAGAMENTO = "Obj_annullanuovopagamento";
 	const ANNULLA_NUOVO_CORRISPETTIVO_MERCATO = "Obj_annullanuovocorrispettivomercato";
 	const ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO = "Obj_annullanuovocorrispettivonegozio";
+	const ANNULLA_MODIFICA_REGISTRAZIONE = "Obj_annullamodificaregistrazione";
 	const LEGGI_MERCATI_NEGOZIO = "Obj_leggimercatinegozio";
 	const AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO = "Obj_aggiungidettagliocorrispettivomercato";
 	const CREA_CORRISPETTIVO_MERCATO = "Obj_creacorrispettivomercato";
 	const AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO = "Obj_aggiungidettagliocorrispettivonegozio";
 	const CREA_CORRISPETTIVO_NEGOZIO = "Obj_creacorrispettivonegozio";
-
+	const AGGIUNGI_FATTURA_PAGATA = "Obj_aggiungifatturapagata";
+	
 	// Actions
 
 	const AZIONE_RICERCA_REGISTRAZIONE = "../primanota/ricercaRegistrazioneFacade.class.php?modo=go";

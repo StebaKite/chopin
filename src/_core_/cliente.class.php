@@ -196,9 +196,11 @@ class Cliente implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
-		foreach(pg_fetch_all($result) as $row) {
+		foreach(pg_fetch_all($result) as $row)
+		{
 			$this->setIdCliente($row[Cliente::ID_CLIENTE]);
 			$this->setCodCliente($row[Cliente::COD_CLIENTE]);
+			$this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
 		}
 		$_SESSION[CLIENTE] = serialize($this);
 	}

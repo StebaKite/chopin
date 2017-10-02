@@ -43,6 +43,8 @@ class ScadenzaCliente implements CoreInterface {
 	private $scadenze;
 	private $qtaScadenze;
 	private $importoScadenza;
+	private $idClienteOrig;
+	private $numFatturaOrig;
 
 	private $scadenzeDaIncassare;
 	private $qtaScadenzeDaIncassare;
@@ -57,6 +59,7 @@ class ScadenzaCliente implements CoreInterface {
 	// Queries
 
 	const CERCA_SCADENZE_CLIENTE = "/scadenze/ricercaScadenzeCliente.sql";
+	const CERCA_SCADENZE_REGISTRAZIONE = "/scadenze/ricercaScadenzeClienteRegistrazione.sql";
 	const CREA_SCADENZA = "/scadenze/creaScadenzaCliente.sql";
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaCliente.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "/scadenze/aggiornaImportoScadenzaCliente.sql";
@@ -121,6 +124,28 @@ class ScadenzaCliente implements CoreInterface {
 			$this->setQtaScadenze(null);
 //			unset($_SESSION['bottoneEstraiPdf']);
 		}
+		return $result;
+	}
+
+	public function trovaScadenzeRegistrazione($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_registrazione%' => trim($this->getIdRegistrazione())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_REGISTRAZIONE;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+
+		if ($result) {
+			$this->setScadenzeDaIncassare(pg_fetch_all($result));
+			$this->setQtaScadenzeDaIncassare(pg_num_rows($result));
+		} else {
+			$this->setScadenzeDaIncassare(null);
+			$this->setQtaScadenzeDaIncassare(0);
+		}
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 		return $result;
 	}
 
@@ -461,6 +486,23 @@ class ScadenzaCliente implements CoreInterface {
 
     public function setQtaScadenzeDaIncassare($qtaScadenzeDaIncassare){
         $this->qtaScadenzeDaIncassare = $qtaScadenzeDaIncassare;
+    }
+
+
+    public function getIdClienteOrig(){
+        return $this->idClienteOrig;
+    }
+
+    public function setIdClienteOrig($idClienteOrig){
+        $this->idClienteOrig = $idClienteOrig;
+    }
+
+    public function getNumFatturaOrig(){
+        return $this->numFatturaOrig;
+    }
+
+    public function setNumFatturaOrig($numFatturaOrig){
+        $this->numFatturaOrig = $numFatturaOrig;
     }
 
 }

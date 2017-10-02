@@ -36,3 +36,4 @@ class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements Primanot
 	}
 }
 
+?>
