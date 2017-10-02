@@ -1777,9 +1777,11 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		$totaleRicavi = 0;
 		$totaleAcquisti = 0;
 		$totaleUtilePerdita = 0;
-		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);					// dodici mesi
+		$utilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);			    		// dodici mesi
 		$classe = array('','','','','','','','','','','','');					// dodici mesi
-
+		$progrUtilePerditaMesi = array(0,0,0,0,0,0,0,0,0,0,0,0);	     		// dodici mesi
+		$progrClasse = array('','','','','','','','','','','','');		      	// dodici mesi
+		
 		/**
 		 * Calcolo l'utile o la perdita per ciascun mese
 		 */
@@ -1788,6 +1790,11 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			$utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
 			if ($utilePerditaMesi[$i] < 0) $classe[$i] = "class='ko'";
 			$totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];
+			
+			for ($j = $i; $j < 13; $j++) {
+			    $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
+			    if ($progrUtilePerditaMesi[$j] < 0) $progrClasse[$j] = "class='ko'";
+			}
 		}
 
 		if ($totaleUtilePerdita < 0) $class = "class='mark-warning'";
@@ -1816,7 +1823,7 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		"	<table class='result'>" .
 		"		<tbody>" .
 		"			<tr>" .
-		"				<td class='enlarge' width='200' align='left'>%ml.utilePerdita%</td>" .
+		"				<td class='enlarge' width='209' align='left'>%ml.utilePerdita%</td>" .
 		"				<td " . $classe[1] . " width='58' align='right'>" . number_format($utilePerditaMesi[1], 0, ',', '.') . "</td>" .
 		"				<td " . $classe[2] . " width='58' align='right'>" . number_format($utilePerditaMesi[2], 0, ',', '.') . "</td>" .
 		"				<td " . $classe[3] . " width='58' align='right'>" . number_format($utilePerditaMesi[3], 0, ',', '.') . "</td>" .
@@ -1830,6 +1837,22 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 		"				<td " . $classe[11] . " width='58' align='right'>" . number_format($utilePerditaMesi[11], 0, ',', '.') . "</td>" .
 		"				<td " . $classe[12] . " width='58' align='right'>" . number_format($utilePerditaMesi[12], 0, ',', '.') . "</td>" .
 		"				<td " . $class . " width='58' align='right'>" . number_format($totaleUtilePerdita, 0, ',', '.') . "</td>" .
+		"			</tr>" .
+		"			<tr>" .
+		"				<td class='enlarge' width='209' align='left'>%ml.progrUtilePerdita%</td>" .
+		"				<td " . $progrClasse[1] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[1], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[2] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[2], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[3] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[3], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[4] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[4], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[5] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[5], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[6] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[6], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[7] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[7], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[8] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[8], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[9] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[9], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[10] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[10], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[11] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[11], 0, ',', '.') . "</td>" .
+		"				<td " . $progrClasse[12] . " width='58' align='right'>" . number_format($progrUtilePerditaMesi[12], 0, ',', '.') . "</td>" .
+		"				<td></td>" .
 		"			</tr>" .
 		"		</tbody>" .
 		"	</table>" .
