@@ -1794,7 +1794,6 @@ abstract class RiepiloghiAbstract extends ChopinAbstract {
 			for ($j = $i; $j < 13; $j++) {
 			    $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
 			    if ($progrUtilePerditaMesi[$j] < 0) $progrClasse[$j] = "class='ko'";
-			    else $progrClasse[$j] = "";
 			}
 		}
 
