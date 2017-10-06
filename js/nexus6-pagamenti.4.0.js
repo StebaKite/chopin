@@ -180,6 +180,25 @@ function aggiungiFatturaPagata(idScadenza)
 function rimuoviFatturaPagata(idScadenza)
 {
 	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function()
+	{
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+		{	
+			var response = xmlhttp.responseText;
+			var datiPagina = response.split("|");
+			$("#scadenze_chiuse_pag_mod").html(datiPagina[0]);
+			$("#scadenze_aperte_pag_mod").html(datiPagina[1]);
+		}
+	}
+	xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza, true);
+	xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------		
+
+function rimuoviFatturaPagata(idScadenza)
+{
+	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()
     {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200)

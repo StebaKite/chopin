@@ -66,6 +66,7 @@ class ScadenzaFornitore implements CoreInterface {
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "/scadenze/aggiornaImportoScadenzaFornitore.sql";
 	const RICERCA_SCADENZE_DA_PAGARE = "/scadenze/ricercaScadenzeAperteFornitore.sql";
 	const RICERCA_SCADENZE_PAGATE = "/scadenze/ricercaScadenzeChiuseFornitore.sql";
+	const PAGA_SCADENZA = "/scadenze/pagaScadenzaFornitore.sql";
 	
 	// Metodi
 
@@ -213,7 +214,25 @@ class ScadenzaFornitore implements CoreInterface {
 
 		return $result;
 	}
-
+	
+	public function cambiaStatoScadenza($db)
+	{
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    
+	    $replace = array(
+	        '%id_scadenza%' => trim($this->getIdScadenza()),
+	        '%sta_scadenza%' => trim($this->getStaScadenza()),
+	        '%id_pagamento%' => (trim($this->getIdPagamento()) == "") ? 'null' : trim($this->getIdPagamento())
+	    );
+	    
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::PAGA_SCADENZA;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->execSql($sql);
+	    
+	    return $result;
+	}
+	
 	public function inserisci($db)
 	{
 		$utility = Utility::getInstance();

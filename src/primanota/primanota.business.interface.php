@@ -49,6 +49,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO = "Obj_aggiungidettagliocorrispettivonegozio";
 	const CREA_CORRISPETTIVO_NEGOZIO = "Obj_creacorrispettivonegozio";
 	const AGGIUNGI_FATTURA_PAGATA = "Obj_aggiungifatturapagata";
+	const RIMUOVI_FATTURA_PAGATA = "Obj_rimuovifatturapagata";
 	
 	// Actions
 
@@ -63,8 +64,12 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CREA_REGISTRAZIONE_OK = "Registrazione salvata con successo";
 	const CREA_INCASSO_OK = "Incasso salvato con successo";
 	const CREA_PAGAMENTO_OK = "Pagamento salvato con successo";
+	
+	const MODIFICA_PAGAMENTO_OK = "Pagamento modificato con successo";
+	
 	const ERRORE_CREAZIONE_REGISTRAZIONE = "ERRORE : registrazione non creata";
-
+	const ERRORE_MODIFICA_REGISTRAZIONE = "ERRORE : registrazione non modificata";
+	
 	const ERRORE_LETTURA = "Errore fatale durante la lettura delle registrazioni" ;
 
 	// Metodi

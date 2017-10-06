@@ -57,8 +57,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
 	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
 	    
-	    $bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $scadenzeFornitore->getIdScadenza() . $aggiungi_icon;
-	    
 	    $thead = "";
 	    $tbody = "";
 	    
@@ -78,6 +76,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	        
 	        foreach ($scadenzeFornitore->getScadenzeDaPagare() as $unaScadenza)
 	        {
+	            $bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $unaScadenza[ScadenzaFornitore::ID_SCADENZA] . $aggiungi_icon;
+	            
 	            $tbody .=
 	            "<tr>" .
 	            "	<td id='icons'>" . $bottoneAggiungiFatturaPagata . "</td>" .
@@ -96,8 +96,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	{
 	    $rimuovi_fattura_pagata_href = "<a class='tooltip' onclick='rimuoviFatturaPagata(";
 	    $rimuovi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-minus'></span></li></a>";
-	    
-	    $bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $scadenzeFornitore->getIdScadenza() . $rimuovi_icon;
 	    
 	    $thead = "";
 	    $tbody = "";
@@ -118,6 +116,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	        
 	        foreach ($scadenzeFornitore->getScadenzePagate() as $unaScadenza)
 	        {
+	            $bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $unaScadenza[ScadenzaFornitore::ID_SCADENZA] . $rimuovi_icon;
+	            
 	            $tbody .=
 	            "<tr>" .
 	            "	<td>" . $unaScadenza[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
@@ -390,6 +390,29 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 		return true;
 	}
 
+	public function aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione)
+	{
+	    foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio)
+	    {
+	        if ($unDettaglio[DettaglioRegistrazione::ID_REGISTRAZIONE] == 0)
+	        {
+	            $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
+	            $dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
+	            $dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
+	            
+	            $_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+	            $conto = explode(".", $_cc[0]);
+	            
+	            $dettaglioRegistrazione->setCodConto($conto[0]);
+	            $dettaglioRegistrazione->setCodSottoconto($conto[1]);
+	            
+	            if ($dettaglioRegistrazione->inserisci($db)) {}		// tutto ok
+	            else return false;
+	        }
+	    }
+	    return true;
+	}
+	
 	// Getters e Setters ---------------------------------------------------
 
 	public function setMessaggio($messaggio) {
