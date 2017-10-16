@@ -48,7 +48,7 @@ class PrimanotaController
 		$cliente = Cliente::getInstance();
 		$mercato = Mercato::getInstance();
 
-		// Registrazione fatture
+		// Registrazione fatture ==============================================================
 
 		if (isset($_REQUEST["datareg_da"])) {
 			$registrazione->setDatRegistrazioneDa($_REQUEST["datareg_da"]);
@@ -142,7 +142,7 @@ class PrimanotaController
 			$registrazione->setNumFattura($_REQUEST["numfatt_mod"]);
 		}
 
-		// Registrazione incasso
+		// Registrazione incasso ==========================================================
 
 		if (isset($_REQUEST["descliente_inc_cre"])) {
 			$cliente->setDesCliente($_REQUEST["descliente_inc_cre"]);
@@ -160,13 +160,18 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 
-		// Registrazione pagamento
+		// Registrazione pagamento =====================================================
 
+		// ricerca scadenza aperte fornitore
 		if (isset($_REQUEST["desfornitore_pag_cre"])) {
 			$fornitore->setDesFornitore($_REQUEST["desfornitore_pag_cre"]);
 			$scadenzaFornitore->setCodNegozioSel($_REQUEST["codnegozio_pag_cre"]);
+			$scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
+			$scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");
+			$dettaglioRegistrazione->setIdTablePagina("dettagli_pag_cre");			
 		}
 
+		// creazione pagamento
 		if (isset($_REQUEST["datareg_pag_cre"])) {
 			$registrazione->setDatRegistrazione($_REQUEST["datareg_pag_cre"]);
 			$registrazione->setDesRegistrazione($_REQUEST["descreg_pag_cre"]);
@@ -176,10 +181,16 @@ class PrimanotaController
 			$registrazione->setNumFattura($_REQUEST["numfatt_pag_cre"]);
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato("");
+			$scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
+			$scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");
 		}
 		
+		// modifica pagamento
 		if (isset($_REQUEST["idpag"])) {
 		    $registrazione->setIdRegistrazione($_REQUEST["idpag"]);
+		    $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_mod");
+		    $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_mod");
+		    $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_mod");		    
 		}
 		
 		if (isset($_REQUEST["datareg_pag_mod"])) {
@@ -190,12 +201,15 @@ class PrimanotaController
 		    $registrazione->setDesFornitore($_REQUEST["fornitore_pag_mod"]);
 		    $registrazione->setNumFattura($_REQUEST["numfatt_pag_mod"]);
 		}
-		
+
+		// aggiungi o rimuovi scadenze in creazione/modifica pagamento
 		if (isset($_REQUEST["idscad"])) {
 		    $scadenzaFornitore->setIdScadenza($_REQUEST["idscad"]);
+		    $scadenzaFornitore->setIdTableScadenzeAperte($_REQUEST["idtableaperte"]);
+		    $scadenzaFornitore->setIdTableScadenzeChiuse($_REQUEST["idtablechiuse"]);
 		}
 		
-		// Registrazione corrispettivo mercato
+		// Registrazione corrispettivo mercato ==================================================
 
 		if (isset($_REQUEST["codneg_cormer_cre"])) {
 			$mercato->setCodNegozio($_REQUEST["codneg_cormer_cre"]);
@@ -220,7 +234,7 @@ class PrimanotaController
 			$registrazione->setIdMercato($_REQUEST["mercati_cormer_cre"]);
 		}
 
-		// Registrazione corrispettivo negozio
+		// Registrazione corrispettivo negozio ==================================================
 
 		if (isset($_REQUEST["codconto_corneg_cre"])) {
 			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_corneg_cre"]);
@@ -241,7 +255,7 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 
-		// Serializzo in sessione gli oggetti modificati
+		// Serializzo in sessione gli oggetti modificati ========================================
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
 		$_SESSION[self::CAUSALE] = serialize($causale);

@@ -9,6 +9,10 @@ $( "#nuovo-pagamento" ).click(function( event ) {
 	$("#descreg_pag_cre_label").hide();
 	$("#dettagli_pag_cre").hide();
 
+	$('#nuovoPagamento').trigger("reset");
+	$('#scadenze_chiuse_pag_cre').html("");
+	$('#scadenze_aperte_pag_cre').html("");
+	
 	$("#nuovo-pagamento-form").dialog("open");
 });
 
@@ -17,7 +21,7 @@ $( "#nuovo-pagamento" ).click(function( event ) {
 $("#nuovo-pagamento-form").dialog({
 	autoOpen: false,
 	modal: true,
-	width: 1000,
+	width: 1050,
 	buttons: [
 		{
 			id: "button-ok-nuovo-pagamento-form",
@@ -148,6 +152,8 @@ function modificaPagamento(idPagamento)
 			$("#dettagli_pag_mod").html(dettagli_mod);
 			$("#conti_pag_mod").html(conti);
 			$("#conti_pag_mod").selectmenu( "refresh" );
+
+			validaModificaPagamento();
 			
 			$( "#modifica-pagamento-form" ).dialog( "open" );
 		}
@@ -158,7 +164,7 @@ function modificaPagamento(idPagamento)
 
 //---------------------------------------------------------------------------------		
 
-function aggiungiFatturaPagata(idScadenza)
+function aggiungiFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
 {
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()
@@ -167,17 +173,17 @@ function aggiungiFatturaPagata(idScadenza)
         {	
         	var response = xmlhttp.responseText;
 			var datiPagina = response.split("|");
-			$("#scadenze_chiuse_pag_mod").html(datiPagina[0]);
-			$("#scadenze_aperte_pag_mod").html(datiPagina[1]);
+			$("#" + idTableChiuse).html(datiPagina[0]);
+			$("#" + idTableAperte).html(datiPagina[1]);
         }
     }
-    xmlhttp.open("GET", "aggiungiFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza, true);
+    xmlhttp.open("GET", "aggiungiFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
     xmlhttp.send();		
 }
 
 //---------------------------------------------------------------------------------		
 
-function rimuoviFatturaPagata(idScadenza)
+function rimuoviFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
 {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function()
@@ -186,11 +192,11 @@ function rimuoviFatturaPagata(idScadenza)
 		{	
 			var response = xmlhttp.responseText;
 			var datiPagina = response.split("|");
-			$("#scadenze_chiuse_pag_mod").html(datiPagina[0]);
-			$("#scadenze_aperte_pag_mod").html(datiPagina[1]);
+			$("#" + idTableChiuse).html(datiPagina[0]);
+			$("#" + idTableAperte).html(datiPagina[1]);
 		}
 	}
-	xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza, true);
+	xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
 	xmlhttp.send();		
 }
 
@@ -213,17 +219,12 @@ function rimuoviFatturaPagata(idScadenza)
     xmlhttp.send();		
 }
 
-
-
-
-
-
 //---------------------------------------------------------------------------------		
 
 $("#modifica-pagamento-form").dialog({
 	autoOpen: false,
 	modal: true,
-	width: 1000,
+	width: 1050,
 	buttons: [
 		{
 			id: "button-ok-modifica-pagamento-form",
@@ -476,7 +477,18 @@ $( ".scadenzeAperteFornitore" ).keyup(function() {
 		var xmlhttp = new XMLHttpRequest();
 	    xmlhttp.onreadystatechange = function() {
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            $( "#numfatt_pag_cre" ).html(xmlhttp.responseText);
+
+				var response = xmlhttp.responseText;
+				var response = response.replace(/\t+/g, "");
+				var datiPagina = response.split("|");
+				var numfatt_dapagare_cre = datiPagina[0];
+				var numfatt_pagate_cre = datiPagina[1];
+
+				// Viene utilizzato solo dalla creazione pagamento perchè la modifica ha il 
+				// campo fornitore in pagina settato a readonly
+				
+				$("#scadenze_chiuse_pag_cre").html(numfatt_pagate_cre);
+				$("#scadenze_aperte_pag_cre").html(numfatt_dapagare_cre);
 	        }
 	    }
 	    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desfornitore_pag_cre=" + desfornitore + "&codnegozio_pag_cre=" + codnegozio, true);

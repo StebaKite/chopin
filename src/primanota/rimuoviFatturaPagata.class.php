@@ -38,8 +38,7 @@ class RimuoviFatturaPagata extends PrimanotaAbstract implements PrimanotaBusines
         $scadenzaFornitore->trovaScadenzeDaPagare($db);
         $scadenzaFornitore->trovaScadenzePagate($db);
         
-        echo $this->makeTabellaFatturePagate($scadenzaFornitore,"scadenze_chiuse_pag_mod") . "|" .
-            $this->makeTabellaFattureDaPagare($scadenzaFornitore,"scadenze_aperte_pag_mod");
+        echo $this->makeTabellaFatturePagate($scadenzaFornitore) . "|" . $this->makeTabellaFattureDaPagare($scadenzaFornitore);
     }
 }
 

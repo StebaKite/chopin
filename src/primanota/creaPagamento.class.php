@@ -56,14 +56,7 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 		$db = Database::getInstance();
 		$db->beginTransaction();
 
-		$numFat = "";
-		$numFatturaRegistrazione = $registrazione->getNumFattura();
-
-		foreach ($registrazione->getNumFattura() as $unNumFattura) {
-			$_numFat = explode(",", $unNumFattura);
-			$numFat .= ($numFat != "") ? ", " . $_numFat[0] . "-" . $_numFat[1] : $_numFat[0] . "-" . $_numFat[1];
-		}
-		$registrazione->setNumFattura($numFat);
+		$registrazione->setNumFattura("");
 
 		if ($registrazione->inserisci($db))
 		{
@@ -76,16 +69,14 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 			 */
 			$riconciliazioneFattureOkay = true;
 
-			foreach($numFatturaRegistrazione as $unNumeroFattura)
+			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenza)
 			{
 				$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 				$scadenzaFornitore->setIdPagamento($registrazione->getIdRegistrazione());
-				$scadenzaFornitore->setStaScadenza("10");		// incassata
+				$scadenzaFornitore->setStaScadenza("10");		// pagata e chiusa
 
-				$numFat = explode(",", $unNumeroFattura);		// [numeroFattura,dataScadenza]
-
-				$scadenzaFornitore->setNumFattura($numFat[0]);
-				$scadenzaFornitore->setDatScadenza($numFat[1]);
+				$scadenzaFornitore->setNumFattura($unaScadenza[ScadenzaFornitore::NUM_FATTURA]);
+				$scadenzaFornitore->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
 
 				if (!$scadenzaFornitore->cambiaStato($db))
 				{

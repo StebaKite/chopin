@@ -47,6 +47,8 @@ class ScadenzaFornitore implements CoreInterface {
 	private $importoScadenza;
 	private $idFornitoreOrig;
 	private $numFatturaOrig;
+	private $idTableScadenzeAperte;
+	private $idTableScadenzeChiuse;
 
 	// fitri di ricerca
 
@@ -67,6 +69,7 @@ class ScadenzaFornitore implements CoreInterface {
 	const RICERCA_SCADENZE_DA_PAGARE = "/scadenze/ricercaScadenzeAperteFornitore.sql";
 	const RICERCA_SCADENZE_PAGATE = "/scadenze/ricercaScadenzeChiuseFornitore.sql";
 	const PAGA_SCADENZA = "/scadenze/pagaScadenzaFornitore.sql";
+	const LEGGI_SCADENZA = "/scadenze/leggiScadenzaFornitore.sql";
 	
 	// Metodi
 
@@ -87,6 +90,8 @@ class ScadenzaFornitore implements CoreInterface {
 		$this->setCodNegozioSel("VIL");
 		$this->setQtaScadenzeDaPagare(0);
 		$this->setScadenzeDaPagare("");
+		$this->setQtaScadenzePagate(0);
+		$this->setScadenzePagate("");
 		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	}
 
@@ -233,6 +238,61 @@ class ScadenzaFornitore implements CoreInterface {
 	    return $result;
 	}
 	
+	public function leggi($db)
+	{
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    
+	    $replace = array(
+	        '%id_scadenza%' => trim($this->getIdScadenza())
+	    );
+	    
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SCADENZA;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->execSql($sql);
+
+
+	    if ($result)
+	    {
+	        foreach (pg_fetch_all($result) as $row)
+	        {
+	            $this->setIdRegistrazione($row[ScadenzaFornitore::ID_REGISTRAZIONE]);
+	            $this->setDatScadenza($row[ScadenzaFornitore::DAT_SCADENZA]);
+	            $this->setImpInScadenza($row[ScadenzaFornitore::IMP_IN_SCADENZA]);
+	            $this->setNotaScadenza($row[ScadenzaFornitore::NOTA_SCADENZA]);
+	            $this->setTipAddebito($row[ScadenzaFornitore::TIP_ADDEBITO]);
+	            $this->setNumFattura($row[ScadenzaFornitore::NUM_FATTURA]);
+	            $this->setStaScadenza($row[ScadenzaFornitore::STA_SCADENZA]);
+	            $this->setIdPagamento($row[ScadenzaFornitore::ID_PAGAMENTO]);
+	        }
+	    }
+	    
+	    return $result;
+	}
+	
+	public function aggiungiScadenzaPagata()
+	{
+	    $item = array(
+	        ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
+	        ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
+	        ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+	        ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
+	        ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()
+	    );
+	    
+	    if ($this->getQtaScadenzePagate() == 0) {
+	        $resultset = array();
+	        array_push($resultset, $item);
+	        $this->setScadenzePagate($resultset);
+	    }
+	    else {
+	        array_push($this->scadenzePagate, $item);
+	        sort($this->scadenzePagate);
+	    }
+	    $this->setQtaScadenzePagate($this->getQtaScadenzePagate() + 1);
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	}
+	
 	public function inserisci($db)
 	{
 		$utility = Utility::getInstance();
@@ -258,10 +318,11 @@ class ScadenzaFornitore implements CoreInterface {
 	public function aggiungi()
 	{
 		$item = array(
-				ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
-				ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
-				ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
-				ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura()
+			ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
+			ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
+			ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+            ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
+		    ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()		      
 		);
 
 		if ($this->getQtaScadenzeDaPagare() == 0) {
@@ -607,6 +668,24 @@ class ScadenzaFornitore implements CoreInterface {
 
     public function setQtaScadenzePagate($qtaScadenzePagate){
         $this->qtaScadenzePagate = $qtaScadenzePagate;
+        return $this;
+    }
+
+    public function getIdTableScadenzeAperte(){
+        return $this->idTableScadenzeAperte;
+    }
+
+    public function setIdTableScadenzeAperte($idTableScadenzeAperte){
+        $this->idTableScadenzeAperte = $idTableScadenzeAperte;
+        return $this;
+    }
+
+    public function getIdTableScadenzeChiuse(){
+        return $this->idTableScadenzeChiuse;
+    }
+
+    public function setIdTableScadenzeChiuse($idTableScadenzeChiuse){
+        $this->idTableScadenzeChiuse = $idTableScadenzeChiuse;
         return $this;
     }
 

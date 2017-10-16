@@ -283,7 +283,8 @@ class Sottoconto implements CoreInterface {
 		foreach ($this->getSottoconti() as $unSottoconto)
 		{
 			if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) == trim($sottoconto)) {
-				$this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+			    $this->setCodSottoconto($unSottoconto[Sottoconto::COD_SOTTOCONTO]);
+			    $this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
 				$this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
 				$this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
 				break;

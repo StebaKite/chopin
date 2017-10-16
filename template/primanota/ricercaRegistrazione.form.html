@@ -509,17 +509,15 @@ $(document).ready( function () {
 					<td id="tdfornitore_pag_cre"><div><input class="scadenzeAperteFornitore" type="text" id="fornitore_pag_cre" name="fornitore_pag_cre" size="40" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre','messaggioControlloDettagliPagamento','descreg_pag_cre','descreg_pag_cre_label')" /></div></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFatturaPagamento" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
+					<td colspan="2"><h2>&nbsp;Fatture incluse nel pagamento</h2></td>
+					<td colspan="2"><h2>&nbsp;Fatture rimanenti da pagare</h2></td>
 				</tr>
 				<tr>
-					<td>%ml.numfatt% :</td>
-					<td id="tdnumfatt_pag_cre" colspan="4">
-						<select class="numfatt-fornitore-multiple" multiple="multiple" style="width: 600px" id="numfatt_pag_cre" name="numfatt_pag_cre[]" >
-						%elenco_scadenze_fornitore%
-						</select>						
+					<td colspan="2" valign="top">
+						<table id="scadenze_chiuse_pag_cre" class="result" style="width: 100%"></table>								
+					</td>	
+					<td colspan="2" valign="top">
+						<table id="scadenze_aperte_pag_cre" class="result" style="width: 100%"></table>								
 					</td>	
 				</tr>
 				<tr><td><h2>Dettagli</h2></td></tr>										
@@ -610,11 +608,11 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_pag_mod"><div><input class="scadenzeAperteFornitore" type="text" id="fornitore_pag_mod" name="fornitore_pag_mod" size="40" onkeyup="validaModificaPagamento()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_mod','messaggioControlloDettagliPagamento_mod','descreg_pag_mod','descreg_pag_mod_label')" /></div></td>
+					<td id="tdfornitore_pag_mod"><div><input type="text" id="fornitore_pag_mod" name="fornitore_pag_mod" size="40" readonly="readonly" /></div></td>
 				</tr>
 				<tr>
-					<td colspan="2"><h2>&nbsp;Fatture Pagate</h2></td>
-					<td colspan="2"><h2>&nbsp;Fatture Da Pagare</h2></td>
+					<td colspan="2"><h2>&nbsp;Fatture incluse nel pagamento</h2></td>
+					<td colspan="2"><h2>&nbsp;Fatture rimanenti da pagare</h2></td>
 				</tr>
 				<tr>
 					<td colspan="2" valign="top">
@@ -664,11 +662,6 @@ $(document).ready( function () {
 		</table> 	 
 	</form>
 </div>	
-
-
-
-
-
 
 <div id="nuovo-corrispettivo-mercato-form" title="Nuovo Corrispettivo Mercato"> 
 	<form method="post" id="nuovoCorrispettivoMercato" action="../primanota/creaCorrispettivoMercatoFacade.class.php?modo=go" >

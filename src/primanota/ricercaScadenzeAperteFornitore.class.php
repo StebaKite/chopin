@@ -35,17 +35,12 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
 		$fornitore->cercaConDescrizione($db);
 		$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 		$scadenzaFornitore->trovaScadenzeDaPagare($db);
-
-		$options = '<select class="numfatt-fornitore-multiple" multiple="multiple" style="width: 600px" id="numfatt_pag_cre">';
-
-		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
-		{
-			foreach($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza) {
-				$options .= '<option value="' . trim($unaScadenza[ScadenzaFornitore::NUM_FATTURA]) . ',' . trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) . '" >Ft.' . trim($unaScadenza[ScadenzaFornitore::NUM_FATTURA]) . ' - ' . trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) .  ' - &euro; ' . trim($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA]) . ' - (' . trim($unaScadenza[ScadenzaFornitore::NOTA_SCADENZA]) . ')</option>';
-			}
-		}
-		$options .= '</select>';
-		echo $options;
+		$registrazione->setNumFattureDaPagare($this->makeTabellaFattureDaPagare($scadenzaFornitore));
+		$registrazione->setNumFatturePagate("");
+	
+		$datiPagina = trim($registrazione->getNumFattureDaPagare()) . "|" . trim($registrazione->getNumFatturePagate());
+		                                
+        echo $datiPagina;
 	}
 
 	public function go() {

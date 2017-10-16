@@ -29,17 +29,27 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
         $registrazione = Registrazione::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $fornitore = Fornitore::getInstance();
+
+        $fornitore->cercaConDescrizione($db);
+        $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
         
-        $scadenzaFornitore->setIdFornitore($registrazione->getIdFornitore());
-        $scadenzaFornitore->setStaScadenza("10");   // pagata e chiusa
-        $scadenzaFornitore->setIdPagamento($registrazione->getIdRegistrazione());
-        $scadenzaFornitore->cambiaStatoScadenza($db);
-        
-        $scadenzaFornitore->trovaScadenzeDaPagare($db);
-        $scadenzaFornitore->trovaScadenzePagate($db);
-        
-        echo $this->makeTabellaFatturePagate($scadenzaFornitore,"scadenze_chiuse_pag_mod") . "|" .
-             $this->makeTabellaFattureDaPagare($scadenzaFornitore,"scadenze_aperte_pag_mod");        
+        if ($scadenzaFornitore->getIdTableScadenzeAperte() == "scadenze_aperte_pag_cre")
+        {
+            $scadenzaFornitore->leggi($db);
+            $scadenzaFornitore->aggiungiScadenzaPagata();
+            
+            echo $this->makeTabellaFatturePagate($scadenzaFornitore) . "|" . $this->refreshTabellaFattureDaPagare($scadenzaFornitore);
+        }
+        elseif ($scadenzaFornitore->getIdTableScadenzeAperte() == "scadenze_aperte_pag_mod")
+        {
+            $scadenzaFornitore->setStaScadenza("10");   // pagata e chiusa
+            $scadenzaFornitore->setIdPagamento($registrazione->getIdRegistrazione());
+            $scadenzaFornitore->cambiaStatoScadenza($db);   
+            $scadenzaFornitore->trovaScadenzeDaPagare($db);
+            $scadenzaFornitore->trovaScadenzePagate($db);
+            
+            echo $this->makeTabellaFatturePagate($scadenzaFornitore) . "|" . $this->makeTabellaFattureDaPagare($scadenzaFornitore);            
+        }
     }
 }
 

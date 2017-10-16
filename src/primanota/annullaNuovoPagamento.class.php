@@ -33,11 +33,13 @@ class AnnullaNuovoPagamento extends PrimanotaAbstract implements PrimanotaBusine
 	{
 		$registrazione = Registrazione::getInstance();
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
 		$registrazione->preparaFiltri();
 		$dettaglioRegistrazione->prepara();
+		$scadenzaFornitore->prepara();
 
 		echo "Okay";
 	}

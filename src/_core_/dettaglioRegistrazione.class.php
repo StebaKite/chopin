@@ -35,6 +35,7 @@ class DettaglioRegistrazione implements CoreInterface {
 	private $aliquota;
 	private $impIva;
 	private $imponibile;
+	private $idTablePagina;
 
 	// Queries
 
@@ -388,6 +389,16 @@ class DettaglioRegistrazione implements CoreInterface {
 
     public function setImponibile($imponibile){
         $this->imponibile = $imponibile;
+    }
+
+
+    public function getIdTablePagina(){
+        return $this->idTablePagina;
+    }
+
+    public function setIdTablePagina($idTablePagina){
+        $this->idTablePagina = $idTablePagina;
+        return $this;
     }
 
 }

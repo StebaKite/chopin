@@ -66,7 +66,7 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
 			}
 			echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
 		}
-		echo "";
+		else echo "";
 	}
 }
 
