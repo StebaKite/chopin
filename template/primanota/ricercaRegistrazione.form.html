@@ -41,7 +41,7 @@ $(document).ready( function () {
 
 </script>		
 
-<<style>
+<style>
 <!--
 
 #selectable .ui-selecting {
@@ -235,7 +235,7 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_mod"><input class="dataregpicker" type="text" id="datareg_mod" name="datareg_mod" size="10" maxlength="10" onblur="validaModificaRegistrazione()" onchange="validaModificaRegistrazione()" /></td>
+					<td id="tddatareg_mod"><input class="dataregpicker" type="text" id="datareg_mod" name="datareg_mod" size="10" maxlength="10" onblur="validaModificaRegistrazione()" onchange="validaModificaRegistrazione()" tabindex="-1" /></td>
 					<td id="descreg_mod_label" >%ml.descreg% : </td>
 					<td id="tddescreg_mod"><input type="text" id="descreg_mod" name="descreg_mod" size="50" maxlength="200" onkeypress="validaModificaRegistrazione()" /></td>
 				</tr>
@@ -573,7 +573,7 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_pag_mod" align="left"><input class="dataregpicker" type="text" id="datareg_pag_mod" name="datareg_pag_mod" size="10" maxlength="10" onblur="validaModificaPagamento()" onchange="validaModificaPagamento()" /></td>
+					<td id="tddatareg_pag_mod" align="left"><input class="dataregpicker" type="text" id="datareg_pag_mod" name="datareg_pag_mod" size="10" maxlength="10" onblur="validaModificaPagamento()" onchange="validaModificaPagamento()" tabindex="-1" /></td>
 					<td id="descreg_pag_mod_label">%ml.descreg% :</td>
 					<td id="tddescreg_pag_mod"><input type="text" id="descreg_pag_mod" name="descreg_pag_mod" size="50" maxlength="200" onkeypress="validaModificaPagamento()" /></td>
 				</tr>
@@ -647,7 +647,7 @@ $(document).ready( function () {
 				</tr>					
 				<tr>
 					<td>%ml.conto% :</td>
-					<td><select class="selectmenuContiPag" id="conti_pag_mod" name="conti_pag_mod"></select></td>
+					<td><select class="selectmenuContiPagMod" id="conti_pag_mod" name="conti_pag_mod"></select></td>
 				</tr>	
 				<tr>
 					<td></td>

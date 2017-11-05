@@ -6,8 +6,10 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 
 	// Oggetti
 
-	const REGISTRAZIONE = "Obj_registrazione";
-	const CAUSALE		= "Obj_causale";
+	const REGISTRAZIONE      = "Obj_registrazione";
+	const CAUSALE		     = "Obj_causale";
+	const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
+	const SCADENZA_CLIENTE   = "Obj_scadenzacliente";
 
 	const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
 	const RICERCA_REGISTRAZIONE = "Obj_ricercaregistraione";

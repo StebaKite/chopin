@@ -32,7 +32,27 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 
 	public function start()
 	{
-		$this->go();
+	    $registragione = Registrazione::getInstance();
+	    $registragione->prepara();
+	    
+	    $cliente = Cliente::getInstance();
+	    $cliente->prepara();
+
+	    $fornitore = Fornitore::getInstance();
+	    $fornitore->prepara();
+	    
+	    $scadenzaFornitore = ScadenzaFornitore::getInstance();
+	    $scadenzaFornitore->setQtaScadenzeDaPagare(0);
+	    $scadenzaFornitore->setScadenzeDaPagare("");
+
+	    $scadenzaCliente = ScadenzaCliente::getInstance();
+	    $scadenzaCliente->setQtaScadenzeDaIncassare(0);
+	    $scadenzaCliente->setScadenzeDaIncassare("");
+	    
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+	    
+	    echo "Ok";
 	}
 
 	public function go()

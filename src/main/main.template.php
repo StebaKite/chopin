@@ -41,11 +41,8 @@ class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 		$this->getEnvironment ( $array );
 						
 		// Pagina -----------------------------------------------------
-
-		$ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment ( $array, $_SESSION );
 		
 		$replace = array(
-				'%amb%' => $ambiente,
 				'%avvisoDiv%' => $_SESSION['avvisoDiv'],
 				'%avvisoDialog%' => $_SESSION['avvisoDialog'],
 				'%menu%' => $this->makeMenu($utility)

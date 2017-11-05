@@ -277,7 +277,8 @@ class ScadenzaFornitore implements CoreInterface {
 	        ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
 	        ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
 	        ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
-	        ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()
+	        ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza(),
+	        ScadenzaFornitore::ID_SCADENZA => $this->getIdScadenza()
 	    );
 	    
 	    if ($this->getQtaScadenzePagate() == 0) {
@@ -290,6 +291,24 @@ class ScadenzaFornitore implements CoreInterface {
 	        sort($this->scadenzePagate);
 	    }
 	    $this->setQtaScadenzePagate($this->getQtaScadenzePagate() + 1);
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	}
+
+	public function rimuoviScadenzaPagata()
+	{
+	    $scadenzePagateDiff = array();	    
+	    foreach ($this->getScadenzePagate() as $unaScadenza)
+	    {
+	        if (trim($unaScadenza[ScadenzaFornitore::NUM_FATTURA]) != trim($this->getNumFattura())
+	        or trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) != trim($this->getDatScadenza()))
+	        {    
+	            array_push($scadenzePagateDiff, $unaScadenza);
+	        }
+	        else {
+                $this->setQtaScadenzePagate($this->getQtaScadenzePagate() - 1);
+	        }
+	    }
+	    $this->setScadenzePagate($scadenzePagateDiff);
 	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	}
 	

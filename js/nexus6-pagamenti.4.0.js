@@ -3,17 +3,26 @@
 //---------------------------------------------------------------------------------				
 
 $( "#nuovo-pagamento" ).click(function( event ) {
-	$("#button-ok-nuovo-pagamento-form").button("disable");
-	$("#button-dettaglio-nuovo-pagamento-form").button("disable");
-	$("#descreg_pag_cre").hide();
-	$("#descreg_pag_cre_label").hide();
-	$("#dettagli_pag_cre").hide();
-
-	$('#nuovoPagamento').trigger("reset");
-	$('#scadenze_chiuse_pag_cre').html("");
-	$('#scadenze_aperte_pag_cre').html("");
 	
-	$("#nuovo-pagamento-form").dialog("open");
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{    	  
+			$("#button-ok-nuovo-pagamento-form").button("disable");
+			$("#button-dettaglio-nuovo-pagamento-form").button("disable");
+			$("#descreg_pag_cre").hide();
+			$("#descreg_pag_cre_label").hide();
+			$("#dettagli_pag_cre").hide();
+
+			$('#nuovoPagamento').trigger("reset");
+			$('#scadenze_chiuse_pag_cre').html("");
+			$('#scadenze_aperte_pag_cre').html("");
+			
+			$("#nuovo-pagamento-form").dialog("open");
+		}
+	} 
+	xmlhttp.open("GET", "creaPagamentoFacade.class.php?modo=start", true);
+	xmlhttp.send();		
 });
 
 //---------------------------------------------------------------------------------		
@@ -49,7 +58,8 @@ $("#nuovo-pagamento-form").dialog({
 			    xmlhttp.onreadystatechange = function() {
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			        	document.getElementById("nuovoPagamento").reset();
-			        	$("#numfatt_pag_cre").select2("val", "");			        	
+			        	$("#scadenze_chiuse_pag_cre").html("");
+			        	$("#scadenze_aperte_pag_cre").html("");
 		            	$("#tddettagli_pag_cre").removeClass("inputFieldError");	
 		    			$("#messaggioControlloDettagliPagamento").html("");			
 			        }
@@ -132,13 +142,19 @@ function modificaPagamento(idPagamento)
 			
 			if (codneg_mod == "VIL") {
 				$("#villa_pag_mod").prop("checked", true).button("refresh");
+    			$("#brembate_pag_mod").prop("checked", false).button("refresh");
+    			$("#trezzo_pag_mod").prop("checked", false).button("refresh");
 			}
 			else {
 	    		if (codneg_mod == "BRE") {
+					$("#villa_pag_mod").prop("checked", false).button("refresh");
 	    			$("#brembate_pag_mod").prop("checked", true).button("refresh");
+	    			$("#trezzo_pag_mod").prop("checked", false).button("refresh");
 	    		}
 	    		else {
 	        		if (codneg_mod == "TRE") {
+						$("#villa_pag_mod").prop("checked", false).button("refresh");
+		    			$("#brembate_pag_mod").prop("checked", false).button("refresh");
 	        			$("#trezzo_pag_mod").prop("checked", true).button("refresh");
 	        		}
 	    		}
@@ -171,8 +187,12 @@ function aggiungiFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
     {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
         {	
+			$("#" + idTableChiuse).html("");
+			$("#" + idTableAperte).html("");
+			
         	var response = xmlhttp.responseText;
 			var datiPagina = response.split("|");
+			
 			$("#" + idTableChiuse).html(datiPagina[0]);
 			$("#" + idTableAperte).html(datiPagina[1]);
         }
@@ -190,33 +210,18 @@ function rimuoviFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
 	{
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
 		{	
+			$("#" + idTableChiuse).html("");
+			$("#" + idTableAperte).html("");
+
 			var response = xmlhttp.responseText;
 			var datiPagina = response.split("|");
+			
 			$("#" + idTableChiuse).html(datiPagina[0]);
 			$("#" + idTableAperte).html(datiPagina[1]);
 		}
 	}
 	xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
 	xmlhttp.send();		
-}
-
-//---------------------------------------------------------------------------------		
-
-function rimuoviFatturaPagata(idScadenza)
-{
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function()
-    {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-        {	
-        	var response = xmlhttp.responseText;
-			var datiPagina = response.split("|");
-			$("#scadenze_chiuse_pag_mod").html(datiPagina[0]);
-			$("#scadenze_aperte_pag_mod").html(datiPagina[1]);
-        }
-    }
-    xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscad=" + idScadenza, true);
-    xmlhttp.send();		
 }
 
 //---------------------------------------------------------------------------------		
@@ -461,6 +466,13 @@ $( ".selectmenuCausalePagMod" )
 		}
 	})
 	.selectmenu({width: 300})
+	.selectmenu("menuWidget")
+	.addClass("overflow");
+
+//---------------------------------------------------------------------------------	
+
+$( ".selectmenuContiPagMod" )
+	.selectmenu({ width: 450 })
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 

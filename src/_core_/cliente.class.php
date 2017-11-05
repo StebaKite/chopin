@@ -81,12 +81,15 @@ class Cliente implements CoreInterface {
 		$utility = Utility::getInstance();
 
 		$this->setCodCliente($this->prelevaUltimoCodiceCliente($utility, $db) + 1);
+		$this->setIdCliente(null);
 		$this->setDesCliente(null);
 		$this->setDesIndirizzoCliente(null);
 		$this->setDesCittaCliente(null);
 		$this->setCapCliente(null);
 		$this->setCodPiva(null);
 		$this->setCodFisc(null);
+		
+		$_SESSION[CLIENTE] = serialize($this);		
 	}
 
 	public function prelevaUltimoCodiceCliente($utility, $db) {

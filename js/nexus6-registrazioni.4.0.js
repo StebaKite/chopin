@@ -6,20 +6,29 @@
 // Creazione di una nuova registrazione
 //---------------------------------------------------------------------------------		
 $( "#nuova-registrazione" ).click(function( event ) {
-	$("#button-ok-nuova-registrazione-form").button("disable");
-	$("#button-dettaglio-nuova-registrazione-form").button("disable");
-	$("#button-dettaglio-nuova-scadenza-form").button("disable");
 	
-	$("#descreg_cre").hide();
-	$("#descreg_cre_label").hide();
-	$("#scadenzesuppl_cre").hide();
-	$("#datascad_cre_label").hide();
-	$("#numfatt_cre_label").hide();
-	$("#numfatt_cre").hide();
-	$("#dettagli_cre").hide();
-	$("#dettagli_inc_cre").hide();
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{    	  
+			$("#button-ok-nuova-registrazione-form").button("disable");
+			$("#button-dettaglio-nuova-registrazione-form").button("disable");
+			$("#button-dettaglio-nuova-scadenza-form").button("disable");
+			
+			$("#descreg_cre").hide();
+			$("#descreg_cre_label").hide();
+			$("#scadenzesuppl_cre").hide();
+			$("#datascad_cre_label").hide();
+			$("#numfatt_cre_label").hide();
+			$("#numfatt_cre").hide();
+			$("#dettagli_cre").hide();
+			$("#dettagli_inc_cre").hide();
 
-	$("#nuova-registrazione-form").dialog("open");
+			$("#nuova-registrazione-form").dialog("open");
+		}
+	} 
+	xmlhttp.open("GET", "creaRegistrazioneFacade.class.php?modo=start", true);
+	xmlhttp.send();		
 });
 
 $( "#nuova-registrazione-form" ).dialog({
@@ -64,7 +73,8 @@ $( "#nuova-registrazione-form" ).dialog({
 			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			        	document.getElementById("nuovaRegistrazione").reset();
 		            	$("#tddettagli_cre").removeClass("inputFieldError");	
-		    			$("#messaggioControlloDettagli").html("");			
+		    			$("#messaggioControlloDettagli").html("");
+		    			$("#scadenzesuppl_cre").html("");
 			        }
 			    }
 			    xmlhttp.open("GET", "annullaNuovaRegistrazioneFacade.class.php?modo=start", true);
@@ -195,11 +205,11 @@ function validaNuovaRegistrazione()
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 	
-	if (controllaClienteFornitore("fornitore_cre", "cliente_cre", "tdfornitore_cre", "tdcliente_cre", "tdnumfatt_cre")) 
+	if (controllaClienteFornitore("fornitore_cre", "cliente_cre", "tdfornitore_cre", "tdcliente_cre", "tdnumfatt_cre", "messaggioControlloFornitore_cre", "messaggioControlloCliente_cre", "messaggioControlloNumeroFattura_cre")) 
 		esito = esito + "1"; else esito = esito + "0";
 	
 	if (($("#fornitore_cre").val() != "") || $("#cliente_cre").val() != "") {
-		if (controllaNumeroFattura("numfatt_cre", "tdnumfatt_cre")) 
+		if (controllaNumeroFattura("numfatt_cre", "tdnumfatt_cre", "messaggioControlloNumeroFattura_cre")) 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 	
@@ -302,7 +312,7 @@ function controllaDescrizione(campoDes, campoDesErr, campoMsg)
 
 //---------------------------------------------------------------------
 
-function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliErr, campoFatErr)
+function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliErr, campoFatErr, campoMsgForn, campoMsgCli, campoMsgFat)
 {
 	/**
 	 * Il cliente e il fornitore sono mutualmente esclusivi
@@ -312,8 +322,8 @@ function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliEr
 
 		$("#" + campoFornErr).addClass("inputFieldError");			
 		$("#" + campoCliErr).addClass("inputFieldError");							
-		$("#messaggioControlloFornitore" ).html("Dato errato");
-		$("#messaggioControlloCliente" ).html("Dato errato");
+		$("#" + campoMsgForn).html("Dato errato");
+		$("#" + campoMsgCli).html("Dato errato");
 		$("#button-dettaglio-nuova-scadenza-form").button("disable");
 		$("#scadenzesuppl_cre").hide();
 		$("#datascad_cre_label").hide();
@@ -329,16 +339,16 @@ function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliEr
 		$("#numfatt_cre_label").hide();
 		$("#numfatt_cre").hide();
 		$("#" + campoFatErr).removeClass("inputFieldError");	
-		$("#messaggioControlloNumeroFattura" ).html("");
+		$("#" + campoMsgFat).html("");
 		return false;		
 	}
 	else {
 		$("#" + campoFornErr).removeClass("inputFieldError");	
 		$("#" + campoCliErr).removeClass("inputFieldError");	
 		$("#" + campoFatErr).removeClass("inputFieldError");	
-		$("#messaggioControlloFornitore" ).html("");
-		$("#messaggioControlloCliente" ).html("");				
-		$("#messaggioControlloNumeroFattura" ).html("");
+		$("#" + campoMsgForn).html("");
+		$("#" + campoMsgCli).html("");
+		$("#" + campoMsgFat).html("");
 		$("#button-dettaglio-nuova-scadenza-form").button("enable");
 		$("#scadenzesuppl_cre").show();
 		$("#datascad_cre_label").show();
@@ -350,18 +360,18 @@ function controllaClienteFornitore(campoForn, campoCli, campoFornErr, campoCliEr
 
 //---------------------------------------------------------------------
 
-function controllaNumeroFattura(campoFat, campoFatErr)
+function controllaNumeroFattura(campoFat, campoFatErr, campoMsgFat)
 {
 	var numfatt = $("#" + campoFat).val();
 
 	if (numfatt != "") {
 		$("#" + campoFatErr).removeClass("inputFieldError");			
-		$("#messaggioControlloNumeroFattura" ).html("");
+		$("#" + campoMsgFat).html("");
 		return true;
 	}
 	else {
 		$("#" + campoFatErr).addClass("inputFieldError");			
-		$("#messaggioControlloNumeroFattura" ).html("Immetti in numero fattura");
+		$("#" + campoMsgFat).html("Immetti in numero fattura");
 		return false;
 	}
 }
@@ -409,7 +419,7 @@ function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat, campoFat
 function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat, campoFattErr, campoMsg)
 {
 	/**
-	 * La fattura del fornitore immessa deve essere univoca
+	 * La fattura del cliente immessa deve essere univoca
 	 */
 	var cliente = $("#" + campoCli).val();
 	var numfatt = $("#" + campoFat).val();
@@ -466,7 +476,7 @@ function controllaDettagliRegistrazione(campoDetErr,campoMsg,campoDes,campoDesLa
     xmlhttp.send();		
 }
 
-function modificaImportoDettaglioRegistrazione(conto,sottoconto,importo,idDettaglio)
+function modificaImportoDettaglioRegistrazione(idTable,idCampoMsg,campoMsg,campoDes,labelDes,conto,sottoconto,importo,idDettaglio)
 {
 	if (importo == "") var importoDett = 0;
 	else var importoDett = importo;
@@ -477,18 +487,11 @@ function modificaImportoDettaglioRegistrazione(conto,sottoconto,importo,idDettag
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            if (xmlhttp.responseText != "") { 
 		        	var dettagliTable = xmlhttp.responseText;
-	        		$("#dettagli_cre").html(dettagliTable);			// creazione registrazione
-	        		$("#dettagli_mod").html(dettagliTable);			// modifica registrazione
-	        		$("#dettagli_inc_cre").html(dettagliTable);		// incassi
-	        		$("#dettagli_pag_cre").html(dettagliTable);		// pagamenti
-	        		$("#dettagli_cormer_cre").html(dettagliTable);	// corrispettivi mercato
-	        		$("#dettagli_corneg_cre").html(dettagliTable);	// corrispettivi negozio
-	        		controllaDettagliRegistrazione("tddettagli_cre","messaggioControlloDettagli","descreg_cre","descreg_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_mod","messaggioControlloDettagli_mod","descreg_mod","descreg_mod_label");
-	        		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_pag_cre","messaggioControlloDettagliPagamento","descreg_pag_cre","descreg_pag_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
+	        		$("#" + idTable).html(dettagliTable);			// modifica registrazione
+	        		controllaDettagliRegistrazione(idCampoMsg,campoMsg,campoDes,labelDes);
+
+	        		var imp = $("#importo" + conto + sottoconto).val();
+	        		$("#importo" + conto + sottoconto).focus().val('').val(imp);
 	            }
 	        }
 	    }
@@ -497,7 +500,7 @@ function modificaImportoDettaglioRegistrazione(conto,sottoconto,importo,idDettag
 	}
 }
 
-function modificaSegnoDettaglioRegistrazione(conto,sottoconto,segno,idDettaglio)
+function modificaSegnoDettaglioRegistrazione(idTable,idCampoMsg,campoMsg,campoDes,labelDes,conto,sottoconto,segno,idDettaglio)
 {
 	if (conto != "") {
 		var xmlhttp = new XMLHttpRequest();
@@ -505,18 +508,11 @@ function modificaSegnoDettaglioRegistrazione(conto,sottoconto,segno,idDettaglio)
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            if (xmlhttp.responseText != "") {
 		        	var dettagliTable = xmlhttp.responseText;
-	        		$("#dettagli_cre").html(dettagliTable);			// creazione registrazione
-	        		$("#dettagli_mod").html(dettagliTable);			// modifica registrazione
-	        		$("#dettagli_inc_cre").html(dettagliTable);		// incasso
-	        		$("#dettagli_pag_cre").html(dettagliTable);		// pagamento
-	        		$("#dettagli_cormer_cre").html(dettagliTable);	// corrispettivi mercato
-	        		$("#dettagli_corneg_cre").html(dettagliTable);	// corrispettivi negozio
-	        		controllaDettagliRegistrazione("tddettagli_cre","messaggioControlloDettagli","descreg_cre","descreg_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_mod","messaggioControlloDettagli_mod","descreg_mod","descreg_mod_label");
-	        		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_pag_cre","messaggioControlloDettagliPagamento","descreg_pag_cre","descreg_pag_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
-	        		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
+	        		$("#" + idTable).html(dettagliTable);			// modifica registrazione
+	        		controllaDettagliRegistrazione(idCampoMsg,campoMsg,campoDes,labelDes);
+
+	        		var segno = $("#segno" + conto + sottoconto).val();
+	        		$("#segno" + conto + sottoconto).focus().val('').val(segno);
 	            }
 	        }
 	    }
@@ -591,23 +587,39 @@ function validaModificaRegistrazione()
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 	
-	if (controllaClienteFornitore("fornitore_mod", "cliente_mod", "tdfornitore_mod", "tdcliente_mod", "tdnumfatt_mod")) 
+	if (controllaClienteFornitore("fornitore_mod", "cliente_mod", "tdfornitore_mod", "tdcliente_mod", "tdnumfatt_mod", "messaggioControlloFornitore_mod", "messaggioControlloCliente_mod", "messaggioControlloNumeroFattura_mod")) 
 		esito = esito + "1"; else esito = esito + "0";
 	
 	if (($("#fornitore_mod").val() != "") || $("#cliente_mod").val() != "") {
-		if (controllaNumeroFattura("numfatt_mod", "tdnumfatt_mod")) 
-			esito = esito + "1"; else esito = esito + "0";		
+		if ($("#numfatt_mod").val() != $("#numfatt_mod_orig").val()) {
+			if (controllaNumeroFattura("numfatt_mod", "tdnumfatt_mod", "messaggioControlloNumeroFattura_mod")) 
+				esito = esito + "1"; else esito = esito + "0";					
+		}
+		else {
+			esito = esito + "1";
+		}
 	}
 	
 	if ($("#fornitore_mod").val() != "") {
-		controllaNumeroFatturaFornitore("fornitore_mod", "numfatt_mod", "datareg_mod", "tdnumfatt_mod", "messaggioControlloNumeroFattura_mod");
-		if ($("#messaggioControlloNumeroFattura_mod").text() == "") 
-			esito = esito + "1"; else esito = esito + "0";		
+		if ($("#numfatt_mod").val() != $("#numfatt_mod_orig").val()) {
+			controllaNumeroFatturaFornitore("fornitore_mod", "numfatt_mod", "datareg_mod", "tdnumfatt_mod", "messaggioControlloNumeroFattura_mod");
+			if ($("#messaggioControlloNumeroFattura_mod").text() == "") esito = esito + "1"; else esito = esito + "0";		
+		}
+		else {
+			esito = esito + "1";			
+		}
+
 	}
 
 	if ($("#cliente_mod").val() != "") {
-		controllaNumeroFatturaCliente("cliente_mod", "numfatt_mod", "datareg_mod", "tdnumfatt_mod", "messaggioControlloNumeroFattura_mod");
-		if ($("#messaggioControlloNumeroFattura_mod").text() == "") esito = esito + "1"; else esito = esito + "0";
+		if ($("#numfatt_mod").val() != $("#numfatt_mod_orig").val()) {
+			controllaNumeroFatturaCliente("cliente_mod", "numfatt_mod", "datareg_mod", "tdnumfatt_mod", "messaggioControlloNumeroFattura_mod");
+			if ($("#messaggioControlloNumeroFattura_mod").text() == "") esito = esito + "1"; else esito = esito + "0";
+		}
+		else {
+			esito = esito + "1";
+		}
+
 	}
 
 	if ($("#causale_mod").val() != "") {
@@ -629,7 +641,10 @@ function modificaRegistrazione(idRegistrazione)
 {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
-		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {    	  
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{    	  
+        	document.getElementById("modificaRegistrazione").reset();
+
 			var response = xmlhttp.responseText;
 			var datiPagina = response.split("|");
 			var datareg_mod = datiPagina[0];
@@ -639,10 +654,11 @@ function modificaRegistrazione(idRegistrazione)
 			var fornitore_mod = datiPagina[4];
 			var cliente_mod = datiPagina[5];
 			var numfatt_mod = datiPagina[6];
-			var scadenzesuppl_fornitore_mod = datiPagina[7];
-			var scadenzesuppl_cliente_mod = datiPagina[8];
-			var dettagli_mod = datiPagina[9];
-			var conti = datiPagina[10];
+			var numfattorig_mod = datiPagina[7];
+			var scadenzesuppl_fornitore_mod = datiPagina[8];
+			var scadenzesuppl_cliente_mod = datiPagina[9];
+			var dettagli_mod = datiPagina[10];
+			var conti = datiPagina[11];
 			
 			$("#datareg_mod").val(datareg_mod);
 			$("#descreg_mod").val(descreg_mod);
@@ -666,7 +682,7 @@ function modificaRegistrazione(idRegistrazione)
 			$("#fornitore_mod").val(fornitore_mod);
 			$("#cliente_mod").val(cliente_mod);			
 			$("#numfatt_mod").val(numfatt_mod);
-			$("#numfatt_mod_orig").val(numfatt_mod);
+			$("#numfatt_mod_orig").val(numfattorig_mod);
 
 			if (fornitore_mod != "") $("#scadenzesuppl_mod").html(scadenzesuppl_fornitore_mod);
 			if (cliente_mod != "")   $("#scadenzesuppl_mod").html(scadenzesuppl_cliente_mod);
@@ -674,7 +690,7 @@ function modificaRegistrazione(idRegistrazione)
 			$("#dettagli_mod").html(dettagli_mod);
             $("#conti").html(conti);
             $("#conti").selectmenu( "refresh" );
-			
+
 			$( "#modifica-registrazione-form" ).dialog( "open" );
 		}
 	} 
@@ -842,13 +858,12 @@ function controllaImportoScadenza(campoImp, campoMsg, idButtonOk)
 
 //---------------------------------------------------------------------------------	
 
-function cancellaNuovaScadenzaFornitore(idFornitore, datScad, numFatt)
+function cancellaNuovaScadenzaFornitore(idTable, idFornitore, datScad, numFatt)
 {
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
-    		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
-    		$("#scadenzesuppl_mod").html(xmlhttp.responseText);
+    		$("#" + idTable).html(xmlhttp.responseText);
         }
     } 
     xmlhttp.open("GET", "cancellaScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore + "&datascad_for=" + datScad + "&numfatt=" + numFatt, true);
@@ -857,12 +872,12 @@ function cancellaNuovaScadenzaFornitore(idFornitore, datScad, numFatt)
 
 //---------------------------------------------------------------------------------	
 
-function cancellaNuovaScadenzaCliente(idCliente, datScad, numFatt)
+function cancellaNuovaScadenzaCliente(idTable, idCliente, datScad, numFatt)
 {
 	var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
-    		$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+    		$("#" + idTable).html(xmlhttp.responseText);
         }
     } 
     xmlhttp.open("GET", "cancellaScadenzaClienteFacade.class.php?modo=start&idcliente=" + idCliente + "&datascad_cli=" + datScad + "&numfatt=" + numFatt, true);
@@ -871,7 +886,7 @@ function cancellaNuovaScadenzaCliente(idCliente, datScad, numFatt)
 
 //---------------------------------------------------------------------------------	
 
-function modificaImportoScadenzaFornitore(idfornitore,datascad,numfatt,importo)
+function modificaImportoScadenzaFornitore(idTable,idfornitore,datascad,numfatt,importo)
 {
 	if (importo == "") var importoScad = 0;
 	else var importoScad = importo;
@@ -882,8 +897,10 @@ function modificaImportoScadenzaFornitore(idfornitore,datascad,numfatt,importo)
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            if (xmlhttp.responseText != "") { 
 		        	var scadenzeTable = xmlhttp.responseText;
-		    		$("#scadenzesuppl_cre").html(scadenzeTable);
-		    		$("#scadenzesuppl_mod").html(scadenzeTable);
+		    		$("#" + idTable).html(scadenzeTable);
+		    		
+	        		var imp = $("#impscad" + idfornitore + datascad + numfatt).val();
+	        		$("#impscad" + idfornitore + datascad + numfatt).focus().val('').val(imp);
 	            }
 	        }
 	    }
@@ -894,7 +911,7 @@ function modificaImportoScadenzaFornitore(idfornitore,datascad,numfatt,importo)
 
 //---------------------------------------------------------------------------------	
 
-function modificaImportoScadenzaCliente(idcliente,datascad,numfatt,importo)
+function modificaImportoScadenzaCliente(idTable,idcliente,datascad,numfatt,importo)
 {
 	if (importo == "") var importoScad = 0;
 	else var importoScad = importo;
@@ -905,7 +922,10 @@ function modificaImportoScadenzaCliente(idcliente,datascad,numfatt,importo)
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            if (xmlhttp.responseText != "") { 
 		        	var scadenzeTable = xmlhttp.responseText;
-		    		$("#scadenzesuppl_cre").html(scadenzeTable);
+		    		$("#" + idTable).html(scadenzeTable);
+		    		
+	        		var imp = $("#impscad" + idcliente + datascad + numfatt).val();
+	        		$("#impscad" + idcliente + datascad + numfatt).focus().val('').val(imp);
 	            }
 	        }
 	    }
@@ -1013,24 +1033,14 @@ $( ".selectmenuCausaleMod" )
 
 //---------------------------------------------------------------------------------
 
-function cancellaDettaglioNuovaRegistrazione(codConto) {
+function cancellaDettaglioNuovaRegistrazione(idTable,idCampoMsg,campoMsg,campoDes,labelDes,codConto) {
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         	var dettagliTable = xmlhttp.responseText;
-    		$("#dettagli_cre").html(dettagliTable);			// creazione registrazione
-    		$("#dettagli_mod").html(dettagliTable);			// modifica registrazione
-    		$("#dettagli_inc_cre").html(dettagliTable);		// incasso
-    		$("#dettagli_pag_cre").html(dettagliTable);		// pagamento
-    		$("#dettagli_cormer_cre").html(dettagliTable);	// corrispettivi mercato
-    		$("#dettagli_corneg_cre").html(dettagliTable);	// corrispettivi negozio
-    		controllaDettagliRegistrazione("tddettagli_cre","messaggioControlloDettagli","descreg_cre","descreg_cre_label");
-    		controllaDettagliRegistrazione("tddettagli_mod","messaggioControlloDettagli_mod","descreg_mod","descreg_mod_label");
-    		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
-    		controllaDettagliRegistrazione("tddettagli_pag_cre","messaggioControlloDettagliPagamento","descreg_pag_cre","descreg_pag_cre_label");
-    		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
-    		controllaDettagliRegistrazione("tddettagli_corneg_cre","messaggioControlloDettagliCorrispettivoNegozio","descreg_corneg_cre","descreg_corneg_cre_label");
+    		$("#" + idTable).html(dettagliTable);
+    		controllaDettagliRegistrazione(idCampoMsg,campoMsg,campoDes,labelDes);
 		}
 	}
 	xmlhttp.open("GET", "cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codConto, true);
@@ -1048,331 +1058,335 @@ function cancellaDettaglioNuovaRegistrazione(codConto) {
 
 
 
+
+
+
+
 //---------------------------------------------------------------------------------				
 // vecchie funzioni non ancor utilizzate dalla nuova versione 4.0
 //---------------------------------------------------------------------------------				
 
-$( "#nuovo-dett-modificareg" ).click(function( event ) {
-	$( "#nuovo-dettaglio-modificareg-form" ).dialog( "open" );
-	event.preventDefault();
-});
-
-$( "#nuovo-dettaglio-modificareg-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 550,
-	height: 400,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				
-				// Controllo congruenza conto dettaglio
-				
-				var conto = $("#conti").val();
-				var fornitore = $("#fornitore").val();
-				var cliente = $("#cliente").val();
-
-				// Fornitore
-				
-				if (fornitore != "") {
-
-					var xmlhttp = new XMLHttpRequest();
-				    xmlhttp.onreadystatechange = function() {
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				        	if (xmlhttp.responseText == "Dettaglio ok") {
-								
-					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
-				                $("#nuovoDettaglio").submit();				
-				        		
-				        	}
-				        	else {
-				        		$( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
-				        	}
-				        }		
-				        
-				    } 
-				    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
-				    xmlhttp.send();
-				}
-
-				// Cliente
-				
-				else if (cliente != "") {
-
-					var xmlhttp = new XMLHttpRequest();
-				    xmlhttp.onreadystatechange = function() {
-				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				        	if (xmlhttp.responseText == "Dettaglio ok") {
-								
-					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
-				                $("#nuovoDettaglio").submit();				
-				        		
-				        	}
-				        	else {
-					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
-				        	}
-				        }		
-				        
-				    } 
-				    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
-				    xmlhttp.send();
-				}
-				else {
-	                $("#nuovoDettaglio").submit();				
-				}
-				
-				$( this ).dialog( "close" );
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-//---------------------------------------------------------------------------------				
-
-$( "#nuova-scad-modificareg" ).click(function( event ) {
-	$( "#nuova-scadenza-modificareg-form" ).dialog( "open" );
-	event.preventDefault();
-});
-
-$( "#nuova-scadenza-modificareg-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 550,
-	height: 150,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-           $("#nuovaScadenza").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-//---------------------------------------------------------------------------------				
-
-function cancellaDettaglio(idconto) {
-	$( "#idDettaglioRegistrazione" ).val(idconto);
-	$( "#cancella-dettaglio-modificareg-form" ).dialog( "open" );
-}
-$( "#cancella-dettaglio-modificareg-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 300,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-           $("#cancellaDettaglio").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
-
-//---------------------------------------------------------------------------------				
-
-function cancellaRegistrazione(idreg) {	
-	$( "#idRegistrazione" ).val(idreg);
-	$( "#cancella-registrazione-form" ).dialog( "open" );
-}
-
-$( "#cancella-registrazione-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 300,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-         $("#cancellaRegistrazione").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
+//$( "#nuovo-dett-modificareg" ).click(function( event ) {
+//	$( "#nuovo-dettaglio-modificareg-form" ).dialog( "open" );
+//	event.preventDefault();
+//});
+//
+//$( "#nuovo-dettaglio-modificareg-form" ).dialog({
+//	autoOpen: false,
+//	modal: true,
+//	width: 550,
+//	height: 400,
+//	buttons: [
+//		{
+//			text: "Ok",
+//			click: function() {
+//				
+//				// Controllo congruenza conto dettaglio
+//				
+//				var conto = $("#conti").val();
+//				var fornitore = $("#fornitore").val();
+//				var cliente = $("#cliente").val();
+//
+//				// Fornitore
+//				
+//				if (fornitore != "") {
+//
+//					var xmlhttp = new XMLHttpRequest();
+//				    xmlhttp.onreadystatechange = function() {
+//				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//				        	if (xmlhttp.responseText == "Dettaglio ok") {
+//								
+//					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+//				                $("#nuovoDettaglio").submit();				
+//				        		
+//				        	}
+//				        	else {
+//				        		$( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+//				        	}
+//				        }		
+//				        
+//				    } 
+//				    xmlhttp.open("GET", "controlloContoDettaglioPagamentoFacade.class.php?modo=start&fornitore=" + fornitore + "&conto=" + conto, true);
+//				    xmlhttp.send();
+//				}
+//
+//				// Cliente
+//				
+//				else if (cliente != "") {
+//
+//					var xmlhttp = new XMLHttpRequest();
+//				    xmlhttp.onreadystatechange = function() {
+//				        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//				        	if (xmlhttp.responseText == "Dettaglio ok") {
+//								
+//					            $( "#esitoControlloContoDettaglio" ).html("&nbsp;");
+//				                $("#nuovoDettaglio").submit();				
+//				        		
+//				        	}
+//				        	else {
+//					            $( "#esitoControlloContoDettaglio" ).html(xmlhttp.responseText);
+//				        	}
+//				        }		
+//				        
+//				    } 
+//				    xmlhttp.open("GET", "controlloContoDettaglioIncassoFacade.class.php?modo=start&cliente=" + cliente + "&conto=" + conto, true);
+//				    xmlhttp.send();
+//				}
+//				else {
+//	                $("#nuovoDettaglio").submit();				
+//				}
+//				
+//				$( this ).dialog( "close" );
+//			}
+//		},
+//		{
+//			text: "Cancel",
+//			click: function() {
+//				$( this ).dialog( "close" );
+//			}
+//		}
+//	]
+//});
+//
+////---------------------------------------------------------------------------------				
+//
+//$( "#nuova-scad-modificareg" ).click(function( event ) {
+//	$( "#nuova-scadenza-modificareg-form" ).dialog( "open" );
+//	event.preventDefault();
+//});
+//
+//$( "#nuova-scadenza-modificareg-form" ).dialog({
+//	autoOpen: false,
+//	modal: true,
+//	width: 550,
+//	height: 150,
+//	buttons: [
+//		{
+//			text: "Ok",
+//			click: function() {
+//				$(this).dialog('close');
+//           $("#nuovaScadenza").submit();				
+//			}
+//		},
+//		{
+//			text: "Cancel",
+//			click: function() {
+//				$( this ).dialog( "close" );
+//			}
+//		}
+//	]
+//});
+//
+////---------------------------------------------------------------------------------				
+//
+//function cancellaDettaglio(idconto) {
+//	$( "#idDettaglioRegistrazione" ).val(idconto);
+//	$( "#cancella-dettaglio-modificareg-form" ).dialog( "open" );
+//}
+//$( "#cancella-dettaglio-modificareg-form" ).dialog({
+//	autoOpen: false,
+//	modal: true,
+//	width: 300,
+//	buttons: [
+//		{
+//			text: "Ok",
+//			click: function() {
+//				$(this).dialog('close');
+//           $("#cancellaDettaglio").submit();				
+//			}
+//		},
+//		{
+//			text: "Cancel",
+//			click: function() {
+//				$( this ).dialog( "close" );
+//			}
+//		}
+//	]
+//});
 
 //---------------------------------------------------------------------------------				
-function cancellaScadenza(idscadenza) {
-//---------------------------------------------------------------------------------	
-	$( "#idScadenzaRegistrazione" ).val(idscadenza);
-	$( "#cancella-scadenza-modificareg-form" ).dialog( "open" );
-}
 
-$( "#cancella-scadenza-modificareg-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 300,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-         $("#cancellaScadenza").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
+//function cancellaRegistrazione(idreg) {	
+//	$( "#idRegistrazione" ).val(idreg);
+//	$( "#cancella-registrazione-form" ).dialog( "open" );
+//}
+//
+//$( "#cancella-registrazione-form" ).dialog({
+//	autoOpen: false,
+//	modal: true,
+//	width: 300,
+//	buttons: [
+//		{
+//			text: "Ok",
+//			click: function() {
+//				$(this).dialog('close');
+//         $("#cancellaRegistrazione").submit();				
+//			}
+//		},
+//		{
+//			text: "Cancel",
+//			click: function() {
+//				$( this ).dialog( "close" );
+//			}
+//		}
+//	]
+//});
 
-//---------------------------------------------------------------------------------	
-
-$( "#fornitore" ).change(function() {
-	
-	var desfornitore = $("#fornitore").val();
-	var datareg = $("#datareg").val();
-	var form = $("#pagamentoForm").val();
-	
-	if (desfornitore != "") {
-
-		if (form == "PAGAMENTO") {
-			
-			var xmlhttp = new XMLHttpRequest();
-		    xmlhttp.onreadystatechange = function() {
-		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		            $( "#select2" ).html(xmlhttp.responseText);
-		            $( "#select2" ).selectmenu( "refresh" );
-		        }
-		    }
-		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
-		    xmlhttp.send();		
-		}
-		else {
-			
-			/**
-			 * Data scadenza
-			 */			
-			var xmlhttp = new XMLHttpRequest();
-	        xmlhttp.onreadystatechange = function() {
-	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                $( "#datascad" ).val(xmlhttp.responseText);
-	            	$( "#tddatascad").removeClass("inputFieldError");	
-	                $( "#esitoDatascad" ).val("");			
-	        		$( "#messaggioControlloDataScadenza" ).html("");	                
-	            }
-	        }
-	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
-	        xmlhttp.send();						
-		}		
-	}
-});
+//---------------------------------------------------------------------------------				
+//function cancellaScadenza(idscadenza) {
+////---------------------------------------------------------------------------------	
+//	$( "#idScadenzaRegistrazione" ).val(idscadenza);
+//	$( "#cancella-scadenza-modificareg-form" ).dialog( "open" );
+//}
+//
+//$( "#cancella-scadenza-modificareg-form" ).dialog({
+//	autoOpen: false,
+//	modal: true,
+//	width: 300,
+//	buttons: [
+//		{
+//			text: "Ok",
+//			click: function() {
+//				$(this).dialog('close');
+//         $("#cancellaScadenza").submit();				
+//			}
+//		},
+//		{
+//			text: "Cancel",
+//			click: function() {
+//				$( this ).dialog( "close" );
+//			}
+//		}
+//	]
+//});
 
 //---------------------------------------------------------------------------------	
 
-$( "#fornitore_regrap" ).change(function() {
-	
-	var desfornitore = $("#fornitore_regrap").val();
-	
-	if (desfornitore != "") {
-		/**
-		 * Genero i dettagli della registrazione
-		 */
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			$( "#dettagli" ).html(xmlhttp.responseText);	                
-        }
-	}
-	xmlhttp.open("GET", "aggiungiFornitoreDettagliRegistrazioneFacade.class.php?modo=start&desfornitore=" + desfornitore, true);
-	xmlhttp.send();						
-	}		
-});
+//$( "#fornitore" ).change(function() {
+//	
+//	var desfornitore = $("#fornitore").val();
+//	var datareg = $("#datareg").val();
+//	var form = $("#pagamentoForm").val();
+//	
+//	if (desfornitore != "") {
+//
+//		if (form == "PAGAMENTO") {
+//			
+//			var xmlhttp = new XMLHttpRequest();
+//		    xmlhttp.onreadystatechange = function() {
+//		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//		            $( "#select2" ).html(xmlhttp.responseText);
+//		            $( "#select2" ).selectmenu( "refresh" );
+//		        }
+//		    }
+//		    xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&desforn=" + desfornitore, true);
+//		    xmlhttp.send();		
+//		}
+//		else {
+//			
+//			/**
+//			 * Data scadenza
+//			 */			
+//			var xmlhttp = new XMLHttpRequest();
+//	        xmlhttp.onreadystatechange = function() {
+//	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//	                $( "#datascad" ).val(xmlhttp.responseText);
+//	            	$( "#tddatascad").removeClass("inputFieldError");	
+//	                $( "#esitoDatascad" ).val("");			
+//	        		$( "#messaggioControlloDataScadenza" ).html("");	                
+//	            }
+//	        }
+//	        xmlhttp.open("GET", "calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
+//	        xmlhttp.send();						
+//		}		
+//	}
+//});
 
 //---------------------------------------------------------------------------------	
 
-$( "#cliente_regrap" ).change(function() {
-	
-	var descliente = $("#cliente_regrap").val();
-	
-	if (descliente != "") {
-		/**
-		 * Genero i dettagli della registrazione
-		 */
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    		$( "#dettagli" ).html(xmlhttp.responseText);	                
-        }
-    }
-	xmlhttp.open("GET", "aggiungiClienteDettagliRegistrazioneFacade.class.php?modo=start&descliente=" + descliente, true);
-	xmlhttp.send();						
-	}		
-});
+//$( "#fornitore_regrap" ).change(function() {
+//	
+//	var desfornitore = $("#fornitore_regrap").val();
+//	
+//	if (desfornitore != "") {
+//		/**
+//		 * Genero i dettagli della registrazione
+//		 */
+//		var xmlhttp = new XMLHttpRequest();
+//		xmlhttp.onreadystatechange = function() {
+//		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//			$( "#dettagli" ).html(xmlhttp.responseText);	                
+//        }
+//	}
+//	xmlhttp.open("GET", "aggiungiFornitoreDettagliRegistrazioneFacade.class.php?modo=start&desfornitore=" + desfornitore, true);
+//	xmlhttp.send();						
+//	}		
+//});
+//
+////---------------------------------------------------------------------------------	
+//
+//$( "#cliente_regrap" ).change(function() {
+//	
+//	var descliente = $("#cliente_regrap").val();
+//	
+//	if (descliente != "") {
+//		/**
+//		 * Genero i dettagli della registrazione
+//		 */
+//		var xmlhttp = new XMLHttpRequest();
+//		xmlhttp.onreadystatechange = function() {
+//		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//    		$( "#dettagli" ).html(xmlhttp.responseText);	                
+//        }
+//    }
+//	xmlhttp.open("GET", "aggiungiClienteDettagliRegistrazioneFacade.class.php?modo=start&descliente=" + descliente, true);
+//	xmlhttp.send();						
+//	}		
+//});
 
 //---------------------------------------------------------------------------------	
 
-$( "#cliente" ).change(function() {
-	
-	var descliente = $("#cliente").val();
-
-	if (descliente != "") {
-		var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                $( "#tipoadd" ).val(xmlhttp.responseText);
-            }
-        }
-        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&descliente=" + descliente, true);
-        xmlhttp.send();			
-	}
-})
-
-//---------------------------------------------------------------------------------	
-
-$( ".selectmenuCausale" )
-	.selectmenu({width: 350})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
-$( ".selectmenuCausaleCre" )
-	.selectmenu({width: 350})
-	.selectmenu("menuWidget")
-	.addClass("overflow");
+//$( "#cliente" ).change(function() {
+//	
+//	var descliente = $("#cliente").val();
+//
+//	if (descliente != "") {
+//		var xmlhttp = new XMLHttpRequest();
+//        xmlhttp.onreadystatechange = function() {
+//            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//                $( "#tipoadd" ).val(xmlhttp.responseText);
+//            }
+//        }
+//        xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&descliente=" + descliente, true);
+//        xmlhttp.send();			
+//	}
+//})
 
 //---------------------------------------------------------------------------------	
 
-$('#numeroFatturaFornitore').change(function() {
-	var fornitore = $("#fornitore").val();
-	var numfatt = $("#numfatt").val();
-	var causale = $("#causale").val();
-	
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
-        }
-    } 
-    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
-    xmlhttp.send();				
-});
+//$( ".selectmenuCausale" )
+//	.selectmenu({width: 350})
+//	.selectmenu("menuWidget")
+//	.addClass("overflow");
+//
+//$( ".selectmenuCausaleCre" )
+//	.selectmenu({width: 350})
+//	.selectmenu("menuWidget")
+//	.addClass("overflow");
+
+//---------------------------------------------------------------------------------	
+
+//$('#numeroFatturaFornitore').change(function() {
+//	var fornitore = $("#fornitore").val();
+//	var numfatt = $("#numfatt").val();
+//	var causale = $("#causale").val();
+//	
+//	var xmlhttp = new XMLHttpRequest();
+//    xmlhttp.onreadystatechange = function() {
+//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//            $( "#esitoControlloNumeroFattura" ).html(xmlhttp.responseText);
+//        }
+//    } 
+//    xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&idfornitore=" + fornitore + "&numfatt=" + numfatt, true);
+//    xmlhttp.send();				
+//});

@@ -140,6 +140,7 @@ class PrimanotaController
 			$registrazione->setDesFornitore($_REQUEST["fornitore_mod"]);
 			$registrazione->setDesCliente($_REQUEST["cliente_mod"]);
 			$registrazione->setNumFattura($_REQUEST["numfatt_mod"]);
+			$registrazione->setNumFatturaOrig($_REQUEST["numfatt_mod_orig"]);
 		}
 
 		// Registrazione incasso ==========================================================

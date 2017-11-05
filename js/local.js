@@ -133,11 +133,6 @@ $( ".selectmenuContiInc" )
 	.selectmenu("menuWidget")
 	.addClass("overflow");
 
-$( ".selectmenuContiPag" )
-	.selectmenu({ width: 450 })
-	.selectmenu("menuWidget")
-	.addClass("overflow");
-
 
 $( ".selectmenuFornitore" ).selectmenu({ width: 350 });
 $( ".selectmenuCliente" ).selectmenu({ width: 350 });

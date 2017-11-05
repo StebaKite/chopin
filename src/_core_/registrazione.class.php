@@ -39,6 +39,7 @@ class Registrazione implements CoreInterface {
 	private $idCliente;
 	private $codCausale;
 	private $numFattura;
+	private $numFatturaOrig;
 	private $numFatturePagate;
 	private $numFattureDaPagare;
 	private $datRegistrazione;
@@ -80,6 +81,29 @@ class Registrazione implements CoreInterface {
 		return unserialize($_SESSION[self::REGISTRAZIONE]);
 	}
 
+	public function prepara()
+	{
+	    $this->setDatScadenza(null);
+	    $this->setDesRegistrazione(null);
+	    $this->setIdFornitore(null);
+	    $this->setIdCliente(null);
+	    $this->setCodCausale(null);
+	    $this->setNumFattura(null);
+	    $this->setNumFattura(null);
+	    $this->setNumFattureDaPagare(null);
+	    $this->setDatRegistrazione(null);
+	    $this->setDatInserimento(null);
+	    $this->setStaRegistrazione(null);
+	    $this->setCodNegozio(null);
+	    $this->setIdMercato(null);
+	    $this->setRegistrazioni(null);
+	    $this->setQtaRegistrazioni(null);
+	    $this->setDesCliente(null);
+	    $this->setDesFornitore(null);
+
+	    $_SESSION[self::REGISTRAZIONE] = serialize($this);
+	}
+	
 	public function leggi($db) {
 
 		$utility = Utility::getInstance();
@@ -102,12 +126,14 @@ class Registrazione implements CoreInterface {
 				$this->setIdCliente($row[self::ID_CLIENTE]);
 				$this->setCodCausale($row[self::COD_CAUSALE]);
 				$this->setNumFattura($row[self::NUM_FATTURA]);
+				$this->setNumFatturaOrig($row[self::NUM_FATTURA]);
 				$this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
 				$this->setDatInserimento($row[self::DAT_INSERIMENTO]);
 				$this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
 				$this->setCodNegozio($row[self::COD_NEGOZIO]);
 				$this->setIdMercato($row[self::ID_MERCATO]);
 			}
+			$_SESSION[self::REGISTRAZIONE] = serialize($this);
 		}
 		return $result;
 	}
@@ -497,6 +523,16 @@ class Registrazione implements CoreInterface {
 
     public function setNumFattureDaPagare($numFattureDaPagare){
         $this->numFattureDaPagare = $numFattureDaPagare;
+        return $this;
+    }
+
+
+    public function getNumFatturaOrig(){
+        return $this->numFatturaOrig;
+    }
+
+    public function setNumFatturaOrig($numFatturaOrig){
+        $this->numFatturaOrig = $numFatturaOrig;
         return $this;
     }
 

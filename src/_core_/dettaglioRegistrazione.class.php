@@ -35,7 +35,14 @@ class DettaglioRegistrazione implements CoreInterface {
 	private $aliquota;
 	private $impIva;
 	private $imponibile;
+	
+	// dati per controlli in pagina
+	
+	private $campoMsgControlloPagina;
 	private $idTablePagina;
+	private $msgControlloPagina;
+	private $nomeCampo;
+	private $labelNomeCampo;
 
 	// Queries
 
@@ -398,6 +405,44 @@ class DettaglioRegistrazione implements CoreInterface {
 
     public function setIdTablePagina($idTablePagina){
         $this->idTablePagina = $idTablePagina;
+        return $this;
+    }
+
+
+    public function getMsgControlloPagina(){
+        return $this->msgControlloPagina;
+    }
+
+    public function setMsgControlloPagina($msgControlloPagina){
+        $this->msgControlloPagina = $msgControlloPagina;
+        return $this;
+    }
+
+    public function getNomeCampo(){
+        return $this->nomeCampo;
+    }
+
+    public function setNomeCampo($nomeCampo){
+        $this->nomeCampo = $nomeCampo;
+        return $this;
+    }
+
+    public function getLabelNomeCampo(){
+        return $this->labelNomeCampo;
+    }
+
+    public function setLabelNomeCampo($labelNomeCampo){
+        $this->labelNomeCampo = $labelNomeCampo;
+        return $this;
+    }
+
+
+    public function getCampoMsgControlloPagina(){
+        return $this->campoMsgControlloPagina;
+    }
+
+    public function setCampoMsgControlloPagina($campoMsgControlloPagina){
+        $this->campoMsgControlloPagina = $campoMsgControlloPagina;
         return $this;
     }
 

@@ -40,6 +40,10 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 
+		$registrazione->prepara();
+		$cliente->prepara();
+		$fornitore->prepara();
+		
 		$registrazione->leggi($db);
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
 
@@ -48,6 +52,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 			$fornitore->leggi($db);
 			$scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
 			$scadenzaFornitore->trovaScadenzeRegistrazione($db);
+			$scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_mod");
+			$_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 		}
 
 		if ($registrazione->getIdCliente() != null) {
@@ -55,11 +61,19 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 			$cliente->leggi($db);
 			$scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
 			$scadenzaCliente->trovaScadenzeRegistrazione($db);
+			$scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
+			$_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 		}
 
 		$dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
 		$dettaglioRegistrazione->leggiDettagliRegistrazione($db);
-
+		$dettaglioRegistrazione->setCampoMsgControlloPagina("tddettagli_mod");
+		$dettaglioRegistrazione->setIdTablePagina("dettagli_mod");
+		$dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagli_mod");
+		$dettaglioRegistrazione->setNomeCampo("descreg_mod");
+		$dettaglioRegistrazione->setLabelNomeCampo("descreg_mod_label");
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+		
 		$causale->setCodCausale($registrazione->getCodCausale());
 		$causale->loadContiConfigurati($db);
 
@@ -71,9 +85,10 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		trim($fornitore->getDesFornitore()) . "|" .
 		trim($cliente->getDesCliente()) . "|" .
 		trim($registrazione->getNumFattura()) . "|" .
-		trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore, "scadenzesuppl_mod")) . "|" .
-		trim($this->makeTabellaScadenzeCliente($scadenzaCliente, "scadenzesuppl_mod")) . "|".
-		trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione, "dettagli_mod")) . "|" .
+		trim($registrazione->getNumFatturaOrig()) . "|" .
+		trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)) . "|" .
+		trim($this->makeTabellaScadenzeCliente($scadenzaCliente)) . "|".
+		trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|" .
 		trim($causale->getContiCausale())
 		;
 
@@ -104,7 +119,6 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 	{
 		$db = Database::getInstance();
 		$db->beginTransaction();
-		$array = $utility->getConfig();
 
 		if ($registrazione->aggiorna($db))
 		{
@@ -150,31 +164,10 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		}
 	}
 
-	private function aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione)
-	{
-		foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio)
-		{
-			if ($unDettaglio[DettaglioRegistrazione::ID_REGISTRAZIONE] == 0)
-			{
-				$dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
-				$dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
-				$dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
-
-				$_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
-				$conto = explode(".", $_cc[0]);
-
-				$dettaglioRegistrazione->setCodConto($conto[0]);
-				$dettaglioRegistrazione->setCodSottoconto($conto[1]);
-
-				if ($dettaglioRegistrazione->inserisci($db)) {}		// tutto ok
-				else return false;
-			}
-		}
-		return true;
-	}
-
 	private function aggiornaScadenzeFornitore($db,$utility,$registrazione,$scadenzaFornitore,$fornitore)
 	{
+	    $array = $utility->getConfig();
+	    
 		foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
 		{
 			$scadenzaFornitore->setIdFornitoreOrig($unaScadenza[ScadenzaFornitore::ID_FORNITORE]);
@@ -213,6 +206,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 
 	private function aggiornaScadenzeCliente($db,$utility,$registrazione,$scadenzaCliente,$cliente)
 	{
+	    $array = $utility->getConfig();
+	    
 		foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
 		{
 			$scadenzaCliente->setIdClienteOrig($unaScadenza[ScadenzaCliente::ID_CLIENTE]);
@@ -222,7 +217,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 
 			$scadenzaCliente->setImpRegistrazione($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]);
 			$scadenzaCliente->setNota($registrazione->getDesRegistrazione());
-			$scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
+			$scadenzaCliente->setTipAddebito($unaScadenza[ScadenzaCliente::TIP_ADDEBITO]);
 			$scadenzaCliente->setCodNegozio($registrazione->getCodNegozio());
 			$scadenzaCliente->setIdCliente($registrazione->getIdCliente());
 			$scadenzaCliente->setNumFattura($registrazione->getNumFattura());
@@ -236,7 +231,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 				else return false;
 			}
 			else {
-				if ($scadenzaFornitore->aggiorna($db)) {}	// tutto ok
+				if ($scadenzaCliente->aggiorna($db)) {}	// tutto ok
 				else return false;
 			}
 		}

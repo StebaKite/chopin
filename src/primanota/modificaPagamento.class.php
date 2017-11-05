@@ -55,6 +55,12 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
                 
 	    $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
 	    $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
+	    $dettaglioRegistrazione->setCampoMsgControlloPagina("tddettagli_pag_mod");
+	    $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_mod");
+	    $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagliPagamento_mod");
+	    $dettaglioRegistrazione->setNomeCampo("descreg_pag_mod");
+	    $dettaglioRegistrazione->setLabelNomeCampo("descreg_pag_mod_label");
+	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 	    
 	    $causale->setCodCausale($registrazione->getCodCausale());
 	    $causale->loadContiConfigurati($db);
@@ -66,7 +72,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 	        . trim($fornitore->getDesFornitore()) . "|"
 	        . trim($registrazione->getNumFattureDaPagare()) . "|"
 	        . trim($registrazione->getNumFatturePagate()) . "|"
-	        . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione, "dettagli_mod")) . "|"
+	        . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|"
 	        . trim($causale->getContiCausale())
 	    ;
 	    

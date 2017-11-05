@@ -28,6 +28,8 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
 		$db = Database::getInstance();
 		$scadenzaCliente = ScadenzaCliente::getInstance();
 		$scadenzaCliente->aggiornaImporto($db);
+		$scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 		echo $this->makeTabellaScadenzeCliente($scadenzaCliente);
 	}
 }

@@ -91,8 +91,11 @@ abstract class Nexus6Abstract {
 	public function makeMenu($utility) : string {
 
 		$array = $utility->getConfig();
-
-		$menu = "<li style='width: 70px;'><img src='../../images/unicorn.png' style='width: 50%;'/></li>";
+		
+		$ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment ( $array, $_SESSION );
+		
+		if ($ambiente == "TEST") {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_test.png' style='width: 100%;'/></li>";}
+		else {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_prod.png' style='width: 100%;'/></li>";}
 
 		// H o m e --------------------------------------
 

@@ -1,10 +1,8 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	font-family: Ubuntu;
+	font-family: 'Rajdhani';
 	font-size: 13px;
-/*	background-image: url("../images/archicinema006.jpg");
-	background-repeat: no-repeat; */
 	background-size: cover;
 	background-color: #d9d4d4; 
 	color: #515151;
@@ -87,7 +85,7 @@ frame {
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: left; width: 17em; }
 
 * {
-	font-family: Ubuntu;
+	font-family: 'Rajdhani';
 	font-size: 13px;
 }
 h1 {
@@ -514,7 +512,7 @@ div.scroll-categorie {
 
 .nav li {
 	float: left;
-	width: 170px;
+	width: 130px;
 	position: relative;
 }
 
@@ -546,7 +544,7 @@ div.scroll-categorie {
 }
 
 .nav ul li {
-	width: 170px;
+	width: 130px;
 	float: left;
 	z-index: 999;
 }

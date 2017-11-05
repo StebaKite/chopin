@@ -31,7 +31,11 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 
 	public function start()
 	{
-		$this->go();
+	    $scadenzaFornitore = ScadenzaFornitore::getInstance();
+	    $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
+	    $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");	
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+	    echo "Ok";
 	}
 
 	public function go()

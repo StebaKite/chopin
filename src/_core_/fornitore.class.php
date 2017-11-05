@@ -69,11 +69,14 @@ class Fornitore implements CoreInterface {
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
+		$this->setIdFornitore(null);
 		$this->setCodFornitore($this->prelevaUltimoCodice($utility, $db) + 1);
 		$this->setDesFornitore(null);
 		$this->setDesIndirizzoFornitore(null);
 		$this->setDesCittaFornitore(null);
 		$this->setCapFornitore(null);
+		
+		$_SESSION[self::FORNITORE] = serialize($this);
 	}
 
 	public function inserisci($db) {
