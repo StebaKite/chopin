@@ -1,333 +1,131 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'primanota.controller.class.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'dettaglioRegistrazione.class.php';
+require_once 'causale.class.php';
+require_once 'ricercaRegistrazione.class.php';
+require_once 'scadenzaCliente.class.php';
+require_once 'cliente.class.php';
+require_once 'lavoroPianificato.class.php';
 
-class ModificaIncasso extends primanotaAbstract {
+class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
+    function __construct()
+    {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
+    
+    public function getInstance()
+    {
+        if (!isset($_SESSION[self::MODIFICA_INCASSO])) $_SESSION[self::MODIFICA_INCASSO] = serialize(new ModificaIncasso());
+        return unserialize($_SESSION[self::MODIFICA_INCASSO]);
+    }
 
-	private static $_instance = null;
-	private static $categoria_causali = 'GENERI';
-	
-	public static $azioneModificaIncasso = "../primanota/modificaIncassoFacade.class.php?modo=go";
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+	public function start()
+	{
+	    $datiPagina = "";
+	    $registrazione = Registrazione::getInstance();
+	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $cliente = Cliente::getInstance();
+	    $scadenzaCliente = ScadenzaCliente::getInstance();
+	    $causale = Causale::getInstance();
+	    
+	    $utility = Utility::getInstance();
+	    $db = Database::getInstance();
+	    
+	    $registrazione->leggi($db);
+	    $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+	    
+	    $cliente->setIdCliente($registrazione->getIdCliente());
+	    $cliente->leggi($db);
+	    $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
+	    
+	    $scadenzaCliente->setIdCliente($cliente->getIdCliente());
+	    $scadenzaCliente->trovaScadenzeDaIncassare($db);
+	    $registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente,"scadenze_aperte_inc_mod"));
+	    
+	    $scadenzaCliente->trovaScadenzeIncassate($db);
+	    $registrazione->setNumFattureIncassate($this->makeTabellaFattureIncassate($scadenzaCliente,"scadenze_chiuse_inc_mod"));
+	    
+	    $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
+	    $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
+	    $dettaglioRegistrazione->setCampoMsgControlloPagina("tddettagli_inc_mod");
+	    $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_mod");
+	    $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagliIncasso_mod");
+	    $dettaglioRegistrazione->setNomeCampo("descreg_inc_mod");
+	    $dettaglioRegistrazione->setLabelNomeCampo("descreg_inc_mod_label");
+	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+	    
+	    $causale->setCodCausale($registrazione->getCodCausale());
+	    $causale->loadContiConfigurati($db);
+	    
+	    $datiPagina = trim($registrazione->getDatRegistrazione()) . "|"
+	        . trim($registrazione->getDesRegistrazione()) . "|"
+            . trim($registrazione->getCodCausale()) . "|"
+            . trim($registrazione->getCodNegozio()) . "|"
+            . trim($cliente->getDesCliente()) . "|"
+            . trim($registrazione->getNumFattureDaIncassare()) . "|"
+            . trim($registrazione->getNumFattureIncassate()) . "|"
+            . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|"
+            . trim($causale->getContiCausale())
+            ;
+	                                    
+        echo $datiPagina;
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new ModificaIncasso();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'modificaIncasso.template.php';
-		require_once 'utility.class.php';
-		
-		$utility = Utility::getInstance();
-		$this->prelevaDatiIncasso($utility);
-		$this->prelevaDatiDettagliIncasso($utility);
-
-		/**
-		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la
-		 * quale redirigere l'utente dopo la modifica
-		 */
-		$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
-		
-		$modificaIncassoTemplate = ModificaIncassoTemplate::getInstance();
-		$this->preparaPagina($modificaIncassoTemplate);
-			
-		// Compone la pagina
-		include(self::$testata);
-		$modificaIncassoTemplate->displayPagina();
-		include(self::$piede);		
-	}
-
-	public function go() {
-
-		require_once 'modificaIncasso.template.php';
-		require_once 'ricercaScadenzeCliente.class.php';
-		require_once 'utility.class.php';
-		
-		/**
-		 * Crea una array dei dettagli per il controllo di quadratura
-		 */
-		$utility = Utility::getInstance();
-		$this->prelevaDatiDettagliIncasso($utility);
-		
-		$result = $_SESSION["elencoDettagliIncasso"];
-		
-		$dettaglioIncasso = pg_fetch_all($result);
-		$dett = "";
-		
-		foreach ($dettaglioIncasso as $row) {
-			$dett = $dett . trim($row["cod_conto"]) . trim($row["cod_sottoconto"]) . "#" . trim($row["imp_registrazione"]) . "#" . trim($row["ind_dareavere"]) . ",";
-		}
-		$_SESSION['dettagliInseriti'] = $dett;
-		
-		$modificaIncassoTemplate = ModificaIncassoTemplate::getInstance();
-		
-		if ($modificaIncassoTemplate->controlliLogici()) {
-		
-			// Aggiornamento del DB ------------------------------
-		
-			if ($this->aggiornaIncasso($utility)) {
-		
-				$_SESSION["messaggioModifica"] = "Incasso salvato con successo";
-
-				$fileClass = $_SESSION['referer_function_name'];
-				
-				if (strrpos($fileClass,"ScadenzeCliente") > 0) {
-					$ricercaScadenzeCliente = RicercaScadenzeCliente::getInstance();
-					$ricercaScadenzeCliente->go();
-				}
-			}
-		}
-		else {
-				
-			$this->preparaPagina($modificaIncassoTemplate);
-		
-			include(self::$testata);
-			$modificaIncassoTemplate->displayPagina();
-		
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		
-			include(self::$piede);
-		}
+	
+	public function go()
+	{
+	    $registrazione = Registrazione::getInstance();
+	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $cliente = Cliente::getInstance();
+	    $scadenzaCliente = ScadenzaCliente::getInstance();
+	    $causale = Causale::getInstance();
+	    
+	    $utility = Utility::getInstance();
+	    $db = Database::getInstance();
+	    
+	    if ($this->aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione, $scadenzaCliente, $cliente))
+	        $_SESSION[self::MSG_DA_MODIFICA] = self::MODIFICA_INCASSO_OK;
+	        else $_SESSION[self::MSG_DA_MODIFICA] = self::ERRORE_MODIFICA_REGISTRAZIONE;
+	        
+	        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+	        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+	        $controller->start();
 	}
 	
-	public function prelevaDatiIncasso($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idIncasso"]);
-	
-		if ($result) {
-	
-			$incasso = pg_fetch_all($result);
-			foreach ($incasso as $row) {
-	
-				$_SESSION["descreg"] = $row["des_registrazione"];
-				$_SESSION["datareg"] = $row["dat_registrazione"];
-				$_SESSION["datareg_old"] = $row["dat_registrazione"];
-				$_SESSION["numfatt"] = $row["num_fattura"];
-				$_SESSION["numfatt_old"] = $row["num_fattura"];
-				$_SESSION["codneg"] = $row["cod_negozio"];
-				$_SESSION["causale"] = $row["cod_causale"];
-				$_SESSION["descli"] = $row["des_cliente"];				
-				$_SESSION["cliente"] = $row["id_cliente"];
-				$_SESSION["cliente_old"] = $row["id_cliente"];
-			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati incasso : " . $_SESSION["idIncasso"] . " <<<<<<<<" );
-		}
+	public function aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione, $scadenzaCliente, $cliente)
+	{
+	    $db = Database::getInstance();
+	    $db->beginTransaction();
+	    $array = $utility->getConfig();
+	    
+	    if ($registrazione->aggiorna($db))
+	    {
+	        if ($this->aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione))
+	        {
+	            $this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+	            $db->commitTransaction();
+	            return true;
+	            
+	        }
+	        else {
+	            $db->rollbackTransaction();
+	            return false;
+	        }
+	    }
+	    else {
+	        $db->rollbackTransaction();
+	        return false;
+	    }
 	}
-	
-	public function prelevaDatiDettagliIncasso($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-	
-		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idIncasso"]);
-	
-		if ($result) {
-			$_SESSION["elencoDettagliIncasso"] = $result;
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati incasso (dettagli) : " . $_SESSION["idIncasso"] . " <<<<<<<<" );
-		}
-	}
-	
-	public function aggiornaIncasso($utility) {
-	
-		require_once 'database.class.php';
-	
-		$db = Database::getInstance();
-		$db->beginTransaction();
-		
-		/**
-		 * Aggiornamento della registrazione di incasso
-		 */		
-		
-		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
-		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$stareg = $_SESSION["stareg"];
-		$numfatt = ($_SESSION["numfatt"] != "") ? "'" . $_SESSION["numfatt"] . "'" : "null" ;
-		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];		
-		$cliente = ($_SESSION["cliente"] != "") ? $this->leggiDescrizioneCliente($db, $utility, $_SESSION["cliente"]) : "null" ;		
-		$staScadenza = "10";   // pagata
-		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idIncasso"], $_SESSION["totaleDare"],
-			$descreg, 'null', $datareg, $numfatt, $causale, 'null', $cliente, $stareg,
-			$codneg, $staScadenza, 'null')) {
-
-			/**
-			 * Se sono cambiati il codice cliente o i numeri fattura, cambio lo stato alle fatture incassate: da "10" a "00"
-			 * e riporto la registrazione originale a '00', valorizzo a null anche l'id_incasso
-			 */
-			
-			if ((trim($cliente) != trim($_SESSION["cliente_old"])) || (trim($_SESSION["numfatt"]) != trim($_SESSION["numfatt_old"]))) {
-			
-				$d = explode(",", $_SESSION["numfatt_old"]);
-					
-				foreach($d as $numeroFattura) {
-					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-					$this->cambiaStatoScadenzaCliente($db, $utility, $_SESSION["cliente_old"], $numfatt, '00', 'null');
-					
-					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $_SESSION["cliente_old"], $numfatt);
-					
-					if ($result_idReg) {
-					
-						foreach(pg_fetch_all($result_idReg) as $row) {
-							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
-						}					
-						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '00');
-					}
-				}
-				
-				/**
-				 * Riconciliazione delle fatture indicate con chiusura delle rispettive scadenze
-				 */
-				
-				$d = explode(",", $_SESSION["numfatt"]);
-					
-				foreach($d as $numeroFattura) {
-					$numfatt = ($numeroFattura != "") ? "'" . $numeroFattura . "'" : "null" ;
-					$this->cambiaStatoScadenzaCliente($db, $utility, $cliente, $numfatt, '10', $_SESSION['idIncasso']);
-
-					$result_idReg = $this->prelevaIdRegistrazioneOriginaleCliente($db, $utility, $cliente, $numfatt);
-						
-					if ($result_idReg) {
-							
-						foreach(pg_fetch_all($result_idReg) as $row) {
-							$idregistrazione = $row['id_registrazione'];		// l'id della fattura originale
-						}
-						$this->cambioStatoRegistrazione($db, $utility, $idregistrazione, '10');
-					}
-				}
-			}
-			
-			/**
-			 * Rigenerazione dei saldi
-			 */
-			$array = $utility->getConfig();
-			
-			if ($array['lavoriPianificatiAttivati'] == "Si") {
-			
-				/**
-				 * Se è cambiata la data di registrazione devo rigenerare i saldi due volte per le due date altrimenti
-				 * i riporti dei saldi potrebbero contenere l'importo due volte
-				 * Questo potrebbe accadere se la data registrazione viene portata da un mese all'altro
-				 */
-				$datareg_new = strtotime(str_replace('/', '-', str_replace("'", "", $datareg)));
-				$datareg_old = strtotime(str_replace('/', '-', $_SESSION["datareg_old"]));
-				if ($datareg_new != $datareg_old) {
-					$this->rigenerazioneSaldi($db, $utility, $datareg_old);
-				}
-				$this->rigenerazioneSaldi($db, $utility, $datareg_new);
-			}
-				
-			$db->commitTransaction();
-			return TRUE;
-		}
-		else {
-			$db->rollbackTransaction();
-			error_log("Errore aggiornamento incasso, eseguito Rollback");
-			return FALSE;
-		}
-	}
-		
-	public function preparaPagina($modificaIncassoTemplate) {
-	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$modificaIncassoTemplate->setAzione(self::$azioneModificaIncasso);
-		$modificaIncassoTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaIncassoTemplate->setTitoloPagina("%ml.modificaIncasso%");
-	
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-	
-		// Prelievo dei dati per i combo --------------------------------------------------------
-	
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
-		$_SESSION['elenco_clienti'] = $this->caricaClienti($utility, $db);
-		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
-
-		/**
-		 * Prepara il selectmenu delle scadenze aperte.
-		 * Come per i conti, l'ajax non interviene se c'è un errore logico e la pagina viene ripresentata
-		 */
-		if (isset($_SESSION["cliente"])) {
-				
-			$options = '';
-				
-			$result_scadenze_cliente = $this->prelevaScadenzeCliente($db, $utility, $_SESSION["cliente"], $_SESSION["idRegistrazione"]);
-				
-			$d = explode(",", $_SESSION["numfatt"]);
-		
-			foreach(pg_fetch_all($result_scadenze_cliente) as $row) {
-				
-				$optionSelected = $this->setFatturaSelezionata($d, trim($row['num_fattura']));
-				if ($optionSelected != "") {
-					$options .= '<option value="' . trim($row['num_fattura']) . '" ' . $optionSelected . '>Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
-				}
-				else {
-					if (trim($row['sta_scadenza'] == "00")) {
-						$options .= '<option value="' . trim($row['num_fattura']) . '" >Ft.' . trim($row['num_fattura']) . ' - &euro; ' . trim($row['imp_registrazione']) . ' - (' . trim($row['nota']) . ')</option>';
-					}
-				}
-			}
-				
-			$_SESSION["elenco_scadenze_cliente"] = $options;
-		}
-		else {
-			$_SESSION["elenco_scadenze_cliente"] = "";
-		}
-	}	
-
-	public function setFatturaSelezionata($fattureSelezionate, $numFatt) {
-	
-		$selected = "";
-	
-		foreach($fattureSelezionate as $numeroFattura) {
-			if (trim($numeroFattura) == trim($numFatt)) {
-				$selected = "selected";
-				break;
-			}
-		}
-		return $selected;
-	}	
 }
 
 ?>

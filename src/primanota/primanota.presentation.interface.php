@@ -30,6 +30,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
 	const MODIFICA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='modificaRegistrazione(";
 	const MODIFICA_PAGAMENTO_HREF = "<a class='tooltip' onclick='modificaPagamento(";
+	const MODIFICA_INCASSO_HREF = "<a class='tooltip' onclick='modificaIncasso(";
 	
 	const CANCELLA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='cancellaRegistrazione(";
 

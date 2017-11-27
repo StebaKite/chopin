@@ -29,9 +29,8 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
         $registrazione = Registrazione::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $fornitore = Fornitore::getInstance();
-
-        $fornitore->cercaConDescrizione($db);
-        $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
+        
+        $fornitore->setIdFornitore($registrazione->getIdFornitore());
         
         if ($scadenzaFornitore->getIdTableScadenzeAperte() == "scadenze_aperte_pag_cre")
         {

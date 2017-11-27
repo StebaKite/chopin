@@ -161,9 +161,9 @@ $(document).ready( function () {
 				</tr>
 				<tr>
 					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_cre"><div><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></div></td>	
+					<td id="tdfornitore_cre"><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></td>	
 					<td>%ml.codclie% :</td>
-					<td id="tdcliente_cre"><div><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></div></td>
+					<td id="tdcliente_cre"><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></td>
 				</tr>					
 				<tr>
 					<td></td>
@@ -410,12 +410,17 @@ $(document).ready( function () {
 					<td></td>
 					<td></td>
 				</tr>
+				
 				<tr>
-					<td>%ml.numfatt% :</td>
-					<td id="tdnumfatt_inc_cre" colspan="4">
-						<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2" name="numfatt_inc_cre[]" >
-						%elenco_scadenze_cliente%
-						</select>						
+					<td colspan="2"><h2>&nbsp;Fatture incluse nell'incasso</h2></td>
+					<td colspan="2"><h2>&nbsp;Fatture rimanenti da incassare</h2></td>
+				</tr>
+				<tr>
+					<td colspan="2" valign="top">
+						<table id="scadenze_chiuse_inc_cre" class="result" style="width: 100%"></table>								
+					</td>	
+					<td colspan="2" valign="top">
+						<table id="scadenze_aperte_inc_cre" class="result" style="width: 100%"></table>								
 					</td>	
 				</tr>
 				<tr><td><h2>Dettagli</h2></td></tr>										
@@ -660,6 +665,82 @@ $(document).ready( function () {
 				</tr>					
 			</tbody>
 		</table> 	 
+	</form>
+</div>	
+
+<div id="modifica-incasso-form" title="Modifica Incasso"> 
+	<form method="post" id="modificaIncasso" action="../primanota/modificaIncassoFacade.class.php?modo=go">
+		<table class="datiCreate" cellpadding="5px">
+			<tbody>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDataIncasso_mod" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneIncasso_mod" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td class="td">%ml.datareg% :</td>
+					<td id="tddatareg_inc_mod" align="left"><input class="dataregpicker" type="text" id="datareg_inc_mod" name="datareg_inc_mod" size="10" maxlength="10" onblur="validaModificaIncasso()" onchange="validaModificaIncasso()" tabindex="-1" /></td>
+					<td id="descreg_inc_mod_label">%ml.descreg% :</td>
+					<td id="tddescreg_inc_mod"><input type="text" id="descreg_inc_mod" name="descreg_inc_mod" size="50" maxlength="200" onkeypress="validaModificaIncasso()" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleIncasso_mod" >&nbsp;</i></td>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioIncasso_mod" >&nbsp;</i></td>
+				</tr>
+				<tr>
+					<td>%ml.codcau% :</td>
+					<td class="tooltip" id="tdcausale_inc_mod">
+						<select class="selectmenuCausaleIncMod" id="causale_inc_mod" name="causale_inc_mod" >
+							<option value=""></option>
+							%elenco_causali_inc_mod%
+						</select>
+					</td>
+					<td>%ml.negozio% :</td>						
+					<td id="tdnegozio_inc_mod">
+						<div class="radioset" >
+							<input type="radio" id="villa_inc_mod" name="codneg_inc_mod" value="VIL" checked onchange="controllaNegozio_inc_mod(this.value)" ><label for="villa_inc_mod">%ml.villa%</label>
+							<input type="radio" id="brembate_inc_mod" name="codneg_inc_mod" value="BRE" onchange="controllaNegozio_inc_mod(this.value)"><label for="brembate_inc_mod">%ml.brembate%</label>
+							<input type="radio" id="trezzo_inc_mod" name="codneg_inc_mod" value="TRE" onchange="controllaNegozio_inc_mod(this.value)"><label for="trezzo_inc_mod">%ml.trezzo%</label>
+						</div>
+					</td>					
+				</tr>					
+				<tr>
+					<td></td>
+					<td class="tdmessage"><i class="message" id="messaggioControlloClienteIncasso_mod" >&nbsp;</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>%ml.codclie% :</td>
+					<td id="tdcliente_inc_mod"><div><input type="text" id="cliente_inc_mod" name="cliente_inc_mod" size="40" readonly="readonly" /></div></td>
+				</tr>
+				<tr>
+					<td colspan="2"><h2>&nbsp;Fatture incluse nell'incasso</h2></td>
+					<td colspan="2"><h2>&nbsp;Fatture rimanenti da incassare</h2></td>
+				</tr>
+				<tr>
+					<td colspan="2" valign="top">
+						<table id="scadenze_chiuse_inc_mod" class="result" style="width: 100%"></table>								
+					</td>	
+					<td colspan="2" valign="top">
+						<table id="scadenze_aperte_inc_mod" class="result" style="width: 100%"></table>								
+					</td>	
+				</tr>
+				<tr><td><h2>&nbsp;Dettagli</h2></td></tr>										
+				<tr>
+					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliIncasso_mod" >&nbsp;</i></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td id="tddettagli_inc_mod" colspan="4">
+						<table id="dettagli_inc_mod" class="result" style="width: 100%"></table>			
+					</td>
+				</tr>										
+			</tbody>
+		</table>
 	</form>
 </div>	
 

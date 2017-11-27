@@ -40,8 +40,12 @@ class Registrazione implements CoreInterface {
 	private $codCausale;
 	private $numFattura;
 	private $numFatturaOrig;
+	
 	private $numFatturePagate;
 	private $numFattureDaPagare;
+	private $numFattureIncassate;
+	private $numFattureDaIncassare;	
+	
 	private $datRegistrazione;
 	private $datInserimento;
 	private $staRegistrazione;
@@ -533,6 +537,25 @@ class Registrazione implements CoreInterface {
 
     public function setNumFatturaOrig($numFatturaOrig){
         $this->numFatturaOrig = $numFatturaOrig;
+        return $this;
+    }
+
+
+    public function getNumFattureIncassate(){
+        return $this->numFattureIncassate;
+    }
+
+    public function setNumFattureIncassate($numFattureIncassate){
+        $this->numFattureIncassate = $numFattureIncassate;
+        return $this;
+    }
+
+    public function getNumFattureDaIncassare(){
+        return $this->numFattureDaIncassare;
+    }
+
+    public function setNumFattureDaIncassare($numFattureDaIncassare){
+        $this->numFattureDaIncassare = $numFattureDaIncassare;
         return $this;
     }
 

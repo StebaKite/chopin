@@ -31,7 +31,16 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 
 	public function start()
 	{
-		$this->go();
+	    $scadenzaCliente = ScadenzaCliente::getInstance();
+	    $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_cre");
+	    $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
+	    $scadenzaCliente->setScadenzeIncassate("");
+	    $scadenzaCliente->setQtaScadenzeIncassate(0);
+	    $scadenzaCliente->setScadenzeDaIncassare("");
+	    $scadenzaCliente->setQtaScadenzeDaIncassare(0);
+	    
+	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+	    echo "Ok";
 	}
 
 	public function go()
@@ -67,17 +76,20 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 			 */
 			$riconciliazioneFattureOkay = true;
 
-			foreach($registrazione->getNumFattura() as $unNumeroFattura)
+			foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenza)
 			{
-				$scadenzaCliente->setIdCliente($cliente->getIdCliente());
-				$scadenzaCliente->setIdIncasso($registrazione->getIdRegistrazione());
-				$scadenzaCliente->setStaScadenza("10");		// incassata
-				$scadenzaCliente->setNumFattura($unNumeroFattura);
-				if (!$scadenzaCliente->cambiaStato($db))
-				{
-					$riconciliazioneFattureOkay = false;
-					break;
-				}
+			    $scadenzaCliente->setIdCliente($cliente->getIdCliente());
+			    $scadenzaCliente->setIdIncasso($registrazione->getIdRegistrazione());
+			    $scadenzaCliente->setStaScadenza("10");		// incassata e chiusa
+			    
+			    $scadenzaCliente->setNumFattura($unaScadenza[ScadenzaCliente::NUM_FATTURA]);
+			    $scadenzaCliente->setDatRegistrazione($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);
+			    
+			    if (!$scadenzaCliente->cambiaStato($db))
+			    {
+			        $riconciliazioneFattureOkay = false;
+			        break;
+			    }
 			}
 
 			/***

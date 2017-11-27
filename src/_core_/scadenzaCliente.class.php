@@ -50,7 +50,9 @@ class ScadenzaCliente implements CoreInterface {
 
 	private $scadenzeDaIncassare;
 	private $qtaScadenzeDaIncassare;
-
+	private $scadenzeIncassate;
+	private $qtaScadenzeIncassate;
+	
 	// fitri di ricerca
 
 	private $datScadenzaDa;
@@ -67,8 +69,10 @@ class ScadenzaCliente implements CoreInterface {
 	const AGGIORNA_SCADENZA = "/scadenze/aggiornaScadenzaCliente.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_CLIENTE = "/scadenze/aggiornaImportoScadenzaCliente.sql";
 	const RICERCA_SCADENZE_DA_INCASSARE = "/scadenze/ricercaScadenzeAperteCliente.sql";
+	const RICERCA_SCADENZE_INCASSATE = "/scadenze/ricercaScadenzeChiuseCliente.sql";
 	const CAMBIO_STATO_SCADENZA_CLIENTE = "/scadenze/updateStatoScadenzaCliente.sql";
-
+	const LEGGI_SCADENZA = "/scadenze/leggiScadenzaCliente.sql";
+	
 	// Metodi
 
 	function __construct() {
@@ -129,7 +133,63 @@ class ScadenzaCliente implements CoreInterface {
 		}
 		return $result;
 	}
-
+	
+	public function leggi($db)
+	{
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    
+	    $replace = array(
+	        '%id_scadenza%' => trim($this->getIdScadenza())
+	    );
+	    
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SCADENZA;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->execSql($sql);
+	    
+	    
+	    if ($result)
+	    {
+	        foreach (pg_fetch_all($result) as $row)
+	        {
+	            $this->setIdRegistrazione($row[ScadenzaCliente::ID_REGISTRAZIONE]);
+	            $this->setDatRegistrazione($row[ScadenzaCliente::DAT_REGISTRAZIONE]);
+	            $this->setImpRegistrazione($row[ScadenzaCliente::IMP_REGISTRAZIONE]);
+	            $this->setNota($row[ScadenzaCliente::NOTA]);
+	            $this->setTipAddebito($row[ScadenzaCliente::TIP_ADDEBITO]);
+	            $this->setNumFattura($row[ScadenzaCliente::NUM_FATTURA]);
+	            $this->setStaScadenza($row[ScadenzaCliente::STA_SCADENZA]);
+	            $this->setIdIncasso($row[ScadenzaCliente::ID_INCASSO]);
+	        }
+	    }
+	    
+	    return $result;
+	}
+	
+	public function aggiungiScadenzaIncassata()
+	{
+	    $item = array(
+	        ScadenzaCliente::ID_CLIENTE => $this->getIdCliente(),
+	        ScadenzaCliente::DAT_REGISTRAZIONE => $this->getDatRegistrazione(),
+	        ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+	        ScadenzaCliente::NUM_FATTURA => $this->getNumFattura(),
+	        ScadenzaCliente::NOTA => $this->getNota(),
+	        ScadenzaCliente::ID_SCADENZA => $this->getIdScadenza()
+	    );
+	    
+	    if ($this->getQtaScadenzeIncassate() == 0) {
+	        $resultset = array();
+	        array_push($resultset, $item);
+	        $this->setScadenzeIncassate($resultset);
+	    }
+	    else {
+	        array_push($this->scadenzeIncassate, $item);
+	        sort($this->scadenzeIncassate);
+	    }
+	    $this->setQtaScadenzeIncassate($this->getQtaScadenzeIncassate() + 1);
+	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	}
+	
 	public function trovaScadenzeRegistrazione($db)
 	{
 		$utility = Utility::getInstance();
@@ -151,29 +211,42 @@ class ScadenzaCliente implements CoreInterface {
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 		return $result;
 	}
-
+	
+	public function dataScadenzaExist($datScadenza)
+	{
+	    foreach ($this->getQtaScadenzeDaIncassare() as $unaScadenza) {
+	        if (trim($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]) == trim($datScadenza)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 	public function aggiungi()
 	{
-		$item = array(
-			ScadenzaCliente::ID_CLIENTE => $this->getIdCliente(),
-		    ScadenzaCliente::ID_SCADENZA => 0,
-		    ScadenzaCliente::DAT_REGISTRAZIONE => $this->getDatRegistrazione(),
-			ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
-			ScadenzaCliente::NUM_FATTURA => $this->getNumFattura(),
-		    ScadenzaCliente::TIP_ADDEBITO => $this->getTipAddebito(),
-		);
-
-		if ($this->getQtaScadenzeDaIncassare() == 0) {
-			$resultset = array();
-			array_push($resultset, $item);
-			$this->setScadenzeDaIncassare($resultset);
-		}
-		else {
-			array_push($this->scadenzeDaIncassare, $item);
-			sort($this->scadenzeDaIncassare);
-		}
-		$this->setQtaScadenzeDaIncassare($this->getQtaScadenzeDaIncassare() + 1);
-		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	    if (!$this->dataScadenzaExist($this->getDatRegistrazione()))
+	    {
+	        $item = array(
+	            ScadenzaCliente::ID_CLIENTE => $this->getIdCliente(),
+	            ScadenzaCliente::ID_SCADENZA => 0,
+	            ScadenzaCliente::DAT_REGISTRAZIONE => $this->getDatRegistrazione(),
+	            ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
+	            ScadenzaCliente::NUM_FATTURA => $this->getNumFattura(),
+	            ScadenzaCliente::TIP_ADDEBITO => $this->getTipAddebito(),
+	        );
+	        
+	        if ($this->getQtaScadenzeDaIncassare() == 0) {
+	            $resultset = array();
+	            array_push($resultset, $item);
+	            $this->setScadenzeDaIncassare($resultset);
+	        }
+	        else {
+	            array_push($this->scadenzeDaIncassare, $item);
+	            sort($this->scadenzeDaIncassare);
+	        }
+	        $this->setQtaScadenzeDaIncassare($this->getQtaScadenzeDaIncassare() + 1);
+	        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	    }    
 	}
 
 	public function cambiaStato($db)
@@ -182,10 +255,9 @@ class ScadenzaCliente implements CoreInterface {
 		$array = $utility->getConfig();
 
 		$replace = array(
-				'%id_incasso%' => trim($this->getIdIncasso()),
-				'%sta_scadenza%' => trim($this->getStaScadenza()),
-				'%id_cliente%' => trim($this->getIdCliente()),
-				'%num_fattura%' => trim($this->getNumFattura())
+		    '%id_incasso%' => (trim($this->getIdIncasso()) == "") ? 'null' : trim($this->getIdIncasso()),
+			'%sta_scadenza%' => trim($this->getStaScadenza()),
+			'%id_scadenza%' => trim($this->getIdScadenza())
 		);
 
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_CLIENTE;
@@ -348,9 +420,33 @@ class ScadenzaCliente implements CoreInterface {
 		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
 		return $result;
 	}
-
-	// Getters & Setters
-
+	
+	public function trovaScadenzeIncassate($db)
+	{
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    $replace = array(
+	        '%id_registrazione%' => trim($this->getIdRegistrazione()),
+	    );
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_INCASSATE;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->getData($sql);
+	    
+	    if ($result) {
+	        $this->setScadenzeIncassate(pg_fetch_all($result));
+	        $this->setQtaScadenzeIncassate(pg_num_rows($result));
+	    } else {
+	        $this->setScadenzeIncassate(null);
+	        $this->setQtaScadenzeIncassate(0);
+	    }
+	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	    return $result;
+	}
+	
+	/************************************************************************
+	 * Getters e setters
+	 */
+	
     public function getRoot(){
         return $this->root;
     }
@@ -554,6 +650,25 @@ class ScadenzaCliente implements CoreInterface {
 
     public function setIdTableScadenzeChiuse($idTableScadenzeChiuse){
         $this->idTableScadenzeChiuse = $idTableScadenzeChiuse;
+        return $this;
+    }
+
+
+    public function getScadenzeIncassate(){
+        return $this->scadenzeIncassate;
+    }
+
+    public function setScadenzeIncassate($scadenzeIncassate){
+        $this->scadenzeIncassate = $scadenzeIncassate;
+        return $this;
+    }
+
+    public function getQtaScadenzeIncassate(){
+        return $this->qtaScadenzeIncassate;
+    }
+
+    public function setQtaScadenzeIncassate($qtaScadenzeIncassate){
+        $this->qtaScadenzeIncassate = $qtaScadenzeIncassate;
         return $this;
     }
 

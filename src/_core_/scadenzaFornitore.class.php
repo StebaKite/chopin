@@ -334,27 +334,40 @@ class ScadenzaFornitore implements CoreInterface {
 		return $result;
 	}
 
+	public function dataScadenzaExist($datScadenza)
+	{
+	    foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+	        if (trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) == trim($datScadenza)) {
+	            return true; 
+	        }
+	    }
+	    return false;
+	}
+	
 	public function aggiungi()
 	{
-		$item = array(
-			ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
-			ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
-			ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
-            ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
-		    ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()		      
-		);
-
-		if ($this->getQtaScadenzeDaPagare() == 0) {
-			$resultset = array();
-			array_push($resultset, $item);
-			$this->setScadenzeDaPagare($resultset);
-		}
-		else {
-			array_push($this->scadenzeDaPagare, $item);
-			sort($this->scadenzeDaPagare);
-		}
-		$this->setQtaScadenzeDaPagare($this->getQtaScadenzeDaPagare() + 1);
-		$_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	    if (!$this->dataScadenzaExist($this->getDatScadenza()))
+	    {
+	        $item = array(
+	            ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
+	            ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
+	            ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+	            ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
+	            ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()
+	        );
+	        
+	        if ($this->getQtaScadenzeDaPagare() == 0) {
+	            $resultset = array();
+	            array_push($resultset, $item);
+	            $this->setScadenzeDaPagare($resultset);
+	        }
+	        else {
+	            array_push($this->scadenzeDaPagare, $item);
+	            sort($this->scadenzeDaPagare);
+	        }
+	        $this->setQtaScadenzeDaPagare($this->getQtaScadenzeDaPagare() + 1);
+	        $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	    }
 	}
 
 	public function cancella($db)

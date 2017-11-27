@@ -117,7 +117,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 								}
 								case ($array[self::INCASSO]): {
 									$bottoneVisualizza = self::VISUALIZZA_INCASSO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
-									$bottoneModifica = "&nbsp;";
+									$bottoneModifica = self::MODIFICA_INCASSO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
 									$bottoneCancella = "&nbsp;";
 									break;
 								}
@@ -186,7 +186,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					"	<td class='td-left'>" . trim($unaRegistrazione[Registrazione::NUM_FATTURA]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::COD_CAUSALE]) . " &ndash; " . trim($unaRegistrazione[Causale::DES_CAUSALE]) . "</td>" .
-					"	<td id='icons'>" . $bottoneVisualizza . "</td>" .
+					"	<td id='icons' style='width:1000px;'>" . $bottoneVisualizza . $bottoneModifica . "</td>" .
 					"	<td id='icons'>" . $bottoneModifica . "</td>" .
 					"	<td id='icons'>" . $bottoneCancella . "</td>" .
 					"</tr>";
@@ -213,7 +213,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 			$risultato_ricerca .= "</tbody></table>";
 		}
 
-		$causale->setCodCausale("");
+		$causale->setCodCausale($registrazione->getCodCausaleSel());
 		$elencoCausali = $causale->caricaCausali($db);
 
 		$fornitore->load($db);
@@ -222,25 +222,26 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 		$_SESSION[self::CLIENTE] = serialize($cliente);
 
 		$replace = array(
-				'%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-				'%azione%' => $_SESSION[self::AZIONE],
-				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
-				'%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
-				'%datareg_a%' => $registrazione->getDatRegistrazioneA(),
-				'%villa-selected%' => ($registrazione->getCodNegozioSel() == "VIL") ? "selected" : "",
-				'%brembate-selected%' => ($registrazione->getCodNegozioSel() == "BRE") ? "selected" : "",
-				'%trezzo-selected%' => ($registrazione->getCodNegozioSel() == "TRE") ? "selected" : "",
-				'%elenco_causali%' => $elencoCausali,
-				'%elenco_causali_cre%' => $elencoCausali,
-				'%elenco_causali_mod%' => $elencoCausali,
-				'%elenco_causali_inc_cre%' => $elencoCausali,
-				'%elenco_causali_pag_cre%' => $elencoCausali,
-                '%elenco_causali_pag_mod%' => $elencoCausali,
-                '%elenco_causali_cormer_cre%' => $elencoCausali,
-				'%elenco_causali_corneg_cre%' => $elencoCausali,
-				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
-				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
-				'%risultato_ricerca%' => $risultato_ricerca
+			'%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+			'%azione%' => $_SESSION[self::AZIONE],
+			'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+			'%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
+			'%datareg_a%' => $registrazione->getDatRegistrazioneA(),
+			'%villa-selected%' => ($registrazione->getCodNegozioSel() == "VIL") ? "selected" : "",
+			'%brembate-selected%' => ($registrazione->getCodNegozioSel() == "BRE") ? "selected" : "",
+			'%trezzo-selected%' => ($registrazione->getCodNegozioSel() == "TRE") ? "selected" : "",
+			'%elenco_causali%' => $elencoCausali,
+			'%elenco_causali_cre%' => $elencoCausali,
+			'%elenco_causali_mod%' => $elencoCausali,
+			'%elenco_causali_inc_cre%' => $elencoCausali,
+		    '%elenco_causali_inc_mod%' => $elencoCausali,
+		    '%elenco_causali_pag_cre%' => $elencoCausali,
+            '%elenco_causali_pag_mod%' => $elencoCausali,
+            '%elenco_causali_cormer_cre%' => $elencoCausali,
+			'%elenco_causali_corneg_cre%' => $elencoCausali,
+			'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
+			'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
+			'%risultato_ricerca%' => $risultato_ricerca
 		);
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

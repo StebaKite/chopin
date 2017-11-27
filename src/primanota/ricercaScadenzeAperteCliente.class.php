@@ -35,17 +35,13 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
 		$cliente->cercaConDescrizione($db);
 		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
 		$scadenzaCliente->trovaScadenzeDaIncassare($db);
-
-		$options = '<select class="numfatt-cliente-multiple" multiple="multiple" style="width: 600px" id="select2">';
-
-		if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0)
-		{
-			foreach($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza) {
-				$options .= '<option value="' . trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) . '" >Ft.' . trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) . ' - &euro; ' . trim($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]) . ' - (' . trim($unaScadenza[ScadenzaCliente::NOTA]) . ')</option>';
-			}
-		}
-		$options .= '</select>';
-		echo $options;
+		
+		$registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente));
+		$registrazione->setNumFattureIncassate("");
+		
+		$datiPagina = trim($registrazione->getNumFattureDaIncassare()) . "|" . trim($registrazione->getNumFattureIncassate());
+		
+		echo $datiPagina;
 	}
 
 	public function go() {

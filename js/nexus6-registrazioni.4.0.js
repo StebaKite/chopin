@@ -461,6 +461,10 @@ function controllaDettagliRegistrazione(campoDetErr,campoMsg,campoDes,campoDesLa
     			$("#" + campoMsg).html("Completa i dettagli");		
     			$("#button-ok-nuova-registrazione-form").button("disable");
     			$("#button-ok-modifica-registrazione-form").button("disable");
+    			$("#button-ok-nuovo-incasso-form").button("disable");
+    			$("#button-ok-modifica-incasso-form").button("disable");
+    			$("#button-ok-nuovo-pagamento-form").button("disable");
+    			$("#button-ok-modifica-pagamento-form").button("disable");
             }
             else {
             	$("#" + campoDes).show();
@@ -469,6 +473,10 @@ function controllaDettagliRegistrazione(campoDetErr,campoMsg,campoDes,campoDesLa
     			$("#" + campoMsg).html("");			
     			$("#button-ok-nuova-registrazione-form").button("enable");
     			$("#button-ok-modifica-registrazione-form").button("enable");
+    			$("#button-ok-nuovo-incasso-form").button("enable");
+    			$("#button-ok-modifica-incasso-form").button("enable");
+    			$("#button-ok-nuovo-pagamento-form").button("enable");
+    			$("#button-ok-modifica-pagamento-form").button("enable");
             }	            
         }
     } 
@@ -492,6 +500,8 @@ function modificaImportoDettaglioRegistrazione(idTable,idCampoMsg,campoMsg,campo
 
 	        		var imp = $("#importo" + conto + sottoconto).val();
 	        		$("#importo" + conto + sottoconto).focus().val('').val(imp);
+	        		
+	        		verificaDettagliRegistrazione(idTable);
 	            }
 	        }
 	    }
@@ -508,11 +518,12 @@ function modificaSegnoDettaglioRegistrazione(idTable,idCampoMsg,campoMsg,campoDe
 	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	            if (xmlhttp.responseText != "") {
 		        	var dettagliTable = xmlhttp.responseText;
-	        		$("#" + idTable).html(dettagliTable);			// modifica registrazione
+	        		$("#" + idTable).html(dettagliTable);
+	        		
 	        		controllaDettagliRegistrazione(idCampoMsg,campoMsg,campoDes,labelDes);
 
 	        		var segno = $("#segno" + conto + sottoconto).val();
-	        		$("#segno" + conto + sottoconto).focus().val('').val(segno);
+	        		$("#segno" + conto + sottoconto).focus().val('').val(segno);	        		
 	            }
 	        }
 	    }
@@ -958,6 +969,28 @@ $( "#fornitore_cre" ).change(function()	{
 	}
 });
 
+//---------------------------------------------------------------------------------	
+
+$( "#cliente_cre" ).change(function()	{
+	
+	var descliente = $("#cliente_cre").val();
+	var datareg = $("#datareg_cre").val();
+	
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        	if (xmlhttp.responseText != "") {
+	            	$("#datascad_cre_label").show();
+	          		$("#scadenzesuppl_cre").html(xmlhttp.responseText);        		
+	        	}
+	        }
+		}
+		xmlhttp.open("GET", "calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
+		xmlhttp.send();						
+	}
+});
+
 
 //---------------------------------------------------------------------------------	
 // Select Menu
@@ -1047,6 +1080,33 @@ function cancellaDettaglioNuovaRegistrazione(idTable,idCampoMsg,campoMsg,campoDe
 	xmlhttp.send();				
 }
 
+//---------------------------------------------------------------------------------
+
+function cancellaRegistrazione(idreg) {	
+	$( "#idRegistrazione" ).val(idreg);
+	$( "#cancella-registrazione-form" ).dialog( "open" );
+}
+
+$( "#cancella-registrazione-form" ).dialog({
+	autoOpen: false,
+	modal: true,
+	width: 300,
+	buttons: [
+		{
+			text: "Ok",
+			click: function() {
+				$(this).dialog('close');
+				$("#cancellaRegistrazione").submit();				
+			}
+		},
+		{
+			text: "Cancel",
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	]
+});
 
 
 
@@ -1206,31 +1266,6 @@ function cancellaDettaglioNuovaRegistrazione(idTable,idCampoMsg,campoMsg,campoDe
 
 //---------------------------------------------------------------------------------				
 
-//function cancellaRegistrazione(idreg) {	
-//	$( "#idRegistrazione" ).val(idreg);
-//	$( "#cancella-registrazione-form" ).dialog( "open" );
-//}
-//
-//$( "#cancella-registrazione-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 300,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//         $("#cancellaRegistrazione").submit();				
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
 
 //---------------------------------------------------------------------------------				
 //function cancellaScadenza(idscadenza) {

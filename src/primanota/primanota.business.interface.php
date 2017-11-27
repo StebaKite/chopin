@@ -18,6 +18,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const MODIFICA_PAGAMENTO = "Obj_modificapagamento";
 	
 	const CREA_INCASSO = "Obj_creaincasso";
+	const MODIFICA_INCASSO = "Obj_modificaincasso";
 	const CREA_PAGAMENTO = "Obj_creapagamento";
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
 	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
@@ -32,6 +33,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CONTROLLA_DATA_REGISTRAZIONE = "Obj_controlladataregistrazione";
 	const AGGIUNGI_SCADENZA_FORNITORE = "Obj_aggiungiscadenzafornitore";
 	const CALCOLA_DATA_SCADENZA_FORNITORE = "Obj_calcoladatascadenzafornitore";
+	const CALCOLA_DATA_SCADENZA_CLIENTE = "Obj_calcoladatascadenzacliente";
 	const AGGIUNGI_SCADENZA_CLIENTE = "Obj_aggiungiscadenzacliente";
 	const CANCELLA_SCADENZA_FORNITORE = "Obj_cancellascadenzafornitore";
 	const CANCELLA_SCADENZA_CLIENTE = "Obj_cancellascadenzacliente";
@@ -52,6 +54,8 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CREA_CORRISPETTIVO_NEGOZIO = "Obj_creacorrispettivonegozio";
 	const AGGIUNGI_FATTURA_PAGATA = "Obj_aggiungifatturapagata";
 	const RIMUOVI_FATTURA_PAGATA = "Obj_rimuovifatturapagata";
+	const AGGIUNGI_FATTURA_INCASSATA = "Obj_aggiungifatturaincassata";
+	const RIMUOVI_FATTURA_INCASSATA = "Obj_rimuovifatturaincassata";
 	
 	// Actions
 
@@ -68,6 +72,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CREA_PAGAMENTO_OK = "Pagamento salvato con successo";
 	
 	const MODIFICA_PAGAMENTO_OK = "Pagamento modificato con successo";
+	const MODIFICA_INCASSO_OK = "Incasso modificato con successo";
 	
 	const ERRORE_CREAZIONE_REGISTRAZIONE = "ERRORE : registrazione non creata";
 	const ERRORE_MODIFICA_REGISTRAZIONE = "ERRORE : registrazione non modificata";

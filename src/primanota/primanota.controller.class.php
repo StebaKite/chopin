@@ -148,6 +148,9 @@ class PrimanotaController
 		if (isset($_REQUEST["descliente_inc_cre"])) {
 			$cliente->setDesCliente($_REQUEST["descliente_inc_cre"]);
 			$scadenzaCliente->setCodNegozioSel($_REQUEST["codnegozio_inc_cre"]);
+			$scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_cre");
+			$scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
+			$dettaglioRegistrazione->setIdTablePagina("dettagli_inc_cre");
 		}
 
 		if (isset($_REQUEST["datareg_inc_cre"])) {
@@ -160,7 +163,31 @@ class PrimanotaController
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato("");
 		}
-
+		
+		// modifica incasso
+		if (isset($_REQUEST["idinc"])) {
+		    $registrazione->setIdRegistrazione($_REQUEST["idinc"]);
+		    $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_mod");
+		    $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_mod");
+		    $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_mod");
+		}
+		
+		if (isset($_REQUEST["datareg_inc_mod"])) {
+		    $registrazione->setDatRegistrazione($_REQUEST["datareg_inc_mod"]);
+		    $registrazione->setDesRegistrazione($_REQUEST["descreg_inc_mod"]);
+		    $registrazione->setCodCausale($_REQUEST["causale_inc_mod"]);
+		    $registrazione->setCodNegozio($_REQUEST["codneg_inc_mod"]);
+		    $registrazione->setDesCliente($_REQUEST["cliente_inc_mod"]);
+		    $registrazione->setNumFattura($_REQUEST["numfatt_inc_mod"]);
+		}
+		
+		// aggiungi o rimuovi scadenze in creazione/modifica incasso
+		if (isset($_REQUEST["idscadcli"])) {
+		    $scadenzaCliente->setIdScadenza($_REQUEST["idscadcli"]);
+		    $scadenzaCliente->setIdTableScadenzeAperte($_REQUEST["idtableaperte"]);
+		    $scadenzaCliente->setIdTableScadenzeChiuse($_REQUEST["idtablechiuse"]);
+		}
+		
 		// Registrazione pagamento =====================================================
 
 		// ricerca scadenza aperte fornitore

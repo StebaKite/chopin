@@ -112,6 +112,67 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
         return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";	    
 	}
 	
+	public function refreshTabellaFattureDaIncassare($scadenzaCliente)
+	{
+	    $aggiungi_fattura_incassata_href = "<a class='tooltip' onclick='aggiungiFatturaIncassata(";
+	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
+	    
+	    $thead = "";
+	    $tbody = "";
+	    $tableIsNotEmpty = false;
+	    
+	    $tbody = "<tbody>";
+	    
+	    foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare)
+	    {
+	        $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
+	        $bottoneAggiungiFatturaIncassata = $aggiungi_fattura_incassata_href . $parms . $aggiungi_icon;
+	        
+	        $fatturaIncassataNotExist = true;
+	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
+	        {
+	            if  (trim($unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA]) == trim($unaScadenzaIncassata[ScadenzaCliente::NUM_FATTURA])
+                and (trim($unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE]) == trim($unaScadenzaIncassata[ScadenzaCliente::DAT_REGISTRAZIONE])))
+	            {
+	                $fatturaIncassataNotExist = false;
+	                break;
+	            }
+	        }
+	        /**
+	         * Vengono escluse tutte le scadenze aggiunte alla tabella della incassate
+	         */
+	        if ($fatturaIncassataNotExist)
+	        {
+	            $tableIsNotEmpty = true;
+	            $tbody .=
+	            "<tr>" .
+	            "	<td id='icons'>" . $bottoneAggiungiFatturaIncassata . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA] . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+	            "	<td align='center'>" . $unaScadenzaDaIncassare[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NOTA] . "</td>" .
+	            "</tr>";
+	        }
+	    }
+	    $tbody .= "</tbody>";
+	    
+	    if ($tableIsNotEmpty)
+	    {
+	        $thead =
+	        "<thead>" .
+	        "	<tr>" .
+	        "		<th width='20'>&nbsp;</th>" .
+	        "		<th width='50'>Num.Fat.</th>" .
+	        "		<th width='50'>Data</th>" .
+	        "		<th width='50' align='center'>Importo</th>" .
+	        "		<th width='200'>Nota</th>" .
+	        "	</tr>" .
+	        "</thead>";
+	    }
+	    return "<table id='" . $scadenzaCliente->getIdTableScadenzeAperte() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+	    
+	}	
+	
 	public function makeTabellaFattureDaPagare($scadenzaFornitore)
 	{
 	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
@@ -194,6 +255,107 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	    return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
 	}
 	
+	public function makeTabellaFattureDaIncassare($scadenzaCliente)
+	{
+	    $aggiungi_fattura_incassata_href = "<a class='tooltip' onclick='aggiungiFatturaIncassata(";
+	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
+	    
+	    $thead = "";
+	    $tbody = "";
+	    $tableIsNotEmpty = false;
+	    
+	    $tbody = "<tbody>";
+	    
+	    foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare)
+	    {
+	        $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
+	        $bottoneAggiungiFatturaIncassata = $aggiungi_fattura_incassata_href . $parms . $aggiungi_icon;
+	        
+	        $fatturaIncassataNotExist = true;
+	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
+	        {
+	            if  (trim($unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA]) == trim($unaScadenzaIncassata[ScadenzaCliente::NUM_FATTURA])
+	                and (trim($unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE]) == trim($unaScadenzaIncassata[ScadenzaCliente::DAT_REGISTRAZIONE])))
+	            {
+	                $fatturaIncassateNotExist = false;
+	                break;
+	            }
+	        }
+	        /**
+	         * Vengono escluse tutte le scadenze aggiunte alla tabella delle incassate
+	         */
+	        if ($fatturaIncassataNotExist)
+	        {
+	            $tableIsNotEmpty = true;
+	            $tbody .=
+	            "<tr>" .
+	            "	<td id='icons'>" . $bottoneAggiungiFatturaIncassata . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA] . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+	            "	<td align='center'>" . $unaScadenzaDaIncassare[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
+	            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NOTA] . "</td>" .
+	            "</tr>";
+	        }
+	    }
+	    $tbody .= "</tbody>";
+	    
+	    if ($tableIsNotEmpty)
+	    {
+	        $thead =
+	        "<thead>" .
+	        "	<tr>" .
+	        "		<th width='20'>&nbsp;</th>" .
+	        "		<th width='50'>Num.Fat.</th>" .
+	        "		<th width='50'>Data</th>" .
+	        "		<th width='50' align='center'>Importo</th>" .
+	        "		<th width='200'>Nota</th>" .
+	        "	</tr>" .
+	        "</thead>";
+	    }
+	    return "<table id='" . $scadenzaCliente->getIdTableScadenzeAperte() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";	    
+	}
+	
+	public function makeTabellaFattureIncassate($scadenzaCliente)
+	{
+	    $rimuovi_fattura_incassata_href = "<a class='tooltip' onclick='rimuoviFatturaIncassata(";
+	    $rimuovi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-minus'></span></li></a>";
+	    
+	    $thead = "";
+	    $tbody = "";
+	    
+	    if ($scadenzaCliente->getQtaScadenzeIncassate() > 0) {
+	        
+	        $tbody = "<tbody>";
+	        $thead =
+	        "<thead>" .
+	        "	<tr>" .
+	        "		<th width='50'>Num.Fat.</th>" .
+	        "		<th width='50'>Data</th>" .
+	        "		<th width='50' align='center'>Importo</th>" .
+	        "		<th width='200'>Nota</th>" .
+	        "		<th width='20'>&nbsp;</th>" .
+	        "	</tr>" .
+	        "</thead>";
+	        
+	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
+	        {
+	            $parms = $unaScadenzaIncassata[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
+	            $bottoneRimuoviFatturaIncassata = $rimuovi_fattura_incassata_href . $parms . $rimuovi_icon;
+	            
+	            $tbody .=
+	            "<tr>" .
+	            "	<td>" . $unaScadenzaIncassata[ScadenzaCliente::NUM_FATTURA] . "</td>" .
+	            "	<td>" . $unaScadenzaIncassata[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+	            "	<td align='center'>" . $unaScadenzaIncassata[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
+	            "	<td>" . $unaScadenzaIncassata[ScadenzaCliente::NOTA] . "</td>" .
+	            "	<td id='icons'>" . $bottoneRimuoviFatturaIncassata . "</td>" .
+	            "</tr>";
+	        }
+	        $tbody .= "</tbody>";
+	    }
+	    return "<table id='" . $scadenzaCliente->getIdTableScadenzeChiuse() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+	}
+	
 	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione)
 	{
 		$cancella_dettaglio_nuova_registrazione_href = "<a class='tooltip' onclick='cancellaDettaglioNuovaRegistrazione(";
@@ -230,7 +392,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href .  $cancella_parms . $cancella_icon;
 
 				$modifica_parms  = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
-				$modifica_parms .= "'" . $dettaglioRegistrazione->getCampoMsgControlloPagina() . "'s,";
+				$modifica_parms .= "'" . $dettaglioRegistrazione->getCampoMsgControlloPagina() . "',";
 				$modifica_parms .= "'" . $dettaglioRegistrazione->getMsgControlloPagina() . "',";
 				$modifica_parms .= "'" . $dettaglioRegistrazione->getNomeCampo() . "',";
 				$modifica_parms .= "'" . $dettaglioRegistrazione->getLabelNomeCampo() . "',";
