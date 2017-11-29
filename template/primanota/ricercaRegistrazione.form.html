@@ -1,119 +1,88 @@
 <script type="text/javascript">
 
-var elencoFornitori = [%elenco_fornitori%];
-var elencoClienti = [%elenco_clienti%];
+	var elencoFornitori = [%elenco_fornitori%];
+	var elencoClienti = [%elenco_clienti%];
 
-$(document).ready( function () {
-    $('#registrazioni').dataTable( {
-    	"order": [[1, 'desc'],[0, 'asc'],[2, 'asc'] ],
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": false, "visible": false },
-       	    {"targets": 1, "orderable": false, "visible": false },
-    	    {"targets": 2, "orderable": false, "visible": false },
-    	    {"targets": 3, "orderable": false },
-    	    {"targets": 4, "orderable": false },
-    	    {"targets": 5, "orderable": false },
-    	    {"targets": 6, "orderable": false },
-    	    {"targets": 7, "orderable": false },
-    	    {"targets": 8, "orderable": false },
-    	    {"targets": 9, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-    
-	$( "#selectable" ).selectable();    
-    
-} );
-
-</script>		
-
-<style>
-<!--
-
-#selectable .ui-selecting {
-   	background: #fff;
-}
-#selectable .ui-selected {
-   	background: #8f5902;
-}
-
--->
-</style>
-
-
-<div id="body">  
-<div id="main">
-	<table style="width:100%;">
-		<tbody>
-			<tr>
-				<td align="left"><h2>%titoloPagina%</h2></td>
-				<td align="right">
-					<button id="nuova-registrazione" class="button">%ml.nuovaregistrazione%</button>
-					<button id="nuovo-incasso" class="button">%ml.nuovoincasso%</button>
-					<button id="nuovo-pagamento" class="button">%ml.nuovopagamento%</button>
-					<button id="nuovo-corrispettivo-mercato" class="button">%ml.nuovocorrispettivomercato%</button>
-					<button id="nuovo-corrispettivo-negozio" class="button">%ml.nuovocorrispettivonegozio%</button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<br>
-</div>	
-
-<form method="post" action="%azione%" >
-	<table class="datiCreate" cellpadding="5px">
-		<tbody>
-			<tr style="float: left;">
-				<td>%ml.negozio% :</td>
-				<td class="tooltip">
-					<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
-						<option value="">%ml.tutti%</option>
-						<option value="VIL" %villa-selected% >%ml.villa%</option>
-						<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-						<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-					</select>
-				</td>
-				<td class="td">%ml.da% :</td>
-				<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
-				<td class="td">%ml.a% :</td>
-				<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
-				<td>%ml.codcau% :</td>
-				<td class="tooltip">
-					<select class="selectmenuCausale" id="causale" name="causale" >
-						<option value="">Tutte</option>
-						%elenco_causali%
-					</select>
-				</td>
-				<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-			</tr>
-		</tfoot>
-	</table>
-</form>
-<br>
-%risultato_ricerca%
-
-</div>	<!-- Div id="main" -->
-</div>	<!-- Div id="body" -->
-
+	$(document).ready(function(){
+		$('.datepicker').datepicker();
 		
+		$("#myInput").on("keyup", function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			});
+		});
+	});
+
+</script>
+
+<div class="well well-sm">
+	<div class="row">
+		<div class="col-sm-7">
+			<h4>%titoloPagina%</h4>
+		</div>
+		<div class="col-sm-5">
+			<div class="btn-group">
+				<button id="nuova-registrazione" class="btn btn-primary">%ml.nuovaregistrazione%</button>
+				<button id="nuovo-incasso" class="btn btn-primary">%ml.nuovoincasso%</button>
+				<button id="nuovo-pagamento" class="btn btn-primary">%ml.nuovopagamento%</button>
+				<button id="nuovo-corrispettivo-mercato" class="btn btn-primary">%ml.nuovocorrispettivomercato%</button>
+				<button id="nuovo-corrispettivo-negozio" class="btn btn-primary">%ml.nuovocorrispettivonegozio%</button>
+			</div>	
+		</div>
+	</div>
+
+	<form method="post" action="%azione%">
+	  
+		<div class="form-group row">
+			<div class="col-xs-2">
+				<label for="codneg_sel">%ml.negozio%</label>
+				<select class="form-control" id="codneg_sel" name="codneg_sel" >
+					<option value="">%ml.tutti%</option>
+					<option value="VIL" %villa-selected% >%ml.villa%</option>
+					<option value="BRE" %brembate-selected% >%ml.brembate%</option>
+					<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+				</select>			
+			</div>
+			<div class="col-xs-2">
+				<label for="datareg_da">%ml.da%</label>
+	            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+	                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
+	                 <span class="input-group-addon">
+	                     <span class="glyphicon glyphicon-calendar"></span>
+	                 </span>
+	             </div>			
+			</div>
+			<div class="col-xs-2">
+				<label for="datareg_a">%ml.a%</label>
+	            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+	                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
+	                 <span class="input-group-addon">
+	                     <span class="glyphicon glyphicon-calendar"></span>
+	                 </span>
+	             </div>			
+			</div>
+			<div class="col-xs-4">
+				<label for="causale">%ml.codcau%</label>
+				<select class="form-control" id="causale" name="causale" >
+					<option value="">%ml.tutti%</option>
+					%elenco_causali%
+				</select>			
+			</div>
+			<div class="col-xs-1">
+				<label for="causale">&nbsp;</label>
+				<button id="submit" type="submit" class="btn btn-default">
+			    	<span class="glyphicon glyphicon-search"></span> Ricerca
+			    </button>
+			</div> 
+		</div> 
+	</form>
+</div>
+
+<div class="well well-sm">
+%risultato_ricerca%
+</div>
+
 <div id="nuova-registrazione-form" title="Nuova Registrazione"> 
 	<form method="post" id="nuovaRegistrazione" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
 		<table class="datiCreate">

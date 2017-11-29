@@ -94,19 +94,24 @@ abstract class Nexus6Abstract {
 		
 		$ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment ( $array, $_SESSION );
 		
-		if ($ambiente == "TEST") {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_test.png' style='width: 100%;'/></li>";}
-		else {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_prod.png' style='width: 100%;'/></li>";}
+// 		if ($ambiente == "TEST") {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_test.png' style='width: 100%;'/></li>";}
+// 		else {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_prod.png' style='width: 100%;'/></li>";}
 
 		// H o m e --------------------------------------
 
 		$home = "";
 
-		if ($array["home"] == "Y") {
-			$home .= "<li><a href='../main/start.php'>" . $array['home_menu_title'] . "</a>";
-			$home .= "<ul>";
-			if ($array["home_item_1"] == "Y") $home .= "<li><a href='../strumenti/cambiaContoStep1Facade.class.php?modo=start'>". $array["home_item_1_name"] . "</a></li>";
-			if ($array["home_item_2"] == "Y") $home .= "<li><a href='../strumenti/lavoriAutomaticiFacade.class.php?modo=start'>". $array["home_item_2_name"] . "</a></li>";
-			$home .= "</ul></li>";
+		if ($array["home"] == "Y")
+		{    
+		    $home .= "<li class='dropdown'>";
+		    $home .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array['home_menu_title'];
+		    $home .= "<span class='caret'></span></a>";
+		    $home .= "<ul class='dropdown-menu'>";
+		    
+		    if ($array["home_item_1"] == "Y") $home .= "<li><a href='../strumenti/cambiaContoStep1Facade.class.php?modo=start'>" . $array["home_item_1_name"] . "</a></li>";
+		    if ($array["home_item_2"] == "Y") $home .= "<li><a href='../strumenti/lavoriAutomaticiFacade.class.php?modo=start'>" . $array["home_item_2_name"] . "</a></li>";
+		    
+		    $home .= "</ul></li>";
 		}
 		$menu .= $home;
 
@@ -114,20 +119,16 @@ abstract class Nexus6Abstract {
 
 		$operazioni = "";
 
-		if ($array["operazioni"] == "Y") {
-			$operazioni .= "<li><a>" . $array["operazioni_menu_title"] . "</a>";
-			$operazioni .= "<ul>";
-			if ($array["operazioni_item_1"] == "Y") $operazioni .= "<li><a href='../primanota/ricercaRegistrazioneFacade.class.php?modo=start'>" . $array["operazioni_item_1_name"] . "</a></li>";
-			if ($array["operazioni_item_2"] == "Y") $operazioni .= "<li><a href='../primanota/creaRegistrazioneRapidaFacade.class.php?modo=start'>" . $array["operazioni_item_2_name"] . "</a></li>";
-			if ($array["operazioni_item_3"] == "Y") $operazioni .= "<li><a href='../primanota/creaRegistrazioneFacade.class.php?modo=start'>" . $array["operazioni_item_3_name"] . "</a></li>";
-			if ($array["operazioni_item_4"] == "Y") $operazioni .= "<li><a href='../primanota/creaPagamentoFacade.class.php?modo=start'>" . $array["operazioni_item_4_name"] . "</a></li>";
-			if ($array["operazioni_item_5"] == "Y") $operazioni .= "<li><a href='../primanota/creaIncassoFacade.class.php?modo=start'>" . $array["operazioni_item_5_name"] . "</a></li>";
-			if ($array["operazioni_item_6"] == "Y") $operazioni .= "<li><a href='../primanota/creaCorrispettivoNegozioFacade.class.php?modo=start'>" . $array["operazioni_item_6_name"] . "</a></li>";
-			if ($array["operazioni_item_7"] == "Y") $operazioni .= "<li><a href='../primanota/creaCorrispettivoMercatoFacade.class.php?modo=start'>" . $array["operazioni_item_7_name"] . "</a></li>";
-			$operazioni .= "<li><hr/></li>";
-			if ($array["operazioni_item_8"] == "Y") $operazioni .= "<li><a href='../primanota/importaExcelCorrispettivoNegozioStep1Facade.class.php?modo=start'>" . $array["operazioni_item_8_name"] . "</a></li>";
-			if ($array["operazioni_item_9"] == "Y") $operazioni .= "<li><a href='../primanota/importaExcelCorrispettivoMercatoStep1Facade.class.php?modo=start'>" . $array["operazioni_item_9_name"] . "</a></li>";
-			$operazioni .= "</ul></li>";
+		if ($array["operazioni"] == "Y")
+		{    
+		    $operazioni .= "<li class='dropdown'>";
+		    $operazioni .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["operazioni_menu_title"];
+		    $operazioni .= "<span class='caret'></span></a>";
+		    $operazioni .= "<ul class='dropdown-menu'>";
+		    
+		    if ($array["operazioni_item_1"] == "Y") $operazioni .= "<li><a href='../primanota/ricercaRegistrazioneFacade.class.php?modo=start'>" . $array["operazioni_item_1_name"] . "</a></li>";
+		    
+		    $operazioni .= "</ul></li>";
 		}
 		$menu .= $operazioni;
 
@@ -135,13 +136,18 @@ abstract class Nexus6Abstract {
 
 		$anagrafiche = "";
 
-		if ($array["anagrafiche"] == "Y") {
-			$anagrafiche .= "<li><a>" . $array["anagrafiche_menu_title"] . "</a>";
-			$anagrafiche .= "<ul>";
-			if ($array["anagrafiche_item_3"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaFornitoreFacade.class.php?modo=start'>" . $array["anagrafiche_item_3_name"] . "</a></li>";
-			if ($array["anagrafiche_item_4"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_4_name"] . "</a></li>";
-			if ($array["anagrafiche_item_5"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaMercatoFacade.class.php?modo=start'>" . $array["anagrafiche_item_5_name"] . "</a></li>";
-			$anagrafiche .= "</ul></li>";
+		if ($array["anagrafiche"] == "Y")
+		{
+		    $anagrafiche .= "<li class='dropdown'>";
+		    $anagrafiche .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["anagrafiche_menu_title"];
+		    $anagrafiche .= "<span class='caret'></span></a>";
+		    $anagrafiche .= "<ul class='dropdown-menu'>";
+		    
+		    if ($array["anagrafiche_item_3"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaFornitoreFacade.class.php?modo=start'>" . $array["anagrafiche_item_3_name"] . "</a></li>";
+		    if ($array["anagrafiche_item_4"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaClienteFacade.class.php?modo=start'>" . $array["anagrafiche_item_4_name"] . "</a></li>";
+		    if ($array["anagrafiche_item_5"] == "Y") $anagrafiche .= "<li><a href='../anagrafica/ricercaMercatoFacade.class.php?modo=start'>" . $array["anagrafiche_item_5_name"] . "</a></li>";
+		    
+		    $anagrafiche .= "</ul></li>";
 		}
 		$menu .= $anagrafiche;
 
@@ -149,62 +155,68 @@ abstract class Nexus6Abstract {
 
 		$configurazioni = "";
 
-		if ($array["configurazioni"] == "Y") {
-			$configurazioni .= "<li><a>" . $array["configurazioni_menu_title"] . "</a>";
-			$configurazioni .= "<ul>";
-			if ($array["configurazioni_item_2"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaContoFacade.class.php?modo=start'>" . $array["configurazioni_item_2_name"] . "</a></li>";
-			if ($array["configurazioni_item_4"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaCausaleFacade.class.php?modo=start'>" . $array["configurazioni_item_4_name"] . "</a></li>";
-			if ($array["configurazioni_item_5"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=start'>" . $array["configurazioni_item_5_name"] . "</a></li>";
-			$configurazioni .= "</ul></li>";
+		if ($array["configurazioni"] == "Y")
+		{
+		    $configurazioni .= "<li class='dropdown'>";
+		    $configurazioni .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["configurazioni_menu_title"];
+		    $configurazioni .= "<span class='caret'></span></a>";
+		    $configurazioni .= "<ul class='dropdown-menu'>";
+		    
+		    if ($array["configurazioni_item_2"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaContoFacade.class.php?modo=start'>" . $array["configurazioni_item_2_name"] . "</a></li>";
+		    if ($array["configurazioni_item_4"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaCausaleFacade.class.php?modo=start'>" . $array["configurazioni_item_4_name"] . "</a></li>";
+		    if ($array["configurazioni_item_5"] == "Y") $configurazioni .= "<li><a href='../configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=start'>" . $array["configurazioni_item_5_name"] . "</a></li>";
+		    
+		    $configurazioni .= "</ul></li>";
 		}
 		$menu .= $configurazioni;
 
 		// S c a d e n z e ------------------------------------------------------------
 
-		$scadenze = "";
+// 		$scadenze = "";
 
-		if ($array["scadenze"] == "Y") {
-			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
-			$scadenze .= "<ul>";
-			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
-			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
-			$scadenze .= "</ul></li>";
-		}
-		$menu .= $scadenze;
+// 		if ($array["scadenze"] == "Y")
+// 		{
+// 			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
+// 			$scadenze .= "<ul>";
+// 			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
+// 			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
+// 			$scadenze .= "</ul></li>";
+// 		}
+// 		$menu .= $scadenze;
 
 		// R i e p i o l o g h i ------------------------------------------------------------
 
-		$riepiloghi = "";
+// 		$riepiloghi = "";
 
-		if ($array["riepiloghi"] == "Y") {
-			$riepiloghi .= "<li><a>" . $array["riepiloghi_menu_title"] . "</a>";
-			$riepiloghi .= "<ul>";
-			if ($array["riepiloghi_item_1"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioFacade.class.php?modo=start'>" . $array["riepiloghi_item_1_name"] . "</a></li>";
-			if ($array["riepiloghi_item_2"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioEsercizioFacade.class.php?modo=start'>" . $array["riepiloghi_item_2_name"] . "</a></li>";
-			if ($array["riepiloghi_item_3"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/riepilogoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_3_name"] . "</a></li>";
-			if ($array["riepiloghi_item_4"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
-			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
-			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
-			$riepiloghi .= "<li><hr/></li>";
-			if ($array["riepiloghi_item_5"] == "Y") $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
-			if ($array["riepiloghi_item_6"] == "Y") $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
-			$riepiloghi .= "</ul></li>";
-		}
-		$menu .= $riepiloghi;
+// 		if ($array["riepiloghi"] == "Y") {
+// 			$riepiloghi .= "<li><a>" . $array["riepiloghi_menu_title"] . "</a>";
+// 			$riepiloghi .= "<ul>";
+// 			if ($array["riepiloghi_item_1"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioFacade.class.php?modo=start'>" . $array["riepiloghi_item_1_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_2"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioEsercizioFacade.class.php?modo=start'>" . $array["riepiloghi_item_2_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_3"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/riepilogoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_3_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_4"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
+// 			$riepiloghi .= "<li><hr/></li>";
+// 			if ($array["riepiloghi_item_5"] == "Y") $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
+// 			if ($array["riepiloghi_item_6"] == "Y") $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
+// 			$riepiloghi .= "</ul></li>";
+// 		}
+// 		$menu .= $riepiloghi;
 
 		// F a t t u r e ------------------------------------------------------------
 
-		$fatture = "";
+// 		$fatture = "";
 
-		if ($array["fatture"] == "Y") {
-			$fatture .= "<li><a>" . $array["fatture_menu_title"] . "</a>";
-			$fatture .= "<ul>";
-			if ($array["fatture_item_1"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=start'>" . $array["fatture_item_1_name"] . "</a></li>";
-			if ($array["fatture_item_2"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaEntePubblicoFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
-			if ($array["fatture_item_3"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
-			$fatture .= "</ul></li>";
-		}
-		$menu .= $fatture;
+// 		if ($array["fatture"] == "Y") {
+// 			$fatture .= "<li><a>" . $array["fatture_menu_title"] . "</a>";
+// 			$fatture .= "<ul>";
+// 			if ($array["fatture_item_1"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=start'>" . $array["fatture_item_1_name"] . "</a></li>";
+// 			if ($array["fatture_item_2"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaEntePubblicoFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
+// 			if ($array["fatture_item_3"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
+// 			$fatture .= "</ul></li>";
+// 		}
+// 		$menu .= $fatture;
 
 		return $menu;
 	}

@@ -66,7 +66,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 		if ($registrazione->getQtaRegistrazioni() > 0) {
 
 			$risultato_ricerca =
-			"<table id='registrazioni' class='display' width='100%'>" .
+			"<input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"<br>" .			
+			"<table class='table table-bordered table-striped table-hover'>" .
 			"	<thead>" .
 			"		<tr>" .
 			"			<th></th>" .
@@ -81,7 +83,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 			"			<th>&nbsp;</th>" .
 			"		</tr>" .
 			"	</thead>" .
-			"	<tbody>";
+			"	<tbody id='myTable'>";
 
 			foreach($registrazione->getRegistrazioni() as $unaRegistrazione) {
 
@@ -178,7 +180,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					}
 
 					$risultato_ricerca .=
-					"<tr " . $class . ">" .
+					"<tr>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
@@ -199,8 +201,8 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
-					"	<td class='dt-right'>" . trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "</td>" .
-					"	<td class='dt-right'>" . trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) .  "</td>" .
+					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) .  "</td>" .
 					"	<td><i>" . trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) . trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " . trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . "</i></td>" .
 					"	<td></td>" .
 					"	<td></td>" .

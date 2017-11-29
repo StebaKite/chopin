@@ -33,10 +33,10 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const MODIFICA_INCASSO_HREF = "<a class='tooltip' onclick='modificaIncasso(";
 	
 	const CANCELLA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='cancellaRegistrazione(";
-
-	const VISUALIZZA_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.visualizza%'><span class='ui-icon ui-icon-search'></span></li></a>";
-	const MODIFICA_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-	const CANCELLA_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+	
+	const VISUALIZZA_ICON = "'><span class='glyphicon glyphicon-search'></span></a>";
+	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-pencil'></span></a>";
+	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-bin'></span></a>";
 
 	// Actions
 

@@ -43,9 +43,11 @@ class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 		// Pagina -----------------------------------------------------
 		
 		$replace = array(
-				'%avvisoDiv%' => $_SESSION['avvisoDiv'],
-				'%avvisoDialog%' => $_SESSION['avvisoDialog'],
-				'%menu%' => $this->makeMenu($utility)
+			'%avvisoDiv%' => $_SESSION['avvisoDiv'],
+			'%avvisoDialog%' => $_SESSION['avvisoDialog'],
+			'%menu%' => $this->makeMenu($utility),
+		    '%ambiente%' => $_SESSION["ambiente"]
+		    
 		);
 
 		unset($_SESSION['avvisoDialog']);
