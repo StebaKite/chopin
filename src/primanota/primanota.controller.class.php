@@ -116,6 +116,7 @@ class PrimanotaController
 			$fornitore->setDesFornitore($_REQUEST["fornitore"]);
 			$scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);
 			$scadenzaFornitore->setDatScadenza($_REQUEST["datascad_for"]);
+			$scadenzaFornitore->setDatScadenzaNuova($_REQUEST["datascad_new"]);
 			$scadenzaFornitore->setImpInScadenza($_REQUEST["impscad_for"]);
 			$scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
 		}
@@ -141,8 +142,19 @@ class PrimanotaController
 			$registrazione->setDesCliente($_REQUEST["cliente_mod"]);
 			$registrazione->setNumFattura($_REQUEST["numfatt_mod"]);
 			$registrazione->setNumFatturaOrig($_REQUEST["numfatt_mod_orig"]);
+			$scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
+			$scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_mod");
 		}
 
+		if (isset($_REQUEST["newcontodett_cre"])){
+		    $dettaglioRegistrazione->setImpRegistrazione($_REQUEST["newimpdett_cre"]);
+		    $dettaglioRegistrazione->setIndDareavere($_REQUEST["newsegnodett_cre"]);
+		    $temp = explode(" - ", $_REQUEST["newcontodett_cre"]);
+		    $cc = explode(".",$temp[0]);		    
+		    $dettaglioRegistrazione->setCodConto($cc[0]);
+		    $dettaglioRegistrazione->setCodSottoconto($cc[1]);		    
+		}
+		
 		// Registrazione incasso ==========================================================
 
 		if (isset($_REQUEST["descliente_inc_cre"])) {

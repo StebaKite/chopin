@@ -48,3 +48,7 @@ select t1.*
 	  %filtri-registrazione%
 	  %filtri-dettaglio%
 	) as t1
+	order by 
+		t1.dat_registrazione_yyyymmdd desc, 
+		t1.id_registrazione asc, 
+		t1.id_dettaglio_registrazione desc

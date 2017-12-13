@@ -183,18 +183,11 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
-//---------------------------------------------------------
-//Menu di navigazione
-//---------------------------------------------------------
-
-$('.nav li').hover(
-	function () {
-		$('ul', this).fadeIn();
-	},
-	function () {
-		$('ul', this).fadeOut();
-	}
-);
+function sleep(miliseconds)
+{
+   var currentTime = new Date().getTime();
+   while (currentTime + miliseconds >= new Date().getTime()) { }
+}
 
 // ---------------------------------------------------------
 // Campi autocomplete

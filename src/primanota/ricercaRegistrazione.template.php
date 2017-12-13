@@ -66,18 +66,21 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 		if ($registrazione->getQtaRegistrazioni() > 0) {
 
 			$risultato_ricerca =
-			"<input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
-			"<br>" .			
-			"<table class='table table-bordered table-striped table-hover'>" .
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<tr>" .
-			"			<th></th>" .
-			"			<th></th>" .
-			"			<th></th>" .
+			"			<th>id</th>" .
 			"			<th>%ml.datReg%</th>" .
-			"			<th class='dt-left'>%ml.numfatt%</th>" .
-			"			<th class='dt-left'>%ml.desReg%</th>" .
-			"			<th class='dt-left'>%ml.codcau%</th>" .
+			"			<th>%ml.numfatt%</th>" .
+			"			<th>%ml.desReg%</th>" .
+			"			<th>%ml.codcau%</th>" .
 			"			<th>&nbsp;</th>" .
 			"			<th>&nbsp;</th>" .
 			"			<th>&nbsp;</th>" .
@@ -182,15 +185,13 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					$risultato_ricerca .=
 					"<tr>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE]) . "</td>" .
-					"	<td class='td-left'>" . trim($unaRegistrazione[Registrazione::NUM_FATTURA]) . "</td>" .
+					"	<td>" . trim($unaRegistrazione[Registrazione::NUM_FATTURA]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
 					"	<td>" . trim($unaRegistrazione[Registrazione::COD_CAUSALE]) . " &ndash; " . trim($unaRegistrazione[Causale::DES_CAUSALE]) . "</td>" .
-					"	<td id='icons' style='width:1000px;'>" . $bottoneVisualizza . $bottoneModifica . "</td>" .
-					"	<td id='icons'>" . $bottoneModifica . "</td>" .
-					"	<td id='icons'>" . $bottoneCancella . "</td>" .
+					"	<td>" . $bottoneVisualizza . "</td>" .
+					"	<td>" . $bottoneModifica . "</td>" .
+					"	<td>" . $bottoneCancella . "</td>" .
 					"</tr>";
 
 				}
@@ -198,21 +199,25 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 
 					$risultato_ricerca .=
 					"<tr>" .
-					"	<td>" . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[Registrazione::DAT_REGISTRAZIONE_YYYYMMDD]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "</td>" .
-					"	<td>" . trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) .  "</td>" .
-					"	<td><i>" . trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) . trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " . trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . "</i></td>" .
-					"	<td></td>" .
-					"	<td></td>" .
-					"	<td></td>" .
-					"	<td></td>" .
+					"	<td colspan='2'></td>" .
+					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" . 
+					trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "&nbsp;&nbsp;" .
+					trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conto:&nbsp;" .
+					trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) .
+					trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " .
+					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . 
+					"   </i></td>" .
 					"</tr>";
 
 				}
 			}
 			$risultato_ricerca .= "</tbody></table>";
+		}
+		else {
+		    $risultato_ricerca = 
+		    "<div class='row'>" .
+		    "    <div class='col-sm-12'>" . $_SESSION[self::MSG] . "</div>" .
+		    "</div>";
 		}
 
 		$causale->setCodCausale($registrazione->getCodCausaleSel());

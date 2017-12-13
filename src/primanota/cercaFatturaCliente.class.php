@@ -33,7 +33,7 @@ class CercaFatturaCliente extends PrimanotaAbstract implements PrimanotaBusiness
 		$cliente->setDesCliente($registrazione->getDesCliente());
 		$cliente->cercaConDescrizione($db);
 		$registrazione->setIdCliente($cliente->getIdCliente());
-		if ($registrazione->cercaFatturaCliente($db)) echo "Fattura gi&agrave; esistente";
+		if ($registrazione->cercaFatturaCliente($db)) echo "esistente";
 		else echo "";
 	}
 

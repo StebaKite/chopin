@@ -16,6 +16,7 @@ interface MainNexus6Interface {
 	const INFO      		= "messaggioInfo";
 	const AMBIENTE  		= "ambiente";
 	const MESSAGGIO 		= "messaggio";
+	const MSG               = "divmsg";
 	const AZIONE    		= "azione";
 	const TIP_CONFERMA 		= "confermaTip";
 	const TITOLO_PAGINA		= "titoloPagina";

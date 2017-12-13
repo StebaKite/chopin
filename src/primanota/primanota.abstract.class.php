@@ -1,9 +1,10 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
+require_once 'primanota.presentation.interface.php';
 require_once 'lavoroPianificato.class.php';
 
-abstract class PrimanotaAbstract extends Nexus6Abstract {
+abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPresentationInterface {
 
 	// Query ---------------------------------------------------------------
 
@@ -51,7 +52,11 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	public static $messaggio;
 
 	// Metodi comuni di utilita della prima note ---------------------------
-                                   	
+
+	public function inizializzaPagina() {}
+	public function controlliLogici() {}
+	public function displayPagina() {}
+	
 	public function refreshTabellaFattureDaPagare($scadenzaFornitore)
 	{
 	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
@@ -358,8 +363,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 	
 	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione)
 	{
-		$cancella_dettaglio_nuova_registrazione_href = "<a class='tooltip' onclick='cancellaDettaglioNuovaRegistrazione(";
-		$cancella_icon = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+		$cancella_dettaglio_nuova_registrazione_href = '<a onclick="cancellaDettaglioNuovaRegistrazione(';
 
 		$thead = "";
 		$tbody = "";
@@ -370,10 +374,10 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			$thead =
 			"<thead>" .
 			"	<tr>" .
-			"		<th width='600'>Conto</th>" .
-			"		<th width='150' align='right'>Importo</th>" .
-			"		<th align='center'>D/A</th>" .
-			"		<th>&nbsp;</th>" .
+			"		<th width='500'>Conto</th>" .
+			"		<th width='180'>Importo</th>" .
+			"		<th width='100'>Segno</th>" .
+			"		<th width='50'>&nbsp;</th>" .
 			"	</tr>" .
 			"</thead>";
 
@@ -383,19 +387,11 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$codConto = explode(".", $contoComposto[0]);
 
 				$cancella_parms  = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
-				$cancella_parms .= "'" . $dettaglioRegistrazione->getCampoMsgControlloPagina() . "',";
-				$cancella_parms .= "'" . $dettaglioRegistrazione->getMsgControlloPagina() . "',";
-				$cancella_parms .= "'" . $dettaglioRegistrazione->getNomeCampo() . "',";
-				$cancella_parms .= "'" . $dettaglioRegistrazione->getLabelNomeCampo() . "',";				
 				$cancella_parms .= trim($contoComposto[0]);
 				
-				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href .  $cancella_parms . $cancella_icon;
+				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href .  $cancella_parms . ')"><span class="glyphicon glyphicon-trash"></span></a>';
 
 				$modifica_parms  = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
-				$modifica_parms .= "'" . $dettaglioRegistrazione->getCampoMsgControlloPagina() . "',";
-				$modifica_parms .= "'" . $dettaglioRegistrazione->getMsgControlloPagina() . "',";
-				$modifica_parms .= "'" . $dettaglioRegistrazione->getNomeCampo() . "',";
-				$modifica_parms .= "'" . $dettaglioRegistrazione->getLabelNomeCampo() . "',";
 				$modifica_parms .= trim($codConto[0]) . ",";
 				$modifica_parms .= trim($codConto[1]) . ",";
 				$modifica_parms .= "this.value,";
@@ -409,29 +405,31 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unDettaglio[DettaglioRegistrazione::COD_CONTO] . "</td>" .
-				"	<td align='right'>" .
-				"		<input type='text' size='15' maxlength='10'" . $idImportoDettaglio . $onModifyImporto . "value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+				"	<td>" .
+				"       <div class='input-group'>" .
+				"           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+				"		    <input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+				"       </div>" .
 				"	</td>" .
-				"	<td align='center'>" .
-				"		<input type='text' size='2' maxlength='1'" . $idSegnoDettaglio . $onModifySegno . "value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+				"	<td>" .
+				"       <div class='input-group'>" .
+				"           <span class='input-group-addon'>D/A</span></span>" .
+				"		    <input class='form-control' type='text' maxlength='1' " . $idSegnoDettaglio . $onModifySegno . "value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+				"       </div>" .
 				"	</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
-			return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='result'>" . $thead . $tbody . "</table>";
+			return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
 		}
 		return "";
 	}
 
 	public function makeTabellaScadenzeFornitore($scadenzaFornitore)
 	{
-		$cancellaLocked = '<li class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-locked"></span></li>';
-		$cancella_nuova_scadenza_fornitore_href = '<a class="tooltip" onclick="cancellaNuovaScadenzaFornitore(';
-		$cancella_icon = ')"><li class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-trash"></span></li></a>';
-
-		$data_ko = "class='ko'";
-		$data_ok = "class='ok'";
+		$data_ko = "class='bg-danger'";
+		$data_ok = "class='bg-success'";
 
 		$thead = "";
 		$tbody = "";
@@ -442,10 +440,10 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 			$thead =
 			"<thead>" .
 			"	<tr>" .
-			"		<th width='80'>Data</th>" .
-			"		<th width='60'>Stato</th>" .
-			"		<th width='80'>Importo</th>" .
-			"		<th>&nbsp;</th>" .
+			"		<th width='180'>Data</th>" .
+			"		<th width='100'>Stato</th>" .
+			"		<th width='180'>Importo</th>" .
+			"		<th width='60'>&nbsp;</th>" .
 			"	</tr>" .
 			"</thead>";
 
@@ -461,38 +459,38 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				$modifica_parms .= trim($numFatt) . ",";
 				$modifica_parms .= "this.value";
 								
-				$onModifyImporto = " onkeyup=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
+				$onModifyImporto = " onkeyup=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';				
+				$onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaFornitore(" . $modifica_parms;
 				$idImportoDettaglio = " id='impscad" . trim($idFornitore) . trim($dataScadenza) . trim($numFatt) . "' ";
+								
 				$stato = ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == "10") ? "Pagata" : "Da Pagare";
 
 				if ($stato == "Da Pagare")
 				{
 					$tdclass = $data_ko;
-					$cancella_parms  = "'" . $scadenzaFornitore->getIdTableScadenzeAperte() . "',";
-					$cancella_parms .= trim($idFornitore) . ",";
-					$cancella_parms .= trim($dataScadenza) . ",";
-					$cancella_parms .= trim($numFatt) . ",";
-					$bottoneCancella = $cancella_nuova_scadenza_fornitore_href . $cancella_parms . $cancella_icon;
+					$bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
 				}
 				else {
 					$tdclass = $data_ok;
-					$bottoneCancella = $cancellaLocked;
+					$bottoneCancella = self::OK_ICON;
 				}
-
+				
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
 				"	<td " . $tdclass . ">" . $stato . "</td>" .
-				"	<td align='right'>" .
-				"		<input type='text' size='15' maxlength='10'" . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
+				"	<td>" .
+				"       <div class='input-group'>" .
+				"           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+				"		    <input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
+				"       </div>" .
 				"	</td>" .
-				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$tbody .= "</tbody>";
-			return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='result'>" . $thead . $tbody . "</table>";
 		}
-		return "";
+		$tbody .= "</tbody>";
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
 	}
 
 	public function makeTabellaScadenzeCliente($scadenzaCliente)
@@ -560,10 +558,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract {
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$tbody .= "</tbody>";
-			return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='result'>" . $thead . $tbody . "</table>";
 		}
-		return "";
+		$tbody .= "</tbody>";
+		return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
 	}
 
 	public function ricalcolaSaldi($db, $datRegistrazione)

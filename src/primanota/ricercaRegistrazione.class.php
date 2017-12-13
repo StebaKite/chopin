@@ -51,7 +51,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 		$ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($ricercaRegistrazioneTemplate);
 
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -79,7 +79,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 		$ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
 		$this->preparaPagina($ricercaRegistrazioneTemplate);
 
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 
@@ -88,7 +88,6 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 			if ($registrazione->load($db)) {
 
 				$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
-				$ricercaRegistrazioneTemplate->displayPagina();
 
 				/**
 				 * Gestione del messaggio proveniente da altre funzioni
@@ -119,26 +118,26 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 				}
 				else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG] = $utility->tailTemplate($template);
 			}
 			else {
 
 				$ricercaRegistrazioneTemplate->displayPagina();
 				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG] = $utility->tailTemplate($template);
 			}
 		}
 		else {
 
 			$ricercaRegistrazioneTemplate->displayPagina();
-
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		}
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);			
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
+		}		
+		$ricercaRegistrazioneTemplate->displayPagina();
+		
 		include($this->piede);
 	}
 

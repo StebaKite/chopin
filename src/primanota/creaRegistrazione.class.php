@@ -44,11 +44,17 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 	    $scadenzaFornitore = ScadenzaFornitore::getInstance();
 	    $scadenzaFornitore->setQtaScadenzeDaPagare(0);
 	    $scadenzaFornitore->setScadenzeDaPagare("");
-
+	    $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
+	    
 	    $scadenzaCliente = ScadenzaCliente::getInstance();
 	    $scadenzaCliente->setQtaScadenzeDaIncassare(0);
 	    $scadenzaCliente->setScadenzeDaIncassare("");
-	    
+	    $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
+
+	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $dettaglioRegistrazione->setIdTablePagina("dettagli_cre");
+
+	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 	    
@@ -61,9 +67,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->creaRegistrazione($utility, $registrazione, $dettaglioRegistrazione))
-			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_REGISTRAZIONE_OK;
-		else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+		$this->creaRegistrazione($utility, $registrazione, $dettaglioRegistrazione);
 
 		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
 		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);

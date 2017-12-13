@@ -31,6 +31,7 @@ class ScadenzaFornitore implements CoreInterface {
 	private $idScadenza;
 	private $idRegistrazione;
 	private $datScadenza;
+	private $datScadenzaNuova;
 	private $impInScadenza;
 	private $notaScadenza;
 	private $tipAddebito;
@@ -66,6 +67,7 @@ class ScadenzaFornitore implements CoreInterface {
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaFornitore.sql";
 	const AGGIORNA_SCADENZA = "/scadenze/aggiornaScadenzaFornitore.sql";
 	const AGGIORNA_IMPORTO_SCADENZA_FORNITORE = "/scadenze/aggiornaImportoScadenzaFornitore.sql";
+	const AGGIORNA_DATA_SCADENZA_FORNITORE = "/scadenze/aggiornaDataScadenzaFornitore.sql";
 	const RICERCA_SCADENZE_DA_PAGARE = "/scadenze/ricercaScadenzeAperteFornitore.sql";
 	const RICERCA_SCADENZE_PAGATE = "/scadenze/ricercaScadenzeChiuseFornitore.sql";
 	const PAGA_SCADENZA = "/scadenze/pagaScadenzaFornitore.sql";
@@ -430,7 +432,7 @@ class ScadenzaFornitore implements CoreInterface {
 		$result = $db->execSql($sql);
 
 		/*
-		 * Se tutto ok tolgo la scadenza nell'array delle scadenze
+		 * Se tutto ok aggiorno la scadenza nell'array delle scadenze
 		 */
 
 		if ($result) {
@@ -460,7 +462,59 @@ class ScadenzaFornitore implements CoreInterface {
 		}
 		return $result;
 	}
-
+	
+	public function aggiornaData($db)
+	{
+	    /**
+	     * Aggiorno la data di scadenza in scadenziario fornitori
+	     */
+	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
+	    
+	    $dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+	    
+	    $replace = array(
+	        '%dat_scadenza_nuova%' => $this->getDatScadenzaNuova(),
+	        '%id_fornitore%' => trim($this->getIdFornitore()),
+	        '%dat_scadenza%' => $dataScad,
+	        '%num_fattura%' => $this->getNumFattura()
+	    );
+	    $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_DATA_SCADENZA_FORNITORE;
+	    $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+	    $result = $db->execSql($sql);
+	    
+	    /*
+	     * Se tutto ok aggiorno la scadenza nell'array delle scadenze
+	     */
+	    
+	    if ($result) {
+	        $scadenzeDiff = array();
+	        foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+	            
+	            if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
+	                array_push($scadenzeDiff, $unaScadenza);
+	                else {
+	                    $item = array (
+	                        ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],
+	                        ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenzaNuova(),
+	                        ScadenzaFornitore::IMP_IN_SCADENZA => $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA],
+	                        ScadenzaFornitore::NOTA_SCADENZA => $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA],
+	                        ScadenzaFornitore::TIP_ADDEBITO => $unaScadenza[ScadenzaFornitore::TIP_ADDEBITO],
+	                        ScadenzaFornitore::COD_NEGOZIO => $unaScadenza[ScadenzaFornitore::COD_NEGOZIO],
+	                        ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
+	                        ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA],
+	                        ScadenzaFornitore::STA_SCADENZA => $unaScadenza[ScadenzaFornitore::STA_SCADENZA],
+	                        ScadenzaFornitore::ID_PAGAMENTO => $unaScadenza[ScadenzaFornitore::ID_PAGAMENTO]
+	                    );
+	                    array_push($scadenzeDiff, $item);
+	                }
+	        }
+	        $this->setScadenzeDaPagare($scadenzeDiff);
+	        $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+	    }
+	    return $result;
+	}
+	
 	public function trovaScadenzeDaPagare($db)
 	{
 		$utility = Utility::getInstance();
@@ -718,6 +772,16 @@ class ScadenzaFornitore implements CoreInterface {
 
     public function setIdTableScadenzeChiuse($idTableScadenzeChiuse){
         $this->idTableScadenzeChiuse = $idTableScadenzeChiuse;
+        return $this;
+    }
+
+
+    public function getDatScadenzaNuova(){
+        return $this->datScadenzaNuova;
+    }
+
+    public function setDatScadenzaNuova($datScadenzaNuova){
+        $this->datScadenzaNuova = $datScadenzaNuova;
         return $this;
     }
 

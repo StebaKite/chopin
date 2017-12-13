@@ -20,23 +20,24 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 
 	// Bottoni
 
-	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a class='tooltip' href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_PAGAMENTO_HREF = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_INCASSO_HREF = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_REGISTRAZIONE_HREF = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_PAGAMENTO_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_INCASSO_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_REGISTRAZIONE_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
 
-	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a class='tooltip' href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a class='tooltip' href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='modificaRegistrazione(";
-	const MODIFICA_PAGAMENTO_HREF = "<a class='tooltip' onclick='modificaPagamento(";
-	const MODIFICA_INCASSO_HREF = "<a class='tooltip' onclick='modificaIncasso(";
+	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=";
+	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
+	const MODIFICA_REGISTRAZIONE_HREF = "<a onclick='modificaRegistrazione(";
+	const MODIFICA_PAGAMENTO_HREF = "<a onclick='modificaPagamento(";
+	const MODIFICA_INCASSO_HREF = "<a onclick='modificaIncasso(";
 	
-	const CANCELLA_REGISTRAZIONE_HREF = "<a class='tooltip' onclick='cancellaRegistrazione(";
+	const CANCELLA_REGISTRAZIONE_HREF = "<a onclick='cancellaRegistrazione(";
 	
-	const VISUALIZZA_ICON = "'><span class='glyphicon glyphicon-search'></span></a>";
+	const VISUALIZZA_ICON = "'><span class='glyphicon glyphicon-check'></span></a>";
 	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-pencil'></span></a>";
-	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-bin'></span></a>";
+	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
+	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
 
 	// Actions
 
@@ -58,6 +59,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	public function inizializzaPagina();
 	public function controlliLogici();
 	public function displayPagina();
+	
 }
 
 ?>

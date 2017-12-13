@@ -34,7 +34,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract implements PrimanotaBusine
 			$fornitore->setDesFornitore($registrazione->getDesFornitore());
 			$fornitore->cercaConDescrizione($db);
 			$registrazione->setIdFornitore($fornitore->getIdFornitore());
-			if ($registrazione->cercaFatturaFornitore($db)) echo "Fattura gi&agrave; esistente";
+			if ($registrazione->cercaFatturaFornitore($db)) echo "esistente";
 			else echo "";
 		}
 		else echo "";

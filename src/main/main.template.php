@@ -46,7 +46,8 @@ class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 			'%avvisoDiv%' => $_SESSION['avvisoDiv'],
 			'%avvisoDialog%' => $_SESSION['avvisoDialog'],
 			'%menu%' => $this->makeMenu($utility),
-		    '%ambiente%' => $_SESSION["ambiente"]
+		    '%amb%' => $_SESSION['ambiente'],
+		    '%users%' => $_SESSION['users'],
 		    
 		);
 

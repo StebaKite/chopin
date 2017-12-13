@@ -4,908 +4,315 @@
 	var elencoClienti = [%elenco_clienti%];
 
 	$(document).ready(function(){
-		$('.datepicker').datepicker();
-		
-		$("#myInput").on("keyup", function() {
-			var value = $(this).val().toLowerCase();
-			$("#myTable tr").filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-			});
-		});
+
+		$(".datepicker").datepicker();
+
+		$("#myInput").on("keyup", 
+			function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable tr").filter(
+					function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					}
+				);
+			}
+		);				
 	});
 
 </script>
 
-<div class="well well-sm">
-	<div class="row">
-		<div class="col-sm-7">
-			<h4>%titoloPagina%</h4>
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+						<button id="nuovaRegistrazione" class="btn btn-primary btn-default">%ml.nuovaregistrazione%</button>
+						<button id="nuovo-incasso" class="btn btn-primary btn-default">%ml.nuovoincasso%</button>
+						<button id="nuovo-pagamento" class="btn btn-primary btn-default">%ml.nuovopagamento%</button>
+						<button id="nuovo-corrispettivo-mercato" class="btn btn-primary btn-default">%ml.nuovocorrispettivomercato%</button>
+						<button id="nuovo-corrispettivo-negozio" class="btn btn-primary btn-default">%ml.nuovocorrispettivonegozio%</button>
+					</div>	
+				</div>			
+			</div>
+			<br/>
+			<form method="post" action="%azione%">
+			  
+				<div class="form-group row">
+					<div class="col-sm-2">
+	 					<div class='input-group'>
+							<span class="input-group-addon">Neg</span>
+							<select class="form-control" id="codneg_sel" name="codneg_sel" >
+								<option value="">%ml.tutti%</option>
+								<option value="VIL" %villa-selected% >%ml.villa%</option>
+								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
+								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+							</select>			
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class='input-group'>
+							<span class="input-group-addon">%ml.da%</span>
+				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+				                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
+				                 <span class="input-group-addon">
+				                     <span class="glyphicon glyphicon-calendar"></span>
+				                 </span>
+				            </div>			
+						</div>  
+					</div>
+					<div class="col-xs-3">
+						<div class='input-group'>
+							<span class="input-group-addon">%ml.a%</span>
+				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+				                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
+				                 <span class="input-group-addon">
+				                     <span class="glyphicon glyphicon-calendar"></span>
+				                 </span>
+							</div>
+						</div>				
+					</div>
+					<div class="col-xs-4">
+						<div class='input-group'>
+							<span class="input-group-addon">%ml.codcau%</span>
+							<select class="form-control" id="causale" name="causale" >
+								<option value="">%ml.tutti%</option>
+								%elenco_causali%
+							</select>			
+						</div>	
+					</div>
+				</div>	
+				<div class="form-group row">				
+					<div class="col-sm-7">
+						<button id="submit" type="submit" class="btn btn-default">
+					    	<span class="glyphicon glyphicon-search"></span> Ricerca
+					    </button>
+					</div> 
+				</div> 
+			</form>  
 		</div>
-		<div class="col-sm-5">
-			<div class="btn-group">
-				<button id="nuova-registrazione" class="btn btn-primary">%ml.nuovaregistrazione%</button>
-				<button id="nuovo-incasso" class="btn btn-primary">%ml.nuovoincasso%</button>
-				<button id="nuovo-pagamento" class="btn btn-primary">%ml.nuovopagamento%</button>
-				<button id="nuovo-corrispettivo-mercato" class="btn btn-primary">%ml.nuovocorrispettivomercato%</button>
-				<button id="nuovo-corrispettivo-negozio" class="btn btn-primary">%ml.nuovocorrispettivonegozio%</button>
-			</div>	
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="modal fade" id="nuova-registrazione-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova Registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="nuovaRegistrazioneForm" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_cre_control_group">
+							    		<label for="datareg_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_cre_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_cre" name="datareg_cre"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_cre">%ml.negozio%</label>
+									<select class="form-control" id="codneg_cre" name="codneg_cre" >
+										<option value="VIL" selected>%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="numfatt_cre_control_group">
+										<label for="numfatt_cre">%ml.numfatt%&nbsp;<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></label>
+										<input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); "/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_cre_control_group">
+							    		<label for="descreg_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cre_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_cre_control_group">
+										<label for="causale_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cre_messaggio"></span></small></label>
+										<select class="form-control" id="causale_cre" name="causale_cre" >
+											<option value=""></option>
+											%elenco_causali_cre%
+										</select>			
+									</div>
+							  	</div>
+							  	<div class="col-sm-4 ui-front">
+							  		<div class="control-group" id="fornitore_cre_control_group">
+							    		<label for="fornitore_cre">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_cre_messaggio"></span></small></label>
+										<input class="form-control" id="fornitore_cre" name="fornitore_cre" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');">
+									</div>	
+							  	</div>
+							  	<div class="col-sm-4 ui-front">
+							  		<div class="control-group" id="cliente_cre_control_group">
+							    		<label for="cliente_cre">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_cre_messaggio"></span></small></label>
+										<input class="form-control" id="cliente_cre" name="cliente_cre" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');">
+									</div>	
+							  	</div>
+							</div>						
+							<div class="form-group row">
+							  	<div class="col-sm-7">
+							  		<div class="control-group" id="scadenzesuppl_cre_control_group">
+							    		<label for="scadenzesuppl_cre">%ml.datascad%&nbsp;<small><span class="text-danger" id="scadenzesuppl_cre_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="scadenzesuppl_cre"></table>
+									</div>	
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_cre_control_group">
+							    		<label for="dettagli_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_cre_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_cre"></table>
+									</div>	
+							  	</div>
+							</div>
+						</div>
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuova-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-form">Nuova scadenza</button>
+	          		<button type="button" class="btn btn-default" id="button-dettaglio-nuova-registrazione-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
 		</div>
 	</div>
-
-	<form method="post" action="%azione%">
-	  
-		<div class="form-group row">
-			<div class="col-xs-2">
-				<label for="codneg_sel">%ml.negozio%</label>
-				<select class="form-control" id="codneg_sel" name="codneg_sel" >
-					<option value="">%ml.tutti%</option>
-					<option value="VIL" %villa-selected% >%ml.villa%</option>
-					<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-					<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-				</select>			
-			</div>
-			<div class="col-xs-2">
-				<label for="datareg_da">%ml.da%</label>
-	            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
-	                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
-	                 <span class="input-group-addon">
-	                     <span class="glyphicon glyphicon-calendar"></span>
-	                 </span>
-	             </div>			
-			</div>
-			<div class="col-xs-2">
-				<label for="datareg_a">%ml.a%</label>
-	            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
-	                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
-	                 <span class="input-group-addon">
-	                     <span class="glyphicon glyphicon-calendar"></span>
-	                 </span>
-	             </div>			
-			</div>
-			<div class="col-xs-4">
-				<label for="causale">%ml.codcau%</label>
-				<select class="form-control" id="causale" name="causale" >
-					<option value="">%ml.tutti%</option>
-					%elenco_causali%
-				</select>			
-			</div>
-			<div class="col-xs-1">
-				<label for="causale">&nbsp;</label>
-				<button id="submit" type="submit" class="btn btn-default">
-			    	<span class="glyphicon glyphicon-search"></span> Ricerca
-			    </button>
-			</div> 
-		</div> 
-	</form>
 </div>
 
-<div class="well well-sm">
-%risultato_ricerca%
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova dettaglio registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovoDettaglioForm" action="../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go">
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+										<input class="form-control" id="newimpdett_cre" name="newimpdett_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_cre')">
+									</div>
+							  	</div>
+							  	<div class="col-xs-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">D/A</span>
+										<input class="form-control" id="newsegnodett_cre" name="newsegnodett_cre" type="text" maxlength="1" />
+									</div>
+							  	</div>							  	
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Cc</span>
+										<select class="form-control" id="conti" name="newcontodett_cre"></select>			
+									</div>	
+							  	</div>							  	
+					  		</div>
+						</div>					
+					</form>	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuova-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="nuova-registrazione-form" title="Nuova Registrazione"> 
-	<form method="post" id="nuovaRegistrazione" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataRegistrazione" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizione" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_cre"><input class="dataregpicker" type="text" id="datareg_cre" name="datareg_cre" size="10" maxlength="10" onblur="validaNuovaRegistrazione()" onchange="validaNuovaRegistrazione()" /></td>
-					<td id="descreg_cre_label" >%ml.descreg% : </td>
-					<td id="tddescreg_cre"><input type="text" id="descreg_cre" name="descreg_cre" size="50" maxlength="200" onkeypress="validaNuovaRegistrazione()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausale" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozio" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_cre">
-						<select class="selectmenuCausaleCre" id="causale_cre" name="causale_cre" >
-							<option value=""></option>
-							%elenco_causali_cre%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td class="tooltip" id="tdnegozio_cre">
-						<div class="radioset" >
-							<input type="radio" id="villa_cre" name="codneg_cre" checked value="VIL" ><label for="villa_cre">%ml.villa%</label>
-							<input type="radio" id="brembate_cre" name="codneg_cre" value="BRE" ><label for="brembate_cre">%ml.brembate%</label>
-							<input type="radio" id="trezzo_cre" name="codneg_cre" value="TRE" ><label for="trezzo_cre">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>					
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloFornitore" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCliente" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_cre"><input type="text" id="fornitore_cre" name="fornitore_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></td>	
-					<td>%ml.codclie% :</td>
-					<td id="tdcliente_cre"><input type="text" id="cliente_cre" name="cliente_cre" size="45" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre','messaggioControlloDettagli','descreg_cre','descreg_cre_label')" /></td>
-				</tr>					
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFattura" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td id="datascad_cre_label" class="td" valign="top">%ml.datascad% :</td>
-					<td id="tddatascad_cre" >
-						<table id="scadenzesuppl_cre" class="result"></table>
-					</td>
-					<td id="numfatt_cre_label" valign="top">%ml.numfatt% :</td>
-					<td id="tdnumfatt_cre" valign="top"><input type="text" id="numfatt_cre" name="numfatt_cre" size="10" maxlength="35" onblur="validaNuovaRegistrazione()" /></td>
-				</tr>
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagli" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_cre" colspan="4">
-						<table id="dettagli_cre" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>	
-
-<div id="nuovo-dettaglio-registrazione-form" title="Nuovo Dettaglio Registrazione">
-	<table class="datiCreate" cellpadding="5px">
-		<tbody>
-			<tr>
-				<td></td>
-				<td class="tdmessage"><i class="message" id="messaggioControlloImportoDettaglio" >&nbsp;</i></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>%ml.importo% :</td>
-				<td class="tooltip"><input type="text" id="importo_dett_cre" name="importo_dett_cre" size="20" maxlength="20" onkeypress="controllaImportoDettaglio()" ></td>
-			</tr>					
-			<tr>
-				<td>%ml.conto% :</td>
-				<td><select class='selectmenuConto' id="conti" name="conto_dett"></select></td>
-			</tr>	
-			<tr>
-				<td>
-					<div class="radioset" >
-						<input type="radio" id="dare_dett_cre" name="dareavere_dett_cre" value="D" checked ><label for="dare_dett_cre">%ml.dare%</label>
-						<input type="radio" id="avere_dett_cre" name="dareavere_dett_cre" value="A" ><label for="avere_dett_cre">%ml.avere%</label>
-					</div>
-				</td>					
-			</tr>					
-		</tbody>
-	</table> 	
+<div class="container">
+	<div class="modal fade" id="nuova-data-scadenza-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova data scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovaDataScadenzaForm" action="../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=go">
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-xs-4">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+				                		<input type='text' class="form-control" id="newdatascad_cre" name="newdatascad_cre" />
+				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				            		</div>			
+							  	</div>
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+										<input class="form-control" id="newimpscad_cre" name="newimpscad_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpscad_cre')">
+									</div>
+							  	</div>
+					  		</div>
+						</div>					
+					</form>	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovascad-nuova-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="modifica-registrazione-form" title="Modifica Registrazione"> 
-	<form method="post" id="modificaRegistrazione" action="../primanota/modificaRegistrazioneFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataRegistrazione_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizione_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_mod"><input class="dataregpicker" type="text" id="datareg_mod" name="datareg_mod" size="10" maxlength="10" onblur="validaModificaRegistrazione()" onchange="validaModificaRegistrazione()" tabindex="-1" /></td>
-					<td id="descreg_mod_label" >%ml.descreg% : </td>
-					<td id="tddescreg_mod"><input type="text" id="descreg_mod" name="descreg_mod" size="50" maxlength="200" onkeypress="validaModificaRegistrazione()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausale_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozio_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_mod">
-						<select class="selectmenuCausaleMod" id="causale_mod" name="causale_mod" >
-							<option value=""></option>
-							%elenco_causali_mod%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td class="tooltip" id="tdnegozio_mod">
-						<div class="radioset" >
-							<input type="radio" id="villa_mod" name="codneg_mod" value="VIL" ><label for="villa_mod">%ml.villa%</label>
-							<input type="radio" id="brembate_mod" name="codneg_mod" value="BRE" ><label for="brembate_mod">%ml.brembate%</label>
-							<input type="radio" id="trezzo_mod" name="codneg_mod" value="TRE" ><label for="trezzo_mod">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>					
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloFornitore_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCliente_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_mod"><div><input type="text" id="fornitore_mod" name="fornitore_mod" size="45" onkeyup="validaModificaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_mod','messaggioControlloDettagli_mod','descreg_mod','descreg_mod_label')" /></div></td>	
-					<td>%ml.codclie% :</td>
-					<td id="tdcliente_mod"><div><input type="text" id="cliente_mod" name="cliente_mod" size="45" onkeyup="validaModificaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_mod','messaggioControlloDettagli_mod','descreg_mod','descreg_mod_label')" /></div></td>
-				</tr>					
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFattura_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td id="datascad_mod_label" class="td" valign="top">%ml.datascad% :</td>
-					<td id="tddatascad_mod" >
-						<table id="scadenzesuppl_mod" class="result"></table>
-					</td>
-					<td id="numfatt_mod_label" valign="top">%ml.numfatt% :</td>
-					<td id="tdnumfatt_mod" valign="top">
-						<input type="text" id="numfatt_mod" name="numfatt_mod" size="10" maxlength="35" onblur="validaModificaRegistrazione()" />
-						<input type="hidden" id="numfatt_mod_orig" name="numfatt_mod_orig" />
-					</td>
-				</tr>
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagli_mod" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_mod" colspan="4">
-						<table id="dettagli_mod" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>	
-
-<div id="cancella-registrazione-form" title="Cancella Registrazione"> 
-	<form method="post" id="cancellaRegistrazione" action="../primanota/cancellaRegistrazioneFacade.class.php?modo=go" >
-		<p>Elimino la registrazione e i suoi dettagli ?</p>
-		<input type="hidden" id="idRegistrazione" name="idRegistrazione">
-	</form>
+<div class="container">
+	<div class="modal fade" id="messaggio-errore-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title"><div class="alert alert-danger" role="alert" >ERRORE</div></h4>
+	        	</div>
+	        	<div class="modal-body">
+		        	<p id="testo-messaggio-errore"></p>
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="nuova-data-scadenza-form" title="Nuova Registrazione - Nuova data scadenza"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataScadenza" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloImportoScadenza" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datascad% :</td>
-					<td class="tooltip"><input class="datepicker" type="text" id="newdatascad_cre" name="newdatascad_cre" size="10" maxlength="10" /></td>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="newimpscad_cre" name="newimpscad_cre" size="20" maxlength="20" onkeypress="controllaImportoScadenza('newimpscad_cre', 'messaggioControlloImportoScadenza', 'button-nuova-scadenza-form')" ></td>
-				</tr>			
-			</tbody>
-		</table> 	 
-  </form>
-</div>
-
-<div id="nuova-data-scadenza-modifica-form" title="Modifica Registrazione - Nuova data scadenza"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataScadenza_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloImportoScadenza_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datascad% :</td>
-					<td class="tooltip"><input class="datepicker" type="text" id="newdatascad_mod" name="newdatascad_mod" size="10" maxlength="10" /></td>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="newimpscad_mod" name="newimpscad_mod" size="20" maxlength="20" onkeypress="controllaImportoScadenza('newimpscad_mod', 'messaggioControlloImportoScadenza_mod', 'button-nuova-scadenza-modifica-form')" ></td>
-				</tr>			
-			</tbody>
-		</table> 	 
-  </form>
-</div>
-
-<div id="nuovo-incasso-form" title="Nuovo Incasso"> 
-	<form method="post" id="nuovoIncasso" action="../primanota/creaIncassoFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataIncasso" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneIncasso" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_inc_cre"><input class="dataregpicker" type="text" id="datareg_inc_cre" name="datareg_inc_cre" size="10" maxlength="10" onblur="validaNuovoIncasso()" onchange="validaNuovoIncasso()" /></td>
-					<td id="descreg_inc_cre_label" >%ml.descreg% : </td>
-					<td id="tddescreg_inc_cre"><input type="text" id="descreg_inc_cre" name="descreg_inc_cre" size="50" maxlength="200" onkeypress="validaNuovoIncasso()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleIncasso" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioIncasso" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_inc_cre">
-						<select class="selectmenuCausaleIncCre" id="causale_inc_cre" name="causale_inc_cre" >
-							<option value=""></option>
-							%elenco_causali_inc_cre%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_inc_cre">
-						<div class="radioset" >
-							<input type="radio" id="villa_inc_cre" name="codneg_inc_cre" checked value="VIL" onchange="controllaNegozio_inc_cre(this.value)" /><label for="villa_inc_cre">%ml.villa%</label>
-							<input type="radio" id="brembate_inc_cre" name="codneg_inc_cre" value="BRE" onchange="controllaNegozio_inc_cre(this.value)" /><label for="brembate_inc_cre">%ml.brembate%</label>
-							<input type="radio" id="trezzo_inc_cre" name="codneg_inc_cre" value="TRE" onchange="controllaNegozio_inc_cre(this.value)" /><label for="trezzo_inc_cre">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloClienteIncasso" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>%ml.codclie% :</td>
-					<td id="tdcliente_inc_cre"><div><input class="scadenzeAperteCliente" type="text" id="cliente_inc_cre" name="cliente_inc_cre" size="40" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_cre','messaggioControlloDettagliIncasso','descreg_inc_cre','descreg_inc_cre_label')"  /></div></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNumeroFatturaIncasso" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				
-				<tr>
-					<td colspan="2"><h2>&nbsp;Fatture incluse nell'incasso</h2></td>
-					<td colspan="2"><h2>&nbsp;Fatture rimanenti da incassare</h2></td>
-				</tr>
-				<tr>
-					<td colspan="2" valign="top">
-						<table id="scadenze_chiuse_inc_cre" class="result" style="width: 100%"></table>								
-					</td>	
-					<td colspan="2" valign="top">
-						<table id="scadenze_aperte_inc_cre" class="result" style="width: 100%"></table>								
-					</td>	
-				</tr>
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliIncasso" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_inc_cre" colspan="4">
-						<table id="dettagli_inc_cre" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>
-
-<div id="nuovo-dettaglio-incasso-form" title="Nuovo Dettaglio"> 
-	<form>
-		<table class="datiCreate" style="cellpadding: 5px;">
-			<tbody>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo_inc_cre" name="importo_inc_cre" size="20" maxlength="20" ></td>
-				</tr>					
-				<tr>
-					<td>%ml.conto% :</td>
-					<td><select class="selectmenuContiInc" id="conti_inc_cre" name="conti_inc_cre"></select></td>
-				</tr>	
-				<tr>
-					<td></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="dare_inc_cre" name="dareavere_inc_cre" value="D" checked ><label for="dare_inc_cre">%ml.dare%</label>
-							<input type="radio" id="avere_inc_cre" name="dareavere_inc_cre" value="A" ><label for="avere_inc_cre">%ml.avere%</label>
-						</div>
-					</td>					
-				</tr>
-			</tbody>
-		</table> 	 
-	</form>
-</div>
-
-<div id="nuovo-pagamento-form" title="Nuovo Pagamento"> 
-	<form method="post" id="nuovoPagamento" action="../primanota/creaPagamentoFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataPagamento" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizionePagamento" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_pag_cre"><input class="dataregpicker" type="text" id="datareg_pag_cre" name="datareg_pag_cre" size="10" maxlength="10" onblur="validaNuovoPagamento()" onchange="validaNuovoPagamento()" /></td>
-					<td id="descreg_pag_cre_label">%ml.descreg% :</td>
-					<td id="tddescreg_pag_cre"><input type="text" id="descreg_pag_cre" name="descreg_pag_cre" size="50" maxlength="200" onkeypress="validaNuovoPagamento()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausalePagamento" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioPagamento" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_pag_cre">
-						<select class="selectmenuCausalePagCre" id="causale_pag_cre" name="causale_pag_cre" >
-							<option value=""></option>
-							%elenco_causali_pag_cre%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_pag_cre">
-						<div class="radioset" >
-							<input type="radio" id="villa_pag_cre" name="codneg_pag_cre" value="VIL" checked onchange="controllaNegozio_pag_cre(this.value)" ><label for="villa_pag_cre">%ml.villa%</label>
-							<input type="radio" id="brembate_pag_cre" name="codneg_pag_cre" value="BRE" onchange="controllaNegozio_pag_cre(this.value)"><label for="brembate_pag_cre">%ml.brembate%</label>
-							<input type="radio" id="trezzo_pag_cre" name="codneg_pag_cre" value="TRE" onchange="controllaNegozio_pag_cre(this.value)"><label for="trezzo_pag_cre">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>					
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloFornitorePagamento" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_pag_cre"><div><input class="scadenzeAperteFornitore" type="text" id="fornitore_pag_cre" name="fornitore_pag_cre" size="40" onkeyup="validaNuovaRegistrazione()" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre','messaggioControlloDettagliPagamento','descreg_pag_cre','descreg_pag_cre_label')" /></div></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h2>&nbsp;Fatture incluse nel pagamento</h2></td>
-					<td colspan="2"><h2>&nbsp;Fatture rimanenti da pagare</h2></td>
-				</tr>
-				<tr>
-					<td colspan="2" valign="top">
-						<table id="scadenze_chiuse_pag_cre" class="result" style="width: 100%"></table>								
-					</td>	
-					<td colspan="2" valign="top">
-						<table id="scadenze_aperte_pag_cre" class="result" style="width: 100%"></table>								
-					</td>	
-				</tr>
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliPagamento" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_pag_cre" colspan="4">
-						<table id="dettagli_pag_cre" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>
-
-<div id="nuovo-dettaglio-pagamento-form" title="Nuovo Dettaglio"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo_pag_cre" name="importo_pag_cre" size="20" maxlength="20" ></td>
-				</tr>					
-				<tr>
-					<td>%ml.conto% :</td>
-					<td><select class="selectmenuContiPag" id="conti_pag_cre" name="conti_pag_cre"></select></td>
-				</tr>	
-				<tr>
-					<td></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="dare_pag_cre" name="dareavere_pag_cre" value="D" checked ><label for="dare_pag_cre">%ml.dare%</label>
-							<input type="radio" id="avere_pag_cre" name="dareavere_pag_cre" value="A" ><label for="avere_pag_cre">%ml.avere%</label>
-						</div>
-					</td>					
-				</tr>					
-			</tbody>
-		</table> 	 
-	</form>
-</div>
-
-<div id="modifica-pagamento-form" title="Modifica Pagamento"> 
-	<form method="post" id="modificaPagamento" action="../primanota/modificaPagamentoFacade.class.php?modo=go">
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataPagamento_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizionePagamento_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_pag_mod" align="left"><input class="dataregpicker" type="text" id="datareg_pag_mod" name="datareg_pag_mod" size="10" maxlength="10" onblur="validaModificaPagamento()" onchange="validaModificaPagamento()" tabindex="-1" /></td>
-					<td id="descreg_pag_mod_label">%ml.descreg% :</td>
-					<td id="tddescreg_pag_mod"><input type="text" id="descreg_pag_mod" name="descreg_pag_mod" size="50" maxlength="200" onkeypress="validaModificaPagamento()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausalePagamento_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioPagamento_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_pag_mod">
-						<select class="selectmenuCausalePagMod" id="causale_pag_mod" name="causale_pag_mod" >
-							<option value=""></option>
-							%elenco_causali_pag_mod%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_pag_mod">
-						<div class="radioset" >
-							<input type="radio" id="villa_pag_mod" name="codneg_pag_mod" value="VIL" checked onchange="controllaNegozio_pag_mod(this.value)" ><label for="villa_pag_mod">%ml.villa%</label>
-							<input type="radio" id="brembate_pag_mod" name="codneg_pag_mod" value="BRE" onchange="controllaNegozio_pag_mod(this.value)"><label for="brembate_pag_mod">%ml.brembate%</label>
-							<input type="radio" id="trezzo_pag_mod" name="codneg_pag_mod" value="TRE" onchange="controllaNegozio_pag_mod(this.value)"><label for="trezzo_pag_mod">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>					
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloFornitorePagamento_mod" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>%ml.codforn% :</td>
-					<td id="tdfornitore_pag_mod"><div><input type="text" id="fornitore_pag_mod" name="fornitore_pag_mod" size="40" readonly="readonly" /></div></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h2>&nbsp;Fatture incluse nel pagamento</h2></td>
-					<td colspan="2"><h2>&nbsp;Fatture rimanenti da pagare</h2></td>
-				</tr>
-				<tr>
-					<td colspan="2" valign="top">
-						<table id="scadenze_chiuse_pag_mod" class="result" style="width: 100%"></table>								
-					</td>	
-					<td colspan="2" valign="top">
-						<table id="scadenze_aperte_pag_mod" class="result" style="width: 100%"></table>								
-					</td>	
-				</tr>
-				<tr><td><h2>&nbsp;Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliPagamento_mod" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_pag_mod" colspan="4">
-						<table id="dettagli_pag_mod" class="result" style="width: 100%"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>	
-
-<div id="nuovo-dettaglio-modifica-pagamento-form" title="Nuovo Dettaglio Modifica Pagamento"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo_pag_mod" name="importo_pag_mod" size="20" maxlength="20" ></td>
-				</tr>					
-				<tr>
-					<td>%ml.conto% :</td>
-					<td><select class="selectmenuContiPagMod" id="conti_pag_mod" name="conti_pag_mod"></select></td>
-				</tr>	
-				<tr>
-					<td></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="dare_pag_mod" name="dareavere_pag_mod" value="D" checked ><label for="dare_pag_mod">%ml.dare%</label>
-							<input type="radio" id="avere_pag_mod" name="dareavere_pag_mod" value="A" ><label for="avere_pag_mod">%ml.avere%</label>
-						</div>
-					</td>					
-				</tr>					
-			</tbody>
-		</table> 	 
-	</form>
-</div>	
-
-<div id="modifica-incasso-form" title="Modifica Incasso"> 
-	<form method="post" id="modificaIncasso" action="../primanota/modificaIncassoFacade.class.php?modo=go">
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataIncasso_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneIncasso_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_inc_mod" align="left"><input class="dataregpicker" type="text" id="datareg_inc_mod" name="datareg_inc_mod" size="10" maxlength="10" onblur="validaModificaIncasso()" onchange="validaModificaIncasso()" tabindex="-1" /></td>
-					<td id="descreg_inc_mod_label">%ml.descreg% :</td>
-					<td id="tddescreg_inc_mod"><input type="text" id="descreg_inc_mod" name="descreg_inc_mod" size="50" maxlength="200" onkeypress="validaModificaIncasso()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleIncasso_mod" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioIncasso_mod" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_inc_mod">
-						<select class="selectmenuCausaleIncMod" id="causale_inc_mod" name="causale_inc_mod" >
-							<option value=""></option>
-							%elenco_causali_inc_mod%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_inc_mod">
-						<div class="radioset" >
-							<input type="radio" id="villa_inc_mod" name="codneg_inc_mod" value="VIL" checked onchange="controllaNegozio_inc_mod(this.value)" ><label for="villa_inc_mod">%ml.villa%</label>
-							<input type="radio" id="brembate_inc_mod" name="codneg_inc_mod" value="BRE" onchange="controllaNegozio_inc_mod(this.value)"><label for="brembate_inc_mod">%ml.brembate%</label>
-							<input type="radio" id="trezzo_inc_mod" name="codneg_inc_mod" value="TRE" onchange="controllaNegozio_inc_mod(this.value)"><label for="trezzo_inc_mod">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>					
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloClienteIncasso_mod" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>%ml.codclie% :</td>
-					<td id="tdcliente_inc_mod"><div><input type="text" id="cliente_inc_mod" name="cliente_inc_mod" size="40" readonly="readonly" /></div></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h2>&nbsp;Fatture incluse nell'incasso</h2></td>
-					<td colspan="2"><h2>&nbsp;Fatture rimanenti da incassare</h2></td>
-				</tr>
-				<tr>
-					<td colspan="2" valign="top">
-						<table id="scadenze_chiuse_inc_mod" class="result" style="width: 100%"></table>								
-					</td>	
-					<td colspan="2" valign="top">
-						<table id="scadenze_aperte_inc_mod" class="result" style="width: 100%"></table>								
-					</td>	
-				</tr>
-				<tr><td><h2>&nbsp;Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliIncasso_mod" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_inc_mod" colspan="4">
-						<table id="dettagli_inc_mod" class="result" style="width: 100%"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>	
-
-<div id="nuovo-corrispettivo-mercato-form" title="Nuovo Corrispettivo Mercato"> 
-	<form method="post" id="nuovoCorrispettivoMercato" action="../primanota/creaCorrispettivoMercatoFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataCorrispettivoMercato" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneCorrispettivoMercato" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_cormer_cre"><input class="dataregpicker" type="text" id="datareg_cormer_cre" name="datareg_cormer_cre" size="10" maxlength="10" onblur="validaNuovoCorrispettivoMercato()" onchange="validaNuovoCorrispettivoMercato()" /></td>
-					<td id="descreg_cormer_cre_label">%ml.descreg% :</td>
-					<td id="tddescreg_cormer_cre"><input type="text" id="descreg_cormer_cre" name="descreg_cormer_cre" size="50" maxlength="200" onkeypress="validaNuovoCorrispettivoMercato()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleCorrispettivoMercato" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioCorrispettivoMercato" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_cormer_cre">
-						<select class="selectmenuCausaleCorMerCre" id="causale_cormer_cre" name="causale_cormer_cre" >
-							<option value=""></option>
-							%elenco_causali_cormer_cre%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_cormer_cre">
-						<div class="radioset" >
-							<input type="radio" id="villa_cormer_cre" name="codneg_cormer_cre" value="VIL" /><label for="villa_cormer_cre">%ml.villa%</label>
-							<input type="radio" id="brembate_cormer_cre" name="codneg_cormer_cre" value="BRE" /><label for="brembate_cormer_cre">%ml.brembate%</label>
-							<input type="radio" id="trezzo_cormer_cre" name="codneg_cormer_cre" value="TRE" /><label for="trezzo_cormer_cre">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloMercatoCorrispettiviMercato" >&nbsp;</i></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>%ml.mercato% :</td>
-					<td class="tooltip" id="tdmercato_cormer_cre">
-						<select class="selectmenuMercato" id="mercati_cormer_cre" name="mercati_cormer_cre"></select>
-					</td>
-				</tr>					
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliCorrispettivoMercato" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_cormer_cre" colspan="4">
-						<table id="dettagli_cormer_cre" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>
-
-<div id="nuovo-dettaglio-corrispettivomercato-form" title="Nuovo Dettaglio Corrispettivo Mercato"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo_cormer_cre" name="importo_cormer_cre" size="10" maxlength="20" onblur="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')" ></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="aliquota10_cormer_cre" name="aliquota_cormer_cre" value="1.10" checked onclick="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')"><label for="aliquota10_cormer_cre">%ml.aliquota10%</label>
-							<input type="radio" id="aliquota20_cormer_cre" name="aliquota_cormer_cre" value="1.22" onclick="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')"><label for="aliquota20_cormer_cre">%ml.aliquota22%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td>%ml.iva% :</td>
-					<td class="tooltip"><input type="text" id="iva_cormer_cre" name="iva_cormer_cre" size="10" maxlength="20"></td>				
-				</tr>				
-				<tr>
-					<td>%ml.imponibile% :</td>
-					<td class="tooltip"><input type="text" id="imponibile_cormer_cre" name="imponibile_cormer_cre" size="10" maxlength="20"></td>				
-				</tr>				
-				<tr>
-					<td>%ml.conto% :</td>
-					<td colspan="2">
-						<select class='selectmenuContiCor' id="conti_cormer_cre">%elenco_conti%</select>
-					</td>
-				</tr>	
-			</tbody>
-			<tfood>
-				<tr style="font-weight:bolder; color:red;">
-					<td colspan="4"><p id="msgquad_cormer_cre"></p></td>
-				</tr>
-			</tfood>
-		</table> 	 
-  </form>
-</div>
-
-
-<div id="nuovo-corrispettivo-negozio-form" title="Nuovo Corrispettivo Negozio"> 
-	<form method="post" id="nuovoCorrispettivoNegozio" action="../primanota/creaCorrispettivoNegozioFacade.class.php?modo=go" >
-		<table class="datiCreate">
-			<tbody>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDataCorrispettivoNegozio" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloDescrizioneCorrispettivoNegozio" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td class="td">%ml.datareg% :</td>
-					<td id="tddatareg_corneg_cre"><input class="dataregpicker" type="text" id="datareg_corneg_cre" name="datareg_corneg_cre" size="10" maxlength="10" onblur="validaNuovoCorrispettivoNegozio()" onchange="validaNuovoCorrispettivoNegozio()" /></td>
-					<td id="descreg_corneg_cre_label">%ml.descreg% :</td>
-					<td id="tddescreg_corneg_cre"><input type="text" id="descreg_corneg_cre" name="descreg_corneg_cre" size="50" maxlength="200" onkeypress="validaNuovoCorrispettivoNegozio()" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloCausaleCorrispettivoNegozio" >&nbsp;</i></td>
-					<td></td>
-					<td class="tdmessage"><i class="message" id="messaggioControlloNegozioCorrispettivoNegozio" >&nbsp;</i></td>
-				</tr>
-				<tr>
-					<td>%ml.codcau% :</td>
-					<td class="tooltip" id="tdcausale_corneg_cre">
-						<select class="selectmenuCausaleCorNegCre" id="causale_corneg_cre" name="causale_corneg_cre" >
-							<option value=""></option>
-							%elenco_causali_corneg_cre%
-						</select>
-					</td>
-					<td>%ml.negozio% :</td>						
-					<td id="tdnegozio_corneg_cre">
-						<div class="radioset" >
-							<input type="radio" id="villa_corneg_cre" name="codneg_corneg_cre" value="VIL" /><label for="villa_corneg_cre">%ml.villa%</label>
-							<input type="radio" id="brembate_corneg_cre" name="codneg_corneg_cre" value="BRE" /><label for="brembate_corneg_cre">%ml.brembate%</label>
-							<input type="radio" id="trezzo_corneg_cre" name="codneg_corneg_cre" value="TRE" /><label for="trezzo_corneg_cre">%ml.trezzo%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr><td><h2>Dettagli</h2></td></tr>										
-				<tr>
-					<td class="tdmessage" colspan="4"><i class="message" id="messaggioControlloDettagliCorrispettivoNegozio" >&nbsp;</i></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td id="tddettagli_corneg_cre" colspan="4">
-						<table id="dettagli_corneg_cre" class="result"></table>			
-					</td>
-				</tr>										
-			</tbody>
-		</table>
-	</form>
-</div>		
-
-<div id="nuovo-dettaglio-corrispettivonegozio-form" title="Nuovo Dettaglio Corrispettivo Negozio"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip"><input type="text" id="importo_corneg_cre" name="importo_corneg_cre" size="10" maxlength="20" onblur="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')" ></td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="aliquota10_corneg_cre" name="aliquota_corneg_cre" value="1.10" checked onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')"><label for="aliquota10_corneg_cre">%ml.aliquota10%</label>
-							<input type="radio" id="aliquota20_corneg_cre" name="aliquota_corneg_cre" value="1.22" onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')"><label for="aliquota20_corneg_cre">%ml.aliquota22%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td>%ml.iva% :</td>
-					<td class="tooltip"><input type="text" id="iva_corneg_cre" name="iva_corneg_cre" size="10" maxlength="20"></td>				
-				</tr>				
-				<tr>
-					<td>%ml.imponibile% :</td>
-					<td class="tooltip"><input type="text" id="imponibile_corneg_cre" name="imponibile_corneg_cre" size="10" maxlength="20"></td>
-				</tr>				
-				<tr>
-					<td>%ml.conto% :</td>
-					<td colspan="2">
-						<select class='selectmenuContiCor' id="conti_corneg_cre">%elenco_conti%</select>
-					</td>
-				</tr>	
-			</tbody>
-			<tfood>
-				<tr style="font-weight:bolder; color:red;">
-					<td colspan="4"><p id="msgquad_corneg_cre"></p></td>
-				</tr>
-			</tfood>
-		</table>
-	</form>	
+<div class="container">
+	<div class="modal fade" id="messaggio-successo-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title"><div class="alert alert-success" role="alert" >SUCCESSO</div></h4>
+	        	</div>
+	        	<div class="modal-body">
+		        	<p id="testo-messaggio-successo"></p>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>

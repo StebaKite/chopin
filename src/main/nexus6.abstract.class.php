@@ -416,6 +416,7 @@ abstract class Nexus6Abstract {
 	 public function getEnvironment($array) {
 
 		$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
+		$_SESSION["users"] = $users;
 
 		if (strpos($users, $array['usernameProdLogin']) === false) {
 			$_SESSION["ambiente"] = "TEST";
