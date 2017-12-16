@@ -495,11 +495,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
 	public function makeTabellaScadenzeCliente($scadenzaCliente)
 	{
-		$cancella_nuova_scadenza_cliente_href = '<a class="tooltip" onclick="cancellaNuovaScadenzaCliente(';
-		$cancella_icon = ')"><li class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-trash"></span></li></a>';
-		
-		$data_ko = "class='ko'";
-		$data_ok = "class='ok'";
+		$data_ko = "class='bg-danger'";
+		$data_ok = "class='bg-success'";
 		
 		$thead = "";
 		$tbody = "";
@@ -510,19 +507,19 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			$thead =
 			"<thead>" .
 			"	<tr>" .
-			"		<th width='80'>Data</th>" .
-			"		<th width='60'>Stato</th>" .
-			"		<th width='80' align='right'>Importo</th>" .
-			"		<th>&nbsp;</th>" .
+			"		<th width='180'>Data</th>" .
+			"		<th width='100'>Stato</th>" .
+			"		<th width='180'>Importo</th>" .
+			"		<th width='60'>&nbsp;</th>" .
 			"	</tr>" .
 			"</thead>";
-
+			
 			foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
 			{
 				$idCliente = $unaScadenza[ScadenzaCliente::ID_CLIENTE];
 				$dataScadenza = strtotime(str_replace('/', '-', $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]));
 				$numFatt = $unaScadenza[ScadenzaCliente::NUM_FATTURA];
-
+				
 				$modifica_parms  = "'" . $scadenzaCliente->getIdTableScadenzeAperte() . "',";
 				$modifica_parms .= trim($idCliente) . ",";
 				$modifica_parms .= trim($dataScadenza) . ",";
@@ -530,32 +527,32 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 				$modifica_parms .= "this.value";
 				
 				$onModifyImporto = " onkeyup=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
+				$onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaCliente(" . $modifica_parms;
 				$idImportoDettaglio = " id='impscad" . trim($idCliente) . trim($dataScadenza) . trim($numFatt) . "' ";
+				
 				$stato = ($unaScadenza[ScadenzaCliente::STA_SCADENZA] == "10") ? "Incassata" : "Da Incassare";
 
 				if ($stato == "Da Incassare")
 				{
-				    $tdclass = $data_ko;
-				    $cancella_parms  = "'" . $scadenzaCliente->getIdTableScadenzeAperte() . "',";
-				    $cancella_parms .= trim($idCliente) . ",";
-				    $cancella_parms .= trim($dataScadenza) . ",";
-				    $cancella_parms .= trim($numFatt) . ",";
-				    
-				    $bottoneCancella = $cancella_nuova_scadenza_cliente_href . $cancella_parms . $cancella_icon;				    
+					$tdclass = $data_ko;
+					$bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
 				}
 				else {
-				    $tdclass = $data_ok;
-				    $bottoneCancella = $cancellaLocked;				    
-				}				
+					$tdclass = $data_ok;
+					$bottoneCancella = self::OK_ICON;
+				}
 				
 				$tbody .=
 				"<tr>" .
 				"	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
 				"	<td " . $tdclass . ">" . $stato . "</td>" .
-				"	<td align='right'>" .
-				"		<input type='text' size='15' maxlength='10'" . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "'></input>" .
+				"	<td>" .
+				"       <div class='input-group'>" .
+				"           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+				"			<input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "'></input>" .
+				"       </div>" .
 				"	</td>" .
-				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 		}

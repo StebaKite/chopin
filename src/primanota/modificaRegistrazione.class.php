@@ -39,6 +39,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
+		$array = $utility->getConfig();
 
 		$registrazione->prepara();
 		$cliente->prepara();
@@ -77,22 +78,24 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		$causale->setCodCausale($registrazione->getCodCausale());
 		$causale->loadContiConfigurati($db);
 
-		$datiPagina =
-		trim($registrazione->getDatRegistrazione()) . "|" .
-		trim($registrazione->getDesRegistrazione()) . "|" .
-		trim($registrazione->getCodCausale()) . "|" .
-		trim($registrazione->getCodNegozio()) . "|" .
-		trim($fornitore->getDesFornitore()) . "|" .
-		trim($cliente->getDesCliente()) . "|" .
-		trim($registrazione->getNumFattura()) . "|" .
-		trim($registrazione->getNumFatturaOrig()) . "|" .
-		trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)) . "|" .
-		trim($this->makeTabellaScadenzeCliente($scadenzaCliente)) . "|".
-		trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|" .
-		trim($causale->getContiCausale())
-		;
-
-		echo $datiPagina;
+		$risultato_xml = $this->root . $array['template'] . self::XML_MODIFICA_REGISTRAZIONE;
+		
+		$replace = array(
+				'%datareg%' => trim($registrazione->getDatRegistrazione()),
+				'%descreg%' => trim($registrazione->getDesRegistrazione()),
+				'%causale%' => trim($registrazione->getCodCausale()),
+				'%codneg%' => trim($registrazione->getCodNegozio()),
+				'%fornitore%' => trim($fornitore->getDesFornitore()),
+				'%cliente%' => trim($cliente->getDesCliente()),
+				'%numfatt%' => trim($registrazione->getNumFattura()),
+				'%numfattorig%' => trim($registrazione->getNumFatturaOrig()),
+				'%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)),
+				'%scadenzesupplcliente%' => trim($this->makeTabellaScadenzeCliente($scadenzaCliente)),
+				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+				'%conti%' => trim($causale->getContiCausale())
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);		
 	}
 
 	public function go()
@@ -106,9 +109,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->aggiornaRegistrazione($utility, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $cliente))
-			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_REGISTRAZIONE_OK;
-		else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+		$this->aggiornaRegistrazione($utility, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $cliente);
 
 		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
 		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);

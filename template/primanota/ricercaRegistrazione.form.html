@@ -21,6 +21,10 @@
 
 </script>
 
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
+
 <div class="container-fluid">
 	<div class="panel panel-default">
 		<!-- Default panel contents -->
@@ -55,9 +59,8 @@
 							</select>			
 						</div>
 					</div>
-					<div class="col-xs-3">
+					<div class="col-sm-2">
 						<div class='input-group'>
-							<span class="input-group-addon">%ml.da%</span>
 				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
 				                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
 				                 <span class="input-group-addon">
@@ -66,9 +69,8 @@
 				            </div>			
 						</div>  
 					</div>
-					<div class="col-xs-3">
+					<div class="col-sm-2">
 						<div class='input-group'>
-							<span class="input-group-addon">%ml.a%</span>
 				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
 				                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
 				                 <span class="input-group-addon">
@@ -81,19 +83,17 @@
 						<div class='input-group'>
 							<span class="input-group-addon">%ml.codcau%</span>
 							<select class="form-control" id="causale" name="causale" >
-								<option value="">%ml.tutti%</option>
+								<option value="">%ml.tutte%</option>
 								%elenco_causali%
 							</select>			
 						</div>	
 					</div>
-				</div>	
-				<div class="form-group row">				
-					<div class="col-sm-7">
+					<div class="col-sm-2">
 						<button id="submit" type="submit" class="btn btn-default">
 					    	<span class="glyphicon glyphicon-search"></span> Ricerca
 					    </button>
 					</div> 
-				</div> 
+				</div>	
 			</form>  
 		</div>
 		<div class="panel-body scrollable-panel">
@@ -101,6 +101,10 @@
 	  	</div>
 	</div>
 </div>
+
+<!-- ------------------- -->
+<!-- NUOVA REGISTRAZIONE -->
+<!-- ------------------- -->
 
 <div class="container">
 	<div class="modal fade" id="nuova-registrazione-dialog" role="dialog">
@@ -193,8 +197,8 @@
 	        	</div>
 	        	<div class="modal-footer">
 	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuova-registrazione-form">Ok</button>
-	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-form">Nuova scadenza</button>
-	          		<button type="button" class="btn btn-default" id="button-dettaglio-nuova-registrazione-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-nuova-registrazione-form">Nuova scadenza</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuova-registrazione-form">Nuovo Dettaglio</button>
 	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
 	        	</div>
 	      	</div>
@@ -202,8 +206,116 @@
 	</div>
 </div>
 
+<!-- ---------------------- -->
+<!-- MODIFICA REGISTRAZIONE -->
+<!-- ---------------------- -->
+
 <div class="container">
-	<div class="modal fade" id="nuovo-dettaglio-dialog" role="dialog">
+	<div class="modal fade" id="modifica-registrazione-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaRegistrazioneForm" action="../primanota/modificaRegistrazioneFacade.class.php?modo=go" >
+
+						<div class="well well-sm">
+							<div class="form-group row">							
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_mod_control_group">
+							    		<label for="datareg_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_mod_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_mod" name="datareg_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_mod">%ml.negozio%</label>
+									<select class="form-control" id="codneg_mod" name="codneg_mod" >
+										<option value="VIL" selected>%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="numfatt_mod_control_group">
+										<label for="numfatt_mod">%ml.numfatt%&nbsp;<small><span class="text-danger" id="numfatt_mod_messaggio"></span></small></label>
+										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" onblur="controllaNumeroFattura('numfatt_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); "/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_mod_control_group">
+							    		<label for="descreg_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_mod_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_mod" name="descreg_mod" type="text" onblur="controllaDescrizione('descreg_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_mod_control_group">
+										<label for="causale_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_mod_messaggio"></span></small></label>
+										<select class="form-control" id="causale_mod" name="causale_mod" >
+											<option value=""></option>
+											%elenco_causali_cre%
+										</select>			
+									</div>
+							  	</div>
+							  	<div class="col-sm-4 ui-front">
+							  		<div class="control-group" id="fornitore_mod_control_group">
+							    		<label for="fornitore_mod">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_mod_messaggio"></span></small></label>
+										<input class="form-control" id="fornitore_mod" name="fornitore_mod" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');">
+									</div>	
+							  	</div>
+							  	<div class="col-sm-4 ui-front">
+							  		<div class="control-group" id="cliente_mod_control_group">
+							    		<label for="cliente_mod">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_mod_messaggio"></span></small></label>
+										<input class="form-control" id="cliente_mod" name="cliente_mod" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');">
+									</div>	
+							  	</div>
+							</div>						
+							<div class="form-group row">
+							  	<div class="col-sm-7">
+							  		<div class="control-group" id="scadenzesuppl_mod_control_group">
+							    		<label for="scadenzesuppl_mod">%ml.datascad%&nbsp;<small><span class="text-danger" id="scadenzesuppl_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="scadenzesuppl_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_mod_control_group">
+							    		<label for="dettagli_mod">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+						</div>	
+					</form>	        	
+					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-modifica-registrazione-form">Nuova scadenza</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-modifica-registrazione-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ----------------------------------- -->
+<!-- NUOVO DETTAGLIO NUOVA REGISTRAZIONE -->
+<!-- ----------------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-creazione-dialog" role="dialog">
 		<div class="modal-dialog">
 	      <!-- Modal content-->
 			<div class="modal-content">
@@ -211,30 +323,30 @@
 	          		<h4 class="modal-title">Nuova dettaglio registrazione</h4>
 	        	</div>
 	        	<div class="modal-body">
-					<form method="post" id="nuovoDettaglioForm" action="../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go">
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-xs-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
-										<input class="form-control" id="newimpdett_cre" name="newimpdett_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_cre')">
-									</div>
-							  	</div>
-							  	<div class="col-xs-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">D/A</span>
-										<input class="form-control" id="newsegnodett_cre" name="newsegnodett_cre" type="text" maxlength="1" />
-									</div>
-							  	</div>							  	
-							  	<div class="col-xs-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">Cc</span>
-										<select class="form-control" id="conti" name="newcontodett_cre"></select>			
-									</div>	
-							  	</div>							  	
-					  		</div>
-						</div>					
-					</form>	        	
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_cre" name="newimpdett_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_cre')">
+								</div>
+						  	</div>
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_cre" name="newsegnodett_cre" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+				  		<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti" name="newcontodett_cre"></select>			
+								</div>	
+						  	</div>							  	
+				  		</div>				  		
+					</div>					
 	        	</div>
 	        	<div class="modal-footer">
 	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuova-registrazione-form">Ok</button>
@@ -245,16 +357,67 @@
 	</div>
 </div>
 
+<!-- -------------------------------------- -->
+<!-- NUOVO DETTAGLIO MODIFICA REGISTRAZIONE -->
+<!-- -------------------------------------- -->
+
 <div class="container">
-	<div class="modal fade" id="nuova-data-scadenza-dialog" role="dialog">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-dialog" role="dialog">
 		<div class="modal-dialog">
 	      <!-- Modal content-->
 			<div class="modal-content">
 	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuova data scadenza</h4>
+	          		<h4 class="modal-title">Nuova dettaglio registrazione</h4>
 	        	</div>
 	        	<div class="modal-body">
-					<form method="post" id="nuovaDataScadenzaForm" action="../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=go">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-xs-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_mod" name="newimpdett_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_mod')">
+								</div>
+						  	</div>
+						  	<div class="col-xs-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_mod" name="newsegnodett_mod" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+						<div class="form-group row">
+						  	<div class="col-xs-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_mod" name="newcontodett_mod"></select>			
+								</div>	
+						  	</div>							  	
+						</div>
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------------------- -->
+<!-- NUOVA DATA SCADENZA CREAZIONE REGISTRAZIONE -->
+<!-- ------------------------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuova-data-scadenza-creazione-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovaDataScadenzaCreazioneForm">
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-xs-4">
@@ -282,16 +445,69 @@
 	</div>
 </div>
 
+<!-- ------------------------------------------ -->
+<!-- NUOVA DATA SCADENZA MODIFICA REGISTRAZIONE -->
+<!-- ------------------------------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="nuova-data-scadenza-modifica-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovaDataScadenzaModificaForm">
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-xs-4">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+				                		<input type='text' class="form-control" id="newdatascad_mod" name="newdatascad_mod" />
+				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				            		</div>			
+							  	</div>
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+										<input class="form-control" id="newimpscad_mod" name="newimpscad_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpscad_mod')">
+									</div>
+							  	</div>
+					  		</div>
+						</div>					
+					</form>	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovascad-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+<!-- ---------------- -->
+<!-- MESSAGGIO ERRORE -->
+<!-- ---------------- -->
+
 <div class="container">
 	<div class="modal fade" id="messaggio-errore-dialog" role="dialog">
 		<div class="modal-dialog">
 	      <!-- Modal content-->
 			<div class="modal-content">
 	        	<div class="modal-header">
-	          		<h4 class="modal-title"><div class="alert alert-danger" role="alert" >ERRORE</div></h4>
+	          		<h4 class="modal-title">ERRORE</h4>
 	        	</div>
 	        	<div class="modal-body">
-		        	<p id="testo-messaggio-errore"></p>
+		        	<div class="alert alert-danger" role="alert" >
+			        	<p id="testo-messaggio-errore"></p>
+			        </div>	
 	        	</div>
 	        	<div class="modal-footer">
 	          		<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
@@ -301,16 +517,22 @@
 	</div>
 </div>
 
+<!-- ---------------- -->
+<!-- MESSAGGIO OK     -->
+<!-- ---------------- -->
+
 <div class="container">
 	<div class="modal fade" id="messaggio-successo-dialog" role="dialog">
 		<div class="modal-dialog">
 	      <!-- Modal content-->
 			<div class="modal-content">
 	        	<div class="modal-header">
-	          		<h4 class="modal-title"><div class="alert alert-success" role="alert" >SUCCESSO</div></h4>
+	          		<h4 class="modal-title">SUCCESSO</h4>
 	        	</div>
 	        	<div class="modal-body">
-		        	<p id="testo-messaggio-successo"></p>
+		        	<div class="alert alert-success" role="alert" >
+			        	<p id="testo-messaggio-successo"></p>
+			        </div>	
 	        	</div>
 	      	</div>
 		</div>

@@ -18,6 +18,10 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 
 	const PAGINA_RICERCA_REGISTRAZIONE = "/primanota/ricercaRegistrazione.form.html";
 
+	// Files XML
+
+	const XML_MODIFICA_REGISTRAZIONE = "/primanota/xml/modificaRegistrazione.xml";
+	
 	// Bottoni
 
 	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=";
