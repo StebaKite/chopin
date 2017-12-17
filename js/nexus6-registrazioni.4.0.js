@@ -228,6 +228,17 @@ $("#button-ok-nuovodett-modifica-registrazione-form").click(
 	}
 );		
 
+//---------------------------------------------------------------------------------
+
+$("#button-ok-cancella-registrazione-form").click(
+	function() {
+		$("#testo-messaggio-successo").html("Registrazione cancellata!");
+		$("#messaggio-successo-dialog").modal("show");						
+		sleep(3000);
+		$("#cancellaRegistrazioneForm").submit();			
+	}
+);
+
 //---------------------------------------------------------------------
 
 function modificaRegistrazione(idRegistrazione)
@@ -582,8 +593,8 @@ function cancellaDettaglioNuovaRegistrazione(idTable,codContoComposto)
 //---------------------------------------------------------------------------------
 
 function cancellaRegistrazione(idreg) {
-	$("#idRegistrazione").val(idreg);
-	$("#cancella-registrazione-form").dialog("open");
+	$("#idreg").val(idreg);
+	$("#cancella-registrazione-dialog").modal("show");
 }
 
 //---------------------------------------------------------------------------------

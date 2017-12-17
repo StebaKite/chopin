@@ -486,11 +486,32 @@
 	</div>
 </div>
 
+<!-- --------------------------- -->
+<!-- CANCELLAZIONE REGISTRAZIONE -->
+<!-- --------------------------- -->
 
-
-
-
-
+<div class="container">
+	<div class="modal fade" id="cancella-registrazione-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Cancella registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">	        		        	
+					<form method="post" id="cancellaRegistrazioneForm" action="../primanota/cancellaRegistrazioneFacade.class.php?modo=go" >
+						<p>Elimino la registrazione e tutte le sue scadenze ?</p>
+						<input type="hidden" id="idreg" name="idreg">
+			        </form>
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
 
 <!-- ---------------- -->
 <!-- MESSAGGIO ERRORE -->

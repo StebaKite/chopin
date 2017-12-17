@@ -1,89 +1,50 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'database.class.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'ricercaRegistrazione.class.php';
 
-class CancellaRegistrazione extends primanotaAbstract {
-
-	private static $_instance = null;
-
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
+class CancellaRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+	}
+	
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::CANCELLA_REGISTRAZIONE])) $_SESSION[self::CANCELLA_REGISTRAZIONE] = serialize(new CancellaRegistrazione());
+		return unserialize($_SESSION[self::CANCELLA_REGISTRAZIONE]);
 	}
 
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new CancellaRegistrazione();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'ricercaRegistrazione.class.php';
-
+	public function start() { }
+	
+	public function go()
+	{
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
+		$registrazione = Registrazione::getInstance();
 		
-		/**
-		 * Prelevo la data della registrazione da cancellare per ricalcolare i saldi
-		 */
+		$registrazione->leggi($db);
 		
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-
 		$db->beginTransaction();
 		
-		if ($result) {
-		
-			$registrazione = pg_fetch_all($result);
-			foreach ($registrazione as $row) {		
-				$datareg = $row["dat_registrazione"];
-			}
-		}
-		
-		$this->cancellaRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-
-//		$db->commitTransaction();
+		$registrazione->cancella($db);
 		
 		/**
 		 * Rigenero i saldi
 		 */
 		
-		$array = $utility->getConfig();
-			
-		$dataRegistrazione = strtotime(str_replace('/', '-', $datareg));
-		
-		if ($array['lavoriPianificatiAttivati'] == "Si") {
-			$this->rigenerazioneSaldi($db, $utility, $dataRegistrazione);
-		}
-			
+		$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
 		$db->commitTransaction();
 		
-		$_SESSION["messaggioCancellazione"] = "Registrazione numero " . $_SESSION['idRegistrazione'] . " cancellata";
 		$ricercaRegistrazione = RicercaRegistrazione::getInstance();
-		$ricercaRegistrazione->go();
+		$ricercaRegistrazione->go();	
 	}
 }
 
