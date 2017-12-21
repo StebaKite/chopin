@@ -14,14 +14,14 @@ html, body {
 
 /* Boostrap.css override */
 .navbar-inverse {
-    background-color: #000099;
+    background-color: #000066;
     font-size: 16px;
 }
 
 /* Boostrap.css override */
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
     color: #fff;
-    background-color: #000099;
+    background-color: #000066;
 }
 
 .modal-header {

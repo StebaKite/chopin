@@ -44,35 +44,71 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 		$fornitore = Fornitore::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 
-		$fornitore->setDesFornitore($registrazione->getDesFornitore());
-		$fornitore->cercaConDescrizione($db);
+		if ($registrazione->getDesFornitore() == "") {
 
-		$scadenzaFornitore->setQtaScadenzeDaPagare(0);
-		$scadenzaFornitore->setScadenzeDaPagare("");
-		/**
-		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza
-		 */
-		if ($fornitore->getNumGgScadenzaFattura() > 0) {
 			/**
-			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore,
-			 * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
-			 */
-			$dataScadenza = $this->sommaGiorniData($registrazione->getDatRegistrazione(), "/", $fornitore->getNumGgScadenzaFattura());
-
-			$data = explode("/",$dataScadenza);
-			$mese = $data[1];
-			$anno = $data[2];
-
-			$scadenzaFornitore->setDatScadenza(SELF::$ggMese[$mese]."/".$mese."/".$anno);
-			$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
-			$scadenzaFornitore->setImpInScadenza(0);
-			$scadenzaFornitore->setNumFattura("0");
-			$scadenzaFornitore->aggiungi();
-
-			echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+			 * Devo eliminare da DB le scadenze del fornitore indicato nella registrazione
+			 * Queste scadenze si trovano nell'oggetto ScadenzeFornitore, elimino solo quelle da pagare.
+			 */ 
+			$scadenzaFornitore->rimuoviScadenzeRegistrazione($db);
+			echo "<div class='alert alert-warning' role='alert'>Scadenze esistenti eliminate, nessuna scadenza presente.</div>";
 		}
 		else {
-			echo "";
+			$fornitore->setDesFornitore($registrazione->getDesFornitore());
+			$fornitore->cercaConDescrizione($db);
+
+			/**
+			 * Verifico se ci sono gia' scadenze significa che è stato cambiato il fornitore.
+			 * Verifico se l'id del nuovo fornitore è diverso da quello delle scadenze, 
+			 *   - se si, aggiorno l'id del fornitore e il tipo addebito di tutte le scadenze della registrazione
+			 *   - se no, calcolo la nuova scadenza del fornitore
+			 */ 
+			
+			if ($scadenzaFornitore->getQtaScadenzeDaPagare() == 0) 
+			{
+				$scadenzaFornitore->setQtaScadenzeDaPagare(0);
+				$scadenzaFornitore->setScadenzeDaPagare("");
+				$dataScadenza = $this->calcolaDataScadenza($registrazione->getDatRegistrazione(),$fornitore->getNumGgScadenzaFattura());
+				/**
+				 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza
+				 */
+				if ($dataScadenza != "") {
+					
+					$scadenzaFornitore->setDatScadenza($dataScadenza);					
+					$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
+					$scadenzaFornitore->setImpInScadenza(0);
+					$scadenzaFornitore->setNumFattura("0");
+					$scadenzaFornitore->aggiungi();
+					
+					echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+				}
+				else {
+					echo "<div class='alert alert-info' role='alert'>Il fornitore ha il numero di giorni scadenza fatture impostato a zero.</div>";
+				}
+			}
+			else {
+			
+				foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
+				{
+					$scadenzaFornitore->setIdFornitoreOrig($unaScadenza[ScadenzaFornitore::ID_FORNITORE]);
+					$scadenzaFornitore->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
+					$scadenzaFornitore->setNumFatturaOrig($registrazione->getNumFatturaOrig());
+					
+					$scadenzaFornitore->setImpInScadenza($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA]);
+					$scadenzaFornitore->setNotaScadenza($unaScadenza[ScadenzaFornitore::NOTA_SCADENZA]);
+					$scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
+					$scadenzaFornitore->setCodNegozio($unaScadenza[ScadenzaFornitore::COD_NEGOZIO]);
+					$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
+					$scadenzaFornitore->setNumFattura($unaScadenza[ScadenzaFornitore::NUM_FATTURA]);
+					$scadenzaFornitore->setStaScadenza($unaScadenza[ScadenzaFornitore::STA_SCADENZA]);
+					
+					/**
+					 * L'aggiornamento delle scadenze non riguarda le date di scadenza impostate con il fornitore 
+					 * precedente. Viene aggiornato solo l'id del fornitore e il tipo di addebito.
+					 */
+					$scadenzaFornitore->aggiorna($db);
+				}
+			}
 		}
 	}
 	public function go() {}

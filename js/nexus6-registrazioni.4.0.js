@@ -655,23 +655,17 @@ $("#fornitore_mod").change(
 		var desfornitore = $("#fornitore_mod").val();
 		var datareg = $("#datareg_mod").val();
 
-		if (desfornitore != "") {
-			var xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-						if (xmlhttp.responseText != "") {
-							$("#datascad_mod_label").show();
-							$("#scadenzesuppl_mod").html(xmlhttp.responseText);
-							controllaNumeroFattura("numfatt_mod");
-						}
-					}
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#scadenzesuppl_mod").html(xmlhttp.responseText);
+					controllaNumeroFattura("numfatt_mod");
 				}
-				xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
-				xmlhttp.send();
+			}
 		}
-		else {
-			alert("cancello tutte le scadenze del fornitore");
-		}
+		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
+		xmlhttp.send();
 	}
 );
 
@@ -697,6 +691,28 @@ $("#cliente_cre").change(
 			xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
 			xmlhttp.send();
 		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#cliente_mod").change(
+	function() {
+
+		var descliente = $("#cliente_mod").val();
+		var datareg = $("#datareg_mod").val();
+
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#scadenzesuppl_mod").html(xmlhttp.responseText);
+					controllaNumeroFattura("numfatt_mod");
+				}
+			}
+		}
+		xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
+		xmlhttp.send();
 	}
 );
 

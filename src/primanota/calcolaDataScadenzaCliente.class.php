@@ -43,40 +43,90 @@ class CalcolaDataScadenzaCliente extends PrimanotaAbstract implements PrimanotaB
         $registrazione = Registrazione::getInstance();
         $cliente = Cliente::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();
-        
-        $cliente->setDesCliente($registrazione->getDesCliente());
-        $cliente->cercaConDescrizione($db);
-        
-        $scadenzaCliente->setQtaScadenzeDaIncassare(0);
-        $scadenzaCliente->setScadenzeDaIncassare("");
-        /**
-         * I giorni di scadenza fattura per i clienti sono configurati in configurazione per tutti
-         * Se questo valore è = 0 la scadenza non viene calcolata
-         */
+
         $array = $utility->getConfig();
         
-        if ($array['giorniScadenzaFattureCliente'] > 0) {
-            /**
-             * Le data di registrazione viene aumentata dei giorni configurati per il cliente,
-             * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
-             */
-            $dataScadenza = $this->sommaGiorniData($registrazione->getDatRegistrazione(), "/", $array['giorniScadenzaFattureCliente']);
-            
-            $data = explode("/",$dataScadenza);
-            $mese = $data[1];
-            $anno = $data[2];
-            
-            $scadenzaCliente->setDatRegistrazione(SELF::$ggMese[$mese]."/".$mese."/".$anno);
-            $scadenzaCliente->setIdCliente($cliente->getIdCliente());
-            $scadenzaCliente->setImpRegistrazione(0);
-            $scadenzaCliente->setNumFattura("0");
-            $scadenzaCliente->aggiungi();
-            
-            echo $this->makeTabellaScadenzeCliente($scadenzaCliente);
+        if ($registrazione->getDesCliente() == "") {
+        	
+        	/**
+        	 * Devo eliminare da DB le scadenze del cliente indicato nella registrazione
+        	 * Queste scadenze si trovano nell'oggetto ScadenzeCliente, elimino solo quelle da incassare.
+        	 */
+        	$scadenzaCliente->rimuoviScadenzeRegistrazione($db);
+        	echo "<div class='alert alert-warning' role='alert'>Scadenze esistenti eliminate, nessuna scadenza presente.</div>";
         }
         else {
-            echo "";
-        }
+        	
+        	$cliente->setDesCliente($registrazione->getDesCliente());
+        	$cliente->cercaConDescrizione($db);
+        	
+        	/**
+        	 * Verifico se ci sono gia' scadenze significa che è stato cambiato il cliente.
+        	 * Verifico se l'id del nuovo cliente è diverso da quello delle scadenze,
+        	 *   - se si, aggiorno l'id del cliente e il tipo addebito di tutte le scadenze della registrazione
+        	 *   - se no, calcolo la nuova scadenza del cliente
+        	 */
+        	
+        	if ($scadenzaCliente->getQtaScadenzeDaIncassare() == 0)
+        	{
+        		/**
+        		 * I giorni di scadenza fattura per i clienti sono configurati in configurazione per tutti
+        		 * Se questo valore è = 0 la scadenza non viene calcolata
+        		 */		
+        		
+        		if ($array['giorniScadenzaFattureCliente'] > 0)
+        		{	
+        			$scadenzaCliente->setQtaScadenzeDaIncassare(0);
+        			$scadenzaCliente->setScadenzeDaIncassare("");
+        			$dataScadenza = $this->calcolaDataScadenza($registrazione->getDatRegistrazione(),$array['giorniScadenzaFattureCliente']);
+        		
+        			/**
+        			 * Se i giorni scadenza fattura del cliente sono = 0 non viene calcolata da data scadenza
+        			 */
+        			if ($dataScadenza != "") {
+        				
+        				$scadenzaCliente->setDatRegistrazione($dataScadenza);
+        				$scadenzaCliente->setIdCliente($cliente->getIdCliente());
+        				$scadenzaCliente->setImpRegistrazione(0);
+        				$scadenzaCliente->setNumFattura("0");
+        				$scadenzaCliente->aggiungi();
+        				
+        				echo $this->makeTabellaScadenzeCliente($scadenzaCliente);        				
+        			}
+        			else {
+        				echo "<div class='alert alert-info' role='alert'>Il cliente ha il numero di giorni scadenza fatture impostato a zero.</div>";
+        			}
+        		}
+        		else {
+        			echo "<div class='alert alert-info' role='alert'>Il cliente ha il numero di giorni scadenza fatture impostato a zero.</div>";
+        		}        		
+        	}
+        	else {
+
+        		foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
+        		{
+        			
+        			$scadenzaCliente->setIdClienteOrig($unaScadenza[ScadenzaCliente::ID_CLIENTE]);
+        			$scadenzaCliente->setDatRegistrazione($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);
+        			$scadenzaCliente->setNumFatturaOrig($unaScadenza[ScadenzaCliente::NUM_FATTURA]);
+        			
+        			$scadenzaCliente->setImpRegistrazione($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]);
+        			$scadenzaCliente->setNota($unaScadenza[ScadenzaCliente::NOTA]);
+        			$scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
+        			$scadenzaCliente->setCodNegozio($unaScadenza[ScadenzaCliente::COD_NEGOZIO]);
+        			$scadenzaCliente->setIdCliente($cliente->getIdCliente());
+        			$scadenzaCliente->setNumFattura($unaScadenza[ScadenzaCliente::NUM_FATTURA]);
+        			$scadenzaCliente->setStaScadenza($unaScadenza[ScadenzaCliente::STA_SCADENZA]);
+        			
+        			/**
+        			 * L'aggiornamento delle scadenze non riguarda le date di scadenza impostate con il cliente
+        			 * precedente. Viene aggiornato solo l'id del cliente e il tipo di addebito.
+        			 */
+        
+        			$scadenzaCliente->aggiorna($db);
+        		}
+        	}
+        }        
     }
     public function go() {}
 }

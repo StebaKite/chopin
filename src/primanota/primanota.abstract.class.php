@@ -421,7 +421,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
-			return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
+			return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 		}
 		return "";
 	}
@@ -490,7 +490,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			}
 		}
 		$tbody .= "</tbody>";
-		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
 
 	public function makeTabellaScadenzeCliente($scadenzaCliente)
@@ -557,7 +557,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			}
 		}
 		$tbody .= "</tbody>";
-		return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
+		return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
 
 	public function ricalcolaSaldi($db, $datRegistrazione)
@@ -571,7 +571,29 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			$lavoroPianificato->settaDaEseguire($db);
 		}
 	}
-
+	
+	public function calcolaDataScadenza($data,$numGiorniScadenza)
+	{
+		/**
+		 * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza
+		 */
+		if ($numGiorniScadenza > 0) {
+			/**
+			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore,
+			 * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
+			 */
+			$dataScadenza = $this->sommaGiorniData($data, "/", $numGiorniScadenza);
+			
+			$data = explode("/",$dataScadenza);
+			$mese = $data[1];
+			$anno = $data[2];
+			
+			return SELF::$ggMese[$mese] . "/" . $mese . "/" . $anno;
+		}
+		else return "";
+	}
+	
+	
 	public function aggiungiDettagliCorrispettivo($db, $utility, $array)
 	{
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();

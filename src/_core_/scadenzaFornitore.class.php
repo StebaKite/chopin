@@ -62,6 +62,7 @@ class ScadenzaFornitore implements CoreInterface {
 
 	const CERCA_SCADENZE_FORNITORE = "/scadenze/ricercaScadenzeFornitore.sql";
 	const CERCA_SCADENZE_REGISTRAZIONE = "/scadenze/ricercaScadenzeFornitoreRegistrazione.sql";
+	const ELIMINA_SCADENZA_REGISTRAZIONE = "/scadenze/cancellaScadenzaFornitoreRegistrazione.sql";
 	const CAMBIO_STATO_SCADENZA_FORNITORE = "/scadenze/updateStatoScadenzaFornitore.sql";
 	const CREA_SCADENZA = "/scadenze/creaScadenzaFornitore.sql";
 	const CANCELLA_SCADENZA = "/scadenze/cancellaScadenzaFornitore.sql";
@@ -175,6 +176,23 @@ class ScadenzaFornitore implements CoreInterface {
 		return $result;
 	}
 
+	public function rimuoviScadenzeRegistrazione($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		foreach ($this->getScadenzeDaPagare() as $unaScadenza)
+		{
+			if ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == '00')			
+			{
+				$this->setDatScadenza(strtotime(str_replace("/", "-", $unaScadenza[ScadenzaFornitore::DAT_SCADENZA])));
+				$this->setIdFornitore($unaScadenza[ScadenzaFornitore::ID_FORNITORE]);
+				$this->setNumFattura($unaScadenza[ScadenzaFornitore::NUM_FATTURA]);
+				$this->cancella($db);
+			}
+		}
+	}
+	
 	public function cambiaStato($db)
 	{
 		$utility = Utility::getInstance();
