@@ -285,6 +285,53 @@ function modificaRegistrazione(idRegistrazione)
 	xmlhttp.send();
 }
 
+//---------------------------------------------------------------------
+
+function visualizzaRegistrazione(idRegistrazione)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("registrazione").each(
+				function() {
+
+					$("#datareg_vis").html($(this).find("datareg").text());
+					$("#descreg_vis").html($(this).find("descreg").text());
+					$("#causale_vis").html($(this).find("causale").text());
+					$("#codneg_vis").html($(this).find("codneg").text());
+					
+					var fornitore = $(this).find("fornitore").text();
+					var cliente   = $(this).find("cliente").text();
+
+					$("#fornitore_vis").html(fornitore);
+					$("#cliente_vis").html(cliente);
+					
+					$("#numfatt_vis").html($(this).find("numfatt").text());
+					
+					if (fornitore != "") {
+						$("#scadenzesuppl_vis").html($(this).find("scadenzesupplfornitore").text());
+						$("#cliente_vis_label").hide();
+					}
+					if (cliente   != "") {
+						$("#scadenzesuppl_vis").html($(this).find("scadenzesupplcliente").text());
+						$("#fornitore_vis_label").hide();
+					}
+					
+					$("#dettagli_vis").html($(this).find("dettagli").text());
+				}
+			)
+
+			$("#visualizza-registrazione-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","visualizzaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
+	xmlhttp.send();
+}
+
 // ---------------------------------------------------------------------------------
 // CREA REGISTRAZIONE : routine di validazione
 // ---------------------------------------------------------------------------------
@@ -627,23 +674,18 @@ $("#fornitore_cre").change(
 		var desfornitore = $("#fornitore_cre").val();
 		var datareg = $("#datareg_cre").val();
 
-		if (desfornitore != "") {
-			var xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-						if (xmlhttp.responseText != "") {
-							$("#datascad_cre_label").show();
-							$("#scadenzesuppl_cre").html(xmlhttp.responseText);
-							controllaNumeroFattura("numfatt_cre");
-						}
-					}
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#datascad_cre_label").show();
+					$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+					controllaNumeroFattura("numfatt_cre");
 				}
-				xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
-				xmlhttp.send();
+			}
 		}
-		else {
-			alert("cancello tutte le scadenze del fornitore");
-		}
+		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
+		xmlhttp.send();
 	}
 );
 
@@ -677,20 +719,18 @@ $("#cliente_cre").change(
 		var descliente = $("#cliente_cre").val();
 		var datareg = $("#datareg_cre").val();
 
-		if (descliente != "") {
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					if (xmlhttp.responseText != "") {
-						$("#datascad_cre_label").show();
-						$("#scadenzesuppl_cre").html(xmlhttp.responseText);
-						controllaNumeroFattura("numfatt_cre");
-					}
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#datascad_cre_label").show();
+					$("#scadenzesuppl_cre").html(xmlhttp.responseText);
+					controllaNumeroFattura("numfatt_cre");
 				}
 			}
-			xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
-			xmlhttp.send();
 		}
+		xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
+		xmlhttp.send();
 	}
 );
 

@@ -161,7 +161,7 @@ class Registrazione implements CoreInterface {
 	{
 		if ($this->getDatRegistrazioneDa() == "") $this->setDatRegistrazioneDa(date("d/m/Y"));
 		if ($this->getDatRegistrazioneA() == "") $this->setDatRegistrazioneA(date("d/m/Y"));
-		if ($this->getCodNegozioSel() == "") $this->setCodNegozioSel("VIL");
+		if ($this->getCodNegozioSel() == "") $this->setCodNegozioSel("");
 	}
 
 	public function load($db)

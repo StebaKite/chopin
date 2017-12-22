@@ -1,0 +1,12 @@
+<registrazione>
+	<datareg>%datareg%</datareg>
+	<descreg>%descreg%</descreg>
+	<causale>%causale%</causale>
+	<codneg>%codneg%</codneg>
+	<fornitore>%fornitore%</fornitore>
+	<cliente>%cliente%</cliente>
+	<numfatt>%numfatt%</numfatt>
+	<scadenzesupplfornitore><![CDATA[%scadenzesupplfornitore%]]></scadenzesupplfornitore>
+	<scadenzesupplcliente><![CDATA[%scadenzesupplcliente%]]></scadenzesupplcliente>
+	<dettagli><![CDATA[%dettagli%]]></dettagli>
+</registrazione>

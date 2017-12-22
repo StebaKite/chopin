@@ -50,6 +50,22 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	// Altri campi
 
 	public static $messaggio;
+	
+	public static $ggMese = array(
+			'01' => '31',
+			'02' => '28',
+			'03' => '31',
+			'04' => '30',
+			'05' => '31',
+			'06' => '30',
+			'07' => '31',
+			'08' => '31',
+			'09' => '30',
+			'10' => '31',
+			'11' => '30',
+			'12' => '31',
+	);
+	
 
 	// Metodi comuni di utilita della prima note ---------------------------
 
@@ -425,7 +441,39 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 		}
 		return "";
 	}
-
+	
+	public function makeTabellaReadOnlyDettagliRegistrazione($dettaglioRegistrazione)
+	{
+		$thead = "";
+		$tbody = "";
+		
+		if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() > 0) {
+			
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='500'>Conto</th>" .
+			"		<th width='180'>Importo</th>" .
+			"		<th width='100'>Segno</th>" .
+			"	</tr>" .
+			"</thead>";
+			
+			foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio)
+			{				
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unDettaglio[DettaglioRegistrazione::COD_CONTO] . "</td>" .
+				"	<td>" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "</td>" .
+				"	<td>" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "</td>" .
+				"</tr>";
+			}
+			$tbody .= "</tbody>";
+			return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
+		}
+		return "";
+	}
+	
 	public function makeTabellaScadenzeFornitore($scadenzaFornitore)
 	{
 		$data_ko = "class='bg-danger'";
@@ -492,7 +540,46 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 		$tbody .= "</tbody>";
 		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
-
+	
+	public function makeTabellaReadOnlyScadenzeFornitore($scadenzaFornitore)
+	{
+		$data_ko = "class='bg-danger'";
+		$data_ok = "class='bg-success'";
+		
+		$thead = "";
+		$tbody = "";
+		
+		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
+			
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='180'>Data</th>" .
+			"		<th width='100'>Stato</th>" .
+			"		<th width='180'>Importo</th>" .
+			"	</tr>" .
+			"</thead>";
+			
+			foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
+			{				
+				$stato = ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == "10") ? "Pagata" : "Da Pagare";
+				
+				if ($stato == "Da Pagare") $tdclass = $data_ko;
+				else $tdclass = $data_ok;
+				
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+				"	<td " . $tdclass . ">" . $stato . "</td>" .
+				"	<td>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+				"</tr>";
+			}
+		}
+		$tbody .= "</tbody>";
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
+	}
+	
 	public function makeTabellaScadenzeCliente($scadenzaCliente)
 	{
 		$data_ko = "class='bg-danger'";
@@ -559,7 +646,46 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 		$tbody .= "</tbody>";
 		return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
-
+	
+	public function makeTabellaReadOnlyScadenzeCliente($scadenzaCliente)
+	{
+		$data_ko = "class='bg-danger'";
+		$data_ok = "class='bg-success'";
+		
+		$thead = "";
+		$tbody = "";
+		
+		if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
+			
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='180'>Data</th>" .
+			"		<th width='100'>Stato</th>" .
+			"		<th width='180'>Importo</th>" .
+			"	</tr>" .
+			"</thead>";
+			
+			foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenza)
+			{
+				$stato = ($unaScadenza[ScadenzaCliente::STA_SCADENZA] == "10") ? "Incassata" : "Da Incassare";
+				
+				if ($stato == "Da Incassare") $tdclass = $data_ko;
+				else $tdclass = $data_ok;
+				
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+				"	<td " . $tdclass . ">" . $stato . "</td>" .
+				"	<td>" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
+				"</tr>";
+			}
+		}
+		$tbody .= "</tbody>";
+		return "<table id='". $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
+	}
+	
 	public function ricalcolaSaldi($db, $datRegistrazione)
 	{
 		$lavoroPianificato = LavoroPianificato::getInstance();
@@ -588,7 +714,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			$mese = $data[1];
 			$anno = $data[2];
 			
-			return SELF::$ggMese[$mese] . "/" . $mese . "/" . $anno;
+			return self::$ggMese[$mese] . "/" . $mese . "/" . $anno;
 		}
 		else return "";
 	}

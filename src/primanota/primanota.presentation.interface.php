@@ -21,6 +21,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	// Files XML
 
 	const XML_MODIFICA_REGISTRAZIONE = "/primanota/xml/modificaRegistrazione.xml";
+	const XML_VISUALIZZA_REGISTRAZIONE = "/primanota/xml/visualizzaRegistrazione.xml";
 	
 	// Bottoni
 
@@ -28,7 +29,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
 	const VISUALIZZA_PAGAMENTO_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
 	const VISUALIZZA_INCASSO_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_REGISTRAZIONE_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
 
 	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=";
 	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
@@ -38,8 +39,8 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	
 	const CANCELLA_REGISTRAZIONE_HREF = "<a onclick='cancellaRegistrazione(";
 	
-	const VISUALIZZA_ICON = "'><span class='glyphicon glyphicon-check'></span></a>";
-	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-pencil'></span></a>";
+	const VISUALIZZA_ICON = ")'><span class='glyphicon glyphicon-eye-open'></span></a>";
+	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
 	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
 	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
 

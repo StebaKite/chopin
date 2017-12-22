@@ -15,6 +15,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const RICERCA_REGISTRAZIONE = "Obj_ricercaregistraione";
 	const CREA_REGISTRAZIONE = "Obj_crearegistrazione";
 	const MODIFICA_REGISTRAZIONE = "Obj_modificaregistrazione";
+	const VISUALIZZA_REGISTRAZIONE = "Obj_visualizzaregistrazione";
 	const CANCELLA_REGISTRAZIONE = "Obj_cancellaregistrazione";
 	const MODIFICA_PAGAMENTO = "Obj_modificapagamento";
 	
