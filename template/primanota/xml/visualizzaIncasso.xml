@@ -1,0 +1,9 @@
+<incasso>
+	<datareg>%datareg%</datareg>
+	<descreg>%descreg%</descreg>
+	<causale>%causale%</causale>
+	<codneg>%codneg%</codneg>
+	<cliente>%cliente%</cliente>
+	<scadenzeincassate><![CDATA[%scadenzeincassate%]]></scadenzeincassate>
+	<dettagli><![CDATA[%dettagli%]]></dettagli>
+</incasso>
