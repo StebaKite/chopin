@@ -2,28 +2,252 @@
 // Incassi
 //---------------------------------------------------------------------------------				
 
-$( "#nuovo-incasso" ).click(function( event ) {
-	
+$( "#nuovo-incasso" ).click(function( event ) {	
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
-		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
-		{    	  
-			$("#button-ok-nuovo-incasso-form").button("disable");
-			$("#button-dettaglio-nuovo-incasso-form").button("disable");
-			$("#descreg_inc_cre").hide();
-			$("#descreg_inc_cre_label").hide();
-			$("#dettagli_inc_cre").hide();
-
-			$('#nuovoIncasso').trigger("reset");
-			$('#scadenze_chiuse_inc_cre').html("");
-			$('#scadenze_aperte_inc_cre').html("");
-			
-			$("#nuovo-incasso-form").dialog("open");			
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {    	  
+			$("#nuovo-incasso-dialog").modal("show");
 		}
 	} 
 	xmlhttp.open("GET", "creaIncassoFacade.class.php?modo=start", true);
 	xmlhttp.send();		
 });
+
+//---------------------------------------------------------------------------------	
+
+$( "#cliente_inc_cre" ).keyup(function() {
+
+	var descliente = $("#cliente_inc_cre").val();
+	var codnegozio = $("#codneg_inc_cre").val();
+
+	if (descliente != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+				var parser = new DOMParser();
+				var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+				
+				$(xmldoc).find("scadenzecliente").each(
+					function() {
+						$("#scadenze_chiuse_inc_cre").html($(this).find("scadenzeincassate").text());
+						$("#scadenze_aperte_inc_cre").html($(this).find("scadenzedaincassare").text());
+					}
+	        	)
+	        }
+	    }
+	    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_cre=" + descliente + "&codnegozio_inc_cre=" + codnegozio, true);
+	    xmlhttp.send();
+	}
+})		
+
+//---------------------------------------------------------------------------------		
+
+function aggiungiFatturaIncassata(idScadenza,idTableAperte,idTableChiuse)
+{
+	var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function()
+    {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+        {	
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("scadenzecliente").each(
+				function() {
+					$("#" + idTableChiuse).html($(this).find("scadenzeincassate").text());
+					$("#" + idTableAperte).html($(this).find("scadenzedaincassare").text());
+				}
+        	)
+        }
+    }
+    xmlhttp.open("GET", "aggiungiFatturaIncassataFacade.class.php?modo=start&idscadcli=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
+    xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------		
+
+function rimuoviFatturaIncassata(idScadenza,idTableAperte,idTableChiuse)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function()
+	{
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+		{	
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("scadenzecliente").each(
+				function() {
+					$("#" + idTableChiuse).html($(this).find("scadenzeincassate").text());
+					$("#" + idTableAperte).html($(this).find("scadenzedaincassare").text());
+				}
+        	)
+		}
+	}
+	xmlhttp.open("GET", "rimuoviFatturaIncassateFacade.class.php?modo=start&idscadcli=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
+	xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------
+
+$("#button-nuovo-dettaglio-nuovo-incasso-form").click(function() {
+	$("#nuovo-dettaglio-incasso-dialog").modal("show");
+});
+
+//---------------------------------------------------------------------------------
+
+$("#button-ok-nuovodett-nuovo-incasso-form").click(
+	function() {
+
+		var D_A = $("#newsegnodett_inc_cre").val();
+	
+		// tolgo eventuali virgole nella descrizione del conto
+		
+		var conto = $("#conti_inc").val().replace(",",".");
+		var idconto = conto.substring(0, 6);
+		
+		// normalizzo la virgola dell'importo
+		
+		var importo = $("#newimpdett_inc_cre").val();
+		var importoNormalizzato = importo.trim().replace(",", ".");
+	
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = 
+			function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var sottocontiTable = xmlhttp.responseText;
+					$("#dettagli_inc_cre").html(sottocontiTable);
+					controllaDettagliRegistrazione("dettagli_inc_cre");
+				}
+			}
+		xmlhttp.open("GET","aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto="	+ conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+		xmlhttp.send();
+	}
+);		
+
+//---------------------------------------------------------------------------------
+
+$("#causale_inc_cre").change(
+	function() {
+		var causale = $("#causale_inc_cre").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_inc").html(xmlhttp.responseText);
+						$("#conti_inc").selectmenu("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#button-ok-nuovo-incasso-form").click(
+	function() {
+		if (validaNuovoIncasso()) {
+			$("#testo-messaggio-successo").html("Incasso salvato con successo!");
+			$("#messaggio-successo-dialog").modal("show");						
+			sleep(3000);
+			$("#nuovoIncassoForm").submit();			
+		}
+		else {
+			$("#testo-messaggio-errore").html("In presenza di campi in errore l'incasso non può essere salvato");
+			$("#messaggio-errore-dialog").modal("show");			
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------		
+// CREA NUOVO INCASSO : validazione dati immessi
+//---------------------------------------------------------------------------------		
+
+function validaNuovoIncasso()
+{
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
+	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
+	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
+	 */
+	var esito = "";
+	
+	controllaDataRegistrazione("datareg_inc_cre", "tddatareg_inc_cre", "messaggioControlloDataIncasso");
+	if ($("#messaggioControlloDataIncasso").text() == "") 
+		esito = esito + "1"; else esito = esito + "0";
+
+	if ($("#descreg_inc_cre").val() != "") {
+		if (controllaDescrizione("descreg_inc_cre", "tddescreg_inc_cre", "messaggioControlloDescrizioneIncasso")) 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+
+	if ($("#causale_inc_cre").val() != "") {
+		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
+		if ($("#messaggioControlloDettagliIncasso").text() == "") 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+
+	if (esito == "111") { return true; }
+	else { return false; }	
+}
+
+//---------------------------------------------------------------------
+
+function visualizzaIncasso(idIncasso)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("incasso").each(
+				function() {
+
+					$("#datareg_inc_vis").html($(this).find("datareg").text());
+					$("#descreg_inc_vis").html($(this).find("descreg").text());
+					$("#causale_inc_vis").html($(this).find("causale").text());
+					$("#codneg_inc_vis").html($(this).find("codneg").text());
+					
+					var cliente   = $(this).find("cliente").text();
+
+					$("#cliente_inc_vis").html(cliente);					
+					$("#scadenze_incassate_inc_vis").html($(this).find("scadenzeincassate").text());					
+					$("#dettagli_inc_vis").html($(this).find("dettagli").text());
+				}
+			)
+
+			$("#visualizza-incasso-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","visualizzaIncassoFacade.class.php?modo=start&idinc=" + idIncasso, true);
+	xmlhttp.send();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//============================================================== vecchie funzioni
+
+
+
 
 $("#nuovo-incasso-form").dialog({
 	autoOpen: false,
@@ -156,41 +380,6 @@ $("#modifica-incasso-form").dialog({
 });
 
 //---------------------------------------------------------------------------------		
-// CREA NUOVO INCASSO : controllo campi in pagina
-//---------------------------------------------------------------------------------		
-
-function validaNuovoIncasso()
-{
-	/**
-	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
-	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
-	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
-	 */
-	var esito = "";
-	
-	controllaDataRegistrazione("datareg_inc_cre", "tddatareg_inc_cre", "messaggioControlloDataIncasso");
-	if ($("#messaggioControlloDataIncasso").text() == "") 
-		esito = esito + "1"; else esito = esito + "0";
-
-	if ($("#descreg_inc_cre").val() != "") {
-		if (controllaDescrizione("descreg_inc_cre", "tddescreg_inc_cre", "messaggioControlloDescrizioneIncasso")) 
-			esito = esito + "1"; else esito = esito + "0";		
-	}
-
-	if ($("#causale_inc_cre").val() != "") {
-		controllaDettagliRegistrazione("tddettagli_inc_cre","messaggioControlloDettagliIncasso","descreg_inc_cre","descreg_inc_cre_label");
-		if ($("#messaggioControlloDettagliIncasso").text() == "") 
-			esito = esito + "1"; else esito = esito + "0";		
-	}
-	
-	if (esito == "111") {
-		$("#button-ok-nuovo-incasso-form").button("enable");
-	} else {
-		$("#button-ok-nuovo-incasso-form").button("disable");	
-	}
-}
-
-//---------------------------------------------------------------------------------		
 // MODIFICA INCASSO : controllo campi in pagina
 //---------------------------------------------------------------------------------		
 
@@ -312,84 +501,6 @@ $( ".selectmenuCausaleIncMod" )
 	.selectmenu({width: 300})
 	.selectmenu("menuWidget")
 	.addClass("overflow");
-
-//---------------------------------------------------------------------------------	
-
-$( ".scadenzeAperteCliente" ).keyup(function() {
-
-	var descliente = $("#cliente_inc_cre").val();
-	if($('#villa_inc_cre').is(':checked')) var codnegozio = $("#villa_inc_cre").val();
-	if($('#brembate_inc_cre').is(':checked')) var codnegozio = $("#brembate_inc_cre").val();
-	if($('#trezzo_inc_cre').is(':checked')) var codnegozio = $("#trezzo_inc_cre").val();
-
-	if (descliente != "") {
-		var xmlhttp = new XMLHttpRequest();
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-				var response = xmlhttp.responseText;
-				var response = response.replace(/\t+/g, "");
-				var datiPagina = response.split("|");
-				var numfatt_daincassare_cre = datiPagina[0];
-				var numfatt_incassate_cre = datiPagina[1];
-
-				// Viene utilizzato solo dalla creazione incasso perchè la modifica ha il 
-				// campo fornitore in pagina settato a readonly
-				
-				$("#scadenze_chiuse_inc_cre").html(numfatt_incassate_cre);
-				$("#scadenze_aperte_inc_cre").html(numfatt_daincassare_cre);
-	        }
-	    }
-	    xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_cre=" + descliente + "&codnegozio_inc_cre=" + codnegozio, true);
-	    xmlhttp.send();
-	}
-})		
-
-//---------------------------------------------------------------------------------		
-
-function aggiungiFatturaIncassata(idScadenza,idTableAperte,idTableChiuse)
-{
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function()
-    {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-        {	
-			$("#" + idTableChiuse).html("");
-			$("#" + idTableAperte).html("");
-			
-        	var response = xmlhttp.responseText;
-			var datiPagina = response.split("|");
-			
-			$("#" + idTableChiuse).html(datiPagina[0]);
-			$("#" + idTableAperte).html(datiPagina[1]);
-        }
-    }
-    xmlhttp.open("GET", "aggiungiFatturaIncassataFacade.class.php?modo=start&idscadcli=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
-    xmlhttp.send();		
-}
-
-//---------------------------------------------------------------------------------		
-
-function rimuoviFatturaIncassata(idScadenza,idTableAperte,idTableChiuse)
-{
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function()
-	{
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-		{	
-			$("#" + idTableChiuse).html("");
-			$("#" + idTableAperte).html("");
-
-			var response = xmlhttp.responseText;
-			var datiPagina = response.split("|");
-			
-			$("#" + idTableChiuse).html(datiPagina[0]);
-			$("#" + idTableAperte).html(datiPagina[1]);
-		}
-	}
-	xmlhttp.open("GET", "rimuoviFatturaIncassateFacade.class.php?modo=start&idscadcli=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
-	xmlhttp.send();		
-}
 
 //---------------------------------------------------------------------------------		
 

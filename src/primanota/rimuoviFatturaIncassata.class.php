@@ -31,6 +31,8 @@ class RimuoviFatturaIncassata extends PrimanotaAbstract implements PrimanotaBusi
         $registrazione = Registrazione::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();
         $cliente = Cliente::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
         
         $cliente->cercaConDescrizione($db);
         $scadenzaCliente->setIdCliente($cliente->getIdCliente());
@@ -40,7 +42,14 @@ class RimuoviFatturaIncassata extends PrimanotaAbstract implements PrimanotaBusi
             $scadenzaCliente->leggi($db);
             $scadenzaCliente->rimuoviScadenzaIncassata();
             
-            echo $this->makeTabellaFattureIncassate($scadenzaCliente) . "|" . $this->refreshTabellaFattureDaIncassare($scadenzaCliente);
+            $risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_CLIENTE_APERTE;
+            
+            $replace = array(
+            		'%scadenzedaincassare%' => $this->refreshTabellaFattureDaIncassare($scadenzaCliente),
+            		'%scadenzeincassate%' => $this->makeTabellaFattureIncassate($scadenzaCliente)
+            );
+            $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+            echo $utility->tailTemplate($template);
         }
         elseif ($scadenzaCliente->getIdTableScadenzeAperte() == "scadenze_aperte_inc_mod")
         {
@@ -51,7 +60,14 @@ class RimuoviFatturaIncassata extends PrimanotaAbstract implements PrimanotaBusi
             $scadenzaCliente->trovaScadenzeDaIncassare($db);
             $scadenzaCliente->trovaScadenzeIncassate($db);
             
-            echo $this->makeTabellaFattureIncassate($scadenzaCliente) . "|" . $this->makeTabellaFattureDaIncassare($scadenzaCliente);
+            $risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_CLIENTE_APERTE;
+            
+            $replace = array(
+            		'%scadenzedaincassare%' => $this->makeTabellaFattureDaIncassare($scadenzaCliente),
+            		'%scadenzeincassate%' => $this->makeTabellaFattureIncassate($scadenzaCliente)
+            );
+            $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+            echo $utility->tailTemplate($template);
         }
     }
 }

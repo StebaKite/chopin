@@ -31,17 +31,30 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
 		$scadenzaCliente = ScadenzaCliente::getInstance();
 		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
 
 		$cliente->cercaConDescrizione($db);
 		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
 		$scadenzaCliente->trovaScadenzeDaIncassare($db);
+
+		/**
+		 * Nell'attributo numFattureDaIncassare ci appoggio la table html generata
+		 * Le scadenze si trovano nell'oggetto scadenzaCliente
+		 */
 		
 		$registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente));
 		$registrazione->setNumFattureIncassate("");
 		
-		$datiPagina = trim($registrazione->getNumFattureDaIncassare()) . "|" . trim($registrazione->getNumFattureIncassate());
+		$risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_CLIENTE_APERTE;
 		
-		echo $datiPagina;
+		$replace = array(
+				'%scadenzedaincassare%' => $registrazione->getNumFattureDaIncassare(),
+				'%scadenzeincassate%' => $registrazione->getNumFattureIncassate()
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go() {

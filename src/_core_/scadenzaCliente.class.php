@@ -314,7 +314,24 @@ class ScadenzaCliente implements CoreInterface {
 		$result = $db->execSql($sql);
 		return $result;
 	}
-
+	
+	public function rimuoviScadenzaIncassata()
+	{
+		$scadenzeIncassateDiff = array();
+		foreach ($this->getScadenzeIncassate() as $unaScadenza)
+		{
+			if (trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) != trim($this->getNumFattura())
+			or trim($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]) != trim($this->getDatRegistrazione()))
+			{
+				array_push($scadenzeIncassateDiff, $unaScadenza);
+			}
+			else {
+				$this->setQtaScadenzeIncassate($this->getQtaScadenzeIncassate() - 1);
+			}
+		}
+		$this->setScadenzeIncassate($scadenzeIncassateDiff);
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+	}
 
 	public function cancella($db)
 	{

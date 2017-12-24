@@ -1,0 +1,4 @@
+<scadenzecliente>
+	<scadenzedaincassare><![CDATA[%scadenzedaincassare%]]></scadenzedaincassare>
+	<scadenzeincassate><![CDATA[%scadenzeincassate%]]></scadenzeincassate>
+</scadenzecliente>

@@ -31,16 +31,27 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 
 	public function start()
 	{
-	    $scadenzaCliente = ScadenzaCliente::getInstance();
-	    $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_cre");
-	    $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
-	    $scadenzaCliente->setScadenzeIncassate("");
-	    $scadenzaCliente->setQtaScadenzeIncassate(0);
-	    $scadenzaCliente->setScadenzeDaIncassare("");
-	    $scadenzaCliente->setQtaScadenzeDaIncassare(0);
-	    
-	    $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
-	    echo "Ok";
+		$registragione = Registrazione::getInstance();
+		$registragione->prepara();
+		
+		$cliente = Cliente::getInstance();
+		$cliente->prepara();
+		
+		$scadenzaCliente = ScadenzaCliente::getInstance();
+		$scadenzaCliente->setQtaScadenzeDaIncassare(0);
+		$scadenzaCliente->setScadenzeDaIncassare("");
+		$scadenzaCliente->setQtaScadenzeIncassate(0);
+		$scadenzaCliente->setScadenzeIncassate("");
+		$scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_cre");
+		$scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
+		
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$dettaglioRegistrazione->setIdTablePagina("dettagli_inc_cre");
+		
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+		$_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+		
+		echo "Ok";
 	}
 
 	public function go()
@@ -49,9 +60,7 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->creaIncasso($utility, $registrazione, $dettaglioRegistrazione))
-			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_INCASSO_OK;
-		else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+		$this->creaIncasso($utility, $registrazione, $dettaglioRegistrazione);
 
 		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
 		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
