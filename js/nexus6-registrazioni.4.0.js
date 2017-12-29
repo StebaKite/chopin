@@ -9,6 +9,12 @@ $("#nuovaRegistrazione").click(function() {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+			document.getElementById("nuovaRegistrazioneForm").reset();
+			$("#codneg_cre option[value=' ']").prop('selected', true);
+			$("#causale_cre option[value=' ']").prop('selected', true);
+			$("#scadenzesuppl_cre").html("");
+			$("#dettagli_cre").html("");
+			$("#dettagli_cre_messaggio").html("");			
 			$("#nuova-registrazione-dialog").modal("show");
 		}
 	}

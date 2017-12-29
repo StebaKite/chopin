@@ -134,7 +134,8 @@
 							  	<div class="col-sm-2">
 							  		<label for="codneg_cre">%ml.negozio%</label>
 									<select class="form-control" id="codneg_cre" name="codneg_cre" >
-										<option value="VIL" selected>%ml.villa%</option>
+										<option value=" ">&nbsp;</option>
+										<option value="VIL">%ml.villa%</option>
 										<option value="BRE">%ml.brembate%</option>
 										<option value="TRE">%ml.trezzo%</option>
 									</select>			
@@ -157,7 +158,7 @@
 							  		<div class="control-group" id="causale_cre_control_group">
 										<label for="causale_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cre_messaggio"></span></small></label>
 										<select class="form-control" id="causale_cre" name="causale_cre" >
-											<option value=""></option>
+											<option value=" "></option>
 											%elenco_causali_cre%
 										</select>			
 									</div>
@@ -633,7 +634,8 @@
 							  	<div class="col-sm-2">
 							  		<label for="codneg_inc_cre">%ml.negozio%</label>
 									<select class="form-control" id="codneg_inc_cre" name="codneg_inc_cre" >
-										<option value="VIL" selected>%ml.villa%</option>
+										<option value=" ">&nbsp;</option>
+										<option value="VIL">%ml.villa%</option>
 										<option value="BRE">%ml.brembate%</option>
 										<option value="TRE">%ml.trezzo%</option>
 									</select>			
@@ -650,7 +652,7 @@
 							  		<div class="control-group" id="causale_inc_cre_control_group">
 										<label for="causale_inc_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_inc_cre_messaggio"></span></small></label>
 										<select class="form-control" id="causale_inc_cre" name="causale_inc_cre" >
-											<option value=""></option>
+											<option value=" "></option>
 											%elenco_causali_inc_cre%
 										</select>			
 									</div>
@@ -819,6 +821,157 @@
 		</div>
 	</div>
 </div>
+
+<!-- ------------------- -->
+<!-- MODIFICA INCASSO  -->
+<!-- ------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-incasso-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Incasso</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaIncassoForm" action="../primanota/modificaIncassoFacade.class.php?modo=go" >
+						<div class="well well-sm">
+							<div class="form-group row">							
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_inc_mod_control_group">
+							    		<label for="datareg_inc_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_inc_mod_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_inc_mod" name="datareg_inc_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_inc_mod">%ml.negozio%</label>
+									<select class="form-control" id="codneg_inc_mod" name="codneg_inc_mod" >
+										<option value="VIL" selected>%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_inc_mod_control_group">
+							    		<label for="descreg_inc_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_inc_mod_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_inc_mod" name="descreg_inc_mod" type="text" onblur="controllaDescrizione('descreg_inc_mod')"/>
+									</div>
+							  	</div>
+							</div>  	
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_inc_mod_control_group">
+										<label for="causale_inc_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_inc_mod_messaggio"></span></small></label>
+										<select class="form-control" id="causale_inc_mod" name="causale_inc_mod" >
+											<option value=""></option>
+											%elenco_causali_inc_mod%
+										</select>			
+									</div>
+							  	</div>
+							  	<div class="col-sm-4 ui-front">
+							  		<div class="control-group" id="cliente_inc_mod_control_group">
+							    		<label for="cliente_inc_mod">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_inc_mod_messaggio"></span></small></label>
+										<input class="form-control" id="cliente_inc_mod" name="cliente_inc_mod" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_mod'); controllaCausale('causale_inc_mod');">
+									</div>	
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-6">
+							  		<div class="control-group" id="scadenze_chiuse_inc_mod_control_group">
+							    		<label for="scadenze_chiuse_inc_mod">Fatture incluse nell'incasso<small><span class="text-danger" id="scadenze_chiuse_inc_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="scadenze_chiuse_inc_mod"></table>
+									</div>	
+							  	</div>
+							  	<div class="col-sm-6">
+							  		<div class="control-group" id="scadenze_aperte_inc_mod_control_group">
+							    		<label for="scadenze_aperte_inc_mod">Fatture rimanenti da incassare<small><span class="text-danger" id="scadenze_aperte_inc_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="scadenze_aperte_inc_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_inc_mod_control_group">
+							    		<label for="dettagli_inc_mod">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_inc_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_inc_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+						</div>
+					</form>	
+
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-incasso-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-modifica-incasso-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ----------------------------------->
+<!-- NUOVO DETTAGLIO MODIFICA INCASSO -->
+<!-- ----------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-incasso-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio incasso</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_inc_mod" name="newimpdett_inc_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_inc_mod')">
+								</div>
+						  	</div>
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_inc_mod" name="newsegnodett_inc_mod" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+				  		<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_inc_mod" name="newcontodett_inc_mod"></select>			
+								</div>	
+						  	</div>							  	
+				  		</div>				  		
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-incasso-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
 
 <!-- ---------------- -->
 <!-- MESSAGGIO ERRORE -->

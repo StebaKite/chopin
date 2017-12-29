@@ -30,7 +30,6 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 
 	public function start()
 	{
-	    $datiPagina = "";
 	    $registrazione = Registrazione::getInstance();
 	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 	    $cliente = Cliente::getInstance();
@@ -38,6 +37,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 	    $causale = Causale::getInstance();
 	    
 	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
 	    $db = Database::getInstance();
 	    
 	    $registrazione->leggi($db);
@@ -48,11 +48,8 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 	    $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
 	    
 	    $scadenzaCliente->setIdCliente($cliente->getIdCliente());
-	    $scadenzaCliente->trovaScadenzeDaIncassare($db);
-	    $registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente,"scadenze_aperte_inc_mod"));
-	    
+	    $scadenzaCliente->trovaScadenzeDaIncassare($db);	    
 	    $scadenzaCliente->trovaScadenzeIncassate($db);
-	    $registrazione->setNumFattureIncassate($this->makeTabellaFattureIncassate($scadenzaCliente,"scadenze_chiuse_inc_mod"));
 	    
 	    $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
 	    $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
@@ -66,18 +63,21 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 	    $causale->setCodCausale($registrazione->getCodCausale());
 	    $causale->loadContiConfigurati($db);
 	    
-	    $datiPagina = trim($registrazione->getDatRegistrazione()) . "|"
-	        . trim($registrazione->getDesRegistrazione()) . "|"
-            . trim($registrazione->getCodCausale()) . "|"
-            . trim($registrazione->getCodNegozio()) . "|"
-            . trim($cliente->getDesCliente()) . "|"
-            . trim($registrazione->getNumFattureDaIncassare()) . "|"
-            . trim($registrazione->getNumFattureIncassate()) . "|"
-            . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|"
-            . trim($causale->getContiCausale())
-            ;
-	                                    
-        echo $datiPagina;
+	    $risultato_xml = $this->root . $array['template'] . self::XML_MODIFICA_INCASSO;
+	    
+	    $replace = array(
+	    		'%datareg%' => trim($registrazione->getDatRegistrazione()),
+	    		'%descreg%' => trim($registrazione->getDesRegistrazione()),
+	    		'%causale%' => trim($registrazione->getCodCausale()),
+	    		'%codneg%' => trim($registrazione->getCodNegozio()),
+	    		'%cliente%' => trim($cliente->getDesCliente()),
+	    		'%scadenzeincassate%' => trim($this->makeTabellaFattureIncassate($scadenzaCliente)),
+	    		'%scadenzedaincassare%' => trim($this->makeTabellaFattureDaIncassare($scadenzaCliente)),
+	    		'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+	    		'%conti%' => $causale->getContiCausale()
+	    );
+	    $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+	    echo $utility->tailTemplate($template);
 	}
 
 	
@@ -92,13 +92,11 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 	    $utility = Utility::getInstance();
 	    $db = Database::getInstance();
 	    
-	    if ($this->aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione, $scadenzaCliente, $cliente))
-	        $_SESSION[self::MSG_DA_MODIFICA] = self::MODIFICA_INCASSO_OK;
-	        else $_SESSION[self::MSG_DA_MODIFICA] = self::ERRORE_MODIFICA_REGISTRAZIONE;
+	    $this->aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione, $scadenzaCliente, $cliente);
 	        
-	        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-	        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
-	        $controller->start();
+        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        $controller->start();
 	}
 	
 	public function aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione, $scadenzaCliente, $cliente)

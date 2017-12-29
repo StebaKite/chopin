@@ -24,6 +24,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const XML_VISUALIZZA_REGISTRAZIONE = "/primanota/xml/visualizzaRegistrazione.xml";
 	const XML_SCADENZE_CLIENTE_APERTE = "/primanota/xml/scadenzeClienteAperte.xml";
 	const XML_VISUALIZZA_INCASSO = "/primanota/xml/visualizzaIncasso.xml";
+	const XML_MODIFICA_INCASSO = "/primanota/xml/modificaIncasso.xml";
 	
 	// Bottoni
 
