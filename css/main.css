@@ -29,3 +29,70 @@ html, body {
 	padding: 15px;
     border-bottom: 1px solid #e5e5e5;
 }
+
+/* ---------- ToDo List ----------- */
+
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+h4 {
+    padding:0.5em;
+    border-bottom:1px solid black;
+    text-align: left;
+    font-size:1.5em;
+}
+
+#todo-input {
+
+}
+
+.template{
+    display:none;
+}
+
+#alertdiv {
+    display:none;
+}
+
+div.todoEntry {
+    padding:0.5em;
+    border-bottom:1px solid lightgrey;
+    text-align: left;
+}
+
+div.todoEntry .entryTitle{
+    font-size:1.2em;
+    padding-right: 3em;
+}
+
+div.todoEntry .entryTime{
+    font-size:0.8em;
+}
+
+
+div.doneTask{
+     color:grey;
+ }
+
+div.doneTask .entryTime{
+    color:grey;
+}
+
+.doneTitle{
+    margin-top:1em;
+}
+
+.taskControls{
+    float:right;
+    display:none;
+}
+
+.taskControls button.buttonDeleteTask{
+    color:red;
+}
+
+.taskControls button.buttonDoTask{
+    color:darkgreen;
+}
