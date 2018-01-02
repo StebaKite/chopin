@@ -26,21 +26,33 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
 
 	public function start()
 	{
-
 		$registrazione = Registrazione::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 		$fornitore = Fornitore::getInstance();
 		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
 		$fornitore->cercaConDescrizione($db);
 		$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 		$scadenzaFornitore->trovaScadenzeDaPagare($db);
+		
+		/**
+		 * Nell'attributo numFattureDaPagare ci appoggio la table html generata
+		 * Le scadenze si trovano nell'oggetto scadenzaFornitore
+		 */		
+		
 		$registrazione->setNumFattureDaPagare($this->makeTabellaFattureDaPagare($scadenzaFornitore));
 		$registrazione->setNumFatturePagate("");
-	
-		$datiPagina = trim($registrazione->getNumFattureDaPagare()) . "|" . trim($registrazione->getNumFatturePagate());
-		                                
-        echo $datiPagina;
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_FORNITORE_APERTE;
+		
+		$replace = array(
+				'%scadenzedapagare%' => $registrazione->getNumFattureDaPagare(),
+				'%scadenzepagate%' => $registrazione->getNumFatturePagate()
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go() {

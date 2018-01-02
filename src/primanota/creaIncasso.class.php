@@ -89,6 +89,7 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 			{
 			    $scadenzaCliente->setIdCliente($cliente->getIdCliente());
 			    $scadenzaCliente->setIdIncasso($registrazione->getIdRegistrazione());
+			    $scadenzaCliente->setIdScadenza($unaScadenza[ScadenzaCliente::ID_SCADENZA]);
 			    $scadenzaCliente->setStaScadenza("10");		// incassata e chiusa
 			    
 			    $scadenzaCliente->setNumFattura($unaScadenza[ScadenzaCliente::NUM_FATTURA]);

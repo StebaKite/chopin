@@ -505,9 +505,7 @@ function modificaSegnoDettaglioRegistrazione(idTable,conto,sottoconto,segno,idDe
 function aggiungiDettaglioContoFornitore(fornitore, campoDett)
 {
 	if (fornitore != "") {
-		$("#button-dettaglio-nuova-registrazione-form").prop("disabled", false);
-		var fornitoreNorm = fornitore.replace("&", ""); // tolgo eventuali &
-		// nella ragione sociale
+		var fornitoreNorm = fornitore.replace("&", ""); // tolgo eventuali & nella ragione sociale
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
@@ -527,11 +525,10 @@ function aggiungiDettaglioContoFornitore(fornitore, campoDett)
 
 //---------------------------------------------------------------------
 
-function aggiungiDettaglioContoCliente(cliente, campoDett, campoMsg, campoDes, campoDesLabel)
+function aggiungiDettaglioContoCliente(cliente, campoDett)
 {
 	if (cliente != "") {
-		var clienteNorm = cliente.replace("&", ""); // tolgo eventuali & nella
-		// ragione sociale
+		var clienteNorm = cliente.replace("&", ""); // tolgo eventuali & nella ragione sociale
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {

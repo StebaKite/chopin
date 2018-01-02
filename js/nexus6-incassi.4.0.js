@@ -10,6 +10,7 @@ $( "#nuovo-incasso" ).click(function( event ) {
 			$("#codneg_inc_cre option[value=' ']").prop('selected', true);
 			$("#causale_inc_cre option[value=' ']").prop('selected', true);
 			$("#scadenze_aperte_inc_cre").html("");
+			$("#scadenze_chiuse_inc_cre").html("");
 			$("#dettagli_inc_cre").html("");
 			$("#dettagli_inc_cre_messaggio").html("");			
 			$("#nuovo-incasso-dialog").modal("show");
@@ -282,7 +283,6 @@ function validaNuovoIncasso()
 	/**
 	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
 	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
-	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
 	 */
 	var esito = "";
 	

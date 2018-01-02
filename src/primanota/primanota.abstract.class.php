@@ -75,8 +75,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function refreshTabellaFattureDaPagare($scadenzaFornitore)
 	{
-	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
-	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
+	    $aggiungi_fattura_pagata_href = "<a onclick='aggiungiFatturaPagata(";
+	    $aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
 	    
 	    $thead = "";
 	    $tbody = "";
@@ -196,84 +196,103 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function makeTabellaFattureDaPagare($scadenzaFornitore)
 	{
-	    $aggiungi_fattura_pagata_href = "<a class='tooltip' onclick='aggiungiFatturaPagata(";
-	    $aggiungi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-plus'></span></li></a>";
-	    
-	    $thead = "";
-	    $tbody = "";
-	    
-	    if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
-	        
-	        $tbody = "<tbody>";
-	        $thead =
-	        "<thead>" .
-	        "	<tr>" .
-	        "		<th width='20'>&nbsp;</th>" .
-	        "		<th width='50'>Num.Fat.</th>" .
-	        "		<th width='50'>Data</th>" .
-	        "		<th width='50' align='center'>Importo</th>" .
-	        "		<th width='200'>Nota</th>" .
-	        "	</tr>" .
-	        "</thead>";
-	        
-	        foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
-	        {
-	            $parms = $unaScadenza[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-	            $bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $parms . $aggiungi_icon;
-	            
-	            $tbody .=
-	            "<tr>" .
-	            "	<td id='icons'>" . $bottoneAggiungiFatturaPagata . "</td>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
-	            "	<td align='center'>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
-	            "</tr>";
-	        }
-	        $tbody .= "</tbody>";
-	    }
-	    return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+		$aggiungi_fattura_pagata_href = "<a onclick='aggiungiFatturaPagata(";
+		$aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
+		
+		$thead = "";
+		$tbody = "";
+		$tableIsNotEmpty = false;
+		
+		$tbody = "<tbody>";
+		
+		foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare)
+		{
+			$parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
+			$bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $parms . $aggiungi_icon;
+			
+			$fatturaPagataNotExist = true;
+			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
+			{
+				if  (trim($unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA]) == trim($unaScadenzaPagata[ScadenzaFornitore::NUM_FATTURA])
+				and (trim($unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA]) == trim($unaScadenzaPagata[ScadenzaFornitore::DAT_SCADENZA])))
+				{
+					$fatturaPagataNotExist = false;
+					break;
+				}
+			}
+			/**
+			 * Vengono escluse tutte le scadenze aggiunte alla tabella delle pagate
+			 */
+			if ($fatturaPagataNotExist)
+			{
+				$tableIsNotEmpty = true;
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $bottoneAggiungiFatturaPagata . "</td>" .
+				"	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+				"	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+				"</tr>";
+			}
+		}
+		$tbody .= "</tbody>";
+		
+		if ($tableIsNotEmpty)
+		{
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='20'>&nbsp;</th>" .
+			"		<th width='50'>Num.Fat.</th>" .
+			"		<th width='50'>Data</th>" .
+			"		<th width='50' align='center'>Importo</th>" .
+			"		<th width='200'>Nota</th>" .
+			"	</tr>" .
+			"</thead>";
+		}
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered table-hover'>" . $thead . $tbody . "</table>";
 	}	    
 	
 	public function makeTabellaFatturePagate($scadenzaFornitore)
 	{
-	    $rimuovi_fattura_pagata_href = "<a class='tooltip' onclick='rimuoviFatturaPagata(";
-	    $rimuovi_icon = ")'><li class='ui-state-default ui-corner-all' ><span class='ui-icon ui-icon-minus'></span></li></a>";
-	    
-	    $thead = "";
-	    $tbody = "";
-	    
-	    if ($scadenzaFornitore->getQtaScadenzePagate() > 0) {
-	        
-	        $tbody = "<tbody>";
-	        $thead =
-	        "<thead>" .
-	        "	<tr>" .
-	        "		<th width='50'>Num.Fat.</th>" .
-	        "		<th width='50'>Data</th>" .
-	        "		<th width='50' align='center'>Importo</th>" .
-	        "		<th width='200'>Nota</th>" .
-	        "		<th width='20'>&nbsp;</th>" .
-	        "	</tr>" .
-	        "</thead>";
-	        
-	        foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenza)
-	        {
-	            $parms = $unaScadenza[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-	            $bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $parms . $rimuovi_icon;
-	            
-	            $tbody .=
-	            "<tr>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
-	            "	<td align='center'>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
-	            "	<td>" . $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
-	            "	<td id='icons'>" . $bottoneRimuoviFatturaPagata . "</td>" .
-	            "</tr>";
-	        }
-	        $tbody .= "</tbody>";
-	    }
-	    return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='result' style='width: 100%'>" . $thead . $tbody . "</table>";
+		$rimuovi_fattura_pagata_href = "<a onclick='rimuoviFatturaPagata(";
+		$rimuovi_icon = ")'><span class='glyphicon glyphicon-triangle-right'></span></a>";
+		
+		$thead = "";
+		$tbody = "";
+		
+		if ($scadenzaFornitore->getQtaScadenzePagate() > 0) {
+			
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='50'>Num.Fat.</th>" .
+			"		<th width='50'>Data</th>" .
+			"		<th width='50' align='center'>Importo</th>" .
+			"		<th width='200'>Nota</th>" .
+			"		<th width='20'>&nbsp;</th>" .
+			"	</tr>" .
+			"</thead>";
+			
+			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
+			{
+				$parms = $unaScadenzaPagata[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
+				$bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $parms . $rimuovi_icon;
+				
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+				"	<td>" . $bottoneRimuoviFatturaPagata . "</td>" .
+				"</tr>";
+			}
+			$tbody .= "</tbody>";
+		}
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
 	
 	public function makeTabellaFattureDaIncassare($scadenzaCliente)

@@ -31,9 +31,24 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 
 	public function start()
 	{
+		$registragione = Registrazione::getInstance();
+		$registragione->prepara();
+		
+		$fornitore = Fornitore::getInstance();
+		$fornitore->prepara();
+		
 	    $scadenzaFornitore = ScadenzaFornitore::getInstance();
+	    $scadenzaFornitore->setQtaScadenzeDaPagare(0);
+	    $scadenzaFornitore->setScadenzeDaPagare("");
+	    $scadenzaFornitore->setQtaScadenzePagate(0);
+	    $scadenzaFornitore->setScadenzePagate("");	    
 	    $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
 	    $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");	
+	    
+	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_cre");
+	    
+	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 	    echo "Ok";
 	}
@@ -44,13 +59,11 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->creaPagamento($utility, $registrazione, $dettaglioRegistrazione))
-			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_PAGAMENTO_OK;
-			else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+		$this->creaPagamento($utility, $registrazione, $dettaglioRegistrazione);
 
-			$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-			$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
-			$controller->start();
+		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+		$controller->start();
 	}
 
 	public function creaPagamento($utility, $registrazione, $dettaglioRegistrazione)
@@ -77,12 +90,13 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 			{
 				$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 				$scadenzaFornitore->setIdPagamento($registrazione->getIdRegistrazione());
+				$scadenzaFornitore->setIdScadenza($unaScadenza[ScadenzaFornitore::ID_SCADENZA]);
 				$scadenzaFornitore->setStaScadenza("10");		// pagata e chiusa
 
 				$scadenzaFornitore->setNumFattura($unaScadenza[ScadenzaFornitore::NUM_FATTURA]);
 				$scadenzaFornitore->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
 
-				if (!$scadenzaFornitore->cambiaStato($db))
+				if (!$scadenzaFornitore->cambiaStatoScadenza($db))
 				{
 					$riconciliazioneFattureOkay = false;
 					break;
