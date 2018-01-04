@@ -93,13 +93,16 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 				if (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_REGISTRAZIONE) {
 
 					/**
+					 * imposto il bottone di cancellazione della registrazione
+					 */					
+
+					
+					/**
 					 * Imposto i bottoni validi sulla riga della registrazione
 					 */
-
+					
 					switch ($unaRegistrazione[Registrazione::STA_REGISTRAZIONE]) {
 						case (self::REGISTRAZIONE_APERTA): {
-
-							$class = "class='dt-ok'";
 
 							switch ($unaRegistrazione[Registrazione::COD_CAUSALE]) {
 								case ($array[self::CORRISPETTIVO_MERCATO]): {
@@ -129,15 +132,23 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 								default: {
 									$bottoneVisualizza = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = self::MODIFICA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
-									$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
-									break;
+
+									/**
+									 * Se vi è una correlazione della registrazione con un pagamento o un incasso la cancellazione della
+									 * stessa non è possibile.
+									 */
+									
+									if (($unaRegistrazione[Registrazione::ID_PAGAMENTO_CORRELATO] == "") and ($unaRegistrazione[Registrazione::ID_INCASSO_CORRELATO] == "")) {
+										$bottoneCancella = self::CANCELLA_REGISTRAZIONE_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::CANCELLA_ICON;
+									}
+									else {
+										$bottoneCancella = "&nbsp;";
+									}
 								}
 							}
 							break;
 						}
 						case (self::REGISTRAZIONE_ERRATA): {
-
-							$class = "class='dt-ko'";
 
 							switch ($row['cod_causale']) {
 								case ($array[self::CORRISPETTIVO_MERCATO]): {
@@ -174,7 +185,6 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 							break;
 						}
 						default: {
-							$class = "class='dt-chiuso'";
 							$bottoneVisualizza = "&nbsp;";
 							$bottoneModifica = "&nbsp;";
 							$bottoneCancella = "&nbsp;";

@@ -46,6 +46,7 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 	    $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");	
 	    
 	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $dettaglioRegistrazione->prepara();
 	    $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_cre");
 	    
 	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);

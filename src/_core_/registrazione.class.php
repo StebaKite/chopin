@@ -29,7 +29,9 @@ class Registrazione implements CoreInterface {
 	const TIPO_RIGA_REGISTRAZIONE = "tipo";
 	const RIGA_REGISTRAZIONE = "R";
 	const RIGA_DETTAGLIO_REGISTRAZIONE = "D";
-
+	const ID_PAGAMENTO_CORRELATO = "id_pagamento";
+	const ID_INCASSO_CORRELATO = "id_incasso";
+	
 	// dati registrazione
 
 	private $idRegistrazione;

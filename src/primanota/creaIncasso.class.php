@@ -46,6 +46,7 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 		$scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
 		
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$dettaglioRegistrazione->prepara();
 		$dettaglioRegistrazione->setIdTablePagina("dettagli_inc_cre");
 		
 		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
