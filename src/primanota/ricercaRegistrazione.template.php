@@ -101,10 +101,12 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					 * Imposto i bottoni validi sulla riga della registrazione
 					 */
 					
-					switch ($unaRegistrazione[Registrazione::STA_REGISTRAZIONE]) {
+					switch ($unaRegistrazione[Registrazione::STA_REGISTRAZIONE])
+					{
 						case (self::REGISTRAZIONE_APERTA): {
 
-							switch ($unaRegistrazione[Registrazione::COD_CAUSALE]) {
+							switch ($unaRegistrazione[Registrazione::COD_CAUSALE])
+							{
 								case ($array[self::CORRISPETTIVO_MERCATO]): {
 									$bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
 									$bottoneModifica = self::MODIFICA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
@@ -205,21 +207,20 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 					"</tr>";
 
 				}
-				elseif (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_DETTAGLIO_REGISTRAZIONE) {
+// 				elseif (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_DETTAGLIO_REGISTRAZIONE) {
 
-					$risultato_ricerca .=
-					"<tr>" .
-					"	<td colspan='2'></td>" .
-					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" . 
-					trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "&nbsp;&nbsp;" .
-					trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conto:&nbsp;" .
-					trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) .
-					trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " .
-					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . 
-					"   </i></td>" .
-					"</tr>";
-
-				}
+// 					$risultato_ricerca .=
+// 					"<tr>" .
+// 					"	<td colspan='2'></td>" .
+// 					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" . 
+// 					trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "&nbsp;&nbsp;" .
+// 					trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conto:&nbsp;" .
+// 					trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) .
+// 					trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " .
+// 					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . 
+// 					"   </i></td>" .
+// 					"</tr>";
+// 				}
 			}
 			$risultato_ricerca .= "</tbody></table>";
 		}

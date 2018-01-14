@@ -1,0 +1,9 @@
+<pagamento>
+	<datareg>%datareg%</datareg>
+	<descreg>%descreg%</descreg>
+	<causale>%causale%</causale>
+	<codneg>%codneg%</codneg>
+	<fornitore>%fornitore%</fornitore>
+	<scadenzepagate><![CDATA[%scadenzepagate%]]></scadenzepagate>
+	<dettagli><![CDATA[%dettagli%]]></dettagli>
+</pagamento>

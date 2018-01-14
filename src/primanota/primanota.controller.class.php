@@ -176,7 +176,7 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 		
-		// modifica incasso
+		// modifica incasso ===============================================================
 		
 		if (isset($_REQUEST["descliente_inc_mod"])) {
 			$cliente->setDesCliente($_REQUEST["descliente_inc_mod"]);
@@ -204,7 +204,7 @@ class PrimanotaController
 		    $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_mod");
 		}
 		
-		// aggiungi o rimuovi scadenze in creazione/modifica incasso
+		// aggiungi o rimuovi scadenze in creazione/modifica incasso ===================
 		
 		if (isset($_REQUEST["idscadcli"])) {
 		    $scadenzaCliente->setIdScadenza($_REQUEST["idscadcli"]);
@@ -283,7 +283,7 @@ class PrimanotaController
 			$registrazione->setDesCliente("");
 			$registrazione->setNumFattura("");
 			$registrazione->setStaRegistrazione("00");
-			$registrazione->setIdMercato($_REQUEST["mercati_cormer_cre"]);
+			$registrazione->setIdMercato($_REQUEST["mercato_cormer_cre"]);
 		}
 
 		// Registrazione corrispettivo negozio ==================================================

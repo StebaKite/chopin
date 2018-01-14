@@ -36,6 +36,7 @@ class Mercato implements CoreInterface {
 	const CREA_MERCATO 		= "/anagrafica/creaMercato.sql";
 	const AGGIORNA_MERCATO  = "/anagrafica/updateMercato.sql";
 	const CANCELLA_MERCATO  = "/anagrafica/deleteMercato.sql";
+	const LEGGI_MERCATO     = "/anagrafica/leggiIdMercato.sql"; 
 	const RICERCA_MERCATI_NEGOZIO = "/anagrafica/ricercaMercatiNegozio.sql";
 
 	// Metodi
@@ -50,6 +51,17 @@ class Mercato implements CoreInterface {
 		return unserialize($_SESSION[self::MERCATO]);
 	}
 
+	public function prepara()
+	{
+		$this->setIdMercato(null);
+		$this->setCodMercato(null);
+		$this->setDesMercato(null);
+		$this->setCittaMercato(null);
+		$this->setCodNegozio(null);
+		$this->setMercati(null);
+		$this->setQtaMercati(0);		
+	}
+	
 	public function load($db)
 	{
 		$utility = Utility::getInstance();
@@ -124,6 +136,26 @@ class Mercato implements CoreInterface {
 		return $result;
 	}
 
+	public function leggi($db)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		$replace = array(
+				'%id_mercato%' => trim($this->getIdMercato())
+		);
+		$sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_MERCATO;
+		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+		$result = $db->getData($sql);
+		
+		foreach(pg_fetch_all($result) as $row) {
+			$this->setCodMercato($row[self::COD_MERCATO]);
+			$this->setDesMercato($row[self::DES_MERCATO]);
+			$this->setCittaMercato($row[self::CITTA_MERCATO]);
+			$this->setCodNegozio($row[self::COD_NEGOZIO]);
+		}
+		return $result;
+	}
+	
 	public function cercaMercatiNegozio($db)
 	{
 		$utility = Utility::getInstance();

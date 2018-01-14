@@ -429,6 +429,39 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 		return "<table id='" . $scadenzaCliente->getIdTableScadenzeChiuse() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
 	}
 	
+	public function makeTabellaReadOnlyFatturePagate($scadenzaFornitore)
+	{
+		$thead = "";
+		$tbody = "";
+		
+		if ($scadenzaFornitore->getQtaScadenzePagate() > 0) {
+			
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th width='50'>Num.Fat.</th>" .
+			"		<th width='50'>Data</th>" .
+			"		<th width='50' align='center'>Importo</th>" .
+			"		<th width='200'>Nota</th>" .
+			"	</tr>" .
+			"</thead>";
+			
+			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
+			{
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+				"	<td>" . $unaScadenzaPagata[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+				"</tr>";
+			}
+			$tbody .= "</tbody>";
+		}
+		return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
+	}
+	
 	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione)
 	{
 		$cancella_dettaglio_nuova_registrazione_href = '<a onclick="cancellaDettaglioNuovaRegistrazione(';

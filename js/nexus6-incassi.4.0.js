@@ -542,18 +542,18 @@ function validaModificaIncasso()
 	 */
 	var esito = "";
 	
-	controllaDataRegistrazione("datareg_inc_mod", "tddatareg_inc_mod", "messaggioControlloDataIncasso_mod");
-	if ($("#messaggioControlloDataIncasso_mod").text() == "") 
+	controllaDataRegistrazione("datareg_inc_mod");
+	if ($("#datareg_inc_cre_messaggio").text() == "") 
 		esito = esito + "1"; else esito = esito + "0";
 
 	if ($("#descreg_inc_mod").val() != "") {
-		if (controllaDescrizione("descreg_inc_mod", "tddescreg_inc_mod", "messaggioControlloDescrizioneIncasso_mod")) 
+		if (controllaDescrizione("descreg_inc_mod")) 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 
 	if ($("#causale_inc_mod").val() != "") {
-		controllaDettagliRegistrazione("tddettagli_inc_mod","messaggioControlloDettagliIncasso_mod","descreg_inc_mod","descreg_inc_mod_label");
-		if ($("#messaggioControlloDettagliIncasso_mod").text() == "") 
+		controllaDettagliRegistrazione("dettagli_inc_mod");
+		if ($("#dettagli_inc_cre_messaggio").text() == "") 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 	

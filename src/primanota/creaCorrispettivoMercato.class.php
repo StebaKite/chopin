@@ -14,6 +14,8 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
 	function __construct() {
 
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
 	}
 
 	public function getInstance()
@@ -24,7 +26,15 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
 
 	public function start()
 	{
-		$this->go();
+		$registragione = Registrazione::getInstance();
+		$registragione->prepara();
+		
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$dettaglioRegistrazione->prepara();
+		$dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_cre");
+		
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+		echo "Ok";
 	}
 
 	public function go()
@@ -33,9 +43,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione))
-			$_SESSION[self::MSG_DA_CREAZIONE] = self::CREA_REGISTRAZIONE_OK;
-		else $_SESSION[self::MSG_DA_CREAZIONE] = self::ERRORE_CREAZIONE_REGISTRAZIONE;
+		$this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
 
 		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
 		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);

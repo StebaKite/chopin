@@ -64,19 +64,22 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 	    
 	    $causale->setCodCausale($registrazione->getCodCausale());
 	    $causale->loadContiConfigurati($db);
-	    	
-	    $datiPagina = trim($registrazione->getDatRegistrazione()) . "|" 
-	        . trim($registrazione->getDesRegistrazione()) . "|"
-	        . trim($registrazione->getCodCausale()) . "|"
-	        . trim($registrazione->getCodNegozio()) . "|"
-	        . trim($fornitore->getDesFornitore()) . "|"
-	        . trim($registrazione->getNumFattureDaPagare()) . "|"
-	        . trim($registrazione->getNumFatturePagate()) . "|"
-	        . trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)) . "|"
-	        . trim($causale->getContiCausale())
-	    ;
 	    
-	    echo $datiPagina;
+	    $risultato_xml = $this->root . $array['template'] . self::XML_MODIFICA_PAGAMENTO;
+	    
+	    $replace = array(
+	    		'%datareg%' => trim($registrazione->getDatRegistrazione()),
+	    		'%descreg%' => trim($registrazione->getDesRegistrazione()),
+	    		'%causale%' => trim($registrazione->getCodCausale()),
+	    		'%codneg%' => trim($registrazione->getCodNegozio()),
+	    		'%fornitore%' => trim($fornitore->getDesFornitore()),
+	    		'%scadenzepagate%' => trim($this->makeTabellaFatturePagate($scadenzaFornitore)),
+	    		'%scadenzedapagare%' => trim($this->makeTabellaFattureDaPagare($scadenzaFornitore)),
+	    		'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+	    		'%conti%' => $causale->getContiCausale()
+	    );
+	    $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+	    echo $utility->tailTemplate($template);
 	}
 
 	public function go()
@@ -90,9 +93,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 	    $utility = Utility::getInstance();
 	    $db = Database::getInstance();
 
-	    if ($this->aggiornaPagamento($utility, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $fornitore))
-	        $_SESSION[self::MSG_DA_MODIFICA] = self::MODIFICA_PAGAMENTO_OK;
-        else $_SESSION[self::MSG_DA_MODIFICA] = self::ERRORE_MODIFICA_REGISTRAZIONE;
+	    $this->aggiornaPagamento($utility, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $fornitore);
 	        
         $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
         $controller = unserialize($_SESSION["Obj_primanotacontroller"]);

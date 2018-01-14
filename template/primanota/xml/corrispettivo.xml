@@ -1,0 +1,8 @@
+<corrispettivo>
+	<datareg>%datareg%</datareg>
+	<descreg>%descreg%</descreg>
+	<causale>%causale%</causale>
+	<codneg>%codneg%</codneg>
+	<mercato>%mercato%</mercato>
+	<dettagli><![CDATA[%dettagli%]]></dettagli>
+</corrispettivo>

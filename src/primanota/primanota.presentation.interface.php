@@ -25,13 +25,16 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const XML_SCADENZE_CLIENTE_APERTE = "/primanota/xml/scadenzeClienteAperte.xml";
 	const XML_SCADENZE_FORNITORE_APERTE = "/primanota/xml/scadenzeFornitoreAperte.xml";
 	const XML_VISUALIZZA_INCASSO = "/primanota/xml/visualizzaIncasso.xml";
+	const XML_VISUALIZZA_PAGAMENTO = "/primanota/xml/visualizzaPagamento.xml";
+	const XML_CORRISPETTIVO = "/primanota/xml/corrispettivo.xml";
 	const XML_MODIFICA_INCASSO = "/primanota/xml/modificaIncasso.xml";
+	const XML_MODIFICA_PAGAMENTO = "/primanota/xml/modificaPagamento.xml";
 	
 	// Bottoni
 
-	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/visualizzaCorrispettivoFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a onclick='visualizzaCorrispettivoMercato(";
 	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_PAGAMENTO_HREF = "<a href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_PAGAMENTO_HREF = "<a onclick='visualizzaPagamento(";
 	const VISUALIZZA_INCASSO_HREF = "<a onclick='visualizzaIncasso(";
 	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
 
