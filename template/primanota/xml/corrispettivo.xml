@@ -5,4 +5,6 @@
 	<codneg>%codneg%</codneg>
 	<mercato>%mercato%</mercato>
 	<dettagli><![CDATA[%dettagli%]]></dettagli>
+	<mercatiNegozio><![CDATA[%mercatiNegozio%]]></mercatiNegozio>	
+	<contiCausale><![CDATA[%contiCausale%]]></contiCausale>
 </corrispettivo>

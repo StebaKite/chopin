@@ -252,6 +252,10 @@ class PrimanotaController
 		    $registrazione->setCodNegozio($_REQUEST["codneg_pag_mod"]);
 		    $registrazione->setDesFornitore($_REQUEST["fornitore_pag_mod"]);
 		    $registrazione->setNumFattura($_REQUEST["numfatt_pag_mod"]);
+		    $registrazione->setStaRegistrazione("00");
+		    $registrazione->setIdMercato("");
+		    $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_mod");
+		    $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_mod");
 		}
 
 		// aggiungi o rimuovi scadenze in creazione/modifica pagamento
@@ -261,12 +265,24 @@ class PrimanotaController
 		    $scadenzaFornitore->setIdTableScadenzeChiuse($_REQUEST["idtablechiuse"]);
 		}
 		
+		// aggiungi o rimuovi scadenze in creazione/modifica incasso ===================
+		
+		if (isset($_REQUEST["idscadfor"])) {
+			$scadenzaFornitore->setIdScadenza($_REQUEST["idscadfor"]);
+			$scadenzaFornitore->setIdTableScadenzeAperte($_REQUEST["idtableaperte"]);
+			$scadenzaFornitore->setIdTableScadenzeChiuse($_REQUEST["idtablechiuse"]);
+		}
+		
 		// Registrazione corrispettivo mercato ==================================================
 
 		if (isset($_REQUEST["codneg_cormer_cre"])) {
 			$mercato->setCodNegozio($_REQUEST["codneg_cormer_cre"]);
 		}
-
+		
+		if (isset($_REQUEST["codneg_cormer_mod"])) {
+			$mercato->setCodNegozio($_REQUEST["codneg_cormer_mod"]);
+		}
+		
 		if (isset($_REQUEST["codconto_cormer_cre"])) {
 			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_cormer_cre"]);
 			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_cormer_cre"]);
@@ -274,7 +290,15 @@ class PrimanotaController
 			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_cormer_cre"]);
 			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_cormer_cre"]);
 		}
-
+		
+		if (isset($_REQUEST["codconto_cormer_mod"])) {
+			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_cormer_mod"]);
+			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_cormer_mod"]);
+			$dettaglioRegistrazione->setAliquota($_REQUEST["aliquota_cormer_mod"]);
+			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_cormer_mod"]);
+			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_cormer_mod"]);
+		}
+		
 		if (isset($_REQUEST["datareg_cormer_cre"])) {
 			$registrazione->setDatRegistrazione($_REQUEST["datareg_cormer_cre"]);
 			$registrazione->setDesRegistrazione($_REQUEST["descreg_cormer_cre"]);
@@ -285,7 +309,18 @@ class PrimanotaController
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato($_REQUEST["mercato_cormer_cre"]);
 		}
-
+		
+		if (isset($_REQUEST["datareg_cormer_mod"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_cormer_mod"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_cormer_mod"]);
+			$registrazione->setCodCausale($_REQUEST["causale_cormer_mod"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_cormer_mod"]);
+			$registrazione->setDesCliente("");
+			$registrazione->setNumFattura("");
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato($_REQUEST["mercato_cormer_mod"]);
+		}
+		
 		// Registrazione corrispettivo negozio ==================================================
 
 		if (isset($_REQUEST["codconto_corneg_cre"])) {

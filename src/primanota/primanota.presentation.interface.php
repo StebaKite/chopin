@@ -38,7 +38,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const VISUALIZZA_INCASSO_HREF = "<a onclick='visualizzaIncasso(";
 	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
 
-	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a href='../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=start&idRegistrazione=";
+	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a onclick='modificaCorrispettivoMercato(";
 	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
 	const MODIFICA_REGISTRAZIONE_HREF = "<a onclick='modificaRegistrazione(";
 	const MODIFICA_PAGAMENTO_HREF = "<a onclick='modificaPagamento(";

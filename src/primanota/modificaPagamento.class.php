@@ -37,6 +37,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 	    $causale = Causale::getInstance();
 	    
 	    $utility = Utility::getInstance();
+	    $array = $utility->getConfig();
 	    $db = Database::getInstance();
 	    
 	    $registrazione->leggi($db);
@@ -48,18 +49,14 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
         
         $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());        
         $scadenzaFornitore->trovaScadenzeDaPagare($db);
-        $registrazione->setNumFattureDaPagare($this->makeTabellaFattureDaPagare($scadenzaFornitore,"scadenze_aperte_pag_mod"));
+        $registrazione->setNumFattureDaPagare($this->makeTabellaFattureDaPagare($scadenzaFornitore));
 
         $scadenzaFornitore->trovaScadenzePagate($db);
-        $registrazione->setNumFatturePagate($this->makeTabellaFatturePagate($scadenzaFornitore,"scadenze_chiuse_pag_mod"));
+        $registrazione->setNumFatturePagate($this->makeTabellaFatturePagate($scadenzaFornitore));
                 
 	    $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
 	    $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
-	    $dettaglioRegistrazione->setCampoMsgControlloPagina("tddettagli_pag_mod");
 	    $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_mod");
-	    $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagliPagamento_mod");
-	    $dettaglioRegistrazione->setNomeCampo("descreg_pag_mod");
-	    $dettaglioRegistrazione->setLabelNomeCampo("descreg_pag_mod_label");
 	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 	    
 	    $causale->setCodCausale($registrazione->getCodCausale());

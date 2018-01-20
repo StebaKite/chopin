@@ -36,8 +36,30 @@ $("#codneg_cormer_cre").change(
 
 //---------------------------------------------------------------------------------
 
+$("#codneg_cormer_mod").change(
+	function() {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				$("#mercato_cormer_mod").html(xmlhttp.responseText);
+				$("#mercato_cormer_mod").selectmenu("refresh");
+			}
+		}
+		xmlhttp.open("GET","leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_mod=" + this.value, true);
+		xmlhttp.send();
+	}
+);
+
+//---------------------------------------------------------------------------------
+
 $("#button-nuovo-dettaglio-nuovo-corrispettivo-mercato-form").click(function() {
 	$("#nuovo-dettaglio-corrispettivo-mercato-dialog").modal("show");
+});
+
+//---------------------------------------------------------------------------------
+
+$("#button-nuovo-dettaglio-modifica-corrispettivo-mercato-form").click(function() {
+	$("#nuovo-dettaglio-modifica-corrispettivo-mercato-dialog").modal("show");
 });
 
 //---------------------------------------------------------------------------------
@@ -74,6 +96,38 @@ $("#button-ok-nuovodett-nuovo-corrispettivo-mercato-form").click(
 
 //---------------------------------------------------------------------------------
 
+$("#button-ok-nuovodett-modifica-corrispettivo-mercato-form").click(
+	function() {
+		
+		var importo = $("#importo_cormer_mod").val();
+		var importoNormalizzato = importo.trim().replace(",", ".");
+		var imponibile = $("#imponibile_cormer_mod").val();
+		var imponibileNormalizzato = imponibile.trim().replace(",", ".");
+		var iva = $("#iva_cormer_mod").val();
+		var ivaNormalizzato = iva.trim().replace(",", ".");
+		
+		if($('#aliquota10_cormer_mod').is(':checked')) { var aliquota = $("#aliquota10_cormer_mod").val(); }
+		if($('#aliquota20_cormer_mod').is(':checked')) { var aliquota = $("#aliquota20_cormer_mod").val(); }
+
+		var conto = $("#conti_cormer_mod").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
+		var idconto = conto.substring(0, 6);
+		
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+	        	var dettagliTable = xmlhttp.responseText;
+	      		$("#dettagli_cormer_mod").html(dettagliTable);
+	      		$("#dettagli_cormer_mod").show();
+	      		controllaDettagliRegistrazione("dettagli_cormer_mod");
+	      	}
+	    }
+	    xmlhttp.open("GET", "aggiungiNuovoDettaglioCorrispettivoMercatoFacade.class.php?modo=go&codconto_cormer_mod=" + idconto + "&aliquota_cormer_mod=" + aliquota + "&importo_cormer_mod=" + importoNormalizzato + "&iva_cormer_mod=" + ivaNormalizzato + "&imponibile_cormer_mod=" + imponibileNormalizzato , true);
+	    xmlhttp.send();				
+	}
+);		
+
+//---------------------------------------------------------------------------------
+
 $("#causale_cormer_cre").change(
 	function() {
 		var causale = $("#causale_cormer_cre").val();
@@ -83,8 +137,29 @@ $("#causale_cormer_cre").change(
 			xmlhttp.onreadystatechange = 
 				function() {
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-						$("#conti_cormer").html(xmlhttp.responseText);
-						$("#conti_cormer").selectmenu("refresh");
+						$("#conti_cormer_cre").html(xmlhttp.responseText);
+						$("#conti_cormer_cre").selectmenu("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_cormer_mod").change(
+	function() {
+		var causale = $("#causale_cormer_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_cormer_mod").html(xmlhttp.responseText);
+						$("#conti_cormer_mod").selectmenu("refresh");
 					}
 				}
 			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
@@ -158,22 +233,21 @@ function validaNuovoCorrispettivoMercato()
 	/**
 	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
 	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
-	 * Se la validazione è positiva viene abilitato il bottone ok di conferma inserimento
 	 */
 	var esito = "";
 	
-	controllaDataRegistrazione("datareg_cormer_cre", "tddatareg_cor_cre", "messaggioControlloDataCorrispettivoMercato");
-	if ($("#messaggioControlloDataCorrispettivoMercato").text() == "") 
+	controllaDataRegistrazione("datareg_cormer_cre");
+	if ($("#datareg_cormer_cre_messaggio").text() == "") 
 		esito = esito + "1"; else esito = esito + "0";
 
 	if ($("#descreg_cormer_cre").val() != "") {
-		if (controllaDescrizione("descreg_cormer_cre", "tddescreg_cormer_cre", "messaggioControlloDescrizioneCorrispettivoMercato")) 
+		if (controllaDescrizione("descreg_cormer_cre")) 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 
 	if ($("#causale_cormer_cre").val() != "") {
-		controllaDettagliRegistrazione("tddettagli_cormer_cre","messaggioControlloDettagliCorrispettivoMercato","descreg_cormer_cre","descreg_cormer_cre_label");
-		if ($("#messaggioControlloCausaleCorrispettivoMercato").text() == "") 
+		controllaDettagliRegistrazione("dettagli_cormer_cre");
+		if ($("#dettagli_cormer_cre_messaggio").text() == "") 
 			esito = esito + "1"; else esito = esito + "0";		
 	}
 	
@@ -217,7 +291,90 @@ function visualizzaCorrispettivoMercato(idRegistrazione)
 	xmlhttp.send();
 }
 
+//---------------------------------------------------------------------------------		
+//MODIFICA CORRISPETTIVO MERCATO : controllo campi in pagina
+//---------------------------------------------------------------------------------		
 
+function validaModificaCorrispettivoMercato()
+{
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o negativo (0)
+	 * La validazione complessiva è positiva se tutti i controlli sono positivi (1)
+	 */
+	var esito = "";
+	
+	controllaDataRegistrazione("datareg_cormer_mod");
+	if ($("#datareg_cormer_mod_messaggio").text() == "") 
+		esito = esito + "1"; else esito = esito + "0";
+
+	if ($("#descreg_cormer_mod").val() != "") {
+		if (controllaDescrizione("descreg_cormer_mod")) 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+
+	if ($("#causale_cormer_mod").val() != "") {
+		controllaDettagliRegistrazione("dettagli_cormer_mod");
+		if ($("#dettagli_cormer_mod_messaggio").text() == "") 
+			esito = esito + "1"; else esito = esito + "0";		
+	}
+	
+	if (esito == "111") {
+		return true;
+	} else {
+		return false;	
+	}
+}
+
+//---------------------------------------------------------------------
+
+function modificaCorrispettivoMercato(idRegistrazione)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("corrispettivo").each(
+				function() {
+
+					$("#datareg_cormer_mod").val($(this).find("datareg").text());
+					$("#descreg_cormer_mod").val($(this).find("descreg").text());
+					$("#causale_cormer_mod").val($(this).find("causale").text());
+
+					var negozio = $(this).find("codneg").text();
+					$("#codneg_cormer_mod option[value='" + negozio + "']").prop('selected', true);
+					
+					$("#mercato_cormer_mod").html($(this).find("mercatiNegozio").text());
+					$("#dettagli_cormer_mod").html($(this).find("dettagli").text());
+					$("#conti_cormer_mod").html($(this).find("contiCausale").text());
+				}
+			)
+
+			$("#modifica-corrispettivo-mercato-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","modificaCorrispettivoMercatoFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
+	xmlhttp.send();
+}
+
+//---------------------------------------------------------------------------------
+
+$("#button-ok-modifica-corrispettivo-mercato-form").click(
+	function() {
+		if (validaModificaCorrispettivoMercato()) {
+			$("#testo-messaggio-successo").html("Corrispettivo salvato con successo!");
+			$("#messaggio-successo-dialog").modal("show");						
+			sleep(3000);
+			$("#modificaCorrispettivoMercatoForm").submit();			
+		}
+		else {
+			$("#testo-messaggio-errore").html("In presenza di campi in errore il corrispettivo non può essere salvato");
+			$("#messaggio-errore-dialog").modal("show");			
+		}
+	}
+);
 
 
 

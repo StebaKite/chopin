@@ -56,6 +56,12 @@ $("#button-nuovo-dettaglio-nuovo-pagamento-form").click(function() {
 
 //---------------------------------------------------------------------------------
 
+$("#button-nuovo-dettaglio-modifica-pagamento-form").click(function() {
+	$("#nuovo-dettaglio-modifica-pagamento-dialog").modal("show");
+});
+
+//---------------------------------------------------------------------------------
+
 $("#button-ok-nuovodett-nuovo-pagamento-form").click(
 	function() {
 
@@ -87,6 +93,85 @@ $("#button-ok-nuovodett-nuovo-pagamento-form").click(
 
 //---------------------------------------------------------------------------------
 
+$("#button-ok-nuovodett-modifica-pagamento-form").click(
+	function() {
+
+		var D_A = $("#newsegnodett_pag_mod").val();
+	
+		// tolgo eventuali virgole nella descrizione del conto
+		
+		var conto = $("#conti_pag_mod").val().replace(",",".");
+		var idconto = conto.substring(0, 6);
+		
+		// normalizzo la virgola dell'importo
+		
+		var importo = $("#newimpdett_pag_mod").val();
+		var importoNormalizzato = importo.trim().replace(",", ".");
+	
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = 
+			function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var sottocontiTable = xmlhttp.responseText;
+					$("#dettagli_pag_mod").html(sottocontiTable);
+					controllaDettagliRegistrazione("dettagli_pag_mod");
+				}
+			}
+		xmlhttp.open("GET","aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto="	+ conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+		xmlhttp.send();
+	}
+);		
+
+//---------------------------------------------------------------------------------		
+
+function aggiungiFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function()
+	{
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+		{	
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("scadenzefornitore").each(
+				function() {
+					$("#" + idTableChiuse).html($(this).find("scadenzepagate").text());
+					$("#" + idTableAperte).html($(this).find("scadenzedapagare").text());
+				}
+			)
+		}
+	}
+	xmlhttp.open("GET", "aggiungiFatturaPagataFacade.class.php?modo=start&idscadfor=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
+	xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------		
+
+function rimuoviFatturaPagata(idScadenza,idTableAperte,idTableChiuse)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function()
+	{
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+		{	
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("scadenzefornitore").each(
+				function() {
+					$("#" + idTableChiuse).html($(this).find("scadenzepagate").text());
+					$("#" + idTableAperte).html($(this).find("scadenzedapagare").text());
+				}
+      	)
+		}
+	}
+	xmlhttp.open("GET", "rimuoviFatturaPagataFacade.class.php?modo=start&idscadfor=" + idScadenza + "&idtableaperte=" + idTableAperte + "&idtablechiuse=" + idTableChiuse, true);
+	xmlhttp.send();		
+}
+
+//---------------------------------------------------------------------------------
+
 $("#causale_pag_cre").change(
 	function() {
 		var causale = $("#causale_pag_cre").val();
@@ -98,6 +183,27 @@ $("#causale_pag_cre").change(
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 						$("#conti_pag").html(xmlhttp.responseText);
 						$("#conti_pag").selectmenu("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_pag_mod").change(
+	function() {
+		var causale = $("#causale_pag_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_pag_mod").html(xmlhttp.responseText);
+						$("#conti_pag_mod").selectmenu("refresh");
 					}
 				}
 			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
@@ -252,7 +358,7 @@ function modificaPagamento(idPagamento)
 			$("#modifica-pagamento-dialog").modal("show");
 		}
 	}
-	xmlhttp.open("GET", "modificaPagamentoFacade.class.php?modo=start&idinc=" + idPagamento, true);
+	xmlhttp.open("GET", "modificaPagamentoFacade.class.php?modo=start&idpag=" + idPagamento, true);
 	xmlhttp.send();		
 }
 

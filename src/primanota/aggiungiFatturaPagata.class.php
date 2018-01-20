@@ -29,6 +29,8 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
         $registrazione = Registrazione::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $fornitore = Fornitore::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
         
         $fornitore->setIdFornitore($registrazione->getIdFornitore());
         
@@ -37,7 +39,14 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaFornitore->leggi($db);
             $scadenzaFornitore->aggiungiScadenzaPagata();
             
-            echo $this->makeTabellaFatturePagate($scadenzaFornitore) . "|" . $this->refreshTabellaFattureDaPagare($scadenzaFornitore);
+            $risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_FORNITORE_APERTE;
+            
+            $replace = array(
+            		'%scadenzedapagare%' => $this->makeTabellaFattureDaPagare($scadenzaFornitore),
+            		'%scadenzepagate%' => $this->makeTabellaFatturePagate($scadenzaFornitore)
+            );
+            $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+            echo $utility->tailTemplate($template);
         }
         elseif ($scadenzaFornitore->getIdTableScadenzeAperte() == "scadenze_aperte_pag_mod")
         {
@@ -47,7 +56,14 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaFornitore->trovaScadenzeDaPagare($db);
             $scadenzaFornitore->trovaScadenzePagate($db);
             
-            echo $this->makeTabellaFatturePagate($scadenzaFornitore) . "|" . $this->makeTabellaFattureDaPagare($scadenzaFornitore);            
+            $risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_FORNITORE_APERTE;
+            
+            $replace = array(
+            		'%scadenzedapagare%' => $this->makeTabellaFattureDaPagare($scadenzaFornitore),
+            		'%scadenzepagate%' => $this->makeTabellaFatturePagate($scadenzaFornitore)
+            );
+            $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+            echo $utility->tailTemplate($template);
         }
     }
 }

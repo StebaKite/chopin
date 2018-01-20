@@ -1,245 +1,136 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'ricercaRegistrazione.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'registrazione.class.php';
+require_once 'mercato.class.php';
+require_once 'causale.class.php';
 
-class ModificaCorrispettivoMercato extends primanotaAbstract {
-
-	private static $_instance = null;
-	private static $categoria_causali = 'GENERI';
+class ModificaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBusinessInterface
+{
+	function __construct()
+	{
+		$this->root = $_SERVER['DOCUMENT_ROOT'];
+		$this->utility = Utility::getInstance();
+		$this->array = $this->utility->getConfig();
+	}
 	
-	public static $azioneModificaCorrispettivo = "../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=go";
+	public function getInstance()
+	{
+		if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO])) $_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO] = serialize(new ModificaCorrispettivoMercato());
+		return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO]);
+	}
+
+	public function start()
+	{
+		$registrazione = Registrazione::getInstance();
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$mercato = Mercato::getInstance();
+		$causale = Causale::getInstance();
 		
-	function __construct() {
-
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-
-		require_once 'utility.class.php';
-
 		$utility = Utility::getInstance();
+		$db = Database::getInstance();
 		$array = $utility->getConfig();
-
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
-
-	private function  __clone() { }
-
-	/**
-	 * Singleton Pattern
-	 */
-
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-			self::$_instance = new ModificaCorrispettivoMercato();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-
-		require_once 'modificaCorrispettivoMercato.template.php';
-		require_once 'utility.class.php';
-
-		$utility = Utility::getInstance();
-		$this->prelevaDatiRegistrazione($utility);
-		$this->prelevaDatiDettagliRegistrazione($utility);
-
-		/**
-		 * Prelevo in entrata il nome della funzione REFERER e ci estraggo il nome della funzione verso la 
-		 * quale redirigere l'utente dopo la modifica 
-		 */
-		if (!isset($_SESSION['referer_function_name'])) {
-			$_SESSION['referer_function_name'] = $_SERVER['HTTP_REFERER'];
-		}
 		
-		$modificaCorrispettivoMercatoTemplate = ModificaCorrispettivoMercatoTemplate::getInstance();
-		$this->preparaPagina($modificaCorrispettivoMercatoTemplate);
-			
-		// Compone la pagina
-		include(self::$testata);
-		$modificaCorrispettivoMercatoTemplate->displayPagina();
-		include(self::$piede);	
-	}
+		$registrazione->prepara();
+		$mercato->prepara();
+		
+		$registrazione->leggi($db);
+		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+		
+		$mercato->setIdMercato($registrazione->getIdMercato());
+		$mercato->leggi($db);
+		
+		$dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
+		$dettaglioRegistrazione->leggiDettagliRegistrazione($db);
+		$dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_mod");
+		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+		
+		$negozio = trim($registrazione->getCodNegozio());
 
-	public function go() {
-	
-		require_once 'modificaCorrispettivoMercato.template.php';
-		require_once 'ricercaRegistrazione.class.php';
-		require_once 'utility.class.php';
-	
-		/**
-		 * Crea una array dei dettagli per il controllo di quadratura
-		 */
-		$utility = Utility::getInstance();
-		$this->prelevaDatiDettagliRegistrazione($utility);
+		// Mercati configurati sul negozio
 		
-		$result = $_SESSION["elencoDettagliRegistrazione"];
+		$mercato->setCodNegozio($negozio);
+		$mercato->cercaMercatiNegozio($db);
 		
-		$dettaglioregistrazione = pg_fetch_all($result);
-		$dett = "";
+		$elenco_mercati = "<select class='form-control' id='mercato_cormer_mod' name='mercato_cormer_mod'><option value=''></option>";
 		
-		foreach ($dettaglioregistrazione as $row) {
-			$dett = $dett . trim($row["cod_conto"]) . trim($row["cod_sottoconto"]) . "#" . trim($row["imp_registrazione"]) . "#" . trim($row["ind_dareavere"]) . ",";			
-		}
-		$_SESSION['dettagliInseriti'] = $dett;
-		
-		$modificaCorrispettivoMercatoTemplate = ModificaCorrispettivoMercatoTemplate::getInstance();
-		
-		if ($modificaCorrispettivoMercatoTemplate->controlliLogici()) {
-
-			// Aggiornamento del DB ------------------------------
-				
-			if ($this->aggiornaRegistrazione($utility)) {
-
-				$_SESSION["messaggioModifica"] = "Registrazione salvata con successo";
-								
-				$fileClass = $_SESSION['referer_function_name'];
-
-				if (strrpos($fileClass,"Registrazione") > 0) {
-					$ricercaRegistrazione = RicercaRegistrazione::getInstance();
-					unset($_SESSION["numfatt"]);
-					$ricercaRegistrazione->go();						
-				}
+		if ($mercato->getQtaMercati() > 0) {
+			foreach ($mercato->getMercati() as $unMercato) {
+				if ($unMercato[Mercato::ID_MERCATO] == $mercato->getIdMercato())
+					$elenco_mercati .= "<option value='" . $unMercato[Mercato::ID_MERCATO] . "' selected>" . $unMercato[Mercato::DES_MERCATO] . "</option>";
+				else
+					$elenco_mercati .= "<option value='" . $unMercato[Mercato::ID_MERCATO] . "'>" . $unMercato[Mercato::DES_MERCATO] . "</option>";
 			}
 		}
 		else {
-			
-			$this->aggiornaStatoRegistrazione($utility);			// mette le registrazione in stato 02 (Errata)	
-			$this->preparaPagina($modificaCorrispettivoMercatoTemplate);
-		
-			include(self::$testata);
-			$modificaCorrispettivoMercatoTemplate->displayPagina();
-		
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		
-			include(self::$piede);
+			$elenco_mercati .= "<option value=''>Non ci sono mercati per il negozio</option>";
 		}
+		$elenco_mercati .= "</select>";
+		
+		$causale->setCodCausale($registrazione->getCodCausale());
+		$causale->leggi($db);
+		$causale->loadContiConfigurati($db);	// conti configurati sulla causale
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_CORRISPETTIVO;
+		
+		$replace = array(
+				'%datareg%' => trim($registrazione->getDatRegistrazione()),
+				'%descreg%' => trim($registrazione->getDesRegistrazione()),
+				'%causale%' => trim($causale->getCodCausale()),
+				'%codneg%' => $negozio,
+				'%mercato%' => trim($mercato->getDesMercato()),
+				'%mercatiNegozio%' => $elenco_mercati,
+				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+				'%contiCausale%' => $causale->getContiCausale()
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
+	}
+
+	public function go()
+	{
+		$registrazione = Registrazione::getInstance();
+		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+		$mercato = Mercato::getInstance();
+		$causale = Causale::getInstance();
+		
+		$utility = Utility::getInstance();
+		$db = Database::getInstance();
+		
+		$this->aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione, $mercato);
+		
+		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+		$controller->start();
 	}	
 	
-	public function prelevaDatiRegistrazione($utility) {
-		
-		require_once 'database.class.php';
-		
-		$db = Database::getInstance();
-		
-		$result = $this->leggiRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-		
-		if ($result) {
-
-			$registrazione = pg_fetch_all($result);				
-			foreach ($registrazione as $row) {
-				
-				$_SESSION["descreg"] = $row["des_registrazione"]; 
-				$_SESSION["datareg"] = $row["dat_registrazione"];
-				$_SESSION["datareg_old"] = $row["dat_registrazione"];
-				$_SESSION["codneg"] = $row["cod_negozio"];
-				$_SESSION["causale"] = $row["cod_causale"];
-				$_SESSION["idmercato"] = $row["id_mercato"];
-			}
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati registrazione : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
-		}
-	}
-	
-	public function prelevaDatiDettagliRegistrazione($utility) {
-
-		require_once 'database.class.php';
-		
-		$db = Database::getInstance();
-		
-		$result = $this->leggiDettagliRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-		
-		if ($result) {		
-			$_SESSION["elencoDettagliRegistrazione"] = $result;
-		}
-		else {
-			error_log(">>>>>> Errore prelievo dati registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<" );
-		}		
-	}
-	
-	public function aggiornaStatoRegistrazione($utility) {
-		
-		require_once 'database.class.php';
-		
-		$db = Database::getInstance();
-		$this->updateStatoRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["stareg"]);
-	}
-	
-	public function aggiornaRegistrazione($utility) {
-	
-		require_once 'database.class.php';
-		
+	public function aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione, $mercato)
+	{
 		$db = Database::getInstance();
 		$db->beginTransaction();
-		$rimuoviOperazioneAssociata = false;
-	
-		$descreg = str_replace("'", "''", $_SESSION["descreg"]);
-		$datareg = ($_SESSION["datareg"] != "") ? "'" . $_SESSION["datareg"] . "'" : "null" ;
-		$stareg = $_SESSION["stareg"];
-		$codneg = ($_SESSION["codneg"] != "") ? "'" . $_SESSION["codneg"] . "'" : "null" ;
-		$causale = $_SESSION["causale"];		
-		$staScadenza = "00"; 
-		$idmercato = $_SESSION["idmercato"];
+		$array = $utility->getConfig();
 		
-		if ($this->updateRegistrazione($db, $utility, $_SESSION["idRegistrazione"], $_SESSION["totaleDare"], $descreg, 'null', $datareg, 'null', $causale, 'null', 'null', $stareg, $codneg, $staScadenza, $idmercato)) {
-
-			/**
-			 * Rigenero i saldi
-			 */
-			
-			$array = $utility->getConfig();
-				
-			if ($array['lavoriPianificatiAttivati'] == "Si") {
-				
-				/**
-				 * Se è cambiata la data di registrazione devo rigenerare i saldi due volte per le due date altrimenti
-				 * i riporti dei saldi potrebbero contenere l'importo due volte
-				 * Questo potrebbe accadere se la data registrazione viene portata da un mese all'altro
-				 */
-				
-				$datareg_new = strtotime(str_replace('/', '-', str_replace("'", "", $datareg)));
-				$datareg_old = strtotime(str_replace('/', '-', $_SESSION["datareg_old"]));
-				if ($datareg_new != $datareg_old) {
-					$this->rigenerazioneSaldi($db, $utility, $datareg_old);						
-				}
-				$this->rigenerazioneSaldi($db, $utility, $datareg_new);
+		if ($registrazione->aggiorna($db))
+		{
+			if ($this->aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione))
+			{
+				$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+				$db->commitTransaction();
+				return true;				
 			}
-				
-			$db->commitTransaction();
-			return TRUE;				
-		}		
+			else {
+				$db->rollbackTransaction();
+				return false;
+			}
+		}
 		else {
 			$db->rollbackTransaction();
-			error_log("Errore inserimento registrazione, eseguito Rollback");
-			return FALSE;
+			return false;
 		}
-	}
-	
-	public function preparaPagina($modificaCorrispettivoMercatoTemplate) {
-	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-	
-		$modificaCorrispettivoMercatoTemplate->setAzione(self::$azioneModificaCorrispettivo);
-		$modificaCorrispettivoMercatoTemplate->setConfermaTip("%ml.salvaTip%");
-		$modificaCorrispettivoMercatoTemplate->setTitoloPagina("%ml.modificaCorrispettivoMercato%");
-	
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-	
-		// Prelievo dei dati per i combo --------------------------------------------------------
-	
-		$_SESSION['elenco_causali'] = $this->caricaCausali($utility, $db, self::$categoria_causali);
-		$_SESSION['elenco_conti'] = $this->caricaConti($utility, $db);
-		$_SESSION['elenco_mercati'] = $this->caricaMercatiNegozio($utility, $db);
 	}
 }	
 

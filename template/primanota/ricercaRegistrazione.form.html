@@ -1283,6 +1283,53 @@
 	</div>
 </div>
 
+<!-- ---------------------------------->
+<!-- NUOVO DETTAGLIO MODIFICA PAGAMENTO -->
+<!-- ---------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-pagamento-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio pagamento</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_pag_mod" name="newimpdett_pag_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_pag_mod')">
+								</div>
+						  	</div>
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_pag_mod" name="newsegnodett_pag_mod" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+				  		<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_pag_mod" name="newcontodett_pag_mod"></select>			
+								</div>	
+						  	</div>							  	
+				  		</div>				  		
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-pagamento-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
 <!-- --------------------------- -->
 <!-- NUOVO CORRISPETTIVO MERCATO -->
 <!-- --------------------------- -->
@@ -1414,7 +1461,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_cormer" name="conti_cormer_cre"></select>			
+									<select class="form-control" id="conti_cormer_cre" name="conti_cormer_cre"></select>			
 								</div>	
 						  	</div>							  	
 						</div>												
@@ -1454,6 +1501,12 @@
 						  		<label for="codneg_cormer_vis">%ml.negozio%</label>
 					    		<span id="codneg_cormer_vis"></span>
 						  	</div>
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+						    		<label for="descreg_cormer_vis">%ml.descreg%</label>
+						    		<span id="descreg_cormer_vis"></span>
+								</div>
+						  	</div>						  	
 						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-6">
@@ -1462,21 +1515,13 @@
 						    		<span id="causale_cormer_vis"></span>
 								</div>
 						  	</div>
-						  	<div class="col-sm-6">
-						  		<div class="control-group">
-						    		<label for="descreg_cormer_vis">%ml.descreg%</label>
-						    		<span id="descreg_cormer_vis"></span>
-								</div>
-						  	</div>
-						</div>
-						<div class="form-group row">
 						  	<div class="col-sm-6 ui-front">
 						  		<div class="control-group">
 						    		<label id="mercato_cormer_vis_label" for="mercato_cormer_vis">%ml.mercato%</label>
 						    		<span id="mercato_cormer_vis"></span>
 								</div>	
-						  	</div>
-						</div>						
+						  	</div>						  	
+						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-12">
 						  		<div class="control-group">
@@ -1488,6 +1533,152 @@
 					</div>	
 	        	</div>
 	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------ -->
+<!-- MODIFICA CORRISPETTIVO MERCATO -->
+<!-- ------------------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-corrispettivo-mercato-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Corrispettivo Mercato</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<form method="post" id="modificaCorrispettivoMercatoForm" action="../primanota/modificaCorrispettivoMercatoFacade.class.php?modo=go">
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_cormer_mod_control_group">
+							    		<label for="datareg_cormer_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_cormer_mod_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_cormer_mod" name="datareg_cormer_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_cormer_mod">%ml.negozio%</label>
+									<select class="form-control" id="codneg_cormer_mod" name="codneg_cormer_mod" >
+										<option value=" ">&nbsp;</option>
+										<option value="VIL">%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_cormer_mod_control_group">
+							    		<label for="descreg_cormer_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cormer_mod_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_cormer_mod" name="descreg_cormer_mod" type="text" onblur="controllaDescrizione('descreg_cormer_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_cormer_mod_control_group">
+										<label for="causale_cormer_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cormer_mod_messaggio"></span></small></label>
+										<select class="form-control" id="causale_cormer_mod" name="causale_cormer_mod" >
+											<option value=" "></option>
+											%elenco_causali_cormer_mod%
+										</select>			
+									</div>
+							  	</div>
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="mercato_cormer_mod_control_group">
+										<label for="mercato_cormer_mod">%ml.mercato%&nbsp;<small><span class="text-danger" id="mercato_cormer_mod_messaggio"></span></small></label>
+										<select class="form-control" id="mercato_cormer_mod" name="mercato_cormer_mod" ></select>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_cormer_mod_control_group">
+							    		<label for="dettagli_cormer_mod">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_cormer_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_cormer_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+							
+						</div>		
+					</form>	
+
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-corrispettivo-mercato-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-modifica-corrispettivo-mercato-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------------------------->
+<!-- NUOVO DETTAGLIO MODIFICA CORRISPETTIVO MERCATO -->
+<!-- ------------------------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-corrispettivo-mercato-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio corrispettivo mercato</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-importo-cormer-mod">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="importo_cormer_mod" name="importo_cormer_mod" type="text" onblur="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')" aria-describedby="sizing-addon-importo-cormer-mod"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+								  	<label><input type="radio" name="aliquota_cormer_mod" id="aliquota10_cormer_mod" value="1.10" checked onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.10</label> 	
+								  	<label><input type="radio" name="aliquota_cormer_mod" id="aliquota20_cormer_mod" value="1.22" onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.20</label> 
+								</div>
+							</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-iva-cormer-mod">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="iva_cormer_mod" name="iva_cormer_mod" type="text" aria-describedby="sizing-addon-iva-cormer-mod"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-imponibile-cormer-mod">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="imponibile_cormer_mod" name="imponibile_cormer_mod" type="text" aria-describedby="sizing-addon-imponibile-cormer-mod"/>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_cormer_mod" name="conti_cormer_mod"></select>
+								</div>	
+						  	</div>							  	
+						</div>												
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-corrispettivo-mercato-form">Ok</button>
 	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
 	        	</div>
 	      	</div>
