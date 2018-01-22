@@ -878,7 +878,39 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			return false;
 		}
 	}
-
+	
+	public function aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione)
+	{
+		$db = Database::getInstance();
+		$db->beginTransaction();
+		$array = $utility->getConfig();
+		
+		if ($registrazione->aggiorna($db))
+		{
+			if ($this->aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione))
+			{
+				$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+				$db->commitTransaction();
+				return true;
+			}
+			else {
+				$db->rollbackTransaction();
+				return false;
+			}
+		}
+		else {
+			$db->rollbackTransaction();
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	public function creaDettaglioCorrispettivonegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)
 	{
 		$_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);	// il codconto del dettaglio contiene anche la descrizione

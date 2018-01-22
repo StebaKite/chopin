@@ -1686,6 +1686,344 @@
 	</div>
 </div>
 
+<!-- --------------------------- -->
+<!-- NUOVO CORRISPETTIVO NEGOZIO -->
+<!-- --------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-corrispettivo-negozio-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo Corrispettivo Negozio</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<form method="post" id="nuovoCorrispettivoNegozioForm" action="../primanota/creaCorrispettivoNegozioFacade.class.php?modo=go">
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_corneg_cre_control_group">
+							    		<label for="datareg_corneg_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_corneg_cre_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_corneg_cre" name="datareg_corneg_cre"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_corneg_cre">%ml.negozio%</label>
+									<select class="form-control" id="codneg_corneg_cre" name="codneg_corneg_cre" >
+										<option value=" ">&nbsp;</option>
+										<option value="VIL">%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_corneg_cre_control_group">
+							    		<label for="descreg_corneg_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_corneg_cre_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_corneg_cre" name="descreg_corneg_cre" type="text" onblur="controllaDescrizione('descreg_corneg_cre')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_corneg_cre_control_group">
+										<label for="causale_corneg_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_corneg_cre_messaggio"></span></small></label>
+										<select class="form-control" id="causale_corneg_cre" name="causale_corneg_cre" >
+											<option value=" "></option>
+											%elenco_causali_corneg_cre%
+										</select>			
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_corneg_cre_control_group">
+							    		<label for="dettagli_corneg_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_corneg_cre_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_corneg_cre"></table>
+									</div>	
+							  	</div>
+							</div>
+							
+						</div>		
+					</form>	
+
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-corrispettivo-negozio-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuovo-corrispettivo-negozio-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ---------------------------------------------->
+<!-- NUOVO DETTAGLIO NUOVO CORRISPETTIVO NEGOZIO -->
+<!-- ---------------------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-corrispettivo-negozio-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio corrispettivo negozio</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-importo-corneg-cre">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="importo_corneg_cre" name="importo_corneg_cre" type="text" onblur="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')" aria-describedby="sizing-addon-importo-corneg-cre"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+								  	<label><input type="radio" name="aliquota_corneg_cre" id="aliquota10_corneg_cre" value="1.10" checked onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.10</label> 	
+								  	<label><input type="radio" name="aliquota_corneg_cre" id="aliquota20_corneg_cre" value="1.22" onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.20</label> 
+								</div>
+							</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-iva-corneg-cre">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="iva_corneg_cre" name="iva_corneg_cre" type="text" aria-describedby="sizing-addon-iva-corneg-cre"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-imponibile-corneg-cre">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="imponibile_corneg_cre" name="imponibile_corneg_cre" type="text" aria-describedby="sizing-addon-imponibile-corneg-cre"/>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_corneg_cre" name="conti_corneg_cre"></select>			
+								</div>	
+						  	</div>							  	
+						</div>												
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuovo-corrispettivo-negozio-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- --------------------------------- -->
+<!-- VISUALIZZA CORRISPETTIVO NEGOZIO  -->
+<!-- --------------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="visualizza-corrispettivo-negozio-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Visualizza Corrispettivo Negozio</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">							
+							<div class="col-sm-3">
+						  		<div class="control-group">
+						    		<label for="datareg_corneg_vis">%ml.datareg%</label>
+						    		<span id="datareg_corneg_vis"></span>
+			            		</div>
+						  	</div>
+						  	<div class="col-sm-3">
+						  		<label for="codneg_corneg_vis">%ml.negozio%</label>
+					    		<span id="codneg_corneg_vis"></span>
+						  	</div>
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+						    		<label for="descreg_corneg_vis">%ml.descreg%</label>
+						    		<span id="descreg_corneg_vis"></span>
+								</div>
+						  	</div>						  	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+									<label for="causale_corneg_vis">%ml.codcau%</label>
+						    		<span id="causale_corneg_vis"></span>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="control-group">
+						    		<label for="dettagli_corneg_vis">Dettagli</label>
+									<table class="table table-bordered table-hover" id="dettagli_corneg_vis"></table>
+								</div>	
+						  	</div>
+						</div>
+					</div>	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------ -->
+<!-- MODIFICA CORRISPETTIVO NEGOZIO -->
+<!-- ------------------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-corrispettivo-negozio-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Corrispettivo Negozio</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<form method="post" id="modificaCorrispettivoNegozioForm" action="../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=go">
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_corneg_mod_control_group">
+							    		<label for="datareg_corneg_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_corneg_mod_messaggio"></span></small></label>
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+					                		<input type='text' class="form-control" id="datareg_corneg_mod" name="datareg_corneg_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-2">
+							  		<label for="codneg_corneg_mod">%ml.negozio%</label>
+									<select class="form-control" id="codneg_corneg_mod" name="codneg_corneg_mod" >
+										<option value=" ">&nbsp;</option>
+										<option value="VIL">%ml.villa%</option>
+										<option value="BRE">%ml.brembate%</option>
+										<option value="TRE">%ml.trezzo%</option>
+									</select>			
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descreg_corneg_mod_control_group">
+							    		<label for="descreg_corneg_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_corneg_mod_messaggio"></span></small></label>
+										<input class="form-control" id="descreg_corneg_mod" name="descreg_corneg_mod" type="text" onblur="controllaDescrizione('descreg_corneg_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="causale_corneg_mod_control_group">
+										<label for="causale_corneg_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_corneg_mod_messaggio"></span></small></label>
+										<select class="form-control" id="causale_corneg_mod" name="causale_corneg_mod" >
+											<option value=" "></option>
+											%elenco_causali_corneg_mod%
+										</select>			
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_corneg_mod_control_group">
+							    		<label for="dettagli_corneg_mod">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_corneg_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_corneg_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+							
+						</div>		
+					</form>	
+
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-corrispettivo-negozio-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-modifica-corrispettivo-negozio-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------------------------->
+<!-- NUOVO DETTAGLIO MODIFICA CORRISPETTIVO NEGOZIO -->
+<!-- ------------------------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-corrispettivo-negozio-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio corrispettivo negozio</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-importo-corneg-mod">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="importo_corneg_mod" name="importo_corneg_mod" type="text" onblur="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')" aria-describedby="sizing-addon-importo-corneg-mod"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota10_corneg_mod" value="1.10" checked onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label> 	
+								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota20_corneg_mod" value="1.22" onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label> 
+								</div>
+							</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-iva-corneg-mod">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="iva_corneg_mod" name="iva_corneg_mod" type="text" aria-describedby="sizing-addon-iva-corneg-mod"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-imponibile-corneg-mod">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="imponibile_corneg_mod" name="imponibile_corneg_mod" type="text" aria-describedby="sizing-addon-imponibile-corneg-mod"/>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="form-control" id="conti_corneg_mod" name="conti_corneg_mod"></select>
+								</div>	
+						  	</div>							  	
+						</div>												
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-corrispettivo-negozio-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
 <!-- ---------------- -->
 <!-- MESSAGGIO ERRORE -->
 <!-- ---------------- -->

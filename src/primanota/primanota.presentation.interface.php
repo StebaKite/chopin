@@ -10,7 +10,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const REGISTRAZIONE_ERRATA = "02";
 
 	const CORRISPETTIVO_MERCATO = "corrispettiviMercato";
-	const CORRISPETTIVO_NEGOZIO = "corrispettivoNegozio";
+	const CORRISPETTIVO_NEGOZIO = "corrispettiviNegozio";
 	const PAGAMENTO = 'pagamentoFornitori';
 	const INCASSO = 'incassoFattureClienti';
 
@@ -33,13 +33,13 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	// Bottoni
 
 	const VISUALIZZA_CORRISPETTIVO_MERCATO_HREF = "<a onclick='visualizzaCorrispettivoMercato(";
-	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/visualizzaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
+	const VISUALIZZA_CORRISPETTIVO_NEGOZIO_HREF = "<a onclick='visualizzaCorrispettivoNegozio(";
 	const VISUALIZZA_PAGAMENTO_HREF = "<a onclick='visualizzaPagamento(";
 	const VISUALIZZA_INCASSO_HREF = "<a onclick='visualizzaIncasso(";
 	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
 
 	const MODIFICA_CORRISPETTIVO_MERCATO_HREF = "<a onclick='modificaCorrispettivoMercato(";
-	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a href='../primanota/modificaCorrispettivoNegozioFacade.class.php?modo=start&idRegistrazione=";
+	const MODIFICA_CORRISPETTIVO_NEGOZIO_HREF = "<a onclick='modificaCorrispettivoNegozio(";
 	const MODIFICA_REGISTRAZIONE_HREF = "<a onclick='modificaRegistrazione(";
 	const MODIFICA_PAGAMENTO_HREF = "<a onclick='modificaPagamento(";
 	const MODIFICA_INCASSO_HREF = "<a onclick='modificaIncasso(";

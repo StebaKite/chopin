@@ -95,43 +95,16 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
 	{
 		$registrazione = Registrazione::getInstance();
 		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$mercato = Mercato::getInstance();
-		$causale = Causale::getInstance();
 		
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 		
-		$this->aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione, $mercato);
+		$this->aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
 		
 		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
 		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
 		$controller->start();
 	}	
-	
-	public function aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione, $mercato)
-	{
-		$db = Database::getInstance();
-		$db->beginTransaction();
-		$array = $utility->getConfig();
-		
-		if ($registrazione->aggiorna($db))
-		{
-			if ($this->aggiornaDettagli($db,$utility,$registrazione,$dettaglioRegistrazione))
-			{
-				$this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
-				$db->commitTransaction();
-				return true;				
-			}
-			else {
-				$db->rollbackTransaction();
-				return false;
-			}
-		}
-		else {
-			$db->rollbackTransaction();
-			return false;
-		}
-	}
 }	
 
 ?>

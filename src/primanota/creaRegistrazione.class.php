@@ -52,6 +52,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 	    $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
 
 	    $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+	    $dettaglioRegistrazione->prepara();
 	    $dettaglioRegistrazione->setIdTablePagina("dettagli_cre");
 
 	    $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);

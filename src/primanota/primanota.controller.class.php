@@ -322,7 +322,15 @@ class PrimanotaController
 		}
 		
 		// Registrazione corrispettivo negozio ==================================================
-
+		
+		if (isset($_REQUEST["codneg_corneg_cre"])) {
+			$mercato->setCodNegozio($_REQUEST["codneg_corneg_cre"]);
+		}
+		
+		if (isset($_REQUEST["codneg_cormer_mod"])) {
+			$mercato->setCodNegozio($_REQUEST["codneg_cormer_mod"]);
+		}
+		
 		if (isset($_REQUEST["codconto_corneg_cre"])) {
 			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_corneg_cre"]);
 			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_corneg_cre"]);
@@ -330,7 +338,15 @@ class PrimanotaController
 			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_corneg_cre"]);
 			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_corneg_cre"]);
 		}
-
+		
+		if (isset($_REQUEST["codconto_corneg_mod"])) {
+			$dettaglioRegistrazione->setCodConto($_REQUEST["codconto_corneg_mod"]);
+			$dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_corneg_mod"]);
+			$dettaglioRegistrazione->setAliquota($_REQUEST["aliquota_corneg_mod"]);
+			$dettaglioRegistrazione->setImpIva($_REQUEST["iva_corneg_mod"]);
+			$dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_corneg_mod"]);
+		}
+		
 		if (isset($_REQUEST["datareg_corneg_cre"])) {
 			$registrazione->setDatRegistrazione($_REQUEST["datareg_corneg_cre"]);
 			$registrazione->setDesRegistrazione($_REQUEST["descreg_corneg_cre"]);
@@ -341,7 +357,18 @@ class PrimanotaController
 			$registrazione->setStaRegistrazione("00");
 			$registrazione->setIdMercato("");
 		}
-
+		
+		if (isset($_REQUEST["datareg_corneg_mod"])) {
+			$registrazione->setDatRegistrazione($_REQUEST["datareg_corneg_mod"]);
+			$registrazione->setDesRegistrazione($_REQUEST["descreg_corneg_mod"]);
+			$registrazione->setCodCausale($_REQUEST["causale_corneg_mod"]);
+			$registrazione->setCodNegozio($_REQUEST["codneg_corneg_mod"]);
+			$registrazione->setDesCliente("");
+			$registrazione->setNumFattura("");
+			$registrazione->setStaRegistrazione("00");
+			$registrazione->setIdMercato("");
+		}
+		
 		// Serializzo in sessione gli oggetti modificati ========================================
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
