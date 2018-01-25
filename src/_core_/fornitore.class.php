@@ -75,6 +75,7 @@ class Fornitore implements CoreInterface {
 		$this->setDesIndirizzoFornitore(null);
 		$this->setDesCittaFornitore(null);
 		$this->setCapFornitore(null);
+		$this->setNumGgScadenzaFattura(30);
 		
 		$_SESSION[self::FORNITORE] = serialize($this);
 	}
@@ -224,9 +225,9 @@ class Fornitore implements CoreInterface {
 				'%id_fornitore%' => $this->getIdFornitore(),
 				'%cod_fornitore%' => $this->getCodFornitore(),
 				'%des_fornitore%' => $this->getDesFornitore(),
-				'%des_indirizzo_fornitore%' => $this->getDesIndirizzoFornitore(),
-				'%des_citta_fornitore%' => $this->getDesCittaFornitore(),
-				'%cap_fornitore%' => $this->getCapFornitore(),
+				'%des_indirizzo_fornitore%' => ($this->getDesIndirizzoFornitore() == "") ? null : "'".$this->getDesIndirizzoFornitore()."'" ,
+				'%des_citta_fornitore%' => ($this->getDesCittaFornitore() == "") ? null : "'".$this->getDesCittaFornitore()."'" ,
+				'%cap_fornitore%' => ($this->getCapFornitore() == "") ? null : "'".$this->getCapFornitore()."'" ,
 				'%tip_addebito%' => $this->getTipAddebito(),
 				'%num_gg_scadenza_fattura%' => $this->getNumGgScadenzaFattura()
 		);

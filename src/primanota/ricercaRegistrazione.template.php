@@ -91,11 +91,6 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 			foreach($registrazione->getRegistrazioni() as $unaRegistrazione) {
 
 				if (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_REGISTRAZIONE) {
-
-					/**
-					 * imposto il bottone di cancellazione della registrazione
-					 */					
-
 					
 					/**
 					 * Imposto i bottoni validi sulla riga della registrazione

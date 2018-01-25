@@ -1,167 +1,241 @@
-<body>
 <script type="text/javascript">
 
-$(document).ready( function () {
-    $('#fornitori').dataTable( {
-    	"order": [[1, 'asc']],
-    	"columnDefs": [
-    	    {"targets": 0, "orderable": false },
-    	    {"targets": 8, "orderable": false },
-    	    {"targets": 9, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+	$(document).ready(function(){
 
-function normalizzaCampo(campo)
-{
-	var c = $("#" + campo).val();
-	var cNorm = c.trim().replace("&", "e");
-	$("#" + campo).val(cNorm);	
-}
+		$(".datepicker").datepicker();
+
+		$("#myInput").on("keyup", 
+			function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable tr").filter(
+					function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					}
+				);
+			}
+		);				
+	});
 
 </script>
 
-<div id="body">
-	<div id="main">
-		<table style="width:100%;">
-			<tbody>
-				<tr>
-					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right"><button id="nuovo-fornitore" class="button">%ml.nuovofornitore%</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<br/>
-		<table id="fornitori" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
-	</div>	
-		
-	<div id="nuovo-fornitore-form" title="Nuovo Fornitore"> 
-		<form method="post" id="nuovoFornitore" action="../anagrafica/creaFornitoreFacade.class.php?modo=go" >
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
 
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.codfornitore% :</td>
-						<td class="tooltip">
-							<input type="text" id="codfornitore" name="codfornitore" size="12" maxlength="10" value='%codfornitore%' onblur="controllaCodiceFornitore();" />&nbsp;&nbsp;&nbsp;
-							<i>(Codice fornitore proposto disponibile)</i>
-						</td>
-					</tr>
-					<tr>
-						<td>%ml.desfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="desfornitore" name="desfornitore" size="70" maxlength="100" value='%desfornitore%' onblur="normalizzaCampo('desfornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.indfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="indfornitore" name="indfornitore" size="70" maxlength="200" value='%indfornitore%' onblur="normalizzaCampo('indfornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.cittafornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="cittafornitore" name="cittafornitore" size="70" maxlength="100" value='%cittafornitore%' onblur="normalizzaCampo('cittafornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.capfornitore% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="capfornitore" name="capfornitore" size="7" maxlength="5" value='%capfornitore%' onblur="normalizzaCampo('capfornitore');"></td>
-					</tr>	
-					<tr>
-						<td>%ml.tipaddebito% :</td>						
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">Bonifico</label>
-								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" ><label for="riba">%ml.riba%</label>
-								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" ><label for="rimdiretta">%ml.rimdiretta%</label>
-								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" ><label for="assegnobancario">%ml.assegnobancario%</label>
-								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" ><label for="addebitodiretto">%ml.addebitodiretto%</label>
-							</div>
-						</td>					
-					</tr>	
-					<tr>
-						<td>
-							<p>
-								<label for="amount">%ml.numggscafatt% :</label>
-								<input type="text" id="numggscadenzafattura" name="numggscadenzafattura" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">
-							</p>
-						</td>
-						<td colspan="2">
-							<div id="slider-gg-scadenza-fattura">
-						</td>
-					</tr>				
-				</tbody>
-			</table>
-			
-		</form>
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+						<button id="nuovoFornitore" class="btn btn-primary btn-default">%ml.nuovofornitore%</button>
+					</div>	
+				</div>			
+			</div>
+			<br/>
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
 	</div>
-					
-	<div id="cancella-fornitore-form" title="Cancella Fornitore"> 
-		<form method="post" id="cancellaFornitore" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
-			<p>Elimino il fornitore ?</p>
-			<input type="hidden" id="idfornitore" name="idfornitore">
-		</form>
-	</div>		
-	
-	<div id="modifica-fornitore-form" title="Modifica Fornitore">
-		<form method="post" id="modificaFornitore" action="../anagrafica/modificaFornitoreFacade.class.php?modo=go" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.codfornitore% :</td>
-						<td class="tooltip"><input type="text" id="codfornitore_mod" name="codfornitore_mod" size="12" maxlength="10" readonly="readonly" ></td>
-					</tr>	
-					<tr>
-						<td>%ml.desfornitore% :</td>
-						<td class="tooltip"><input type="text" id="desfornitore_mod" name="desfornitore_mod" size="70" maxlength="100" onblur="normalizzaCampo('desfornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.indfornitore% :</td>
-						<td class="tooltip"><input type="text" id="indfornitore_mod" name="indfornitore_mod" size="70" maxlength="200" onblur="normalizzaCampo('indfornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.cittafornitore% :</td>
-						<td class="tooltip"><input type="text" id="cittafornitore_mod" name="cittafornitore_mod" size="70" maxlength="100" onblur="normalizzaCampo('cittafornitore');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.capfornitore% :</td>
-						<td class="tooltip"><input type="text" id="capfornitore_mod" name="capfornitore_mod" size="7" maxlength="5" onblur="normalizzaCampo('capfornitore');"></td>
-					</tr>	
-					<tr>
-						<td>%ml.tipaddebito% :</td>						
-						<td>
-							<div class="radioset" >
-								<input type="radio" id="bonifico_mod" name="tipoaddebito_mod" value="BONIFICO"/><label for="bonifico_mod">Bonifico</label>
-								<input type="radio" id="riba_mod" name="tipoaddebito_mod" value="RIBA"/><label for="riba_mod">Ri.Ba.</label>
-								<input type="radio" id="rimdiretta_mod" name="tipoaddebito_mod" value="RIM_DIR"/><label for="rimdiretta_mod">Rimessa diretta</label>
-								<input type="radio" id="assegnobancario_mod" name="tipoaddebito_mod" value="ASS_BAN"/><label for="assegnobancario_mod">Assegno bancario</label>
-								<input type="radio" id="addebitodiretto_mod" name="tipoaddebito_mod" value="ADD_DIR"/><label for="addebitodiretto_mod">Addebito diretto</label>
+</div>
+
+<!-- --------------- -->
+<!-- NUOVO FORNITORE -->
+<!-- --------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-fornitore-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo Fornitore</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="nuovoFornitoreForm" action="../anagrafica/creaFornitoreFacade.class.php?modo=go" >
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="codforn_cre_control_group">
+										<label for="codforn_cre">%ml.codfornitore%&nbsp;<small><span class="text-danger" id="codforn_cre_messaggio"></span></small></label>
+										<input class="form-control" id="codforn_cre" name="codforn_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="desforn_cre_control_group">
+							    		<label for="desforn_cre">%ml.desfornitore%&nbsp;<small><span class="text-danger" id="desforn_cre_messaggio"></span></small></label>
+										<input class="form-control" id="desforn_cre" name="desforn_cre" type="text" onblur="controllaDescrizione('desforn_cre')"/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="ggscadfat_cre_control_group">
+							    		<label for="ggscadfat_cre">%ml.numggscafatt%&nbsp;<small><span class="text-danger" id="ggscadfat_cre_messaggio"></span></small></label>
+										<input class="form-control" id="ggscadfat_cre" name="ggscadfat_cre" type="text" onblur="controllaQuantita('ggscadfat_cre')" />
+									</div>
+							  	</div>							
 							</div>
-						</td>					
-					</tr>
-					<tr>
-						<td>
-							<p>
-								<label for="amount">%ml.numggscafatt% :</label>
-								<input type="text" id="numggscadenzafattura_mod" name="numggscadenzafattura_mod" size="3" readonly style="border:0; color:#f6931f; font-weight:bold;">
-							</p>
-						</td>
-						<td>
-							<div id="slider-gg-scadenza-fattura_mod">
-						</td>
-					</tr>				
-				</tbody>
-			</table>
-		</form>
+							<div class="form-group row">
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="indforn_cre_control_group">
+							    		<label for="indforn_cre">%ml.indfornitore%&nbsp;<small><span class="text-danger" id="indforn_cre_messaggio"></span></small></label>
+										<input class="form-control" id="indforn_cre" name="indforn_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="cittaforn_cre_control_group">
+							    		<label for="cittaforn_cre">%ml.cittafornitore%&nbsp;<small><span class="text-danger" id="cittaforn_cre_messaggio"></span></small></label>
+										<input class="form-control" id="cittaforn_cre" name="cittaforn_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="capforn_cre_control_group">
+							    		<label for="capforn_cre">%ml.capfornitore%&nbsp;<small><span class="text-danger" id="capforn_cre_messaggio"></span></small></label>
+										<input class="form-control" id="capforn_cre" name="capforn_cre" type="text" />
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-8">
+						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>						    		
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+									</div>						    		
+								</div>	
+							</div>
+						</div>
+
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-fornitore-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
 	</div>
+</div>
+
+<!-- ------------------ -->
+<!-- MODIFICA FORNITORE -->
+<!-- ------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-fornitore-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Fornitore</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaFornitoreForm" action="../anagrafica/modificaFornitoreFacade.class.php?modo=go" >
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="codforn_mod_control_group">
+										<label for="codforn_mod">%ml.codfornitore%&nbsp;<small><span class="text-danger" id="codforn_mod_messaggio"></span></small></label>
+										<input class="form-control" id="codforn_mod" name="codforn_mod" readonly type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="desforn_mod_control_group">
+							    		<label for="desforn_mod">%ml.desfornitore%&nbsp;<small><span class="text-danger" id="desforn_mod_messaggio"></span></small></label>
+										<input class="form-control" id="desforn_mod" name="desforn_mod" type="text" onblur="controllaDescrizione('desforn_mod')"/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="ggscadfat_mod_control_group">
+							    		<label for="ggscadfat_mod">%ml.numggscafatt%&nbsp;<small><span class="text-danger" id="ggscadfat_mod_messaggio"></span></small></label>
+										<input class="form-control" id="ggscadfat_mod" name="ggscadfat_mod" type="text" onblur="controllaQuantita('ggscadfat_mod')"/>
+									</div>
+							  	</div>							
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="indforn_mod_control_group">
+							    		<label for="indforn_mod">%ml.indfornitore%&nbsp;<small><span class="text-danger" id="indforn_mod_messaggio"></span></small></label>
+										<input class="form-control" id="indforn_mod" name="indforn_mod" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="cittaforn_mod_control_group">
+							    		<label for="cittaforn_mod">%ml.cittafornitore%&nbsp;<small><span class="text-danger" id="cittaforn_mod_messaggio"></span></small></label>
+										<input class="form-control" id="cittaforn_mod" name="cittaforn_mod" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="capforn_mod_control_group">
+							    		<label for="capforn_mod">%ml.capfornitore%&nbsp;<small><span class="text-danger" id="capforn_mod_messaggio"></span></small></label>
+										<input class="form-control" id="capforn_mod" name="capforn_mod" type="text" />
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-8">
+						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_mod_messaggio"></span></small></label>						    		
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="bonifico_mod" autocomplete="off" value="BONIFICO">Bonifico</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="riba_mod" autocomplete="off" value="RIBA">%ml.riba%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="rimdiretta_mod" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="assegnobancario_mod" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="addebitodiretto_mod" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+									</div>						    		
+								</div>	
+							</div>
+						</div>
+
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-fornitore-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ----------------------- -->
+<!-- CANCELLAZIONE FORNITORE -->
+<!-- ----------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="cancella-fornitore-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Cancella fornitore</h4>
+	        	</div>
+	        	<div class="modal-body">	        		        	
+					<form method="post" id="cancellaFornitoreForm" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
+						<p>Elimino il fornitore ?</p>
+						<input type="hidden" id="idfornitore" name="idfornitore">
+			        </form>
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-fornitore-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ----------->
+<!-- FINE DIV -->
+<!-- ----------->

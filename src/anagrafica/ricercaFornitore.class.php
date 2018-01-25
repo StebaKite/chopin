@@ -45,8 +45,6 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
 		if ($this->refreshFornitori($db, $fornitore)) {
 
-			$ricercaFornitoreTemplate->displayPagina();
-
 			/**
 			 * Gestione del messaggio proveniente dalla cancellazione
 			*/
@@ -65,24 +63,27 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
 			}
-
+			
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-			if ($fornitore->getQtaFornitori()  > 0) {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			
+			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+			if ($pos === false) {
+				if ($fornitore->getQtaFornitori() > 0)
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-
-			echo $utility->tailTemplate($template);
+			else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+			
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
 		else {
 
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-		}
-
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
+		}		
+		$ricercaFornitoreTemplate->displayPagina();
+		
 		include($this->piede);
 	}
 

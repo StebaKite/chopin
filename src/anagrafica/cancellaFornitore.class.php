@@ -34,8 +34,6 @@ class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 		
 		$fornitore->cancella($db);
 		
-		$_SESSION["messaggioCancellazione"] = "Fornitore cancellato";
-		
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));		
 		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 		$controller->start();

@@ -33,7 +33,11 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const MODIFICA_FORNITORE = "Obj_modificafornitore";
 	const MODIFICA_MERCATO = "Obj_modificamercato";
 	const RICERCA_MERCATO = "Obj_ricercamercato";
-
+	
+	// Files XML
+	
+	const XML_FORNITORE = "/anagrafica/xml/fornitore.xml";
+	
 	// Actions
 
 	const AZIONE_RICERCA_CLIENTE    = "../anagrafica/ricercaClienteFacade.class.php?modo=go";

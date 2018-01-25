@@ -28,20 +28,24 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 		$fornitore = Fornitore::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-
+		$array = $utility->getConfig();
+		
 		$fornitore->leggi($db);
 		$_SESSION[self::FORNITORE] = serialize($fornitore);
-
-		$datiPagina =
-		trim($fornitore->getCodFornitore()) . "|" .
-		trim($fornitore->getDesFornitore()) . "|" .
-		trim($fornitore->getDesIndirizzoFornitore()) . "|" .
-		trim($fornitore->getDesCittaFornitore()) . "|" .
-		trim($fornitore->getCapFornitore()) . "|".
-		trim($fornitore->getTipAddebito()) . "|" .
-		trim($fornitore->getNumGgScadenzaFattura());
-
-		echo $datiPagina;
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_FORNITORE;
+		
+		$replace = array(
+				'%codice%' => trim($fornitore->getCodFornitore()),
+				'%descrizione%' => trim($fornitore->getDesFornitore()),
+				'%indirizzo%' => trim($fornitore->getDesIndirizzoFornitore()),
+				'%citta%' => trim($fornitore->getDesCittaFornitore()),
+				'%cap%' => trim($fornitore->getCapFornitore()),
+				'%tipoAddebito%' => trim($fornitore->getTipAddebito()),
+				'%giorniScadenzaFattura%' => trim($fornitore->getNumGgScadenzaFattura())
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go()
@@ -49,78 +53,14 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 		$fornitore = Fornitore::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
-
-		if ($this->controlliLogici($fornitore)) {
-
-			if ($this->aggiornaFornitore($db, $fornitore)) {
-				$_SESSION[self::MSG_DA_MODIFICA] = self::MODIFICA_FORNITORE_OK;
-			}
-		}
-		else {
-			$_SESSION[self::MSG_DA_MODIFICA] = $_SESSION[self::MESSAGGIO];
-		}
+		$db->beginTransaction();
+		
+		if ($fornitore->update($db)) $db->commitTransaction();
+		else $db->rollbackTransaction();
 
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));
 		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 		$controller->start();
-	}
-
-	private function aggiornaFornitore($db, $fornitore)
-	{
-		$db->beginTransaction();
-
-		/**
-		 * Metto il doppio apostrofo e gli apici dove servono
-		 */
-
-		$fornitore->setDesFornitore(str_replace("'","''",$fornitore->getDesFornitore()));
-
-		$indirizzo = ($fornitore->getDesIndirizzoFornitore() != "") ? "'" . $fornitore->getDesIndirizzoFornitore() . "'" : "null" ;
-		$fornitore->setDesIndirizzoFornitore($indirizzo);
-
-		$citta = ($fornitore->getDesCittaFornitore() != "") ? "'" . $fornitore->getDesCittaFornitore() . "'" : "null" ;
-		$fornitore->setDesCittaFornitore($citta);
-
-		$cap = ($fornitore->getCapFornitore() != "") ? "'" . $fornitore->getCapFornitore() . "'" : "null" ;
-		$fornitore->setCapFornitore($cap);
-
-		if ($fornitore->update($db)) {
-
-			$db->commitTransaction();
-			return TRUE;
-		}
-		else {
-			$db->rollbackTransaction();
-			error_log("Errore aggiornamento fornitore, eseguito Rollback");
-			return FALSE;
-		}
-	}
-
-	public function controlliLogici($fornitore)
-	{
-		$esito = TRUE;
-		$msg = "<br>";
-
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
-
-		if ($fornitore->getCodFornitore() == "") {
-			$msg = $msg . "<br>&ndash; Manca il codice del fornitore";
-			$esito = FALSE;
-		}
-
-		if ($fornitore->getDesFornitore() == "") {
-			$msg = $msg . "<br>&ndash; Manca la descrizione del fornitore";
-			$esito = FALSE;
-		}
-
-		// ----------------------------------------------
-
-		if ($msg != "<br>")	$_SESSION["messaggio"] = $msg;
-		else unset($_SESSION["messaggio"]);
-
-		return $esito;
 	}
 }
 

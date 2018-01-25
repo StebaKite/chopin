@@ -106,7 +106,7 @@ function todoTemplate(entry){
     //find and clone the template node
     var newNode = $( "#templ_todoEntry" ).clone(true)
     var time = new Date(entry.time)
-    var timeString = addZero(time.getHours()) + ':' +  addZero(time.getMinutes())
+    var timeString = addZero(time.getHours()) + ':' +  addZero(time.getMinutes()) + ' - ' + time.getDate() + '/' + time.getMonth()+1 + '/' + time.getFullYear();
     if(entry.done) newNode.addClass('doneTask')
     $('#placeholder_title', newNode).text(entry.title).removeClass('placeholder').removeAttr('id')
     $('#placeholder_time', newNode).text(timeString).removeClass('placeholder').removeAttr('id')
@@ -150,7 +150,7 @@ function addZero(num) {
 	<div class="input-group">
 		<input type="text" class="form-control" id="todo-input" placeholder="Aggiungi una cosa da fare">
 		<span class="input-group-btn">
-			<button class="btn btn-success" type="button" id="todo-addbutton">Aggiungi</button>
+			<button class="btn btn-primary btn-default" type="button" id="todo-addbutton">Aggiungi</button>
 		</span>
 	</div>
 	<div id="unDoneTasksContainer"></div>

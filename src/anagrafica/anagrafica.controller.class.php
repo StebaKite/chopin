@@ -30,22 +30,30 @@ class AnagraficaController {
 		$cliente = Cliente::getInstance();
 		$mercato = Mercato::getInstance();
 
-		if (isset($_REQUEST["codfornitore"])) {
-			$fornitore->setDesFornitore($_REQUEST["desfornitore"]);
-			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore"]);
-			$fornitore->setDesCittaFornitore($_REQUEST["cittafornitore"]);
-			$fornitore->setCapFornitore($_REQUEST["capfornitore"]);
-			$fornitore->setTipAddebito($_REQUEST["tipoaddebito"]);
-			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura"]);
+		if (isset($_REQUEST["codforn_cre"]))
+		{
+			$descrizione = ($_REQUEST["desforn_cre"] != "") ? str_replace("'","''",$_REQUEST["desforn_cre"]) : "" ;
+			$fornitore->setDesFornitore($descrizione);
+			$indirizzo = ($_REQUEST["indforn_cre"] != "") ? str_replace("'","''",$_REQUEST["indforn_cre"]) : "" ;
+			$fornitore->setDesIndirizzoFornitore($indirizzo);
+			$citta = ($_REQUEST["cittaforn_cre"] != "") ? str_replace("'","''",$_REQUEST["cittaforn_cre"]) : "" ;
+			$fornitore->setDesCittaFornitore($citta);
+			$fornitore->setCapFornitore($_REQUEST["capforn_cre"]);
+			$fornitore->setTipAddebito($_REQUEST["tipoadd_cre"]);
+			$fornitore->setNumGgScadenzaFattura($_REQUEST["ggscadfat_cre"]);
 		}
 
-		if (isset($_REQUEST["codfornitore_mod"])) {
-			$fornitore->setDesFornitore($_REQUEST["desfornitore_mod"]);
-			$fornitore->setDesIndirizzoFornitore($_REQUEST["indfornitore_mod"]);
-			$fornitore->setDesCittaFornitore($_REQUEST["cittafornitore_mod"]);
-			$fornitore->setCapFornitore($_REQUEST["capfornitore_mod"]);
-			$fornitore->setTipAddebito($_REQUEST["tipoaddebito_mod"]);
-			$fornitore->setNumGgScadenzaFattura($_REQUEST["numggscadenzafattura_mod"]);
+		if (isset($_REQUEST["codforn_mod"]))
+		{
+			$descrizione = ($_REQUEST["desforn_mod"] != "") ? str_replace("'","''",$_REQUEST["desforn_mod"]) : "" ;
+			$fornitore->setDesFornitore($descrizione);
+			$indirizzo = ($_REQUEST["indforn_mod"] != "") ? str_replace("'","''",$_REQUEST["indforn_mod"]) : "" ;
+			$fornitore->setDesIndirizzoFornitore($indirizzo);
+			$citta = ($_REQUEST["cittaforn_mod"] != "") ? str_replace("'","''",$_REQUEST["cittaforn_mod"]) : "" ;
+			$fornitore->setDesCittaFornitore($citta);
+			$fornitore->setCapFornitore($_REQUEST["capforn_mod"]);
+			$fornitore->setTipAddebito($_REQUEST["tipoadd_mod"]);
+			$fornitore->setNumGgScadenzaFattura($_REQUEST["ggscadfat_mod"]);
 		}
 
 		if (isset($_REQUEST["codcliente"])) {

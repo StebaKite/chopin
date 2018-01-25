@@ -25,9 +25,8 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 
 	public function controlliLogici() {}
 
-	public function displayPagina() {
-		
-		// Template --------------------------------------------------------------
+	public function displayPagina() 
+	{
 		
 		$fornitore = Fornitore::getInstance();
 		$utility = Utility::getInstance();
@@ -39,6 +38,14 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 		if ($fornitore->getQtaFornitori() > 0) {
 		
 			$risultato_ricerca =
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<tr>" .
 			"			<th>%ml.codfornitore%</th>" .
@@ -53,23 +60,16 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 			"			<th>&nbsp;</th>" .
 			"		</tr>" .
 			"	</thead>" .
-			"	<tbody>" ;
+			"	<tbody id='myTable'>";
 		
 			foreach($fornitore->getFornitori() as $row) {
 		
 				if ($row[self::QTA_REGISTRAZIONI_FORNITORE] == 0) {
-					$class = "class=''";
+					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_ICON;
+					$bottoneCancella = self::CANCELLA_FORNITORE_HREF . trim($row['id_fornitore']) . self::CANCELLA_ICON;
 				}
 				else {
-					$class = "class=''";
-				}
-		
-				if ($row[self::QTA_REGISTRAZIONI_FORNITORE] == 0) {
-					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_FORNITORE_ICON;
-					$bottoneCancella = self::CANCELLA_FORNITORE_HREF . trim($row['id_fornitore']) . "," . trim($row['cod_fornitore']) . self::CANCELLA_FORNITORE_ICON;
-				}
-				else {
-					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_FORNITORE_ICON;
+					$bottoneModifica = self::MODIFICA_FORNITORE_HREF . trim($row['id_fornitore']) . self::MODIFICA_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 		
@@ -83,11 +83,11 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
  				"	<td>" . trim($row[$fornitore::TIP_ADDEBITO]) . "</td>" .
  				"	<td>" . trim($row[$fornitore::NUM_GG_SCADENZA_FATTURA]) . "</td>" .
  				"	<td>" . trim($row[$fornitore::QTA_REGISTRAZIONI_FORNITORE]) . "</td>" .
- 				"	<td id='icons'>" . $bottoneModifica . "</td>" .
- 				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+ 				"	<td>" . $bottoneModifica . "</td>" .
+ 				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$risultato_ricerca .= "</tbody>";
+			$risultato_ricerca .= "</tbody></table>";
 		}
 		
 		$fornitore->prepara();
@@ -103,8 +103,6 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
 				'%tipoaddebito%' => $fornitore->getTipAddebito(),	
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-		
-		$utility = Utility::getInstance();
 		
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

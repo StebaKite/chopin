@@ -1,0 +1,9 @@
+<fornitore>
+	<codice>%codice%</codice>
+	<descrizione>%descrizione%</descrizione>
+	<indirizzo>%indirizzo%</indirizzo>
+	<citta>%citta%</citta>
+	<cap>%cap%</cap>
+	<tipoAddebito>%tipoAddebito%</tipoAddebito>
+	<giorniScadenzaFattura>%giorniScadenzaFattura%</giorniScadenzaFattura>
+</fornitore>

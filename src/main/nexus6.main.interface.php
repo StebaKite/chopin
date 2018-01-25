@@ -53,6 +53,11 @@ interface MainNexus6Interface {
 	// Bottoni
 
 	const BOTTONE_ESTRAI_PDF = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
+	
+	const VISUALIZZA_ICON = ")'><span class='glyphicon glyphicon-eye-open'></span></a>";
+	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
+	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
+	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
 }
 
 ?>

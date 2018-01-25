@@ -36,10 +36,8 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const CANCELLA_CLIENTE_HREF = "<a class='tooltip' onclick='cancellaCliente(";
 	const CANCELLA_CLIENTE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
 
-	const MODIFICA_FORNITORE_HREF = "<a class='tooltip' onclick='modificaFornitore(";
-	const MODIFICA_FORNITORE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-	const CANCELLA_FORNITORE_HREF = "<a class='tooltip' onclick='cancellaFornitore(";
-	const CANCELLA_FORNITORE_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+	const MODIFICA_FORNITORE_HREF = "<a onclick='modificaFornitore(";
+	const CANCELLA_FORNITORE_HREF = "<a onclick='cancellaFornitore(";
 
 	// Actions
 

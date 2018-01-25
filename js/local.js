@@ -227,11 +227,23 @@ function controllaDataRegistrazione(campoDat)
 
 //---------------------------------------------------------------------------------
 
+function controllaCodice(campoCod)
+{
+	if ($("#" + campoCod).val() != "") {
+		$("#" + campoCod + "_control_group").removeClass("has-error");
+		$("#" + campoCod + "_messaggio").html("");
+		return true;
+	} else {
+		$("#" + campoCod + "_control_group").addClass("has-error");
+		$("#" + campoCod + "_messaggio").html("obbligatorio");
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------------------
+
 function controllaDescrizione(campoDes)
 {
-	/**
-	 * La descrizione della registrazione è obbligatoria
-	 */
 	if ($("#" + campoDes).val() != "") {
 		$("#" + campoDes + "_control_group").removeClass("has-error");
 		$("#" + campoDes + "_messaggio").html("");
@@ -418,6 +430,23 @@ function controllaImporto(campoImp) {
 	} else {
 		$("#" + campoImp + "_control_group").addClass("has-error");
 		$("#" + campoImp + "_messaggio").html("non valido");
+	}
+}
+
+//---------------------------------------------------------------------------------
+
+function controllaQuantita(campoQta) {
+
+	var qta = $("#" + campoQta).val();
+
+	if (isNumeric(qta)) {
+		$("#" + campoQta + "_control_group").removeClass("has-error");
+		$("#" + campoQta + "_messaggio").html("");
+		return true;
+	} else {
+		$("#" + campoQta + "_control_group").addClass("has-error");
+		$("#" + campoQta + "_messaggio").html("non valido");
+		return false;
 	}
 }
 
