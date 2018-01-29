@@ -28,7 +28,7 @@ class LeggiMercatiNegozio extends PrimanotaAbstract implements PrimanotaBusiness
 		$db = Database::getInstance();
 		$mercato->cercaMercatiNegozio($db);
 		
-		$elenco_mercati = "<select class='form-control' id='mercato_cormer_cre' name='mercato_cormer_cre'><option value=''></option>";
+		$elenco_mercati = "<option value=''></option>";
 
 		if ($mercato->getQtaMercati() > 0) {
 			foreach ($mercato->getMercati() as $unMercato) {
@@ -38,7 +38,6 @@ class LeggiMercatiNegozio extends PrimanotaAbstract implements PrimanotaBusiness
 		else {
 			$elenco_mercati .= "<option value=''>Non ci sono mercati per il negozio</option>";
 		}
-		$elenco_mercati .= "</select>";
 		echo $elenco_mercati;
 	}
 }

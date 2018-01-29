@@ -30,7 +30,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 		$fornitore = Fornitore::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
 
-		if ($registrazione->getDesFornitore() == "") {
+		if ($registrazione->getIdFornitore() == "") {
 
 			/**
 			 * Devo eliminare da DB le scadenze del fornitore indicato nella registrazione
@@ -40,8 +40,8 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 			echo "<div class='alert alert-warning' role='alert'>Scadenze esistenti eliminate, nessuna scadenza presente.</div>";
 		}
 		else {
-			$fornitore->setDesFornitore($registrazione->getDesFornitore());
-			$fornitore->cercaConDescrizione($db);
+			$fornitore->setIdFornitore($registrazione->getIdFornitore());
+			$fornitore->leggi($db);
 
 			/**
 			 * Verifico se ci sono gia' scadenze significa che è stato cambiato il fornitore.

@@ -1,11 +1,9 @@
 <script type="text/javascript">
 
-	var elencoFornitori = [%elenco_fornitori%];
+//	var elencoFornitori = [%elenco_fornitori%];
 	var elencoClienti = [%elenco_clienti%];
 
 	$(document).ready(function(){
-
-		$(".datepicker").datepicker();
 
 		$("#myInput").on("keyup", 
 			function() {
@@ -51,7 +49,7 @@
 					<div class="col-sm-2">
 	 					<div class='input-group'>
 							<span class="input-group-addon">Neg</span>
-							<select class="form-control" id="codneg_sel" name="codneg_sel" >
+							<select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
 								<option value="">%ml.tutti%</option>
 								<option value="VIL" %villa-selected% >%ml.villa%</option>
 								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
@@ -61,7 +59,7 @@
 					</div>
 					<div class="col-sm-2">
 						<div class='input-group'>
-				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+				            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 				                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
 				                 <span class="input-group-addon">
 				                     <span class="glyphicon glyphicon-calendar"></span>
@@ -71,7 +69,7 @@
 					</div>
 					<div class="col-sm-2">
 						<div class='input-group'>
-				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy">
+				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 				                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
 				                 <span class="input-group-addon">
 				                     <span class="glyphicon glyphicon-calendar"></span>
@@ -79,18 +77,18 @@
 							</div>
 						</div>				
 					</div>
-					<div class="col-xs-4">
+					<div class="col-sm-5">
 						<div class='input-group'>
 							<span class="input-group-addon">%ml.codcau%</span>
-							<select class="form-control" id="causale" name="causale" >
+							<select class="selectCausale" data-live-search="true" id="causale" name="causale" >
 								<option value="">%ml.tutte%</option>
 								%elenco_causali%
 							</select>			
 						</div>	
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-1">
 						<button id="submit" type="submit" class="btn btn-default">
-					    	<span class="glyphicon glyphicon-search"></span> Ricerca
+					    	<span class="glyphicon glyphicon-search"></span>
 					    </button>
 					</div> 
 				</div>	
@@ -121,9 +119,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_cre_control_group">
-							    		<label for="datareg_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_cre_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_cre" name="datareg_cre"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -131,48 +128,58 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_cre">%ml.negozio%</label>
-									<select class="form-control" id="codneg_cre" name="codneg_cre" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_cre" name="codneg_cre" >
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
-							  	<div class="col-sm-2 ui-front">
-							  		<div class="control-group" id="numfatt_cre_control_group">
-										<label for="numfatt_cre">%ml.numfatt%&nbsp;<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></label>
+							  	<div class="col-sm-5">
+									<div class='input-group' id="descreg_cre_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
+										<input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
+									</div>
+							  	</div>							
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-3 ui-front">
+									<div class='input-group' id="numfatt_cre_control_group">
+										<span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
 										<input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); "/>
 									</div>
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_cre_control_group">
-							    		<label for="descreg_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cre_messaggio"></span></small></label>
-										<input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_cre_control_group">
-										<label for="causale_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cre_messaggio"></span></small></label>
-										<select class="form-control" id="causale_cre" name="causale_cre" >
-											<option value=" "></option>
+									<div class='input-group' id="causale_cre_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_cre%
 										</select>			
 									</div>
 							  	</div>
-							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="fornitore_cre_control_group">
-							    		<label for="fornitore_cre">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_cre_messaggio"></span></small></label>
-										<input class="form-control" id="fornitore_cre" name="fornitore_cre" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');">
+							</div>							
+							<div class="form-group row">
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="fornitore_cre_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectCliFor" data-live-search="true" id="fornitore_cre" name="fornitore_cre" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');" >
+											<option value=" ">&nbsp;</option>
+											%elenco_fornitori%
+										</select>			
 									</div>	
 							  	</div>
-							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="cliente_cre_control_group">
-							    		<label for="cliente_cre">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_cre_messaggio"></span></small></label>
-										<input class="form-control" id="cliente_cre" name="cliente_cre" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');">
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="cliente_cre_control_group">
+										<span class="input-group-addon">%ml.codclie%</span>
+										<select class="selectCliFor" data-live-search="true" id="cliente_cre" name="cliente_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');" >
+											<option value=" ">&nbsp;</option>
+											%elenco_clienti%
+										</select>			
 									</div>	
 							  	</div>
 							</div>						
@@ -227,8 +234,7 @@
 							<div class="form-group row">							
 								<div class="col-sm-3">
 							  		<div class="control-group" id="datareg_mod_control_group">
-							    		<label for="datareg_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_mod_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_mod" name="datareg_mod"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -236,47 +242,55 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_mod">%ml.negozio%</label>
-									<select class="form-control" id="codneg_mod" name="codneg_mod" >
-										<option value="VIL" selected>%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
-							  	</div>
-							  	<div class="col-sm-2 ui-front">
-							  		<div class="control-group" id="numfatt_mod_control_group">
-										<label for="numfatt_mod">%ml.numfatt%&nbsp;<small><span class="text-danger" id="numfatt_mod_messaggio"></span></small></label>
-										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" onblur="controllaNumeroFattura('numfatt_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); "/>
-									</div>
-							  	</div>
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectpicker" id="codneg_mod" name="codneg_mod" >
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+								  	</div>
+								</div> 	
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_mod_control_group">
-							    		<label for="descreg_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_mod_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_mod" name="descreg_mod" type="text" onblur="controllaDescrizione('descreg_mod')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
+							  	<div class="col-sm-2 ui-front">
+									<div class='input-group' id="numfatt_mod_control_group">
+										<span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
+										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" onblur="controllaNumeroFattura('numfatt_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); "/>
+									</div>
+							  	</div>
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_mod_control_group">
-										<label for="causale_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_mod_messaggio"></span></small></label>
-										<select class="form-control" id="causale_mod" name="causale_mod" >
-											<option value=""></option>
+									<div class='input-group' id="causale_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_mod" name="causale_mod" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_cre%
 										</select>			
 									</div>
 							  	</div>
-							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="fornitore_mod_control_group">
-							    		<label for="fornitore_mod">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_mod_messaggio"></span></small></label>
-										<input class="form-control" id="fornitore_mod" name="fornitore_mod" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');">
+							</div> 	
+							<div class="form-group row">
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="fornitore_mod_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectCliFor" data-live-search="true" id="fornitore_mod" name="fornitore_mod" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');" >
+											%elenco_fornitori%
+										</select>			
 									</div>	
 							  	</div>
-							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="cliente_mod_control_group">
-							    		<label for="cliente_mod">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_mod_messaggio"></span></small></label>
-										<input class="form-control" id="cliente_mod" name="cliente_mod" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');">
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="cliente_mod_control_group">
+										<span class="input-group-addon">%ml.codclie%</span>
+										<select class="selectCliFor" data-live-search="true" id="cliente_mod" name="cliente_mod" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');" >
+											%elenco_clienti%
+										</select>			
 									</div>	
 							  	</div>
 							</div>						
@@ -343,7 +357,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti" name="newcontodett_cre"></select>			
+									<select class='selectpicker' data-live-search='true' id="conti" name="newcontodett_cre"></select>
 								</div>	
 						  	</div>							  	
 				  		</div>				  		
@@ -390,7 +404,7 @@
 						  	<div class="col-xs-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_mod" name="newcontodett_mod"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_mod" name="newcontodett_mod"></select>			
 								</div>	
 						  	</div>							  	
 						</div>
@@ -422,7 +436,7 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-xs-4">
-									<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 				                		<input type='text' class="form-control" id="newdatascad_cre" name="newdatascad_cre" />
 				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 				            		</div>			
@@ -463,7 +477,7 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-xs-4">
-									<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 				                		<input type='text' class="form-control" id="newdatascad_mod" name="newdatascad_mod" />
 				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 				            		</div>			
@@ -622,8 +636,7 @@
 							<div class="form-group row">
 								<div class="col-sm-3">
 							  		<div class="control-group" id="datareg_inc_cre_control_group">
-							    		<label for="datareg_inc_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_inc_cre_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_inc_cre" name="datareg_inc_cre"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -631,36 +644,40 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_inc_cre">%ml.negozio%</label>
-									<select class="form-control" id="codneg_inc_cre" name="codneg_inc_cre" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_inc_cre" name="codneg_inc_cre">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_inc_cre_control_group">
-							    		<label for="descreg_inc_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_inc_cre_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_inc_cre_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_inc_cre" name="descreg_inc_cre" type="text" onblur="controllaDescrizione('descreg_inc_cre')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_inc_cre_control_group">
-										<label for="causale_inc_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_inc_cre_messaggio"></span></small></label>
-										<select class="form-control" id="causale_inc_cre" name="causale_inc_cre" >
-											<option value=" "></option>
+									<div class='input-group' id="causale_inc_cre_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_inc_cre" name="causale_inc_cre" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_inc_cre%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="cliente_inc_cre_control_group">
-							    		<label for="cliente_inc_cre">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_inc_cre_messaggio"></span></small></label>
-										<input class="form-control" id="cliente_inc_cre" name="cliente_inc_cre" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_cre'); controllaCausale('causale_inc_cre');">
+									<div class='input-group' id="cliente_inc_cre_control_group">
+										<span class="input-group-addon">%ml.codclie%</span>
+										<select class="selectCliFor" data-live-search="true" id="cliente_inc_cre" name="cliente_inc_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_cre'); controllaClienteFornitore('fornitore_inc_cre','cliente_inc_cre'); controllaCausale('causale_inc_cre');" >
+											%elenco_clienti%
+										</select>			
 									</div>	
 							  	</div>
 							</div>
@@ -731,7 +748,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_inc" name="newcontodett_inc_cre"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_inc_cre" name="newcontodett_inc_cre"></select>			
 								</div>	
 						  	</div>							  	
 				  		</div>				  		
@@ -772,6 +789,12 @@
 						  		<label for="codneg_inc_vis">%ml.negozio%</label>
 					    		<span id="codneg_inc_vis"></span>
 						  	</div>
+						  	<div class="col-sm-5">
+						  		<div class="control-group">
+						    		<label for="descreg_inc_vis">%ml.descreg%</label>
+						    		<span id="descreg_inc_vis"></span>
+								</div>
+						  	</div>
 						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-6">
@@ -780,21 +803,13 @@
 						    		<span id="causale_inc_vis"></span>
 								</div>
 						  	</div>
-						  	<div class="col-sm-6">
-						  		<div class="control-group">
-						    		<label for="descreg_inc_vis">%ml.descreg%</label>
-						    		<span id="descreg_inc_vis"></span>
-								</div>
-						  	</div>
-						</div>
-						<div class="form-group row">
 						  	<div class="col-sm-6 ui-front">
 						  		<div class="control-group">
 						    		<label id="cliente_inc_vis_label" for="cliente_inc_vis">%ml.codclie%</label>
 						    		<span id="cliente_inc_vis"></span>
 								</div>	
 						  	</div>
-						</div>						
+						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-7">
 						  		<div class="control-group">
@@ -841,8 +856,7 @@
 							<div class="form-group row">							
 								<div class="col-sm-3">
 							  		<div class="control-group" id="datareg_inc_mod_control_group">
-							    		<label for="datareg_inc_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_inc_mod_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_inc_mod" name="datareg_inc_mod"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -850,35 +864,40 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_inc_mod">%ml.negozio%</label>
-									<select class="form-control" id="codneg_inc_mod" name="codneg_inc_mod" >
-										<option value="VIL" selected>%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_inc_mod" name="codneg_inc_mod">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_inc_mod_control_group">
-							    		<label for="descreg_inc_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_inc_mod_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_inc_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_inc_mod" name="descreg_inc_mod" type="text" onblur="controllaDescrizione('descreg_inc_mod')"/>
 									</div>
 							  	</div>
 							</div>  	
 							<div class="form-group row">
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_inc_mod_control_group">
-										<label for="causale_inc_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_inc_mod_messaggio"></span></small></label>
-										<select class="form-control" id="causale_inc_mod" name="causale_inc_mod" >
-											<option value=""></option>
+									<div class='input-group' id="causale_inc_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_inc_mod" name="causale_inc_mod" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_inc_mod%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="cliente_inc_mod_control_group">
-							    		<label for="cliente_inc_mod">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_inc_mod_messaggio"></span></small></label>
-										<input class="form-control" id="cliente_inc_mod" name="cliente_inc_mod" type="text" onblur="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_mod'); controllaCausale('causale_inc_mod');">
+									<div class='input-group' id="cliente_inc_mod_control_group">
+										<span class="input-group-addon">%ml.codclie%</span>
+										<select class="selectCliFor" data-live-search="true" id="cliente_inc_mod" name="cliente_inc_mod" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_mod'); controllaClienteFornitore('fornitore_inc_mod','cliente_inc_mod'); controllaCausale('causale_inc_mod');" >
+											%elenco_clienti%
+										</select>			
 									</div>	
 							  	</div>
 							</div>
@@ -950,7 +969,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_inc_mod" name="newcontodett_inc_mod"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_inc_mod" name="newcontodett_inc_mod"></select>			
 								</div>	
 						  	</div>							  	
 				  		</div>				  		
@@ -984,9 +1003,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_pag_cre_control_group">
-							    		<label for="datareg_pag_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_pag_cre_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_pag_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_pag_cre" name="datareg_pag_cre"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -995,35 +1013,39 @@
 				            		</div>
 							  	</div>
 							  	<div class="col-sm-2">
-							  		<label for="codneg_pag_cre">%ml.negozio%</label>
-									<select class="form-control" id="codneg_pag_cre" name="codneg_pag_cre" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_pag_cre" name="codneg_pag_cre">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_pag_cre_control_group">
-							    		<label for="descreg_pag_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_pag_cre_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_pag_cre_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_pag_cre" name="descreg_pag_cre" type="text" onblur="controllaDescrizione('descreg_pag_cre')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_pag_cre_control_group">
-										<label for="causale_pag_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_pag_cre_messaggio"></span></small></label>
-										<select class="form-control" id="causale_pag_cre" name="causale_pag_cre" >
-											<option value=" "></option>
+									<div class='input-group' id="causale_pag_cre_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_pag_cre" name="causale_pag_cre" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_pag_cre%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="fornitore_pag_cre_control_group">
-							    		<label for="fornitore_pag_cre">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_pag_cre_messaggio"></span></small></label>
-										<input class="form-control" id="fornitore_pag_cre" name="fornitore_pag_cre" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre'); controllaCausale('causale_pag_cre');">
+									<div class='input-group' id="fornitore_pag_cre_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectCliFor" data-live-search="true" id="fornitore_pag_cre" name="fornitore_pag_cre" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre'); controllaClienteFornitore('fornitore_pag_cre','cliente_pag_cre'); controllaCausale('causale_pag_cre');" >
+											%elenco_fornitori%
+										</select>			
 									</div>	
 							  	</div>
 							</div>
@@ -1096,7 +1118,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_pag" name="newcontodett_pag_cre"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_pag" name="newcontodett_pag_cre"></select>			
 								</div>	
 						  	</div>							  	
 				  		</div>				  		
@@ -1137,6 +1159,12 @@
 						  		<label for="codneg_pag_vis">%ml.negozio%</label>
 					    		<span id="codneg_pag_vis"></span>
 						  	</div>
+						  	<div class="col-sm-5">
+						  		<div class="control-group">
+						    		<label for="descreg_pag_vis">%ml.descreg%</label>
+						    		<span id="descreg_pag_vis"></span>
+								</div>
+						  	</div>
 						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-6">
@@ -1145,21 +1173,13 @@
 						    		<span id="causale_pag_vis"></span>
 								</div>
 						  	</div>
-						  	<div class="col-sm-6">
-						  		<div class="control-group">
-						    		<label for="descreg_pag_vis">%ml.descreg%</label>
-						    		<span id="descreg_pag_vis"></span>
-								</div>
-						  	</div>
-						</div>
-						<div class="form-group row">
 						  	<div class="col-sm-6 ui-front">
 						  		<div class="control-group">
 						    		<label id="fornitore_pag_vis_label" for="fornitore_pag_vis">%ml.codforn%</label>
 						    		<span id="fornitore_pag_vis"></span>
 								</div>	
 						  	</div>
-						</div>						
+						</div>
 						<div class="form-group row">
 						  	<div class="col-sm-7">
 						  		<div class="control-group">
@@ -1205,9 +1225,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">							
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_pag_mod_control_group">
-							    		<label for="datareg_pag_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_pag_mod_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_pag_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_pag_mod" name="datareg_pag_mod"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -1215,35 +1234,40 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_pag_mod">%ml.negozio%</label>
-									<select class="form-control" id="codneg_pag_mod" name="codneg_pag_mod" >
-										<option value="VIL" selected>%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_pag_mod" name="codneg_pag_mod">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_pag_mod_control_group">
-							    		<label for="descreg_pag_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_pag_mod_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_pag_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_pag_mod" name="descreg_pag_mod" type="text" onblur="controllaDescrizione('descreg_pag_mod')"/>
 									</div>
 							  	</div>
 							</div>  	
 							<div class="form-group row">
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_pag_mod_control_group">
-										<label for="causale_pag_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_pag_mod_messaggio"></span></small></label>
-										<select class="form-control" id="causale_pag_mod" name="causale_pag_mod" >
-											<option value=""></option>
+									<div class='input-group' id="causale_pag_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_pag_mod" name="causale_pag_mod" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_pag_mod%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4 ui-front">
-							  		<div class="control-group" id="fornitore_pag_mod_control_group">
-							    		<label for="fornitore_pag_mod">%ml.codforn%&nbsp;<small><span class="text-danger" id="fornitore_pag_mod_messaggio"></span></small></label>
-										<input class="form-control" id="fornitore_pag_mod" name="fornitore_pag_mod" type="text" onblur="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_mod'); controllaCausale('causale_pag_mod');">
+									<div class='input-group' id="fornitore_pag_mod_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectCliFor" data-live-search="true" id="fornitore_pag_mod" name="fornitore_pag_mod" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_mod'); controllaClienteFornitore('fornitore_pag_mod','cliente_pag_mod'); controllaCausale('causale_pag_mod');" >
+											%elenco_fornitori%
+										</select>			
 									</div>	
 							  	</div>
 							</div>
@@ -1315,7 +1339,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_pag_mod" name="newcontodett_pag_mod"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_pag_mod" name="newcontodett_pag_mod"></select>			
 								</div>	
 						  	</div>							  	
 				  		</div>				  		
@@ -1349,9 +1373,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_cormer_cre_control_group">
-							    		<label for="datareg_cormer_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_cormer_cre_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_pag_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_cormer_cre" name="datareg_cormer_cre"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -1359,36 +1382,38 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_cormer_cre">%ml.negozio%</label>
-									<select class="form-control" id="codneg_cormer_cre" name="codneg_cormer_cre" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_cormer_cre" name="codneg_cormer_cre">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_cormer_cre_control_group">
-							    		<label for="descreg_cormer_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cormer_cre_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_cormer_cre_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_cormer_cre" name="descreg_cormer_cre" type="text" onblur="controllaDescrizione('descreg_cormer_cre')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
-							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_cormer_cre_control_group">
-										<label for="causale_cormer_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cormer_cre_messaggio"></span></small></label>
-										<select class="form-control" id="causale_cormer_cre" name="causale_cormer_cre" >
-											<option value=" "></option>
+							  	<div class="col-sm-6">
+									<div class='input-group' id="causale_cormer_cre_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_cormer_cre" name="causale_cormer_cre" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_cormer_cre%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="mercato_cormer_cre_control_group">
-										<label for="mercato_cormer_cre">%ml.mercato%&nbsp;<small><span class="text-danger" id="mercato_cormer_cre_messaggio"></span></small></label>
-										<select class="form-control" id="mercato_cormer_cre" name="mercato_cormer_cre" ></select>			
+									<div class='input-group' id="mercato_cormer_cre_control_group">
+										<span class="input-group-addon">%ml.mercato%</span>
+										<select class="selectpicker" id="mercato_cormer_cre" name="mercato_cormer_cre" ></select>			
 									</div>
 							  	</div>
 							</div>
@@ -1437,10 +1462,10 @@
 								</div>
 						  	</div>
 						  	<div class="col-sm-5">
-			 					<div class='input-group'>
-								  	<label><input type="radio" name="aliquota_cormer_cre" id="aliquota10_cormer_cre" value="1.10" checked onclick="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.10</label> 	
-								  	<label><input type="radio" name="aliquota_cormer_cre" id="aliquota20_cormer_cre" value="1.22" onclick="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.20</label> 
-								</div>
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-primary active"><input type="radio" name="aliquota_cormer_cre" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onchange="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.10</label>
+								  	<label class="btn btn-primary"><input type="radio" name="aliquota_cormer_cre" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onchange="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.20</label>
+								</div>						    		
 							</div>	
 						</div>
 						<div class="form-group row">
@@ -1461,7 +1486,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_cormer_cre" name="conti_cormer_cre"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_cormer_cre" name="conti_cormer_cre"></select>			
 								</div>	
 						  	</div>							  	
 						</div>												
@@ -1559,9 +1584,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_cormer_mod_control_group">
-							    		<label for="datareg_cormer_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_cormer_mod_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_pag_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_cormer_mod" name="datareg_cormer_mod"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -1569,36 +1593,38 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_cormer_mod">%ml.negozio%</label>
-									<select class="form-control" id="codneg_cormer_mod" name="codneg_cormer_mod" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_cormer_mod" name="codneg_cormer_mod">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_cormer_mod_control_group">
-							    		<label for="descreg_cormer_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cormer_mod_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_cormer_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_cormer_mod" name="descreg_cormer_mod" type="text" onblur="controllaDescrizione('descreg_cormer_mod')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
-							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_cormer_mod_control_group">
-										<label for="causale_cormer_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cormer_mod_messaggio"></span></small></label>
-										<select class="form-control" id="causale_cormer_mod" name="causale_cormer_mod" >
-											<option value=" "></option>
+							  	<div class="col-sm-6">
+									<div class='input-group' id="causale_cormer_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_cormer_mod" name="causale_cormer_mod" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_cormer_mod%
 										</select>			
 									</div>
 							  	</div>
 							  	<div class="col-sm-4">
-							  		<div class="control-group" id="mercato_cormer_mod_control_group">
-										<label for="mercato_cormer_mod">%ml.mercato%&nbsp;<small><span class="text-danger" id="mercato_cormer_mod_messaggio"></span></small></label>
-										<select class="form-control" id="mercato_cormer_mod" name="mercato_cormer_mod" ></select>
+									<div class='input-group' id="mercato_cormer_mod_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectpicker" id="mercato_cormer_mod" name="mercato_cormer_mod" ></select>
 									</div>
 							  	</div>
 							</div>
@@ -1647,10 +1673,10 @@
 								</div>
 						  	</div>
 						  	<div class="col-sm-5">
-			 					<div class='input-group'>
-								  	<label><input type="radio" name="aliquota_cormer_mod" id="aliquota10_cormer_mod" value="1.10" checked onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.10</label> 	
-								  	<label><input type="radio" name="aliquota_cormer_mod" id="aliquota20_cormer_mod" value="1.22" onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.20</label> 
-								</div>
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-primary active"><input type="radio" name="aliquota_cormer_mod" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.10</label>
+								  	<label class="btn btn-primary"><input type="radio" name="aliquota_cormer_mod" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.20</label>
+								</div>						    		
 							</div>	
 						</div>
 						<div class="form-group row">
@@ -1671,7 +1697,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_cormer_mod" name="conti_cormer_mod"></select>
+									<select class="selectpicker" data-live-search="true" id="conti_cormer_mod" name="conti_cormer_mod"></select>			
 								</div>	
 						  	</div>							  	
 						</div>												
@@ -1705,9 +1731,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_corneg_cre_control_group">
-							    		<label for="datareg_corneg_cre">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_corneg_cre_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_corneg_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_corneg_cre" name="datareg_corneg_cre"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -1715,28 +1740,30 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_corneg_cre">%ml.negozio%</label>
-									<select class="form-control" id="codneg_corneg_cre" name="codneg_corneg_cre" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_corneg_cre" name="codneg_corneg_cre">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_corneg_cre_control_group">
-							    		<label for="descreg_corneg_cre">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_corneg_cre_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_corneg_cre_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_corneg_cre" name="descreg_corneg_cre" type="text" onblur="controllaDescrizione('descreg_corneg_cre')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
-							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_corneg_cre_control_group">
-										<label for="causale_corneg_cre">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_corneg_cre_messaggio"></span></small></label>
-										<select class="form-control" id="causale_corneg_cre" name="causale_corneg_cre" >
-											<option value=" "></option>
+							  	<div class="col-sm-6">
+									<div class='input-group' id="causale_corneg_cre_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_corneg_cre" name="causale_corneg_cre" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_corneg_cre%
 										</select>			
 									</div>
@@ -1787,10 +1814,10 @@
 								</div>
 						  	</div>
 						  	<div class="col-sm-5">
-			 					<div class='input-group'>
-								  	<label><input type="radio" name="aliquota_corneg_cre" id="aliquota10_corneg_cre" value="1.10" checked onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.10</label> 	
-								  	<label><input type="radio" name="aliquota_corneg_cre" id="aliquota20_corneg_cre" value="1.22" onclick="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.20</label> 
-								</div>
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-primary active"><input type="radio" name="aliquota_corneg_cre" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onchange="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.10</label>
+								  	<label class="btn btn-primary"><input type="radio" name="aliquota_corneg_cre" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onchange="calcolaImponibile('importo_corneg_cre', 'aliquota_corneg_cre', 'imponibile_corneg_cre', 'iva_corneg_cre', 'msgquad_corneg_cre')">Aliq.20</label>
+								</div>						    		
 							</div>	
 						</div>
 						<div class="form-group row">
@@ -1811,7 +1838,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_corneg_cre" name="conti_corneg_cre"></select>			
+									<select class="selectpicker" data-live-search="true" id="conti_corneg_cre" name="conti_corneg_cre"></select>
 								</div>	
 						  	</div>							  	
 						</div>												
@@ -1903,9 +1930,8 @@
 						<div class="well well-sm">
 							<div class="form-group row">
 								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_corneg_mod_control_group">
-							    		<label for="datareg_corneg_mod">%ml.datareg%&nbsp;<small><span class="text-danger" id="datareg_corneg_mod_messaggio"></span></small></label>
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd/mm/yyyy">
+									<div class='input-group' id="datareg_corneg_mod_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
 					                		<input type='text' class="form-control" id="datareg_corneg_mod" name="datareg_corneg_mod"/>
 					                		<span class="input-group-addon">
 					                    		<span class="glyphicon glyphicon-calendar"></span>
@@ -1913,28 +1939,30 @@
 					            		</div>			
 				            		</div>
 							  	</div>
-							  	<div class="col-sm-2">
-							  		<label for="codneg_corneg_mod">%ml.negozio%</label>
-									<select class="form-control" id="codneg_corneg_mod" name="codneg_corneg_mod" >
-										<option value=" ">&nbsp;</option>
-										<option value="VIL">%ml.villa%</option>
-										<option value="BRE">%ml.brembate%</option>
-										<option value="TRE">%ml.trezzo%</option>
-									</select>			
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="codneg_corneg_mod" name="codneg_corneg_mod">
+											<option value=" ">&nbsp;</option>
+											<option value="VIL">%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
 							  	</div>
 							  	<div class="col-sm-5">
-							  		<div class="control-group" id="descreg_corneg_mod_control_group">
-							    		<label for="descreg_corneg_mod">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_corneg_mod_messaggio"></span></small></label>
+									<div class='input-group' id="descreg_corneg_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
 										<input class="form-control" id="descreg_corneg_mod" name="descreg_corneg_mod" type="text" onblur="controllaDescrizione('descreg_corneg_mod')"/>
 									</div>
 							  	</div>
 							</div>
 							<div class="form-group row">
-							  	<div class="col-sm-4">
-							  		<div class="control-group" id="causale_corneg_mod_control_group">
-										<label for="causale_corneg_mod">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_corneg_mod_messaggio"></span></small></label>
-										<select class="form-control" id="causale_corneg_mod" name="causale_corneg_mod" >
-											<option value=" "></option>
+							  	<div class="col-sm-6">
+									<div class='input-group' id="causale_corneg_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_corneg_mod" name="causale_corneg_mod" >
+											<option value=" ">&nbsp;</option>
 											%elenco_causali_corneg_mod%
 										</select>			
 									</div>
@@ -1985,9 +2013,13 @@
 								</div>
 						  	</div>
 						  	<div class="col-sm-5">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-primary active"><input type="radio" name="aliquota_corneg_mod" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label>
+								  	<label class="btn btn-primary"><input type="radio" name="aliquota_corneg_mod" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label>
+								</div>						    		
 			 					<div class='input-group'>
-								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota10_corneg_mod" value="1.10" checked onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label> 	
-								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota20_corneg_mod" value="1.22" onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label> 
+								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota10_corneg_mod" value="1.10" checked onchange="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label> 	
+								  	<label><input type="radio" name="aliquota_corneg_mod" id="aliquota20_corneg_mod" value="1.22" onchange="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label> 
 								</div>
 							</div>	
 						</div>
@@ -2009,7 +2041,7 @@
 						  	<div class="col-sm-8">
 			 					<div class='input-group'>
 									<span class="input-group-addon">Cc</span>
-									<select class="form-control" id="conti_corneg_mod" name="conti_corneg_mod"></select>
+									<select class="selectpicker" data-live-search="true" id="conti_corneg_mod" name="conti_corneg_mod"></select>
 								</div>	
 						  	</div>							  	
 						</div>												

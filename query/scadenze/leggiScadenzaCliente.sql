@@ -2,7 +2,7 @@ SELECT
 	scadenza_cliente.id_scadenza,
 	scadenza_cliente.id_registrazione,
 	scadenza_cliente.dat_registrazione as dat_registrazione_yyyymmdd,
-	to_char(scadenza_cliente.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
+	to_char(scadenza_cliente.dat_registrazione, 'DD-MM-YYYY') as dat_registrazione,
 	scadenza_cliente.dat_registrazione as dat_registrazione_originale,
 	scadenza_cliente.imp_registrazione,
 	scadenza_cliente.nota,

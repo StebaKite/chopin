@@ -35,26 +35,7 @@ $( "#msg" ).dialog({
 	]
 });
 
-$( ".dataregpicker" ).datepicker({
-	showAnim: "slideDown",
-	changeMonth: true,
-	changeYear: true,
-	bgiframe: true,
-	dateFormat: formatDateJQ,
-	constrainInput: true,
-	numberOfMonths: 1,
-	maxDate: 0
-});
-
-$( ".datepicker" ).datepicker({
-	showAnim: "slideDown",
-	changeMonth: true,
-	changeYear: true,
-	bgiframe: true,
-	dateFormat: formatDateJQ,
-	constrainInput: true,
-	numberOfMonths: 3
-});
+$(".datepicker").datepicker();
 
 $( ".data" ).datepicker({
 	showAnim: "slideDown",
@@ -73,6 +54,24 @@ $( "#slider" ).slider({
 });
 
 $( ".spinner" ).spinner();
+
+$('select').selectpicker();
+
+$('.selectCausale').selectpicker({
+	style: 'btn-info',
+	size: 'auto',
+	width: '300px'
+});
+
+$('.selectNegozio').selectpicker({
+	style: 'btn-info',
+	size: 'auto'
+});
+
+$('.selectCliFor').selectpicker({
+	style: 'btn-info',
+	size: 'auto'
+});
 
 $( "#menu" ).menu();
 
@@ -281,24 +280,18 @@ function controllaClienteFornitore(campoForn, campoCli)
 	 * Il cliente e il fornitore sono mutualmente esclusivi Possono mancare
 	 * entrambi
 	 */
-	if (($("#" + campoForn).val() != "") && ($("#" + campoCli).val() != "")) {
-
+	if (($("#" + campoForn).val() != " ") && ($("#" + campoCli).val() != " "))
+	{
 		$("#" + campoForn + "_control_group").addClass("has-error");
 		$("#" + campoCli + "_control_group").addClass("has-error");
-		$("#" + campoForn + "_messaggio").html("Dato errato");
-		$("#" + campoCli + "_messaggio").html("Dato errato");
 		return false;
-	} else if (($("#" + campoForn).val() == "") && ($("#" + campoCli).val() == "")) {
+	} else if (($("#" + campoForn).val() == " ") && ($("#" + campoCli).val() == " ")) {
 		$("#" + campoForn + "_control_group").addClass("has-error");
 		$("#" + campoCli + "_control_group").addClass("has-error");
-		$("#" + campoForn + "_messaggio").html("Esclusivo");
-		$("#" + campoCli + "_messaggio").html("Esclusivo");
 		return false;
 	} else {
 		$("#" + campoForn + "_control_group").removeClass("has-error");
 		$("#" + campoCli + "_control_group").removeClass("has-error");
-		$("#" + campoForn + "_messaggio").html("");
-		$("#" + campoCli + "_messaggio").html("");
 		return true;
 	}
 }
@@ -454,9 +447,9 @@ function controllaQuantita(campoQta) {
 // Campi autocomplete
 // ---------------------------------------------------------
 
-$( "#fornitore_cre" ).autocomplete({
- 	source: elencoFornitori
-});	
+//$( "#fornitore_cre" ).autocomplete({
+// 	source: elencoFornitori
+//});	
 
 $( "#cliente_cre" ).autocomplete({
  	source: elencoClienti

@@ -24,9 +24,9 @@ class CercaCfisCliente extends AnagraficaAbstract implements AnagraficaBusinessI
 		$cliente->cercaCodiceFiscale($db);
 		
 		if ($cliente->getCfiscEsistente() == "true") {
-			echo "C.fisc cliente gi&agrave; usato";
+			echo "gi&agrave; usato";
 		} else {
-			echo "C.fisc Ok!";
+			echo "";
 		}
 	}
 	

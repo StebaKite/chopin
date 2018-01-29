@@ -161,8 +161,8 @@ class Registrazione implements CoreInterface {
 
 	public function preparaFiltri()
 	{
-		if ($this->getDatRegistrazioneDa() == "") $this->setDatRegistrazioneDa(date("d/m/Y"));
-		if ($this->getDatRegistrazioneA() == "") $this->setDatRegistrazioneA(date("d/m/Y"));
+		if ($this->getDatRegistrazioneDa() == "") $this->setDatRegistrazioneDa(date("d-m-Y"));
+		if ($this->getDatRegistrazioneA() == "") $this->setDatRegistrazioneA(date("d-m-Y"));
 		if ($this->getCodNegozioSel() == "") $this->setCodNegozioSel("");
 	}
 
@@ -214,21 +214,6 @@ class Registrazione implements CoreInterface {
 	public function inserisci($db)
 	{
 		$utility = Utility::getInstance();
-		$cliente = Cliente::getInstance();
-		$fornitore = Fornitore::getInstance();
-
-		$cliente->setDesCliente($this->getDesCliente());
-		$fornitore->setDesFornitore($this->getDesFornitore());
-
-		if ($this->getDesCliente() != "") {
-			$cliente->cercaConDescrizione($db);
-			$this->setIdCliente($cliente->getIdCliente());
-		}
-		if ($this->getDesFornitore() != "") {
-			$fornitore->cercaConDescrizione($db);
-			$this->setIdFornitore($fornitore->getIdFornitore());
-		}
-
 		$array = $utility->getConfig();
 
 		$replace = array(
@@ -238,8 +223,8 @@ class Registrazione implements CoreInterface {
 				'%dat_inserimento%' => date("Y-m-d H:i:s"),
 				'%num_fattura%' => ($this->getNumFattura() != "") ? "'" . $this->getNumFattura() . "'" : "null" ,
 				'%cod_causale%' => $this->getCodCausale(),
-				'%id_fornitore%' => ($fornitore->getIdFornitore() != "") ? "'" . $fornitore->getIdFornitore() . "'" : "null" ,
-				'%id_cliente%' => ($cliente->getIdCliente() != "") ? "'" . $cliente->getIdCliente() . "'" : "null" ,
+				'%id_fornitore%' => ($this->getIdFornitore() != " ") ? "'" . $this->getIdFornitore() . "'" : "null" ,
+				'%id_cliente%' => ($this->getIdCliente() != " ") ? "'" . $this->getIdCliente() . "'" : "null" ,
 				'%sta_registrazione%' => $this->getStaRegistrazione(),
 				'%cod_negozio%' => ($this->getCodNegozio() != "") ? "'" . $this->getCodNegozio() . "'" : "null",
 				'%id_mercato%' => ($this->getIdMercato() != "") ? "'" . $this->getIdMercato() . "'" : "null"
@@ -252,30 +237,14 @@ class Registrazione implements CoreInterface {
 			$this->setIdRegistrazione($db->getLastIdUsed());		// l'id generato dall'inserimento
 		}
 		$_SESSION[self::REGISTRAZIONE] = serialize($this);
-		$_SESSION[self::CLIENTE] = serialize($cliente);
-		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		return $result;
 	}
 
 	public function aggiorna($db)
 	{
 		$utility = Utility::getInstance();
-		$cliente = Cliente::getInstance();
-		$fornitore = Fornitore::getInstance();
-
-		$cliente->setDesCliente($this->getDesCliente());
-		$fornitore->setDesFornitore($this->getDesFornitore());
-
-		if ($this->getDesCliente() != "") {
-			$cliente->cercaConDescrizione($db);
-			$this->setIdCliente($cliente->getIdCliente());
-		}
-		if ($this->getDesFornitore() != "") {
-			$fornitore->cercaConDescrizione($db);
-			$this->setIdFornitore($fornitore->getIdFornitore());
-		}
-
 		$array = $utility->getConfig();
+		
 		$replace = array(
 				'%id_registrazione%' => trim($this->getIdRegistrazione()),
 				'%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
@@ -284,8 +253,8 @@ class Registrazione implements CoreInterface {
 				'%dat_inserimento%' => date("Y-m-d H:i:s"),
 				'%num_fattura%' => ($this->getNumFattura() != "") ? "'" . $this->getNumFattura() . "'" : "null" ,
 				'%cod_causale%' => $this->getCodCausale(),
-				'%id_fornitore%' => ($fornitore->getIdFornitore() != "") ? "'" . $fornitore->getIdFornitore() . "'" : "null" ,
-				'%id_cliente%' => ($cliente->getIdCliente() != "") ? "'" . $cliente->getIdCliente() . "'" : "null" ,
+				'%id_fornitore%' => ($this->getIdFornitore() != " ") ? "'" . $this->getIdFornitore() . "'" : "null" ,
+				'%id_cliente%' => ($this->getIdCliente() != " ") ? "'" . $this->getIdCliente() . "'" : "null" ,
 				'%sta_registrazione%' => $this->getStaRegistrazione(),
 				'%cod_negozio%' => ($this->getCodNegozio() != "") ? "'" . $this->getCodNegozio() . "'" : "null",
 				'%id_mercato%' => ($this->getIdMercato() != "") ? "'" . $this->getIdMercato() . "'" : "null"
@@ -295,8 +264,6 @@ class Registrazione implements CoreInterface {
 		$result = $db->execSql($sql);
 
 		$_SESSION[self::REGISTRAZIONE] = serialize($this);
-		$_SESSION[self::CLIENTE] = serialize($cliente);
-		$_SESSION[self::FORNITORE] = serialize($fornitore);
 		return $result;
 	}
 

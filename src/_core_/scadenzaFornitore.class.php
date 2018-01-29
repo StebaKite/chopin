@@ -88,8 +88,8 @@ class ScadenzaFornitore implements CoreInterface {
 
 	public function prepara()
 	{
-		$this->setDatScadenzaDa(date("d/m/Y"));
-		$this->setDatScadenzaA(date("d/m/Y"));
+		$this->setDatScadenzaDa(date("d-m-Y"));
+		$this->setDatScadenzaA(date("d-m-Y"));
 		$this->setCodNegozioSel("VIL");
 		$this->setQtaScadenzeDaPagare(0);
 		$this->setScadenzeDaPagare("");
@@ -398,7 +398,7 @@ class ScadenzaFornitore implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+		$dataScad = date("d-m-Y", trim($this->getDatScadenza()));
 
 		$replace = array(
 				'%dat_scadenza%' => $dataScad,
@@ -437,7 +437,7 @@ class ScadenzaFornitore implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+		$dataScad = date("d-m-Y", trim($this->getDatScadenza()));
 
 		$replace = array(
 				'%imp_in_scadenza%' => $this->getImpInScadenza(),
@@ -489,7 +489,7 @@ class ScadenzaFornitore implements CoreInterface {
 	    $utility = Utility::getInstance();
 	    $array = $utility->getConfig();
 	    
-	    $dataScad = date("d/m/Y", trim($this->getDatScadenza()));
+	    $dataScad = date("d-m-Y", trim($this->getDatScadenza()));
 	    
 	    $replace = array(
 	        '%dat_scadenza_nuova%' => $this->getDatScadenzaNuova(),

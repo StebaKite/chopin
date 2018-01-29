@@ -82,7 +82,7 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
 				'%descreg%' => trim($registrazione->getDesRegistrazione()),
 				'%causale%' => trim($causale->getCodCausale()),
 				'%codneg%' => $negozio,
-				'%mercato%' => trim($mercato->getDesMercato()),
+				'%mercato%' => trim($mercato->getIdMercato()),
 				'%mercatiNegozio%' => $elenco_mercati,
 				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
 				'%contiCausale%' => $causale->getContiCausale()

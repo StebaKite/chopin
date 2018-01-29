@@ -1,7 +1,7 @@
 select
 	id_scadenza, 
 	id_registrazione, 
-	to_char(dat_scadenza, 'DD/MM/YYYY') as dat_scadenza, 
+	to_char(dat_scadenza, 'DD-MM-YYYY') as dat_scadenza, 
 	imp_in_scadenza, 
 	nota_scadenza, 
 	tip_addebito, 

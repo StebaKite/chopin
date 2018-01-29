@@ -85,8 +85,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 				'%descreg%' => trim($registrazione->getDesRegistrazione()),
 				'%causale%' => trim($registrazione->getCodCausale()),
 				'%codneg%' => trim($registrazione->getCodNegozio()),
-				'%fornitore%' => trim($fornitore->getDesFornitore()),
-				'%cliente%' => trim($cliente->getDesCliente()),
+				'%fornitore%' => trim($fornitore->getIdFornitore()),
+				'%cliente%' => trim($cliente->getIdCliente()),
 				'%numfatt%' => trim($registrazione->getNumFattura()),
 				'%numfattorig%' => trim($registrazione->getNumFatturaOrig()),
 				'%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)),
@@ -132,7 +132,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 				 * - aggiorno quelle esistenti con i dati variati dell'operazione
 				 */
 
-				if ($registrazione->getIdFornitore() != null)
+				if ($registrazione->getIdFornitore() != " ")
 				{
 					if ($this->aggiornaScadenzeFornitore($db,$utility,$registrazione,$scadenzaFornitore,$fornitore)) {}		// tutto ok
 					else {
@@ -141,7 +141,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 					}
 				}
 				else {
-					if ($registrazione->getIdCliente() != null)
+					if ($registrazione->getIdCliente() != " ")
 					{
 						if ($this->aggiornaScadenzeCliente($db,$utility,$registrazione,$scadenzaCliente,$cliente)) {}		// tutto ok
 						else {

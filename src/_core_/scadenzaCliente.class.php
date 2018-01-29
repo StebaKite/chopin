@@ -87,8 +87,8 @@ class ScadenzaCliente implements CoreInterface {
 
 	public function prepara()
 	{
-		$this->setDatScadenzaDa(date("d/m/Y"));
-		$this->setDatScadenzaA(date("d/m/Y"));
+		$this->setDatScadenzaDa(date("d-m-Y"));
+		$this->setDatScadenzaA(date("d-m-Y"));
 		$this->setCodNegozioSel("VIL");
 		$this->setQtaScadenze(0);
 		$this->setScadenze("");
@@ -341,7 +341,7 @@ class ScadenzaCliente implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$dataReg = date("d/m/Y", trim($this->getDatRegistrazione()));
+		$dataReg = date("d-m-Y", trim($this->getDatRegistrazione()));
 
 		$replace = array(
 				'%dat_registrazione%' => $dataReg,
@@ -380,7 +380,7 @@ class ScadenzaCliente implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$dataScad = date("d/m/Y", trim($this->getDatRegistrazione()));
+		$dataScad = date("d-m-Y", trim($this->getDatRegistrazione()));
 
 		$replace = array(
 				'%imp_registrazione%' => $this->getImpRegistrazione(),

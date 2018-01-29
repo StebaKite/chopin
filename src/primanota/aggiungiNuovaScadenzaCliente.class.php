@@ -27,9 +27,11 @@ class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements Primanot
 	{
 		$db = Database::getInstance();
 		$cliente = Cliente::getInstance();
-		$cliente->cercaConDescrizione($db);
-
 		$scadenzaCliente = ScadenzaCliente::getInstance();
+		
+		$cliente->setIdCliente($scadenzaCliente->getIdCliente()); 
+		$cliente->leggi($db);
+
 		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
 		$scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
 		$scadenzaCliente->aggiungi();

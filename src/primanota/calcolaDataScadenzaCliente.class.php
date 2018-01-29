@@ -46,7 +46,7 @@ class CalcolaDataScadenzaCliente extends PrimanotaAbstract implements PrimanotaB
 
         $array = $utility->getConfig();
         
-        if ($registrazione->getDesCliente() == "") {
+        if ($registrazione->getIdCliente() == "") {
         	
         	/**
         	 * Devo eliminare da DB le scadenze del cliente indicato nella registrazione
@@ -57,8 +57,8 @@ class CalcolaDataScadenzaCliente extends PrimanotaAbstract implements PrimanotaB
         }
         else {
         	
-        	$cliente->setDesCliente($registrazione->getDesCliente());
-        	$cliente->cercaConDescrizione($db);
+        	$cliente->setIdCliente($registrazione->getIdCliente());
+        	$cliente->leggi($db);
         	
         	/**
         	 * Verifico se ci sono gia' scadenze significa che è stato cambiato il cliente.

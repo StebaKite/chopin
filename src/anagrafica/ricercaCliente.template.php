@@ -44,8 +44,16 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 		if ($cliente->getQtaClienti() > 0) {
 
 			$risultato_ricerca =
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
-			"		<tr> " .
+			"		<tr>" .
 			"			<th>%ml.codcliente%</th>" .
 			"			<th>%ml.descliente%</th>" .
 			"			<th>%ml.desindirizzocliente%</th>" .
@@ -57,15 +65,15 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 			"			<th>&nbsp;</th>" .
 			"		</tr>" .
 			"	</thead>" .
-			"	<tbody>";
+			"	<tbody id='myTable'>";
 
 			foreach($cliente->getClienti() as $row) {
 
 				if ($row[$cliente::QTA_REGISTRAZIONI_CLIENTE] == 0) {
-					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
-					$bottoneCancella = self::CANCELLA_CLIENTE_HREF . trim($row['id_cliente']) . "," . trim($row['cod_cliente']) . self::CANCELLA_CLIENTE_ICON;
+					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_ICON;
+					$bottoneCancella = self::CANCELLA_CLIENTE_HREF . trim($row['id_cliente']) . self::CANCELLA_ICON;
 				} else {
-					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_CLIENTE_ICON;
+					$bottoneModifica = self::MODIFICA_CLIENTE_HREF . trim($row['id_cliente']) . self::MODIFICA_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 				
@@ -78,8 +86,8 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 				"	<td>" . trim($row[$cliente::CAP_CLIENTE]) . "</td>" .
 				"	<td>" . trim($row[$cliente::TIP_ADDEBITO]) . "</td>" .
 				"	<td>" . trim($row[$cliente::QTA_REGISTRAZIONI_CLIENTE]) . "</td>" .
-				"	<td id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td>" . $bottoneModifica . "</td>" .
+				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$risultato_ricerca .= "</tbody>";
@@ -103,8 +111,6 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 				'%catcliente%' => $cliente->getCatCliente(),
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-
-		$utility = Utility::getInstance();
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);

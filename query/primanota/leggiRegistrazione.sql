@@ -1,6 +1,6 @@
 SELECT
 	registrazione.id_registrazione,
-	to_char(registrazione.dat_scadenza, 'DD/MM/YYYY') as dat_scadenza,	
+	to_char(registrazione.dat_scadenza, 'DD-MM-YYYY') as dat_scadenza,	
 	registrazione.des_registrazione,
 	registrazione.id_fornitore,
 	fornitore.des_fornitore,
@@ -8,7 +8,7 @@ SELECT
 	cliente.des_cliente,
 	registrazione.cod_causale,
 	registrazione.num_fattura,
-	to_char(registrazione.dat_registrazione, 'DD/MM/YYYY') as dat_registrazione,
+	to_char(registrazione.dat_registrazione, 'DD-MM-YYYY') as dat_registrazione,
 	registrazione.dat_inserimento,
 	registrazione.sta_registrazione,
 	registrazione.cod_negozio,

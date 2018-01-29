@@ -27,11 +27,7 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 	public function go()
 	{
 		$db = Database::getInstance();
-		$fornitore = Fornitore::getInstance();
-		$fornitore->cercaConDescrizione($db);
-
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-		$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 		
 		$scadenzaFornitore->aggiungi();
 		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);

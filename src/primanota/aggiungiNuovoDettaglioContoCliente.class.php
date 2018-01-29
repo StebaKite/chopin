@@ -46,8 +46,8 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
 			$dettaglioRegistrazione->setIndDareavere("D");
 
 			// cerco il fornitore selezionato usando la sua descrizione
-			$cliente->setDesCliente($registrazione->getDesCliente());
-			$cliente->cercaConDescrizione($db);
+			$cliente->setIdCliente($registrazione->getIdCliente());
+			$cliente->leggi($db);
 
 			// prelevo i codici dei conti fornitori in configurazione
 			$contoClienti = explode(",", $array["contiCliente"]);

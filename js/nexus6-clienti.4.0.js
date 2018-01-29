@@ -2,31 +2,126 @@
 // Clienti
 //---------------------------------------------------------------------------------
 
-$( "#nuovo-cliente" ).click(function( event ) {
-	$( "#nuovo-cliente-form" ).dialog( "open" );
-	event.preventDefault();
+
+$("#nuovoCliente").click(function() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+			document.getElementById("nuovoClienteForm").reset();
+            if (xmlhttp.responseText != "") {
+        		$("#codcli_cre").val(xmlhttp.responseText);
+            }			
+			$("#nuovo-cliente-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET", "creaClienteFacade.class.php?modo=start", true);
+	xmlhttp.send();
 });
 
-$( "#nuovo-cliente-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 900,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-				$("#nuovoCliente").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
+//---------------------------------------------------------------------------------
+
+$("#button-ok-nuovo-cliente-form").click(
+	function() {
+		if (validaNuovoCliente()) {
+			$("#testo-messaggio-successo").html("Cliente salvato con successo, conto cliente creato!");
+			$("#messaggio-successo-dialog").modal("show");						
+			sleep(3000);
+			$("#nuovoClienteForm").submit();			
 		}
-	]
-});
+		else {
+			$("#testo-messaggio-errore").html("In presenza di campi in errore il cliente non può essere salvato");
+			$("#messaggio-errore-dialog").modal("show");			
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+// CREA CLIENTE : routine di validazione
+//---------------------------------------------------------------------------------
+
+function validaNuovoCliente() {
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o
+	 * negativo (0) La validazione complessiva è positiva se tutti i controlli
+	 * sono positivi (1)
+	 */
+	var esito = "";
+
+	if ($("#codcli_cre").val() != "") {
+		if (controllaCodice("codcli_cre")) { esito = esito + "1"; }
+		else { esito = esito + "0"; }
+	}
+
+	if ($("#descli_cre").val() != "") {
+		if (controllaDescrizione("descli_cre")) { esito = esito + "1"; }
+		else { esito = esito + "0"; }
+	}
+
+	if (esito == "11") { return true; }
+	else { return false; }
+}
+
+//---------------------------------------------------------------------------------
+
+function controllaUnivocitaPiva(campo_piva, campo_descli)
+{
+	var codpiva = $("#" + campo_piva).val();
+	var descliente = $("#" + campo_descli).val();
+
+	if (codpiva != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#" + campo_piva + "_messaggio").html(xmlhttp.responseText);
+					$("#" + campo_piva + "_control_group").addClass("has-error");
+				} else {
+					$("#" + campo_piva + "_messaggio").html("");
+					$("#" + campo_piva + "_control_group").removeClass("has-error");
+				}
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
+	    xmlhttp.send();		
+	}		
+}
+
+//---------------------------------------------------------------------------------
+
+function controllaUnivocitaCfis(campo_cfis)
+{
+	var codfisc = $("#" + campo_cfis).val();
+
+	if (codfisc != "") {
+		var xmlhttp = new XMLHttpRequest();
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText != "") {
+					$("#" + campo_cfis + "_messaggio").html(xmlhttp.responseText);
+					$("#" + campo_cfis + "_control_group").addClass("has-error");
+				} else {
+					$("#" + campo_cfis + "_messaggio").html("");
+					$("#" + campo_cfis + "_control_group").removeClass("has-error");
+				}
+	        }
+	    } 
+	    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
+	    xmlhttp.send();		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //---------------------------------------------------------------------------------				
 function modificaCliente(idCliente) {
@@ -134,5 +229,24 @@ $( "#cancella-cliente-form" ).dialog({
 		}
 	]
 });
+
+// =============================================================================
+// Spostete qui dalla pagina di ricerca cliente
+//=============================================================================
+
+
+
+function normalizzaCampo(campo) {
+
+	var c = $("#" + campo).val();
+	var cNorm = c.trim().replace("&", "e");
+	$("#" + campo).val(cNorm);	
+}
+
+
+
+
+
+
 
 

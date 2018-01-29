@@ -32,7 +32,7 @@ class Causale implements CoreInterface {
 	private $qtaRegistrazioniCausale;
 	private $qtaContiCausale;
 	private $contiCausale;
-
+	
 	// Queries
 
 	const RICERCA_CAUSALE	= "/configurazioni/ricercaCausale.sql";
@@ -268,7 +268,7 @@ class Causale implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 
-		$conti = "<select class='selectmenuConto' id='conti' name='conto_dett'><option value=''></option>";
+		$conti = "<option value=''></option>";
 		$qtaContiCausale = pg_num_rows($result);
 		$contiCausale = pg_fetch_all($result);
 		$this->setQtaContiCausale(0);
@@ -282,7 +282,7 @@ class Causale implements CoreInterface {
 		}
 		$conti .= "</select>";
 		$this->setContiCausale($conti);
-		return $result;
+		return $conti;
 	}
 
 	// Getters & Setters

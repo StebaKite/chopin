@@ -234,29 +234,29 @@ abstract class Nexus6Abstract {
 	public function sommaGiorniData($data, $carattereSeparatore, $giorniDaSommare) {
 
 		list($giorno, $mese, $anno) = explode($carattereSeparatore, $data);
-		return date("d/m/Y",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
+		return date("d-m-Y",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
 	}
 
 	public function sommaGiorniDataYMD($data, $carattereSeparatore, $giorniDaSommare) {
 
 		list($anno, $mese, $giorno) = explode($carattereSeparatore, $data);
-		return date("Y/m/d",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
+		return date("Y-m-d",mktime(0,0,0, $mese, $giorno + $giorniDaSommare, $anno));
 	}
 
 	public function caricaElencoFornitori($fornitore)
 	{
-		$elencoFornitori = "";
+		$elencoFornitori = "<option value=' '>&nbsp;</option>";
 		foreach ($fornitore->getFornitori() as $unFornitore) {
-			$elencoFornitori .= '"' . $unFornitore[Fornitore::DES_FORNITORE] . '",';
+			$elencoFornitori .= "<option value='" . $unFornitore[Fornitore::ID_FORNITORE] . "'>" . $unFornitore[Fornitore::DES_FORNITORE] . "</option>";
 		}
 		return $elencoFornitori;
 	}
 
 	public function caricaElencoClienti($cliente)
 	{
-		$elencoClienti = "";
+		$elencoClienti = "<option value=' '>&nbsp;</option>";
 		foreach ($cliente->getClienti() as $unCliente) {
-			$elencoClienti .= '"' . $unCliente[Cliente::DES_CLIENTE] . '",';
+			$elencoClienti .= "<option value='" . $unCliente[Cliente::ID_CLIENTE] . "'>" . $unCliente[Cliente::DES_CLIENTE] . "</option>";
 		}
 		return $elencoClienti;
 	}

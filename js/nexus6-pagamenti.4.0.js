@@ -7,8 +7,9 @@ $( "#nuovo-pagamento" ).click(function( event ) {
 	xmlhttp.onreadystatechange = function() {
 		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {    	  
 			document.getElementById("nuovoPagamentoForm").reset();
-			$("#codneg_pag_cre option[value=' ']").prop('selected', true);
-			$("#causale_pag_cre option[value=' ']").prop('selected', true);
+			$("#codneg_pag_cre").selectpicker('val',' ');
+			$("#causale_pag_cre").selectpicker('val',' ');
+			$("#fornitore_pag_cre").selectpicker('val',' ');
 			$("#scadenze_aperte_pag_cre").html("");
 			$("#scadenze_chiuse_pag_cre").html("");
 			$("#dettagli_pag_cre").html("");
@@ -344,10 +345,10 @@ function modificaPagamento(idPagamento)
 					$("#causale_pag_mod").val($(this).find("causale").text());
 
 					var negozio = $(this).find("codneg").text();
-					$("#codneg_pag_mod option[value='" + negozio + "']").prop('selected', true);
+					$("#codneg_pag_mod").selectpicker('val', negozio);
 					
 					var fornitore   = $(this).find("fornitore").text();
-					$("#fornitore_pag_mod").val(fornitore);
+					$("#fornitore_pag_mod").selectpicker('val',fornitore);
 					
 					$("#scadenze_chiuse_pag_mod").html($(this).find("scadenzepagate").text());					
 					$("#scadenze_aperte_pag_mod").html($(this).find("scadenzedapagare").text());					

@@ -7,8 +7,8 @@ $( "#nuovo-corrispettivo-mercato" ).click(function( event ) {
 	xmlhttp.onreadystatechange = function() {
 		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {    	  
 			document.getElementById("nuovoCorrispettivoMercatoForm").reset();
-			$("#codneg_cormer_cre option[value=' ']").prop('selected', true);
-			$("#causale_cormer_cre option[value=' ']").prop('selected', true);
+			$("#codneg_cormer_cre").selectpicker('val', ' ');
+			$("#causale_cormer_cre").selectpicker('val', ' ');
 			$("#dettagli_cormer_cre").html("");
 			$("#dettagli_cormer_cre_messaggio").html("");			
 			$("#nuovo-corrispettivo-mercato-dialog").modal("show");
@@ -25,8 +25,8 @@ $( "#nuovo-corrispettivo-negozio" ).click(function( event ) {
 	xmlhttp.onreadystatechange = function() {
 		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {    	  
 			document.getElementById("nuovoCorrispettivoNegozioForm").reset();
-			$("#codneg_corneg_cre option[value=' ']").prop('selected', true);
-			$("#causale_corneg_cre option[value=' ']").prop('selected', true);
+			$("#codneg_corneg_cre").selectpicker('val', ' ');
+			$("#causale_corneg_cre").selectpicker('val', ' ');
 			$("#dettagli_corneg_cre").html("");
 			$("#dettagli_corneg_cre_messaggio").html("");			
 			$("#nuovo-corrispettivo-negozio-dialog").modal("show");
@@ -44,7 +44,7 @@ $("#codneg_cormer_cre").change(
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				$("#mercato_cormer_cre").html(xmlhttp.responseText);
-				$("#mercato_cormer_cre").selectmenu("refresh");
+				$("#mercato_cormer_cre").selectpicker("refresh");
 			}
 		}
 		xmlhttp.open("GET","leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_cre=" + this.value, true);
@@ -60,7 +60,7 @@ $("#codneg_cormer_mod").change(
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				$("#mercato_cormer_mod").html(xmlhttp.responseText);
-				$("#mercato_cormer_mod").selectmenu("refresh");
+				$("#mercato_cormer_mod").selectpicker("refresh");
 			}
 		}
 		xmlhttp.open("GET","leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_mod=" + this.value, true);
@@ -107,7 +107,7 @@ $("#button-ok-nuovodett-nuovo-corrispettivo-mercato-form").click(
 		if($('#aliquota10_cormer_cre').is(':checked')) { var aliquota = $("#aliquota10_cormer_cre").val(); }
 		if($('#aliquota20_cormer_cre').is(':checked')) { var aliquota = $("#aliquota20_cormer_cre").val(); }
 
-		var conto = $("#conti_cormer").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
+		var conto = $("#conti_cormer_cre").val().replace(",",".");			// tolgo eventuali virgole nella descrizione del conto	
 		var idconto = conto.substring(0, 6);
 		
 		var xmlhttp = new XMLHttpRequest();
@@ -560,9 +560,14 @@ function modificaCorrispettivoMercato(idRegistrazione)
 					$("#causale_cormer_mod").val($(this).find("causale").text());
 
 					var negozio = $(this).find("codneg").text();
-					$("#codneg_cormer_mod option[value='" + negozio + "']").prop('selected', true);
+					$("#codneg_cormer_mod").selectpicker('val', negozio);
 					
 					$("#mercato_cormer_mod").html($(this).find("mercatiNegozio").text());
+					$("#mercato_cormer_mod").selectpicker('refresh');
+					
+					var mercato = $(this).find("mercato").text();
+					$("#mercato_cormer_mod").selectpicker('val', mercato);
+					
 					$("#dettagli_cormer_mod").html($(this).find("dettagli").text());
 					$("#conti_cormer_mod").html($(this).find("contiCausale").text());
 				}
@@ -645,7 +650,7 @@ function modificaCorrispettivoNegozio(idRegistrazione)
 					$("#causale_corneg_mod").val($(this).find("causale").text());
 
 					var negozio = $(this).find("codneg").text();
-					$("#codneg_corneg_mod option[value='" + negozio + "']").prop('selected', true);
+					$("#codneg_corneg_mod").selectpicker('val', negozio);
 					
 					$("#dettagli_corneg_mod").html($(this).find("dettagli").text());
 					$("#conti_corneg_mod").html($(this).find("contiCausale").text());

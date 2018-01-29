@@ -25,9 +25,9 @@ class CercaPivaCliente extends AnagraficaAbstract implements AnagraficaBusinessI
 		$cliente->cercaPartivaIva($db);
 
 		if ($cliente->getPivaEsistente() == "true") {
-			echo "P.iva cliente gi&agrave; esistente";
+			echo "gi&agrave; esistente";
 		} else {
-			echo "P.iva Ok!";
+			echo "";
 		}
 	}
 	

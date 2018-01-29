@@ -1,194 +1,160 @@
 <script type="text/javascript">
 
-function controllaUnivocitaPiva(funzione) {
-
-	if (funzione == "new") {
-		var codpiva = $("#codpiva").val();
-		var descliente = $("#descliente").val();
-
-		if (codpiva != "") {
-			var xmlhttp = new XMLHttpRequest();
-		    xmlhttp.onreadystatechange = function() {
-		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		            $( "#esitoControlloUnivocitaPiva" ).html(xmlhttp.responseText);
-		            $( "#esitoPivaCliente" ).val(xmlhttp.responseText);
-		        }
-		    } 
-		    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
-		    xmlhttp.send();		
-		}		
-	}
-	else {
-		var codpiva = $("#codpiva_mod").val();
-		var descliente = $("#descliente_mod").val();
-
-		if (codpiva != "") {
-			var xmlhttp = new XMLHttpRequest();
-		    xmlhttp.onreadystatechange = function() {
-		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		            $( "#esitoControlloUnivocitaPiva_mod" ).html(xmlhttp.responseText);
-		            $( "#esitoPivaCliente_mod" ).val(xmlhttp.responseText);
-		        }
-		    } 
-		    xmlhttp.open("GET", "cercaPivaClienteFacade.class.php?modo=start&codpiva=" + codpiva + "&descliente=" + descliente, true);
-		    xmlhttp.send();		
-		}				
-	}
-}
-
-function controllaUnivocitaCfis(funzione) {
-
-	if (funzione == "new") {
-		var codfisc = $("#codfisc").val();
-
-		if (codfisc != "") {
-			var xmlhttp = new XMLHttpRequest();
-		    xmlhttp.onreadystatechange = function() {
-		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		            $( "#esitoControlloUnivocitaCfis" ).html(xmlhttp.responseText);
-		            $( "#esitoCfisCliente" ).val(xmlhttp.responseText);
-		        }
-		    } 
-		    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
-		    xmlhttp.send();		
-		}		
-	}
-	else {
-		var codfisc = $("#codfisc_mod").val();
-
-		if (codfisc != "") {
-			var xmlhttp = new XMLHttpRequest();
-		    xmlhttp.onreadystatechange = function() {
-		        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-		            $( "#esitoControlloUnivocitaCfis_mod" ).html(xmlhttp.responseText);
-		            $( "#esitoCfisCliente_mod" ).val(xmlhttp.responseText);
-		        }
-		    } 
-		    xmlhttp.open("GET", "cercaCfisClienteFacade.class.php?modo=start&codfisc=" + codfisc, true);
-		    xmlhttp.send();		
-		}		
-	}
-}
-
-function normalizzaCampo(campo) {
-
-	var c = $("#" + campo).val();
-	var cNorm = c.trim().replace("&", "e");
-	$("#" + campo).val(cNorm);	
-}
-
-$(document).ready( function () {
-    $('#clienti').dataTable( {
-    	"order": [[1, 'asc']],
-    	"columnDefs": [
-    	    {"targets": 0, "orderable": false },
-    	    {"targets": 7, "orderable": false },
-    	    {"targets": 8, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+	$(document).ready(function(){
+	
+		$(".datepicker").datepicker();
+	
+		$("#myInput").on("keyup", 
+			function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable tr").filter(
+					function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					}
+				);
+			}
+		);				
+	});
 
 </script>
 
-<div id="body">
-	<div id="main">
-		<table style="width:100%;">
-			<tbody>
-				<tr>
-					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right"><button id="nuovo-cliente" class="button">%ml.nuovocliente%</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<br/>
-		<table id="clienti" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
-	</div>	
-		
-	<div id="nuovo-cliente-form" title="Nuovo Cliente"> 
-		<form method="post" id="nuovoCliente" action="../anagrafica/creaClienteFacade.class.php?modo=go" >
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
 
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.categoria% :</td>
-						<td class="tooltip">
-							<select class="selectmenuCategoria" id="catcliente" name="catcliente" >
-								<option value=""></option>
-								%elenco_categorie_cliente%
-							</select>
-						</td>
-					</tr>					
-					<tr>
-						<td>%ml.codcliente% :</td>
-						<td class="tooltip">
-							<input type="text" id="codcliente" name="codcliente" size="12" maxlength="10" value='%codcliente%' >&nbsp;&nbsp;&nbsp;
-							<i>(Codice cliente proposto disponibile)</i>
-						</td>
-					</tr>
-					<tr>
-						<td>%ml.descliente% :</td>
-						<td class="tooltip"><input type="text" id="descliente" name="descliente" size="70" maxlength="100" value='%descliente%' onblur="normalizzaCampo('descliente');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.desindirizzocliente% :</td>
-						<td class="tooltip"><input type="text" id="indcliente" name="indcliente" size="70" maxlength="200" value='%indcliente%' onblur="normalizzaCampo('indcliente');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.descittacliente% :</td>
-						<td class="tooltip"><input type="text" id="cittacliente" name="cittacliente" size="70" maxlength="100" value='%cittacliente%' onblur="normalizzaCampo('cittacliente');"></td>
-					</tr>			
-					<tr>
-						<td>%ml.capcliente% :</td>
-						<td class="tooltip"><input type="text" id="capcliente" name="capcliente" size="7" maxlength="5" value='%capcliente%' onblur="normalizzaCampo('capcliente');"></td>
-					</tr>	
-					<tr>
-						<td>%ml.tipaddebito% :</td>						
-						<td>
-							<div class="radioset" >
-								<input type="radio" id="bonifico" name="tipoaddebito" value="BONIFICO" checked ><label for="bonifico">%ml.bonifico%</label>
-								<input type="radio" id="riba" name="tipoaddebito" value="RIBA" ><label for="riba">%ml.riba%</label>
-								<input type="radio" id="rimdiretta" name="tipoaddebito" value="RIM_DIR" ><label for="rimdiretta">%ml.rimdiretta%</label>
-								<input type="radio" id="assegnobancario" name="tipoaddebito" value="ASS_BAN" ><label for="assegnobancario">%ml.assegnobancario%</label>
-								<input type="radio" id="addebitodiretto" name="tipoaddebito" value="ADD_DIR" ><label for="addebitodiretto">%ml.addebitodiretto%</label>
-							</div>
-						</td>					
-					</tr>					
-					<tr>
-						<td>%ml.pivacliente% :</td>
-						<td class="tooltip">
-							<input type="text" id="codpiva" name="codpiva" size="15" maxlength="11" value='%codpiva%' onblur="controllaUnivocitaPiva('new');" >&nbsp;&nbsp;&nbsp;
-							<i id="esitoControlloUnivocitaPiva">&nbsp;</i>
-						</td>
-					</tr>					
-					<tr>
-						<td>%ml.cfiscliente% :</td>
-						<td class="tooltip">
-							<input type="text" id="codfisc" name="codfisc" size="20" maxlength="16" value='%codfisc%' onblur="controllaUnivocitaCfis('new');" >&nbsp;&nbsp;&nbsp;
-							<i id="esitoControlloUnivocitaCfis">&nbsp;</i>
-						</td>
-					</tr>					
-				</tbody>
-			</table>
-			<input type="hidden" id="esitoPivaCliente" name="esitoPivaCliente" />						
-			<input type="hidden" id="esitoCfisCliente" name="esitoCfisCliente" />						
-			
-		</form>
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+						<button id="nuovoCliente" class="btn btn-primary btn-default">%ml.nuovocliente%</button>
+					</div>	
+				</div>			
+			</div>
+			<br/>
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
 	</div>
+</div>
+
+<!-- ------------- -->
+<!-- NUOVO CLIENTE -->
+<!-- ------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-cliente-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo Cliente</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="nuovoClienteForm" action="../anagrafica/creaClienteFacade.class.php?modo=go" >
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+							  		<div class="control-group" id="catcli_cre_control_group">
+										<label for="catcli_cre">%ml.categoria%&nbsp;<small><span class="text-danger" id="catcli_cre_messaggio"></span></small></label>
+										<select class="selectpicker" id="catcli_cre" name="catcli_cre" >
+											%elenco_categorie_cliente%
+										</select>			
+									</div>
+							  	</div>
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="codcli_cre_control_group">
+										<label for="codcli_cre">%ml.codcliente%&nbsp;<small><span class="text-danger" id="codcli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="codcli_cre" name="codcli_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="descli_cre_control_group">
+							    		<label for="descli_cre">%ml.descliente%&nbsp;<small><span class="text-danger" id="descli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="descli_cre" name="descli_cre" type="text" onblur="controllaDescrizione('descli_cre')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-5">
+							  		<div class="control-group" id="indcli_cre_control_group">
+							    		<label for="indcli_cre">%ml.indcliente%&nbsp;<small><span class="text-danger" id="indcli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="indcli_cre" name="indcli_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="cittacli_cre_control_group">
+							    		<label for="cittacli_cre">%ml.cittacliente%&nbsp;<small><span class="text-danger" id="cittacli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="cittacli_cre" name="cittacli_cre" type="text" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<div class="control-group" id="capcli_cre_control_group">
+							    		<label for="capcli_cre">%ml.capcliente%&nbsp;<small><span class="text-danger" id="capcli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="capcli_cre" name="capcli_cre" type="text" />
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-8">
+						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>						    		
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+									</div>						    		
+								</div>	
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="pivacli_cre_control_group">
+										<label for="pivacli_cre">%ml.pivacliente%&nbsp;<small><span class="text-danger" id="pivacli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="pivacli_cre" name="pivacli_cre" type="text" onblur="controllaUnivocitaPiva('pivacli_cre', 'descli_cre');" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-2 ui-front">
+							  		<div class="control-group" id="cfiscli_cre_control_group">
+										<label for="cfiscli_cre">%ml.cfiscliente%&nbsp;<small><span class="text-danger" id="cfiscli_cre_messaggio"></span></small></label>
+										<input class="form-control" id="cfiscli_cre" name="cfiscli_cre" type="text" onblur="controllaUnivocitaCfis('cfiscli_cre');" />
+									</div>
+							  	</div>
+							</div>
+						</div>
+						
+					</form>
+											
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-cliente-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
 		
 	<div id="cancella-cliente-form" title="Cancella Cliente"> 
 		<form method="post" id="cancellaCliente" action="../anagrafica/cancellaClienteFacade.class.php?modo=start" >

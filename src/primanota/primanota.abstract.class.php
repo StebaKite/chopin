@@ -793,13 +793,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			 * Le data di registrazione viene aumentata dei giorni configurati per il fornitore,
 			 * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
 			 */
-			$dataScadenza = $this->sommaGiorniData($data, "/", $numGiorniScadenza);
-			
-			$data = explode("/",$dataScadenza);
-			$mese = $data[1];
-			$anno = $data[2];
-			
-			return self::$ggMese[$mese] . "/" . $mese . "/" . $anno;
+			$dataScadenza = $this->sommaGiorniData($data, "-", $numGiorniScadenza);
+			return $dataScadenza;
 		}
 		else return "";
 	}

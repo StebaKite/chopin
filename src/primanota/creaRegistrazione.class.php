@@ -156,6 +156,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 	public function creaScadenzeFornitore($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore)
 	{
 		$fornitore = Fornitore::getInstance();
+		$fornitore->setIdFornitore($registrazione->getIdFornitore());
 		$fornitore->leggi($db);
 
 		$scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
@@ -171,13 +172,13 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 		 */
 		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
 		{
-			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
-			$dataRegistrazione = strtotime(str_replace('/', '-', $data1));
+//			$data1 = str_replace("'", "", $registrazione->getDatRegistrazione());					// la datareg arriva con gli apici per il db
+			$dataRegistrazione = strtotime($registrazione->getDatRegistrazione());
 
 			foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenza)
 			{
-				$data = str_replace("'", "", $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);			// la datascad arriva con gli apici per il db
-				$dataScadenza = strtotime(str_replace('/', '-', $data));							// cambio i separatori altrimenti la strtotime non funziona
+//				$data = str_replace("'", "", $unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);			// la datascad arriva con gli apici per il db
+				$dataScadenza = strtotime($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);							// cambio i separatori altrimenti la strtotime non funziona
 
 				if ($dataScadenza > $dataRegistrazione) {
 					/**

@@ -70,7 +70,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 	    		'%descreg%' => trim($registrazione->getDesRegistrazione()),
 	    		'%causale%' => trim($registrazione->getCodCausale()),
 	    		'%codneg%' => trim($registrazione->getCodNegozio()),
-	    		'%cliente%' => trim($cliente->getDesCliente()),
+	    		'%cliente%' => trim($cliente->getIdCliente()),
 	    		'%scadenzeincassate%' => trim($this->makeTabellaFattureIncassate($scadenzaCliente)),
 	    		'%scadenzedaincassare%' => trim($this->makeTabellaFattureDaIncassare($scadenzaCliente)),
 	    		'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),

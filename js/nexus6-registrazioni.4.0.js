@@ -10,8 +10,10 @@ $("#nuovaRegistrazione").click(function() {
 	xmlhttp.onreadystatechange = function() {
 		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
 			document.getElementById("nuovaRegistrazioneForm").reset();
-			$("#codneg_cre option[value=' ']").prop('selected', true);
-			$("#causale_cre option[value=' ']").prop('selected', true);
+			$("#codneg_cre").selectpicker('val', ' ');
+			$("#causale_cre").selectpicker('val', ' ');
+			$("#fornitore_cre").selectpicker('val', ' ');
+			$("#cliente_cre").selectpicker('val', ' ');
 			$("#scadenzesuppl_cre").html("");
 			$("#dettagli_cre").html("");
 			$("#dettagli_cre_messaggio").html("");			
@@ -143,7 +145,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
 		var cliente = $("#cliente_mod").val();
 		var numfatt = $("#numfatt_mod").val();
 		
-		if (fornitore != "")
+		if (fornitore != " ")
 		{	
 			var xmlhttp = new XMLHttpRequest();
 		    xmlhttp.onreadystatechange = function() {
@@ -156,7 +158,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
 		    xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
 		    xmlhttp.send();
 		}
-		else if (cliente != "")
+		else if (cliente != " ")
 		{
 			var xmlhttp = new XMLHttpRequest();
 		    xmlhttp.onreadystatechange = function() {
@@ -166,7 +168,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
 		            }
 		        }
 		    } 
-		    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&datascad_cli=" + datascad + "&cliente=" + cliente + "&impscad_cli=" + impscad + "&numfatt=" + numfatt, true);
+		    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&&cliente=" + cliente + "&datascad_cli=" + datascad + "&impscad_cli=" + impscad + "&numfatt=" + numfatt, true);
 		    xmlhttp.send();	
 		} 
 	}
@@ -266,18 +268,20 @@ function modificaRegistrazione(idRegistrazione)
 					$("#causale_mod").val($(this).find("causale").text());
 					
 					var negozio = $(this).find("codneg").text();
-					$("#codneg_mod option[value='" + negozio + "']").prop('selected', true);
+					$("#codneg_mod").selectpicker('val', negozio);
 					
 					var fornitore = $(this).find("fornitore").text();
 					var cliente   = $(this).find("cliente").text();
+					if (fornitore == "") fornitore = " ";
+					if (cliente == "") cliente = " ";
 					
-					$("#fornitore_mod").val(fornitore);
-					$("#cliente_mod").val(cliente);
+					$("#fornitore_mod").selectpicker('val',fornitore);
+					$("#cliente_mod").selectpicker('val',cliente);
 					$("#numfatt_mod").val($(this).find("numfatt").text());
 					$("#numfatt_mod_orig").val($(this).find("numfattorig").text());
 					
-					if (fornitore != "") $("#scadenzesuppl_mod").html($(this).find("scadenzesupplfornitore").text());
-					if (cliente   != "") $("#scadenzesuppl_mod").html($(this).find("scadenzesupplcliente").text());
+					if (fornitore != " ") $("#scadenzesuppl_mod").html($(this).find("scadenzesupplfornitore").text());
+					if (cliente   != " ") $("#scadenzesuppl_mod").html($(this).find("scadenzesupplcliente").text());
 					
 					$("#dettagli_mod").html($(this).find("dettagli").text());
 					$("#conti_mod").html($(this).find("conti").text());
@@ -502,11 +506,10 @@ function modificaSegnoDettaglioRegistrazione(idTable,conto,sottoconto,segno,idDe
 
 //---------------------------------------------------------------------
 
-function aggiungiDettaglioContoFornitore(fornitore, campoDett)
+function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
 {
-	if (fornitore != "") {
-		var fornitoreNorm = fornitore.replace("&", ""); // tolgo eventuali & nella ragione sociale
-
+	if (idfornitore != "")
+	{
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -518,18 +521,17 @@ function aggiungiDettaglioContoFornitore(fornitore, campoDett)
 				}
 			}
 		}
-		xmlhttp.open("GET", "aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&desfornitore=" + fornitoreNorm, true);
+		xmlhttp.open("GET", "aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore, true);
 		xmlhttp.send();
 	}
 }
 
 //---------------------------------------------------------------------
 
-function aggiungiDettaglioContoCliente(cliente, campoDett)
+function aggiungiDettaglioContoCliente(idcliente, campoDett)
 {
-	if (cliente != "") {
-		var clienteNorm = cliente.replace("&", ""); // tolgo eventuali & nella ragione sociale
-
+	if (idcliente != "")
+	{
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -541,7 +543,7 @@ function aggiungiDettaglioContoCliente(cliente, campoDett)
 				}
 			}
 		}
-		xmlhttp.open("GET","aggiungiNuovoDettaglioContoClienteFacade.class.php?modo=go&descliente=" + clienteNorm, true);
+		xmlhttp.open("GET","aggiungiNuovoDettaglioContoClienteFacade.class.php?modo=go&idcliente=" + idcliente, true);
 		xmlhttp.send();
 	}
 }
@@ -674,7 +676,7 @@ $("#cancella-registrazione-form").dialog({
 $("#fornitore_cre").change(
 	function() {
 
-		var desfornitore = $("#fornitore_cre").val();
+		var idfornitore = $("#fornitore_cre").val();
 		var datareg = $("#datareg_cre").val();
 
 		var xmlhttp = new XMLHttpRequest();
@@ -687,7 +689,7 @@ $("#fornitore_cre").change(
 				}
 			}
 		}
-		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
+		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore="+ idfornitore + "&datareg=" + datareg, true);
 		xmlhttp.send();
 	}
 );
@@ -771,7 +773,7 @@ $("#causale_cre").change(
 				function() {
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 						$("#conti").html(xmlhttp.responseText);
-						$("#conti").selectmenu("refresh");
+						$('#conti').selectpicker('refresh');
 					}
 				}
 			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
@@ -791,8 +793,176 @@ $("#causale_mod").change(
 			xmlhttp.onreadystatechange = 
 				function() {
 					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-						$("#conti").html(xmlhttp.responseText);
-						$("#conti").selectmenu("refresh");
+						$("#conti_mod").html(xmlhttp.responseText);
+						$("#conti_mod").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_inc").change(
+	function() {
+		var causale = $("#causale_inc").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_inc").html(xmlhttp.responseText);
+						$("#conti_inc").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_inc_mod").change(
+	function() {
+		var causale = $("#causale_inc_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_inc_mod").html(xmlhttp.responseText);
+						$("#conti_inc_mod").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_pag_cre").change(
+	function() {
+		var causale = $("#causale_pag_cre").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_pag").html(xmlhttp.responseText);
+						$("#conti_pag").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_pag_mod").change(
+	function() {
+		var causale = $("#causale_pag_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_pag_mod").html(xmlhttp.responseText);
+						$("#conti_pag_mod").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_cormer_cre").change(
+	function() {
+		var causale = $("#causale_cormer_cre").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_cormer_cre").html(xmlhttp.responseText);
+						$("#conti_cormer_cre").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_cormer_mod").change(
+	function() {
+		var causale = $("#causale_cormer_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_cormer_mod").html(xmlhttp.responseText);
+						$("#conti_cormer_mod").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_corneg_cre").change(
+	function() {
+		var causale = $("#causale_corneg_cre").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_corneg_cre").html(xmlhttp.responseText);
+						$("#conti_corneg_cre").selectpicker("refresh");
+					}
+				}
+			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.send();
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
+
+$("#causale_corneg_mod").change(
+	function() {
+		var causale = $("#causale_corneg_mod").val();
+
+		if (causale != "") {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = 
+				function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						$("#conti_corneg_mod").html(xmlhttp.responseText);
+						$("#conti_corneg_mod").selectpicker("refresh");
 					}
 				}
 			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);

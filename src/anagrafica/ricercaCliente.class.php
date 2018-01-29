@@ -43,13 +43,8 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 
-		if ($this->refreshClienti($db, $cliente)) {
-
-			$ricercaClienteTemplate->displayPagina();
-
-			/**
-			 * Gestione del messaggio proveniente dalla cancellazione
-			 */
+		if ($this->refreshClienti($db, $cliente))
+		{
 
 			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
 				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
@@ -66,24 +61,27 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 			else {
 				$_SESSION[self::MESSAGGIO] = "Trovati " . $cliente->getQtaClienti() . " clienti";
 			}
-
+			
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-			if ($cliente->getQtaClienti() > 0) {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			
+			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+			if ($pos === false) {
+				if ($cliente->getQtaClienti() > 0)
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-
-			echo $utility->tailTemplate($template);
+			else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+			
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
 		else {
-
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			
+			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-		}
-
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
+		}		
+		$ricercaClienteTemplate->displayPagina();
+		
 		include($this->piede);
 	}
 

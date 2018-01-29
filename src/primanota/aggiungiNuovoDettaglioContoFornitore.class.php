@@ -46,8 +46,8 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
 			$dettaglioRegistrazione->setIndDareavere("A");
 
 			// cerco il fornitore selezionato usando la sua descrizione
-			$fornitore->setDesFornitore($registrazione->getDesFornitore());
-			$fornitore->cercaConDescrizione($db);
+			$fornitore->setidFornitore($registrazione->getIdFornitore());
+			$fornitore->leggi($db);
 
 			if ($fornitore->getCodFornitore() != "")
 			{

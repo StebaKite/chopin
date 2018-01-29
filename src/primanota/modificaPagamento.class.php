@@ -69,7 +69,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 	    		'%descreg%' => trim($registrazione->getDesRegistrazione()),
 	    		'%causale%' => trim($registrazione->getCodCausale()),
 	    		'%codneg%' => trim($registrazione->getCodNegozio()),
-	    		'%fornitore%' => trim($fornitore->getDesFornitore()),
+	    		'%fornitore%' => trim($fornitore->getIdFornitore()),
 	    		'%scadenzepagate%' => trim($this->makeTabellaFatturePagate($scadenzaFornitore)),
 	    		'%scadenzedapagare%' => trim($this->makeTabellaFattureDaPagare($scadenzaFornitore)),
 	    		'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
