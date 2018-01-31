@@ -73,6 +73,11 @@ $('.selectCliFor').selectpicker({
 	size: 'auto'
 });
 
+$('.selectCatCli').selectpicker({
+	style: 'btn-info',
+	size: 'auto'
+});
+
 $( "#menu" ).menu();
 
 $( ".tooltip" ).tooltip();

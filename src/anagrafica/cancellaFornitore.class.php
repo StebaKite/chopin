@@ -14,12 +14,7 @@ class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-		}
+	}
 
 	public function getInstance()
 	{

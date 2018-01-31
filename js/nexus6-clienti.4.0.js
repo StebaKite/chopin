@@ -36,6 +36,23 @@ $("#button-ok-nuovo-cliente-form").click(
 );
 
 //---------------------------------------------------------------------------------
+
+$("#button-ok-modifica-cliente-form").click(
+	function() {
+		if (validaModificaCliente()) {
+			$("#testo-messaggio-successo").html("Cliente salvato con successo");
+			$("#messaggio-successo-dialog").modal("show");						
+			sleep(3000);
+			$("#modificaClienteForm").submit();			
+		}
+		else {
+			$("#testo-messaggio-errore").html("In presenza di campi in errore il cliente non può essere salvato");
+			$("#messaggio-errore-dialog").modal("show");			
+		}
+	}
+);
+
+//---------------------------------------------------------------------------------
 // CREA CLIENTE : routine di validazione
 //---------------------------------------------------------------------------------
 
@@ -54,6 +71,32 @@ function validaNuovoCliente() {
 
 	if ($("#descli_cre").val() != "") {
 		if (controllaDescrizione("descli_cre")) { esito = esito + "1"; }
+		else { esito = esito + "0"; }
+	}
+
+	if (esito == "11") { return true; }
+	else { return false; }
+}
+
+//---------------------------------------------------------------------------------
+//MODIFICA CLIENTE : routine di validazione
+//---------------------------------------------------------------------------------
+
+function validaModificaCliente() {
+	/**
+	 * Ciascun controllo di validazione può dare un esito positivo (1) o
+	 * negativo (0) La validazione complessiva è positiva se tutti i controlli
+	 * sono positivi (1)
+	 */
+	var esito = "";
+
+	if ($("#codcli_mod").val() != "") {
+		if (controllaCodice("codcli_mod")) { esito = esito + "1"; }
+		else { esito = esito + "0"; }
+	}
+
+	if ($("#descli_mod").val() != "") {
+		if (controllaDescrizione("descli_mod")) { esito = esito + "1"; }
 		else { esito = esito + "0"; }
 	}
 
@@ -110,125 +153,104 @@ function controllaUnivocitaCfis(campo_cfis)
 	}
 }
 
+//---------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-//---------------------------------------------------------------------------------				
-function modificaCliente(idCliente) {
-//---------------------------------------------------------------------------------					
+function modificaCliente(idCliente)
+{
 	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        	var response = xmlhttp.responseText;
-        	
-        	var datiPagina = response.split("|");
-    		$("#codcliente_mod").val(datiPagina[0]);
-    		$("#descliente_mod").val(datiPagina[1]);
-    		$("#indcliente_mod").val(datiPagina[2]);
-    		$("#cittacliente_mod").val(datiPagina[3]);
-    		$("#capcliente_mod").val(datiPagina[4]);
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{
+			document.getElementById("modificaClienteForm").reset();
 
-			$("#bonifico_mod").prop("checked", false).button("refresh");
-			$("#riba_mod").prop("checked", false).button("refresh");
-			$("#rimdiretta_mod").prop("checked", false).button("refresh");
-			$("#assegnobancario_mod").prop("checked", false).button("refresh");
-			$("#addebitodiretto_mod").prop("checked", false).button("refresh");
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("cliente").each(
+				function() {
 
-    		if (datiPagina[5] == "BONIFICO") {
-    			$("#bonifico_mod").prop("checked", true).button("refresh");
-    		}
-    		else {
-        		if (datiPagina[5] == "RIBA") {
-        			$("#riba_mod").prop("checked", true).button("refresh");
-        		}
-        		else {
-            		if (datiPagina[5] == "RIM_DIR") {
-            			$("#rimdiretta_mod").prop("checked", true).button("refresh");
-            		}
-            		else {
-                		if (datiPagina[5] == "ASS_BAN") {
-                			$("#assegnobancario_mod").prop("checked", true).button("refresh");
-                		}
-                		else {
-                    		if (datiPagina[5] == "ADD_DIR") {
-                    			$("#addebitodiretto_mod").prop("checked", true).button("refresh");
-                    		}
-                		}
-            		}
-        		}
-    		}
-    		
-    		$("#tipoaddebito_mod").val(datiPagina[5]);
-    		$("#codpiva_mod").val(datiPagina[6]);
-    		$("#codfisc_mod").val(datiPagina[7]);	
-    		$("#catcliente_mod").html(datiPagina[8]);
-            $("#catcliente_mod").selectmenu( "refresh" );
-        	
-    		$( "#modifica-cliente-form" ).dialog( "open" );
-        }
-    }
-    xmlhttp.open("GET", "modificaClienteFacade.class.php?modo=start&idcliente=" + idCliente, true);
-    xmlhttp.send();				
+					$("#codcli_mod").val($(this).find("codice").text());
+					$("#descli_mod").val($(this).find("descrizione").text());
+					$("#indcli_mod").val($(this).find("indirizzo").text());
+					$("#cittacli_mod").val($(this).find("citta").text());
+					$("#capcli_mod").val($(this).find("cap").text());
+					$("#pivacli_mod").val($(this).find("piva").text());
+					$("#cfiscli_mod").val($(this).find("cfisc").text());
+					
+					$("#bonifico_mod").parent('.btn').removeClass('active');
+					$("#riba_mod").parent('.btn').removeClass('active');
+					$("#rimdiretta_mod").parent('.btn').removeClass('active');
+					$("#assegnobancario_mod").parent('.btn').removeClass('active');
+					$("#addebitodiretto_mod").parent('.btn').removeClass('active');
+
+					var tipoAddebito = $(this).find("tipoAddebito").text();
+					
+					if (tipoAddebito == "BONIFICO") {
+						$("#bonifico_mod").parent('.btn').addClass('active');
+						$("#bonifico_mod").prop('checked',true);
+					}
+					if (tipoAddebito == "RIBA") {
+						$("#riba_mod").parent('.btn').addClass('active');
+						$("#riba_mod").prop('checked',true);
+					}
+					if (tipoAddebito == "RIM_DIR") {
+						$("#rimdiretta_mod").parent('.btn').addClass('active');
+						$("#rimdiretta_mod").prop('checked',true);
+					}
+					if (tipoAddebito == "ASS_BAN") {
+						$("#assegnobancario_mod").parent('.btn').addClass('active');
+						$("#assegnobancario_mod").prop('checked',true);
+					}
+					if (tipoAddebito == "ADD_DIR") {
+						$("#addebitodiretto_mod").parent('.btn').addClass('active');
+						$("#addebitodiretto_mod").prop('checked',true);
+					}
+					
+					$("#categoriacli_mod").html($(this).find("categorieCliente").text());
+					var categoria = $(this).find("categoria").text();
+					$("#categoriacli_mod").selectpicker('val',categoria);
+					$("#catcli_mod").val(categoria);
+				}
+			)
+
+			$("#modifica-cliente-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","modificaClienteFacade.class.php?modo=start&idcliente=" + idCliente, true);
+	xmlhttp.send();
 }
 
-$( "#modifica-cliente-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 900,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-				$("#modificaCliente").submit();
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
+//---------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------------				
-function cancellaCliente(idcliente, codcliente) {
-//---------------------------------------------------------------------------------					
-	$( "#idcliente" ).val(idcliente);
-	$( "#cancella-cliente-form" ).dialog( "open" );
+function cancellaCliente(idcliente) {
+	$("#idcliente").val(idcliente);
+	$("#cancella-cliente-dialog").modal("show");
 }
 
-$( "#cancella-cliente-form" ).dialog({
-	autoOpen: false,
-	modal: true,
-	width: 300,
-	buttons: [
-		{
-			text: "Ok",
-			click: function() {
-				$(this).dialog('close');
-				$("#cancellaCliente").submit();				
-			}
-		},
-		{
-			text: "Cancel",
-			click: function() {
-				$( this ).dialog( "close" );
-			}
-		}
-	]
-});
+//---------------------------------------------------------------------------------
+
+$("#button-ok-cancella-cliente-form").click(
+	function() {
+		$("#testo-messaggio-successo").html("Cliente cancellato!");
+		$("#messaggio-successo-dialog").modal("show");						
+		sleep(3000);
+		$("#cancellaClienteForm").submit();			
+	}
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =============================================================================
 // Spostete qui dalla pagina di ricerca cliente

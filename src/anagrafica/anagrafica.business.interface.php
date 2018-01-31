@@ -37,6 +37,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	// Files XML
 	
 	const XML_FORNITORE = "/anagrafica/xml/fornitore.xml";
+	const XML_CLIENTE = "/anagrafica/xml/cliente.xml";
 	
 	// Actions
 

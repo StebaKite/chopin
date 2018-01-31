@@ -14,11 +14,6 @@ class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -32,8 +27,7 @@ class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$cliente = Cliente::getInstance();
 		$db = Database::getInstance();
 		
-		if ($cliente->cancella($db)) $_SESSION[self::MSG_DA_CANCELLAZIONE] = self::CANCELLA_CLIENTE_OK;
-		else $_SESSION[self::MSG_DA_CANCELLAZIONE] = self::ERRORE_CANCELLA_CLIENTE;
+		$cliente->cancella($db);
 		
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
 		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);

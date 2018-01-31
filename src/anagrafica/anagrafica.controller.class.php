@@ -56,31 +56,27 @@ class AnagraficaController {
 			$fornitore->setNumGgScadenzaFattura($_REQUEST["ggscadfat_mod"]);
 		}
 
-		if (isset($_REQUEST["codcliente"])) {
-			$cliente->setCodCliente($_REQUEST["codcliente"]);
-			$cliente->setDesCliente($_REQUEST["descliente"]);
-			$cliente->setDesIndirizzoCliente($_REQUEST["indcliente"]);
-			$cliente->setDesCittaCliente($_REQUEST["cittacliente"]);
-			$cliente->setCapCliente($_REQUEST["capcliente"]);
-			$cliente->setTipAddebito($_REQUEST["tipoaddebito"]);
-			$cliente->setCodPiva($_REQUEST["codpiva"]);
-			$cliente->setCodFisc($_REQUEST["codfisc"]);
-			$cliente->setCatCliente($_REQUEST["catcliente"]);
-			$cliente->setEsitoPivaCliente($_REQUEST["esitoPivaCliente"]);
-			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente"]);
+		if (isset($_REQUEST["codcli_cre"])) {
+			$cliente->setCatCliente($_REQUEST["catcli_cre"]);
+			$cliente->setCodCliente($_REQUEST["codcli_cre"]);
+			$cliente->setDesCliente($_REQUEST["descli_cre"]);
+			$cliente->setDesIndirizzoCliente($_REQUEST["indcli_cre"]);
+			$cliente->setDesCittaCliente($_REQUEST["cittacli_cre"]);
+			$cliente->setCapCliente($_REQUEST["capcli_cre"]);
+			$cliente->setTipAddebito($_REQUEST["tipoadd_cre"]);
+			$cliente->setCodPiva($_REQUEST["pivacli_cre"]);
+			$cliente->setCodFisc($_REQUEST["cfiscli_cre"]);
 		}
 
-		if (isset($_REQUEST["codcliente_mod"])) {
-			$cliente->setDesCliente($_REQUEST["descliente_mod"]);
-			$cliente->setDesIndirizzoCliente($_REQUEST["indcliente_mod"]);
-			$cliente->setDesCittaCliente($_REQUEST["cittacliente_mod"]);
-			$cliente->setCapCliente($_REQUEST["capcliente_mod"]);
-			$cliente->setTipAddebito($_REQUEST["tipoaddebito_mod"]);
-			$cliente->setCodPiva($_REQUEST["codpiva_mod"]);
-			$cliente->setCodFisc($_REQUEST["codfisc_mod"]);
-			$cliente->setCatCliente($_REQUEST["catcliente_mod"]);
-			$cliente->setEsitoPivaCliente($_REQUEST["esitoPivaCliente_mod"]);
-			$cliente->setEsitoCfisCliente($_REQUEST["esitoCfisCliente_mod"]);
+		if (isset($_REQUEST["codcli_mod"])) {
+			$cliente->setCatCliente($_REQUEST["catcli_mod"]);
+			$cliente->setDesCliente($_REQUEST["descli_mod"]);
+			$cliente->setDesIndirizzoCliente($_REQUEST["indcli_mod"]);
+			$cliente->setDesCittaCliente($_REQUEST["cittacli_mod"]);
+			$cliente->setCapCliente($_REQUEST["capcli_mod"]);
+			$cliente->setTipAddebito($_REQUEST["tipoadd_mod"]);
+			$cliente->setCodPiva($_REQUEST["pivacli_mod"]);
+			$cliente->setCodFisc($_REQUEST["cfiscli_mod"]);
 		}
 
 		if (isset($_REQUEST["codmercato"])) {

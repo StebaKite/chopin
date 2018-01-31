@@ -113,12 +113,12 @@ class Cliente implements CoreInterface {
 		$replace = array(
 				'%cod_cliente%' => trim($this->getCodCliente()),
 				'%des_cliente%' => trim($this->getDesCliente()),
-				'%des_indirizzo_cliente%' => trim($this->getDesIndirizzoCliente()),
-				'%des_citta_cliente%' => trim($this->getDesCittaCliente()),
-				'%cap_cliente%' => trim($this->getCapCliente()),
+				'%des_indirizzo_cliente%' => ($this->getDesIndirizzoCliente() != "") ? "'" . trim($this->getDesIndirizzoCliente()) . "'" : "null",
+				'%des_citta_cliente%' => ($this->getDesCittaCliente() != "") ? "'" . trim($this->getDesCittaCliente()) . "'" : "null",
+				'%cap_cliente%' => ($this->getCapCliente() != "") ? "'" . trim($this->getCapCliente()) . "'" : "null",
 				'%tip_addebito%' => trim($this->getTipAddebito()),
-				'%cod_piva%' => trim($this->getCodPiva()),
-				'%cod_fisc%' => trim($this->getCodFisc()),
+				'%cod_piva%' => ($this->getCodPiva() != "") ? "'" . trim($this->getCodPiva()) . "'" : "null",
+				'%cod_fisc%' => ($this->getCodFisc() != "") ? "'" . trim($this->getCodFisc()) . "'" : "null",
 				'%cat_cliente%' => trim($this->getCatCliente())
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CLIENTE;
@@ -302,14 +302,14 @@ class Cliente implements CoreInterface {
 		$replace = array(
 				'%id_cliente%' => $this->getIdCliente(),
 				'%cod_cliente%' => $this->getCodCliente(),
-				'%des_cliente%' => $this->getDesCliente(),
-				'%des_indirizzo_cliente%' => $this->getDesIndirizzoCliente(),
-				'%des_citta_cliente%' => $this->getDesCittaCliente(),
-				'%cap_cliente%' => $this->getCapCliente(),
-				'%tip_addebito%' => $this->getTipAddebito(),
-				'%cod_piva%' => $this->getCodPiva(),
-				'%cod_fisc%' => $this->getCodFisc(),
-				'%cat_cliente%' => $this->getCatCliente()
+				'%des_cliente%' => ($this->getDesCliente() != "") ? str_replace("'","''",$this->getDesCliente()) : "null",
+				'%des_indirizzo_cliente%' => ($this->getDesIndirizzoCliente() != "") ? "'" . str_replace("'","''",$this->getDesIndirizzoCliente()) . "'" : "null",
+				'%des_citta_cliente%' => ($this->getDesCittaCliente() != "") ? "'" . str_replace("'","''",$this->getDesCittaCliente()) . "'" : "null",
+				'%cap_cliente%' => ($this->getCapCliente() != "") ? "'" . str_replace("'","''",$this->getCapCliente()) . "'" : "null",
+				'%tip_addebito%' => ($this->getTipAddebito() != "") ? str_replace("'","''",$this->getTipAddebito()) : "null",
+				'%cod_piva%' => ($this->getCodPiva() != "") ? "'" . str_replace("'","''",$this->getCodPiva()) . "'" : "null",
+				'%cod_fisc%' => ($this->getCodFisc() != "") ? "'" . str_replace("'","''",$this->getCodFisc()) . "'" : "null",
+				'%cat_cliente%' => ($this->getCatCliente() != "") ? "'" . str_replace("'","''",$this->getCatCliente()) . "'" : "null"
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CLIENTE;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
