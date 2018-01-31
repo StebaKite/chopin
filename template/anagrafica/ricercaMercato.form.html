@@ -1,124 +1,208 @@
-<body>
-
 <script type="text/javascript">
 
-$(document).ready( function () {
-    $('#mercati').dataTable( {
-    	"order": [[1, 'asc']],
-    	"columnDefs": [
-    	    {"targets": 0, "orderable": true },
-    	    {"targets": 1, "orderable": true },
-    	    {"targets": 2, "orderable": true },
-    	    {"targets": 3, "orderable": true },
-    	    {"targets": 4, "orderable": false },
-    	    {"targets": 5, "orderable": false },
-    	    {"targets": 6, "orderable": false },
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+	$(document).ready(function(){
+	
+		$(".datepicker").datepicker();
+
+		$(".selectCatCli").on("change", function() {
+			$("#catcli_cre").val($(this).find("option:selected").val());
+		});
+		
+		$("#myInput").on("keyup", 
+			function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable tr").filter(
+					function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					}
+				);
+			}
+		);				
+	});
 
 </script>
 
-<div id="body">
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
 
-	<div id="main">
-		<table style="width:100%;">
-			<tbody>
-				<tr>
-					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right"><button id="nuovo-mercato" class="button">%ml.nuovomercato%</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<br/>		
-		<table id="mercati" class="display" cellspacing="0" width="100%">%risultato_ricerca%</table>
-	</div>	
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+						<button id="nuovoMercato" class="btn btn-primary btn-default">%ml.nuovomercato%</button>
+					</div>	
+				</div>			
+			</div>
+			<br/>
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
+	</div>
 </div>
 
-<div id="nuovo-mercato-form" title="Nuovo Mercato"> 
-	<form method="post" id="nuovoMercato" action="../anagrafica/creaMercatoFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.codmercato% :</td>
-					<td class="tooltip"><input type="text" id="codmercato" name="codmercato" size="10" maxlength="10" ></td>
-				</tr>					
-				<tr>
-					<td>%ml.desmercato% :</td>
-					<td class="tooltip"><input type="text" id="desmercato" name="desmercato" size="50" maxlength="100" ></td>
-				</tr>	
-				<tr>
-					<td>%ml.cittamercato% :</td>
-					<td class="tooltip"><input type="text" id="cittamercato" name="cittamercato" size="50" maxlength="100" ></td>
-				</tr>
-				<tr>
-					<td>%ml.negozio% :</td>						
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="villa" name="codneg" value="VIL" ><label for="villa">%ml.villa%</label>
-							<input type="radio" id="brembate" name="codneg" value="BRE" ><label for="brembate">%ml.brembate%</label>
-							<input type="radio" id="trezzo" name="codneg" value="TRE" ><label for="trezzo">%ml.trezzo%</label>
+<!-- ------------- -->
+<!-- NUOVO MERCATO -->
+<!-- ------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-mercato-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo Mercato</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="nuovoMercatoForm" action="../anagrafica/creaMercatoFacade.class.php?modo=go" >
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-3 ui-front">
+				 					<div class='input-group' id="codmer_cre_control_group">
+										<span class="input-group-addon">%ml.codmercato%</span>
+										<input class="form-control" id="codmer_cre" name="codmer_cre" type="text" onblur="controllaCodice('codmer_cre')" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-5">
+				 					<div class='input-group' id="desmer_cre_control_group">
+										<span class="input-group-addon">%ml.desmercato%</span>
+										<input class="form-control" id="desmer_cre" name="desmer_cre" type="text" onblur="controllaDescrizione('desmer_cre')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-5">
+				 					<div class='input-group' id="citmer_cre_control_group">
+										<span class="input-group-addon">%ml.cittamercato%</span>
+										<input class="form-control" id="citmer_cre" name="citmer_cre" type="text" onblur="controllaDescrizione('citmer_cre')" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="negmer_cre" name="negmer_cre" >
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
+							  	</div>
+							</div>
 						</div>
-					</td>	
-				</tr>	
-			</tbody>
-		</table> 	
-	</form>
+						
+					</form>
+											
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-mercato-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="modifica-mercato-form" title="Modifica Mercato"> 
-	<form method="post" id="modificaMercato" action="../anagrafica/modificaMercatoFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.codmercato% :</td>
-					<td class="tooltip"><input type="text" id="codmercato_mod" name="codmercato_mod" size="10" maxlength="10" ></td>
-				</tr>					
-				<tr>
-					<td>%ml.desmercato% :</td>
-					<td class="tooltip"><input type="text" id="desmercato_mod" name="desmercato_mod" size="50" maxlength="100" ></td>
-				</tr>	
-				<tr>
-					<td>%ml.cittamercato% :</td>
-					<td class="tooltip"><input type="text" id="cittamercato_mod" name="cittamercato_mod" size="50" maxlength="100" ></td>
-				</tr>
-				<tr>
-					<td>%ml.negozio% :</td>						
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="villamod" name="codneg_mod" value="VIL" ><label for="villamod">%ml.villa%</label>
-							<input type="radio" id="brembatemod" name="codneg_mod" value="BRE" ><label for="brembatemod">%ml.brembate%</label>
-							<input type="radio" id="trezzomod" name="codneg_mod" value="TRE" ><label for="trezzomod">%ml.trezzo%</label>
+<!-- ---------------- -->
+<!-- MODIFICA MERCATO -->
+<!-- ---------------- -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-mercato-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Mercato</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaMercatoForm" action="../anagrafica/modificaMercatoFacade.class.php?modo=go" >
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-3 ui-front">
+				 					<div class='input-group' id="codmer_mod_control_group">
+										<span class="input-group-addon">%ml.codmercato%</span>
+										<input class="form-control" id="codmer_mod" name="codmer_mod" type="text" readonly />
+									</div>
+							  	</div>
+							  	<div class="col-sm-7">
+				 					<div class='input-group' id="desmer_mod_control_group">
+										<span class="input-group-addon">%ml.desmercato%</span>
+										<input class="form-control" id="desmer_mod" name="desmer_mod" type="text" onblur="controllaDescrizione('desmer_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-7">
+				 					<div class='input-group' id="citmer_mod_control_group">
+										<span class="input-group-addon">%ml.cittamercato%</span>
+										<input class="form-control" id="citmer_mod" name="citmer_mod" type="text" onblur="controllaDescrizione('citmer_mod')" />
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectNegozio" id="negmer_mod" name="negmer_mod" >
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+									</div>	
+							  	</div>
+							</div>
 						</div>
-					</td>	
-				</tr>	
-			</tbody>
-			<tfoot>
-				<tr><td><input type="hidden" id="idmercato_mod" name="idmercato_mod" /></td></tr>
-			</tfoot>
-		</table> 	
-	</form>
+						
+					</form>
+											
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-mercato-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="cancella-mercato-form" title="Cancella Mercato"> 
-	<form method="post" id="cancellaMercato" action="../anagrafica/cancellaMercatoFacade.class.php?modo=go" >
-		<p>Elimino il mercato ?</p>
-		<input type="hidden" id="idmercato" name="idmercato">
-		<input type="hidden" id="codmercatoselezionato" name="codmercatoselezionato">
-	</form>
+<!-- --------------------- -->
+<!-- CANCELLAZIONE MERCATO -->
+<!-- --------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="cancella-mercato-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Cancella mercato</h4>
+	        	</div>
+	        	<div class="modal-body">	        		        	
+					<form method="post" id="cancellaMercatoForm" action="../anagrafica/cancellaMercatoFacade.class.php?modo=start" >
+						<p>Elimino il mercato ?</p>
+						<input type="hidden" id="idmercato" name="idmercato">
+			        </form>
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-mercato-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
+
+<!-- ----------->
+<!-- FINE DIV -->
+<!-- ----------->
+

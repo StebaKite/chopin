@@ -79,13 +79,20 @@ class AnagraficaController {
 			$cliente->setCodFisc($_REQUEST["cfiscli_mod"]);
 		}
 
-		if (isset($_REQUEST["codmercato"])) {
-			$mercato->setCodMercato($_REQUEST["codmercato"]);
-			$mercato->setDesMercato($_REQUEST["desmercato"]);
-			$mercato->setCittaMercato($_REQUEST["cittamercato"]);
-			$mercato->setCodNegozio($_REQUEST["codneg"]);
+		if (isset($_REQUEST["codmer_cre"])) {
+			$mercato->setCodMercato($_REQUEST["codmer_cre"]);
+			$mercato->setDesMercato($_REQUEST["desmer_cre"]);
+			$mercato->setCittaMercato($_REQUEST["citmer_cre"]);
+			$mercato->setCodNegozio($_REQUEST["negmer_cre"]);
 		}
-
+		
+		if (isset($_REQUEST["codmer_mod"])) {
+			$mercato->setCodMercato($_REQUEST["codmer_mod"]);
+			$mercato->setDesMercato($_REQUEST["desmer_mod"]);
+			$mercato->setCittaMercato($_REQUEST["citmer_mod"]);
+			$mercato->setCodNegozio($_REQUEST["negmer_mod"]);
+		}
+		
 		if (isset($_REQUEST["codfisc"])) {
 			$cliente->setCodFisc($_REQUEST["codfisc"]);
 		}
@@ -95,25 +102,17 @@ class AnagraficaController {
 			$cliente->setDesCliente($_REQUEST["descliente"]);
 		}
 
-		if (isset($_REQUEST["idcliente"])) {
-			$cliente->setIdCliente($_REQUEST["idcliente"]);
-		}
+// 		if (isset($_REQUEST["idcliente"])) {
+// 			$cliente->setIdCliente($_REQUEST["idcliente"]);
+// 		}
 
-		if (isset($_REQUEST["idfornitore"])) {
-			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
-		}
+// 		if (isset($_REQUEST["idfornitore"])) {
+// 			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
+// 		}
 
-		if (isset($_REQUEST["idmercato"])) {
-			$mercato->setIdMercato($_REQUEST["idmercato"]);
-		}
-
-		if (isset($_REQUEST["idmercato_mod"])) {
-			$mercato->setIdMercato($_REQUEST["idmercato_mod"]);
-			$mercato->setCodMercato($_REQUEST["codmercato_mod"]);
-			$mercato->setDesMercato($_REQUEST["desmercato_mod"]);
-			$mercato->setCittaMercato($_REQUEST["cittamercato_mod"]);
-			$mercato->setCodNegozio($_REQUEST["codneg_mod"]);
-		}
+ 		if (isset($_REQUEST["idmercato"])) {
+ 			$mercato->setIdMercato($_REQUEST["idmercato"]);
+ 		}
 
 		// Serializzo in sessione gli oggetti modificati
 

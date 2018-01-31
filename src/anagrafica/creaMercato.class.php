@@ -30,36 +30,21 @@ class CreaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterf
 
 	public function start() {}
 	
-	public function go() {
+	public function go()
+	{
+		$mercato = Mercato::getInstance();
 		
-		$this->creaMercato();			
+		$db = Database::getInstance();
+		$db->beginTransaction();
+		
+		if ($mercato->nuovo($db)) $db->commitTransaction();
+		else $db->rollbackTransaction();
 		
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
 		
 		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 		$controller->setRequest("start");
 		$controller->start();
-	}
-
-	private function creaMercato() {
-
-		$db = Database::getInstance();
-		$mercato = Mercato::getInstance();
-		
-		$desMercato = str_replace("'","''",$mercato->getDesMercato());
-		$mercato->setDesMercato($desMercato);
-		
-		$cittamercato = str_replace("'","''",$mercato->getCittaMercato());
-		$mercato->setCittaMercato($cittamercato);
-		
-		if ($mercato->nuovo($db)) {
-			$_SESSION["messaggioCreazione"] = self::CREA_MERCATO_OK;
-			return TRUE;
-		}
-		else {
-			unset($_SESSION["messaggioCreazione"]);
-			return FALSE;				
-		}
 	}
 }	
 	

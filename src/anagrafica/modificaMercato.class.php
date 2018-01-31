@@ -15,11 +15,6 @@ class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -28,39 +23,43 @@ class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 		return unserialize($_SESSION[self::MODIFICA_MERCATO]);
 	}
 
-	public function start() {}
+	public function start()
+	{
+		$mercato = Mercato::getInstance();
+		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$mercato->leggi($db);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_MERCATO;
+		
+		$replace = array(
+				'%codice%' => trim($mercato->getCodMercato()),
+				'%descrizione%' => trim($mercato->getDesMercato()),
+				'%citta%' => trim($mercato->getCittaMercato()),
+				'%negozio%' => trim($mercato->getCodNegozio())
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
+	}
 	
-	public function go() {
-
-		if ($this->aggiornaMercato()) {
-			$_SESSION["messaggioModifica"] = self::MODIFICA_MERCATO_OK;
-		}
+	public function go()
+	{
+		$mercato = Mercato::getInstance();
+		
+		$db = Database::getInstance();
+		$db->beginTransaction();
+		
+		if ($mercato->aggiorna($db)) $db->commitTransaction();
+		else $db->rollbackTransaction();
 
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
 		
 		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 		$controller->setRequest("start");
 		$controller->start();
-	}
-
-	private function aggiornaMercato() {
-
-		$db = Database::getInstance();
-		$mercato = Mercato::getInstance();		
-		
-		$desmercato = str_replace("'","''",$mercato->getDesMercato());
-		$mercato->setDesMercato($desmercato);
-		
-		$cittamercato = str_replace("'","''",$mercato->getCittaMercato());	
-		$mercato->setCittaMercato($cittamercato);
-		
-		if ($mercato->aggiorna($db)) {	
-			return TRUE;
-		}
-		else {
-			error_log("Errore aggiornamento cliente, eseguito Rollback");
-			return FALSE;
-		}
 	}
 }
 	

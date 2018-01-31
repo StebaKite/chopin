@@ -90,8 +90,8 @@ class Mercato implements CoreInterface {
 
 		$replace = array(
 				'%cod_mercato%' => $this->getCodMercato(),
-				'%des_mercato%' => $this->getDesMercato(),
-				'%citta_mercato%' => $this->getCittaMercato(),
+				'%des_mercato%' => str_replace("'","''",$this->getDesMercato()),
+				'%citta_mercato%' => str_replace("'","''",$this->getCittaMercato()),
 				'%cod_negozio%' => $this->getCodNegozio()
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_MERCATO;
@@ -110,8 +110,8 @@ class Mercato implements CoreInterface {
 		$replace = array(
 				'%id_mercato%' => trim($this->getIdMercato()),
 				'%cod_mercato%' => trim($this->getCodMercato()),
-				'%des_mercato%' => trim($this->getDesMercato()),
-				'%citta_mercato%' => trim($this->getCittaMercato()),
+				'%des_mercato%' => trim(str_replace("'","''",$this->getDesMercato())),
+				'%citta_mercato%' => trim(str_replace("'","''",$this->getCittaMercato())),
 				'%cod_negozio%' => trim($this->getCodNegozio()),
 		);
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_MERCATO;
@@ -132,7 +132,7 @@ class Mercato implements CoreInterface {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->getData($sql);
 
-		if ($result) $this->load($db);		// refresh dei mercati caricati
+// 		if ($result) $this->load($db);		// refresh dei mercati caricati
 		return $result;
 	}
 

@@ -2,7 +2,6 @@
 // Clienti
 //---------------------------------------------------------------------------------
 
-
 $("#nuovoCliente").click(function() {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -237,38 +236,4 @@ $("#button-ok-cancella-cliente-form").click(
 		$("#cancellaClienteForm").submit();			
 	}
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =============================================================================
-// Spostete qui dalla pagina di ricerca cliente
-//=============================================================================
-
-
-
-function normalizzaCampo(campo) {
-
-	var c = $("#" + campo).val();
-	var cNorm = c.trim().replace("&", "e");
-	$("#" + campo).val(cNorm);	
-}
-
-
-
-
-
-
-
 

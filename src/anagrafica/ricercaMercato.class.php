@@ -34,8 +34,13 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 		$mercato = Mercato::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-		
 		$ricercaMercatoTemplate = RicercaMercatoTemplate::getInstance();
+		
+		$this->preparaPagina($ricercaMercatoTemplate);
+		
+		$replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+		echo $utility->tailTemplate($template);
 		
 		$mercato->setMercati(null);
 
@@ -43,60 +48,29 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 			
 			$_SESSION[self::MERCATO] = serialize($mercato);
 	
-			$this->preparaPagina();
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$ricercaMercatoTemplate->displayPagina();
-
-			if (isset($_SESSION["messaggioCreazione"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioCreazione"] . "<br>" . "Trovati " . $mercato->getQtaMercati() . " mercati";
-				unset($_SESSION["messaggioCreazione"]);
-			}
-			elseif (isset($_SESSION["messaggioCancellazione"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioCancellazione"] . "<br>" . "Trovati " . $mercato->getQtaMercati() . " mercati";
-				unset($_SESSION["messaggioCancellazione"]);
-			}
-			elseif (isset($_SESSION["messaggioModifica"])) {
-				$_SESSION["messaggio"] = $_SESSION["messaggioModifica"] . "<br>" . "Trovati " . $mercato->getQtaMercati() . " mercati";
-				unset($_SESSION["messaggioModifica"]);
-			}
-			else $_SESSION["messaggio"] = "Trovati " . $mercato->getQtaMercati() . " mercati";
+			$_SESSION["messaggio"] = "Trovati " . $mercato->getQtaMercati() . " mercati";			
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			
+			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+			if ($pos === false) {
+				if ($mercato->getQtaMercati() > 0)
+					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+			}
+			else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-	
-			if ($mercato->getQtaMercati() > 0) {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-	
-			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
 		else {
-	
-			$this->preparaPagina($ricercaMercatoTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-				
-			$ricercaMercatoTemplate->displayPagina();
-	
 			$_SESSION["messaggio"] = self::ERRORE_LETTURA;
 	
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-	
-			include($this->piede);
 		}
+		$ricercaMercatoTemplate->displayPagina();
+		
+		include($this->piede);	
 	}
 	
 	public function go() {}

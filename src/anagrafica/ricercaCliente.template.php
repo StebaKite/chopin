@@ -90,7 +90,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
 				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$risultato_ricerca .= "</tbody>";
+			$risultato_ricerca .= "</tbody></table>";
 		}
 
 		$cliente->prepara();

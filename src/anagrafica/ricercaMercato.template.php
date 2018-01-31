@@ -36,6 +36,14 @@ class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPre
 		if ($mercato->getQtaMercati() > 0) {
 	
 			$risultato_ricerca =
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<tr> " .
 			"			<th class='dt-left'>%ml.codmercato%</th>" .
@@ -47,18 +55,16 @@ class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPre
 			"			<th class='dt-left'></th>" .
 			"		</tr>" .
 			"	</thead>" .
-			"	<tbody>";
+			"	<tbody id='myTable'>";
 	
 			foreach($mercato->getMercati() as $row) {
 	
 				if ($row[$mercato::QTA_REGISTRAZIONI_MERCATO] == 0) {
-					$parms = trim($row['id_mercato']) . "#" . trim($row['cod_mercato']) . "#" . str_replace("'", "@", trim($row['des_mercato'])) . "#" . str_replace("'", "@", trim($row['citta_mercato'])) . "#" . trim($row['cod_negozio']);
-					$bottoneModifica = "<a class='tooltip' onclick='modificaMercato(" . '"' . $parms . '"' . ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-					$bottoneCancella = "<a class='tooltip' onclick='cancellaMercato(" . trim($row['id_mercato']) . "," . trim($row['cod_mercato']) . ")'><li class='ui-state-default ui-corner-all' title='%ml.cancella%'><span class='ui-icon ui-icon-trash'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_MERCATO_HREF . trim($row['id_mercato']) . self::MODIFICA_ICON;
+					$bottoneCancella = self::CANCELLA_MERCATO_HREF . trim($row['id_mercato']) . self::CANCELLA_ICON;
 				}
 				else {
-					$parms = trim($row['id_mercato']) . "#" . trim($row['cod_mercato']) . "#" . str_replace("'", "@", trim($row['des_mercato'])) . "#" . str_replace("'", "@", trim($row['citta_mercato'])) . "#" . trim($row['cod_negozio']);
-					$bottoneModifica = "<a class='tooltip' onclick='modificaMercato(" . '"' . $parms . '"' . ")'><li class='ui-state-default ui-corner-all' title='%ml.modifica%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
+					$bottoneModifica = self::MODIFICA_MERCATO_HREF . trim($row['id_mercato']) . self::MODIFICA_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 	
@@ -69,14 +75,11 @@ class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPre
 				"	<td>" . trim($row['citta_mercato']) . "</td>" .
 				"	<td>" . trim($row['cod_negozio']) . "</td>" .
 				"	<td>" . trim($row['tot_registrazioni_mercato']) . "</td>" .
-				"	<td id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td>" . $bottoneModifica . "</td>" .
+				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
-			$risultato_ricerca .= "</tbody>";
-		}
-		else {
-	
+			$risultato_ricerca .= "</tbody></table>";
 		}
 	
 		$replace = array(
@@ -84,9 +87,6 @@ class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPre
 				'%azione%' => $_SESSION[self::AZIONE_RICERCA_MERCATO],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-	
-		$utility = Utility::getInstance();
-	
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);
 		echo $utility->tailTemplate($template);
 	}

@@ -15,11 +15,6 @@ class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -33,12 +28,7 @@ class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$mercato = Mercato::getInstance();
 		$db = Database::getInstance();
 
-		if ($mercato->cancella($db)) {
-			$_SESSION["messaggioCancellazione"] = self::CANCELLA_MERCATO_OK;
-		}
-		else {
-			$_SESSION["messaggioCancellazione"] = self::ERRORE_LETTURA;		
-		}
+		$mercato->cancella($db);
 		
 		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
 		
@@ -47,9 +37,7 @@ class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 		$controller->start();
 	}
 	
-	public function go() {
-		$this->start();
-	}
+	public function go() {}
 }
 
 ?>

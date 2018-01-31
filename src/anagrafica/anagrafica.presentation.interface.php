@@ -35,7 +35,9 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 	const CANCELLA_CLIENTE_HREF   = "<a onclick='cancellaCliente(";
 	const MODIFICA_FORNITORE_HREF = "<a onclick='modificaFornitore(";
 	const CANCELLA_FORNITORE_HREF = "<a onclick='cancellaFornitore(";
-
+	const MODIFICA_MERCATO_HREF   = "<a onclick='modificaMercato(";
+	const CANCELLA_MERCATO_HREF   = "<a onclick='cancellaMercato(";
+	
 	// Actions
 
 	const AZIONE_RICERCA_CLIENTE   = "../anagrafica/ricercaClienteFacade.class.php?modo=go";

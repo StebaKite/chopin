@@ -1,0 +1,6 @@
+<mercato>
+	<codice>%codice%</codice>
+	<descrizione>%descrizione%</descrizione>
+	<citta>%citta%</citta>
+	<negozio>%negozio%</negozio>
+</mercato>
