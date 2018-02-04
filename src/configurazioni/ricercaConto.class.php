@@ -41,7 +41,6 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
 		$this->preparaPagina($ricercaContoTemplate);
 
-		// compone la pagina
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
@@ -57,80 +56,33 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
-
+		$ricercaContoTemplate = RicercaContoTemplate::getInstance();		
+		$this->preparaPagina($ricercaContoTemplate);
+		
+		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
+		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+		echo $utility->tailTemplate($template);
+		
 		if ($conto->load($db)) {
 
 			$_SESSION[self::CONTO] = serialize($conto);
-
-			$this->preparaPagina($ricercaContoTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$ricercaContoTemplate->displayPagina();
-
-			/**
-			 * Gestione del messaggio proveniente dalla cancellazione
-			 */
-
-			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
-				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
-				unset($_SESSION[self::MSG_DA_GENERAZIONE_MASTRINO]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE_CONTO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE_CONTO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
-				unset($_SESSION[self::MSG_DA_CREAZIONE_CONTO]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_MODIFICA_CONTO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA_CONTO] . "<br>&ndash;&nbsp;" . "Trovati " . $conto->getQtaConti() . " conti";
-				unset($_SESSION[self::MSG_DA_MODIFICA_CONTO]);
-			}
-			else {
-				$_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
-			}
+			$_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
-			if ($pos === false) {
-				if ($conto->getQtaConti() > 0) {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-				}
-				else {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				}
-			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-
-			echo $utility->tailTemplate($template);
-			include($this->piede);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);			
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);			
 		}
 		else {
-
-			$this->preparaPagina($ricercaContoTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$ricercaContoTemplate->displayPagina();
 
 			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-
-			include($this->piede);
-		}
+		}		
+		$ricercaContoTemplate->displayPagina();
+		
+		include($this->piede);
 	}
 
 	public function preparaPagina($ricercaContoTemplate) {

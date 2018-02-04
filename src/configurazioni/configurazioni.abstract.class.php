@@ -1,9 +1,11 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
+require_once 'configurazioni.presentation.interface.php';
 
-abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
+abstract class ConfigurazioniAbstract extends Nexus6Abstract implements ConfigurazioniPresentationInterface
+{
 	public static $messaggio;
 
 	const NESSUNO = "NS";
@@ -13,18 +15,18 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
 	// Bottoni
 
-	const CANCELLA_SOTTOCONTO_HREF = "<td width='25' id='icons'><a class='tooltip' onclick='cancellaSottoconto(";
-	const CANCELLA_SOTTOCONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>";
-	const MODIFICA_GRUPPO_SOTTOCONTO_HREF = "<td id='icons'><a class='tooltip' onclick='modificaGruppoSottoconto(";
-	const MODIFICA_GRUPPO_SOTTOCONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='Cambia gruppo'><span class='ui-icon ui-icon-tag'></span></li></a></td>";
+	const CANCELLA_SOTTOCONTO_HREF = "<a onclick='cancellaSottoconto(";
+	const MODIFICA_GRUPPO_SOTTOCONTO_HREF = "<a onclick='modificaGruppoSottoconto(";
 
-	const ESCLUDI_CONTO_HREF = "<a class='tooltip' onclick='escludiConto(";
-	const ESCLUDI_CONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.escludiContoTip%'><span class='ui-icon ui-icon-minus'></span></li></a>";
-	const INCLUDI_CONTO_HREF = "<a class='tooltip' onclick='includiConto(";
-	const INCLUDI_CONTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.includiContoTip%'><span class='ui-icon ui-icon-plus'></span></li></a>";
+	const ESCLUDI_CONTO_HREF = "<a onclick='escludiConto(";
+	const INCLUDI_CONTO_HREF = "<a onclick='includiConto(";
 
 	// Metodi comuni di utilita della prima note ---------------------------
-
+	
+	public function inizializzaPagina() {}
+	public function controlliLogici() {}
+	public function displayPagina() {}
+	
 	public function makeTabellaSottoconti($conto, $sottoconto)
 	{
 		$utility = Utility::getInstance();
@@ -38,9 +40,9 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 			$thead =
 			"<thead>" .
 			"	<tr>" .
-			"		<th width='100' align='center'>Sottoconto</th>" .
-			"		<th width='400' align='left'>Descrizione</th>" .
-			"		<th width='50'>Gruppo</th>" .
+			"		<th>Sottoconto</th>" .
+			"		<th>Descrizione</th>" .
+			"		<th>Gruppo</th>" .
 			"		<th>&nbsp;</th>" .
 			"		<th>&nbsp;</th>" .
 			"	</tr>" .
@@ -48,10 +50,11 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
 			foreach ($sottoconto->getSottoconti() as $row)
 			{
-				$bottoneCancella = "<td width='28' align='right'>" . $row[Sottoconto::NUM_REG_SOTTOCONTO] . "</td>";
+				$bottoneCancella = "&nbsp;";
+				$bottoneModifica = self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . "&apos;" . $row[Sottoconto::IND_GRUPPO] . "&apos;," . $row[Sottoconto::COD_CONTO] . "," . $row[Sottoconto::COD_SOTTOCONTO] . self::MODIFICA_ICON;
 
 				if ($row[Sottoconto::NUM_REG_SOTTOCONTO] == 0) {
-					$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $sottoconto->getCodConto() . ",&apos;_mod&apos;" . self::CANCELLA_SOTTOCONTO_ICON ;
+					$bottoneCancella = self::CANCELLA_SOTTOCONTO_HREF . $row[Sottoconto::COD_SOTTOCONTO] . "," . $sottoconto->getCodConto() . ",&apos;_mod&apos;" . self::CANCELLA_ICON ;
 				}
 
 				if ($row[Sottoconto::IND_GRUPPO] == "") $indGruppo = "&ndash;&ndash;&ndash;";
@@ -62,16 +65,16 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract {
 
 				$tbody .=
 				"<tr>" .
-				"	<td align='center'>" . $row[Sottoconto::COD_SOTTOCONTO] . "</td>" .
+				"	<td>" . $row[Sottoconto::COD_SOTTOCONTO] . "</td>" .
 				"	<td>" . $row[Sottoconto::DES_SOTTOCONTO] . "</td>" .
-				"	<td align='center'>" . $indGruppo . "</td>" .
-				self::MODIFICA_GRUPPO_SOTTOCONTO_HREF . "&apos;" . $row[Sottoconto::IND_GRUPPO] . "&apos;," . $row[Sottoconto::COD_CONTO] . "," . $row[Sottoconto::COD_SOTTOCONTO] . self::MODIFICA_GRUPPO_SOTTOCONTO_ICON .
-				$bottoneCancella .
+				"	<td>" . $indGruppo . "</td>" .
+				"   <td>" . $bottoneModifica . "</td>" . 
+				"   <td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$tbody .= "</tbody>";
 		}
-		return "<table id='sottocontiTable_mod' class='result'>" . $thead . $tbody . "</table>";
+		return $thead . $tbody;
 	}
 
 	public function makeTableContiConfigurati($configurazioneCausale)

@@ -25,8 +25,13 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		return unserialize($_SESSION[self::CREA_CONTO]);
 	}
 
-	public function start() {
-		$this->go();
+	public function start()
+	{
+		$conto = Conto::getInstance();
+		$sottoconto = Sottoconto::getInstance();
+		
+		$conto->prepara();
+		$sottoconto->preparaNuoviSottoconti();
 	}
 
 	public function go() {
@@ -35,17 +40,8 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 
-		$creaContoTemplate = CreaContoTemplate::getInstance();
-
-		if ($creaContoTemplate->controlliLogici()) {
-
-			if ($this->creaConto($utility,$conto,$sottoconto)) {
-				$_SESSION[self::MSG_DA_CREAZIONE_CONTO] = self::CREA_CONTO_OK;
-			}
-			else $_SESSION[self::MSG_DA_CREAZIONE_CONTO] = self::ERRORE_CREAZIONE_CONTO;
-		}
-		else $_SESSION[self::MSG_DA_CREAZIONE_CONTO] = $_SESSION[self::MESSAGGIO];
-
+		$this->creaConto($utility,$conto,$sottoconto);
+				
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();

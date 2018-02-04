@@ -85,8 +85,6 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	
 	const ERRORE_CREAZIONE_REGISTRAZIONE = "ERRORE : registrazione non creata";
 	const ERRORE_MODIFICA_REGISTRAZIONE = "ERRORE : registrazione non modificata";
-	
-	const ERRORE_LETTURA = "Errore fatale durante la lettura delle registrazioni" ;
 
 	// Metodi
 

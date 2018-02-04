@@ -220,9 +220,12 @@ class Sottoconto implements CoreInterface {
 // 		$this->setNuoviSottoconti($nuoviSottocontiDiff);
 // 	}
 
-	public function preparaNuoviSottoconti() {
+	public function preparaNuoviSottoconti()
+	{
 		$this->setQtaSottoconti(0);
 		$this->setSottoconti(array());
+		
+		$_SESSION[self::SOTTOCONTO] = serialize($this);
 	}
 
 	public function aggiorna($db)

@@ -34,6 +34,8 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$conto = Conto::getInstance();
 		$sottoconto = Sottoconto::getInstance();
 		$db = Database::getInstance();
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
 		$conto->leggi($db);
 		$_SESSION[self::CONTO] = serialize($conto);
@@ -41,18 +43,21 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$sottoconto->setCodConto($conto->getCodConto());
 		$sottoconto->leggi($db);
 		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
-
-		$datiPagina =
-			$this->makeTabellaSottoconti($conto, $sottoconto) . "|" .
-			$conto->getCodConto() . "|" .
-			$conto->getDesConto() . "|" .
-			$conto->getCatConto() . "|" .
-			$conto->getTipConto() . "|" .
-			$conto->getIndPresenzaInBilancio() . "|" .
-			$conto->getIndVisibilitaSottoconti() . "|" .
-			$conto->getNumRigaBilancio();
-
-		echo $datiPagina;
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_CONTO;
+		
+		$replace = array(
+				'%codice%' => trim($conto->getCodConto()),
+				'%descrizione%' => trim($conto->getDesConto()),
+				'%categoria%' => trim($conto->getCatConto()),
+				'%tipo%' => trim($conto->getTipConto()),
+				'%presenzaInBilancio%' => trim($conto->getIndPresenzaInBilancio()),
+				'%presenzaSottoconti%' => trim($conto->getIndVisibilitaSottoconti()),
+				'%numeroRigaBilancio%' => trim($conto->getNumRigaBilancio()),
+				'%sottoconti%' => $this->makeTabellaSottoconti($conto, $sottoconto)
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go() {
@@ -61,17 +66,7 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->controlliLogici($conto, $sottoconto)) {
-
-			// Aggiornamento del DB ------------------------------
-
-			if ($this->aggiornaConto($utility, $conto, $sottoconto)) {
-				$_SESSION[self::MSG_DA_MODIFICA_CONTO] = self::MODIFICA_CONTO_OK;
-			}
-		}
-		else {
-			$_SESSION[self::MSG_DA_MODIFICA_CONTO] = $_SESSION[self::MESSAGGIO];
-		}
+		$this->aggiornaConto($utility, $conto, $sottoconto);
 
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
@@ -82,8 +77,6 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 
 		$db = Database::getInstance();
 		$db->beginTransaction();
-
-		$conto->setDesConto(str_replace("'","''",$conto->getDesConto()));
 
 		if ($conto->aggiorna($db)) {
 
@@ -107,34 +100,6 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 			$_SESSION[self::MESSAGGIO] = self::ERRORE_SCRITTURA;
 			return FALSE;
 		}
-	}
-
-	public function controlliLogici($conto, $sottoconto) {
-
-		$esito = TRUE;
-		$msg = "<br>";
-
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
-
-		if ($conto->getDesConto() == "") {
-			$msg = $msg . self::ERRORE_DESCRIZIONE_CONTO;
-			$esito = FALSE;
-		}
-
-		if ($sottoconto->getQtaSottoconti() == 0) {
-			$msg = $msg . self::ERRORE_SOTTOCONTI_MANCANTI;
-			$esito = FALSE;
-		}
-
-		if ($msg != "<br>") {
-			$_SESSION[self::MESSAGGIO] = $msg;
-		}
-		else {
-			unset($_SESSION[self::MESSAGGIO]);
-		}
-		return $esito;
 	}
 }
 

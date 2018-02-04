@@ -1,0 +1,10 @@
+<conto>
+	<codice>%codice%</codice>
+	<descrizione>%descrizione%</descrizione>
+	<categoria>%categoria%</categoria>
+	<tipo>%tipo%</tipo>
+	<presenzaInBilancio>%presenzaInBilancio%</presenzaInBilancio>
+	<presenzaSottoconti>%presenzaSottoconti%</presenzaSottoconti>
+	<numeroRigaBilancio>%numeroRigaBilancio%</numeroRigaBilancio>
+	<sottoconti><![CDATA[%sottoconti%]]></sottoconti>
+</conto>

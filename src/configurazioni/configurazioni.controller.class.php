@@ -39,26 +39,37 @@ class ConfigurazioniController
 		$configurazioneCausale = ConfigurazioneCausale::getInstance();
 		$progressivoFattura = ProgressivoFattura::getInstance();
 
-		if (isset($_REQUEST["categoria"])) {
- 			$conto->setCatConto($_REQUEST["categoria"]);
- 			$conto->setTipConto($_REQUEST["tipoconto"]);
+		// Conti --------------------------------------------------
+		
+		if (isset($_REQUEST["codconto"])) {
+			$conto->setCodConto($_REQUEST["codconto"]);
+		}
+		
+		if (isset($_REQUEST["catconto_sel"])) {
+ 			$conto->setCatContoSel($_REQUEST["catconto_sel"]);
+ 			$conto->setTipContoSel($_REQUEST["tipconto_sel"]);
  		}
-
- 		if (isset($_REQUEST["codconto"])) {
- 			$conto->setCodConto($_REQUEST["codconto"]);
- 			$conto->setDesConto($_REQUEST["desconto"]);
- 			$conto->setCatConto($_REQUEST["categoria"]);
- 			$conto->setTipConto($_REQUEST["dareavere"]);
- 			$conto->setIndPresenzaInBilancio($_REQUEST["indpresenza"]);
- 			$conto->setIndVisibilitaSottoconti($_REQUEST["indvissottoconti"]);
- 			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio"]);
- 			$configurazioneCausale->setCodConto($_REQUEST["codconto"]);
+ 		
+ 		if (isset($_REQUEST["codsottoconto"])) {
+ 			$sottoconto->setCodConto($_REQUEST["codconto"]);
+ 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto"]);
+ 			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto"]);
+ 		}
+ 		
+ 		if (isset($_REQUEST["codconto_cre"])) {
+ 			$conto->setCodConto($_REQUEST["codconto_cre"]);
+ 			$conto->setDesConto($_REQUEST["desconto_cre"]);
+ 			$conto->setCatConto($_REQUEST["catconto_cre"]);
+ 			$conto->setTipConto($_REQUEST["dareavere_cre"]);
+ 			$conto->setIndPresenzaInBilancio($_REQUEST["indpresenza_cre"]);
+ 			$conto->setIndVisibilitaSottoconti($_REQUEST["indvissottoconti_cre"]);
+ 			$conto->setNumRigaBilancio($_REQUEST["numrigabilancio_cre"]);
  		}
 
  		if (isset($_REQUEST["codconto_mod"])) {
  			$conto->setCodConto($_REQUEST["codconto_mod"]);
  			$conto->setDesConto($_REQUEST["desconto_mod"]);
- 			$conto->setCatConto($_REQUEST["categoria_mod"]);
+ 			$conto->setCatConto($_REQUEST["catconto_mod"]);
  			$conto->setTipConto($_REQUEST["dareavere_mod"]);
  			$conto->setIndPresenzaInBilancio($_REQUEST["indpresenza_mod"]);
  			$conto->setIndVisibilitaSottoconti($_REQUEST["indvissottoconti_mod"]);
@@ -95,14 +106,6 @@ class ConfigurazioniController
  			$conto->setCatConto($_REQUEST["catconto"]);
  			$conto->setDesConto($_REQUEST["desconto"]);
  			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto"]);
- 		}
-
- 		if (isset($_REQUEST["codsottoconto"])) {
- 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto"]);
- 			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto"]);
- 			$sottoconto->setCodConto($_REQUEST["codconto"]);
- 			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto"]);
- 			$sottoconto->setIndGruppo($_REQUEST["indgruppo"]);
  		}
 
  		if (isset($_REQUEST["codcausale"])) {

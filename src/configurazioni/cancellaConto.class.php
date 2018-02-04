@@ -15,11 +15,6 @@ class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -35,8 +30,6 @@ class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$db = Database::getInstance();
 
 		$conto->cancella($db);
-
-		$_SESSION[self::MSG_DA_CANCELLAZIONE] = self::CANCELLA_CONTO_OK;
 		
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);

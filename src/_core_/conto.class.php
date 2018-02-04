@@ -31,6 +31,8 @@ class Conto implements CoreInterface {
 	private $indVisibilitaSottoconti;
 	private $conti;
 	private $qtaConti;
+	private $catContoSel;
+	private $tipContoSel;
 
 	// Queries
 
@@ -57,20 +59,9 @@ class Conto implements CoreInterface {
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
-		$categoriaCond = "";
-		$tipcontoCond = "";
-
-		if ($this->getCatConto() != "") {
-			$categoriaCond = "and cat_conto = '" . $this->getCatConto() . "'";
-		}
-
-		if ($this->getTipConto() != "") {
-			$tipcontoCond = "and tip_conto = '" . $this->getTipConto() . "'";
-		}
-
 		$replace = array(
-				'%categoria%' => $categoriaCond,
-				'%tipconto%' => $tipcontoCond
+				'%categoria%' => ($this->getCatContoSel() != "") ? "and cat_conto = '" . $this->getCatContoSel() . "'" : "",
+				'%tipconto%' => ($this->getTipContoSel() != "") ? "and tip_conto = '" . $this->getTipContoSel() . "'" : ""
 		);
 
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_CONTO;
@@ -103,6 +94,8 @@ class Conto implements CoreInterface {
 		if ($result) {
 	
 			$conto = pg_fetch_all($result);
+			$numConti = pg_num_rows($result);
+			
 			foreach ($conto as $row) {
 	
 				$this->setDesConto(trim($row[self::DES_CONTO]));
@@ -113,6 +106,7 @@ class Conto implements CoreInterface {
 				$this->setNumRigaBilancio(trim($row[self::NUM_RIGA_BILANCIO]));
 			}
 		}
+		return $numConti;
 	}
 
 	public function aggiorna($db) {
@@ -122,7 +116,7 @@ class Conto implements CoreInterface {
 		
 		$replace = array(
 				'%cod_conto%' => $this->getCodConto(),
-				'%des_conto%' => $this->getDesConto(),
+				'%des_conto%' => str_replace("'","''",$this->getDesConto()),
 				'%cat_conto%' => $this->getCatConto(),
 				'%tip_conto%' => $this->getTipConto(),
 				'%ind_presenza_in_bilancio%' => $this->getIndPresenzaInBilancio(),
@@ -132,6 +126,11 @@ class Conto implements CoreInterface {
 		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CONTO;
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
+		if ($result) {
+			$this->load($db);	// refresh dei conti caricati
+			$_SESSION[self::CONTO] = serialize($this);
+		}
+		
 		return $result;
 	}
 
@@ -145,6 +144,8 @@ class Conto implements CoreInterface {
 		$this->setIndPresenzaInBilancio(null);
 		$this->setNumRigaBilancio(null);
 		$this->setIndVisibilitaSottoconti(null);
+		
+		$_SESSION[self::CONTO] = serialize($this);
 	}
 
 	public function inserisci($db) {
@@ -276,6 +277,25 @@ class Conto implements CoreInterface {
 
     public function setQtaConti($qtaConti){
         $this->qtaConti = $qtaConti;
+    }
+
+
+    public function getCatContoSel(){
+        return $this->catContoSel;
+    }
+
+    public function setCatContoSel($catContoSel){
+        $this->catContoSel = $catContoSel;
+        return $this;
+    }
+
+    public function getTipContoSel(){
+        return $this->tipContoSel;
+    }
+
+    public function setTipContoSel($tipContoSel){
+        $this->tipContoSel = $tipContoSel;
+        return $this;
     }
 
 }

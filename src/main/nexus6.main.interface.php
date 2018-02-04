@@ -49,7 +49,7 @@ interface MainNexus6Interface {
 
 	const CONTO_IN_DARE = "Dare";
 	const CONTO_IN_AVERE = "Avere";
-
+	
 	// Bottoni
 
 	const BOTTONE_ESTRAI_PDF = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
@@ -58,6 +58,13 @@ interface MainNexus6Interface {
 	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
 	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
 	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
+	const LISTA_ICON = ")'><span class='glyphicon glyphicon-list-alt'></span></a>";
+	const CONFIGURA_ICON = ")'><span class='glyphicon glyphicon-wrench'></span></a>";
+	
+	// Messaggi d'errore comuni
+	
+	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati!!";
+	
 }
 
 ?>

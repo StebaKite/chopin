@@ -57,6 +57,11 @@ $( ".spinner" ).spinner();
 
 $('select').selectpicker();
 
+$('.selectNormal').selectpicker({
+	style: 'btn-info',
+	size: 'auto'
+});
+
 $('.selectCausale').selectpicker({
 	style: 'btn-info',
 	size: 'auto',
@@ -428,6 +433,23 @@ function controllaImporto(campoImp) {
 	} else {
 		$("#" + campoImp + "_control_group").addClass("has-error");
 		$("#" + campoImp + "_messaggio").html("non valido");
+	}
+}
+
+//---------------------------------------------------------------------------------
+
+function controllaNumero(campoNum) {
+
+	var numero = $("#" + campoNum).val();
+
+	if (isNumeric(numero)) {
+		$("#" + campoNum + "_control_group").removeClass("has-error");
+		$("#" + campoNum + "_messaggio").html("");
+		return true;
+	} else {
+		$("#" + campoNum + "_control_group").addClass("has-error");
+		$("#" + campoNum + "_messaggio").html("non valido");
+		return false;
 	}
 }
 
