@@ -1,4 +1,4 @@
-f; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
 ; Il file x le traduzioni viene applicato dalla funzione che carica il template. 
 ; Il formato del campo in pagina deve essere: %ml.label%
 ; Il formato della traduzione deve essere: nome label = traduzione in lingua

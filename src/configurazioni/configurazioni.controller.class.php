@@ -93,13 +93,13 @@ class ConfigurazioniController
  			$sottoconto->setCodSottoconto($_REQUEST["codsottoconto_del"]);
  		}
 
- 		if (isset($_REQUEST["codcontogenera"])) {
- 			$sottoconto->setDataRegistrazioneDa($_REQUEST["datareg_da"]);
- 			$sottoconto->setDataRegistrazioneA($_REQUEST["datareg_a"]);
- 			$sottoconto->setCodConto($_REQUEST["codcontogenera"]);
- 			$sottoconto->setCodSottoconto($_REQUEST["codsottocontogenera"]);
- 			$sottoconto->setCodNegozio($_REQUEST["codneg_sel"]);
- 			$sottoconto->setSaldiInclusi($_REQUEST["saldiInclusi"]);
+ 		if (isset($_REQUEST["csot_mov"])) {
+ 			$sottoconto->setDataRegistrazioneDa($_REQUEST["dtda_mov"]);
+ 			$sottoconto->setDataRegistrazioneA($_REQUEST["dta_mov"]);
+ 			$sottoconto->setCodConto($_REQUEST["ccon_mov"]);
+ 			$sottoconto->setCodSottoconto($_REQUEST["csot_mov"]);
+ 			$sottoconto->setCodNegozio($_REQUEST["cneg_mov"]);
+ 			$sottoconto->setSaldiInclusi($_REQUEST["sal_mov"]);
  		}
 
  		if (isset($_REQUEST["datareg_da"])) {
@@ -108,12 +108,14 @@ class ConfigurazioniController
  			$sottoconto->setDesSottoconto($_REQUEST["dessottoconto"]);
  		}
 
- 		if (isset($_REQUEST["codcausale"])) {
- 			$causale->setCodCausale($_REQUEST["codcausale"]);
- 			$causale->setDesCausale($_REQUEST["descausale"]);
- 			$causale->setCatCausale($_REQUEST["catcausale"]);
- 			$configurazioneCausale->setCodCausale($_REQUEST["codcausale"]);
- 			$configurazioneCausale->setDesCausale($_REQUEST["descausale"]);
+ 		// Causali ---------------------------------------
+ 		
+ 		if (isset($_REQUEST["codcausale_cre"])) {
+ 			$causale->setCodCausale($_REQUEST["codcausale_cre"]);
+ 			$causale->setDesCausale($_REQUEST["descausale_cre"]);
+ 			$causale->setCatCausale($_REQUEST["catcausale_cre"]);
+ 			$configurazioneCausale->setCodCausale($_REQUEST["codcausale_cre"]);
+ 			$configurazioneCausale->setDesCausale($_REQUEST["descausale_cre"]);
  		}
 
  		if (isset($_REQUEST["codcausale_conf"])) {

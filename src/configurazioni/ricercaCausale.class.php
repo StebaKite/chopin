@@ -39,66 +39,41 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
+		
 		$ricercaCausaleTemplate = RicercaCausaleTemplate::getInstance();
-
 		$this->preparaPagina($ricercaCausaleTemplate);
 
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
 		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
 		echo $utility->tailTemplate($template);
 
-		if ($this->refreshCausali($db, $causale)) {
-
-			$ricercaCausaleTemplate->displayPagina();
-
-			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
-				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE_CAUSALE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE_CAUSALE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
-				unset($_SESSION[self::MSG_DA_CREAZIONE_CAUSALE]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_MODIFICA_CAUSALE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA_CAUSALE] . "<br>" . "Trovate " . $causale->getQtaCausali() . " causali";
-				unset($_SESSION[self::MSG_DA_MODIFICA_CAUSALE]);
-			}
-			else {
-				$_SESSION[self::MESSAGGIO] = "Trovate " . $causale->getQtaCausali() . " causali";
-			}
+		if ($this->refreshCausali($db, $causale))
+		{
+			$_SESSION[self::MESSAGGIO] = "Trovate " . $causale->getQtaCausali() . " causali";
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 
-			$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
-			if ($pos === false) {
-				if ($causale->getQtaCausali() > 0) {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-				}
-				else {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				}
-			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-
-			echo $utility->tailTemplate($template);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
 		else {
-
+			
+			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+			
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+			echo $utility->tailTemplate($template);
 		}
-
+		
+		$ricercaCausaleTemplate->displayPagina();
+		
 		include($this->piede);
 	}
 
 	/**
 	 * Questo metodo osserva il contenuto dell'array causali dell'oggetto. Se è vuoto lo ricarica e
 	 * ri-serializza l'oggetto in sessione, se è pieno non fa nulla e lascia l'array esistente
-	 * @param unknown $db
-	 * @param unknown $causale
-	 * @return boolean
 	 */
 	private function refreshCausali($db, $causale) {
 

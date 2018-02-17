@@ -1,0 +1,5 @@
+<sottoconto>
+	<codiceconto>%conto%</codiceconto>
+	<codicesottoconto>%sottoconto%</codicesottoconto>
+	<movimenti><![CDATA[%movimenti%]]></movimenti>
+</sottoconto>

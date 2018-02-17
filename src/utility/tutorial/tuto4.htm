@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Multi-colunne</title>
+<title>Multi-columns</title>
 <link type="text/css" rel="stylesheet" href="../fpdf.css">
 </head>
 <body>
-<h1>Multi-colunne</h1>
+<h1>Multi-columns</h1>
 This example is a variant of the previous one showing how to lay the text across multiple
 columns.
 <div class="source">
@@ -15,12 +15,10 @@ columns.
 
 class </span>PDF <span class="kw">extends </span>FPDF
 <span class="kw">{
-</span><span class="cmt">// Current column
-</span><span class="kw">var </span>$col <span class="kw">= </span>0<span class="kw">;
-</span><span class="cmt">// Ordinate of column start
-</span><span class="kw">var </span>$y0<span class="kw">;
+protected </span>$col <span class="kw">= </span>0<span class="kw">; </span><span class="cmt">// Current column
+</span><span class="kw">protected </span>$y0<span class="kw">;      </span><span class="cmt">// Ordinate of column start
 
-function </span>Header<span class="kw">()
+</span><span class="kw">function </span>Header<span class="kw">()
 {
     </span><span class="cmt">// Page header
     </span><span class="kw">global </span>$title<span class="kw">;

@@ -8,26 +8,27 @@
 <body>
 <h1>AliasNbPages</h1>
 <code>AliasNbPages([<b>string</b> alias])</code>
-<h2>Descrizione</h2>
-Definisce un alias per il numero totale di pagine. Sarà sostituito alla chiusura del documento.
-<h2>Parametri</h2>
+<h2>Description</h2>
+Defines an alias for the total number of pages. It will be substituted as the document is
+closed.
+<h2>Parameters</h2>
 <dl class="param">
 <dt><code>alias</code></dt>
 <dd>
-L'alias. Valore di default: <code>{nb}</code>.
+The alias. Default value: <code>{nb}</code>.
 </dd>
 </dl>
-<h2>Esempio</h2>
+<h2>Example</h2>
 <div class="doc-source">
 <pre><code>class PDF extends FPDF
 {
 function Footer()
 {
-    // Va a 1.5 cm dal fondo della pagina
+    // Go to 1.5 cm from bottom
     $this-&gt;SetY(-15);
-    // Seleziona Arial corsivo 8
+    // Select Arial italic 8
     $this-&gt;SetFont('Arial','I',8);
-    // Stampa il numero di pagina corrente e totale
+    // Print current and total page numbers
     $this-&gt;Cell(0,10,'Page '.$this-&gt;PageNo().'/{nb}',0,0,'C');
 }
 }
@@ -35,10 +36,10 @@ function Footer()
 $pdf = new PDF();
 $pdf-&gt;AliasNbPages();</code></pre>
 </div>
-<h2>Vedi anche</h2>
-<a href="pageno.htm">PageNo()</a>,
-<a href="footer.htm">Footer()</a>.
+<h2>See also</h2>
+<a href="pageno.htm">PageNo</a>,
+<a href="footer.htm">Footer</a>
 <hr style="margin-top:1.5em">
-<div style="text-align:center"><a href="index.htm">Indice</a></div>
+<div style="text-align:center"><a href="index.htm">Index</a></div>
 </body>
 </html>

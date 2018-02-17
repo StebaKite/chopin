@@ -10,13 +10,19 @@ class Pdf extends FPDF implements UtilityComponentInterface
 	public $title2;
 	public $creator;
 	public $logo;
-
+	private static $_instance = null;
+	
 	function __construct($orientation='P', $unit='mm', $size='A4')
 	{
+		parent::__construct();
+		
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
+	}
 
+	function initialize($orientation='P', $unit='mm', $size='A4')
+	{
 		// Some checks
 		$this->_dochecks();
 		// Initialization of properties
@@ -106,7 +112,7 @@ class Pdf extends FPDF implements UtilityComponentInterface
 		// Set default PDF version number
 		$this->PDFVersion = '1.3';
 	}
-
+	
 	public function getInstance()
 	{
 		if (!isset($_SESSION[self::PDF])) $_SESSION[self::PDF] = serialize(new Pdf());
@@ -143,7 +149,7 @@ class Pdf extends FPDF implements UtilityComponentInterface
 		$this->Cell(0,10,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');	// Page number
 
 		$this->SetY(-10);												// Position at 1 cm from bottom
-		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252',"Generato dal database di Nexus6 il " . date("d/m/Y")),0,1,'C');
+		$this->Cell(0, 10, iconv('UTF-8', 'windows-1252',"Generato dal database di Nexus8 il " . date("d/m/Y")),0,1,'C');
 	}
 
 	// Simple table
@@ -224,8 +230,90 @@ class Pdf extends FPDF implements UtilityComponentInterface
 			}
 		}
 	}
-
-
+	
+	public function makeMastrinoContoTable($header, $data) {
+		
+		// Colors, line width and bold font
+		$this->SetFillColor(28,148,196);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','B',10);
+		
+		// Header
+		$w = array(20, 80, 30, 30, 30);
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],10,$header[$i],1,0,'C',true);
+			$this->Ln();
+			
+			// Color and font restoration
+			$this->SetFillColor(224,235,255);
+			$this->SetTextColor(0);
+			$this->SetFont('');
+			$this->SetFont('','',8);
+			
+			// Data
+			$totaleDare = 0;
+			$totaleAvere = 0;
+			$saldo = 0;
+			
+			$fill = false;
+			foreach($data as $row) {
+				
+				if ($row['ind_dareavere'] == 'D') {
+					$totaleDare = $totaleDare + $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+					$impDare = $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+					$euroAvere = "";
+					$impAvere = "";
+				}
+				elseif ($row['ind_dareavere'] == 'A') {
+					$totaleAvere = $totaleAvere + $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+					$impDare = "";
+					$impAvere = $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+					$euroDare = "";
+				}
+				
+				if (trim($row[Conto::TIP_CONTO]) == self::CONTO_IN_DARE) {
+					$saldo = $totaleDare - $totaleAvere;
+				}
+				elseif (trim($row[Conto::TIP_CONTO]) == self::CONTO_IN_AVERE) {
+					$saldo = $totaleAvere - $totaleDare;
+				}
+				
+				$this->SetFont('','',10);
+				$fill = !$fill;
+				
+				$this->Cell($w[0],6,iconv('UTF-8', 'windows-1252',date("d/m/Y",strtotime($row[Registrazione::DAT_REGISTRAZIONE]))),'LR',0,'L',$fill);
+				$this->Cell($w[1],6,iconv('UTF-8', 'windows-1252',trim($row[Registrazione::DES_REGISTRAZIONE])),'LR',0,'L',$fill);
+				$this->Cell($w[2],6,number_format($impDare, 2, ',', '.'),'LR',0,'R',$fill);
+				$this->Cell($w[3],6,number_format($impAvere, 2, ',', '.'),'LR',0,'R',$fill);
+				
+				if ($saldo < 0) {
+					$this->SetTextColor(255,0,0);
+					$this->SetFont('','B',10);
+				}
+				
+				$this->Cell($w[4],6,number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+				$this->Ln();
+				
+				$this->SetFont('');
+				$this->SetTextColor(0);
+			}
+			
+			$this->SetFillColor(224,235,255);
+			$this->SetTextColor(0);
+			
+			$this->SetFont('','B',10);
+			$this->Cell($w[0],6,'','LR',0,'L',$fill);
+			$this->Cell($w[1],6,'Totale ' . EURO ,'LR',0,'R',$fill);
+			$this->Cell($w[2],6,number_format($totaleDare, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[3],6,number_format($totaleAvere, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Cell($w[4],6,number_format($saldo, 2, ',', '.'),'LR',0,'R',$fill);
+			$this->Ln();
+			
+			$this->Cell(array_sum($w),0,'','T');
+	}
+	
 	public function BilancioTable($data, $invSegno) {
 
 		// Column widths
@@ -630,8 +718,6 @@ class Pdf extends FPDF implements UtilityComponentInterface
 
 	/**
 	 * Questo metodo crea una tabella PDF per il riepilogo negozi
-	 * @param unknown $header
-	 * @param unknown $data
 	 */
 	public function riepilogoNegoziTable($header, $data, $invSegno) {
 
@@ -759,8 +845,6 @@ class Pdf extends FPDF implements UtilityComponentInterface
 
 	/**
 	 * Questo metodo crea una tabella PDF del margine di contribuzione per il riepilogo negozi
-	 * @param unknown $header
-	 * @param unknown $datiMCT
 	 */
 	public function riepilogoNegoziMctTable($header, $datiMCT) {
 
@@ -826,8 +910,6 @@ class Pdf extends FPDF implements UtilityComponentInterface
 
 	/**
 	 * Questo metodo crea una tabella PDF del Break Even Point per il riepilogo negozi
-	 * @param unknown $header
-	 * @param unknown $datiMCT
 	 */
 	public function riepilogoNegoziBepTable($header, $datiMCT) {
 

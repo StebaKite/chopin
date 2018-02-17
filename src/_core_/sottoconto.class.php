@@ -170,6 +170,8 @@ class Sottoconto implements CoreInterface {
 			$this->setRegistrazioniTrovate(null);
 			$this->setQtaRegistrazioniTrovate(0);
 		}
+		
+		$_SESSION[self::SOTTOCONTO] = serialize($this);		
 		return $result;
 	}
 

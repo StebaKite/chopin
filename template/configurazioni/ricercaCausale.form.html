@@ -1,51 +1,112 @@
 <body>
 <script type="text/javascript">
 
-$(document).ready( function () {
-    $('#causali').dataTable( {
-    	"order": [[0, 'asc']],
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": true },
-       	    {"targets": 1, "orderable": true },
-    	    {"targets": 2, "orderable": true },
-    	    {"targets": 3, "orderable": true },
-    	    {"targets": 4, "orderable": false },
-    	    {"targets": 5, "orderable": false },
-    	    {"targets": 6, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+$(document).ready(function(){
+	
+	$(".datepicker").datepicker();
+	
+	$("#myInput").on("keyup", 
+		function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(
+				function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				}
+			);
+		}
+	);				
+});
 
 </script>
 
-<div id="body">
-	<div id="main">
-		<table style="width:100%;">
-			<tbody>
-				<tr>
-					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right"><button id="nuova-causale" class="button">%ml.nuovacausale%</button></td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		%risultato_ricerca%		
-	</div>	
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+						<button id="nuovaCausale" class="btn btn-primary btn-default">%ml.nuovacausale%</button>
+					</div>	
+				</div>			
+			</div>
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
+	</div>
+</div>
+
+<!-- ------------- -->
+<!-- NUOVA CAUSALE -->
+<!-- ------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuova-causale-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova Causale</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="nuovaCausaleForm" action="../configurazioni/creaCausaleFacade.class.php?modo=go" >
+
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+									<div class='input-group' id="codcausale_cre_control_group">
+										<span class="input-group-addon">%ml.codcausale%</span>
+										<input class="form-control" id="codcausale_cre" name="codcausale_cre" type="text" maxlength="4" onblur="controllaCodice('codcausale_cre')"/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-8">
+									<div class='input-group' id="descausale_cre_control_group">
+										<span class="input-group-addon">%ml.descausale%</span>
+										<input class="form-control" id="descausale_cre" name="descausale_cre" type="text" maxlength="100" onblur="controllaDescrizione('descausale_cre')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary active"><input type="radio" name="catcausale_cre" id="catcausale_generi_cre" autocomplete="off" value="GENERI" checked >%ml.generi%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_incpag_cre" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_corris_cre" autocomplete="off" value="CORRIS" >%ml.corris%</label>
+									</div>						    		
+								</div>	
+							</div>
+							
+						</div>
+
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuova-causale-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- 
 		
 <div id="cancella-causale-form" title="Cancella Causale"> 
 	<form method="post" id="cancellaCausale" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
@@ -155,3 +216,5 @@ $(document).ready( function () {
 		</tbody>
 	</table>
 </div>
+ -->
+ 

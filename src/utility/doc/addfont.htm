@@ -8,49 +8,48 @@
 <body>
 <h1>AddFont</h1>
 <code>AddFont(<b>string</b> family [, <b>string</b> style [, <b>string</b> file]])</code>
-<h2>Descrizione</h2>
-Importa un font TrueType, OpenType o Type1 e lo rende disponibile. E' necessario generare prima un
-file di definizione di font con la utility MakeFont.
+<h2>Description</h2>
+Imports a TrueType, OpenType or Type1 font and makes it available. It is necessary to generate a font
+definition file first with the MakeFont utility.
 <br>
-Il file di definizione (e lo stesso file del font quando compreso) deve essere presente nella
-directory delle fonts. Se non può essere trovato, viene generato l'errore "Could not include
-font definition file".
-<h2>Parametri</h2>
+The definition file (and the font file itself when embedding) must be present in the font directory.
+If it is not found, the error "Could not include font definition file" is raised.
+<h2>Parameters</h2>
 <dl class="param">
 <dt><code>family</code></dt>
 <dd>
-Famiglia del font. Il nome può essere scelto arbitrariamente. Se viene indicato un nome di una famiglia
-standard, verrà sovrascritto il font corrispondente.
+Font family. The name can be chosen arbitrarily. If it is a standard family name, it will
+override the corresponding font.
 </dd>
 <dt><code>style</code></dt>
 <dd>
-Stile del font. Possibili valori sono (case insensitive):
+Font style. Possible values are (case insensitive):
 <ul>
-<li>stringa vuota: normale</li>
-<li><code>B</code>: grassetto</li>
-<li><code>I</code>: corsivo</li>
-<li><code>BI</code> o <code>IB</code>: grassetto corsivo</li>
+<li>empty string: regular</li>
+<li><code>B</code>: bold</li>
+<li><code>I</code>: italic</li>
+<li><code>BI</code> or <code>IB</code>: bold italic</li>
 </ul>
-Il valore di default è normale.
+The default value is regular.
 </dd>
 <dt><code>file</code></dt>
 <dd>
-Il file di definizione del font.
+The font definition file.
 <br>
-Per default, il nome viene costruito dalla famiglia e dallo stile, in minuscolo e senza spazi.
+By default, the name is built from the family and style, in lower case with no space.
 </dd>
 </dl>
-<h2>Esempio</h2>
+<h2>Example</h2>
 <div class="doc-source">
 <pre><code>$pdf-&gt;AddFont('Comic','I');</code></pre>
 </div>
-è equivalente a:
+is equivalent to:
 <div class="doc-source">
 <pre><code>$pdf-&gt;AddFont('Comic','I','comici.php');</code></pre>
 </div>
-<h2>Vedi anche</h2>
-<a href="setfont.htm">SetFont()</a>.
+<h2>See also</h2>
+<a href="setfont.htm">SetFont</a>
 <hr style="margin-top:1.5em">
-<div style="text-align:center"><a href="index.htm">Indice</a></div>
+<div style="text-align:center"><a href="index.htm">Index</a></div>
 </body>
 </html>

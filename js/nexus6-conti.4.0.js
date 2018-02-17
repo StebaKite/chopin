@@ -21,7 +21,6 @@ $("#nuovoConto").click(function() {
 	xmlhttp.send();
 });
 
-
 //---------------------------------------------------------------------------------
 
 $("#button-nuovo-sottoconto-nuovo-conto-form").click(function() {
@@ -267,6 +266,83 @@ function modificaConto(codConto)
 	xmlhttp.send();
 }
 
+//---------------------------------------------------------------------
+
+function visualizzaConto(codConto)
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
+		{
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("conto").each(
+				function() {
+
+					$("#codconto_vis").html($(this).find("codice").text());
+					$("#desconto_vis").html($(this).find("descrizione").text());
+					$("#numrigabilancio_vis").html($(this).find("numeroRigaBilancio").text());
+
+					$("#catconto_vis").html($(this).find("categoria").text());
+					$("#tipconto_vis").html($(this).find("tipo").text());
+					
+					var presInBil = $(this).find("presenzaInBilancio").text();
+					if (presInBil == "N") $("#indpresenza_vis").html("Escluso");
+					else $("#indpresenza_vis").html("Incluso in Bilancio");
+					
+					var presSottoconti = $(this).find("presenzaSottoconti").text();
+					if (presSottoconti == "N") $("#indvissottoconti_vis").html("Non visibili");
+					else $("#indvissottoconti_vis").html("Sottoconti visibili");
+
+					$("#datareg_da").val(getTodayDate()); 
+					$("#datareg_a").val(getTodayDate()); 
+					
+					
+					//----------------------------------------------------------
+					
+					$("#sottocontiTable_vis").html($(this).find("sottoconti").text());
+				}
+			)
+			$("#visualizza-conto-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","visualizzaContoFacade.class.php?modo=start&codconto=" + codConto, true);
+	xmlhttp.send();
+}
+
+//---------------------------------------------------------------------
+
+function estraiMovimentiSottoconto(codconto,codsottoconto)
+{
+	var negozio = $("#codneg_sel").val();
+	var datareg_DA = $("#datareg_da").val();
+	var datareg_A = $("#datareg_a").val();
+	var saldiSi = $("#saldiInclusiSi").val();
+	var saldiNo = $("#saldiInclusiNo").val();
+	if ($("#saldiInclusiSi").parent(".btn").hasClass("active")) var saldi = "S";
+	if ($("#saldiInclusiNo").parent(".btn").hasClass("active")) var saldi = "N";
+	
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			
+			var parser = new DOMParser();
+			var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+			
+			$(xmldoc).find("sottoconto").each(
+				function() {
+					
+					$("#movimentiTable_vis").html($(this).find("movimenti").text());
+				}
+			)
+			$("#visualizza-movimenti-sottoconto-dialog").modal("show");
+		}
+	}
+	xmlhttp.open("GET","estraiMovimentiSottocontoFacade.class.php?modo=start&csot_mov=" + codsottoconto + "&ccon_mov=" + codconto + "&cneg_mov=" + negozio + "&dtda_mov=" + datareg_DA + "&dta_mov=" + datareg_A + "&sal_mov=" + saldi, true);
+	xmlhttp.send();				
+}
+
 //---------------------------------------------------------------------------------
 // CREA CONTO : routine di validazione
 //---------------------------------------------------------------------------------
@@ -381,309 +457,4 @@ function modificaGruppoSottoconto(indgruppo,codconto,codsottoconto)
 	$("#modifica-gruppo-sottoconto-dialog").modal("show");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//function generaMastrino(codconto, codsottoconto) {
-//
-//	var input_codcontogenera = "<input type='text' id='codcontogenera' name='codcontogenera' value='" + codconto + "' readonly >";
-//	var input_codsottocontogenera = "<input type='text' id='codsottocontogenera' name='codsottocontogenera' value='" + codsottoconto + "' readonly >";
-//	
-//	$( "#id_codcontogenera" ).html(input_codcontogenera);
-//	$( "#id_codsottocontogenera" ).html(input_codsottocontogenera);
-//	$( "#generaMastrino-form" ).dialog( "open" );
-//}
-//
-//$( "#generaMastrino-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 450,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//				$("#generaMastrino").submit();				
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-////---------------------------------------------------------------------------------		
-////Creazione di un nuovo sottoconto in modifica conto
-////---------------------------------------------------------------------------------		
-//$( "#nuovo-sottoconto-modificaconto" ).click(function( event ) {
-//	$( "#nuovo-sottoconto-modificaconto-form" ).dialog( "open" );
-//	event.preventDefault();
-//});
-//
-//$( "#nuovo-sottoconto-modificaconto-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 650,
-//	height: 250,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//           $("#nuovoSottoconto").submit();				
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-////---------------------------------------------------------------------------------		
-//function cancellaConto(codconto) {
-////---------------------------------------------------------------------------------			
-//	$( "#codconto" ).val(codconto);
-//	$( "#cancella-conto-form" ).dialog( "open" );
-//}
-//
-//$( "#cancella-conto-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 300,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//       $("#cancellaConto").submit();				
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-//
-//$( "#modifica-sottoconto-modificagruppo-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 500,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				
-//				var codconto = $("#codconto_modgru").val();
-//				var codsottoconto = $("#codsottoconto_modgru").val();
-//				var indgruppo = $("input[name=indgruppo_modgru]:checked").val();				
-//				var xmlhttp = new XMLHttpRequest();
-//			    xmlhttp.onreadystatechange = function() {
-//			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//			        	var sottocontiTable_mod = xmlhttp.responseText;
-//		        		$("#sottocontiTable_mod").html(sottocontiTable_mod);
-//		        		var sottocontiTable = sottocontiTable_mod.replace("sottocontiTable_mod","sottocontiTable")
-//		        		$("#sottocontiTable").html(sottocontiTable);
-//			        }
-//			    }
-//			    xmlhttp.open("GET", "modificaGruppoSottocontoFacade.class.php?modo=start&codconto_modgru=" + codconto + "&codsottoconto_modgru=" + codsottoconto + "&indgruppo_modgru=" + indgruppo, true);
-//			    xmlhttp.send();				
-//				
-//				$(this).dialog('close');
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-////---------------------------------------------------------------------------------			
-//// Creazione di un nuovo conto
-////---------------------------------------------------------------------------------			
-//$( "#nuovo-conto" ).click(function( event ) {
-//	$( "#nuovo-conto-form" ).dialog( "open" );
-//	event.preventDefault();
-//});
-//
-//$( "#nuovo-conto-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 750,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//				$("#nuovoConto").submit();				
-//			}
-//		},
-//		{
-//			text: "Nuovo sottoconto",
-//			click: function() {
-//				$( "#nuovo-sottoconto-form" ).dialog( "open" );
-//				event.preventDefault();
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//				$("#annullaNuovoConto").submit();
-//			}
-//		}
-//	]
-//});
-//
-////---------------------------------------------------------------------------------			
-//function modificaConto(codconto) {
-////---------------------------------------------------------------------------------				
-//	var xmlhttp = new XMLHttpRequest();
-//    xmlhttp.onreadystatechange = function() {
-//        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//        	var response = xmlhttp.responseText;
-//        	
-//        	var datiPagina = response.split("|");
-//    		$("#sottocontiTable_mod").html(datiPagina[0]);
-//    		$("#codconto_mod").val(datiPagina[1]);
-//    		$("#desconto_mod").val(datiPagina[2]);    
-//    		
-//    		if (datiPagina[3] == "Conto Economico") {
-//    			$("#contoeco_mod").attr("checked", "checked").button("refresh");
-//    		}
-//    		else {
-//        		if (datiPagina[3] == "Stato Patrimoniale") {
-//        			$("#contopat_mod").attr("checked", "checked").button("refresh");
-//        		}    			
-//    		}
-//    		
-//    		if (datiPagina[4] == "Dare") {
-//    			$("#dare_mod").attr("checked", "checked").button("refresh");
-//    		}
-//    		else {
-//        		if (datiPagina[4] == "Avere") {
-//        			$("#avere_mod").attr("checked", "checked").button("refresh");
-//        		}    			
-//    		}
-//    		
-//    		if (datiPagina[5] == "S") {
-//    			$("#presenzaSi_mod").attr("checked", "checked").button("refresh");
-//    		}
-//    		else {
-//        		if (datiPagina[5] == "N") {
-//        			$("#presenzaNo_mod").attr("checked", "checked").button("refresh");
-//        		}    			
-//    		}
-//    		
-//    		if (datiPagina[6] == "S") {
-//    			$("#sottocontiSi_mod").attr("checked", "checked").button("refresh");
-//    		}
-//    		else {
-//        		if (datiPagina[6] == "N") {
-//        			$("#sottocontiNo_mod").attr("checked", "checked").button("refresh");
-//        		}    			
-//    		}
-//
-//    		$("#numrigabilancio_mod").val(datiPagina[7]);
-//    		$("#slider-posizione-bilancio_mod").slider( "value", datiPagina[7] );	
-//    		
-//    		$( "#modifica-conto-form" ).dialog( "open" );
-//        }
-//    }
-//    xmlhttp.open("GET", "modificaContoFacade.class.php?modo=start&codconto=" + codconto, true);
-//    xmlhttp.send();				
-//}
-//
-//$( "#modifica-conto-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 750,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				$(this).dialog('close');
-//				$("#modificaConto").submit();
-//			}
-//		},
-//		{
-//			text: "Nuovo sottoconto",
-//			click: function() {
-//				$( "#nuovo-sottoconto-form" ).dialog( "open" );
-//				event.preventDefault();
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//				$("#annullaModificaConto").submit();
-//			}
-//		}
-//	]
-//});
-//
-//
-//$( "#nuovo-sottoconto-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 600,
-//	height: 200,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				
-//				var codsottoconto = $("#codsottoconto").val();
-//				var dessottoconto = $("#dessottoconto").val();
-//				
-//				var xmlhttp = new XMLHttpRequest();
-//			    xmlhttp.onreadystatechange = function() {
-//			        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//			        	var sottocontiTable = xmlhttp.responseText;
-//		        		$("#sottocontiTable").html(sottocontiTable);
-//		        		$("#sottocontiTable_mod").html(sottocontiTable);
-//			        }
-//			    }
-//			    xmlhttp.open("GET", "aggiungiNuovoSottocontoFacade.class.php?modo=start&codsottoconto=" + codsottoconto + "&dessottoconto=" + dessottoconto, true);
-//			    xmlhttp.send();				
-//
-//				$( this ).dialog( "close" );           				
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-//
-////---------------------------------------------------------------------------------				
-//
-//
-////---------------------------------------------------------------------------------				
+//---------------------------------------------------------------------

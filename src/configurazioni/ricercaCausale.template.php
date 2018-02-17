@@ -38,7 +38,14 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
 		if ($causale->getQtaCausali() > 0) {
 
 			$risultato_ricerca =
-			"<table id='causali' class='display'>" .
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<th>%ml.codcausale%</th>" .
 			"		<th>%ml.descausale%</th>" .
@@ -48,25 +55,25 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
 			"		<th></th>" .
 			"		<th></th>" .
 			"	</thead>" .
-			"	<tbody>";
-
+			"	<tbody id='myTable'>";
+			
 			foreach($causale->getCausali() as $row) {
 
-				if ($row[self::NUM_CONTI_CAUSALE] == 0) {
-					$class = "class='errato'";
+				if ($row[self::NUM_REG_CAUSALE] == 0) {
+					$class = "class='bg-danger'";
 				}
 				else {
 					$class = "class=''";
 				}
 
 				if ($row[self::NUM_REG_CAUSALE] == 0) {
-					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_CAUSALE_ICON;
-					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . self::CONFIGURA_CAUSALE_ICON;
-					$bottoneCancella = self::CANCELLA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::CANCELLA_CAUSALE_ICON;
+					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_ICON;
+					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . self::CONFIGURA_ICON;
+					$bottoneCancella = self::CANCELLA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::CANCELLA_ICON;
 				}
 				else {
-					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_CAUSALE_ICON;
-					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . self::CONFIGURA_CAUSALE_ICON;
+					$bottoneModifica = self::MODIFICA_CAUSALE_HREF . trim($row[$causale::COD_CAUSALE]) . self::MODIFICA_ICON;
+					$bottoneConfigura = self::CONFIGURA_CAUSALE_HREF  . trim($row[$causale::COD_CAUSALE]) . self::CONFIGURA_ICON;
 					$bottoneCancella = "&nbsp;";
 				}
 
@@ -75,10 +82,10 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
 				"	<td>" . trim($row[$causale::COD_CAUSALE]) . "</td>" .
 				"	<td>" . trim($row[$causale::DES_CAUSALE]) . "</td>" .
 				"	<td>" . trim($row[$causale::CAT_CAUSALE]) . "</td>" .
-				"	<td>" . trim($row[self::NUM_REG_CAUSALE]) . "</td>" .
-				"	<td id='icons'>" . $bottoneModifica . "</td>" .
-				"	<td id='icons'>" . $bottoneConfigura . "</td>" .
-				"	<td id='icons'>" . $bottoneCancella . "</td>" .
+				"	<td " . $class . ">" . trim($row[self::NUM_REG_CAUSALE]) . "</td>" .
+				"	<td>" . $bottoneModifica . "</td>" .
+				"	<td>" . $bottoneConfigura . "</td>" .
+				"	<td>" . $bottoneCancella . "</td>" .
 				"</tr>";
 			}
 			$risultato_ricerca .= "</tbody></table>";
@@ -87,12 +94,8 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE],
-				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%causale%' => $causale->getCodCausale(),
-				'%risultato_ricerca%' => $risultato_ricerca,
-				'%codcausale%' => $causale->getCodCausale(),
-				'%descausale%' => $causale->getDesCausale(),
-				'%catcausale%' => $causale->getCatCausale()
+				'%risultato_ricerca%' => $risultato_ricerca
 		);
 
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

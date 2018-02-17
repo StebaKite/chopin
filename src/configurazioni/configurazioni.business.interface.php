@@ -14,14 +14,15 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 
  	const RICERCA_CONTO = "Obj_ricercaconto";
  	const MODIFICA_CONTO = "Obj_modificaconto";
+ 	const VISUALIZZA_CONTO = "Obj_visualizzaconto";
  	const CANCELLA_CONTO = "Obj_cancellaconto";
  	const CREA_CONTO = "Obj_creaconto";
  	const CONTROLLA_CONTO = "Obj_controllaconto";
  	const CANCELLA_SOTTOCONTO = "Obj_cancellasottoconto";
     const AGGIUNGI_SOTTOCONTO = "Obj_aggiungisottoconto";
     const TOGLI_SOTTOCONTO = "Obj_toglisottoconto";
-    const ESTRAI_MASTRINO = "Obj_estraimastrino";
-    const ESTRAI_PDF_MASTRINO = "Obj_estraipdfmastrino";
+    const ESTRAI_MOVIMENTI_SOTTOCONTO = "Obj_estraimovimentisottoconto";
+    const ESPORTA_MOVIMENTI_SOTTOCONTO = "Obj_esportamovimentisottoconto";
     const RICERCA_CAUSALE = "Obj_ricercacausale";
     const CREA_CAUSALE = "Obj_creacausale";
     const CANCELLA_CAUSALE = "Obj_cancellacausale";
@@ -37,6 +38,7 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
     // Files XML
     
     const XML_CONTO = "/configurazioni/xml/conto.xml";
+    const XML_SOTTOCONTO = "/configurazioni/xml/sottoconto.xml";
     
 	// Actions
 
@@ -45,7 +47,7 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 // 	const AZIONE_GENERA_MASTRINO = "../configurazioni/generaMastrinoContoFacade.class.php?modo=go";
 // 	const AZIONE_ESTRAI_PDF_MASTRINO = "../configurazioni/estraiPdfMastrinoContoFacade.class.php?modo=go";
 // 	const AZIONE_CREA_CONTO = "../configurazioni/creaContoFacade.class.php?modo=go";
-// 	const AZIONE_RICERCA_CAUSALE = "../configurazioni/ricercaCausaleFacade.class.php?modo=go";
+ 	const AZIONE_RICERCA_CAUSALE = "../configurazioni/ricercaCausaleFacade.class.php?modo=go";
 // 	const AZIONE_CREA_CAUSALE = "../configurazioni/creaCausaleFacade.class.php?modo=go";
 // 	const AZIONE_RICERCA_PROGRESSIVO_FATTURA = "../configurazioni/ricercaProgressivoFatturaFacade.class.php?modo=go";
 // 	const AZIONE_MODIFICA_PROGRESSIVO_FATTURA = "../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go";
