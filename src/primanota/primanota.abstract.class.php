@@ -4,8 +4,25 @@ require_once 'nexus6.abstract.class.php';
 require_once 'primanota.presentation.interface.php';
 require_once 'lavoroPianificato.class.php';
 
-abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPresentationInterface {
-
+abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPresentationInterface
+{
+	
+	// Bottoni
+	
+	const AGGIUNGI_FATTURA_PAGATA_HREF = "<a onclick='aggiungiFatturaPagata(";
+	const AGGIUNGI_FATTURA_INCASSATA_HREF = "<a onclick='aggiungiFatturaIncassata(";
+	const AGGIUNGI_FATTURA_PAGATA_HREF = "<a onclick='aggiungiFatturaPagata(";
+	const RIMUOVI_FATTURA_PAGATA_HREF = "<a onclick='rimuoviFatturaPagata(";
+	const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
+	const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = '<a onclick="cancellaDettaglioNuovaRegistrazione(';
+	
+	
+	
+	
+	
+	
+	
+	
 	// Query ---------------------------------------------------------------
 
 	public static $queryCreaRegistrazione = "/primanota/creaRegistrazione.sql";
@@ -75,9 +92,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function refreshTabellaFattureDaPagare($scadenzaFornitore)
 	{
-	    $aggiungi_fattura_pagata_href = "<a onclick='aggiungiFatturaPagata(";
-	    $aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
-	    
 	    $thead = "";
 	    $tbody = "";
 	    $tableIsNotEmpty = false;
@@ -87,7 +101,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare)
         {
             $parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-            $bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $parms . $aggiungi_icon;
+            $bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . self::INCLUDI_ICON;
 
             $fatturaPagataNotExist = true;
             foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
@@ -135,9 +149,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function refreshTabellaFattureDaIncassare($scadenzaCliente)
 	{
-	    $aggiungi_fattura_incassata_href = "<a onclick='aggiungiFatturaIncassata(";
-	    $aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
-	    
 	    $thead = "";
 	    $tbody = "";
 	    $tableIsNotEmpty = false;
@@ -147,7 +158,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	    foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare)
 	    {
 	        $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
-	        $bottoneAggiungiFatturaIncassata = $aggiungi_fattura_incassata_href . $parms . $aggiungi_icon;
+	        $bottoneAggiungiFatturaIncassata = self::AGGIUNGI_FATTURA_INCASSATA_HREF . $parms . self::INCLUDI_ICON;
 	        
 	        $fatturaIncassataNotExist = true;
 	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
@@ -196,9 +207,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function makeTabellaFattureDaPagare($scadenzaFornitore)
 	{
-		$aggiungi_fattura_pagata_href = "<a onclick='aggiungiFatturaPagata(";
-		$aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
-		
 		$thead = "";
 		$tbody = "";
 		$tableIsNotEmpty = false;
@@ -208,7 +216,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 		foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare)
 		{
 			$parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-			$bottoneAggiungiFatturaPagata = $aggiungi_fattura_pagata_href . $parms . $aggiungi_icon;
+			$bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . self::INCLUDI_ICON;
 			
 			$fatturaPagataNotExist = true;
 			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
@@ -255,10 +263,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	}	    
 	
 	public function makeTabellaFatturePagate($scadenzaFornitore)
-	{
-		$rimuovi_fattura_pagata_href = "<a onclick='rimuoviFatturaPagata(";
-		$rimuovi_icon = ")'><span class='glyphicon glyphicon-triangle-right'></span></a>";
-		
+	{		
 		$thead = "";
 		$tbody = "";
 		
@@ -279,7 +284,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 			foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata)
 			{
 				$parms = $unaScadenzaPagata[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-				$bottoneRimuoviFatturaPagata = $rimuovi_fattura_pagata_href . $parms . $rimuovi_icon;
+				$bottoneRimuoviFatturaPagata = self::RIMUOVI_FATTURA_PAGATA_HREF . $parms . self::ESCLUDI_ICON;
 				
 				$tbody .=
 				"<tr>" .
@@ -297,9 +302,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function makeTabellaFattureDaIncassare($scadenzaCliente)
 	{
-	    $aggiungi_fattura_incassata_href = "<a onclick='aggiungiFatturaIncassata(";
-	    $aggiungi_icon = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
-	    
 	    $thead = "";
 	    $tbody = "";
 	    $tableIsNotEmpty = false;
@@ -309,7 +311,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	    foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare)
 	    {
 	        $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
-	        $bottoneAggiungiFatturaIncassata = $aggiungi_fattura_incassata_href . $parms . $aggiungi_icon;
+	        $bottoneAggiungiFatturaIncassata = self::AGGIUNGI_FATTURA_INCASSATA_HREF . $parms . self::INCLUDI_ICON;
 	        
 	        $fatturaIncassataNotExist = true;
 	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
@@ -356,10 +358,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	}
 	
 	public function makeTabellaFattureIncassate($scadenzaCliente)
-	{
-	    $rimuovi_fattura_incassata_href = "<a onclick='rimuoviFatturaIncassata(";
-	    $rimuovi_icon = ")'><span class='glyphicon glyphicon-triangle-right'></span></a>";
-	    
+	{	    
 	    $thead = "";
 	    $tbody = "";
 	    
@@ -380,7 +379,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	        foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata)
 	        {
 	            $parms = $unaScadenzaIncassata[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
-	            $bottoneRimuoviFatturaIncassata = $rimuovi_fattura_incassata_href . $parms . $rimuovi_icon;
+	            $bottoneRimuoviFatturaIncassata = self::RIMUOVI_FATTURA_INCASSATA_HREF . $parms . self::ESCLUDI_ICON;
 	            
 	            $tbody .=
 	            "<tr>" .
@@ -464,8 +463,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione)
 	{
-		$cancella_dettaglio_nuova_registrazione_href = '<a onclick="cancellaDettaglioNuovaRegistrazione(';
-
 		$thead = "";
 		$tbody = "";
 
@@ -490,7 +487,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 				$cancella_parms  = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
 				$cancella_parms .= trim($contoComposto[0]);
 				
-				$bottoneCancella = $cancella_dettaglio_nuova_registrazione_href .  $cancella_parms . ')"><span class="glyphicon glyphicon-trash"></span></a>';
+				$bottoneCancella = self::CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF .  $cancella_parms . self::CANCELLA_ICON;
 
 				$modifica_parms  = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
 				$modifica_parms .= trim($codConto[0]) . ",";

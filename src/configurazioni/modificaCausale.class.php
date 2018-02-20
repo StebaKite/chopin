@@ -26,17 +26,21 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
 	{
 		$causale = Causale::getInstance();
 		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 		$db = Database::getInstance();
 
 		$causale->leggi($db);
 		$_SESSION[self::CAUSALE] = serialize($causale);
-
-		$datiPagina =
-		trim($causale->getCodCausale()) . "|" .
-		trim($causale->getDesCausale()) . "|" .
-		trim($causale->getCatCausale());
-
-		echo $datiPagina;
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
+		
+		$replace = array(
+				'%codice%' => trim($causale->getCodCausale()),
+				'%descrizione%' => trim($causale->getDesCausale()),
+				'%categoria%' => trim($causale->getCatCausale()),
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go()
@@ -45,41 +49,11 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 
-		if ($this->controlliLogici($causale)) {
-
-			if ($causale->aggiorna($db)) {
-				$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = self::AGGIORNA_CAUSALE_OK;
-			}
-			else {
-				$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = $_SESSION[self::MESSAGGIO];
-			}
-		}
-		else {
-			$_SESSION[self::MSG_DA_MODIFICA_CAUSALE] = $_SESSION[self::MESSAGGIO];
-		}
+		$causale->aggiorna($db);
 
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();
-	}
-
-	public function controlliLogici($causale)
-	{
-		$esito = TRUE;
-		$msg = "<br>";
-
-		if ($causale->getDesCausale() == "") {
-			$msg .= self::ERRORE_DESCRIZIONE_CAUSALE;
-			$esito = FALSE;
-		}
-
-		if ($msg != "<br>") {
-			$_SESSION[self::MESSAGGIO] = $msg;
-		}
-		else {
-			unset($_SESSION[self::MESSAGGIO]);
-		}
-		return $esito;
 	}
 }
 

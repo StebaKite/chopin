@@ -27,16 +27,19 @@ class IncludiContoCausale extends ConfigurazioniAbstract implements Configurazio
 		$configurazioneCausale = ConfigurazioneCausale::getInstance();
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
-
+		$array = $utility->getConfig();
+		
 		$configurazioneCausale->inserisciConto($db);
-
 		$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
-
-		$datiPagina =
-		trim($this->makeTableContiConfigurati($configurazioneCausale)) . "|" .
-		trim($this->makeTableContiConfigurabili($configurazioneCausale));
-
-		echo $datiPagina;
+	
+		$risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
+		
+		$replace = array(
+				'%conticonfigurati%' => trim($this->makeTableContiConfigurati($configurazioneCausale)),
+				'%contidisponibili%' => trim($this->makeTableContiConfigurabili($configurazioneCausale))
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go() {}

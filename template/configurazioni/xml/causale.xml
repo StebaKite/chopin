@@ -1,0 +1,7 @@
+<causale>
+	<codice>%codice%</codice>
+	<descrizione>%descrizione%</descrizione>
+	<categoria>%categoria%</categoria>
+	<conticonfigurati><![CDATA[%conticonfigurati%]]></conticonfigurati>
+	<contidisponibili><![CDATA[%contidisponibili%]]></contidisponibili>
+</causale>

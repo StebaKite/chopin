@@ -39,6 +39,7 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
     
     const XML_CONTO = "/configurazioni/xml/conto.xml";
     const XML_SOTTOCONTO = "/configurazioni/xml/sottoconto.xml";
+    const XML_CAUSALE = "/configurazioni/xml/causale.xml";
     
 	// Actions
 

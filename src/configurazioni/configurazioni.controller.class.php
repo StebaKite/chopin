@@ -122,13 +122,21 @@ class ConfigurazioniController
  			$causale->setCodCausale($_REQUEST["codcausale_conf"]);
  			$configurazioneCausale->setCodCausale($_REQUEST["codcausale_conf"]);
  		}
-
+ 		
+ 		if (isset($_REQUEST["codconto_conf"])) {
+ 			$configurazioneCausale->setCodConto($_REQUEST["codconto_conf"]);
+ 		}
+ 		
  		if (isset($_REQUEST["codcausale_mod"])) {
  			$causale->setCodCausale($_REQUEST["codcausale_mod"]);
  			$causale->setDesCausale($_REQUEST["descausale_mod"]);
  			$causale->setCatCausale($_REQUEST["catcausale_mod"]);
  		}
-
+ 		
+ 		if (isset($_REQUEST["codcausale_del"])) {
+ 			$causale->setCodCausale($_REQUEST["codcausale_del"]);
+ 		}
+ 		
  		if (isset($_REQUEST["catcliente"])) {
  			$progressivoFattura->setCatCliente($_REQUEST["catcliente"]);
  			$progressivoFattura->setNegProgr($_REQUEST["codnegozio"]);

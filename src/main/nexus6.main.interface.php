@@ -51,8 +51,6 @@ interface MainNexus6Interface {
 	const CONTO_IN_AVERE = "Avere";
 	
 	// Bottoni
-
-	const BOTTONE_ESTRAI_PDF = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
 	
 	const VISUALIZZA_ICON = ")'><span class='glyphicon glyphicon-eye-open'></span></a>";
 	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
@@ -60,6 +58,8 @@ interface MainNexus6Interface {
 	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
 	const LISTA_ICON = ")'><span class='glyphicon glyphicon-list-alt'></span></a>";
 	const CONFIGURA_ICON = ")'><span class='glyphicon glyphicon-wrench'></span></a>";
+	const INCLUDI_ICON = ")'><span class='glyphicon glyphicon-triangle-left'></span></a>";
+	const ESCLUDI_ICON = ")'><span class='glyphicon glyphicon-triangle-right'></span></a>";
 	
 	// Messaggi d'errore comuni
 	

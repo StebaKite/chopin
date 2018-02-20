@@ -99,122 +99,137 @@ $(document).ready(function(){
 	</div>
 </div>
 
+<!-- ---------------- -->
+<!-- MODIFICA CAUSALE -->
+<!-- ---------------- -->
 
+<div class="container">
+	<div class="modal fade" id="modifica-causale-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Causale</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaCausaleForm" action="../configurazioni/modificaCausaleFacade.class.php?modo=go" >
 
-
-
-
-
-
-<!-- 
-		
-<div id="cancella-causale-form" title="Cancella Causale"> 
-	<form method="post" id="cancellaCausale" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
-		<p>Elimino la causale e tutte le sue configurazioni ?</p>
-		<input type="hidden" id="codcausale" name="codcausale">
-  </form>
-</div>
-		
-<div id="nuova-causale-form" title="Nuova Causale"> 
-	<form method="post" id="nuovaCausale" action="../configurazioni/creaCausaleFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.codcausale% :</td>
-					<td class="tooltip"><input type="text" id="codcausale" name="codcausale" size="6" maxlength="4" value='%codcausale%'></td>
-				</tr>
-				<tr>
-					<td>%ml.descausale% :</td>
-					<td class="tooltip"><input type="text" id="descausale" name="descausale" size="70" maxlength="100" value='%descausale%'></td>
-				</tr>
-				<tr>
-					<td>%ml.catcausale% :</td>						
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="generi" name="catcausale" value="GENERI" checked ><label for="generi">%ml.generi%</label>
-							<input type="radio" id="incpag" name="catcausale" value="INCPAG" ><label for="incpag">%ml.incpag%</label>
-							<input type="radio" id="corris" name="catcausale" value="CORRIS" ><label for="corris">%ml.corris%</label>
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+									<div class='input-group' id="codcausale_mod_control_group">
+										<span class="input-group-addon">%ml.codcausale%</span>
+										<input class="form-control" id="codcausale_mod" name="codcausale_mod" type="text" readonly />
+									</div>
+							  	</div>
+							  	<div class="col-sm-8">
+									<div class='input-group' id="descausale_mod_control_group">
+										<span class="input-group-addon">%ml.descausale%</span>
+										<input class="form-control" id="descausale_mod" name="descausale_mod" type="text" maxlength="100" onblur="controllaDescrizione('descausale_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+									<div class="btn-group" data-toggle="buttons">
+										<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_generi_mod" autocomplete="off" value="GENERI" >%ml.generi%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_incpag_mod" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
+									  	<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_corris_mod" autocomplete="off" value="CORRIS" >%ml.corris%</label>
+									</div>						    		
+								</div>	
+							</div>
+							
 						</div>
-					</td>					
-				</tr>								
-			</tbody>
-		</table> 	 
-	</form>
+
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-causale-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
 
-<div id="modifica-causale-form" title="Modifica Causale"> 
-	<form method="post" id="modificaCausale" action="../configurazioni/modificaCausaleFacade.class.php?modo=go" >
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.codcausale% :</td>
-					<td class="tooltip"><input type="text" id="codcausale_mod" name="codcausale_mod" size="6" maxlength="4" readonly="readonly" ></td>
-				</tr>
-				<tr>
-					<td>%ml.descausale% :</td>
-					<td class="tooltip"><input type="text" id="descausale_mod" name="descausale_mod" size="70" maxlength="100" ></td>
-				</tr>
-				<tr>
-					<td>%ml.catcausale% :</td>						
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="generi_mod" name="catcausale_mod" value="GENERI" ><label for="generi_mod">%ml.generi%</label>
-							<input type="radio" id="incpag_mod" name="catcausale_mod" value="INCPAG" ><label for="incpag_mod">%ml.incpag%</label>
-							<input type="radio" id="corris_mod" name="catcausale_mod" value="CORRIS" ><label for="corris_mod">%ml.corris%</label>
+<!-- ---------------- -->
+<!-- CONFIGURA CAUSALE -->
+<!-- ---------------- -->
+
+<div class="container">
+	<div class="modal fade" id="configura-causale-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Configura Causale</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="configuraCausaleForm" action="../configurazioni/configuraCausaleFacade.class.php?modo=go" >
+
+						<div class="well well-sm">
+							<div class="form-group row">
+							  	<div class="col-sm-6">
+							  		<div class="control-group" id="conti_configurati_causale_mod_control_group">
+							    		<label for="conti_configurati_causale_mod">Conti inclusi<small><span class="text-danger" id="conti_configurati_causale_mod_messaggio"></span></small></label>
+										<div class="panel-body scrollable-panel">
+											<table class="table table-bordered table-hover" id="conti_configurati_causale_mod"></table>
+										</div>	
+									</div>	
+							  	</div>
+							  	<div class="col-sm-6">
+							  		<div class="control-group" id="conti_disponibili_causale_mod_control_group">
+							    		<label for="conti_disponibili_causale_mod">Conti disponibili<small><span class="text-danger" id="conti_disponibili_causale_mod_messaggio"></span></small></label>
+										<div class="panel-body scrollable-panel">
+											<table class="table table-bordered table-hover" id="conti_disponibili_causale_mod"></table>
+										</div>	
+									</div>	
+							  	</div>
+							</div>
 						</div>
-					</td>					
-				</tr>					
-			</tbody>
-		</table>	
-	</form>
-</div>			
 
-<div id="configura-causale-form" title="Configura Causale"> 
-	<table class="result">
-		<tbody>
-			<tr>
-				<td align="left" valign="top">
-					<div>
-						<table class="result" id="resultTable">
-							<thead>
-								<tr>
-									<th colspan="3"><h2>%ml.contiInclusi%</h2></th>
-								</tr>
-								<tr>
-									<th align="center" width="60">%ml.conto%</th>
-									<th align="left" width="371">%ml.desconto%</th>
-									<th width="23">&nbsp;</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-					<div class='scroll-config-causali'>
-						<table id="elencoContiConfigurati"></table>						
-					</div>	
-				</td>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				<td align="left" valign="top">
-					<div>
-						<table class="result" id="resultTable">
-							<thead>
-								<tr>
-									<th colspan="3"><h2>%ml.contiDisponibili%</h2></th>
-								</tr>
-								<tr>
-									<th width="20">&nbsp;</th>
-									<th align="center" width="60">%ml.conto%</th>
-									<th align="left" width="359">%ml.desconto%</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-					<div class='scroll-config-causali'>
-						<table id="elencoContiDisponibili"></table>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-configura-causale-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
 </div>
- -->
- 
+
+<!-- --------------------- -->
+<!-- CANCELLAZIONE CAUSALE -->
+<!-- --------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="cancella-causale-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Cancella causale</h4>
+	        	</div>
+	        	<div class="modal-body">	        		        	
+					<form method="post" id="cancellaCausaleForm" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
+						<p>Elimino la causale e la sua configurazione ?</p>
+						<input type="hidden" id="codcausale_del" name="codcausale_del">
+			        </form>
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-causale-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- --------- -->
+<!-- FINE DIVS -->
+<!-- --------- -->

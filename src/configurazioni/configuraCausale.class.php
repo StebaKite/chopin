@@ -2,16 +2,13 @@
 
 require_once 'configurazioni.abstract.class.php';
 require_once 'configurazioni.business.interface.php';
-require_once 'configuraCausale.template.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'configuraCausale.class.php';
 require_once 'configurazioneCausale.class.php';
 
-class ConfiguraCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
-
-	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati";
-	const ERRORE_SCRITTURA = "Errore fatale durante la scrittura dei dati";
+class ConfiguraCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
+{
 
 	function __construct()
 	{
@@ -31,17 +28,19 @@ class ConfiguraCausale extends ConfigurazioniAbstract implements ConfigurazioniB
 		$configurazioneCausale = ConfigurazioneCausale::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
 		$this->refreshContiConfigurati($db, $configurazioneCausale);
 		$this->refreshContiConfigurabili($db, $configurazioneCausale);
 
-		$_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
-
-		$datiPagina =
-		trim($this->makeTableContiConfigurati($configurazioneCausale)) . "|" .
-		trim($this->makeTableContiConfigurabili($configurazioneCausale));
-
-		echo $datiPagina;
+		$risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
+		
+		$replace = array(
+				'%conticonfigurati%' => trim($this->makeTableContiConfigurati($configurazioneCausale)),
+				'%contidisponibili%' => trim($this->makeTableContiConfigurabili($configurazioneCausale))
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go() {}

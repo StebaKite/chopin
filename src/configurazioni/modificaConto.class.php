@@ -10,25 +10,25 @@ require_once 'conto.class.php';
 require_once 'sottoconto.class.php';
 
 class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
-
+	
 	function __construct()
 	{
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
+		
 		$this->testata = $this->root . $this->array[self::TESTATA];
 		$this->piede = $this->root . $this->array[self::PIEDE];
 		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
 		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
-
+	
 	public function getInstance()
 	{
 		if (!isset($_SESSION[self::MODIFICA_CONTO])) $_SESSION[self::MODIFICA_CONTO] = serialize(new ModificaConto());
 		return unserialize($_SESSION[self::MODIFICA_CONTO]);
 	}
-
+	
 	public function start()
 	{
 		$conto = Conto::getInstance();
@@ -36,10 +36,10 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
+		
 		$conto->leggi($db);
 		$_SESSION[self::CONTO] = serialize($conto);
-
+		
 		$sottoconto->setCodConto($conto->getCodConto());
 		$sottoconto->leggi($db);
 		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
@@ -59,27 +59,27 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
 		echo $utility->tailTemplate($template);
 	}
-
+	
 	public function go() {
-
+		
 		$conto = Conto::getInstance();
 		$sottoconto = Sottoconto::getInstance();
 		$utility = Utility::getInstance();
-
+		
 		$this->aggiornaConto($utility, $conto, $sottoconto);
-
+		
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();
 	}
-
+	
 	public function aggiornaConto($utility, $conto, $sottoconto) {
-
+		
 		$db = Database::getInstance();
 		$db->beginTransaction();
-
+		
 		if ($conto->aggiorna($db)) {
-
+			
 			foreach ($sottoconto->getSottoconti() as $unSottoconto) {
 				if ($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO] == null) {
 					$sottoconto->setCodConto($conto->getCodConto());
@@ -89,7 +89,7 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 					$sottoconto->inserisci($db);
 				}
 			}
-
+			
 			$sottoconto->preparaNuoviSottoconti();
 			$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 			$db->commitTransaction();

@@ -19,8 +19,7 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
 
 	const CANCELLA_SOTTOCONTO_HREF = "<a onclick='cancellaSottoconto(";
 	const MODIFICA_GRUPPO_SOTTOCONTO_HREF = "<a onclick='modificaGruppoSottoconto(";
-	const ESTRAI_MOVIMENTI_SOTTOCONTO_HREF = "<a onclick='estraiMovimentiSottoconto(";
-	
+	const ESTRAI_MOVIMENTI_SOTTOCONTO_HREF = "<a onclick='estraiMovimentiSottoconto(";	
 	const ESCLUDI_CONTO_HREF = "<a onclick='escludiConto(";
 	const INCLUDI_CONTO_HREF = "<a onclick='includiConto(";
 
@@ -125,46 +124,68 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
 	
 	public function makeTableContiConfigurati($configurazioneCausale)
 	{
-		if ($configurazioneCausale->getQtaContiConfigurati() > 0) {
-			$elencoContiConfigurati = "<table class='result' id='elencoContiConfigurati'><tbody>";
+		$thead = "";
+		$tbody = "";
+		
+		if ($configurazioneCausale->getQtaContiConfigurati() > 0)
+		{
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th>Conto</th>" .
+			"		<th>Descrizione</th>" .
+			"		<th>&nbsp;</th>" .
+			"	</tr>" .
+			"</thead>";
+			
 			foreach ($configurazioneCausale->getContiConfigurati() as $row) {
 
-				$bottoneEscludi = self::ESCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::ESCLUDI_CONTO_ICON;
+				$bottoneEscludi = self::ESCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::ESCLUDI_ICON;
 
-				$elencoContiConfigurati .= "<tr " . $class . ">";
-				$elencoContiConfigurati .= "<td align='center' width='68'>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>";
-				$elencoContiConfigurati .= "<td align='left' width='400'>" . $row[Conto::DES_CONTO] . "</td>";
-				$elencoContiConfigurati .= "<td width='20' id='icons'>" . $bottoneEscludi . "</td>";
-				$elencoContiConfigurati .= "</tr>";
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>" .
+				"	<td>" . $row[Conto::DES_CONTO] . "</td>" .
+				"	<td>" . $bottoneEscludi . "</td>" .
+				"</tr>";
 			}
-			$elencoContiConfigurati .= "</tbody></table></div>";
+			$tbody .= "</tbody>";
 		}
-		else {
-			$elencoContiConfigurati = "<p>La causale non ha conti configurati</p>";
-		}
-		return $elencoContiConfigurati;
+		return $thead . $tbody;
 	}
 
 	public function makeTableContiConfigurabili($configurazioneCausale)
 	{
-		if ($configurazioneCausale->getQtaContiConfigurabili() > 0) {
-			$elencoContiConfigurabili = "<table class='result' id='elencoContiDisponibili'><tbody>";
+		$thead = "";
+		$tbody = "";
+				
+		if ($configurazioneCausale->getQtaContiConfigurabili() > 0)
+		{
+			$tbody = "<tbody>";
+			$thead =
+			"<thead>" .
+			"	<tr>" .
+			"		<th>&nbsp;</th>" .
+			"		<th>Conto</th>" .
+			"		<th>Descrizione</th>" .
+			"	</tr>" .
+			"</thead>";
+			
 			foreach ($configurazioneCausale->getContiConfigurabili() as $row) {
 
-				$bottoneIncludi = self::INCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::INCLUDI_CONTO_ICON;
+				$bottoneIncludi = self::INCLUDI_CONTO_HREF . $row[ConfigurazioneCausale::COD_CONTO] . self::INCLUDI_ICON;
 
-				$elencoContiConfigurabili .= "<tr " . $class . ">";
-				$elencoContiConfigurabili .= "<td width='25' id='icons'>" . $bottoneIncludi . "</td>";
-				$elencoContiConfigurabili .= "<td align='center' width='68'>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>";
-				$elencoContiConfigurabili .= "<td align='left' width='400'>" . $row[Conto::DES_CONTO] . "</td>";
-				$elencoContiConfigurabili .= "</tr>";
+				$tbody .=
+				"<tr>" .
+				"	<td>" . $bottoneIncludi . "</td>" .
+				"	<td>" . $row[ConfigurazioneCausale::COD_CONTO] . "</td>" .
+				"	<td>" . $row[Conto::DES_CONTO] . "</td>" .
+				"</tr>";
 			}
-			$elencoContiConfigurabili .= "</tbody></table></div>";
+			$tbody .= "</tbody>";
 		}
-		else {
-			$elencoContiConfigurabili = "<p>Non ci sono conti disponibili da includere nella causale</p>";
-		}
-		return $elencoContiConfigurabili;
+		return $thead . $tbody;
 	}
 
 	public function refreshContiConfigurati($db, $configurazioneCausale)
