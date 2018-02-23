@@ -1,0 +1,7 @@
+<progressivo>
+	<categoria>%categoria%</categoria>
+	<negozio>%negozio%</negozio>
+	<numfatturaultimo>%numfatturaultimo%</numfatturaultimo>
+	<notatestata><![CDATA[%notatestata%]]></notatestata>
+	<notapiede><![CDATA[%notapiede%]]></notapiede>
+</progressivo>

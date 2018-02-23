@@ -1,75 +1,112 @@
 <body>
 <script type="text/javascript">
 
-$(document).ready( function () {
-    $('#progressivi').dataTable( {
-    	"order": [[0, 'asc']],
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": true },
-       	    {"targets": 1, "orderable": true },
-    	    {"targets": 2, "orderable": true },
-    	    {"targets": 3, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+$(document).ready(function(){
+	
+	$(".datepicker").datepicker();
+	
+	$("#myInput").on("keyup", 
+		function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(
+				function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				}
+			);
+		}
+	);				
+});
 
 </script>
-
-<div id="body">
-	<div id="main">
-		<table style="width:100%;">
-			<tbody>
-				<tr>
-					<td align="left"><h2>%titoloPagina%</h2></td>
-					<td align="right"><button id="nuovo-progressivo" class="button">%ml.nuovoprogressivo%</button></td>
-				</tr>
-			</tbody>
-		</table>	
-		<br>
-		%risultato_ricerca%		
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+				<div class="col-sm-5">
+					<div class="btn-group pull-right">				
+<!-- 						<button id="nuovoProgressivo" class="btn btn-primary btn-default">%ml.nuovoprogressivo%</button> -->
+					</div>	
+				</div>			
+			</div>
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
 	</div>
+</div>
 
-	<div id="modifica-progressivo-form" title="Modifica Progressivo"> 
-		<form method="post" id="modificaProgressivo" action="../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.categoria% :</td>
-						<td class="tooltip"><input type="text" id="catcliente" name="catcliente" size="10" maxlength="4" readonly="readonly" ></td>
-					</tr>
-					<tr>
-						<td>%ml.negozio% :</td>
-						<td class="tooltip"><input type="text" id="codnegozio" name="codnegozio" size="10" maxlength="3" readonly="readonly" ></td>
-					</tr>
-					<tr>
-						<td>%ml.numfatt% :</td>
-						<td class="tooltip"><input type="text" id="numfatt" name="numfatt" size="10" maxlength="10" ></td>
-					</tr>
-					<tr>
-						<td>%ml.notatesta% :</td>
-						<td class="tooltip"><textarea id="notatesta" name="notatesta" rows="4" cols="90" title="%ml.notafatturaTip%"></textarea></td>
-					</tr>
-					<tr>
-						<td>%ml.notapiede% :</td>
-						<td class="tooltip"><textarea id="notapiede" name="notapiede" rows="4" cols="90" title="%ml.notafatturaTip%"></textarea></td>
-					</tr>
-				</tbody>
-			</table>
-		</form>	
-	</div>	
-	
+<!-- -------------------- -->
+<!-- MODIFICA PROGRESSIVO -->
+<!-- -------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-progressivo-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Progressivo</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaProgressivoForm" action="../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go" >
+
+						<div class="well well-sm">
+						
+							<div class="form-group row">
+							  	<div class="col-sm-4">
+									<div class='input-group' id="catcliente_mod_control_group">
+										<span class="input-group-addon">%ml.categoria%</span>
+										<input class="form-control" id="catcliente_mod" name="catcliente_mod" type="text" readonly />
+									</div>
+							  	</div>
+							  	<div class="col-sm-4">
+									<div class='input-group' id="codnegozio_mod_control_group">
+										<span class="input-group-addon">%ml.negozio%</span>
+										<input class="form-control" id="codnegozio_mod" name="codnegozio_mod" type="text" readonly />
+									</div>
+							  	</div>
+							  	<div class="col-sm-4">
+									<div class='input-group' id="numfatt_mod_control_group">
+										<span class="input-group-addon">%ml.numfatt%</span>
+										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" maxlength="10" />
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+									<div class='input-group' id="numfatt_mod_control_group">
+										<span class="input-group-addon">%ml.notatesta%</span>
+										<textarea class="form-control" id="notatesta_mod" name="notatesta_mod" rows="4"></textarea>
+									</div>
+							  	</div>													  	
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+									<div class='input-group' id="numfatt_mod_control_group">
+										<span class="input-group-addon">%ml.notapiede%</span>
+										<textarea class="form-control" id="notapiede_mod" name="notapiede_mod" rows="4"></textarea>
+									</div>
+							  	</div>													  	
+							</div>							
+						</div>
+
+					</form>
+	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-progressivo-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>

@@ -93,9 +93,6 @@ abstract class Nexus6Abstract {
 		$array = $utility->getConfig();
 		
 		$ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment ( $array, $_SESSION );
-		
-// 		if ($ambiente == "TEST") {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_test.png' style='width: 100%;'/></li>";}
-// 		else {$menu = "<li style='width: 70px;'><img src='../../images/unicorn_nexus8_4.0_prod.png' style='width: 100%;'/></li>";}
 
 		// H o m e --------------------------------------
 
@@ -172,17 +169,17 @@ abstract class Nexus6Abstract {
 
 		// S c a d e n z e ------------------------------------------------------------
 
-// 		$scadenze = "";
+		$scadenze = "";
 
-// 		if ($array["scadenze"] == "Y")
-// 		{
-// 			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
-// 			$scadenze .= "<ul>";
-// 			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
-// 			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
-// 			$scadenze .= "</ul></li>";
-// 		}
-// 		$menu .= $scadenze;
+		if ($array["scadenze"] == "Y")
+		{
+			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
+			$scadenze .= "<ul>";
+			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
+//			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
+			$scadenze .= "</ul></li>";
+		}
+		$menu .= $scadenze;
 
 		// R i e p i o l o g h i ------------------------------------------------------------
 

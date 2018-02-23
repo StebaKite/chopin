@@ -94,7 +94,6 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE],
-				'%causale%' => $causale->getCodCausale(),
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 

@@ -137,12 +137,12 @@ class ConfigurazioniController
  			$causale->setCodCausale($_REQUEST["codcausale_del"]);
  		}
  		
- 		if (isset($_REQUEST["catcliente"])) {
- 			$progressivoFattura->setCatCliente($_REQUEST["catcliente"]);
- 			$progressivoFattura->setNegProgr($_REQUEST["codnegozio"]);
- 			$progressivoFattura->setNumFatturaUltimo($_REQUEST["numfatt"]);
- 			$progressivoFattura->setNotaTestaFattura($_REQUEST["notatesta"]);
- 			$progressivoFattura->setNotaPiedeFattura($_REQUEST["notapiede"]);
+ 		if (isset($_REQUEST["catcliente_mod"])) {
+ 			$progressivoFattura->setCatCliente($_REQUEST["catcliente_mod"]);
+ 			$progressivoFattura->setNegProgr($_REQUEST["codnegozio_mod"]);
+ 			$progressivoFattura->setNumFatturaUltimo($_REQUEST["numfatt_mod"]);
+ 			$progressivoFattura->setNotaTestaFattura($_REQUEST["notatesta_mod"]);
+ 			$progressivoFattura->setNotaPiedeFattura($_REQUEST["notapiede_mod"]);
  		}
 
 		// Serializzo in sessione gli oggetti modificati

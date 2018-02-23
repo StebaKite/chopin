@@ -52,8 +52,6 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
 			$_SESSION[self::MESSAGGIO] = "Trovate " . $causale->getQtaCausali() . " causali";
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
 			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
@@ -91,7 +89,6 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
 	public function preparaPagina($ricercaCausaleTemplate) {
 
 		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_CAUSALE;
-		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
 		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaCausale%";
 	}
 }

@@ -14,11 +14,6 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 		$this->utility = Utility::getInstance();
 		$this->array = $this->utility->getConfig();
-
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
 	public function getInstance()
@@ -33,18 +28,22 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
 		$progressivoFattura = ProgressivoFattura::getInstance();
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
 
 		$progressivoFattura->leggi($db);
 		$_SESSION[self::PROGRESIVO_FATTURA] = serialize($progressivoFattura);
-
-		$datiPagina =
-		$progressivoFattura->getCatCliente() . "|" .
-		$progressivoFattura->getNegProgr() . "|" .
-		$progressivoFattura->getNumFatturaUltimo() . "|" .
-		$progressivoFattura->getNotaTestaFattura() . "|" .
-		$progressivoFattura->getNotaPiedeFattura();
-
-		echo $datiPagina;
+		
+		$risultato_xml = $this->root . $array['template'] . self::XML_PROGRESSIVO;
+		
+		$replace = array(
+				'%categoria%' => trim($progressivoFattura->getCatCliente()),
+				'%negozio%' => trim($progressivoFattura->getNegProgr()),
+				'%numfatturaultimo%' => trim($progressivoFattura->getNumFatturaUltimo()),
+				'%notatestata%' => trim($progressivoFattura->getNotaTestaFattura()),
+				'%notapiede%' => trim($progressivoFattura->getNotaPiedeFattura()),
+		);
+		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+		echo $utility->tailTemplate($template);
 	}
 
 	public function go()
@@ -53,35 +52,12 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 
-		if ($this->controlliLogici($progressivoFattura)) {
-
-			// Aggiornamento del DB ------------------------------
-
-			if ($progressivoFattura->update($db)) {
-				$_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO] = self::AGGIORNA_PROGRESSIVO_OK;
-			}
-		}
-		else {
-			$_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO] = $_SESSION[self::MESSAGGIO];
-		}
-
+		$progressivoFattura->update($db);
+		$progressivoFattura->load($db);
+		
 		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaProgressivoFattura::getInstance()));
 		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 		$controller->start();
-	}
-
-	public function controlliLogici($progressivoFattura) {
-
-		$esito = TRUE;
-		$msg = "<br>";
-
-		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
-		}
-		else {
-			unset($_SESSION["messaggio"]);
-		}
-		return $esito;
 	}
 }
 

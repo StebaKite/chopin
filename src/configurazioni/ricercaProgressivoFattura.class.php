@@ -39,8 +39,8 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
+		
 		$ricercaProgressivoFatturaTemplate = RicercaProgressivoFatturaTemplate::getInstance();
-
 		$this->preparaPagina($ricercaProgressivoFatturaTemplate);
 
 		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
@@ -49,55 +49,24 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
 
 		if ($this->refreshProgressiviFattura($db, $progressivoFattura)) {
 
-			$ricercaProgressivoFatturaTemplate->displayPagina();
+			$_SESSION[self::MESSAGGIO] = "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
 
-			if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
-				unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_CREAZIONE_PROGRESSIVO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE_PROGRESSIVO] . "<br>" . "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
-				unset($_SESSION[self::MSG_DA_CREAZIONE_PROGRESSIVO]);
-			}
-			elseif (isset($_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO])) {
-				$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO] . "<br>" . "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
-				unset($_SESSION[self::MSG_DA_MODIFICA_PROGRESSIVO]);
-			}
-			else {
-				$_SESSION[self::MESSAGGIO] = "Trovati " . $progressivoFattura->getQtaProgressiviFattura() . " progressivi fattura";
-			}
-
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-
-			if ($progressivoFattura->getQtaProgressiviFattura() > 0) {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-			}
-			else {
-				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			}
-
-			echo $utility->tailTemplate($template);
-
-			include($this->piede);
+			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+			$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);			
 		}
 		else {
-
-			$this->preparaPagina($ricercaProgressivoFatturaTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$ricercaProgressivoFatturaTemplate->displayPagina();
-
+			
 			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
-
+			
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 			echo $utility->tailTemplate($template);
-
-			include($this->piede);
 		}
+		
+		$ricercaProgressivoFatturaTemplate->displayPagina();
+		
+		include($this->piede);
 	}
 
 	private function refreshProgressiviFattura($db, $progressivoFattura) {
@@ -108,7 +77,6 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
 				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
 				return false;
 			}
-			$_SESSION[self::PROGRESIVO_FATTURA] = serialize($progressivoFattura);
 		}
 		return true;
 	}
@@ -116,7 +84,6 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
 	public function preparaPagina($ricercaProgressivoFatturaTemplate) {
 
 		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_PROGRESSIVO_FATTURA;
-		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
 		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaProgressivoFattura%";
 	}
 }

@@ -62,6 +62,7 @@ class ProgressivoFattura implements CoreInterface {
 			$this->setProgressiviFattura(null);
 			$this->setQtaProgressiviFattura(null);
 		}
+		$_SESSION[self::PROGRESSIVO_FATTURA] = serialize($this);
 		return $result;
 	}
 	

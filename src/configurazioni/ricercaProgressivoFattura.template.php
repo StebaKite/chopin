@@ -38,35 +38,40 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implement
 		if ($progressivoFattura->getQtaProgressiviFattura() > 0) {
 
 			$risultato_ricerca =
-			"<table id='progressivi' class='display'>" .
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<th>%ml.categoria%</th>" .
 			"		<th>%ml.negozio%</th>" .
 			"		<th>%ml.numfatt%</th>" .
 			"		<th></th>" .
 			"	</thead>" .
-			"	<tbody>";
+			"	<tbody id='myTable'>";
 
 			foreach($progressivoFattura->getProgressiviFattura() as $row) {
 
-				$bottoneModifica = self::MODIFICA_PROGRESSIVO_HREF . trim($row[ProgressivoFattura::CAT_CLIENTE]) . ",&apos;" . trim($row[ProgressivoFattura::NEG_PROGR]) . "&apos;" . self::MODIFICA_PROGRESSIVO_ICON;
+				$bottoneModifica = self::MODIFICA_PROGRESSIVO_HREF . trim($row[ProgressivoFattura::CAT_CLIENTE]) . ",&apos;" . trim($row[ProgressivoFattura::NEG_PROGR]) . "&apos;" . self::MODIFICA_ICON;
 
 				$risultato_ricerca .=
 				"<tr>" .
 				"	<td>" . trim($row[CategoriaCliente::DES_CATEGORIA]) . "</td>" .
 				"	<td>" . trim($row[ProgressivoFattura::NEG_PROGR]) . "</td>" .
 				"	<td>" . trim($row[ProgressivoFattura::NUM_FATTURA_ULTIMO]) . "</td>" .
-				"	<td id='icons'>" . $bottoneModifica . "</td>" .
+				"	<td>" . $bottoneModifica . "</td>" .
 				"</tr>";
 			}
-			$risultato_ricerca .= "</tbody></table></div>";
+			$risultato_ricerca .= "</tbody></table>";
 		}
 
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO],
 				'%azione%' => $_SESSION[self::AZIONE],
-				'%elenco_categorie_cliente%' => $_SESSION['elenco_categorie_cliente'],
-				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 
