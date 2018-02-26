@@ -31,20 +31,9 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 
 		$esito = TRUE;
 		$msg = "<br>";
-
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
-
-		if ($scadenzaFornitore->getDatScadenzaDa() == "") {
-			$msg .= self::ERRORE_DATA_INIZIO_RICERCA;
-			$esito = FALSE;
-		}
-
-		if ($scadenzaFornitore->getDatScadenzaA() == "") {
-			$msg .= SELF::ERRORE_DATA_FINE_RICERCA;
-			$esito = FALSE;
-		}
+		
+		// ----------------------------------------------
+		
 
 		// ----------------------------------------------
 
@@ -66,14 +55,19 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_SCADENZE_FORNITORE;
 		$risultato_ricerca = "";
 
-		if ($scadenzaFornitore->getQtaScadenze() > 0)
+		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
 		{
 			$risultato_ricerca =
-			"<table id='scadenze' class='display'>" .
+			"<div class='row'>" .
+			"    <div class='col-sm-4'>" .
+			"        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+			"    </div>" .
+			"    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>" .
+			"<br/>" .
+			"<table class='table table-bordered table-hover'>" .
 			"	<thead>" .
 			"		<tr>" .
-			"			<th></th>" .
-			"			<th></th>" .
 			"			<th>%ml.datscadenza%</th>" .
 			"			<th>%ml.codforn%</th>" .
 			"			<th>%ml.notascadenza%</th>" .
@@ -86,14 +80,14 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 			"			<th></th>" .
 			"		</tr>" .
 			"	</thead>" .
-			"	<tbody>";
+			"	<tbody id='myTable'>";			
 
 			$idfornitore_break = "";
 			$datscadenza_break = "";
 			$totale_fornitore = 0;
 			$totale_scadenze = 0;
 
-			foreach($scadenzaFornitore->getScadenze() as $row) {
+			foreach($scadenzaFornitore->getScadenzeDaPagare() as $row) {
 
 				if (($idfornitore_break == self::EMPTYSTRING) && ($datscadenza_break == self::EMPTYSTRING)) {
 					$idfornitore_break = trim($row[ScadenzaFornitore::ID_FORNITORE]);
@@ -105,67 +99,62 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 					$datscadenza2  = trim($row[ScadenzaFornitore::DAT_SCADENZA_YYYYMMDD]);
 				}
 
-				if (trim($row[Registrazione::STA_REGISTRAZIONE]) == "00") {
-					$class = "class=''";
-					$bottoneModificaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::MODIFICA_REGISTRAZIONE_ICON;
-				}
-				else {
-					$class = "class=''";
-					$bottoneModificaRegistrazione = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::VISUALIZZA_REGISTRAZIONE_ICON;
-				}
+				
+				
+// 				if (trim($row[Registrazione::STA_REGISTRAZIONE]) == "00") {
+// 					$bottoneModificaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
+// 				}
+// 				else {
+// 					$bottoneModificaRegistrazione = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
+// 				}
 
+				
+				
 				if (trim($row[ScadenzaFornitore::NOTA_SCADENZA]) != self::EMPTYSTRING) {$notascadenza = trim($row[ScadenzaFornitore::NOTA_SCADENZA]);}
 				else {$notascadenza = "&ndash;&ndash;&ndash;";}
 
 				if (trim($row[ScadenzaFornitore::TIP_ADDEBITO]) != self::EMPTYSTRING) {$tipaddebito = trim($row[ScadenzaFornitore::TIP_ADDEBITO]);}
 				else {$tipaddebito = self::CAMPO_VUOTO;}
 
+				
+				$bottoneVisualizzaScadenza = self::VISUALIZZA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::VISUALIZZA_ICON;
+				$bottoneModificaScadenza = self::MODIFICA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::MODIFICA_ICON;
+				$bottoneCancellaScadenza = self::CANCELLA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::CANCELLA_ICON;
+				
 				if (trim($row[ScadenzaFornitore::STA_SCADENZA]) == self::SCADENZA_SOSPESA) {
 					$stascadenza = self::CAMPO_VUOTO;
 					$tdclass = self::DATA_KO;
-					$bottoneModificaPagamento = self::EMPTYSTRING;
-					$bottoneCancellaPagamento = self::EMPTYSTRING;
 				}
 
 				if (trim($row[ScadenzaFornitore::STA_SCADENZA]) == self::SCADENZA_APERTA) {
 					$stascadenza = self::SCADENZA_DA_PAGARE;
 					$tdclass = self::DATA_KO;
-					$bottoneModificaPagamento = self::EMPTYSTRING;
-					$bottoneCancellaPagamento = self::EMPTYSTRING;
 				}
 
 				if (trim($row[ScadenzaFornitore::STA_SCADENZA]) == self::SCADENZA_CHIUSA) {
 					$stascadenza = self::SCADENZA_PAGATA;
 					$tdclass = self::DATA_OK;
-					$bottoneModificaPagamento = self::MODIFICA_PAGAMENTO_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . "&idPagamento= " . trim($row[ScadenzaFornitore::ID_PAGAMENTO]) . self::MODIFICA_PAGAMENTO_ICON;
-					$bottoneCancellaPagamento = self::CANCELLA_PAGAMENTO_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . "," . trim($row[ScadenzaFornitore::ID_PAGAMENTO]) . self::CANCELLA_PAGAMENTO_ICON;
 				}
 
 				if (trim($row[ScadenzaFornitore::STA_SCADENZA]) == self::SCADENZA_RIMANDATA) {
 					$stascadenza = self::SCADENZA_POSTICIPATA;
 					$tdclass = self::DATA_CHIUSA;
-					$bottoneModificaPagamento = self::MODIFICA_PAGAMENTO_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . "&idPagamento= " . trim($row[ScadenzaFornitore::ID_PAGAMENTO]) . self::MODIFICA_PAGAMENTO_ICON;
-					$bottoneCancellaPagamento = self::CANCELLA_PAGAMENTO_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . "," . trim($row[ScadenzaFornitore::ID_PAGAMENTO]) . self::CANCELLA_PAGAMENTO_ICON;
 				}
-
-				$bottoneEstraiPdf = self::BOTTONE_ESTRAI_PDF;
 
 				if ((trim($row[ScadenzaFornitore::ID_FORNITORE]) != $idfornitore_break) | (trim($row[ScadenzaFornitore::DAT_SCADENZA]) != $datscadenza_break)) {
 
 					$risultato_ricerca .=
-					"<tr class='dt-subtotale'>" .
-					"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
-					"	<td>" . $desfornitore2 . "</td>" .
+					"<tr>" .
 					"	<td></td>" .
 					"	<td></td>" .
 					"	<td></td>" .
 					"	<td></td>" .
-					"	<td class='dt-right'><i>Totale data</i></td>" .
-					"	<td></td>" .
-					"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-					"	<td id='icons'></td>" .
-					"	<td id='icons'></td>" .
-					"	<td id='icons'></td>" .
+					"	<td class='bg-info'><strong>Totale data</strong></td>" .
+					"	<td class='bg-info'></td>" .
+					"	<td class='bg-info'><strong>" . number_format($totale_fornitore, 2, ',', '.') . "</strong></td>" .
+					"	<td class='bg-info'></td>" .
+					"	<td class='bg-info'></td>" .
+					"	<td class='bg-info'></td>" .
 					"</tr>";
 
 					$desfornitore = trim($row[Fornitore::DES_FORNITORE]);
@@ -183,18 +172,16 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 
 				$risultato_ricerca = $risultato_ricerca .
 				"<tr>" .
-				"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
-				"	<td>" . $desfornitore2 . "</td>" .
-				"	<td class='dt-center'>" . $datscadenza . "</td>" .
+				"	<td>" . $datscadenza . "</td>" .
 				"	<td>" . $desfornitore . "</td>" .
 				"	<td>" . $notascadenza . "</td>" .
-				"	<td class='dt-center'>" . $numfatt . "</td>" .
-				"	<td class='dt-center'>" . $tipaddebito . "</td>" .
+				"	<td>" . $numfatt . "</td>" .
+				"	<td>" . $tipaddebito . "</td>" .
 				"	<td " . $tdclass . ">" . $stascadenza . "</td>" .
-				"	<td class='dt-right'>" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
-				"	<td id='icons'>" . $bottoneModificaRegistrazione . "</td>" .
-				"	<td id='icons'>" . $bottoneModificaPagamento . "</td>" .
-				"	<td id='icons'>" . $bottoneCancellaPagamento . "</td>" .
+				"	<td>" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
+				"	<td>" . $bottoneVisualizzaScadenza . "</td>" .
+				"	<td>" . $bottoneModificaScadenza . "</td>" .
+				"	<td>" . $bottoneCancellaScadenza . "</td>" .
 				"</tr>";
 
 				$desfornitore = self::EMPTYSTRING;
@@ -203,43 +190,42 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 			}
 
 			$risultato_ricerca .=
-			"<tr class='dt-subtotale'>" .
-			"	<td class='dt-center'>" . $datscadenza2 . "</td>" .
-			"	<td>" . $desfornitore2 . "</td>" .
-			"	<td class='dt-center'>" . $datscadenza . "</td>" .
+			"<tr>" .
+			"	<td>" . $datscadenza . "</td>" .
 			"	<td>" . $desfornitore . "</td>" .
 			"	<td></td>" .
 			"	<td></td>" .
-			"	<td class='dt-right'><i>Totale fornitore</i></td>" .
-			"	<td></td>" .
-			"	<td class='dt-right'>" . number_format($totale_fornitore, 2, ',', '.') . "</td>" .
-			"	<td id='icons'></td>" .
-			"	<td id='icons'></td>" .
-			"	<td id='icons'></td>" .
+			"	<td class='bg-info'><strong>Totale fornitore</strong></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'><strong>" . number_format($totale_fornitore, 2, ',', '.') . "</strong></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'></td>" .
 			"</tr>";
 
 			$totale_scadenze += $totale_fornitore;
 
 			$risultato_ricerca .=
-			"<tr class='dt-totale'>" .
-			"	<td class='dt-center'>" . self::DATA_ALTA . "</td>" .
-			"	<td></td>" .
-			"	<td class='dt-center'>" . $datscadenza . "</td>" .
+			"<tr>" .
+			"	<td>" . $datscadenza . "</td>" .
 			"	<td>" . $desfornitore . "</td>" .
 			"	<td></td>" .
 			"	<td></td>" .
-			"	<td class='dt-right'><i>Totale scadenze</i></td>" .
-			"	<td></td>" .
-			"	<td class='dt-right'>" . number_format($totale_scadenze, 2, ',', '.') . "</td>" .
-			"	<td id='icons'></td>" .
-			"	<td id='icons'></td>" .
-			"	<td id='icons'></td>" .
+			"	<td class='bg-info'><strong>Totale scadenze</strong></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'><strong>" . number_format($totale_scadenze, 2, ',', '.') . "</strong></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'></td>" .
+			"	<td class='bg-info'></td>" .
 			"</tr>";
 
 			$risultato_ricerca .= "</tbody></table>";
 		}
 		else {
-			$risultato_ricerca = self::EMPTYSTRING;
+			$risultato_ricerca =
+			"<div class='row'>" .
+			"    <div class='col-sm-12'>" . $_SESSION[self::MSG] . "</div>" .
+			"</div>";
 		}
 
 		$replace = array(
@@ -255,7 +241,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 				'%10-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_CHIUSA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
 				'%02-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_RIMANDATA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
 				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
-				'%bottoneEstraiPdf%' => $bottoneEstraiPdf,
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
 		$template = $utility->tailFile($utility->getTemplate($form), $replace);

@@ -15,32 +15,29 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 
 	// Bottoni
 
-	const MODIFICA_REGISTRAZIONE_HREF = "<a class='tooltip' href='../primanota/modificaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_REGISTRAZIONE_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modificaFattura%'><span class='ui-icon ui-icon-pencil'></span></li></a>";
-	const VISUALIZZA_REGISTRAZIONE_HREF = "<a class='tooltip' href='../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idRegistrazione=";
-	const VISUALIZZA_REGISTRAZIONE_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaFattura%'><span class='ui-icon ui-icon-search'></span></li></a>";
-	const MODIFICA_PAGAMENTO_HREF = "<a class='tooltip' href='../primanota/modificaPagamentoFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_PAGAMENTO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.visualizzaPagamento%'><span class='ui-icon ui-icon-link'></span></li></a>";
-	const CANCELLA_PAGAMENTO_HREF = "<a class='tooltip' onclick='cancellaPagamento(";
-	const CANCELLA_PAGAMENTO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaPagamento%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
-	const MODIFICA_INCASSO_HREF = "<a class='tooltip' href='../primanota/modificaIncassoFacade.class.php?modo=start&idRegistrazione=";
-	const MODIFICA_INCASSO_ICON = "'><li class='ui-state-default ui-corner-all' title='%ml.modificaIncasso%'><span class='ui-icon ui-icon-link'></span></li></a>";
-	const CANCELLA_INCASSO_HREF = "<a class='tooltip' onclick='cancellaIncasso(";
-	const CANCELLA_INCASSO_ICON = ")'><li class='ui-state-default ui-corner-all' title='%ml.cancellaIncasso%'><span class='ui-icon ui-icon-scissors'></span></li></a>";
+ 	const MODIFICA_REGISTRAZIONE_HREF = "<a onclick='modificaRegistrazione(";
+ 	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
+ 	
+ 	const MODIFICA_PAGAMENTO_HREF = "<a onclick='modificaPagamento(";
+ 	const VISUALIZZA_PAGAMENTO_HREF = "<a onclick='visualizzaPagamento(";
+ 	
+ 	
+ 	
+ 	
+ 	
+	const VISUALIZZA_SCADENZA_HREF = "<a onclick='visualizzaScadenzaFornitore(";
+	const MODIFICA_SCADENZA_HREF = "<a onclick='modificaScadenzaFornitore(";
+	const CANCELLA_SCADENZA_HREF = "<a onclick='cancellaScadenzaFornitore(";
+	
+ 	const MODIFICA_INCASSO_HREF = "<a onclick='modificaIncasso(";
+ 	const CANCELLA_INCASSO_HREF = "<a class='tooltip' onclick='cancellaIncasso(";
 
 
 	// Errori e messaggi
 
-	const DATA_KO = "class='dt-ko'";
-	const DATA_OK = "class='dt-ok'";
-	const DATA_CHIUSA = "class='dt-chiuso'";
-	const SCADENZA_DA_PAGARE = "Da Pagare";
-	const SCADENZA_PAGATA = "Pagato";
-	const SCADENZA_POSTICIPATA = "Posticipata";
-	const SCADENZA_APERTA = "00";
-	const SCADENZA_CHIUSA = "10";
-	const SCADENZA_SOSPESA = "  ";
-	const SCADENZA_RIMANDATA = "02";
+	const DATA_KO = "class='bg-danger'";
+	const DATA_OK = "";
+	const DATA_CHIUSA = "class='bg-info'";
 	const REGISTRAZIONE_APERTA = "00";
 	const ERRORE_DATA_INIZIO_RICERCA  = "<br>&ndash; Manca la data di inizio ricerca";
 	const ERRORE_DATA_FINE_RICERCA  = "<br>&ndash; Manca la data di fine ricerca";
@@ -53,9 +50,9 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 	// Metodi
 
 	public function getInstance();
-	public function inizializzaPagina();
-	public function controlliLogici();
-	public function displayPagina();
+// 	public function inizializzaPagina();
+// 	public function controlliLogici();
+// 	public function displayPagina();
 }
 
 ?>

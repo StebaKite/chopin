@@ -1,100 +1,622 @@
 <body>
 <script type="text/javascript">
 
-$(document).ready( function () {
-    $('#scadenze').dataTable( {
-    	"order": [[0, 'asc'],[1, 'asc'] ],
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": false, "visible": false },
-       	    {"targets": 1, "orderable": false, "visible": false },
-    	    {"targets": 2, "orderable": false },
-    	    {"targets": 3, "orderable": false },
-    	    {"targets": 4, "orderable": false },
-    	    {"targets": 5, "orderable": false },
-    	    {"targets": 6, "orderable": false },
-    	    {"targets": 7, "orderable": false },
-    	    {"targets": 8, "orderable": false },
-    	    {"targets": 9, "orderable": false },
-    	    {"targets": 10, "orderable": false }
-    		],
-   		"language": {
-               "lengthMenu": "Visualizza _MENU_ righe per pagina",
-               "zeroRecords": "La ricerca non ha prodotto risultati",
-               "info": "Pagina _PAGE_ di _PAGES_",
-               "infoEmpty": "La ricerca non ha prodotto risultati",
-               "infoFiltered": "(righe filtrate da _MAX_ totali)",
-               "search": "Cerca:",
-               "paginate": {
-                   "first":      "Prima",
-                   "last":       "Ultima",
-                   "next":       "Prossima",
-                   "previous":   "Precedente"
-               }
-        },
-        "lengthMenu": [ 15, 20, 25, 50, 75, 100 ]
-    } );
-} );
+$(document).ready(function(){
+
+	$(".datepicker").datepicker();
+
+	$("#myInput").on("keyup", 
+		function() {
+			var value = $(this).val().toLowerCase();
+			$("#myTable tr").filter(
+				function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				}
+			);
+		}
+	);				
+});
 
 </script>
 
-<div id="body">
-	<div id="main">
-		<h2>%titoloPagina%</h2>
-		<br>
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td>%ml.negozio% :</td>
-						<td class="tooltip">
-							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
+
+<div class="container-fluid">
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">
+	  
+			<div class="row">
+				<div class="col-sm-7">
+					<h4>%titoloPagina%</h4>
+				</div>
+			</div>
+			<br/>
+			<form method="post" action="%azione%">
+			  
+				<div class="form-group row">
+					<div class="col-sm-2">
+	 					<div class='input-group'>
+							<span class="input-group-addon">Neg</span>
+							<select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
 								<option value="">%ml.tutti%</option>
 								<option value="VIL" %villa-selected% >%ml.villa%</option>
 								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
 								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-							</select>
-						</td>
-						
-						<td>%ml.stascadenza% :</td>
-						<td class="tooltip">
-							<select class="selectmenuStato" id="statoscad_sel" name="statoscad_sel" >
+							</select>			
+						</div>
+					</div>
+					<div class="col-sm-3">
+	 					<div class='input-group'>
+							<span class="input-group-addon">%ml.stascadenza%</span>
+							<select class="selectStato" id="statoscad_sel" name="statoscad_sel" >
 								<option value="">%ml.tutti%</option>
 								<option value="00" %00-selected% >%ml.dapagare%</option>
 								<option value="10" %10-selected% >%ml.pagato%</option>
-								<option value="02" %02-selected% >%ml.shift%</option>
-							</select>
-						</td>
-					
-						<td class="td">%ml.da% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datascad_da" size="10" maxlength="10" value='%datascad_da%' ></td>
-						<td class="td">%ml.a% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datascad_a" size="10" maxlength="10" value='%datascad_a%' ></td>
-						<td width="50"></td>						
-						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
-		<br>
-		%risultato_ricerca%
-		<br>
-		<form class="tooltip" method="post" id="estraipdf" action="../scadenze/estraiPdfScadenzeFornitoreFacade.class.php?modo=start" >
-			%bottoneEstraiPdf%
-			<input type="hidden" name="datascad_da" value='%datascad_da%' >
-			<input type="hidden" name="datascad_a" value='%datascad_a%' >
-			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
-		</form>
-	</div>	
-		
-<div id="cancella-pagamento-form" title="Cancella Pagamento"> 
-	<form method="post" id="cancellaPagamento" action="../scadenze/cancellaPagamentoFacade.class.php?modo=go" >
-		<p>Elimino il pagamento e ripristino lo stato della scadenza in "Da Pagare" ?</p>
-		<input type="hidden" id="idScadenza" name="idScadenza">
-		<input type="hidden" id="idPagamento" name="idPagamento">
-  </form>
+								<option value="02" %02-selected% >%ml.shift%</option>								
+							</select>			
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class='input-group'>
+				            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+				                 <input type='text' class="form-control" name="datascad_da" value='%datascad_da%' />
+				                 <span class="input-group-addon">
+				                     <span class="glyphicon glyphicon-calendar"></span>
+				                 </span>
+				            </div>			
+						</div>  
+					</div>
+					<div class="col-sm-2">
+						<div class='input-group'>
+				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+				                 <input type='text' class="form-control" name="datascad_a" value='%datascad_a%' />
+				                 <span class="input-group-addon">
+				                     <span class="glyphicon glyphicon-calendar"></span>
+				                 </span>
+							</div>
+						</div>				
+					</div>
+					<div class="col-sm-1">
+						<button id="submit" type="submit" class="btn btn-default">
+					    	<span class="glyphicon glyphicon-search"></span>
+					    </button>
+					</div> 
+				</div>	
+			</form>  
+		</div>
+		<div class="panel-body scrollable-panel">
+		  	%risultato_ricerca%
+	  	</div>
+	</div>
 </div>
-		
+
+<!-- ------------------------ -->
+<!-- VISUALIZZAZIONE SCADENZA -->
+<!-- ------------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="visualizza-scadenza-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Visualizza Scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">					
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-3">
+						  		<label for="datascad_vis">%ml.datascad%</label>
+					    		<span id="datascad_vis"></span>
+						  	</div>
+						  	<div class="col-sm-9">
+						  		<label for="notascad_vis">%ml.desscad%</label>
+					    		<span id="notascad_vis"></span>
+						  	</div>
+						</div>
+						<div class="form-group row">						
+						  	<div class="col-sm-3">
+						  		<label for="impscad_vis">%ml.importo%</label>
+					    		<span id="impscad_vis"></span>
+							</div>	
+						  	<div class="col-sm-3">
+						  		<label for="fatscad_vis">%ml.numfatt%</label>
+					    		<span id="fatscad_vis"></span>
+							</div>	
+						  	<div class="col-sm-3">
+						  		<label for="tipaddeb_vis">%ml.tipaddebito%</label>
+					    		<span id="tipaddeb_vis"></span>
+							</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">						
+				          		<h4>Registrazione Originale</h4>
+				          	</div>	
+				        </div>  	
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="panel-body">
+								  	<table class="table table-bordered table-hover" id="regOrigTable_vis"></table>
+								</div> 	
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">						
+				          		<h4>Pagamento</h4>
+				          	</div>	
+				        </div>  	
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="panel-body">
+								  	<table class="table table-bordered table-hover" id="pagamentoTable_vis"></table>
+								</div> 	
+						  	</div>
+						</div>
+					</div>        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------- -->
+<!-- VISUALIZZA REGISTRAZIONE  -->
+<!-- ------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="visualizza-registrazione-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Visualizza Registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<div class="well well-sm">
+						<div class="form-group row">							
+							<div class="col-sm-3">
+						  		<div class="control-group">
+						    		<label for="datareg_vis">%ml.datareg%</label>
+						    		<span id="datareg_vis"></span>
+			            		</div>
+						  	</div>
+						  	<div class="col-sm-3">
+						  		<label for="codneg_vis">%ml.negozio%</label>
+					    		<span id="codneg_vis"></span>
+						  	</div>
+						  	<div class="col-sm-2 ui-front">
+						  		<div class="control-group">
+									<label for="numfatt_vis">%ml.numfatt%</label>
+						    		<span id="numfatt_vis"></span>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+									<label for="causale_vis">%ml.codcau%</label>
+						    		<span id="causale_vis"></span>
+								</div>
+						  	</div>
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+						    		<label for="descreg_vis">%ml.descreg%</label>
+						    		<span id="descreg_vis"></span>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+						    		<label id="fornitore_vis_label" for="fornitore_vis">%ml.codforn%</label>
+						    		<span id="fornitore_vis"></span>
+								</div>	
+						  	</div>
+						  	<div class="col-sm-6 ui-front">
+						  		<div class="control-group">
+						    		<label id="cliente_vis_label" for="cliente_vis">%ml.codclie%</label>
+						    		<span id="cliente_vis"></span>
+								</div>	
+						  	</div>
+						</div>						
+						<div class="form-group row">
+						  	<div class="col-sm-7">
+						  		<div class="control-group">
+						    		<label for="scadenzesuppl_vis">%ml.datascad%</label>
+									<table class="table table-bordered" id="scadenzesuppl_vis"></table>
+								</div>	
+						  	</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="control-group">
+						    		<label for="dettagli_vis">Dettagli</label>
+									<table class="table table-bordered table-hover" id="dettagli_vis"></table>
+								</div>	
+						  	</div>
+						</div>
+					</div>	
+					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- --------------------- -->
+<!-- VISUALIZZA PAGAMENTO  -->
+<!-- --------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="visualizza-pagamento-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Visualizza Pagamento</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<div class="well well-sm">
+						<div class="form-group row">							
+							<div class="col-sm-3">
+						  		<div class="control-group">
+						    		<label for="datareg_pag_vis">%ml.datareg%</label>
+						    		<span id="datareg_pag_vis"></span>
+			            		</div>
+						  	</div>
+						  	<div class="col-sm-3">
+						  		<label for="codneg_pag_vis">%ml.negozio%</label>
+					    		<span id="codneg_pag_vis"></span>
+						  	</div>
+						  	<div class="col-sm-5">
+						  		<div class="control-group">
+						    		<label for="descreg_pag_vis">%ml.descreg%</label>
+						    		<span id="descreg_pag_vis"></span>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+									<label for="causale_pag_vis">%ml.codcau%</label>
+						    		<span id="causale_pag_vis"></span>
+								</div>
+						  	</div>
+						  	<div class="col-sm-6 ui-front">
+						  		<div class="control-group">
+						    		<label id="fornitore_pag_vis_label" for="fornitore_pag_vis">%ml.codforn%</label>
+						    		<span id="fornitore_pag_vis"></span>
+								</div>	
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-7">
+						  		<div class="control-group">
+						    		<label for="scadenze_pagate_pag_vis">Fatture incluse nel pagamento</label>
+									<table class="table table-bordered" id="scadenze_pagate_pag_vis"></table>
+								</div>	
+						  	</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="control-group">
+						    		<label for="dettagli_pag_vis">Dettagli</label>
+									<table class="table table-bordered table-hover" id="dettagli_pag_vis"></table>
+								</div>	
+						  	</div>
+						</div>
+					</div>	
+					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ----------------- -->
+<!-- MODIFICA SCADENZA -->
+<!-- ----------------- -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-scadenza-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">					
+					
+					<form method="post" id="modificaScadenzaForm" action="../scadenze/modificaScadenzaFacade.class.php?modo=go" >
+					
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<div class='input-group' id="datascad_pag_cre_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+					                		<input type='text' class="form-control" id="datascad_mod" name="datascad_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-9">
+									<div class='input-group' id="notascad_pag_mod_control_group">
+										<span class="input-group-addon">%ml.desscad%</span>
+										<input class="form-control" id="notascad_mod" name="notascad_mod" type="text" onblur="controllaDescrizione('notascad_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">		
+							  	<div class="col-sm-3">
+									<div class='input-group' id="impscad_mod_control_group">
+										<span class="input-group-addon">%ml.importo%</span>
+										<input class="form-control" id="impscad_mod" name="impscad_mod" type="text" onblur="controllaNumero('impscad_mod')"/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+									<div class='input-group' id="fatscad_mod_control_group">
+										<span class="input-group-addon">%ml.numfatt%</span>
+										<input class="form-control" id="fatscad_mod" name="fatscad_mod" type="text" onblur="controllaCodice('fatscad_mod')"/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-3">
+							  		<label for="tipaddeb_mod">%ml.tipaddebito%</label>
+						    		<span id="tipaddeb_mod"></span>
+								</div>	
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">						
+					          		<h4>Registrazione Originale</h4>
+					          	</div>	
+					        </div>  	
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="panel-body">
+									  	<table class="table table-bordered table-hover" id="regOrigTable_mod"></table>
+									</div> 	
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">						
+					          		<h4>Pagamento</h4>
+					          	</div>	
+					        </div>  	
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="panel-body">
+									  	<table class="table table-bordered table-hover" id="pagamentoTable_mod"></table>
+									</div> 	
+							  	</div>
+							</div>
+						</div>
+						        
+					</form>
+							
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ---------------------- -->
+<!-- MODIFICA REGISTRAZIONE -->
+<!-- ---------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="modifica-registrazione-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Modifica Registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+	        		        	
+					<form method="post" id="modificaRegistrazioneForm" action="../primanota/modificaRegistrazioneFacade.class.php?modo=go" >
+
+						<div class="well well-sm">
+							<div class="form-group row">							
+								<div class="col-sm-3">
+							  		<div class="control-group" id="datareg_mod_control_group">
+										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+					                		<input type='text' class="form-control" id="datareg_mod" name="datareg_mod"/>
+					                		<span class="input-group-addon">
+					                    		<span class="glyphicon glyphicon-calendar"></span>
+					                 		</span>
+					            		</div>			
+				            		</div>
+							  	</div>
+							  	<div class="col-sm-3">
+				 					<div class='input-group'>
+										<span class="input-group-addon">Neg</span>
+										<select class="selectpicker" id="codneg_mod" name="codneg_mod" >
+											<option value="VIL" selected>%ml.villa%</option>
+											<option value="BRE">%ml.brembate%</option>
+											<option value="TRE">%ml.trezzo%</option>
+										</select>			
+								  	</div>
+								</div> 	
+							  	<div class="col-sm-5">
+									<div class='input-group' id="descreg_mod_control_group">
+										<span class="input-group-addon">%ml.descreg%</span>
+										<input class="form-control" id="descreg_mod" name="descreg_mod" type="text" onblur="controllaDescrizione('descreg_mod')"/>
+									</div>
+							  	</div>
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-2 ui-front">
+									<div class='input-group' id="numfatt_mod_control_group">
+										<span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
+										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" onblur="controllaNumeroFattura('numfatt_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); "/>
+									</div>
+							  	</div>
+							  	<div class="col-sm-4">
+									<div class='input-group' id="causale_mod_control_group">
+										<span class="input-group-addon">%ml.codcau%</span>
+										<select class="selectCausale" data-live-search="true" id="causale_mod" name="causale_mod" >
+											<option value=" ">&nbsp;</option>
+											%elenco_causali_cre%
+										</select>			
+									</div>
+							  	</div>
+							</div> 	
+							<div class="form-group row">
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="fornitore_mod_control_group">
+										<span class="input-group-addon">%ml.codforn%</span>
+										<select class="selectCliFor" data-live-search="true" id="fornitore_mod" name="fornitore_mod" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');" >
+											%elenco_fornitori%
+										</select>			
+									</div>	
+							  	</div>
+							  	<div class="col-sm-6 ui-front">
+									<div class='input-group' id="cliente_mod_control_group">
+										<span class="input-group-addon">%ml.codclie%</span>
+										<select class="selectCliFor" data-live-search="true" id="cliente_mod" name="cliente_mod" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_mod'); controllaClienteFornitore('fornitore_mod','cliente_mod'); controllaCausale('causale_mod');" >
+											%elenco_clienti%
+										</select>			
+									</div>	
+							  	</div>
+							</div>						
+							<div class="form-group row">
+							  	<div class="col-sm-7">
+							  		<div class="control-group" id="scadenzesuppl_mod_control_group">
+							    		<label for="scadenzesuppl_mod">%ml.datascad%&nbsp;<small><span class="text-danger" id="scadenzesuppl_mod_messaggio"></span></small></label>
+										<table class="table table-bordered" id="scadenzesuppl_mod"></table>
+									</div>	
+							  	</div>	
+							</div>
+							<div class="form-group row">
+							  	<div class="col-sm-12">
+							  		<div class="control-group" id="dettagli_mod_control_group">
+							    		<label for="dettagli_mod">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_mod_messaggio"></span></small></label>
+										<table class="table table-bordered table-hover" id="dettagli_mod"></table>
+									</div>	
+							  	</div>
+							</div>
+						</div>	
+					</form>	        	
+					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-modifica-registrazione-form">Nuova scadenza</button>
+	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-modifica-registrazione-form">Nuovo Dettaglio</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- -------------------------------------- -->
+<!-- NUOVO DETTAGLIO MODIFICA REGISTRAZIONE -->
+<!-- -------------------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-modifica-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova dettaglio registrazione</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-xs-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_mod" name="newimpdett_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_mod')">
+								</div>
+						  	</div>
+						  	<div class="col-xs-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_mod" name="newsegnodett_mod" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+						<div class="form-group row">
+						  	<div class="col-xs-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="selectpicker" data-live-search="true" id="conti_mod" name="newcontodett_mod"></select>			
+								</div>	
+						  	</div>							  	
+						</div>
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+<!-- ------------------------------------------ -->
+<!-- NUOVA DATA SCADENZA MODIFICA REGISTRAZIONE -->
+<!-- ------------------------------------------ -->
+
+<div class="container">
+	<div class="modal fade" id="nuova-data-scadenza-modifica-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovaDataScadenzaModificaForm">
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-xs-4">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+				                		<input type='text' class="form-control" id="newdatascad_mod" name="newdatascad_mod" />
+				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				            		</div>			
+							  	</div>
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+										<input class="form-control" id="newimpscad_mod" name="newimpscad_mod" type="text" maxlength="10" onkeypress="controllaImporto('newimpscad_mod')">
+									</div>
+							  	</div>
+					  		</div>
+						</div>					
+					</form>	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovascad-modifica-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+ 		

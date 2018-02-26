@@ -42,8 +42,9 @@ interface MainNexus6Interface {
 	const SCADENZA_APERTA = "00";
 	const SCADENZA_CHIUSA = "10";
 	const SCADENZA_RIMANDATA = '02';
+	const SCADENZA_SOSPESA = "  ";
 
-	const SCADENZA_DAPAGARE = "Da Pagare";
+	const SCADENZA_DA_PAGARE = "Da Pagare";
 	const SCADENZA_PAGATA = "Pagato";
 	const SCADENZA_POSTICIPATA = "Posticipato";
 

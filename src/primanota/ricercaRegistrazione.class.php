@@ -122,7 +122,6 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 			}
 			else {
 
-				$ricercaRegistrazioneTemplate->displayPagina();
 				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 				$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
@@ -131,7 +130,6 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 		}
 		else {
 
-			$ricercaRegistrazioneTemplate->displayPagina();
 			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);			
 			$_SESSION[self::MSG] = $utility->tailTemplate($template);

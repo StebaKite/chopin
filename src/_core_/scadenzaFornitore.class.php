@@ -286,7 +286,7 @@ class ScadenzaFornitore implements CoreInterface {
 	            $this->setIdPagamento($row[ScadenzaFornitore::ID_PAGAMENTO]);
 	        }
 	    }
-	    
+	    $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
 	    return $result;
 	}
 	

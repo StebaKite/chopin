@@ -173,8 +173,11 @@ abstract class Nexus6Abstract {
 
 		if ($array["scadenze"] == "Y")
 		{
-			$scadenze .= "<li><a>" . $array["scadenze_menu_title"] . "</a>";
-			$scadenze .= "<ul>";
+			$scadenze .= "<li class='dropdown'>";
+			$scadenze .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["scadenze_menu_title"];
+			$scadenze .= "<span class='caret'></span></a>";
+			$scadenze .= "<ul class='dropdown-menu'>";
+			
 			if ($array["scadenze_item_1"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=start'>" . $array["scadenze_item_1_name"] . "</a></li>";
 //			if ($array["scadenze_item_2"] == "Y") $scadenze .= "<li><a href='../scadenze/ricercaScadenzeClienteFacade.class.php?modo=start'>" . $array["scadenze_item_2_name"] . "</a></li>";
 			$scadenze .= "</ul></li>";

@@ -63,6 +63,12 @@ class ScadenzeController
 			$scadenzaFornitore->setIdScadenza($_REQUEST[self::ID_SCADENZA]);
 			$registrazione->setIdRegistrazione($_REQUEST[self::ID_PAGAMENTO]);
 		}
+		
+		if (isset($_REQUEST[self::ID_SCADENZA]))
+		{
+			$scadenzaFornitore->setIdScadenza($_REQUEST[self::ID_SCADENZA]);
+		}
+		
 
 		// Serializzo in sessione gli oggetti modificati
 

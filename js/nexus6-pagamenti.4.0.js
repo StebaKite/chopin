@@ -322,7 +322,7 @@ function visualizzaPagamento(idPagamento)
 			$("#visualizza-pagamento-dialog").modal("show");
 		}
 	}
-	xmlhttp.open("GET","visualizzaPagamentoFacade.class.php?modo=start&idpag=" + idPagamento, true);
+	xmlhttp.open("GET","../primanota/visualizzaPagamentoFacade.class.php?modo=start&idpag=" + idPagamento, true);
 	xmlhttp.send();
 }
 

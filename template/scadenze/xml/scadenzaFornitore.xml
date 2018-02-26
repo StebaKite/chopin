@@ -1,0 +1,10 @@
+<scadenza>
+	<data>%data%</data>
+	<importo>%importo%</importo>
+	<addebito>%addebito%</addebito>
+	<fattura>%fattura%</fattura>
+	<stato>%stato%</stato>
+	<nota>%nota%</nota>
+	<registrazioneOriginante><![CDATA[%registrazioneoriginante%]]></registrazioneOriginante>
+	<pagamento><![CDATA[%pagamento%]]></pagamento>
+</scadenza>

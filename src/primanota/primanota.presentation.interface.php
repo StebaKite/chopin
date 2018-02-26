@@ -46,14 +46,6 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	
 	const CANCELLA_REGISTRAZIONE_HREF = "<a onclick='cancellaRegistrazione(";
 	
-// 	const VISUALIZZA_ICON = ")'><span class='glyphicon glyphicon-eye-open'></span></a>";
-// 	const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
-// 	const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
-// 	const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
-
-	// Actions
-
-
 	// Errori e messaggi
 
 	const ERRORE_DATA_DA = "ERRORE: manca la data di inizio ricerca";

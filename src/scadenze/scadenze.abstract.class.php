@@ -1,9 +1,12 @@
 <?php
 
 require_once 'nexus6.abstract.class.php';
+require_once 'scadenze.presentation.interface.php';
 
-abstract class ScadenzeAbstract extends Nexus6Abstract {
+abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresentationInterface {
 
+//	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
+	
 	private static $_instance = null;
 
 	public static $messaggio;
@@ -51,6 +54,126 @@ abstract class ScadenzeAbstract extends Nexus6Abstract {
 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 		$result = $db->execSql($sql);
 	}
+		
+	public function makeTabellaReadOnlyRegistrazioneOriginale($registrazione)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$bottoneVisualizzaRegistrazione = self::VISUALIZZA_REGISTRAZIONE_HREF . $registrazione->getIdRegistrazione() . self::VISUALIZZA_ICON;
+		
+		$thead =
+		"<thead>" .
+		"	<tr>" .
+		"		<th>%ml.datReg%</th>" .
+		"		<th>%ml.descreg%</th>" .
+		"		<th>%ml.negozio%</th>" .
+		"		<th></th>" .
+		"	</tr>" .
+		"</thead>";
+		
+		$tbody =
+		"<tbody>" .
+		"	<tr>" .
+		"		<td>" . date("d/m/Y",strtotime($registrazione->getDatRegistrazione())) . "</td>" .
+		"		<td>" . trim($registrazione->getDesRegistrazione()) . "</td>" .
+		"		<td>" . trim($registrazione->getCodNegozio()) . "</td>" .
+		"		<td>" . $bottoneVisualizzaRegistrazione . "</td>" .
+		"	</tr>".
+		"</tbody>";
+		
+		return $thead . $tbody;
+	}
+	
+	public function makeTabellaReadOnlyPagamento($registrazione)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$bottoneVisualizzaRegistrazione = self::VISUALIZZA_PAGAMENTO_HREF . $registrazione->getIdRegistrazione() . self::VISUALIZZA_ICON;
+		
+		$thead =
+		"<thead>" .
+		"	<tr>" .
+		"		<th>%ml.datReg%</th>" .
+		"		<th>%ml.descreg%</th>" .
+		"		<th>%ml.negozio%</th>" .
+		"		<th></th>" .
+		"	</tr>" .
+		"</thead>";
+		
+		$tbody =
+		"<tbody>" .
+		"	<tr>" .
+		"		<td>" . date("d/m/Y",strtotime($registrazione->getDatRegistrazione())) . "</td>" .
+		"		<td>" . trim($registrazione->getDesRegistrazione()) . "</td>" .
+		"		<td>" . trim($registrazione->getCodNegozio()) . "</td>" .
+		"		<td>" . $bottoneVisualizzaRegistrazione . "</td>" .
+		"	</tr>".
+		"</tbody>";
+		
+		return $thead . $tbody;
+	}
+	
+	public function makeTabellaRegistrazioneOriginale($registrazione)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$bottoneVisualizzaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . $registrazione->getIdRegistrazione() . self::MODIFICA_ICON;
+		
+		$thead =
+		"<thead>" .
+		"	<tr>" .
+		"		<th>%ml.datReg%</th>" .
+		"		<th>%ml.descreg%</th>" .
+		"		<th>%ml.negozio%</th>" .
+		"		<th></th>" .
+		"	</tr>" .
+		"</thead>";
+		
+		$tbody =
+		"<tbody>" .
+		"	<tr>" .
+		"		<td>" . date("d/m/Y",strtotime($registrazione->getDatRegistrazione())) . "</td>" .
+		"		<td>" . trim($registrazione->getDesRegistrazione()) . "</td>" .
+		"		<td>" . trim($registrazione->getCodNegozio()) . "</td>" .
+		"		<td>" . $bottoneVisualizzaRegistrazione . "</td>" .
+		"	</tr>".
+		"</tbody>";
+		
+		return $thead . $tbody;
+	}
+	
+	public function makeTabellaPagamento($registrazione)
+	{
+		$utility = Utility::getInstance();
+		$array = $utility->getConfig();
+		
+		$bottoneVisualizzaRegistrazione = self::MODIFICA_PAGAMENTO_HREF . $registrazione->getIdRegistrazione() . self::MODIFICA_ICON;
+		
+		$thead =
+		"<thead>" .
+		"	<tr>" .
+		"		<th>%ml.datReg%</th>" .
+		"		<th>%ml.descreg%</th>" .
+		"		<th>%ml.negozio%</th>" .
+		"		<th></th>" .
+		"	</tr>" .
+		"</thead>";
+		
+		$tbody =
+		"<tbody>" .
+		"	<tr>" .
+		"		<td>" . date("d/m/Y",strtotime($registrazione->getDatRegistrazione())) . "</td>" .
+		"		<td>" . trim($registrazione->getDesRegistrazione()) . "</td>" .
+		"		<td>" . trim($registrazione->getCodNegozio()) . "</td>" .
+		"		<td>" . $bottoneVisualizzaRegistrazione . "</td>" .
+		"	</tr>".
+		"</tbody>";
+		
+		return $thead . $tbody;
+	}	
 }
 
 ?>

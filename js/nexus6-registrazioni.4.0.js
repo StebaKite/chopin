@@ -155,7 +155,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
 		            }
 		        }				        
 		    } 
-		    xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
+		    xmlhttp.open("GET", "../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
 		    xmlhttp.send();
 		}
 		else if (cliente != " ")
@@ -168,7 +168,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
 		            }
 		        }
 		    } 
-		    xmlhttp.open("GET", "aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&&cliente=" + cliente + "&datascad_cli=" + datascad + "&impscad_cli=" + impscad + "&numfatt=" + numfatt, true);
+		    xmlhttp.open("GET", "../primanota/aggiungiNuovaScadenzaClienteFacade.class.php?modo=start&&cliente=" + cliente + "&datascad_cli=" + datascad + "&impscad_cli=" + impscad + "&numfatt=" + numfatt, true);
 		    xmlhttp.send();	
 		} 
 	}
@@ -231,7 +231,7 @@ $("#button-ok-nuovodett-modifica-registrazione-form").click(
 					controllaDettagliRegistrazione("dettagli_mod");
 				}
 			}
-		xmlhttp.open("GET","aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto="	+ conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+		xmlhttp.open("GET","../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto="	+ conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
 		xmlhttp.send();
 	}
 );		
@@ -291,7 +291,7 @@ function modificaRegistrazione(idRegistrazione)
 			$("#modifica-registrazione-dialog").modal("show");
 		}
 	}
-	xmlhttp.open("GET","modificaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
+	xmlhttp.open("GET","../primanota/modificaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
 	xmlhttp.send();
 }
 
@@ -338,7 +338,7 @@ function visualizzaRegistrazione(idRegistrazione)
 			$("#visualizza-registrazione-dialog").modal("show");
 		}
 	}
-	xmlhttp.open("GET","visualizzaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
+	xmlhttp.open("GET","../primanota/visualizzaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
 	xmlhttp.send();
 }
 
@@ -475,7 +475,7 @@ function modificaImportoDettaglioRegistrazione(idTable,conto,sottoconto,importo,
 				 }
 			 }
 		 }
-		 xmlhttp.open("GET","aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
+		 xmlhttp.open("GET","../pimanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
 		 xmlhttp.send();
 	 }
  }
@@ -499,7 +499,7 @@ function modificaSegnoDettaglioRegistrazione(idTable,conto,sottoconto,segno,idDe
 				}
 			}
 		}
-		xmlhttp.open("GET", "aggiornaSegnoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
+		xmlhttp.open("GET", "../primanota/aggiornaSegnoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
 		xmlhttp.send();
 	}
 }
@@ -521,7 +521,7 @@ function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
 				}
 			}
 		}
-		xmlhttp.open("GET", "aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore, true);
+		xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore, true);
 		xmlhttp.send();
 	}
 }
@@ -543,7 +543,7 @@ function aggiungiDettaglioContoCliente(idcliente, campoDett)
 				}
 			}
 		}
-		xmlhttp.open("GET","aggiungiNuovoDettaglioContoClienteFacade.class.php?modo=go&idcliente=" + idcliente, true);
+		xmlhttp.open("GET","../primanota/aggiungiNuovoDettaglioContoClienteFacade.class.php?modo=go&idcliente=" + idcliente, true);
 		xmlhttp.send();
 	}
 }
@@ -558,7 +558,7 @@ function cancellaNuovaScadenzaFornitore(idTable, idFornitore, datScad, numFatt)
 			$("#" + idTable).html(xmlhttp.responseText);
 		}
 	}
-	xmlhttp.open("GET", "cancellaScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore + "&datascad_for=" + datScad + "&numfatt=" + numFatt, true);
+	xmlhttp.open("GET", "../primanota/cancellaScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore + "&datascad_for=" + datScad + "&numfatt=" + numFatt, true);
 	xmlhttp.send();
 }
 
@@ -572,7 +572,7 @@ function cancellaNuovaScadenzaCliente(idTable, idCliente, datScad, numFatt)
 			$("#" + idTable).html(xmlhttp.responseText);
 		}
 	}
-	xmlhttp.open("GET", "cancellaScadenzaClienteFacade.class.php?modo=start&idcliente=" + idCliente + "&datascad_cli=" + datScad + "&numfatt=" + numFatt, true);
+	xmlhttp.open("GET", "../primanota/cancellaScadenzaClienteFacade.class.php?modo=start&idcliente=" + idCliente + "&datascad_cli=" + datScad + "&numfatt=" + numFatt, true);
 	xmlhttp.send();
 }
 
@@ -596,7 +596,7 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
 				}
 			}
 		}
-		xmlhttp.open("GET","aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importoScad, true);
+		xmlhttp.open("GET","../primanota/aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importoScad, true);
 		xmlhttp.send();
 	}
 }
@@ -621,7 +621,7 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
 				}
 			}
 		}
-		xmlhttp.open("GET", "aggiornaImportoScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_cli=" + datascad + "&numfatt=" + numfatt + "&impscad_cli=" + importoScad, true);
+		xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_cli=" + datascad + "&numfatt=" + numfatt + "&impscad_cli=" + importoScad, true);
 		xmlhttp.send();
 	}
 }
@@ -649,26 +649,6 @@ function cancellaRegistrazione(idreg) {
 	$("#cancella-registrazione-dialog").modal("show");
 }
 
-//---------------------------------------------------------------------------------
-
-$("#cancella-registrazione-form").dialog({
-	autoOpen : false,
-	modal : true,
-	width : 300,
-	buttons : [ {
-		text : "Ok",
-		click : function() {
-			$(this).dialog('close');
-			$("#cancellaRegistrazione").submit();
-		}
-	}, {
-		text : "Cancel",
-		click : function() {
-			$(this).dialog("close");
-		}
-	} ]
-});
-
 // ---------------------------------------------------------------------------------
 // Funzioni utility
 // ---------------------------------------------------------------------------------
@@ -689,7 +669,7 @@ $("#fornitore_cre").change(
 				}
 			}
 		}
-		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore="+ idfornitore + "&datareg=" + datareg, true);
+		xmlhttp.open("GET","../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore="+ idfornitore + "&datareg=" + datareg, true);
 		xmlhttp.send();
 	}
 );
@@ -711,7 +691,7 @@ $("#fornitore_mod").change(
 				}
 			}
 		}
-		xmlhttp.open("GET","calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
+		xmlhttp.open("GET","../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore="+ desfornitore + "&datareg=" + datareg, true);
 		xmlhttp.send();
 	}
 );
@@ -734,7 +714,7 @@ $("#cliente_cre").change(
 				}
 			}
 		}
-		xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
+		xmlhttp.open("GET","../primanota/calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
 		xmlhttp.send();
 	}
 );
@@ -756,7 +736,7 @@ $("#cliente_mod").change(
 				}
 			}
 		}
-		xmlhttp.open("GET","calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
+		xmlhttp.open("GET","../primanota/calcolaDataScadenzaClienteFacade.class.php?modo=start&descliente=" + descliente + "&datareg=" + datareg, true);
 		xmlhttp.send();
 	}
 );
@@ -776,7 +756,7 @@ $("#causale_cre").change(
 						$('#conti').selectpicker('refresh');
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -797,7 +777,7 @@ $("#causale_mod").change(
 						$("#conti_mod").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -818,7 +798,7 @@ $("#causale_inc").change(
 						$("#conti_inc").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -839,7 +819,7 @@ $("#causale_inc_mod").change(
 						$("#conti_inc_mod").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -860,7 +840,7 @@ $("#causale_pag_cre").change(
 						$("#conti_pag").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -881,7 +861,7 @@ $("#causale_pag_mod").change(
 						$("#conti_pag_mod").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -902,7 +882,7 @@ $("#causale_cormer_cre").change(
 						$("#conti_cormer_cre").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -923,7 +903,7 @@ $("#causale_cormer_mod").change(
 						$("#conti_cormer_mod").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -944,7 +924,7 @@ $("#causale_corneg_cre").change(
 						$("#conti_corneg_cre").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}
@@ -965,7 +945,7 @@ $("#causale_corneg_mod").change(
 						$("#conti_corneg_mod").selectpicker("refresh");
 					}
 				}
-			xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
+			xmlhttp.open("GET", "../primanota/loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
 			xmlhttp.send();
 		}
 	}

@@ -34,7 +34,6 @@ class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusin
 		$array = $utility->getConfig();
 
 		$scadenzaFornitore->prepara();
-// 		unset($_SESSION['referer_function_name']);
 
 		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
 		$this->preparaPagina($ricercaScadenzeTemplate);
@@ -69,50 +68,49 @@ class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusin
 
 				$_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 
-				$ricercaScadenzeTemplate->displayPagina();
-
 				/**
 				 * Gestione del messaggio proveniente da altre funzioni
 				*/
 				if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenze() . " scadenze";
+					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
 					unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
 				}
 				elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
-					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenze() . " scadenze";
+					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
 					unset($_SESSION[self::MSG_DA_MODIFICA]);
 				}
 				else {
-					$_SESSION[self::MESSAGGIO] = "Trovate " . $scadenzaFornitore->getQtaScadenze() . " scadenze";
+					$_SESSION[self::MESSAGGIO] = "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
 				}
 
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-				if ($scadenzaFornitore->getQtaScadenze() > 0) {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+				
+				$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
+				if ($pos === false) {
+					if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
+						$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
 				}
-				else {
-					$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				}
-
-				echo $utility->tailTemplate($template);
+				else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+				
+				$_SESSION[self::MSG] = $utility->tailTemplate($template);
 			}
 			else {
-				$ricercaScadenzeTemplate->displayPagina();
-				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
 
+				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
 				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
+				$_SESSION[self::MSG] = $utility->tailTemplate($template);
 			}
 		}
 		else {
-			$ricercaScadenzeTemplate->displayPagina();
 
 			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
 			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
+			$_SESSION[self::MSG] = $utility->tailTemplate($template);
 		}
+		$ricercaScadenzeTemplate->displayPagina();
+		
 		include($this->piede);
 	}
 

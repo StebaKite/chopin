@@ -11,17 +11,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 	
 	const AGGIUNGI_FATTURA_PAGATA_HREF = "<a onclick='aggiungiFatturaPagata(";
 	const AGGIUNGI_FATTURA_INCASSATA_HREF = "<a onclick='aggiungiFatturaIncassata(";
-	const AGGIUNGI_FATTURA_PAGATA_HREF = "<a onclick='aggiungiFatturaPagata(";
 	const RIMUOVI_FATTURA_PAGATA_HREF = "<a onclick='rimuoviFatturaPagata(";
 	const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
-	const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = '<a onclick="cancellaDettaglioNuovaRegistrazione(';
-	
-	
-	
-	
-	
-	
-	
+	const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = "<a onclick='cancellaDettaglioNuovaRegistrazione(";
 	
 	// Query ---------------------------------------------------------------
 
@@ -506,13 +498,13 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 				"	<td>" .
 				"       <div class='input-group'>" .
 				"           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
-				"		    <input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+				"		    <input class='form-control' type='text' maxlength='10'" . $idImportoDettaglio . $onModifyImporto . " value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
 				"       </div>" .
 				"	</td>" .
 				"	<td>" .
 				"       <div class='input-group'>" .
-				"           <span class='input-group-addon'>D/A</span></span>" .
-				"		    <input class='form-control' type='text' maxlength='1' " . $idSegnoDettaglio . $onModifySegno . "value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+				"           <span class='input-group-addon'>D/A</span>" .
+				"		    <input class='form-control' type='text' maxlength='1'" . $idSegnoDettaglio . $onModifySegno . " value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
 				"       </div>" .
 				"	</td>" .
 				"	<td id='icons'>" . $bottoneCancella . "</td>" .

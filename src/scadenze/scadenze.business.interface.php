@@ -6,6 +6,9 @@ interface ScadenzeBusinessInterface extends MainNexus6Interface {
 
 	// Oggetti
 
+	const VISUALIZZA_SCADENZA_FORNITORE = "Obj_visualizzascadenzafornitore";
+	const MODIFICA_SCADENZA_FORNITORE = "Obj_modificascadenzafornitore";
+	
 	const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
 	const SCADENZA_CLIENTE = "Obj_scadenzacliente";
 	const RICERCA_SCADENZE_FORNITORE = "Obj_ricercascadenzefornitore";
@@ -21,6 +24,10 @@ interface ScadenzeBusinessInterface extends MainNexus6Interface {
 	const AZIONE_RICERCA_SCADENZE_FORNITORE = "../scadenze/ricercaScadenzeFornitoreFacade.class.php?modo=go";
 	const AZIONE_RICERCA_SCADENZE_CLIENTE   = "../scadenze/ricercaScadenzeClienteFacade.class.php?modo=go";
 
+	// Files XML
+	
+	const XML_SCADENZA_FORNITORE = "/scadenze/xml/scadenzaFornitore.xml";
+	
 	// Errori e messaggi
 
 	const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
