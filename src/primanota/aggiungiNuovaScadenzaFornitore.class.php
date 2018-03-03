@@ -6,6 +6,7 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'fornitore.class.php';
 require_once 'scadenzaFornitore.class.php';
+require_once 'registrazione.class.php';
 
 class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
 {
@@ -28,8 +29,16 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 	{
 		$db = Database::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
+		$registrazione = Registrazione::getInstance();
+		$fornitore = Fornitore::getInstance();
 		
+		$fornitore->setIdFornitore($registrazione->getIdFornitore());
+		$fornitore->leggi($db);
+		
+		$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
+		$scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
 		$scadenzaFornitore->aggiungi();
+		
 		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
 	}
 }

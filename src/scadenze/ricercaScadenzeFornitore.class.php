@@ -7,119 +7,120 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'scadenzaFornitore.class.php';
 
-class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusinessInterface
-{
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
+class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusinessInterface {
 
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE])) $_SESSION[self::RICERCA_SCADENZE_FORNITORE] = serialize(new RicercaScadenzeFornitore());
-		return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE]);
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function start()
-	{
-		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function getInstance() {
+        if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE])) {
+            $_SESSION[self::RICERCA_SCADENZE_FORNITORE] = serialize(new RicercaScadenzeFornitore());
+        }
+        return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE]);
+    }
 
-		$scadenzaFornitore->prepara();
+    public function start() {
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
-		$this->preparaPagina($ricercaScadenzeTemplate);
+        $_SESSION[self::FUNCTION_REFERER] = self::RICERCA_SCADENZE_FORNITORE;
+        unset($_SESSION[self::MSG]);
 
-		// compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
+        $scadenzaFornitore->prepara();
 
-		$ricercaScadenzeTemplate->displayPagina();
-		include($this->piede);
-	}
+        $ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
+        $this->preparaPagina($ricercaScadenzeTemplate);
 
-	public function go()
-	{
-		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        // compone la pagina
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-		$ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
+        $ricercaScadenzeTemplate->displayPagina();
+        include($this->piede);
+    }
 
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
+    public function go() {
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$this->preparaPagina($ricercaScadenzeTemplate);
+        $_SESSION[self::FUNCTION_REFERER] = self::RICERCA_SCADENZE_FORNITORE;
 
-		if ($ricercaScadenzeTemplate->controlliLogici()) {
+        $ricercaScadenzeTemplate = RicercaScadenzeTemplate::getInstance();
 
-			if ($scadenzaFornitore->load($db)) {
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-				$_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+        $this->preparaPagina($ricercaScadenzeTemplate);
 
-				/**
-				 * Gestione del messaggio proveniente da altre funzioni
-				*/
-				if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
-					unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-				}
-				elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
-					$_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
-					unset($_SESSION[self::MSG_DA_MODIFICA]);
-				}
-				else {
-					$_SESSION[self::MESSAGGIO] = "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
-				}
+        if ($ricercaScadenzeTemplate->controlliLogici()) {
 
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				
-				$pos = strpos($_SESSION[self::MESSAGGIO],"ERRORE");
-				if ($pos === false) {
-					if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
-						$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-					else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				}
-				else $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-				
-				$_SESSION[self::MSG] = $utility->tailTemplate($template);
-			}
-			else {
+            if ($scadenzaFornitore->load($db)) {
 
-				$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-				self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				$_SESSION[self::MSG] = $utility->tailTemplate($template);
-			}
-		}
-		else {
+                $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			$_SESSION[self::MSG] = $utility->tailTemplate($template);
-		}
-		$ricercaScadenzeTemplate->displayPagina();
-		
-		include($this->piede);
-	}
+                /**
+                 * Gestione del messaggio proveniente da altre funzioni
+                 */
+                if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
+                    $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
+                    unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
+                } elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
+                    $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
+                    unset($_SESSION[self::MSG_DA_MODIFICA]);
+                } else {
+                    $_SESSION[self::MESSAGGIO] = "Trovate " . $scadenzaFornitore->getQtaScadenzeDaPagare() . " scadenze";
+                }
 
-	public function preparaPagina()
-	{
-		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_SCADENZE_FORNITORE;
-		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
-		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaScadenze%";
-	}
+                self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+
+                $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
+                if ($pos === false) {
+                    if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
+                        $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+                    else
+                        $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+                } else
+                    $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+
+                $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            }
+            else {
+
+                $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+                self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+                $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            }
+        } else {
+
+            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        }
+        $ricercaScadenzeTemplate->displayPagina();
+
+        include($this->piede);
+    }
+
+    public function preparaPagina() {
+        $_SESSION[self::AZIONE] = self::AZIONE_RICERCA_SCADENZE_FORNITORE;
+        $_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaScadenze%";
+    }
+
 }
 
 ?>

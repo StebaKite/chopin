@@ -2,7 +2,10 @@
 
 require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
+require_once 'scadenze.controller.class.php';
 require_once 'ricercaRegistrazione.class.php';
+require_once 'ricercaScadenzeFornitore.class.php';
+require_once 'ricercaScadenzeCliente.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'registrazione.class.php';
@@ -40,7 +43,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		$utility = Utility::getInstance();
 		$db = Database::getInstance();
 		$array = $utility->getConfig();
-
+		
 		$registrazione->prepara();
 		$cliente->prepara();
 		$fornitore->prepara();
@@ -111,8 +114,25 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 
 		$this->aggiornaRegistrazione($utility, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $cliente);
 
-		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+		/**
+		 * Passo il controllo al controller del componente di provenienza
+		 */		
+
+		if (isset($_SESSION[self::FUNCTION_REFERER])) {
+			
+			if ($_SESSION[self::FUNCTION_REFERER] == self::RICERCA_SCADENZE_FORNITORE) {
+				$_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeFornitore::getInstance()));
+				$controller = unserialize($_SESSION[self::SCADENZE_CONTROLLER]);
+			}
+			elseif ($_SESSION[self::FUNCTION_REFERER] == self::RICERCA_SCADENZE_CLIENTE) {
+				$_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance()));
+				$controller = unserialize($_SESSION[self::SCADENZE_CONTROLLER]);
+			}			
+		}
+		else {
+			$_SESSION[self::PRIMANOTA_CONTROLLER] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+			$controller = unserialize($_SESSION[self::PRIMANOTA_CONTROLLER]);
+		}
 		$controller->start();
 	}
 
@@ -183,8 +203,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 			$importo_in_scadenza = (strstr($array['notaDiAccredito'], $registrazione->getCodCausale())) ? $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] * (-1) : $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA];
 
 			$scadenzaFornitore->setImpInScadenza($importo_in_scadenza);
-			$scadenzaFornitore->setNotaScadenza($registrazione->getDesRegistrazione());
-			$scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
+			$scadenzaFornitore->setNotaScadenza($unaScadenza[ScadenzaFornitore::NOTA_SCADENZA]);
+			$scadenzaFornitore->setTipAddebito($unaScadenza[ScadenzaFornitore::TIP_ADDEBITO]);
 			$scadenzaFornitore->setCodNegozio($registrazione->getCodNegozio());
 			$scadenzaFornitore->setIdFornitore($registrazione->getIdFornitore());
 			$scadenzaFornitore->setNumFattura($registrazione->getNumFattura());

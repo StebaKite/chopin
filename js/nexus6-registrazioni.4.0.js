@@ -265,7 +265,10 @@ function modificaRegistrazione(idRegistrazione)
 
 					$("#datareg_mod").val($(this).find("datareg").text());
 					$("#descreg_mod").val($(this).find("descreg").text());
-					$("#causale_mod").val($(this).find("causale").text());
+
+					var causale = $(this).find("causale").text();
+					if (causale == "") causale = " ";
+					$("#causale_mod").selectpicker('val',causale);
 					
 					var negozio = $(this).find("codneg").text();
 					$("#codneg_mod").selectpicker('val', negozio);
@@ -475,7 +478,7 @@ function modificaImportoDettaglioRegistrazione(idTable,conto,sottoconto,importo,
 				 }
 			 }
 		 }
-		 xmlhttp.open("GET","../pimanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
+		 xmlhttp.open("GET","../primanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
 		 xmlhttp.send();
 	 }
  }

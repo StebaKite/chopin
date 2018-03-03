@@ -1,0 +1,41 @@
+
+<!-- ------------------------------------------- -->
+<!-- NUOVA DATA SCADENZA CREAZIONE REGISTRAZIONE -->
+<!-- ------------------------------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="nuova-data-scadenza-creazione-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuova scadenza</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<form method="post" id="nuovaDataScadenzaCreazioneForm">
+						<div class="well well-sm">
+							<div class="form-group row">
+								<div class="col-xs-4">
+									<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+				                		<input type='text' class="form-control" id="newdatascad_cre" name="newdatascad_cre" />
+				                		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				            		</div>			
+							  	</div>
+							  	<div class="col-xs-4">
+				 					<div class='input-group'>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+										<input class="form-control" id="newimpscad_cre" name="newimpscad_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpscad_cre')">
+									</div>
+							  	</div>
+					  		</div>
+						</div>					
+					</form>	        	
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovascad-nuova-registrazione-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>

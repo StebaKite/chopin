@@ -20,8 +20,6 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 	const CREA_FORNITORE = "Obj_creafornitore";
 	const CREA_CLIENTE = "Obj_creacliente";
 	const CREA_MERCATO = "Obj_creamercato";
-	const FORNITORE = "Obj_fornitore";
-	const CLIENTE = "Obj_cliente";
 	const MERCATO = "Obj_mercato";
 	const CANCELLA_CLIENTE = "Obj_cancellacliente";
 	const CANCELLA_FORNITORE = "Obj_cancellafornitore";

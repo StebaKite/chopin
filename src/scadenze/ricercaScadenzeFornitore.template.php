@@ -4,8 +4,9 @@ require_once 'scadenze.abstract.class.php';
 require_once 'scadenze.presentation.interface.php';
 require_once 'utility.class.php';
 require_once 'scadenzaFornitore.class.php';
+require_once 'causale.class.php';
+require_once 'cliente.class.php';
 require_once 'fornitore.class.php';
-require_once 'registrazione.class.php';
 
 class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresentationInterface
 {
@@ -27,8 +28,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 
 	public function controlliLogici()
 	{
-		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-
 		$esito = TRUE;
 		$msg = "<br>";
 		
@@ -49,10 +48,27 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 	public function displayPagina()
 	{
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
+		$causale = Causale::getInstance();
+		$cliente = Cliente::getInstance();
+		$fornitore = Fornitore::getInstance();
+		
 		$utility = Utility::getInstance();
+		$db = Database::getInstance();
 		$array = $utility->getConfig();
 
-		$form = $this->root . $array['template'] . self::PAGINA_RICERCA_SCADENZE_FORNITORE;
+		// Parti utili per la composizione della pagina
+		
+		$paginaRicercaScadenze = $this->root . $array['template'] . self::PAGINA_RICERCA_SCADENZE_FORNITORE;
+		$dialogoVisualizzaRegistrazione = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_REGISTRAZIONE;
+		$dialogoVisualizzaPagamento = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_PAGAMENTO;
+		$dialogoModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_MODIFICA_REGISTRAZIONE;
+		$dialogoNuovoDettaglioModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_REGISTRAZIONE;
+		$dialogoNuovaScadenzaModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVA_SCADENZA_MODIFICA_REGISTRAZIONE;
+		$dialogoModificaPagamento = $this->root . $array['template'] . self::DIALOGO_MODIFICA_PAGAMENTO;
+		$dialogoNuovoDettaglioModificaPagamento = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_PAGAMENTO;
+		
+		// Creo l'elenco delle scadenze
+		
 		$risultato_ricerca = "";
 
 		if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0)
@@ -98,17 +114,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 					$desfornitore2 = trim($row[Fornitore::DES_FORNITORE]);
 					$datscadenza2  = trim($row[ScadenzaFornitore::DAT_SCADENZA_YYYYMMDD]);
 				}
-
-				
-				
-// 				if (trim($row[Registrazione::STA_REGISTRAZIONE]) == "00") {
-// 					$bottoneModificaRegistrazione = self::MODIFICA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
-// 				}
-// 				else {
-// 					$bottoneModificaRegistrazione = self::VISUALIZZA_REGISTRAZIONE_HREF . trim($row[ScadenzaFornitore::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
-// 				}
-
-				
 				
 				if (trim($row[ScadenzaFornitore::NOTA_SCADENZA]) != self::EMPTYSTRING) {$notascadenza = trim($row[ScadenzaFornitore::NOTA_SCADENZA]);}
 				else {$notascadenza = "&ndash;&ndash;&ndash;";}
@@ -119,7 +124,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 				
 				$bottoneVisualizzaScadenza = self::VISUALIZZA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::VISUALIZZA_ICON;
 				$bottoneModificaScadenza = self::MODIFICA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::MODIFICA_ICON;
-				$bottoneCancellaScadenza = self::CANCELLA_SCADENZA_HREF . trim($row[ScadenzaFornitore::ID_SCADENZA]) . self::CANCELLA_ICON;
 				
 				if (trim($row[ScadenzaFornitore::STA_SCADENZA]) == self::SCADENZA_SOSPESA) {
 					$stascadenza = self::CAMPO_VUOTO;
@@ -154,7 +158,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 					"	<td class='bg-info'><strong>" . number_format($totale_fornitore, 2, ',', '.') . "</strong></td>" .
 					"	<td class='bg-info'></td>" .
 					"	<td class='bg-info'></td>" .
-					"	<td class='bg-info'></td>" .
 					"</tr>";
 
 					$desfornitore = trim($row[Fornitore::DES_FORNITORE]);
@@ -181,7 +184,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 				"	<td>" . number_format(trim($row['imp_in_scadenza']), 2, ',', '.') . "</td>" .
 				"	<td>" . $bottoneVisualizzaScadenza . "</td>" .
 				"	<td>" . $bottoneModificaScadenza . "</td>" .
-				"	<td>" . $bottoneCancellaScadenza . "</td>" .
 				"</tr>";
 
 				$desfornitore = self::EMPTYSTRING;
@@ -200,7 +202,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 			"	<td class='bg-info'><strong>" . number_format($totale_fornitore, 2, ',', '.') . "</strong></td>" .
 			"	<td class='bg-info'></td>" .
 			"	<td class='bg-info'></td>" .
-			"	<td class='bg-info'></td>" .
 			"</tr>";
 
 			$totale_scadenze += $totale_fornitore;
@@ -216,7 +217,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 			"	<td class='bg-info'><strong>" . number_format($totale_scadenze, 2, ',', '.') . "</strong></td>" .
 			"	<td class='bg-info'></td>" .
 			"	<td class='bg-info'></td>" .
-			"	<td class='bg-info'></td>" .
 			"</tr>";
 
 			$risultato_ricerca .= "</tbody></table>";
@@ -228,6 +228,13 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 			"</div>";
 		}
 
+		$elencoCausali = $causale->caricaCausali($db);
+		
+		$fornitore->load($db);
+		$cliente->load($db);
+		$_SESSION[self::FORNITORE] = serialize($fornitore);
+		$_SESSION[self::CLIENTE] = serialize($cliente);
+		
 		$replace = array(
 				'%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
 				'%azione%' => $_SESSION[self::AZIONE],
@@ -241,9 +248,25 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 				'%10-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_CHIUSA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
 				'%02-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_RIMANDATA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
 				'%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+				'%elenco_causali%' => $elencoCausali,
+				'%elenco_causali_cre%' => $elencoCausali,
+				'%elenco_causali_mod%' => $elencoCausali,
+				'%elenco_fornitori%' => $this->caricaElencoFornitori($fornitore),
+				'%elenco_clienti%' => $this->caricaElencoClienti($cliente),
 				'%risultato_ricerca%' => $risultato_ricerca
 		);
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
+		
+		// Includo la pagina principale e tutti i dialoghi che servono e faccio la send della pagina ottenuta
+		
+		$template  = $utility->tailFile($utility->getTemplate($paginaRicercaScadenze), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaRegistrazione), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaPagamento), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoModificaRegistrazione), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaRegistrazione), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoNuovaScadenzaModificaRegistrazione), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoModificaPagamento), $replace);
+		$template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaPagamento), $replace);
+		
 		echo $utility->tailTemplate($template);
 		}
 	}

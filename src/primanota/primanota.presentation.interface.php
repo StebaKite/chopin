@@ -54,8 +54,6 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	// Oggetti
 
 	const RICERCA_REGISTRAZIONE_TEMPLATE = "Obj_ricercaregistrazionetemplate";
-	const FORNITORE = "Obj_fornitore";
-	const CLIENTE = "Obj_cliente";
 
 	// Metodi
 

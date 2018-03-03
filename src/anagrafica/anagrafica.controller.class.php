@@ -102,13 +102,13 @@ class AnagraficaController {
 			$cliente->setDesCliente($_REQUEST["descliente"]);
 		}
 
-// 		if (isset($_REQUEST["idcliente"])) {
-// 			$cliente->setIdCliente($_REQUEST["idcliente"]);
-// 		}
+		if (isset($_REQUEST["idcliente"])) {
+			$cliente->setIdCliente($_REQUEST["idcliente"]);
+		}
 
-// 		if (isset($_REQUEST["idfornitore"])) {
-// 			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
-// 		}
+		if (isset($_REQUEST["idfornitore"])) {
+			$fornitore->setIdFornitore($_REQUEST["idfornitore"]);
+		}
 
  		if (isset($_REQUEST["idmercato"])) {
  			$mercato->setIdMercato($_REQUEST["idmercato"]);

@@ -50,6 +50,7 @@ interface MainNexus6Interface {
 
 	const CONTO_IN_DARE = "Dare";
 	const CONTO_IN_AVERE = "Avere";
+	const FUNCTION_REFERER = "FunctionReferer";
 	
 	// Bottoni
 	
@@ -65,6 +66,29 @@ interface MainNexus6Interface {
 	// Messaggi d'errore comuni
 	
 	const ERRORE_LETTURA = "Errore fatale durante la lettura dei dati!!";
+	
+	// Parti HTML condivise da più pagine
+	
+	const DIALOGO_VISUALIZZA_REGISTRAZIONE = "/condivisi/visualizzaRegistrazione.dialog.html";
+	const DIALOGO_NUOVA_REGISTRAZIONE = "/condivisi/nuovaRegistrazione.dialog.html";
+	const DIALOGO_VISUALIZZA_PAGAMENTO = "/condivisi/visualizzaPagamento.dialog.html";
+	const DIALOGO_MODIFICA_REGISTRAZIONE = "/condivisi/modificaRegistrazione.dialog.html";
+	const DIALOGO_NUOVO_DETTAGLIO_NUOVA_REGISTRAZIONE = "/condivisi/nuovoDettaglioNuovaRegistrazione.dialog.html";
+	const DIALOGO_NUOVO_DETTAGLIO_MODIFICA_REGISTRAZIONE = "/condivisi/nuovoDettaglioModificaRegistrazione.dialog.html";
+	const DIALOGO_NUOVA_SCADENZA_NUOVA_REGISTRAZIONE = "/condivisi/nuovaDataScadenzaNuovaRegistrazione.dialog.html";
+	const DIALOGO_NUOVA_SCADENZA_MODIFICA_REGISTRAZIONE = "/condivisi/nuovaDataScadenzaModificaRegistrazione.dialog.html";
+	const DIALOGO_MODIFICA_PAGAMENTO = "/condivisi/modificaPagamento.dialog.html";
+	const DIALOGO_NUOVO_DETTAGLIO_MODIFICA_PAGAMENTO = "/condivisi/nuovoDettaglioModificaPagamento.dialog.html";
+	
+	// Oggetti condivisi da più classi
+	
+	const FORNITORE = "Obj_fornitore";
+	const CLIENTE = "Obj_cliente";
+	const RICERCA_SCADENZE_FORNITORE = "Obj_ricercascadenzefornitore";
+	const RICERCA_SCADENZE_CLIENTE = "Obj_ricercascadenzecliente";
+	
+	const PRIMANOTA_CONTROLLER = "Obj_primanotacontroller";
+	const SCADENZE_CONTROLLER = "Obj_scadenzecontroller";
 	
 }
 

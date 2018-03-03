@@ -373,7 +373,9 @@ class ScadenzaFornitore implements CoreInterface {
 	            ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
 	            ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
 	            ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),
-	            ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()
+	        	ScadenzaFornitore::TIP_ADDEBITO => $this->getTipAddebito(),
+	        	ScadenzaFornitore::STA_SCADENZA => self::SCADENZA_APERTA,	
+	        	ScadenzaFornitore::NOTA_SCADENZA => $this->getNotaScadenza()
 	        );
 	        
 	        if ($this->getQtaScadenzeDaPagare() == 0) {

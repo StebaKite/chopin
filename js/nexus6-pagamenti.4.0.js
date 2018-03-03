@@ -359,7 +359,7 @@ function modificaPagamento(idPagamento)
 			$("#modifica-pagamento-dialog").modal("show");
 		}
 	}
-	xmlhttp.open("GET", "modificaPagamentoFacade.class.php?modo=start&idpag=" + idPagamento, true);
+	xmlhttp.open("GET", "../primanota/modificaPagamentoFacade.class.php?modo=start&idpag=" + idPagamento, true);
 	xmlhttp.send();		
 }
 

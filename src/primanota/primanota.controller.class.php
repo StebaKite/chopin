@@ -96,17 +96,19 @@ class PrimanotaController
 			$registrazione->setIdMercato("");
 		}
 
-// 		if (isset($_REQUEST["idfornitore"])) {
-// 			$scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);
-// 			$scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
-// 			$scadenzaFornitore->setDatRegistrazione($_REQUEST["datareg"]);
-// 		}
+		if (isset($_REQUEST["idfornitore"])) {
+			$scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);
+			$scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
+			$scadenzaFornitore->setDatScadenza($_REQUEST["datareg"]);
+			$registrazione->setIdFornitore($_REQUEST["idfornitore"]);
+		}
 
-// 		if (isset($_REQUEST["idcliente"])) {
-// 			$scadenzaCliente->setIdCliente($_REQUEST["idcliente"]);
-// 			$scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
-// 			$scadenzaCliente->setDatRegistrazione($_REQUEST["datareg"]);
-// 		}
+		if (isset($_REQUEST["idcliente"])) {
+			$scadenzaCliente->setIdCliente($_REQUEST["idcliente"]);
+			$scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
+			$scadenzaCliente->setDatRegistrazione($_REQUEST["datareg"]);
+			$registrazione->setIdCliente($_REQUEST["idcliente"]);
+		}
 
 		if (isset($_REQUEST["datascad_for"])) {
 			$scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);

@@ -64,6 +64,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 					$scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
 					$scadenzaFornitore->setImpInScadenza(0);
 					$scadenzaFornitore->setNumFattura("0");
+					$scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
 					$scadenzaFornitore->aggiungi();
 					
 					echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);

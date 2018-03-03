@@ -42,6 +42,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 
+		unset($_SESSION[self::FUNCTION_REFERER]);
+		unset($_SESSION[self::MSG]);
+		
 		$registrazione->preparaFiltri();
 		$dettaglioRegistrazione->prepara();
 		$scadenzaCliente->prepara();
@@ -70,7 +73,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 		$db = Database::getInstance();
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
-
+		
+		unset($_SESSION[self::FUNCTION_REFERER]);
+		
 		$registrazione->preparaFiltri();
 		$dettaglioRegistrazione->prepara();
 		$scadenzaCliente->prepara();

@@ -8,11 +8,8 @@ interface ScadenzeBusinessInterface extends MainNexus6Interface {
 
 	const VISUALIZZA_SCADENZA_FORNITORE = "Obj_visualizzascadenzafornitore";
 	const MODIFICA_SCADENZA_FORNITORE = "Obj_modificascadenzafornitore";
-	
 	const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
 	const SCADENZA_CLIENTE = "Obj_scadenzacliente";
-	const RICERCA_SCADENZE_FORNITORE = "Obj_ricercascadenzefornitore";
-	const RICERCA_SCADENZE_CLIENTE = "Obj_ricercascadenzecliente";
 	const ESTRAI_PDF_SCADENZE_FORNITORE = "Obj_estraipdfscadenzefornitore";
 	const ESTRAI_PDF_SCADENZE_CLIENTE = "Obj_estraipdfscadenzecliente";
 	const CANCELLA_PAGAMENTO = "Obj_cancellapagamento";

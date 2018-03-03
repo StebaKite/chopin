@@ -1,0 +1,74 @@
+
+<!-- --------------------- -->
+<!-- VISUALIZZA PAGAMENTO  -->
+<!-- --------------------- -->
+
+<div class="container">
+	<div class="modal fade" id="visualizza-pagamento-dialog" role="dialog">
+		<div class="modal-dialog modal-lg">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Visualizza Pagamento</h4>
+	        	</div>
+	        	<div class="modal-body">
+
+					<div class="well well-sm">
+						<div class="form-group row">							
+							<div class="col-sm-3">
+						  		<div class="control-group">
+						    		<label for="datareg_pag_vis">%ml.datareg%</label>
+						    		<span id="datareg_pag_vis"></span>
+			            		</div>
+						  	</div>
+						  	<div class="col-sm-3">
+						  		<label for="codneg_pag_vis">%ml.negozio%</label>
+					    		<span id="codneg_pag_vis"></span>
+						  	</div>
+						  	<div class="col-sm-5">
+						  		<div class="control-group">
+						    		<label for="descreg_pag_vis">%ml.descreg%</label>
+						    		<span id="descreg_pag_vis"></span>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-6">
+						  		<div class="control-group">
+									<label for="causale_pag_vis">%ml.codcau%</label>
+						    		<span id="causale_pag_vis"></span>
+								</div>
+						  	</div>
+						  	<div class="col-sm-6 ui-front">
+						  		<div class="control-group">
+						    		<label id="fornitore_pag_vis_label" for="fornitore_pag_vis">%ml.codforn%</label>
+						    		<span id="fornitore_pag_vis"></span>
+								</div>	
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-7">
+						  		<div class="control-group">
+						    		<label for="scadenze_pagate_pag_vis">Fatture incluse nel pagamento</label>
+									<table class="table table-bordered" id="scadenze_pagate_pag_vis"></table>
+								</div>	
+						  	</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-12">
+						  		<div class="control-group">
+						    		<label for="dettagli_pag_vis">Dettagli</label>
+									<table class="table table-bordered table-hover" id="dettagli_pag_vis"></table>
+								</div>	
+						  	</div>
+						</div>
+					</div>	
+					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>
