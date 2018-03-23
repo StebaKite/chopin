@@ -25,7 +25,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
     }
 
     public function inizializzaPagina() {
-        
+
     }
 
     public function controlliLogici() {
@@ -61,14 +61,32 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
         $paginaRicercaRegistrazione = $this->root . $array['template'] . self::PAGINA_RICERCA_REGISTRAZIONE;
         $dialogoVisualizzaRegistrazione = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_REGISTRAZIONE;
         $dialogoNuovaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVA_REGISTRAZIONE;
+        $dialogoCancellaRegistrazione = $this->root . $array['template'] . self::DIALOGO_CANCELLA_REGISTRAZIONE;
         $dialogoVisualizzaPagamento = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_PAGAMENTO;
+        $dialogoVisualizzaIncasso = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_INCASSO;
+        $dialogoVisualizzaCorrispettivoMercato = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_CORRISPETTIVO_MERCATO;
+        $dialogoVisualizzaCorrispettivoNegozio = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_CORRISPETTIVO_NEGOZIO;
         $dialogoModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_MODIFICA_REGISTRAZIONE;
+        $dialogoModificaIncasso = $this->root . $array['template'] . self::DIALOGO_MODIFICA_INCASSO;
         $dialogoNuovoDettaglioNuovaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_NUOVA_REGISTRAZIONE;
         $dialogoNuovoDettaglioModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_REGISTRAZIONE;
         $dialogoNuovaScadenzaNuovaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVA_SCADENZA_NUOVA_REGISTRAZIONE;
         $dialogoNuovaScadenzaModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVA_SCADENZA_MODIFICA_REGISTRAZIONE;
         $dialogoModificaPagamento = $this->root . $array['template'] . self::DIALOGO_MODIFICA_PAGAMENTO;
+        $dialogoModificaCorrispettivoMercato = $this->root . $array['template'] . self::DIALOGO_MODIFICA_CORRISPETTIVO_MERCATO;
+        $dialogoModificaCorrispettivoNegozio = $this->root . $array['template'] . self::DIALOGO_MODIFICA_CORRISPETTIVO_NEGOZIO;
         $dialogoNuovoDettaglioModificaPagamento = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_PAGAMENTO;
+        $dialogoNuovoIncasso = $this->root . $array['template'] . self::DIALOGO_NUOVO_INCASSO;
+        $dialogoNuovoPagamento = $this->root . $array['template'] . self::DIALOGO_NUOVO_PAGAMENTO;
+        $dialogoNuovoCorrispettivoMercato = $this->root . $array['template'] . self::DIALOGO_NUOVO_CORRISPETTIVO_MERCATO;
+        $dialogoNuovoCorrispettivoNegozio = $this->root . $array['template'] . self::DIALOGO_NUOVO_CORRISPETTIVO_NEGOZIO;
+        $dialogoNuovoDettaglioNuovoIncasso = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_NUOVO_INCASSO;
+        $dialogoNuovoDettaglioNuovoPagamento = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_NUOVO_PAGAMENTO;
+        $dialogoNuovoDettaglioModificaIncasso = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_INCASSO;
+        $dialogoNuovoDettaglioNuovoCorrispettivoMercato = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_NUOVO_CORRISPETTIVO_MERCATO;
+        $dialogoNuovoDettaglioModificaCorrispettivoMercato = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_CORRISPETTIVO_MERCATO;
+        $dialogoNuovoDettaglioNuovoCorrispettivoNegozio = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_NUOVO_CORRISPETTIVO_NEGOZIO;
+        $dialogoNuovoDettaglioModificaCorrispettivoNegozio = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_CORRISPETTIVO_NEGOZIO;
 
         // creo l'elenco delle registrazioni
 
@@ -209,12 +227,12 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 // 					$risultato_ricerca .=
 // 					"<tr>" .
 // 					"	<td colspan='2'></td>" .
-// 					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" . 
+// 					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" .
 // 					trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "&nbsp;&nbsp;" .
 // 					trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conto:&nbsp;" .
 // 					trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) .
 // 					trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " .
-// 					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) . 
+// 					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) .
 // 					"   </i></td>" .
 // 					"</tr>";
 // 				}
@@ -259,19 +277,41 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
             '%risultato_ricerca%' => $risultato_ricerca
         );
 
-        // Includo la pagina principale e tutti i dialoghi che servono e faccio la send della pagina ottenuta
-
-        $template =  $utility->tailFile($utility->getTemplate($paginaRicercaRegistrazione), $replace);
+        // Includo la pagina principale e tutti i dialoghi che servono
+        // Registrazione
+        $template = $utility->tailFile($utility->getTemplate($paginaRicercaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovaRegistrazione), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoCancellaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaRegistrazione), $replace);
-        $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaPagamento), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoModificaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioNuovaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovaScadenzaNuovaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovaScadenzaModificaRegistrazione), $replace);
+
+        // Incassi e Pagamenti
+        $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaPagamento), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaIncasso), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoIncasso), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoPagamento), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoModificaPagamento), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoModificaIncasso), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaPagamento), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioNuovoIncasso), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioNuovoPagamento), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaIncasso), $replace);
+
+        // Corrispettivi
+        $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaCorrispettivoMercato), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaCorrispettivoNegozio), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoModificaCorrispettivoMercato), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoModificaCorrispettivoNegozio), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoCorrispettivoMercato), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoCorrispettivoNegozio), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioNuovoCorrispettivoMercato), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaCorrispettivoMercato), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioNuovoCorrispettivoNegozio), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaCorrispettivoNegozio), $replace);
 
         echo $utility->tailTemplate($template);
     }

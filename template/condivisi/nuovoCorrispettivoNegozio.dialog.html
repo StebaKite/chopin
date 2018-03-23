@@ -1,0 +1,80 @@
+
+<!-- ============================== -->
+<!-- NUOVO CORRISPETTIVO NEGOZIO -->
+<!-- ============================== -->
+
+<div class="container">
+    <div class="modal fade" id="nuovo-corrispettivo-negozio-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo Corrispettivo Negozio</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="nuovoCorrispettivoNegozioForm" action="../primanota/creaCorrispettivoNegozioFacade.class.php?modo=go">
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="datareg_corneg_cre_control_group">
+                                        <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                            <input type='text' class="form-control" id="datareg_corneg_cre" name="datareg_corneg_cre"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">Neg</span>
+                                        <select class="selectNegozio" id="codneg_corneg_cre" name="codneg_corneg_cre">
+                                            <option value=" ">&nbsp;</option>
+                                            <option value="VIL">%ml.villa%</option>
+                                            <option value="BRE">%ml.brembate%</option>
+                                            <option value="TRE">%ml.trezzo%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class='input-group' id="descreg_corneg_cre_control_group">
+                                        <span class="input-group-addon">%ml.descreg%</span>
+                                        <input class="form-control" id="descreg_corneg_cre" name="descreg_corneg_cre" type="text" onblur="controllaDescrizione('descreg_corneg_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <div class='input-group' id="causale_corneg_cre_control_group">
+                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <select class="selectCausale" data-live-search="true" id="causale_corneg_cre" name="causale_corneg_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_causali_corneg_cre%
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div class="control-group" id="dettagli_corneg_cre_control_group">
+                                        <label for="dettagli_corneg_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_corneg_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="dettagli_corneg_cre"></table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-corrispettivo-negozio-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuovo-corrispettivo-negozio-form">Nuovo Dettaglio</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -34,8 +34,6 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
 		$utility = Utility::getInstance();
 		$array = $utility->getConfig();
 		
-
-		$cliente->cercaConDescrizione($db);
 		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
 		$scadenzaCliente->trovaScadenzeDaIncassare($db);
 

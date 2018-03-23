@@ -11,5 +11,4 @@ $_SESSION["Obj_scadenzecontroller"] = serialize(new ScadenzeController(RicercaSc
 
 $controller = unserialize($_SESSION["Obj_scadenzecontroller"]);
 $controller->start();
-
 ?>

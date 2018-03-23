@@ -1,0 +1,61 @@
+
+<!-- =========================================== -->
+<!-- NUOVO DETTAGLIO NUOVO CORRISPETTIVO MERCATO -->
+<!-- =========================================== -->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-corrispettivo-mercato-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio corrispettivo mercato</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-importo-cormer-cre">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="importo_cormer_cre" name="importo_cormer_cre" type="text" onblur="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')" aria-describedby="sizing-addon-importo-cormer-cre"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn btn-primary active"><input type="radio" name="aliquota_cormer_cre" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onchange="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.10</label>
+								  	<label class="btn btn-primary"><input type="radio" name="aliquota_cormer_cre" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onchange="calcolaImponibile('importo_cormer_cre', 'aliquota_cormer_cre', 'imponibile_cormer_cre', 'iva_cormer_cre', 'msgquad_cormer_cre')">Aliq.20</label>
+								</div>						    		
+							</div>	
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-iva-cormer-cre">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>			 					
+									<input class="form-control" id="iva_cormer_cre" name="iva_cormer_cre" type="text" aria-describedby="sizing-addon-iva-cormer-cre"/>
+								</div>
+						  	</div>
+						  	<div class="col-sm-5">
+			 					<div class='input-group'>
+									<span class="input-group-addon" id="sizing-addon-imponibile-cormer-cre">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="imponibile_cormer_cre" name="imponibile_cormer_cre" type="text" aria-describedby="sizing-addon-imponibile-cormer-cre"/>
+								</div>
+						  	</div>
+						</div>
+						<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="selectpicker" data-live-search="true" id="conti_cormer_cre" name="conti_cormer_cre"></select>			
+								</div>	
+						  	</div>							  	
+						</div>												
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuovo-corrispettivo-mercato-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>

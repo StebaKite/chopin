@@ -1,0 +1,65 @@
+
+<!-- =============================================== -->
+<!-- NUOVO DETTAGLIO MODIFICA CORRISPETTIVO NEGOZIO  -->
+<!-- =============================================== -->
+
+<div class="container">
+    <div class="modal fade" id="nuovo-dettaglio-modifica-corrispettivo-negozio-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo dettaglio corrispettivo negozio</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-importo-corneg-mod">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="importo_corneg_mod" name="importo_corneg_mod" type="text" onblur="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')" aria-describedby="sizing-addon-importo-corneg-mod"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary active"><input type="radio" name="aliquota_corneg_mod" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label>
+                                    <label class="btn btn-primary"><input type="radio" name="aliquota_corneg_mod" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onclick="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label>
+                                </div>
+                                <div class='input-group'>
+                                    <label><input type="radio" name="aliquota_corneg_mod" id="aliquota10_corneg_mod" value="1.10" checked onchange="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.10</label>
+                                    <label><input type="radio" name="aliquota_corneg_mod" id="aliquota20_corneg_mod" value="1.22" onchange="calcolaImponibile('importo_corneg_mod', 'aliquota_corneg_mod', 'imponibile_corneg_mod', 'iva_corneg_mod', 'msgquad_corneg_mod')">Aliq.20</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-iva-corneg-mod">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="iva_corneg_mod" name="iva_corneg_mod" type="text" aria-describedby="sizing-addon-iva-corneg-mod"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-imponibile-corneg-mod">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="imponibile_corneg_mod" name="imponibile_corneg_mod" type="text" aria-describedby="sizing-addon-imponibile-corneg-mod"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-8">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">Cc</span>
+                                    <select class="selectpicker" data-live-search="true" id="conti_corneg_mod" name="conti_corneg_mod"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-corrispettivo-negozio-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

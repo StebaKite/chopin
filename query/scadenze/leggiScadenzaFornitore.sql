@@ -9,6 +9,7 @@ SELECT
 	scadenza.tip_addebito,
 	scadenza.num_fattura,
 	scadenza.sta_scadenza,
+	scadenza.cod_negozio,
 	scadenza.id_pagamento
 FROM contabilita.scadenza
 WHERE id_scadenza = %id_scadenza%

@@ -1,0 +1,47 @@
+
+<!-- ---------------------------------->
+<!-- NUOVO DETTAGLIO NUOVO PAGAMENTO -->
+<!-- ---------------------------------->
+
+<div class="container">
+	<div class="modal fade" id="nuovo-dettaglio-pagamento-dialog" role="dialog">
+		<div class="modal-dialog">
+	      <!-- Modal content-->
+			<div class="modal-content">
+	        	<div class="modal-header">
+	          		<h4 class="modal-title">Nuovo dettaglio pagamento</h4>
+	        	</div>
+	        	<div class="modal-body">
+					<div class="well well-sm">
+						<div class="form-group row">
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+									<input class="form-control" id="newimpdett_pag_cre" name="newimpdett_pag_cre" type="text" maxlength="10" onkeypress="controllaImporto('newimpdett_pag_cre')">
+								</div>
+						  	</div>
+						  	<div class="col-sm-4">
+			 					<div class='input-group'>
+									<span class="input-group-addon">D/A</span>
+									<input class="form-control" id="newsegnodett_pag_cre" name="newsegnodett_pag_cre" type="text" maxlength="1" />
+								</div>
+						  	</div>
+				  		</div>
+				  		<div class="form-group row">
+						  	<div class="col-sm-8">
+			 					<div class='input-group'>
+									<span class="input-group-addon">Cc</span>
+									<select class="selectpicker" data-live-search="true" id="conti_pag" name="newcontodett_pag_cre"></select>			
+								</div>	
+						  	</div>							  	
+				  		</div>				  		
+					</div>					
+	        	</div>
+	        	<div class="modal-footer">
+	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuovo-pagamento-form">Ok</button>
+	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	        	</div>
+	      	</div>
+		</div>
+	</div>
+</div>

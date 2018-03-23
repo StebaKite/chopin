@@ -1,0 +1,61 @@
+
+<!-- ------------------------------------------------->
+<!-- NUOVO DETTAGLIO MODIFICA CORRISPETTIVO MERCATO -->
+<!-- ------------------------------------------------->
+
+<div class="container">
+    <div class="modal fade" id="nuovo-dettaglio-modifica-corrispettivo-mercato-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo dettaglio corrispettivo mercato</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-importo-cormer-mod">Importo&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="importo_cormer_mod" name="importo_cormer_mod" type="text" onblur="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')" aria-describedby="sizing-addon-importo-cormer-mod"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary active"><input type="radio" name="aliquota_cormer_mod" id="aliquota10_cormer_cre" autocomplete="off" value="1.10" checked onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.10</label>
+                                    <label class="btn btn-primary"><input type="radio" name="aliquota_cormer_mod" id="aliquota20_cormer_cre" autocomplete="off" value="1.22" onclick="calcolaImponibile('importo_cormer_mod', 'aliquota_cormer_mod', 'imponibile_cormer_mod', 'iva_cormer_mod', 'msgquad_cormer_mod')">Aliq.20</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-iva-cormer-mod">Iva&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="iva_cormer_mod" name="iva_cormer_mod" type="text" aria-describedby="sizing-addon-iva-cormer-mod"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class='input-group'>
+                                    <span class="input-group-addon" id="sizing-addon-imponibile-cormer-mod">Imponibile&nbsp;<span class="glyphicon glyphicon-euro"></span></span>
+                                    <input class="form-control" id="imponibile_cormer_mod" name="imponibile_cormer_mod" type="text" aria-describedby="sizing-addon-imponibile-cormer-mod"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-8">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">Cc</span>
+                                    <select class="selectpicker" data-live-search="true" id="conti_cormer_mod" name="conti_cormer_mod"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-modifica-corrispettivo-mercato-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

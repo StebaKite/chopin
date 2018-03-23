@@ -1,10 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <scadenza>
-	<data>%data%</data>
-	<importo>%importo%</importo>
-	<addebito>%addebito%</addebito>
-	<fattura>%fattura%</fattura>
-	<stato>%stato%</stato>
-	<nota>%nota%</nota>
-	<registrazioneOriginante><![CDATA[%registrazioneoriginante%]]></registrazioneOriginante>
-	<pagamento><![CDATA[%pagamento%]]></pagamento>
+    <data>%data%</data>
+    <importo>%importo%</importo>
+    <fornitore>%fornitore%</fornitore>
+    <negozio>%negozio%</negozio>
+    <addebito>%addebito%</addebito>
+    <fattura>%fattura%</fattura>
+    <stato>%stato%</stato>
+    <nota>%nota%</nota>
+    <registrazioneOriginante><![CDATA[%registrazioneoriginante%]]></registrazioneOriginante>
+    <pagamento><![CDATA[%pagamento%]]></pagamento>
 </scadenza>

@@ -1,5 +1,5 @@
 ; ------------------------------------------------------------------------------
-; Il file x le traduzioni viene applicato dalla funzione che carica il template. 
+; Il file x le traduzioni viene applicato dalla funzione che carica il template.
 ; Il formato del campo in pagina deve essere: %ml.label%
 ; Il formato della traduzione deve essere: nome label = traduzione in lingua
 ; ------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ estraipdfTip = Estrae la tabella su un documento PDF
 anteprimaTip = Visualizza l'anteprima della struttura conti del bilancio
 nuovaDataScadTip = Aggiunge una data scadenza supplementare
 creaFattTip = Genera una fattura per il cliente selezionato
-articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe 
+articoloTip = Il campo ammette 150 caratteri. Il carattere \ spaccher&agrave; la descrizione su pi&ugrave; righe
 notafatturaTip = Inserisci le note che devono apparire in fattura. Ogni riga deve terminare col carattere \  (serve per il ritorno a capo della riga)
 avantiTip = Avanza al passo successivo
 confermaTip = Conferma esecuzione lavoro
@@ -118,7 +118,7 @@ ricercaRegistrazione = Ricerca Operazione
 modificaRegistrazione = Modifica Registrazione
 modificaCorrispettivoMercato = Modifica Corrispettivo Mercato
 modificaCorrispettivoNegozio = Modifica Corrispettivo Negozio
- 
+
 visualizzaRegistrazione = Visualizza Registrazione
 visualizzaCorrispettivoMercato = Visualizza Corrispettivo Mercato
 visualizzaCorrispettivoNegozio = Visualizza Corrispettivo Negozio
@@ -245,7 +245,7 @@ daincassare = Da incassare
 incassato = Incassato
 costi = Costi
 ricavi = Ricavi
-datregistrazione = Reg.
+datregistrazione = Data Registrazione
 numrigabilancio = Riga di bilancio
 anno = Anno
 datlavoro = Data
@@ -309,7 +309,7 @@ cercaConto = Cerca il conto
 
 codmercato = Codice mercato
 desmercato = Descrizione mercato
-cittamercato = Citt&agrave; mercato 
+cittamercato = Citt&agrave; mercato
 mercato = Mercato
 file = File da importare
 tabellaCorrispettivi = Corrispettivi da importare

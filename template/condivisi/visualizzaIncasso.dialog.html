@@ -1,0 +1,74 @@
+
+<!-- =================== -->
+<!-- VISUALIZZA INCASSO  -->
+<!-- =================== -->
+
+<div class="container">
+    <div class="modal fade" id="visualizza-incasso-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza Incasso</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <div class="control-group">
+                                    <label for="datareg_inc_vis">%ml.datareg%</label>
+                                    <span id="datareg_inc_vis"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="codneg_inc_vis">%ml.negozio%</label>
+                                <span id="codneg_inc_vis"></span>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="control-group">
+                                    <label for="descreg_inc_vis">%ml.descreg%</label>
+                                    <span id="descreg_inc_vis"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <div class="control-group">
+                                    <label for="causale_inc_vis">%ml.codcau%</label>
+                                    <span id="causale_inc_vis"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ui-front">
+                                <div class="control-group">
+                                    <label id="cliente_inc_vis_label" for="cliente_inc_vis">%ml.codclie%</label>
+                                    <span id="cliente_inc_vis"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-7">
+                                <div class="control-group">
+                                    <label for="scadenze_incassate_inc_vis">Fatture incluse nell'incasso</label>
+                                    <table class="table table-bordered" id="scadenze_incassate_inc_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="control-group">
+                                    <label for="dettagli_inc_vis">Dettagli</label>
+                                    <table class="table table-bordered table-hover" id="dettagli_inc_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+
+<!-- ================================ -->
+<!-- VISUALIZZA CORRISPETTIVO MERCATO -->
+<!-- ================================ -->
+
+<div class="container">
+    <div class="modal fade" id="visualizza-corrispettivo-mercato-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza Corrispettivo Mercato</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">							
+                            <div class="col-sm-3">
+                                <div class="control-group">
+                                    <label for="datareg_cormer_vis">%ml.datareg%</label>
+                                    <span id="datareg_cormer_vis"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="codneg_cormer_vis">%ml.negozio%</label>
+                                <span id="codneg_cormer_vis"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="control-group">
+                                    <label for="descreg_cormer_vis">%ml.descreg%</label>
+                                    <span id="descreg_cormer_vis"></span>
+                                </div>
+                            </div>						  	
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <div class="control-group">
+                                    <label for="causale_cormer_vis">%ml.codcau%</label>
+                                    <span id="causale_cormer_vis"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 ui-front">
+                                <div class="control-group">
+                                    <label id="mercato_cormer_vis_label" for="mercato_cormer_vis">%ml.mercato%</label>
+                                    <span id="mercato_cormer_vis"></span>
+                                </div>	
+                            </div>						  	
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="control-group">
+                                    <label for="dettagli_cormer_vis">Dettagli</label>
+                                    <table class="table table-bordered table-hover" id="dettagli_cormer_vis"></table>
+                                </div>	
+                            </div>
+                        </div>
+                    </div>	
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

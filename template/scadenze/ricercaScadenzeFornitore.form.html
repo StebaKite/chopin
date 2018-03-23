@@ -1,21 +1,20 @@
-<body>
 <script type="text/javascript">
 
-$(document).ready(function(){
+    $(document).ready(function () {
 
-	$(".datepicker").datepicker();
+        $(".datepicker").datepicker();
 
-	$("#myInput").on("keyup", 
-		function() {
-			var value = $(this).val().toLowerCase();
-			$("#myTable tr").filter(
-				function() {
-					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-				}
-			);
-		}
-	);				
-});
+        $("#myInput").on("keyup",
+                function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(
+                            function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            }
+                    );
+                }
+        );
+    });
 
 </script>
 
@@ -24,73 +23,73 @@ $(document).ready(function(){
 <!-- ------------------- -->
 
 <div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-			</div>
-			<br/>
-			<form method="post" action="%azione%">
-			  
-				<div class="form-group row">
-					<div class="col-sm-2">
-	 					<div class='input-group'>
-							<span class="input-group-addon">Neg</span>
-							<select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="VIL" %villa-selected% >%ml.villa%</option>
-								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-							</select>			
-						</div>
-					</div>
-					<div class="col-sm-3">
-	 					<div class='input-group'>
-							<span class="input-group-addon">%ml.stascadenza%</span>
-							<select class="selectStato" id="statoscad_sel" name="statoscad_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="00" %00-selected% >%ml.dapagare%</option>
-								<option value="10" %10-selected% >%ml.pagato%</option>
-								<option value="02" %02-selected% >%ml.shift%</option>								
-							</select>			
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class='input-group'>
-				            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-				                 <input type='text' class="form-control" name="datascad_da" value='%datascad_da%' />
-				                 <span class="input-group-addon">
-				                     <span class="glyphicon glyphicon-calendar"></span>
-				                 </span>
-				            </div>			
-						</div>  
-					</div>
-					<div class="col-sm-2">
-						<div class='input-group'>
-				            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-				                 <input type='text' class="form-control" name="datascad_a" value='%datascad_a%' />
-				                 <span class="input-group-addon">
-				                     <span class="glyphicon glyphicon-calendar"></span>
-				                 </span>
-							</div>
-						</div>				
-					</div>
-					<div class="col-sm-1">
-						<button id="submit" type="submit" class="btn btn-default">
-					    	<span class="glyphicon glyphicon-search"></span>
-					    </button>
-					</div> 
-				</div>	
-			</form>  
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+            </div>
+            <br/>
+            <form method="post" action="%azione%">
+
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Neg</span>
+                            <select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="VIL" %villa-selected% >%ml.villa%</option>
+                                <option value="BRE" %brembate-selected% >%ml.brembate%</option>
+                                <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.stascadenza%</span>
+                            <select class="selectStato" id="statoscad_sel" name="statoscad_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="00" %00-selected% >%ml.dapagare%</option>
+                                <option value="10" %10-selected% >%ml.pagato%</option>
+                                <option value="02" %02-selected% >%ml.shift%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datascad_da" value='%datascad_da%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datascad_a" value='%datascad_a%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="submit" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-body scrollable-panel">
+            %risultato_ricerca%
+        </div>
+    </div>
 </div>
 
 <!-- ------------------------ -->
@@ -98,71 +97,71 @@ $(document).ready(function(){
 <!-- ------------------------ -->
 
 <div class="container">
-	<div class="modal fade" id="visualizza-scadenza-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Visualizza Scadenza</h4>
-	        	</div>
-	        	<div class="modal-body">					
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-3">
-						  		<label for="datascad_vis">%ml.datascad%</label>
-					    		<span id="datascad_vis"></span>
-						  	</div>
-						  	<div class="col-sm-9">
-						  		<label for="notascad_vis">%ml.desscad%</label>
-					    		<span id="notascad_vis"></span>
-						  	</div>
-						</div>
-						<div class="form-group row">						
-						  	<div class="col-sm-3">
-						  		<label for="impscad_vis">%ml.importo%</label>
-					    		<span id="impscad_vis"></span>
-							</div>	
-						  	<div class="col-sm-3">
-						  		<label for="fatscad_vis">%ml.numfatt%</label>
-					    		<span id="fatscad_vis"></span>
-							</div>	
-						  	<div class="col-sm-3">
-						  		<label for="tipaddeb_vis">%ml.tipaddebito%</label>
-					    		<span id="tipaddeb_vis"></span>
-							</div>	
-						</div>
-						<div class="form-group row">
-						  	<div class="col-sm-12">						
-				          		<h4>Registrazione Originale</h4>
-				          	</div>	
-				        </div>  	
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-						  		<div class="panel-body">
-								  	<table class="table table-bordered table-hover" id="regOrigTable_vis"></table>
-								</div> 	
-						  	</div>
-						</div>
-						<div class="form-group row">
-						  	<div class="col-sm-12">						
-				          		<h4>Pagamento</h4>
-				          	</div>	
-				        </div>  	
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-						  		<div class="panel-body">
-								  	<table class="table table-bordered table-hover" id="pagamentoTable_vis"></table>
-								</div> 	
-						  	</div>
-						</div>
-					</div>        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="visualizza-scadenza-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza Scadenza</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="datascad_vis">%ml.datascad%</label>
+                                <span id="datascad_vis"></span>
+                            </div>
+                            <div class="col-sm-9">
+                                <label for="notascad_vis">%ml.desscad%</label>
+                                <span id="notascad_vis"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="impscad_vis">%ml.importo%</label>
+                                <span id="impscad_vis"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="fatscad_vis">%ml.numfatt%</label>
+                                <span id="fatscad_vis"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="tipaddeb_vis">%ml.tipaddebito%</label>
+                                <span id="tipaddeb_vis"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <h4>Registrazione Originale</h4>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-hover" id="regOrigTable_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <h4>Pagamento</h4>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="panel-body">
+                                    <table class="table table-bordered table-hover" id="pagamentoTable_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ----------------- -->
@@ -170,92 +169,96 @@ $(document).ready(function(){
 <!-- ----------------- -->
 
 <div class="container">
-	<div class="modal fade" id="modifica-scadenza-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Scadenza</h4>
-	        	</div>
-	        	<div class="modal-body">					
-					
-					<form method="post" id="modificaScadenzaForm" action="../scadenze/modificaScadenzaFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-								<div class="col-sm-3">
-									<div class='input-group' id="datascad_pag_cre_control_group">
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-					                		<input type='text' class="form-control" id="datascad_mod" name="datascad_mod"/>
-					                		<span class="input-group-addon">
-					                    		<span class="glyphicon glyphicon-calendar"></span>
-					                 		</span>
-					            		</div>			
-				            		</div>
-							  	</div>
-							  	<div class="col-sm-9">
-									<div class='input-group' id="notascad_pag_mod_control_group">
-										<span class="input-group-addon">%ml.desscad%</span>
-										<input class="form-control" id="notascad_mod" name="notascad_mod" type="text" onblur="controllaDescrizione('notascad_mod')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">		
-							  	<div class="col-sm-3">
-									<div class='input-group' id="impscad_mod_control_group">
-										<span class="input-group-addon">%ml.importo%</span>
-										<input class="form-control" id="impscad_mod" name="impscad_mod" type="text" onblur="controllaNumero('impscad_mod')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-									<div class='input-group' id="fatscad_mod_control_group">
-										<span class="input-group-addon">%ml.numfatt%</span>
-										<input class="form-control" id="fatscad_mod" name="fatscad_mod" type="text" onblur="controllaCodice('fatscad_mod')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-							  		<label for="tipaddeb_mod">%ml.tipaddebito%</label>
-						    		<span id="tipaddeb_mod"></span>
-								</div>	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">						
-					          		<h4>Registrazione Originale</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-							  		<div class="panel-body">
-									  	<table class="table table-bordered table-hover" id="regOrigTable_mod"></table>
-									</div> 	
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">						
-					          		<h4>Pagamento</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-							  		<div class="panel-body">
-									  	<table class="table table-bordered table-hover" id="pagamentoTable_mod"></table>
-									</div> 	
-							  	</div>
-							</div>
-						</div>
-						        
-					</form>
-							
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="modifica-scadenza-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifica Scadenza</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="modificaScadenzaForm" action="../scadenze/modificaScadenzaFornitoreFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="datascad_pag_cre_control_group">
+                                        <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                            <input type='text' class="form-control" id="datascad_mod" name="datascad_mod"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class='input-group' id="notascad_pag_mod_control_group">
+                                        <span class="input-group-addon">%ml.desscad%</span>
+                                        <input class="form-control" id="notascad_mod" name="notascad_mod" type="text" onblur="controllaDescrizione('notascad_mod')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="impscad_mod_control_group">
+                                        <span class="input-group-addon">%ml.importo%</span>
+                                        <input class="form-control" id="impscad_mod" name="impscad_mod" type="text" onblur="controllaNumero('impscad_mod')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="fatscad_mod_control_group">
+                                        <span class="input-group-addon">%ml.numfatt%</span>
+                                        <input class="form-control" id="fatscad_mod" name="fatscad_mod" type="text" onblur="controllaCodice('fatscad_mod')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="tipaddeb_mod">%ml.tipaddebito%</label>
+                                    <span id="tipaddeb_mod"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <h4>Registrazione Originale</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div class="panel-body">
+                                        <table class="table table-bordered table-hover" id="regOrigTable_mod"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <h4>Pagamento</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div class="panel-body">
+                                        <table class="table table-bordered table-hover" id="pagamentoTable_mod"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="negozio_mod" name="negozio_mod"/>
+                        <input type="hidden" id="fatscad_orig_mod" name="fatscad_orig_mod"/>
+                        <input type="hidden" id="fornitore_orig_mod" name="fornitore_orig_mod"/>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-scadenza-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 
- 		

@@ -7,60 +7,59 @@ require_once 'utility.class.php';
 require_once 'registrazione.class.php';
 require_once 'lavoroPianificato.class.php';
 
-class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE])) $_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE] = serialize(new ControllaDataRegistrazione());
-		return unserialize($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]);
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function start()
-	{
-		$dataOk = false;
+    public function getInstance() {
+        if (!isset($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]))
+            $_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE] = serialize(new ControllaDataRegistrazione());
+        return unserialize($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]);
+    }
 
-		$registrazione = Registrazione::getInstance();
-		$lavoroPianificato = LavoroPianificato::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
+    public function start() {
+        $dataOk = false;
 
-		$lavoroPianificato->load($db);
+        $registrazione = Registrazione::getInstance();
+        $lavoroPianificato = LavoroPianificato::getInstance();
+        $db = Database::getInstance();
 
-		if ($lavoroPianificato->getQtaLavoriPianificati() > 0) {
+        $lavoroPianificato->load($db);
 
-			foreach($lavoroPianificato->getLavoriPianificati() as $unLavoro) {
+        if ($lavoroPianificato->getQtaLavoriPianificati() > 0) {
 
-				/**
-				 * Se la registrazione ha una data di registrazione che cade all'interno di un mese in linea è ok.
-				 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese
-				 */
+            foreach ($lavoroPianificato->getLavoriPianificati() as $unLavoro) {
 
-				if (date("d", strtotime($unLavoro[LavoroPianificato::DAT_LAVORO])) == "01") {
+                /**
+                 * Se la registrazione ha una data di registrazione che cade all'interno di un mese in linea è ok.
+                 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese
+                 */
+                if (date("d", strtotime($unLavoro[LavoroPianificato::DAT_LAVORO])) == "01") {
 
-					$dataRegistrazione = strtotime(str_replace('/', '-', $registrazione->getDatRegistrazione()));
+                    $dataRegistrazione = strtotime(str_replace('/', '-', $registrazione->getDatRegistrazione()));
 
-					if ($dataRegistrazione >= strtotime($unLavoro[LavoroPianificato::DAT_LAVORO])) {
-						$dataOk = true;
-						break;
-					}
-				}
-			}
-		}
+                    if ($dataRegistrazione >= strtotime($unLavoro[LavoroPianificato::DAT_LAVORO])) {
+                        $dataOk = true;
+                        break;
+                    }
+                }
+            }
+        }
 
-		if ($dataOk) echo "";
-		else echo "Data non ammessa";
-	}
+        if ($dataOk)
+            echo "";
+        else
+            echo "Data non ammessa";
+    }
 
-	public function go() {
-		$this->start();
-	}
+    public function go() {
+        $this->start();
+    }
+
 }
 
 ?>

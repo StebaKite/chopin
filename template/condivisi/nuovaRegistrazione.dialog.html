@@ -4,109 +4,109 @@
 <!-- ------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuova-registrazione-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuova Registrazione</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="nuovaRegistrazioneForm" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-								<div class="col-sm-3">
-									<div class='input-group' id="datareg_cre_control_group">
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-					                		<input type='text' class="form-control" id="datareg_cre" name="datareg_cre"/>
-					                		<span class="input-group-addon">
-					                    		<span class="glyphicon glyphicon-calendar"></span>
-					                 		</span>
-					            		</div>			
-				            		</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">Neg</span>
-										<select class="selectNegozio" id="codneg_cre" name="codneg_cre" >
-											<option value=" ">&nbsp;</option>
-											<option value="VIL">%ml.villa%</option>
-											<option value="BRE">%ml.brembate%</option>
-											<option value="TRE">%ml.trezzo%</option>
-										</select>			
-									</div>	
-							  	</div>
-							  	<div class="col-sm-5">
-									<div class='input-group' id="descreg_cre_control_group">
-										<span class="input-group-addon">%ml.descreg%</span>
-										<input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
-									</div>
-							  	</div>							
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-									<div class='input-group' id="numfatt_cre_control_group">
-										<span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
-										<input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); "/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-5">
-									<div class='input-group' id="causale_cre_control_group">
-										<span class="input-group-addon">%ml.codcau%</span>
-										<select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
-											<option value=" ">&nbsp;</option>
-											%elenco_causali_cre%
-										</select>			
-									</div>
-							  	</div>
-							</div>							
-							<div class="form-group row">
-							  	<div class="col-sm-6 ui-front">
-									<div class='input-group' id="fornitore_cre_control_group">
-										<span class="input-group-addon">%ml.codforn%</span>
-										<select class="selectCliFor" data-live-search="true" id="fornitore_cre" name="fornitore_cre" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');" >
-											%elenco_fornitori%
-										</select>			
-									</div>	
-							  	</div>
-							  	<div class="col-sm-6 ui-front">
-									<div class='input-group' id="cliente_cre_control_group">
-										<span class="input-group-addon">%ml.codclie%</span>
-										<select class="selectCliFor" data-live-search="true" id="cliente_cre" name="cliente_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre','cliente_cre'); controllaCausale('causale_cre');" >
-											%elenco_clienti%
-										</select>			
-									</div>	
-							  	</div>
-							</div>						
-							<div class="form-group row">
-							  	<div class="col-sm-7">
-							  		<div class="control-group" id="scadenzesuppl_cre_control_group">
-							    		<label for="scadenzesuppl_cre">%ml.datascad%&nbsp;<small><span class="text-danger" id="scadenzesuppl_cre_messaggio"></span></small></label>
-										<table class="table table-bordered table-hover" id="scadenzesuppl_cre"></table>
-									</div>	
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-							  		<div class="control-group" id="dettagli_cre_control_group">
-							    		<label for="dettagli_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_cre_messaggio"></span></small></label>
-										<table class="table table-bordered table-hover" id="dettagli_cre"></table>
-									</div>	
-							  	</div>
-							</div>
-						</div>
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuova-registrazione-form">Ok</button>
-	          		<button type="button" class="btn btn-default" id="button-nuova-scadenza-nuova-registrazione-form">Nuova scadenza</button>
-	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuova-registrazione-form">Nuovo Dettaglio</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="nuova-registrazione-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuova Registrazione</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="nuovaRegistrazioneForm" action="../primanota/creaRegistrazioneFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="datareg_cre_control_group">
+                                        <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                            <input type='text' class="form-control" id="datareg_cre" name="datareg_cre"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">Neg</span>
+                                        <select class="selectNegozio" id="codneg_cre" name="codneg_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            <option value="VIL">%ml.villa%</option>
+                                            <option value="BRE">%ml.brembate%</option>
+                                            <option value="TRE">%ml.trezzo%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class='input-group' id="descreg_cre_control_group">
+                                        <span class="input-group-addon">%ml.descreg%</span>
+                                        <input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4 ui-front">
+                                    <div class='input-group' id="numfatt_cre_control_group">
+                                        <span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
+                                        <input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre');"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class='input-group' id="causale_cre_control_group">
+                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_causali_cre%
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 ui-front">
+                                    <div class='input-group' id="fornitore_cre_control_group">
+                                        <span class="input-group-addon">%ml.codforn%</span>
+                                        <select class="selectCliFor" data-live-search="true" id="fornitore_cre" name="fornitore_cre" onchange="aggiungiDettaglioContoFornitore(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre'); controllaCausale('causale_cre');" >
+                                            %elenco_fornitori%
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ui-front">
+                                    <div class='input-group' id="cliente_cre_control_group">
+                                        <span class="input-group-addon">%ml.codclie%</span>
+                                        <select class="selectCliFor" data-live-search="true" id="cliente_cre" name="cliente_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre'); controllaCausale('causale_cre');" >
+                                            %elenco_clienti%
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-7">
+                                    <div class="control-group" id="scadenzesuppl_cre_control_group">
+                                        <label for="scadenzesuppl_cre">%ml.datascad%&nbsp;<small><span class="text-danger" id="scadenzesuppl_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="scadenzesuppl_cre"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div class="control-group" id="dettagli_cre_control_group">
+                                        <label for="dettagli_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="dettagli_cre"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuova-registrazione-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-nuova-scadenza-nuova-registrazione-form">Nuova scadenza</button>
+                    <button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuova-registrazione-form">Nuovo Dettaglio</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

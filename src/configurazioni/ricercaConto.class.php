@@ -7,90 +7,89 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'conto.class.php';
 
-class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
-{
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
+class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::RICERCA_CONTO])) $_SESSION[self::RICERCA_CONTO] = serialize(new RicercaConto());
-		return unserialize($_SESSION[self::RICERCA_CONTO]);
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function start() {
+    public function getInstance() {
+        if (!isset($_SESSION[self::RICERCA_CONTO]))
+            $_SESSION[self::RICERCA_CONTO] = serialize(new RicercaConto());
+        return unserialize($_SESSION[self::RICERCA_CONTO]);
+    }
 
-		$conto = Conto::getInstance();
-		$sottoconto = Sottoconto::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function start() {
 
-		$conto->setConti(null);
-		$sottoconto->preparaNuoviSottoconti();
-		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+        $conto = Conto::getInstance();
+        $sottoconto = Sottoconto::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$ricercaContoTemplate = RicercaContoTemplate::getInstance();
-		$this->preparaPagina($ricercaContoTemplate);
+        $conto->setConti(null);
+        $sottoconto->preparaNuoviSottoconti();
+        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
+        $ricercaContoTemplate = RicercaContoTemplate::getInstance();
+        $this->preparaPagina($ricercaContoTemplate);
 
-		$ricercaContoTemplate->displayPagina();
-		include($this->piede);
-	}
+        $replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%users%' => $_SESSION[self::USERS], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-	public function go() {
+        $ricercaContoTemplate->displayPagina();
+        include($this->piede);
+    }
 
-		$conto = Conto::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function go() {
 
-		$ricercaContoTemplate = RicercaContoTemplate::getInstance();		
-		$this->preparaPagina($ricercaContoTemplate);
-		
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);
-		
-		if ($conto->load($db)) {
+        $conto = Conto::getInstance();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-			$_SESSION[self::CONTO] = serialize($conto);
-			$_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
+        $ricercaContoTemplate = RicercaContoTemplate::getInstance();
+        $this->preparaPagina($ricercaContoTemplate);
 
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);			
-			$_SESSION[self::MSG] = $utility->tailTemplate($template);			
-		}
-		else {
+        $replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%users%' => $_SESSION[self::USERS], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-			$_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA ;
+        if ($conto->load($db)) {
 
-			self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-			$template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-		}		
-		$ricercaContoTemplate->displayPagina();
-		
-		include($this->piede);
-	}
+            $_SESSION[self::CONTO] = serialize($conto);
+            $_SESSION[self::MESSAGGIO] = "Trovati " . $conto->getQtaConti() . " conti";
 
-	public function preparaPagina($ricercaContoTemplate) {
+            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        } else {
 
-		$_SESSION[self::AZIONE] = self::AZIONE_RICERCA_CONTO;
-		$_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
-		$_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaConto%";
-	}
+            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+
+            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+            echo $utility->tailTemplate($template);
+        }
+        $ricercaContoTemplate->displayPagina();
+
+        include($this->piede);
+    }
+
+    public function preparaPagina($ricercaContoTemplate) {
+
+        $_SESSION[self::AZIONE] = self::AZIONE_RICERCA_CONTO;
+        $_SESSION[self::TIP_CONFERMA] = "%ml.cercaTip%";
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaConto%";
+    }
+
 }
 
 ?>

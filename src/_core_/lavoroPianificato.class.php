@@ -1,318 +1,309 @@
 <?php
 
 require_once 'core.interface.php';
+require_once 'coreBase.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 
-class LavoroPianificato implements CoreInterface {
+class LavoroPianificato extends CoreBase implements CoreInterface {
 
-	private $root;
+    private $root;
 
-	// Nomi colonne tabella Lavoro Pianificato
+    // Nomi colonne tabella Lavoro Pianificato
 
-	const PK_LAVORO_PIANIFICATO = "pk_lavoro_pianificato";
-	const DAT_LAVORO = "dat_lavoro";
-	const DES_LAVORO = "des_lavoro";
-	const FIL_ESECUZIONE_LAVORO = "fil_esecuzione_lavoro";
-	const CLA_ESECUZIONE_LAVORO = "cla_esecuzione_lavoro";
-	const STA_LAVORO = "sta_lavoro";
-	const TMS_ESECUZIONE = "tms_esecuzione";
+    const PK_LAVORO_PIANIFICATO = "pk_lavoro_pianificato";
+    const DAT_LAVORO = "dat_lavoro";
+    const DES_LAVORO = "des_lavoro";
+    const FIL_ESECUZIONE_LAVORO = "fil_esecuzione_lavoro";
+    const CLA_ESECUZIONE_LAVORO = "cla_esecuzione_lavoro";
+    const STA_LAVORO = "sta_lavoro";
+    const TMS_ESECUZIONE = "tms_esecuzione";
+    // altre costanti
 
-	// altre costanti
+    const PRIMO_DEL_MESE = "01";
+    const SALDO_GIA_CALCOLATO = "10";
+    const SALDO_DA_CALCOLARE = "00";
+    const SALDI_CLASS_FOLDER = "/chopin/src/saldi/";
 
-	const PRIMO_DEL_MESE = "01";
-	const SALDO_GIA_CALCOLATO = "10";
-	const SALDO_DA_CALCOLARE = "00";
-	const SALDI_CLASS_FOLDER = "/chopin/src/saldi/";
+    // dati Lavoro Pianificato
 
-	// dati Lavoro Pianificato
+    private $pkLavoroPianificato;
+    private $datLavoro;
+    private $desLavoro;
+    private $filEsecuzioneLavoro;
+    private $claEsecuzioneLavoro;
+    private $staLavoro;
+    private $tmsEsecuzione;
+    private $lavoriPianificati;
+    private $qtaLavoriPianificati;
+    private $datRegistrazione;
+    private $datEsecuzioneLavoro;
 
-	private $pkLavoroPianificato;
-	private $datLavoro;
-	private $desLavoro;
-	private $filEsecuzioneLavoro;
-	private $claEsecuzioneLavoro;
-	private $staLavoro;
-	private $tmsEsecuzione;
+    // fitri di ricerca
+    // Queries
 
-	private $lavoriPianificati;
-	private $qtaLavoriPianificati;
+    const LOAD_LAVORI_PIANIFICATI = "/main/lavoriPianificati.sql";
+    const CAMBIO_STATO = "/main/cambioStatoLavoroPianificato.sql";
+    const LEGGI_LAVORI_ANNO_CORRENTE = "/main/lavoriPianificatiAnnoCorrente.sql";
 
-	private $datRegistrazione;
-	private $datEsecuzioneLavoro;
+    // Metodi
 
-	// fitri di ricerca
+    function __construct() {
+        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+    }
 
+    public function getInstance() {
 
-	// Queries
+        if (!isset($_SESSION[self::LAVORO_PIANIFICATO]))
+            $_SESSION[self::LAVORO_PIANIFICATO] = serialize(new LavoroPianificato());
+        return unserialize($_SESSION[self::LAVORO_PIANIFICATO]);
+    }
 
-	const LOAD_LAVORI_PIANIFICATI = "/main/lavoriPianificati.sql";
-	const CAMBIO_STATO = "/main/cambioStatoLavoroPianificato.sql";
-	const LEGGI_LAVORI_ANNO_CORRENTE = "/main/lavoriPianificatiAnnoCorrente.sql";
+    public function load($db) {
 
-	// Metodi
+        /**
+         * 	colonne array LavoriPianificati
+         *
+         * 	pk_lavoro_pianificato
+         * 	dat_lavoro
+         * 	des_lavoro
+         * 	fil_esecuzione_lavoro
+         * 	cla_esecuzione_lavoro
+         * 	sta_lavoro
+         * 	tms_esecuzione
+         *
+         */
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-	function __construct() {
-		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
-	}
+        $replace = array();
 
-	public function getInstance() {
+        $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::LOAD_LAVORI_PIANIFICATI;
 
-		if (!isset($_SESSION[self::LAVORO_PIANIFICATO])) $_SESSION[self::LAVORO_PIANIFICATO] = serialize(new LavoroPianificato());
-		return unserialize($_SESSION[self::LAVORO_PIANIFICATO]);
-	}
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
 
-	public function load($db) {
+        if ($result) {
+            $this->setLavoriPianificati(pg_fetch_all($result));
+            $this->setQtaLavoriPianificati(pg_num_rows($result));
+        } else {
+            $this->setLavoriPianificati(null);
+            $this->setQtaLavoriPianificati(0);
+        }
+        return $result;
+    }
 
-		/**
-		 *	colonne array LavoriPianificati
-		 *
-		 * 	pk_lavoro_pianificato
-		 *	dat_lavoro
-		 *	des_lavoro
-		 *	fil_esecuzione_lavoro
-		 *	cla_esecuzione_lavoro
-		 *	sta_lavoro
-		 *	tms_esecuzione
-		 *
-		 */
+    public function settaDaEseguire($db) {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        if ($this->getQtaLavoriPianificati() > 0) {
 
-		$replace = array();
+        } else
+            $this->load($db);
 
-		$sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::LOAD_LAVORI_PIANIFICATI;
+        if ($this->getQtaLavoriPianificati() > 0) {
 
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
+            foreach ($this->getLavoriPianificati() as $row) {
 
-		if ($result) {
-			$this->setLavoriPianificati(pg_fetch_all($result));
-			$this->setQtaLavoriPianificati(pg_num_rows($result));
-		}
-		else {
-			$this->setLavoriPianificati(null);
-			$this->setQtaLavoriPianificati(0);
-		}
-		return $result;
-	}
+                /**
+                 * Se la registrazione ha una data di registrazione che cade all'interno di un mese per il quale è già
+                 * stato riportato il saldo allora devo aggiornare tutti i riporti da quella data riporto in poi
+                 *
+                 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese
+                 */
+                if (date("d", strtotime($row[LavoroPianificato::DAT_LAVORO])) == LavoroPianificato::PRIMO_DEL_MESE) {
+                    if ((strtotime($row[LavoroPianificato::DAT_LAVORO]) >= strtotime($this->getDatRegistrazione())) && ($row[LavoroPianificato::STA_LAVORO] == LavoroPianificato::SALDO_GIA_CALCOLATO)) {
 
-	public function settaDaEseguire($db) {
+                        $this->setPkLavoroPianificato($row[LavoroPianificato::PK_LAVORO_PIANIFICATO]);
+                        $this->setStaLavoro(LavoroPianificato::SALDO_DA_CALCOLARE);
+                        $this->cambioStato($db);
+                    }
+                }
+            }
+        }
+        $this->load($db); // Riestrazione dei lavori pianificati a valle dei cambi stato
+    }
 
-		if ($this->getQtaLavoriPianificati() > 0) {}
-		else $this->load($db);
+    public function cambioStato($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		if ($this->getQtaLavoriPianificati() > 0) {
+        $replace = array(
+            '%sta_lavoro%' => $this->getStaLavoro(),
+            '%pk_lavoro_pianificato%' => $this->getPkLavoroPianificato()
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::CAMBIO_STATO;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
+        return $result;
+    }
 
-			foreach($this->getLavoriPianificati() as $row) {
+    public function esegui($db) {
+        $oggi = date("Y/m/d");
+        foreach ($this->getLavoriPianificati() as $row) {
+            if ((strtotime($row[self::DAT_LAVORO]) <= strtotime($oggi)) && ($row[self::STA_LAVORO] == self::SALDO_DA_CALCOLARE)) {
 
-				/**
-				 * Se la registrazione ha una data di registrazione che cade all'interno di un mese per il quale è già
-				 * stato riportato il saldo allora devo aggiornare tutti i riporti da quella data riporto in poi
-				 *
-				 * Salto tutti gli eventuali lavori pianificati che cadono in giorni diversi dal primo del mese
-				 */
+                $this->setClaEsecuzioneLavoro($row[self::CLA_ESECUZIONE_LAVORO]);
+                $this->setFilEsecuzioneLavoro($row[self::FIL_ESECUZIONE_LAVORO]);
+                $this->setDatLavoro($row[self::DAT_LAVORO]);
+                $this->setPkLavoroPianificato($row[self::PK_LAVORO_PIANIFICATO]);
 
-				if (date("d", strtotime($row[LavoroPianificato::DAT_LAVORO])) == LavoroPianificato::PRIMO_DEL_MESE) {
-					if ((strtotime($row[LavoroPianificato::DAT_LAVORO]) >= strtotime($this->getDatRegistrazione())) && ($row[LavoroPianificato::STA_LAVORO] == LavoroPianificato::SALDO_GIA_CALCOLATO)) {
+                if ($this->runClass($db))
+                    error_log("Lavoro " . $this->getDesLavoro() . " eseguito!");
+                else
+                    error_log("Lavoro " . $this->getDesLavoro() . " in crash!");
+            }
+        }
+    }
 
-						$this->setPkLavoroPianificato($row[LavoroPianificato::PK_LAVORO_PIANIFICATO]);
-						$this->setStaLavoro(LavoroPianificato::SALDO_DA_CALCOLARE);
-						$this->cambioStato($db);
-					}
-				}
-			}
-		}
-		$this->load($db);	// Riestrazione dei lavori pianificati a valle dei cambi stato
-	}
+    public function runClass($db) {
+        $className = trim($this->getClaEsecuzioneLavoro());
+        $fileClass = $this->getRoot() . self::SALDI_CLASS_FOLDER . trim($this->getFilEsecuzioneLavoro()) . '.class.php';
 
-	public function cambioStato($db)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        if (file_exists($fileClass)) {
 
-		$replace = array(
-				'%sta_lavoro%' => $this->getStaLavoro(),
-				'%pk_lavoro_pianificato%' => $this->getPkLavoroPianificato()
-		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::CAMBIO_STATO;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+            require_once trim($this->getFilEsecuzioneLavoro()) . '.class.php';
 
-	public function esegui($db)
-	{
-		$oggi = date("Y/m/d");
-		foreach($this->getLavoriPianificati() as $row) {
-			if ((strtotime($row[self::DAT_LAVORO]) <= strtotime($oggi)) && ($row[self::STA_LAVORO] == self::SALDO_DA_CALCOLARE)) {
+            if (class_exists($className)) {
+                $instance = new $className();
+                $this->setDatEsecuzioneLavoro(str_replace("-", "/", $this->getDatLavoro()));
+                if ($instance->start($db, $this->getLavoroPianificato())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                error_log("Il nome classe '" . $className . "' non è definito, lavoro non eseguito");
+                return false;
+            }
+        } else {
+            error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
+            return false;
+        }
+    }
 
-				$this->setClaEsecuzioneLavoro($row[self::CLA_ESECUZIONE_LAVORO]);
-				$this->setFilEsecuzioneLavoro($row[self::FIL_ESECUZIONE_LAVORO]);
-				$this->setDatLavoro($row[self::DAT_LAVORO]);
-				$this->setPkLavoroPianificato($row[self::PK_LAVORO_PIANIFICATO]);
+    /**
+     *
+     * @param unknown $db
+     * @param unknown $utility
+     * @return unknown
+     */
+    public function loadAnnoCorrente($db) {
 
-				if ($this->runClass($db)) error_log("Lavoro " . $this->getDesLavoro() . " eseguito!");
-				else error_log("Lavoro " . $this->getDesLavoro() . " in crash!");
-			}
-		}
-	}
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-	public function runClass($db)
-	{
-		$className = trim($this->getClaEsecuzioneLavoro());
-		$fileClass = $this->getRoot() . self::SALDI_CLASS_FOLDER . trim($this->getFilEsecuzioneLavoro()) . '.class.php';
+        $replace = array();
 
-		if (file_exists($fileClass)) {
+        $sqlTemplate = $this->root . $array['query'] . self::LEGGI_LAVORI_ANNO_CORRENTE;
 
-			require_once trim($this->getFilEsecuzioneLavoro()) . '.class.php';
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
 
-			if (class_exists($className)) {
-				$instance = new $className();
-				$this->setDatEsecuzioneLavoro(str_replace("-", "/", $this->getDatLavoro()));
-				if ($instance->start($db, $this->getLavoroPianificato())) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			else {
-				error_log("Il nome classe '" . $className . "' non è definito, lavoro non eseguito");
-				return false;
-			}
-		}
-		else {
-			error_log("Il file '" . $fileClass . "' non esiste, lavoro non eseguito");
-			return false;
-		}
-	}
-	/**
-	 *
-	 * @param unknown $db
-	 * @param unknown $utility
-	 * @return unknown
-	 */
-	public function loadAnnoCorrente($db) {
+        if ($result) {
+            $this->setLavoriPianificati(pg_fetch_all($result));
+            $this->setQtaLavoriPianificati(pg_num_rows($result));
+        } else {
+            $this->setLavoriPianificati(null);
+            $this->setQtaLavoriPianificati(0);
+        }
+        return $result;
+    }
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    // Getters e Setters
 
-		$replace = array();
-
-		$sqlTemplate = $this->root . $array['query'] . self::LEGGI_LAVORI_ANNO_CORRENTE;
-
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-
-		if ($result) {
-			$this->setLavoriPianificati(pg_fetch_all($result));
-			$this->setQtaLavoriPianificati(pg_num_rows($result));
-		}
-		else {
-			$this->setLavoriPianificati(null);
-			$this->setQtaLavoriPianificati(0);
-		}
-		return $result;
-	}
-
-	// Getters e Setters
-
-    public function getRoot(){
+    public function getRoot() {
         return $this->root;
     }
 
-    public function setRoot($root){
+    public function setRoot($root) {
         $this->root = $root;
     }
 
-    public function getPkLavoroPianificato(){
+    public function getPkLavoroPianificato() {
         return $this->pkLavoroPianificato;
     }
 
-    public function setPkLavoroPianificato($pkLavoroPianificato){
+    public function setPkLavoroPianificato($pkLavoroPianificato) {
         $this->pkLavoroPianificato = $pkLavoroPianificato;
     }
 
-    public function getDatLavoro(){
+    public function getDatLavoro() {
         return $this->datLavoro;
     }
 
-    public function setDatLavoro($datLavoro){
+    public function setDatLavoro($datLavoro) {
         $this->datLavoro = $datLavoro;
     }
 
-    public function getDesLavoro(){
+    public function getDesLavoro() {
         return $this->desLavoro;
     }
 
-    public function setDesLavoro($desLavoro){
+    public function setDesLavoro($desLavoro) {
         $this->desLavoro = $desLavoro;
     }
 
-    public function getFilEsecuzioneLavoro(){
+    public function getFilEsecuzioneLavoro() {
         return $this->filEsecuzioneLavoro;
     }
 
-    public function setFilEsecuzioneLavoro($filEsecuzioneLavoro){
+    public function setFilEsecuzioneLavoro($filEsecuzioneLavoro) {
         $this->filEsecuzioneLavoro = $filEsecuzioneLavoro;
     }
 
-    public function getClaEsecuzioneLavoro(){
+    public function getClaEsecuzioneLavoro() {
         return $this->claEsecuzioneLavoro;
     }
 
-    public function setClaEsecuzioneLavoro($claEsecuzioneLavoro){
+    public function setClaEsecuzioneLavoro($claEsecuzioneLavoro) {
         $this->claEsecuzioneLavoro = $claEsecuzioneLavoro;
     }
 
-    public function getStaLavoro(){
+    public function getStaLavoro() {
         return $this->staLavoro;
     }
 
-    public function setStaLavoro($staLavoro){
+    public function setStaLavoro($staLavoro) {
         $this->staLavoro = $staLavoro;
     }
 
-    public function getTmsEsecuzione(){
+    public function getTmsEsecuzione() {
         return $this->tmsEsecuzione;
     }
 
-    public function setTmsEsecuzione($tmsEsecuzione){
+    public function setTmsEsecuzione($tmsEsecuzione) {
         $this->tmsEsecuzione = $tmsEsecuzione;
     }
 
-    public function getLavoriPianificati(){
+    public function getLavoriPianificati() {
         return $this->lavoriPianificati;
     }
 
-    public function setLavoriPianificati($lavoriPianificati){
+    public function setLavoriPianificati($lavoriPianificati) {
         $this->lavoriPianificati = $lavoriPianificati;
     }
 
-    public function getQtaLavoriPianificati(){
+    public function getQtaLavoriPianificati() {
         return $this->qtaLavoriPianificati;
     }
 
-    public function setQtaLavoriPianificati($qtaLavoriPianificati){
+    public function setQtaLavoriPianificati($qtaLavoriPianificati) {
         $this->qtaLavoriPianificati = $qtaLavoriPianificati;
     }
 
-    public function getDatEsecuzioneLavoro(){
+    public function getDatEsecuzioneLavoro() {
         return $this->datEsecuzioneLavoro;
     }
 
-    public function setDatEsecuzioneLavoro($datEsecuzioneLavoro){
+    public function setDatEsecuzioneLavoro($datEsecuzioneLavoro) {
         $this->datEsecuzioneLavoro = $datEsecuzioneLavoro;
     }
 
-
-    public function getDatRegistrazione(){
+    public function getDatRegistrazione() {
         return $this->datRegistrazione;
     }
 
-    public function setDatRegistrazione($datRegistrazione){
+    public function setDatRegistrazione($datRegistrazione) {
         $this->datRegistrazione = $datRegistrazione;
     }
 

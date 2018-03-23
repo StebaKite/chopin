@@ -1,529 +1,522 @@
 <?php
 
 require_once 'core.interface.php';
+require_once 'coreBase.class.php';
 require_once 'database.class.php';
 require_once 'utility.class.php';
 
-class Registrazione implements CoreInterface {
+class Registrazione extends CoreBase implements CoreInterface {
 
-	private $root;
+    private $root;
 
-	// Nomi colonne tabella Registrazione
+    // Nomi colonne tabella Registrazione
 
-	const ID_REGISTRAZIONE	= "id_registrazione";
-	const DAT_SCADENZA		= "dat_scadenza";
-	const DES_REGISTRAZIONE	= "des_registrazione";
-	const ID_FORNITORE		= "id_fornitore";
-	const ID_CLIENTE		= "id_cliente";
-	const COD_CAUSALE		= "cod_causale";
-	const NUM_FATTURA		= "num_fattura";
-	const DAT_REGISTRAZIONE	= "dat_registrazione";
-	const DAT_INSERIMENTO	= "dat_inserimento";
-	const STA_REGISTRAZIONE	= "sta_registrazione";
-	const COD_NEGOZIO		= "cod_negozio";
-	const ID_MERCATO		= "id_mercato";
+    const ID_REGISTRAZIONE = "id_registrazione";
+    const DAT_SCADENZA = "dat_scadenza";
+    const DES_REGISTRAZIONE = "des_registrazione";
+    const ID_FORNITORE = "id_fornitore";
+    const ID_CLIENTE = "id_cliente";
+    const COD_CAUSALE = "cod_causale";
+    const NUM_FATTURA = "num_fattura";
+    const DAT_REGISTRAZIONE = "dat_registrazione";
+    const DAT_INSERIMENTO = "dat_inserimento";
+    const STA_REGISTRAZIONE = "sta_registrazione";
+    const COD_NEGOZIO = "cod_negozio";
+    const ID_MERCATO = "id_mercato";
+    // altri nomi generati
 
-	// altri nomi generati
+    const DAT_REGISTRAZIONE_YYYYMMDD = "dat_registrazione_yyyymmdd";
+    const TIPO_RIGA_REGISTRAZIONE = "tipo";
+    const RIGA_REGISTRAZIONE = "R";
+    const RIGA_DETTAGLIO_REGISTRAZIONE = "D";
+    const ID_PAGAMENTO_CORRELATO = "id_pagamento";
+    const ID_INCASSO_CORRELATO = "id_incasso";
 
-	const DAT_REGISTRAZIONE_YYYYMMDD = "dat_registrazione_yyyymmdd";
-	const TIPO_RIGA_REGISTRAZIONE = "tipo";
-	const RIGA_REGISTRAZIONE = "R";
-	const RIGA_DETTAGLIO_REGISTRAZIONE = "D";
-	const ID_PAGAMENTO_CORRELATO = "id_pagamento";
-	const ID_INCASSO_CORRELATO = "id_incasso";
-	
-	// dati registrazione
+    // dati registrazione
 
-	private $idRegistrazione;
-	private $datScadenza;
-	private $desRegistrazione;
-	private $idFornitore;
-	private $idCliente;
-	private $codCausale;
-	private $numFattura;
-	private $numFatturaOrig;
-	
-	private $numFatturePagate;
-	private $numFattureDaPagare;
-	private $numFattureIncassate;
-	private $numFattureDaIncassare;	
-	
-	private $datRegistrazione;
-	private $datInserimento;
-	private $staRegistrazione;
-	private $codNegozio;
-	private $idMercato;
-	private $registrazioni;
-	private $qtaRegistrazioni;
-	private $desCliente;
-	private $desFornitore;
+    private $idRegistrazione;
+    private $datScadenza;
+    private $desRegistrazione;
+    private $idFornitore;
+    private $idCliente;
+    private $codCausale;
+    private $numFattura;
+    private $numFatturaOrig;
+    private $numFatturePagate;
+    private $numFattureDaPagare;
+    private $numFattureIncassate;
+    private $numFattureDaIncassare;
+    private $datRegistrazione;
+    private $datInserimento;
+    private $staRegistrazione;
+    private $codNegozio;
+    private $idMercato;
+    private $registrazioni;
+    private $qtaRegistrazioni;
+    private $desCliente;
+    private $desFornitore;
+    // Dati filtri di ricerca
 
-	// Dati filtri di ricerca
+    private $datRegistrazioneDa;
+    private $datRegistrazioneA;
+    private $codNegozioSel;
+    private $codCausaleSel;
 
-	private $datRegistrazioneDa;
-	private $datRegistrazioneA;
-	private $codNegozioSel;
-	private $codCausaleSel;
+    // Queries
 
-	// Queries
+    const LEGGI_REGISTRAZIONE = "/primanota/leggiRegistrazione.sql";
+    const CANCELLA_REGISTRAZIONE = "/primanota/deleteRegistrazione.sql";
+    const RICERCA_REGISTRAZIONE = "/primanota/ricercaRegistrazione.sql";
+    const CREA_REGISTRAZIONE = "/primanota/creaRegistrazione.sql";
+    const AGGIORNA_REGISTRAZIONE = "/primanota/updateRegistrazione.sql";
+    const CERCA_FATTURA_FORNITORE = "/primanota/ricercaFatturaFornitore.sql";
+    const CERCA_FATTURA_CLIENTE = "/primanota/ricercaFatturaCliente.sql";
 
-	const LEGGI_REGISTRAZIONE = "/primanota/leggiRegistrazione.sql";
-	const CANCELLA_REGISTRAZIONE = "/primanota/deleteRegistrazione.sql";
-	const RICERCA_REGISTRAZIONE = "/primanota/ricercaRegistrazione.sql";
-	const CREA_REGISTRAZIONE = "/primanota/creaRegistrazione.sql";
-	const AGGIORNA_REGISTRAZIONE = "/primanota/updateRegistrazione.sql";
-	const CERCA_FATTURA_FORNITORE = "/primanota/ricercaFatturaFornitore.sql";
-	const CERCA_FATTURA_CLIENTE = "/primanota/ricercaFatturaCliente.sql";
+    // Metodi
 
-	// Metodi
+    function __construct() {
+        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+    }
 
-	function __construct() {
-		$this->setRoot($_SERVER['DOCUMENT_ROOT']);
-	}
+    public function getInstance() {
 
-	public function getInstance() {
+        if (!isset($_SESSION[self::REGISTRAZIONE]))
+            $_SESSION[self::REGISTRAZIONE] = serialize(new Registrazione());
+        return unserialize($_SESSION[self::REGISTRAZIONE]);
+    }
 
-		if (!isset($_SESSION[self::REGISTRAZIONE])) $_SESSION[self::REGISTRAZIONE] = serialize(new Registrazione());
-		return unserialize($_SESSION[self::REGISTRAZIONE]);
-	}
+    public function prepara() {
+        $this->setDatScadenza(null);
+        $this->setDesRegistrazione(null);
+        $this->setIdFornitore(null);
+        $this->setIdCliente(null);
+        $this->setCodCausale(null);
+        $this->setNumFattura(null);
+        $this->setNumFattura(null);
+        $this->setNumFattureDaPagare(null);
+        $this->setDatRegistrazione(null);
+        $this->setDatInserimento(null);
+        $this->setStaRegistrazione(null);
+        $this->setCodNegozio(null);
+        $this->setIdMercato(null);
+        $this->setRegistrazioni(null);
+        $this->setQtaRegistrazioni(null);
+        $this->setDesCliente(null);
+        $this->setDesFornitore(null);
 
-	public function prepara()
-	{
-	    $this->setDatScadenza(null);
-	    $this->setDesRegistrazione(null);
-	    $this->setIdFornitore(null);
-	    $this->setIdCliente(null);
-	    $this->setCodCausale(null);
-	    $this->setNumFattura(null);
-	    $this->setNumFattura(null);
-	    $this->setNumFattureDaPagare(null);
-	    $this->setDatRegistrazione(null);
-	    $this->setDatInserimento(null);
-	    $this->setStaRegistrazione(null);
-	    $this->setCodNegozio(null);
-	    $this->setIdMercato(null);
-	    $this->setRegistrazioni(null);
-	    $this->setQtaRegistrazioni(null);
-	    $this->setDesCliente(null);
-	    $this->setDesFornitore(null);
+        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+    }
 
-	    $_SESSION[self::REGISTRAZIONE] = serialize($this);
-	}
-	
-	public function leggi($db) {
+    public function leggi($db) {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$replace = array(
-				'%id_registrazione%' => trim($this->getIdRegistrazione())
-		);
+        $replace = array(
+            '%id_registrazione%' => trim($this->getIdRegistrazione())
+        );
 
-		$sqlTemplate = $this->root . $array['query'] . self::LEGGI_REGISTRAZIONE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+        $sqlTemplate = $this->root . $array['query'] . self::LEGGI_REGISTRAZIONE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
 
-		if ($result) {
-			foreach (pg_fetch_all($result) as $row) {
-				$this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
-				$this->setDatScadenza(trim($row[self::DAT_SCADENZA]));
-				$this->setDesRegistrazione(trim($row[self::DES_REGISTRAZIONE]));
-				$this->setIdFornitore($row[self::ID_FORNITORE]);
-				$this->setIdCliente($row[self::ID_CLIENTE]);
-				$this->setCodCausale($row[self::COD_CAUSALE]);
-				$this->setNumFattura($row[self::NUM_FATTURA]);
-				$this->setNumFatturaOrig($row[self::NUM_FATTURA]);
-				$this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
-				$this->setDatInserimento($row[self::DAT_INSERIMENTO]);
-				$this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
-				$this->setCodNegozio($row[self::COD_NEGOZIO]);
-				$this->setIdMercato($row[self::ID_MERCATO]);
-			}
-			$_SESSION[self::REGISTRAZIONE] = serialize($this);
-		}
-		return $result;
-	}
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
+                $this->setDatScadenza(trim($row[self::DAT_SCADENZA]));
+                $this->setDesRegistrazione(trim($row[self::DES_REGISTRAZIONE]));
+                $this->setIdFornitore($row[self::ID_FORNITORE]);
+                $this->setIdCliente($row[self::ID_CLIENTE]);
+                $this->setCodCausale($row[self::COD_CAUSALE]);
+                $this->setNumFattura($row[self::NUM_FATTURA]);
+                $this->setNumFatturaOrig($row[self::NUM_FATTURA]);
+                $this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
+                $this->setDatInserimento($row[self::DAT_INSERIMENTO]);
+                $this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
+                $this->setCodNegozio($row[self::COD_NEGOZIO]);
+                $this->setIdMercato($row[self::ID_MERCATO]);
+            }
+            $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        }
+        return $result;
+    }
 
-	public function cancella($db) {
+    public function cancella($db) {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$replace = array(
-				'%id_registrazione%' => trim($this->getIdRegistrazione())
-		);
+        $replace = array(
+            '%id_registrazione%' => trim($this->getIdRegistrazione())
+        );
 
-		$sqlTemplate = $this->root . $array['query'] . self::CANCELLA_REGISTRAZIONE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
-		return $result;
-	}
+        $sqlTemplate = $this->root . $array['query'] . self::CANCELLA_REGISTRAZIONE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
+        return $result;
+    }
 
-	public function preparaFiltri()
-	{
-		if ($this->getDatRegistrazioneDa() == "") $this->setDatRegistrazioneDa(date("d-m-Y"));
-		if ($this->getDatRegistrazioneA() == "") $this->setDatRegistrazioneA(date("d-m-Y"));
-		if ($this->getCodNegozioSel() == "") $this->setCodNegozioSel("");
-	}
+    public function preparaFiltri() {
+        if ($this->getDatRegistrazioneDa() == "")
+            $this->setDatRegistrazioneDa(date("d-m-Y"));
+        if ($this->getDatRegistrazioneA() == "")
+            $this->setDatRegistrazioneA(date("d-m-Y"));
+        if ($this->getCodNegozioSel() == "")
+            $this->setCodNegozioSel("");
+    }
 
-	public function load($db)
-	{
-		$utility = Utility::getInstance();
+    public function load($db) {
+        $utility = Utility::getInstance();
 
-		$filtriRegistrazione = "";
-		$filtriDettaglio = "";
+        $filtriRegistrazione = "";
+        $filtriDettaglio = "";
 
-		if ($this->getCodCausaleSel() != "") {
-			$filtriRegistrazione .= "and reg.cod_causale = '" . trim($this->getCodCausaleSel()) . "'";
-		}
-		if ($this->getCodNegozioSel() != "") {
-			$filtriRegistrazione .= "and reg.cod_negozio = '" . trim($this->getCodNegozioSel()) . "'";
-		}
+        if ($this->getCodCausaleSel() != "") {
+            $filtriRegistrazione .= "and reg.cod_causale = '" . trim($this->getCodCausaleSel()) . "'";
+        }
+        if ($this->getCodNegozioSel() != "") {
+            $filtriRegistrazione .= "and reg.cod_negozio = '" . trim($this->getCodNegozioSel()) . "'";
+        }
 
-		$replace = array(
-				'%datareg_da%' => $this->getDatRegistrazioneDa(),
-				'%datareg_a%' => $this->getDatRegistrazioneA(),
-				'%filtri-registrazione%' => $filtriRegistrazione,
-				'%filtri-dettaglio%' => $filtriDettaglio
-		);
+        $replace = array(
+            '%datareg_da%' => $this->getDatRegistrazioneDa(),
+            '%datareg_a%' => $this->getDatRegistrazioneA(),
+            '%filtri-registrazione%' => $filtriRegistrazione,
+            '%filtri-dettaglio%' => $filtriDettaglio
+        );
 
-		$array = $utility->getConfig();
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_REGISTRAZIONE;
+        $array = $utility->getConfig();
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_REGISTRAZIONE;
 
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
-		// esegue la query
+        // esegue la query
 
-		$result = $db->getData($sql);
+        $result = $db->getData($sql);
 
-		if ($result) {
-			$this->setRegistrazioni(pg_fetch_all($result));
+        if ($result) {
+            $this->setRegistrazioni(pg_fetch_all($result));
 
-			$numReg = 0;
-			foreach ($this->getRegistrazioni() as $unaRegistrazione) {
-				if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R") $numReg ++;
-			}
-			$this->setQtaRegistrazioni($numReg);
-		} else {
-			$this->setRegistrazioni(null);
-			$this->setQtaRegistrazioni(0);
-		}
-		return $result;
-	}
+            $numReg = 0;
+            foreach ($this->getRegistrazioni() as $unaRegistrazione) {
+                if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R")
+                    $numReg ++;
+            }
+            $this->setQtaRegistrazioni($numReg);
+        } else {
+            $this->setRegistrazioni(null);
+            $this->setQtaRegistrazioni(0);
+        }
+        return $result;
+    }
 
-	public function inserisci($db)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function inserisci($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$replace = array(
-				'%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
-				'%dat_scadenza%' => ($this->getDatScadenza() != "") ? "'" . $this->getDatScadenza() . "'" : "null",
-				'%dat_registrazione%' => ($this->getDatRegistrazione() != "") ? "'" . $this->getDatRegistrazione() . "'" : "null" ,
-				'%dat_inserimento%' => date("Y-m-d H:i:s"),
-				'%num_fattura%' => ($this->getNumFattura() != "") ? "'" . $this->getNumFattura() . "'" : "null" ,
-				'%cod_causale%' => $this->getCodCausale(),
-				'%id_fornitore%' => ($this->getIdFornitore() != " ") ? "'" . $this->getIdFornitore() . "'" : "null" ,
-				'%id_cliente%' => ($this->getIdCliente() != " ") ? "'" . $this->getIdCliente() . "'" : "null" ,
-				'%sta_registrazione%' => $this->getStaRegistrazione(),
-				'%cod_negozio%' => ($this->getCodNegozio() != "") ? "'" . $this->getCodNegozio() . "'" : "null",
-				'%id_mercato%' => ($this->getIdMercato() != "") ? "'" . $this->getIdMercato() . "'" : "null"
-		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_REGISTRAZIONE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
+        $replace = array(
+            '%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
+            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? "'" . $this->getDatScadenza() . "'" : parent::NULL_VALUE,
+            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? "'" . $this->getDatRegistrazione() . "'" : parent::NULL_VALUE,
+            '%dat_inserimento%' => date("Y-m-d H:i:s"),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? "'" . $this->getNumFattura() . "'" : parent::NULL_VALUE,
+            '%cod_causale%' => $this->getCodCausale(),
+            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? "'" . $this->getIdFornitore() . "'" : parent::NULL_VALUE,
+            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? "'" . $this->getIdCliente() . "'" : parent::NULL_VALUE,
+            '%sta_registrazione%' => $this->getStaRegistrazione(),
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? "'" . $this->getCodNegozio() . "'" : parent::NULL_VALUE,
+            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_REGISTRAZIONE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
 
-		if ($result) {
-			$this->setIdRegistrazione($db->getLastIdUsed());		// l'id generato dall'inserimento
-		}
-		$_SESSION[self::REGISTRAZIONE] = serialize($this);
-		return $result;
-	}
+        if ($result) {
+            $this->setIdRegistrazione($db->getLastIdUsed());  // l'id generato dall'inserimento
+        }
+        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        return $result;
+    }
 
-	public function aggiorna($db)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$replace = array(
-				'%id_registrazione%' => trim($this->getIdRegistrazione()),
-				'%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
-				'%dat_scadenza%' => ($this->getDatScadenza() != "") ? "'" . $this->getDatScadenza() . "'" : "null",
-				'%dat_registrazione%' => ($this->getDatRegistrazione() != "") ? "'" . $this->getDatRegistrazione() . "'" : "null" ,
-				'%dat_inserimento%' => date("Y-m-d H:i:s"),
-				'%num_fattura%' => ($this->getNumFattura() != "") ? "'" . $this->getNumFattura() . "'" : "null" ,
-				'%cod_causale%' => $this->getCodCausale(),
-				'%id_fornitore%' => ($this->getIdFornitore() != " ") ? "'" . $this->getIdFornitore() . "'" : "null" ,
-				'%id_cliente%' => ($this->getIdCliente() != " ") ? "'" . $this->getIdCliente() . "'" : "null" ,
-				'%sta_registrazione%' => $this->getStaRegistrazione(),
-				'%cod_negozio%' => ($this->getCodNegozio() != "") ? "'" . $this->getCodNegozio() . "'" : "null",
-				'%id_mercato%' => ($this->getIdMercato() != "") ? "'" . $this->getIdMercato() . "'" : "null"
-		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_REGISTRAZIONE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->execSql($sql);
+    public function aggiorna($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$_SESSION[self::REGISTRAZIONE] = serialize($this);
-		return $result;
-	}
+        $replace = array(
+            '%id_registrazione%' => trim($this->getIdRegistrazione()),
+            '%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
+            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? "'" . $this->getDatScadenza() . "'" : parent::NULL_VALUE,
+            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? "'" . $this->getDatRegistrazione() . "'" : parent::NULL_VALUE,
+            '%dat_inserimento%' => date("Y-m-d H:i:s"),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? "'" . $this->getNumFattura() . "'" : parent::NULL_VALUE,
+            '%cod_causale%' => $this->getCodCausale(),
+            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? "'" . $this->getIdFornitore() . "'" : parent::NULL_VALUE,
+            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? "'" . $this->getIdCliente() . "'" : parent::NULL_VALUE,
+            '%sta_registrazione%' => $this->getStaRegistrazione(),
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? "'" . $this->getCodNegozio() . "'" : parent::NULL_VALUE,
+            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_REGISTRAZIONE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
 
-	public function cercaFatturaFornitore($db)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        return $result;
+    }
 
-		$replace = array(
-				'%id_fornitore%' => trim($this->getIdFornitore()),
-				'%num_fattura%' => trim($this->getNumFattura()),
-				'%dat_registrazione%' => trim($this->getDatRegistrazione())
-		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_FORNITORE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+    public function cercaFatturaFornitore($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		if ($result){
-			if (pg_num_rows($result) > 0) return true;
-			else return false;
-		}
-		return false;
-	}
+        $replace = array(
+            '%id_fornitore%' => trim($this->getIdFornitore()),
+            '%num_fattura%' => trim($this->getNumFattura()),
+            '%dat_registrazione%' => trim($this->getDatRegistrazione())
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_FORNITORE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
 
-	public function cercaFatturaCliente($db)
-	{
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        if ($result) {
+            if (pg_num_rows($result) > 0)
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
 
-		$replace = array(
-				'%id_cliente%' => trim($this->getIdCliente()),
-				'%num_fattura%' => trim($this->getNumFattura()),
-				'%dat_registrazione%' => trim($this->getDatRegistrazione())
-		);
-		$sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_CLIENTE;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-		$result = $db->getData($sql);
+    public function cercaFatturaCliente($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		if ($result){
-			if (pg_num_rows($result) > 0) return true;
-			else return false;
-		}
-		return false;
-	}
+        $replace = array(
+            '%id_cliente%' => trim($this->getIdCliente()),
+            '%num_fattura%' => trim($this->getNumFattura()),
+            '%dat_registrazione%' => trim($this->getDatRegistrazione())
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_CLIENTE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
 
+        if ($result) {
+            if (pg_num_rows($result) > 0)
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
 
-    public function getRoot(){
+    public function getRoot() {
         return $this->root;
     }
 
-    public function setRoot($root){
+    public function setRoot($root) {
         $this->root = $root;
     }
 
-    public function getIdRegistrazione(){
+    public function getIdRegistrazione() {
         return $this->idRegistrazione;
     }
 
-    public function setIdRegistrazione($idRegistrazione){
+    public function setIdRegistrazione($idRegistrazione) {
         $this->idRegistrazione = $idRegistrazione;
     }
 
-    public function getDatScadenza(){
+    public function getDatScadenza() {
         return $this->datScadenza;
     }
 
-    public function setDatScadenza($datScadenza){
+    public function setDatScadenza($datScadenza) {
         $this->datScadenza = $datScadenza;
     }
 
-    public function getDesRegistrazione(){
+    public function getDesRegistrazione() {
         return $this->desRegistrazione;
     }
 
-    public function setDesRegistrazione($desRegistrazione){
+    public function setDesRegistrazione($desRegistrazione) {
         $this->desRegistrazione = $desRegistrazione;
     }
 
-    public function getIdFornitore(){
+    public function getIdFornitore() {
         return $this->idFornitore;
     }
 
-    public function setIdFornitore($idFornitore){
+    public function setIdFornitore($idFornitore) {
         $this->idFornitore = $idFornitore;
     }
 
-    public function getIdCliente(){
+    public function getIdCliente() {
         return $this->idCliente;
     }
 
-    public function setIdCliente($idCliente){
+    public function setIdCliente($idCliente) {
         $this->idCliente = $idCliente;
     }
 
-    public function getCodCausale(){
+    public function getCodCausale() {
         return $this->codCausale;
     }
 
-    public function setCodCausale($codCausale){
+    public function setCodCausale($codCausale) {
         $this->codCausale = $codCausale;
     }
 
-    public function getNumFattura(){
+    public function getNumFattura() {
         return $this->numFattura;
     }
 
-    public function setNumFattura($numFattura){
+    public function setNumFattura($numFattura) {
         $this->numFattura = $numFattura;
     }
 
-    public function getDatRegistrazione(){
+    public function getDatRegistrazione() {
         return $this->datRegistrazione;
     }
 
-    public function setDatRegistrazione($datRegistrazione){
+    public function setDatRegistrazione($datRegistrazione) {
         $this->datRegistrazione = $datRegistrazione;
     }
 
-    public function getDatInserimento(){
+    public function getDatInserimento() {
         return $this->datInserimento;
     }
 
-    public function setDatInserimento($datInserimento){
+    public function setDatInserimento($datInserimento) {
         $this->datInserimento = $datInserimento;
     }
 
-    public function getStaRegistrazione(){
+    public function getStaRegistrazione() {
         return $this->staRegistrazione;
     }
 
-    public function setStaRegistrazione($staRegistrazione){
+    public function setStaRegistrazione($staRegistrazione) {
         $this->staRegistrazione = $staRegistrazione;
     }
 
-    public function getCodNegozio(){
+    public function getCodNegozio() {
         return $this->codNegozio;
     }
 
-    public function setCodNegozio($codNegozio){
+    public function setCodNegozio($codNegozio) {
         $this->codNegozio = $codNegozio;
     }
 
-    public function getIdMercato(){
+    public function getIdMercato() {
         return $this->idMercato;
     }
 
-    public function setIdMercato($idMercato){
+    public function setIdMercato($idMercato) {
         $this->idMercato = $idMercato;
     }
 
-    public function getDatRegistrazioneDa(){
+    public function getDatRegistrazioneDa() {
         return $this->datRegistrazioneDa;
     }
 
-    public function setDatRegistrazioneDa($datRegistrazioneDa){
+    public function setDatRegistrazioneDa($datRegistrazioneDa) {
         $this->datRegistrazioneDa = $datRegistrazioneDa;
     }
 
-    public function getDatRegistrazioneA(){
+    public function getDatRegistrazioneA() {
         return $this->datRegistrazioneA;
     }
 
-    public function setDatRegistrazioneA($datRegistrazioneA){
+    public function setDatRegistrazioneA($datRegistrazioneA) {
         $this->datRegistrazioneA = $datRegistrazioneA;
     }
 
-    public function getCodNegozioSel(){
+    public function getCodNegozioSel() {
         return $this->codNegozioSel;
     }
 
-    public function setCodNegozioSel($codNegozioSel){
+    public function setCodNegozioSel($codNegozioSel) {
         $this->codNegozioSel = $codNegozioSel;
     }
 
-    public function getCodCausaleSel(){
+    public function getCodCausaleSel() {
         return $this->codCausaleSel;
     }
 
-    public function setCodCausaleSel($codCausaleSel){
+    public function setCodCausaleSel($codCausaleSel) {
         $this->codCausaleSel = $codCausaleSel;
     }
 
-
-    public function getRegistrazioni(){
+    public function getRegistrazioni() {
         return $this->registrazioni;
     }
 
-    public function setRegistrazioni($registrazioni){
+    public function setRegistrazioni($registrazioni) {
         $this->registrazioni = $registrazioni;
     }
 
-    public function getQtaRegistrazioni(){
+    public function getQtaRegistrazioni() {
         return $this->qtaRegistrazioni;
     }
 
-    public function setQtaRegistrazioni($qtaRegistrazioni){
+    public function setQtaRegistrazioni($qtaRegistrazioni) {
         $this->qtaRegistrazioni = $qtaRegistrazioni;
     }
 
-
-    public function getDesCliente(){
+    public function getDesCliente() {
         return $this->desCliente;
     }
 
-    public function setDesCliente($desCliente){
+    public function setDesCliente($desCliente) {
         $this->desCliente = $desCliente;
     }
 
-    public function getDesFornitore(){
+    public function getDesFornitore() {
         return $this->desFornitore;
     }
 
-    public function setDesFornitore($desFornitore){
+    public function setDesFornitore($desFornitore) {
         $this->desFornitore = $desFornitore;
     }
 
-
-    public function getNumFatturePagate(){
+    public function getNumFatturePagate() {
         return $this->numFatturePagate;
     }
 
-    public function setNumFatturePagate($numFatturePagate){
+    public function setNumFatturePagate($numFatturePagate) {
         $this->numFatturePagate = $numFatturePagate;
         return $this;
     }
 
-    public function getNumFattureDaPagare(){
+    public function getNumFattureDaPagare() {
         return $this->numFattureDaPagare;
     }
 
-    public function setNumFattureDaPagare($numFattureDaPagare){
+    public function setNumFattureDaPagare($numFattureDaPagare) {
         $this->numFattureDaPagare = $numFattureDaPagare;
         return $this;
     }
 
-
-    public function getNumFatturaOrig(){
+    public function getNumFatturaOrig() {
         return $this->numFatturaOrig;
     }
 
-    public function setNumFatturaOrig($numFatturaOrig){
+    public function setNumFatturaOrig($numFatturaOrig) {
         $this->numFatturaOrig = $numFatturaOrig;
         return $this;
     }
 
-
-    public function getNumFattureIncassate(){
+    public function getNumFattureIncassate() {
         return $this->numFattureIncassate;
     }
 
-    public function setNumFattureIncassate($numFattureIncassate){
+    public function setNumFattureIncassate($numFattureIncassate) {
         $this->numFattureIncassate = $numFattureIncassate;
         return $this;
     }
 
-    public function getNumFattureDaIncassare(){
+    public function getNumFattureDaIncassare() {
         return $this->numFattureDaIncassare;
     }
 
-    public function setNumFattureDaIncassare($numFattureDaIncassare){
+    public function setNumFattureDaIncassare($numFattureDaIncassare) {
         $this->numFattureDaIncassare = $numFattureDaIncassare;
         return $this;
     }
