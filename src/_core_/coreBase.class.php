@@ -24,6 +24,10 @@ abstract class CoreBase {
             return FALSE;
     }
 
+    function quotation($param) {
+        return "'" . $param . "'";
+    }
+
 }
 
 ?>

@@ -1,41 +1,69 @@
-<body>
 
-<div id="body">
-	<div id="main">
-		<h2>%titoloPagina%</h2>
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
 
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td class="td">%ml.da% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
-						<td class="td">%ml.a% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
-						<td>%ml.negozio% :</td>
-						<td class="tooltip">
-							<select class="selectmenuNegozio" id="codneg_sel" name="codneg_sel" >
-								<option value="" %tutti-selected% >%ml.tutti%</option>
-								<option value="VIL" %villa-selected% >%ml.villa%</option>
-								<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-								<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-							</select>
-						</td>
-						<td width="55"></td>						
-						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
-		%tabs%
-		<br>
-		<form class="tooltip" method="post" id="estraipdf" action="../riepiloghi/estraiPdfAndamentoNegoziFacade.class.php?modo=start" >
-			%bottoneEstraiPdf%
-			<input type="hidden" name="datareg_da" value='%datareg_da%' >
-			<input type="hidden" name="datareg_a" value='%datareg_a%' >
-			<input type="hidden" name="codneg_sel" value='%codneg_sel%' >
-		</form>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+            </div>
+            <br/>
+            <form method="post" action="%azione%">
+
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Neg</span>
+                            <select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="VIL" %villa-selected% >%ml.villa%</option>
+                                <option value="BRE" %brembate-selected% >%ml.brembate%</option>
+                                <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="submit" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel-body scrollable-panel">
+        %tabs%
+    </div>
+    <div class="panel-body">
+        <form action="../riepiloghi/estraiPdfAndamentoNegoziFacade.class.php?modo=start" method="get">
+            <button id="submit" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-download-alt"></span>
+            </button>
+        </form>
+    </div>
+</div>

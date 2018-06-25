@@ -1,204 +1,116 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'andamentoMercati.template.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
 
-class AndamentoMercati extends RiepiloghiAbstract {
+class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public static $azioneAndamentoMercati = "../riepiloghi/andamentoMercatiFacade.class.php?modo=go";
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	function __construct() {
+    public function getInstance() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+        if (!isset($_SESSION[self::ANDAMENTO_MERCATI]))
+            $_SESSION[self::ANDAMENTO_MERCATI] = serialize(new AndamentoMercati());
+        return unserialize($_SESSION[self::ANDAMENTO_MERCATI]);
+    }
 
-		require_once 'utility.class.php';
+    public function start() {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $riepilogo = Riepilogo::getInstance();
 
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
+        $riepilogo->prepara();
 
-	private function  __clone() { }
+        $andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
+        $this->preparaPagina();
 
-	/**
-	 * Singleton Pattern
-	 */
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-	public static function getInstance() {
+        $andamentoMercatiTemplate->displayPagina();
+        include($this->piede);
+    }
 
-		if( !is_object(self::$_instance) )
+    public function go() {
 
-			self::$_instance = new AndamentoMercati();
+        $riepilogo = Riepilogo::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-			return self::$_instance;
-	}
+        $riepilogo->prepara();
 
+        $andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
+        $this->preparaPagina();
 
-	public function start() {
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-		require_once 'andamentoMercati.template.php';
-		require_once 'utility.class.php';
+        if ($this->ricercaDati()) {
 
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+            $andamentoMercatiTemplate->displayPagina();
+            $riepilogo = Riepilogo::getInstance();
 
-		$_SESSION["datareg_da"] = "01/01/" . date("Y");
-		$_SESSION["datareg_a"]  = "31/12/" . date("Y");
+            $numRicavi = $riepilogo->getNumRicaviAndamentoMercatoVilla() +
+                    $riepilogo->getNumRicaviAndamentoMercatoBrembate() +
+                    $riepilogo->getNumRicaviAndamentoMercatoTrezzo();
 
-		$negozi = explode(",", $array["negozi"]);
-		foreach($negozi as $negozio) {
-			unset($_SESSION["elencoVociAndamentoRicaviNegozio_" . $negozio] );			
-		}
-		unset($_SESSION['bottoneEstraiPdf']);
+            $_SESSION["messaggio"] = "Trovate " . $numRicavi . " voci di ricavo";
+            $replace = array('%messaggio%' => $_SESSION["messaggio"]);
 
-		$andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
-		$this->preparaPagina($andamentoMercatiTemplate);
+            if (($numRicavi) > 0) {
+                $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), $replace);
+            } else {
+                $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $replace);
+            }
+        } else {
 
-		// compongo la pagina
+            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), parent::$replace);
 
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        }
+        include($this->piede);
+    }
 
-		$andamentoMercatiTemplate->displayPagina();
-		include(self::$piede);
-	}
+    public function ricercaDati() {
 
-	public function go() {
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		require_once 'andamentoMercati.template.php';
-		require_once 'utility.class.php';
+        $riepilogo = Riepilogo::getInstance();
+        $riepilogo->prepara();
 
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $negozi = explode(",", $array["negozi"]);       // VIL,BRE,TRE  da config
 
-		$andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
+        foreach ($negozi as $negozio) {
+            $riepilogo->setCodnegSel($negozio);
+            $riepilogo->ricercaVociAndamentoRicaviMercato($db);
+        }
+        return true;
+    }
 
-		if ($andamentoMercatiTemplate->controlliLogici()) {
+    public function preparaPagina() {
 
-			if ($this->ricercaDati($utility)) {
-					
-				$this->preparaPagina($andamentoMercatiTemplate);
-					
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
+        $_SESSION[self::AZIONE] = self::AZIONE_ANDAMENTO_MERCATI;
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.andamentoMercati%";
+    }
 
-				$andamentoMercatiTemplate->displayPagina();
-
-				$negozi = explode(",", $array["negozi"]);
-				foreach($negozi as $negozio) {
-					$numRicavi += $_SESSION["numRicaviTrovati_". $negozio];
-				}
-
-				$_SESSION["messaggio"] = "Trovate " . $numRicavi . " voci di ricavo";
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-
-				if ($numRicavi > 0) {
-					$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-				}
-				else {
-					$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				}
-
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
-			}
-			else {
-					
-				$this->preparaPagina($andamentoMercatiTemplate);
-					
-				$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-				$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-				echo $utility->tailTemplate($template);
-
-				$andamentoMercatiTemplate->displayPagina();
-
-				$_SESSION["messaggio"] = "Errore fatale durante la lettura delle registrazioni" ;
-
-				self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
-					
-				include(self::$piede);
-			}
-		}
-		else {
-			$this->preparaPagina($andamentoMercatiTemplate);
-
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-
-			$andamentoMercatiTemplate->displayPagina();
-
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-
-			include(self::$piede);
-		}
-	}
-
-	public function ricercaDati($utility) {
-
-		require_once 'database.class.php';
-
-		$array = $utility->getConfig();
-		$db = Database::getInstance();
-		
-		unset($_SESSION["totaliProgressivi"]);	
-		
-		$negozi = explode(",", $array["negozi"]);
-		$numRicaviTotali = 0;
-		
-		foreach($negozi as $negozio) {
-			
-			$replace = array(
-					'%datareg_da%' => $_SESSION["datareg_da"],
-					'%datareg_a%' => $_SESSION["datareg_a"],
-					'%codnegozio%' => $negozio
-			);
-				
-			$numRicavi = $this->ricercaVociAndamentoRicaviMercato($utility, $db, $replace, $negozio);			
-			
-			/**
-			 * Un contatore che contiene "" indica un accesso a db fallito
-			 */
-
-			if ($numRicavi === "") {
-				return false;
-			}
-			else {
-				$numRicaviTotali += $numRicavi;
-				if ($numRicaviTotali > 0) {
-					$_SESSION['bottoneEstraiPdf'] = "<button id='pdf' class='button' title='%ml.estraipdfTip%'>%ml.pdf%</button>";
-				}
-				else {
-					unset($_SESSION['bottoneEstraiPdf']);
-				}
-			}
-		}
-		return true;
-	}
-
-	public function preparaPagina($bilancioTemplate) {
-
-		require_once 'utility.class.php';
-
-		$_SESSION["confermaTip"] = "%ml.confermaEstraiRiepilogo%";
-		$_SESSION["azione"] = self::$azioneAndamentoMercati;
-		$_SESSION["titoloPagina"] = "%ml.andamentoMercati%";
-	}
 }
 
 ?>
-	

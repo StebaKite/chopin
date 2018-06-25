@@ -1,86 +1,80 @@
 <?php
 
 require_once 'riepiloghi.abstract.class.php';
+require_once 'riepiloghi.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'riepilogo.class.php';
 
-class AndamentoMercatiTemplate extends RiepiloghiAbstract {
+class AndamentoMercatiTemplate extends RiepiloghiAbstract implements RiepiloghiPresentationInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	private static $pagina = "/riepiloghi/andamentoMercati.form.html";
+    public function getInstance() {
+        if (!isset($_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE]))
+            $_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE] = serialize(new AndamentoMercatiTemplate());
+        return unserialize($_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE]);
+    }
 
-	//-----------------------------------------------------------------------------
+    public function inizializzaPagina() {
 
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    }
 
-	private function  __clone() { }
+    public function controlliLogici() {
+        return TRUE;
+    }
 
-	/**
-	 * Singleton Pattern
-	 */
+    public function displayPagina() {
 
-	public static function getInstance() {
+        $riepilogo = Riepilogo::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		if( !is_object(self::$_instance) )
+        $form = $this->root . $array['template'] . parent::PAGINA_ANDAMENTO_MERCATI;
 
-			self::$_instance = new AndamentoMercatiTemplate();
+        $mercatiTabs = array();
 
-			return self::$_instance;
-	}
+        $negozi = explode(",", $array["negozi"]);       // VIL,BRE,TRE da config
 
-	// template ------------------------------------------------
+        foreach ($negozi as $negozio) {
 
-	public function inizializzaPagina() {}
+            switch ($negozio) {
+                case self::VILLA:
+                    if ($riepilogo->getNumRicaviAndamentoMercatoVilla() > 0) {
+                        $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoVilla());
+                    }
+                    break;
+                case self::BREMBATE:
+                    if ($riepilogo->getNumRicaviAndamentoMercatoBrembate() > 0) {
+                        $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoBrembate());
+                    }
+                    break;
+                case self::TREZZO:
+                    if ($riepilogo->getNumRicaviAndamentoMercatoTrezzo() > 0) {
+                        $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoTrezzo());
+                    }
+                    break;
+            }
+        }
 
-	public function controlliLogici() { return TRUE;}
+        $replace = array(
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%azione%' => $_SESSION[self::AZIONE],
+            '%datareg_da%' => $riepilogo->getDataregDa(),
+            '%datareg_a%' => $riepilogo->getDataregA(),
+            '%villa-selected%' => ($riepilogo->getCodnegSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%brembate-selected%' => ($riepilogo->getCodnegSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%trezzo-selected%' => ($riepilogo->getCodnegSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%tabs%' => (count($mercatiTabs > 0) ? $this->makeTabsAndamentoMercati($mercatiTabs) : self::EMPTYSTRING)
+        );
 
-	public function displayPagina() {
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+    }
 
-			require_once 'utility.class.php';
-
-		// Template --------------------------------------------------------------
-
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-
-		$form = self::$root . $array['template'] . self::$pagina;
-
-		$mercatiTabs = array();
-		
-		$negozi = explode(",", $array["negozi"]);
-		foreach($negozi as $negozio) {
-			
-			$vociRicavo = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviMercato_" . $negozio]);
-			if (count($vociRicavo) > 0) {	
-				$mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($vociRicavo);
-			}					
-		}
-
-		/** ******************************************
-		 * Costruisco il box delle tabs
-		 */
-		
-		$tabs = "";
-		if (count($mercatiTabs) > 0) {			
-			$tabs = $this->makeTabsAndamentoMercati($mercatiTabs, $negoziTabs);
-		}
-
-		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%tabs%' => $tabs,
-				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf']
-		);
-
-		$utility = Utility::getInstance();
-
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-	}
 }
 
 ?>
