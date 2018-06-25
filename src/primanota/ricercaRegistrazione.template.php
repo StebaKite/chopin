@@ -94,11 +94,14 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 
         if ($registrazione->getQtaRegistrazioni() > 0) {
 
-            $risultato_ricerca = "<div class='row'>" .
-                    "    <div class='col-sm-4'>" .
-                    "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
-                    "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+            $risultato_ricerca = "" .
+                    "<div class='row'>" .
+                    "   <div class='col-sm-4'>" .
+                    "       <div class='input-group input-group-sm'>" .
+                    "           <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+                    "       </div>" .
+                    "   </div>" .
+                    "   <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .

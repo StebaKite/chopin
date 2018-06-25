@@ -1,46 +1,75 @@
-<body>
 
-<div id="body">
-	<div id="main">
-		<h2>%titoloPagina%</h2>
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
 
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td class="td">%ml.da% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_da" size="10" maxlength="10" value='%datareg_da%' ></td>
-						<td class="td">%ml.a% :</td>
-						<td class="tooltip"><input class="datepicker" type="text" name="datareg_a" size="10" maxlength="10" value='%datareg_a%' ></td>
-						<td>
-							<div class="radioset" >
-								<input type="radio" id="saldiInclusi" name="saldiInclusi" value="S" %saldiInclusichecked% ><label for="saldiInclusi">%ml.saldiInclusi%</label>
-								<input type="radio" id="saldiEsclusi" name="saldiInclusi" value="N" %saldiEsclusichecked% ><label for="saldiEsclusi">%ml.saldiEsclusi%</label>
-							</div>
-						</td>		
-						<td>
-							<div class="radioset" >
-								<input type="radio" id="tuttiConti" name="soloContoEconomico" value="N" %tuttiContichecked% ><label for="tuttiConti">%ml.tutti%</label>
-								<input type="radio" id="soloContoEconomico" name="soloContoEconomico" value="S" %soloContoEconomicochecked% ><label for="soloContoEconomico">%ml.soloContoEconomico%</label>
-							</div>
-						</td>												
-						<td width="55"></td>						
-						<td class="tooltip" colspan="6"><button class="button" title="%ml.cercaTip%" >%ml.cerca%</button></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					</tr>
-				</tfoot>
-			</table>
-		</form>
-		%tabs%
-		<br>
-		<form class="tooltip" method="post" id="estraipdf" action="../riepiloghi/estraiPdfRiepilogoNegoziFacade.class.php?modo=start" >
-			%bottoneEstraiPdf%
-			<input type="hidden" name="datareg_da" value='%datareg_da%' >
-			<input type="hidden" name="datareg_a" value='%datareg_a%' >
-			<input type="hidden" name="catconto_sel" value='%catconto_sel%' >
-			<input type="hidden" name="saldiInclusi" value='%saldiInclusi%' >
-			<input type="hidden" name="soloContoEconomico" value='%soloContoEconomico%' >
-		</form>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+            </div>
+            <br/>
+            <form method="post" action="%azione%">
+
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary %activeSaldiInclusi%"><input type="radio" name="saldiInclusi" id="saldiInclusi" autocomplete="off" value="S" %saldiInclusichecked% >%ml.saldiInclusi%</label>
+                                <label class="btn btn-primary %activeSaldiEsclusi%"><input type="radio" name="saldiInclusi" id="saldiEsclusi" autocomplete="off" value="N" %saldiEsclusichecked% >%ml.saldiEsclusi%</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Conti</span>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary %activeTutti%"><input type="radio" name="soloContoEconomico" id="tutticonti" autocomplete="off" value="N" %tuttiContiChecked% >%ml.tutti%</label>
+                                <label class="btn btn-primary %activeContoeco%"><input type="radio" name="soloContoEconomico" id="contoeco" autocomplete="off" value="S" %soloContoEconomicoChecked% >%ml.contoeco%</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="submit" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel-body scrollable-panel">
+        %tabs%
+    </div>
+    <div class="panel-body">
+        <form action="../riepiloghi/estraiPdfRiepilogoNegoziFacade.class.php?modo=start" method="get">
+            <button id="submit" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-download-alt"></span>
+            </button>
+        </form>
+    </div>
+</div>

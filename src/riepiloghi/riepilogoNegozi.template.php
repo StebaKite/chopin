@@ -3,260 +3,88 @@
 
 require_once 'riepiloghiComparati.abstract.class.php';
 require_once 'riepiloghi.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'riepilogo.class.php';
 
 class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements RiepiloghiPresentationInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	private static $paginaRiepilogoNegozi = "/riepiloghi/riepilogoNegozi.form.html";
-	
-	//-----------------------------------------------------------------------------
+    public function getInstance() {
+        if (!isset($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]))
+            $_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE] = serialize(new RiepilogoNegoziTemplate());
+        return unserialize($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]);
+    }
 
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    public function inizializzaPagina() {
 
-	private function  __clone() { }
+    }
 
-	/**
-	 * Singleton Pattern
-	 */
+    public function controlliLogici() {
+        return TRUE;
+    }
 
-	public static function getInstance() {
+    public function displayPagina() {
 
-		if( !is_object(self::$_instance) )
+        $riepilogo = Riepilogo::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-			self::$_instance = new RiepilogoNegoziTemplate();
+        $form = $this->root . $array['template'] . self::PAGINA_RIEPILOGO_NEGOZI;
 
-		return self::$_instance;
-	}
+        if (parent::isNotEmpty($riepilogo->getCostiComparati()))
+            $this->makeTableCostiComparati($riepilogo);
 
-	// template ------------------------------------------------
+        if (parent::isNotEmpty($riepilogo->getRicaviComparati()))
+            $this->makeTableRicaviComparati($riepilogo);
 
-	public function inizializzaPagina() {}
+        if (parent::isNotEmpty($riepilogo->getAttivoComparati()))
+            $this->makeTableAttivoComparati($riepilogo);
 
-	public function controlliLogici() { return TRUE;}
+        if (parent::isNotEmpty($riepilogo->getPassivoComparati()))
+            $this->makeTablePassivoComparati($riepilogo);
 
-	public function displayPagina() {
+        /*
+         * Se ci sono le condizioni calcolo l'mct e il bep e genero le tabelle in output
+         */
+        if (parent::isNotEmpty($riepilogo->getCostoVariabileVilla()) or
+                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiVilla()) or
+                parent::isNotEmpty($riepilogo->getCostoFissoVilla()) or
+                parent::isNotEmpty($riepilogo->getCostoVariabileBrembate()) or
+                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiBrembate()) or
+                parent::isNotEmpty($riepilogo->getCostoFissoBrembate()) or
+                parent::isNotEmpty($riepilogo->getCostoVariabileTrezzo()) or
+                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiTrezzo()) or
+                parent::isNotEmpty($riepilogo->getCostoFissoTrezzo())) {
 
-		require_once 'utility.class.php';
-		
-		// Template --------------------------------------------------------------
-		
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$form = self::$root . $array['template'] . self::$paginaRiepilogoNegozi;
-		
-		$risultato_costi = "";
-		$risultato_ricavi = "";
-		$risultato_esercizio = "";
-		$mct = "";
-		$bep = "";
-		$tabs = "";
+            $this->makeTableMct($riepilogo);
+            $this->makeTableBep($riepilogo);
+        }
 
-		if (isset($_SESSION["costiComparati"]))
-			$risultato_costi = $this->makeTableCostiComparati($array, $_SESSION["costiComparati"]);
-		
-		if (isset($_SESSION["ricaviComparati"]))
-			$risultato_ricavi = $this->makeTableRicaviComparati($array, $_SESSION["ricaviComparati"]);
+        $replace = array(
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%azione%' => $_SESSION[self::AZIONE],
+            '%datareg_da%' => $riepilogo->getDataregDa(),
+            '%datareg_a%' => $riepilogo->getDataregA(),
+            '%tabs%' => $this->makeTabs($riepilogo),
+            '%saldiInclusichecked%' => ($riepilogo->getSaldiInclusi() == "S") ? self::CHECK_THIS_ITEM : "",
+            '%saldiEsclusichecked%' => ($riepilogo->getSaldiInclusi() == "N") ? self::CHECK_THIS_ITEM : "",
+            '%activeSaldiInclusi%' => ($riepilogo->getSaldiInclusi() == "S") ? self::ACTIVE_THIS_ITEM : self::EMPTYSTRING,
+            '%activeSaldiEsclusi%' => ($riepilogo->getSaldiInclusi() == "N") ? self::ACTIVE_THIS_ITEM : self::EMPTYSTRING,
+            '%tuttiContiChecked%' => ($riepilogo->getSoloContoEconomico() == "N") ? self::CHECK_THIS_ITEM : "",
+            '%soloContoEconomicoChecked%' => ($riepilogo->getSoloContoEconomico() == "S") ? self::CHECK_THIS_ITEM : "",
+            '%activeTutti%' => ($riepilogo->getSoloContoEconomico() == "N") ? self::ACTIVE_THIS_ITEM : "",
+            '%activeContoeco%' => ($riepilogo->getSoloContoEconomico() == "S") ? self::ACTIVE_THIS_ITEM : "",
+        );
 
-		if (isset($_SESSION["attivoComparati"]))
-			$risultato_attivo = $this->makeTableAttivoComparati($array, $_SESSION["attivoComparati"]);					
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+    }
 
-		if (isset($_SESSION["passivoComparati"]))
-			$risultato_passivo = $this->makeTablePassivoComparati($array, $_SESSION["passivoComparati"]);
-					
-		$mct = $this->makeTableMargineContribuzione();
-		$bep = $this->makeTableBep();
-			
-		/** ******************************************
-		 * Costruisco il box delle tabs
-		 */
-					
-		if (($risultato_costi != "") or ($risultato_ricavi != "") or ($risultato_attivo != "") or ($risultato_passivo != "")) {
-			
-			$tabs  = "	<div class='tabs'>";
-			$tabs .= "		<ul>";
-			
-			if ($risultato_costi != "")   { $tabs .= "<li><a href='#tabs-1'>Costi</a></li>"; }
-			if ($risultato_ricavi != "")  { $tabs .= "<li><a href='#tabs-2'>Ricavi</a></li>"; }
-			if ($risultato_attivo != "")  { $tabs .= "<li><a href='#tabs-3'>Attivo</a></li>"; }
-			if ($risultato_passivo != "") { $tabs .= "<li><a href='#tabs-4'>Passivo</a></li>"; }
-			
-			$tabs .= "<li><a href='#tabs-5'>" . strtoupper($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</a></li>";
+}
 
-			if ($mct != "") { $tabs .= "<li><a href='#tabs-6'>MCT</a></li>"; }
-			if ($bep != "") { $tabs .= "<li><a href='#tabs-7'>BEP</a></li>"; }
-			$tabs .= "</ul>";
-			
-			if ($risultato_costi != "")   { $tabs .= "<div id='tabs-1'>" . $risultato_costi . "</div>"; }
-			if ($risultato_ricavi != "")  { $tabs .= "<div id='tabs-2'>" . $risultato_ricavi . "</div>"; }
-			if ($risultato_attivo != "")  { $tabs .= "<div id='tabs-3'>" . $risultato_attivo . "</div>"; }
-			if ($risultato_passivo != "") { $tabs .= "<div id='tabs-4'>" . $risultato_passivo . "</div>"; }
-			
-			$tabs .= "<div id='tabs-5'>" . $this->tabellaTotaliRiepilogoNegozi($this->nomeTabTotali(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']))) . "</div>";
-			
-			if ($mct != "") { $tabs .= "<div id='tabs-6'>" . $mct . "</div>"; }
-			if ($bep != "") { $tabs .= "<div id='tabs-7'>" . $bep . "</div>"; }
-			
-			$tabs .= "</div>";				
-		}
-		
-		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%codneg_sel%' => $_SESSION["codneg_sel"],
-				'%catconto_sel%' => $_SESSION["catconto_sel"],				
-				'%tabs%' => $tabs,
-				'%bottoneEstraiPdf%' => $_SESSION['bottoneEstraiPdf'],
-				'%saldiInclusichecked%' => ($_SESSION["saldiInclusi"] == "S") ? "checked" : "",
-				'%saldiEsclusichecked%' => ($_SESSION["saldiInclusi"] == "N") ? "checked" : "",
-				'%saldiInclusi%' => $_SESSION["saldiInclusi"],
-				'%tuttiContichecked%' => ($_SESSION["soloContoEconomico"] == "N") ? "checked" : "",
-				'%soloContoEconomicochecked%' => ($_SESSION["soloContoEconomico"] == "S") ? "checked" : "",
-				'%soloContoEconomico%' => $_SESSION["soloContoEconomico"]
-		);
-		
-		$utility = Utility::getInstance();
-		
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-	}
-
-	public function tabellaTotaliRiepilogoNegozi($tipoTotale) {
-	
-		if ($tipoTotale == "Utile") {
-			
-			$risultato_esercizio = 
-			"<table class='result'>" .
-			"	<thead>" .
-			"		<th width='300'>&nbsp;</th>" .
-			"		<th width='100'>%ml.brembate%</th>" .
-			"		<th width='100'>%ml.trezzo%</th>" .
-			"		<th width='100'>%ml.villa%</th>" .
-			"		<th width='100'>%ml.totale%</th>" .
-			"	</thead>" .
-			"<tbody>";
-
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Bre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Tre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Vil"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi"], 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Bre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Tre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Vil"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti"], 2, ',', '.') . "</td>" .
-			"</tr>";
-
-
-			$utile_Bre = $_SESSION["totaleRicavi_Bre"] - $_SESSION["totaleCosti_Bre"];
-			$utile_Tre = $_SESSION["totaleRicavi_Tre"] - $_SESSION["totaleCosti_Tre"];
-			$utile_Vil = $_SESSION["totaleRicavi_Vil"] - $_SESSION["totaleCosti_Vil"];
-			$utile = $utile_Bre + $utile_Tre + $utile_Vil;
-			
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Utile del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($utile_Bre, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($utile_Tre, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($utile_Vil, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($utile, 2, ',', '.') . "</td>" .
-			"</tr>";
-			
-			$risultato_esercizio .= "</tbody></table>" ;
-		}
-		elseif ($tipoTotale == "Perdita") {
-			
-			$risultato_esercizio = 
-			"<table class='result'>" .
-			"	<thead>" .
-			"		<th width='300'>&nbsp;</th>" .
-			"		<th width='100'>%ml.brembate%</th>" .
-			"		<th width='100'>%ml.trezzo%</th>" .
-			"		<th width='100'>%ml.villa%</th>" .
-			"		<th width='100'>%ml.totale%</th>" .
-			"	</thead>" .
-			"<tbody>";
-				
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Bre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Tre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi_Vil"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleRicavi"], 2, ',', '.') . "</td>" .
-			"</tr>";
-
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Bre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Tre"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti_Vil"], 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($_SESSION["totaleCosti"], 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$perdita_Bre = $_SESSION["totaleRicavi_Bre"] - $_SESSION["totaleCosti_Bre"];
-			$perdita_Tre = $_SESSION["totaleRicavi_Tre"] - $_SESSION["totaleCosti_Tre"];
-			$perdita_Vil = $_SESSION["totaleRicavi_Vil"] - $_SESSION["totaleCosti_Vil"];
-			$perdita = $perdita_Bre + $perdita_Tre + $perdita_Vil;   			
-			
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='enlarge'>Perdita del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Bre, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Tre, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($perdita_Vil, 2, ',', '.') . "</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($perdita, 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$risultato_esercizio .= "</tbody></table>" ;
-		
-		}
-		else {
-			
-			$risultato_esercizio = "<table class='result'><tbody>";
-
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$pareggio = $totaleRicavi - $totaleCosti;
-				
-			$risultato_esercizio .=
-			"<tr height='30'>" .
-			"	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-			"	<td width='108' align='right' class='mark'>" . number_format($pareggio, 2, ',', '.') . "</td>" .
-			"</tr>";
-				
-			$risultato_esercizio .= "</tbody></table>" ;
-		}
-		return $risultato_esercizio;
-	}	
-
-	public function ricercaDati($utility) {}
-	public function preparaPagina($template) {}
-	
-}	
-	
 ?>

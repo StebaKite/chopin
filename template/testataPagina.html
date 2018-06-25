@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 
-
     <link href="../../jquery/jquery-ui.css" rel="stylesheet">
 
     <style type="text/css" media="screen">
@@ -35,31 +34,33 @@
     <script src="../../jquery/jquery-ui.js"></script>
     <script src="../../jquery/jquery-ui.min.js"></script>
 
-    <!--
-            <link href="../../DataTables/media/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
-            <script src="../../DataTables/media/js/jquery.dataTables.js" type="text/javascript" charset="utf8" ></script>
-    -->
-
-
     <body>
 
-        <div class="container-fluid">
-            <div class="well well-sm">
-                <nav class="navbar navbar-inverse navbar-fixed-top">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <a class="navbar-brand" href="../main/start.php">Nexus8 %amb%</a>
-                        </div>
+        <div class="panel panel-default">
+            <nav class="navbar-default">
+                <div class="container">
+
+                    <strong class="navbar-brand">Nexus8</strong>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
+                            <li><a href="../main/start.php"><span class="glyphicon glyphicon-home"></a></li>
                             %menu%
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#"><span class="glyphicon glyphicon-user"></span> %users%</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Esci</a></li>
+                            <li class="divider-vertical"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">%amb% <span class="glyphicon glyphicon-off"></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> %users%</a></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Esci</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
-                </nav>
-            </div>
-            <br/>
+                    <!--</div>-->
+                </div>
+            </nav>
+        </div>
 
-            <!-- Inizio corpo pagina incluso -->
+        <!-- Inizio corpo pagina incluso -->

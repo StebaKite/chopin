@@ -103,9 +103,23 @@ abstract class Nexus6Abstract {
 
         $home = "";
 
+//        <li class="dropdown">
+//            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+//            <ul class="dropdown-menu">
+//                <li><a href="#">Action</a></li>
+//                <li><a href="#">Another action</a></li>
+//                <li><a href="#">Something else here</a></li>
+//                <li role="separator" class="divider"></li>
+//                <li><a href="#">Separated link</a></li>
+//                <li role="separator" class="divider"></li>
+//                <li><a href="#">One more separated link</a></li>
+//            </ul>
+//        </li>
+
+
         if ($array["home"] == "Y") {
             $home .= "<li class='dropdown'>";
-            $home .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array['home_menu_title'];
+            $home .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['home_menu_title'];
             $home .= "<span class='caret'></span></a>";
             $home .= "<ul class='dropdown-menu'>";
 
@@ -124,7 +138,7 @@ abstract class Nexus6Abstract {
 
         if ($array["operazioni"] == "Y") {
             $operazioni .= "<li class='dropdown'>";
-            $operazioni .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["operazioni_menu_title"];
+            $operazioni .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['operazioni_menu_title'];
             $operazioni .= "<span class='caret'></span></a>";
             $operazioni .= "<ul class='dropdown-menu'>";
 
@@ -141,7 +155,7 @@ abstract class Nexus6Abstract {
 
         if ($array["anagrafiche"] == "Y") {
             $anagrafiche .= "<li class='dropdown'>";
-            $anagrafiche .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["anagrafiche_menu_title"];
+            $anagrafiche .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['anagrafiche_menu_title'];
             $anagrafiche .= "<span class='caret'></span></a>";
             $anagrafiche .= "<ul class='dropdown-menu'>";
 
@@ -162,7 +176,7 @@ abstract class Nexus6Abstract {
 
         if ($array["configurazioni"] == "Y") {
             $configurazioni .= "<li class='dropdown'>";
-            $configurazioni .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["configurazioni_menu_title"];
+            $configurazioni .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['configurazioni_menu_title'];
             $configurazioni .= "<span class='caret'></span></a>";
             $configurazioni .= "<ul class='dropdown-menu'>";
 
@@ -183,7 +197,7 @@ abstract class Nexus6Abstract {
 
         if ($array["scadenze"] == "Y") {
             $scadenze .= "<li class='dropdown'>";
-            $scadenze .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#'>" . $array["scadenze_menu_title"];
+            $scadenze .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['scadenze_menu_title'];
             $scadenze .= "<span class='caret'></span></a>";
             $scadenze .= "<ul class='dropdown-menu'>";
 
@@ -197,33 +211,61 @@ abstract class Nexus6Abstract {
         $menu .= $scadenze;
 
         // R i e p i o l o g h i ------------------------------------------------------------
-// 		$riepiloghi = "";
-// 		if ($array["riepiloghi"] == "Y") {
-// 			$riepiloghi .= "<li><a>" . $array["riepiloghi_menu_title"] . "</a>";
-// 			$riepiloghi .= "<ul>";
-// 			if ($array["riepiloghi_item_1"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioFacade.class.php?modo=start'>" . $array["riepiloghi_item_1_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_2"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/bilancioEsercizioFacade.class.php?modo=start'>" . $array["riepiloghi_item_2_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_3"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/riepilogoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_3_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_4"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_7"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_8"] == "Y") $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
-// 			$riepiloghi .= "<li><hr/></li>";
-// 			if ($array["riepiloghi_item_5"] == "Y") $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
-// 			if ($array["riepiloghi_item_6"] == "Y") $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
-// 			$riepiloghi .= "</ul></li>";
-// 		}
-// 		$menu .= $riepiloghi;
+
+        $riepiloghi = "";
+
+        if ($array["riepiloghi"] == "Y") {
+            $riepiloghi .= "<li class='dropdown'>";
+            $riepiloghi .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array['riepiloghi_menu_title'];
+            $riepiloghi .= "<span class='caret'></span></a>";
+            $riepiloghi .= "<ul class='dropdown-menu'>";
+
+            if ($array["riepiloghi_item_1"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/generaBilancioEsercizioFacade.class.php?modo=start'>" . $array["riepiloghi_item_1_name"] . "</a></li>";
+            if ($array["riepiloghi_item_2"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/generaBilancioPeriodicoFacade.class.php?modo=start'>" . $array["riepiloghi_item_2_name"] . "</a></li>";
+
+            $riepiloghi .= "<li role='separator' class='divider'></li>";
+
+            if ($array["riepiloghi_item_3"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/riepilogoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_3_name"] . "</a></li>";
+            if ($array["riepiloghi_item_4"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziFacade.class.php?modo=start'>" . $array["riepiloghi_item_4_name"] . "</a></li>";
+            if ($array["riepiloghi_item_7"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
+            if ($array["riepiloghi_item_8"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
+
+            $riepiloghi .= "<li role='separator' class='divider'></li>";
+
+            if ($array["riepiloghi_item_5"] == "Y")
+                $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
+            if ($array["riepiloghi_item_6"] == "Y")
+                $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
+
+            $riepiloghi .= "</ul></li>";
+        }
+        $menu .= $riepiloghi;
+
         // F a t t u r e ------------------------------------------------------------
-// 		$fatture = "";
-// 		if ($array["fatture"] == "Y") {
-// 			$fatture .= "<li><a>" . $array["fatture_menu_title"] . "</a>";
-// 			$fatture .= "<ul>";
-// 			if ($array["fatture_item_1"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=start'>" . $array["fatture_item_1_name"] . "</a></li>";
-// 			if ($array["fatture_item_2"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaEntePubblicoFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
-// 			if ($array["fatture_item_3"] == "Y") $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
-// 			$fatture .= "</ul></li>";
-// 		}
-// 		$menu .= $fatture;
+
+        $fatture = "";
+
+        if ($array["fatture"] == "Y") {
+            $fatture .= "<li class='dropdown'>";
+            $fatture .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array["fatture_menu_title"];
+            $fatture .= "<span class='caret'></span></a>";
+            $fatture .= "<ul class='dropdown-menu'>";
+
+            if ($array["fatture_item_1"] == "Y")
+                $fatture .= "<li><a href='../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=start'>" . $array["fatture_item_1_name"] . "</a></li>";
+            if ($array["fatture_item_2"] == "Y")
+                $fatture .= "<li><a href='../fatture/creaFatturaEntePubblicoFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
+            if ($array["fatture_item_3"] == "Y")
+                $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
+            $fatture .= "</ul></li>";
+        }
+        $menu .= $fatture;
 
         return $menu;
     }
@@ -248,6 +290,20 @@ abstract class Nexus6Abstract {
 
         list($anno, $mese, $giorno) = explode($carattereSeparatore, $data);
         return date("Y-m-d", mktime(0, 0, 0, $mese, $giorno + $giorniDaSommare, $anno));
+    }
+
+    function isEmpty($param) {
+        if (($param == "") or ( $param == " ") or ( $param == null))
+            return TRUE;
+        else
+            return FALSE;
+    }
+
+    function isNotEmpty($param) {
+        if (($param != "") and ( $param != " ") and ( $param != null))
+            return TRUE;
+        else
+            return FALSE;
     }
 
     public function caricaElencoFornitori($fornitore) {

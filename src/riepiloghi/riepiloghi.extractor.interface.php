@@ -1,8 +1,10 @@
 <?php
 
-interface RiepiloghiExtractorInterface {
+require_once 'nexus6.main.interface.php';
 
-	public function generaSezioneIntestazione($pdf);
+interface RiepiloghiExtractorInterface extends MainNexus6Interface {
+
+    public function generaSezioneIntestazione($pdf, $bilancio);
 }
 
 ?>

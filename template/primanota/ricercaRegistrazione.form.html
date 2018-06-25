@@ -44,19 +44,21 @@
 
                 <div class="form-group row">
                     <div class="col-sm-2">
-                        <div class='input-group'>
+                        <div class="input-group">
                             <span class="input-group-addon">Neg</span>
-                            <select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
-                                <option value="">%ml.tutti%</option>
-                                <option value="VIL" %villa-selected% >%ml.villa%</option>
-                                <option value="BRE" %brembate-selected% >%ml.brembate%</option>
-                                <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-                            </select>
+                            <div class='form-control form-control-selectpicker'>
+                                <select id="codneg_sel" name="codneg_sel" >
+                                    <option value="">%ml.tutti%</option>
+                                    <option value="VIL" %villa-selected% >%ml.villa%</option>
+                                    <option value="BRE" %brembate-selected% >%ml.brembate%</option>
+                                    <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class='input-group'>
-                            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                            <div class='input-group input-group-sm date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
                                 <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -66,7 +68,7 @@
                     </div>
                     <div class="col-sm-2">
                         <div class='input-group'>
-                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                            <div class='input-group input-group-sm date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
                                 <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -75,9 +77,9 @@
                         </div>
                     </div>
                     <div class="col-sm-5">
-                        <div class='input-group'>
+                        <div class='input-group input-group-sm'>
                             <span class="input-group-addon">%ml.codcau%</span>
-                            <select class="selectCausale" data-live-search="true" id="causale" name="causale" >
+                            <select data-live-search="true" id="causale" name="causale" >
                                 <option value="">%ml.tutte%</option>
                                 %elenco_causali%
                             </select>

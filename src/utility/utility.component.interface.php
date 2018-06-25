@@ -4,15 +4,12 @@ require_once 'nexus6.main.interface.php';
 
 interface UtilityComponentInterface extends MainNexus6Interface {
 
-	// Oggetti
+    // Oggetti
 
-	const PDF = "Obj_pdf";
-	const PDF_SCADENZE = "Obj_pdfscadenze";
-	const PDF_CONTI = "Obj_pdfconti";
-
-
-
-
+    const PDF = "Obj_pdf";
+    const PDF_SCADENZE = "Obj_pdfscadenze";
+    const PDF_CONTI = "Obj_pdfconti";
+    const PDF_FATTURA_BASE = "Obj_fatturabase";
 
 }
 
