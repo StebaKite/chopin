@@ -1,24 +1,24 @@
 <script type="text/javascript">
 
-	$(document).ready(function(){
-	
-		$(".datepicker").datepicker();
+    $(document).ready(function () {
 
-		$(".selectCatCli").on("change", function() {
-			$("#catcli_cre").val($(this).find("option:selected").val());
-		});
-		
-		$("#myInput").on("keyup", 
-			function() {
-				var value = $(this).val().toLowerCase();
-				$("#myTable tr").filter(
-					function() {
-						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-					}
-				);
-			}
-		);				
-	});
+        $(".datepicker").datepicker();
+
+        $(".selectCatCli").on("change", function () {
+            $("#catcli_cre").val($(this).find("option:selected").val());
+        });
+
+        $("#myInput").on("keyup",
+                function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(
+                            function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            }
+                    );
+                }
+        );
+    });
 
 </script>
 
@@ -27,26 +27,26 @@
 <!-- ------------------- -->
 
 <div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-				<div class="col-sm-5">
-					<div class="btn-group pull-right">				
-						<button id="nuovoCliente" class="btn btn-primary btn-default">%ml.nuovocliente%</button>
-					</div>	
-				</div>			
-			</div>
-			<br/>
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+                <div class="col-sm-5">
+                    <div class="btn-group pull-right">
+                        <button id="nuovoCliente" class="btn btn-primary btn-default">%ml.nuovocliente%</button>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+        <div class="panel-body scrollable-panel">
+            %risultato_ricerca%
+        </div>
+    </div>
 </div>
 
 <!-- ------------- -->
@@ -54,100 +54,100 @@
 <!-- ------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-cliente-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo Cliente</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="nuovoClienteForm" action="../anagrafica/creaClienteFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.codcliente%</span>
-										<input class="form-control" id="codcli_cre" name="codcli_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.categoria%</span>
-										<select class="selectCatCli" data-live-search="true" id="categoriacli_cre" >
-											<option value=" ">&nbsp;</option>
-	 										%elenco_categorie_cliente%
- 										</select>			
- 										<input id="catcli_cre" name="catcli_cre" type="hidden" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.descliente%</span>
-										<input class="form-control" id="descli_cre" name="descli_cre" type="text" onblur="controllaDescrizione('descli_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.desindirizzocliente%</span>
-										<input class="form-control" id="indcli_cre" name="indcli_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.descittacliente%</span>
-										<input class="form-control" id="cittacli_cre" name="cittacli_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.capcliente%</span>
-										<input class="form-control" id="capcli_cre" name="capcli_cre" type="text" />
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-8">
-						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>						    		
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
-									</div>						    		
-								</div>	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.pivacliente%</span>
-										<input class="form-control" id="pivacli_cre" name="pivacli_cre" type="text" maxlength="11" onblur="controllaUnivocitaPiva('pivacli_cre', 'descli_cre');" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.cfiscliente%</span>
-										<input class="form-control" id="cfiscli_cre" name="cfiscli_cre" type="text" maxlength="16" onblur="controllaUnivocitaCfis('cfiscli_cre');" />
-									</div>
-							  	</div>
-							</div>
-						</div>
-						
-					</form>
-											
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-cliente-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="nuovo-cliente-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo Cliente</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="nuovoClienteForm" action="../anagrafica/creaClienteFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.codcliente%</span>
+                                        <input class="form-control" id="codcli_cre" name="codcli_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.categoria%</span>
+                                        <select class="selectCatCli" data-live-search="true" id="categoriacli_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_categorie_cliente%
+                                        </select>
+                                        <input id="catcli_cre" name="catcli_cre" type="hidden" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.descliente%</span>
+                                        <input class="form-control" id="descli_cre" name="descli_cre" type="text" onblur="controllaDescrizione('descli_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.desindirizzocliente%</span>
+                                        <input class="form-control" id="indcli_cre" name="indcli_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.descittacliente%</span>
+                                        <input class="form-control" id="cittacli_cre" name="cittacli_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.capcliente%</span>
+                                        <input class="form-control" id="capcli_cre" name="capcli_cre" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-8">
+                                    <label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.pivacliente%</span>
+                                        <input class="form-control" id="pivacli_cre" name="pivacli_cre" type="text" maxlength="11" onblur="controllaUnivocitaPiva('pivacli_cre', 'descli_cre');" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.cfiscliente%</span>
+                                        <input class="form-control" id="cfiscli_cre" name="cfiscli_cre" type="text" maxlength="16" onblur="controllaUnivocitaCfis('cfiscli_cre');" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-cliente-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ---------------- -->
@@ -155,100 +155,100 @@
 <!-- ---------------- -->
 
 <div class="container">
-	<div class="modal fade" id="modifica-cliente-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Cliente</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="modificaClienteForm" action="../anagrafica/modificaClienteFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.codcliente%</span>
-										<input class="form-control" id="codcli_mod" name="codcli_mod" type="text" readonly />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.categoria%</span>
-										<select class="selectCatCli" data-live-search="true" id="categoriacli_mod" >
-											<option value=" ">&nbsp;</option>
-	 										%elenco_categorie_cliente%
- 										</select>			
- 										<input id="catcli_mod" name="catcli_mod" type="hidden" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.descliente%</span>
-										<input class="form-control" id="descli_mod" name="descli_mod" type="text" onblur="controllaDescrizione('descli_mod')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.desindirizzocliente%</span>
-										<input class="form-control" id="indcli_mod" name="indcli_mod" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.descittacliente%</span>
-										<input class="form-control" id="cittacli_mod" name="cittacli_mod" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.capcliente%</span>
-										<input class="form-control" id="capcli_mod" name="capcli_mod" type="text" />
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-8">
-						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_mod_messaggio"></span></small></label>						    		
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="bonifico_mod" autocomplete="off" value="BONIFICO">Bonifico</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="riba_mod" autocomplete="off" value="RIBA">%ml.riba%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="rimdiretta_mod" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="assegnobancario_mod" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="addebitodiretto_mod" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
-									</div>						    		
-								</div>	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.pivacliente%</span>
-										<input class="form-control" id="pivacli_mod" name="pivacli_mod" type="text" maxlength="11" onblur="controllaUnivocitaPiva('pivacli_mod', 'descli_mod');" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.cfiscliente%</span>
-										<input class="form-control" id="cfiscli_mod" name="cfiscli_mod" type="text" maxlength="16" onblur="controllaUnivocitaCfis('cfiscli_mod');" />
-									</div>
-							  	</div>
-							</div>
-						</div>
-						
-					</form>
-											
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-cliente-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="modifica-cliente-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifica Cliente</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="modificaClienteForm" action="../anagrafica/modificaClienteFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.codcliente%</span>
+                                        <input class="form-control" id="codcli_mod" name="codcli_mod" type="text" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.categoria%</span>
+                                        <select class="selectCatCli" data-live-search="true" id="categoriacli_mod" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_categorie_cliente%
+                                        </select>
+                                        <input id="catcli_mod" name="catcli_mod" type="hidden" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.descliente%</span>
+                                        <input class="form-control" id="descli_mod" name="descli_mod" type="text" onblur="controllaDescrizione('descli_mod')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.desindirizzocliente%</span>
+                                        <input class="form-control" id="indcli_mod" name="indcli_mod" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.descittacliente%</span>
+                                        <input class="form-control" id="cittacli_mod" name="cittacli_mod" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.capcliente%</span>
+                                        <input class="form-control" id="capcli_mod" name="capcli_mod" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-8">
+                                    <label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_mod_messaggio"></span></small></label>
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="bonifico_mod" autocomplete="off" value="BONIFICO">Bonifico</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="riba_mod" autocomplete="off" value="RIBA">%ml.riba%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="rimdiretta_mod" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="assegnobancario_mod" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="addebitodiretto_mod" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.pivacliente%</span>
+                                        <input class="form-control" id="pivacli_mod" name="pivacli_mod" type="text" maxlength="11" onblur="controllaUnivocitaPiva('pivacli_mod', 'descli_mod');" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.cfiscliente%</span>
+                                        <input class="form-control" id="cfiscli_mod" name="cfiscli_mod" type="text" maxlength="16" onblur="controllaUnivocitaCfis('cfiscli_mod');" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-cliente-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- --------------------- -->
@@ -256,26 +256,26 @@
 <!-- --------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="cancella-cliente-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Cancella cliente</h4>
-	        	</div>
-	        	<div class="modal-body">	        		        	
-					<form method="post" id="cancellaClienteForm" action="../anagrafica/cancellaClienteFacade.class.php?modo=start" >
-						<p>Elimino il cliente ?</p>
-						<input type="hidden" id="idcliente" name="idcliente">
-			        </form>
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-cliente-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="cancella-cliente-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancella cliente</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="cancellaClienteForm" action="../anagrafica/cancellaClienteFacade.class.php?modo=start" >
+                        <p>Elimino il cliente ?</p>
+                        <input type="hidden" id="idcliente" name="idcliente">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-cliente-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ----------->

@@ -29,22 +29,38 @@
                     </div>
                     <div class="col-sm-2">
                         <div class='input-group'>
-                            <span class="input-group-addon">%ml.anno%</span>
-                            <div class='form-control form-control-selectpicker'>
-                                <select id="anno_eserczio_sel" name="anno_eserczio_sel" >
-                                    <option value="%ml.anno_esercizio_corrente%" %anno_esercizio_corrente-selected% >%ml.anno_esercizio_corrente%</option>
-                                    <option value="%ml.anno_esercizio_menouno%"  %anno_esercizio_menouno-selected% >%ml.anno_esercizio_menouno%</option>
-                                    <option value="%ml.anno_esercizio_menodue%" %anno_esercizio_menodue-selected% >%ml.anno_esercizio_menodue%</option>
-                                    <option value="%ml.anno_esercizio_menotre%" %anno_esercizio_menotre-selected% >%ml.anno_esercizio_menotre%</option>
-                                </select>
+                            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_da" value='%datareg_da%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-7">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" name="datareg_a" value='%datareg_a%' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
                         <div class='input-group'>
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary %activeSaldiInclusi%"><input type="radio" name="saldiInclusi" id="saldiInclusi" autocomplete="off" value="S" %saldiInclusichecked% >%ml.saldiInclusi%</label>
                                 <label class="btn btn-primary %activeSaldiEsclusi%"><input type="radio" name="saldiInclusi" id="saldiEsclusi" autocomplete="off" value="N" %saldiEsclusichecked% >%ml.saldiEsclusi%</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Conti</span>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary %activeTutti%"><input type="radio" name="soloContoEconomico" id="tutticonti" autocomplete="off" value="N" %tutticontichecked% >%ml.tutti%</label>
+                                <label class="btn btn-primary %activeContoeco%"><input type="radio" name="soloContoEconomico" id="contoeco" autocomplete="off" value="S" %contoecochecked% >%ml.contoeco%</label>
                             </div>
                         </div>
                     </div>
@@ -55,17 +71,17 @@
                     </div>
                 </div>
             </form>
+        </div>
 
-        </div>
-        <div class="panel-body scrollable-panel">
-            %tabs%
-        </div>
-        <div class="panel-body">
-            <form action="../riepiloghi/estraiPdfBilancioFacade.class.php?modo=start" method="get">
-                <button id="submit" type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-download-alt"></span>
-                </button>
-            </form>
-        </div>
+    </div>
+    <div class="panel-body scrollable-panel">
+        %tabs%
+    </div>
+    <div class="panel-body">
+        <form action="../riepiloghi/estraiPdfBilancioFacade.class.php?modo=start" method="get">
+            <button id="submit" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-download-alt"></span>
+            </button>
+        </form>
     </div>
 </div>

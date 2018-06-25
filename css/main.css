@@ -1,5 +1,5 @@
 @font-face {
-	font-family: 'Rajdhani';
+    font-family: 'Rajdhani';
 }
 
 html, body {
@@ -7,26 +7,14 @@ html, body {
 }
 
 .scrollable-panel{
-	height:400px;
-	overflow-y:auto;
-	width:100%;
-}
-
-/* Boostrap.css override */
-.navbar-inverse {
-    background-color: #000066;
-    font-size: 16px;
-}
-
-/* Boostrap.css override */
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
-    color: #fff;
-    background-color: #000066;
+    height:400px;
+    overflow-y:auto;
+    width:100%;
 }
 
 .modal-header {
     background-color: #afcee9;
-	padding: 15px;
+    padding: 15px;
     border-bottom: 1px solid #e5e5e5;
 }
 
@@ -73,8 +61,8 @@ div.todoEntry .entryTime{
 
 
 div.doneTask{
-     color:grey;
- }
+    color:grey;
+}
 
 div.doneTask .entryTime{
     color:grey;
@@ -95,4 +83,20 @@ div.doneTask .entryTime{
 
 .taskControls button.buttonDoTask{
     color:darkgreen;
+}
+
+.input-group .form-control.form-control-selectpicker {
+    padding: 0;
+}
+.input-group .form-control.form-control-selectpicker > .btn-group.bootstrap-select {
+    width: 100%;
+}
+.input-group .form-control-6 {
+    width: 50%;
+}
+.input-group .form-control.form-control-selectpicker .btn-group .btn {
+    border: 0;
+}
+.input-group .form-control.form-control-selectpicker .btn-group.open .btn {
+    border-radius: 0;
 }

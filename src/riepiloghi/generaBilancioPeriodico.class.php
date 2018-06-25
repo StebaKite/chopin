@@ -2,12 +2,12 @@
 
 require_once 'riepiloghi.abstract.class.php';
 require_once 'riepiloghi.business.interface.php';
-require_once 'generaBilancioEsercizio.template.php';
+require_once 'generaBilancioPeriodico.template.php';
 require_once 'utility.class.php';
 require_once 'bilancio.class.php';
 require_once 'database.class.php';
 
-class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
+class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
         $this->root = $_SERVER['DOCUMENT_ROOT'];
@@ -22,9 +22,9 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
 
     public function getInstance() {
 
-        if (!isset($_SESSION[self::GENERA_BILANCIO_ESERCIZIO]))
-            $_SESSION[self::GENERA_BILANCIO_ESERCIZIO] = serialize(new GeneraBilancioEsercizio());
-        return unserialize($_SESSION[self::GENERA_BILANCIO_ESERCIZIO]);
+        if (!isset($_SESSION[self::GENERA_BILANCIO_PERIODICO]))
+            $_SESSION[self::GENERA_BILANCIO_PERIODICO] = serialize(new GeneraBilancioPeriodico());
+        return unserialize($_SESSION[self::GENERA_BILANCIO_PERIODICO]);
     }
 
     public function start() {
@@ -34,11 +34,11 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio = Bilancio::getInstance();
 
         $bilancio->prepara();
-        $bilancio->setTipoBilancio(self::ESERCIZIO);
+        $bilancio->setTipoBilancio(self::PERIODICO);
         $_SESSION[self::BILANCIO] = serialize($bilancio);
 
-        $bilancioTemplate = GeneraBilancioEsercizioTemplate::getInstance();
-        $this->preparaPagina();
+        $bilancioTemplate = GeneraBilancioPeriodicoTemplate::getInstance();
+        $this->preparaPagina($bilancioTemplate);
 
         $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
@@ -54,8 +54,8 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
-        $bilancioTemplate = GeneraBilancioEsercizioTemplate::getInstance();
-        $this->preparaPagina();
+        $bilancioTemplate = GeneraBilancioPeriodicoTemplate::getInstance();
+        $this->preparaPagina($bilancioTemplate);
 
         $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
@@ -90,23 +90,26 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $db = Database::getInstance();
         $bilancio = Bilancio::getInstance();
         $bilancio->prepara();
-        $bilancio->setTipoBilancio(self::ESERCIZIO);
+        $bilancio->setTipoBilancio(self::PERIODICO);
         $_SESSION[self::BILANCIO] = serialize($bilancio);
 
         $bilancio->ricercaCosti($db);
         $bilancio->ricercaRicavi($db);
 
-        $bilancio->ricercaAttivo($db);
-        $bilancio->ricercaPassivo($db);
+        if (($bilancio->getCatconto() == self::STATO_PATRIMONIALE) or ( $bilancio->getCatconto() == self::TUTTI_CONTI)) {
+            $bilancio->ricercaAttivo($db);
+            $bilancio->ricercaPassivo($db);
+        }
 
-        $bilancio->ricercaCostiMargineContribuzione($db);
-        $bilancio->ricercaRicaviMargineContribuzione($db);
-        $bilancio->ricercaCostiFissi($db);
+        $bilancio->ricercaCostiMargineContribuzione($db);       // Conto economico
+        $bilancio->ricercaRicaviMargineContribuzione($db);      // Conto economico
+        $bilancio->ricercaCostiFissi($db);                      // Conto economico
     }
 
-    private function preparaPagina() {
-        $_SESSION[self::AZIONE] = self::AZIONE_BILANCIO_ESERCIZIO;
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.bilancioEsercizio%";
+    private function preparaPagina($bilancioTemplate) {
+
+        $_SESSION[self::AZIONE] = self::AZIONE_BILANCIO_PERIODICO;
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.bilancioPeriodico%";
     }
 
 }

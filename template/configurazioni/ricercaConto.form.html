@@ -1,78 +1,78 @@
 
 <script type="text/javascript">
 
-	$(document).ready(function(){
-	
-		$(".datepicker").datepicker();
-		
-		$("#myInput").on("keyup", 
-			function() {
-				var value = $(this).val().toLowerCase();
-				$("#myTable tr").filter(
-					function() {
-						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-					}
-				);
-			}
-		);				
-	});
-	
+    $(document).ready(function () {
+
+        $(".datepicker").datepicker();
+
+        $("#myInput").on("keyup",
+                function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(
+                            function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            }
+                    );
+                }
+        );
+    });
+
 </script>
 
 <!-- ------------------- -->
 <!-- RICERCA             -->
 <!-- ------------------- -->
 <div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-				<div class="col-sm-5">
-					<div class="btn-group pull-right">				
-						<button id="nuovoConto" class="btn btn-primary btn-default">%ml.nuovoconto%</button>
-					</div>	
-				</div>			
-			</div>
-			<br/>
-			<form method="post" action="%azione%">
-			  
-				<div class="form-group row">
-					<div class="col-sm-4">
-	 					<div class='input-group'>
-							<span class="input-group-addon">Categoria</span>
-							<select class="selectNormal" id="catconto_sel" name="catconto_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="Conto Economico" %conto-economico-selected%>Conto Economico</option>
-								<option value="Stato Patrimoniale" %stato-patrimoniale-selected%>Stato Patrimoniale</option>
-							</select>			
-						</div>
-					</div>
-					<div class="col-sm-4">
-	 					<div class='input-group'>
-							<span class="input-group-addon">Tipo conto</span>
-							<select class="selectNormal" id="tipconto_sel" name="tipconto_sel" >
-								<option value="">%ml.tutti%</option>
-								<option value="Dare" %dare-selected%>Dare</option>
-								<option value="Avere" %avere-selected%>Avere</option>
-							</select>			
-						</div>
-					</div>
-					<div class="col-sm-1">
-						<button id="submit" type="submit" class="btn btn-default">
-					    	<span class="glyphicon glyphicon-search"></span>
-					    </button>
-					</div> 
-				</div>	
-			</form>  
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+                <div class="col-sm-5">
+                    <div class="btn-group pull-right">
+                        <button id="nuovoConto" class="btn btn-primary btn-default">%ml.nuovoconto%</button>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <form method="post" action="%azione%">
+
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Categoria</span>
+                            <select class="selectNormal" id="catconto_sel" name="catconto_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="Conto Economico" %conto-economico-selected%>Conto Economico</option>
+                                <option value="Stato Patrimoniale" %stato-patrimoniale-selected%>Stato Patrimoniale</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Tipo conto</span>
+                            <select class="selectNormal" id="tipconto_sel" name="tipconto_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="Dare" %dare-selected%>Dare</option>
+                                <option value="Avere" %avere-selected%>Avere</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="submit" type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-body scrollable-panel">
+            %risultato_ricerca%
+        </div>
+    </div>
 </div>
 
 <!-- ----------- -->
@@ -80,93 +80,93 @@
 <!-- ----------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-conto-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo Conto</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="nuovoContoForm" action="../configurazioni/creaContoFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-2">
-									<div class='input-group' id="codconto_cre_control_group">
-										<span class="input-group-addon">%ml.conto%</span>
-										<input class="form-control" id="codconto_cre" name="codconto_cre" type="text" onblur="controllaConto('codconto_cre')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-10">
-									<div class='input-group' id="desconto_cre_control_group">
-										<span class="input-group-addon">%ml.desconto%</span>
-										<input class="form-control" id="desconto_cre" name="desconto_cre" type="text" onblur="controllaDescrizione('desconto_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="catconto_cre" id="contoeco_cre" autocomplete="off" value="Conto Economico" checked >%ml.contoeco%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catconto_cre" id="contopat_cre" autocomplete="off" value="Stato Patrimoniale" >%ml.contopat%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="dareavere_cre" id="dare_cre" autocomplete="off" value="Dare" checked >%ml.dare%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="dareavere_cre" id="avere_cre" autocomplete="off" value="Avere" >%ml.avere%</label>
-									</div>						    		
-								</div>	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">						
-					          		<h4>Opzioni di bilancio</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="indpresenza_cre" id="presenzaSi_cre" autocomplete="off" value="S" checked >%ml.presenteInBilancio%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="indpresenza_cre" id="presenzaNo_cre" autocomplete="off" value="N" >%ml.assenteInBilancio%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="indvissottoconti_cre" id="sottocontiSi_cre" autocomplete="off" value="S" checked >%ml.presenzaSottoconti%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="indvissottoconti_cre" id="sottocontiNo_cre" autocomplete="off" value="N" >%ml.assenzaSottoconti%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-3">
-									<div class='input-group' id="numrigabilancio_cre_control_group">
-										<span class="input-group-addon">%ml.numrigabilancio%</span>
-										<input class="form-control" id="numrigabilancio_cre" name="numrigabilancio_cre" type="text" onblur="controllaNumero('numrigabilancio_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">						
-					          		<h4>Sottoconti</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-10">
-								  	<table class="table table-bordered table-hover" id="sottocontiTable_cre"></table>
-							  	</div>
-							</div>
-						</div>
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-conto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" id="button-nuovo-sottoconto-nuovo-conto-form">Nuovo sottoconto</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="nuovo-conto-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo Conto</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="nuovoContoForm" action="../configurazioni/creaContoFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-2">
+                                    <div class='input-group' id="codconto_cre_control_group">
+                                        <span class="input-group-addon">%ml.conto%</span>
+                                        <input class="form-control" id="codconto_cre" name="codconto_cre" type="text" onblur="controllaConto('codconto_cre')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div class='input-group' id="desconto_cre_control_group">
+                                        <span class="input-group-addon">%ml.desconto%</span>
+                                        <input class="form-control" id="desconto_cre" name="desconto_cre" type="text" onblur="controllaDescrizione('desconto_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="catconto_cre" id="contoeco_cre" autocomplete="off" value="Conto Economico" checked >%ml.contoeco%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="catconto_cre" id="contopat_cre" autocomplete="off" value="Stato Patrimoniale" >%ml.contopat%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="dareavere_cre" id="dare_cre" autocomplete="off" value="Dare" checked >%ml.dare%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="dareavere_cre" id="avere_cre" autocomplete="off" value="Avere" >%ml.avere%</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <h4>Opzioni di bilancio</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="indpresenza_cre" id="presenzaSi_cre" autocomplete="off" value="S" checked >%ml.presenteInBilancio%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="indpresenza_cre" id="presenzaNo_cre" autocomplete="off" value="N" >%ml.assenteInBilancio%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="indvissottoconti_cre" id="sottocontiSi_cre" autocomplete="off" value="S" checked >%ml.presenzaSottoconti%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="indvissottoconti_cre" id="sottocontiNo_cre" autocomplete="off" value="N" >%ml.assenzaSottoconti%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="numrigabilancio_cre_control_group">
+                                        <span class="input-group-addon">%ml.numrigabilancio%</span>
+                                        <input class="form-control" id="numrigabilancio_cre" name="numrigabilancio_cre" type="text" onblur="controllaNumero('numrigabilancio_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <h4>Sottoconti</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <table class="table table-bordered table-hover" id="sottocontiTable_cre"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-conto-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-nuovo-sottoconto-nuovo-conto-form">Nuovo sottoconto</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- -------------- -->
@@ -174,93 +174,93 @@
 <!-- -------------- -->
 
 <div class="container">
-	<div class="modal fade" id="modifica-conto-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Conto</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="modificaContoForm" action="../configurazioni/modificaContoFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-2">
-									<div class='input-group' id="codconto_mod_control_group">
-										<span class="input-group-addon">%ml.conto%</span>
-										<input class="form-control" id="codconto_mod" name="codconto_mod" type="text" onblur="controllaConto('codconto_mod')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-10">
-									<div class='input-group' id="desconto_mod_control_group">
-										<span class="input-group-addon">%ml.desconto%</span>
-										<input class="form-control" id="desconto_mod" name="desconto_mod" type="text" onblur="controllaDescrizione('desconto_mod')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-5">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="catconto_mod" id="contoeco_mod" autocomplete="off" value="Conto Economico" >%ml.contoeco%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catconto_mod" id="contopat_mod" autocomplete="off" value="Stato Patrimoniale" >%ml.contopat%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="dareavere_mod" id="dare_mod" autocomplete="off" value="Dare" >%ml.dare%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="dareavere_mod" id="avere_mod" autocomplete="off" value="Avere" >%ml.avere%</label>
-									</div>						    		
-								</div>	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">						
-					          		<h4>Opzioni di bilancio</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="indpresenza_mod" id="presenzaSi_mod" autocomplete="off" value="S" >%ml.presenteInBilancio%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="indpresenza_mod" id="presenzaNo_mod" autocomplete="off" value="N" >%ml.assenteInBilancio%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="indvissottoconti_mod" id="sottocontiSi_mod" autocomplete="off" value="S" >%ml.presenzaSottoconti%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="indvissottoconti_mod" id="sottocontiNo_mod" autocomplete="off" value="N" >%ml.assenzaSottoconti%</label>
-									</div>						    		
-								</div>	
-							  	<div class="col-sm-3">
-									<div class='input-group' id="numrigabilancio_mod_control_group">
-										<span class="input-group-addon">%ml.numrigabilancio%</span>
-										<input class="form-control" id="numrigabilancio_mod" name="numrigabilancio_mod" type="text" onblur="controllaNumero('numrigabilancio_mod')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">						
-					          		<h4>Sottoconti</h4>
-					          	</div>	
-					        </div>  	
-							<div class="form-group row">
-							  	<div class="col-sm-10">
-								  	<table class="table table-bordered table-hover" id="sottocontiTable_mod"></table>
-							  	</div>
-							</div>
-						</div>
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-conto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" id="button-nuovo-sottoconto-modifica-conto-form">Nuovo sottoconto</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="modifica-conto-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifica Conto</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" id="modificaContoForm" action="../configurazioni/modificaContoFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-2">
+                                    <div class='input-group' id="codconto_mod_control_group">
+                                        <span class="input-group-addon">%ml.conto%</span>
+                                        <input class="form-control" id="codconto_mod" name="codconto_mod" type="text" onblur="controllaConto('codconto_mod')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div class='input-group' id="desconto_mod_control_group">
+                                        <span class="input-group-addon">%ml.desconto%</span>
+                                        <input class="form-control" id="desconto_mod" name="desconto_mod" type="text" onblur="controllaDescrizione('desconto_mod')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="catconto_mod" id="contoeco_mod" autocomplete="off" value="Conto Economico" >%ml.contoeco%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="catconto_mod" id="contopat_mod" autocomplete="off" value="Stato Patrimoniale" >%ml.contopat%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="dareavere_mod" id="dare_mod" autocomplete="off" value="Dare" >%ml.dare%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="dareavere_mod" id="avere_mod" autocomplete="off" value="Avere" >%ml.avere%</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <h4>Opzioni di bilancio</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="indpresenza_mod" id="presenzaSi_mod" autocomplete="off" value="S" >%ml.presenteInBilancio%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="indpresenza_mod" id="presenzaNo_mod" autocomplete="off" value="N" >%ml.assenteInBilancio%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="indvissottoconti_mod" id="sottocontiSi_mod" autocomplete="off" value="S" >%ml.presenzaSottoconti%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="indvissottoconti_mod" id="sottocontiNo_mod" autocomplete="off" value="N" >%ml.assenzaSottoconti%</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group' id="numrigabilancio_mod_control_group">
+                                        <span class="input-group-addon">%ml.numrigabilancio%</span>
+                                        <input class="form-control" id="numrigabilancio_mod" name="numrigabilancio_mod" type="text" onblur="controllaNumero('numrigabilancio_mod')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <h4>Sottoconti</h4>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <table class="table table-bordered table-hover" id="sottocontiTable_mod"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-conto-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-nuovo-sottoconto-modifica-conto-form">Nuovo sottoconto</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- -------------------------------- -->
@@ -268,40 +268,40 @@
 <!-- -------------------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-sottoconto-nuovo-conto-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo sottoconto</h4>
-	        	</div>
-	        	<div class="modal-body">
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-5">
-								<div class='input-group' id="codsottoconto_cre_control_group">
-									<span class="input-group-addon">%ml.codsottoconto%</span>
-									<input class="form-control" id="codsottoconto_cre" name="codsottoconto_cre" type="text" onblur="controllaCodice('codsottoconto_cre')"/>
-								</div>
-						  	</div>
-				  		</div>
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-								<div class='input-group' id="dessottoconto_cre_control_group">
-									<span class="input-group-addon">%ml.dessottoconto%</span>
-									<input class="form-control" id="dessottoconto_cre" name="dessottoconto_cre" type="text" onblur="controllaDescrizione('dessottoconto_cre')"/>
-								</div>
-						  	</div>						  	
-				  		</div>
-					</div>					
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-sottoconto-nuovo-conto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="nuovo-sottoconto-nuovo-conto-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo sottoconto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group' id="codsottoconto_cre_control_group">
+                                    <span class="input-group-addon">%ml.codsottoconto%</span>
+                                    <input class="form-control" id="codsottoconto_cre" name="codsottoconto_cre" type="text" onblur="controllaCodice('codsottoconto_cre')"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class='input-group' id="dessottoconto_cre_control_group">
+                                    <span class="input-group-addon">%ml.dessottoconto%</span>
+                                    <input class="form-control" id="dessottoconto_cre" name="dessottoconto_cre" type="text" onblur="controllaDescrizione('dessottoconto_cre')"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-sottoconto-nuovo-conto-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- -------------------------------- -->
@@ -309,40 +309,40 @@
 <!-- -------------------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-sottoconto-modifica-conto-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo sottoconto</h4>
-	        	</div>
-	        	<div class="modal-body">
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-5">
-								<div class='input-group' id="codsottoconto_mod_control_group">
-									<span class="input-group-addon">%ml.codsottoconto%</span>
-									<input class="form-control" id="codsottoconto_mod" name="codsottoconto_mod" type="text" onblur="controllaCodice('codsottoconto_mod')"/>
-								</div>
-						  	</div>
-				  		</div>
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-								<div class='input-group' id="dessottoconto_mod_control_group">
-									<span class="input-group-addon">%ml.dessottoconto%</span>
-									<input class="form-control" id="dessottoconto_mod" name="dessottoconto_mod" type="text" onblur="controllaDescrizione('dessottoconto_mod')"/>
-								</div>
-						  	</div>						  	
-				  		</div>
-					</div>					
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-sottoconto-modifica-conto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="nuovo-sottoconto-modifica-conto-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo sottoconto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <div class='input-group' id="codsottoconto_mod_control_group">
+                                    <span class="input-group-addon">%ml.codsottoconto%</span>
+                                    <input class="form-control" id="codsottoconto_mod" name="codsottoconto_mod" type="text" onblur="controllaCodice('codsottoconto_mod')"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class='input-group' id="dessottoconto_mod_control_group">
+                                    <span class="input-group-addon">%ml.dessottoconto%</span>
+                                    <input class="form-control" id="dessottoconto_mod" name="dessottoconto_mod" type="text" onblur="controllaDescrizione('dessottoconto_mod')"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-sottoconto-modifica-conto-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- -------------------------- -->
@@ -350,48 +350,48 @@
 <!-- -------------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="modifica-gruppo-sottoconto-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo sottoconto</h4>
-	        	</div>
-	        	<div class="modal-body">
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-4">
-								<div class='input-group' id="codconto_modgru_control_group">
-									<span class="input-group-addon">%ml.conto%</span>
-									<input class="form-control" id="codconto_modgru" name="codconto_modgru" type="text" readonly />
-								</div>
-						  	</div>
-						  	<div class="col-sm-4">
-								<div class='input-group' id="codsottoconto_modgru_control_group">
-									<span class="input-group-addon">%ml.codsottoconto%</span>
-									<input class="form-control" id="codsottoconto_modgru" name="codsottoconto_modgru" type="text" readonly />
-								</div>
-						  	</div>
-						</div>
-						<div class="form-group row">
-						  	<div class="col-sm-8">
-								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-primary"><input type="radio" id="indgruppoNS_modgru" name="indgruppo_modgru" autocomplete="off" value="NS" >%ml.ns%</label>
-									<label class="btn btn-primary"><input type="radio" id="indgruppoCF_modgru" name="indgruppo_modgru" autocomplete="off" value="CF" >%ml.cf%</label>
-									<label class="btn btn-primary"><input type="radio" id="indgruppoCV_modgru" name="indgruppo_modgru" autocomplete="off" value="CV" >%ml.cv%</label>
-									<label class="btn btn-primary"><input type="radio" id="indgruppoRC_modgru" name="indgruppo_modgru" autocomplete="off" value="RC" >%ml.rc%</label>
-								</div>						    		
-							</div>	
-						</div>
-					</div>
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-gruppo-sottoconto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="modifica-gruppo-sottoconto-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo sottoconto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <div class='input-group' id="codconto_modgru_control_group">
+                                    <span class="input-group-addon">%ml.conto%</span>
+                                    <input class="form-control" id="codconto_modgru" name="codconto_modgru" type="text" readonly />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class='input-group' id="codsottoconto_modgru_control_group">
+                                    <span class="input-group-addon">%ml.codsottoconto%</span>
+                                    <input class="form-control" id="codsottoconto_modgru" name="codsottoconto_modgru" type="text" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-8">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary"><input type="radio" id="indgruppoNS_modgru" name="indgruppo_modgru" autocomplete="off" value="NS" >%ml.ns%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="indgruppoCF_modgru" name="indgruppo_modgru" autocomplete="off" value="CF" >%ml.cf%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="indgruppoCV_modgru" name="indgruppo_modgru" autocomplete="off" value="CV" >%ml.cv%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="indgruppoRC_modgru" name="indgruppo_modgru" autocomplete="off" value="RC" >%ml.rc%</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-gruppo-sottoconto-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- --------------------- -->
@@ -399,26 +399,26 @@
 <!-- --------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="cancella-conto-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Cancella conto</h4>
-	        	</div>
-	        	<div class="modal-body">	        		        	
-					<form method="post" id="cancellaContoForm" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >
-						<p>Elimino il conto e tutti i suoi sottoconti ?</p>
-						<input type="hidden" id="codconto" name="codconto">
-			        </form>
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-conto-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="cancella-conto-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancella conto</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="cancellaContoForm" action="../configurazioni/cancellaContoFacade.class.php?modo=go" >
+                        <p>Elimino il conto e tutti i suoi sottoconti ?</p>
+                        <input type="hidden" id="codconto" name="codconto">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-conto-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- --------------------- -->
@@ -426,108 +426,108 @@
 <!-- --------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="visualizza-conto-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Visualizza Conto</h4>
-	        	</div>
-	        	<div class="modal-body">					
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-2">
-						  		<label for="codconto_vis">%ml.conto%</label>
-					    		<span id="codconto_vis"></span>
-						  	</div>
-						  	<div class="col-sm-10">
-						  		<label for="desconto_vis">%ml.desconto%</label>
-					    		<span id="desconto_vis"></span>
-						  	</div>
-						</div>
-						<div class="form-group row">						
-						  	<div class="col-sm-4">
-						  		<label for="catconto_vis">%ml.catconto%</label>
-					    		<span id="catconto_vis"></span>
-							</div>	
-						  	<div class="col-sm-4">
-						  		<label for="tipconto_vis">%ml.tipconto%</label>
-					    		<span id="tipconto_vis"></span>
-							</div>	
-						</div>
-						<div class="form-group row">
-						  	<div class="col-sm-4">
-						  		<label for="indpresenza_vis">%ml.presenteInBilancio%</label>
-					    		<span id="indpresenza_vis"></span>
-							</div>	
-						  	<div class="col-sm-4">
-						  		<label for=""indvissottoconti_vis"">%ml.presenzaSottoconti%</label>
-					    		<span id="indvissottoconti_vis"></span>
-							</div>	
-						  	<div class="col-sm-3">
-						  		<label for="numrigabilancio_vis">%ml.numrigabilancio%</label>
-					    		<span id="numrigabilancio_vis"></span>
-						  	</div>
-						</div>
-						<div class="form-group row">
-						  	<div class="col-sm-12">						
-				          		<h4>Estrazione movimentazione sottoconti</h4>
-				          	</div>	
-				        </div>  	
-						<div class="form-group row">
-							<div class="col-sm-3">
-			 					<div class='input-group'>
-									<span class="input-group-addon">Neg</span>
-									<select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
-										<option value="">%ml.tutti%</option>
-										<option value="VIL" %villa-selected% >%ml.villa%</option>
-										<option value="BRE" %brembate-selected% >%ml.brembate%</option>
-										<option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
-									</select>			
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class='input-group'>
-						            <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-						                 <input type='text' class="form-control" id="datareg_da" name="datareg_da" />
-						                 <span class="input-group-addon">
-						                     <span class="glyphicon glyphicon-calendar"></span>
-						                 </span>
-						            </div>			
-								</div>  
-							</div>
-							<div class="col-sm-3">
-								<div class='input-group'>
-						            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-						                 <input type='text' class="form-control" id="datareg_a" name="datareg_a" />
-						                 <span class="input-group-addon">
-						                     <span class="glyphicon glyphicon-calendar"></span>
-						                 </span>
-									</div>
-								</div>				
-							</div>
-							<div class="col-sm-3">
-								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-primary active"><input type="radio" id="saldiInclusiSi" name="saldiInclusi" autocomplete="off" value="S" checked >%ml.saldiInclusi%</label>
-									<label class="btn btn-primary"><input type="radio" id="saldiInclusiNo" name="saldiInclusi" autocomplete="off" value="N" >%ml.saldiEsclusi%</label>
-								</div>						    		
-							</div>	        
-				        </div>  					        
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-						  		<div class="panel-body scrollable-panel">
-								  	<table class="table table-bordered table-hover" id="sottocontiTable_vis"></table>
-								</div> 	
-						  	</div>
-						</div>
-					</div>        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="visualizza-conto-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza Conto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <label for="codconto_vis">%ml.conto%</label>
+                                <span id="codconto_vis"></span>
+                            </div>
+                            <div class="col-sm-10">
+                                <label for="desconto_vis">%ml.desconto%</label>
+                                <span id="desconto_vis"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="catconto_vis">%ml.catconto%</label>
+                                <span id="catconto_vis"></span>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="tipconto_vis">%ml.tipconto%</label>
+                                <span id="tipconto_vis"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="indpresenza_vis">%ml.presenteInBilancio%</label>
+                                <span id="indpresenza_vis"></span>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for=""indvissottoconti_vis"">%ml.presenzaSottoconti%</label>
+                                <span id="indvissottoconti_vis"></span>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="numrigabilancio_vis">%ml.numrigabilancio%</label>
+                                <span id="numrigabilancio_vis"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <h4>Estrazione movimentazione sottoconti</h4>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">Neg</span>
+                                    <select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
+                                        <option value="">%ml.tutti%</option>
+                                        <option value="VIL" %villa-selected% >%ml.villa%</option>
+                                        <option value="BRE" %brembate-selected% >%ml.brembate%</option>
+                                        <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <div class='input-group date' id='datepicker' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                        <input type='text' class="form-control" id="datareg_da" name="datareg_da" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                        <input type='text' class="form-control" id="datareg_a" name="datareg_a" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary active"><input type="radio" id="saldiInclusiSi" name="saldiInclusi" autocomplete="off" value="S" checked >%ml.saldiInclusi%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="saldiInclusiNo" name="saldiInclusi" autocomplete="off" value="N" >%ml.saldiEsclusi%</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="panel-body scrollable-panel">
+                                    <table class="table table-bordered table-hover" id="sottocontiTable_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ------------------------------------ -->
@@ -535,36 +535,36 @@
 <!-- ------------------------------------ -->
 
 <div class="container">
-	<div class="modal fade" id="visualizza-movimenti-sottoconto-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Visualizza movimentazione conto</h4>
-	        	</div>
-	        	<div class="modal-body">					
-					<div class="well well-sm">
-						<div class="form-group row">
-						  	<div class="col-sm-12">
-								<div class="panel-body scrollable-panel">
-								  	<table class="table table-bordered" id="movimentiTable_vis"></table>
-							  	</div>
-							</div>  	
-						</div>
-					</div>        	
-	        	</div>
-	        	<div class="modal-footer">
-					<div>
-					  	<form action="../configurazioni/esportaMovimentiSottocontoFacade.class.php?modo=start" method="get"> 	
-							<button id="submit" type="submit" class="btn btn-default">
-						    	<span class="glyphicon glyphicon-download-alt"></span>
-						    </button>
-						</form>		  	
-				  	</div>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="visualizza-movimenti-sottoconto-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza movimentazione conto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="panel-body scrollable-panel">
+                                    <table class="table table-bordered" id="movimentiTable_vis"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <form action="../configurazioni/esportaMovimentiSottocontoFacade.class.php?modo=start" method="get">
+                            <button id="submit" type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ----------->

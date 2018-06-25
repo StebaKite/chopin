@@ -1,20 +1,20 @@
 <script type="text/javascript">
 
-	$(document).ready(function(){
+    $(document).ready(function () {
 
-		$(".datepicker").datepicker();
+        $(".datepicker").datepicker();
 
-		$("#myInput").on("keyup", 
-			function() {
-				var value = $(this).val().toLowerCase();
-				$("#myTable tr").filter(
-					function() {
-						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-					}
-				);
-			}
-		);				
-	});
+        $("#myInput").on("keyup",
+                function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(
+                            function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            }
+                    );
+                }
+        );
+    });
 
 </script>
 
@@ -23,26 +23,26 @@
 <!-- ------------------- -->
 
 <div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-				<div class="col-sm-5">
-					<div class="btn-group pull-right">				
-						<button id="nuovoFornitore" class="btn btn-primary btn-default">%ml.nuovofornitore%</button>
-					</div>	
-				</div>			
-			</div>
-			<br/>
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+                <div class="col-sm-5">
+                    <div class="btn-group pull-right">
+                        <button id="nuovoFornitore" class="btn btn-primary btn-default">%ml.nuovofornitore%</button>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+        <div class="panel-body scrollable-panel">
+            %risultato_ricerca%
+        </div>
+    </div>
 </div>
 
 <!-- --------------- -->
@@ -50,81 +50,81 @@
 <!-- --------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-fornitore-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo Fornitore</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="nuovoFornitoreForm" action="../anagrafica/creaFornitoreFacade.class.php?modo=go" >
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.codfornitore%</span>
-										<input class="form-control" id="codforn_cre" name="codforn_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.desfornitore%</span>
-										<input class="form-control" id="desforn_cre" name="desforn_cre" type="text" onblur="controllaDescrizione('desforn_cre')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.numggscafatt%</span>
-										<input class="form-control" id="ggscadfat_cre" name="ggscadfat_cre" type="text" onblur="controllaQuantita('ggscadfat_cre')" />
-									</div>
-							  	</div>							
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.indfornitore%</span>
-										<input class="form-control" id="indforn_cre" name="indforn_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.cittafornitore%</span>
-										<input class="form-control" id="cittaforn_cre" name="cittaforn_cre" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.capfornitore%</span>
-										<input class="form-control" id="capforn_cre" name="capforn_cre" type="text" />
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-8">
-						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>						    		
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
-									</div>						    		
-								</div>	
-							</div>
-						</div>
+    <div class="modal fade" id="nuovo-fornitore-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo Fornitore</h4>
+                </div>
+                <div class="modal-body">
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-fornitore-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+                    <form method="post" id="nuovoFornitoreForm" action="../anagrafica/creaFornitoreFacade.class.php?modo=go" >
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.codfornitore%</span>
+                                        <input class="form-control" id="codforn_cre" name="codforn_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.desfornitore%</span>
+                                        <input class="form-control" id="desforn_cre" name="desforn_cre" type="text" onblur="controllaDescrizione('desforn_cre')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.numggscafatt%</span>
+                                        <input class="form-control" id="ggscadfat_cre" name="ggscadfat_cre" type="text" onblur="controllaQuantita('ggscadfat_cre')" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.indfornitore%</span>
+                                        <input class="form-control" id="indforn_cre" name="indforn_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.cittafornitore%</span>
+                                        <input class="form-control" id="cittaforn_cre" name="cittaforn_cre" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.capfornitore%</span>
+                                        <input class="form-control" id="capforn_cre" name="capforn_cre" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-8">
+                                    <label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary active"><input type="radio" name="tipoadd_cre" id="bonifico_cre" autocomplete="off" value="BONIFICO" checked>Bonifico</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="riba_cre" autocomplete="off" value="RIBA">%ml.riba%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="rimdiretta_cre" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="assegnobancario_cre" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_cre" id="addebitodiretto_cre" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-fornitore-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ------------------ -->
@@ -132,81 +132,81 @@
 <!-- ------------------ -->
 
 <div class="container">
-	<div class="modal fade" id="modifica-fornitore-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Fornitore</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="modificaFornitoreForm" action="../anagrafica/modificaFornitoreFacade.class.php?modo=go" >
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-3 ui-front">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.codfornitore%</span>
-										<input class="form-control" id="codforn_mod" name="codforn_mod" readonly type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.desfornitore%</span>
-										<input class="form-control" id="desforn_mod" name="desforn_mod" type="text" onblur="controllaDescrizione('desforn_mod')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.numggscafatt%</span>
-										<input class="form-control" id="ggscadfat_mod" name="ggscadfat_mod" type="text" onblur="controllaQuantita('ggscadfat_mod')"/>
-									</div>
-							  	</div>							
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-5">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.indfornitore%</span>
-										<input class="form-control" id="indforn_mod" name="indforn_mod" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.cittafornitore%</span>
-										<input class="form-control" id="cittaforn_mod" name="cittaforn_mod" type="text" />
-									</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">%ml.capfornitore%</span>
-										<input class="form-control" id="capforn_mod" name="capforn_mod" type="text" />
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-8">
-						    		<label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_mod_messaggio"></span></small></label>						    		
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="bonifico_mod" autocomplete="off" value="BONIFICO">Bonifico</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="riba_mod" autocomplete="off" value="RIBA">%ml.riba%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="rimdiretta_mod" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="assegnobancario_mod" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="addebitodiretto_mod" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
-									</div>						    		
-								</div>	
-							</div>
-						</div>
+    <div class="modal fade" id="modifica-fornitore-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modifica Fornitore</h4>
+                </div>
+                <div class="modal-body">
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-fornitore-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+                    <form method="post" id="modificaFornitoreForm" action="../anagrafica/modificaFornitoreFacade.class.php?modo=go" >
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3 ui-front">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.codfornitore%</span>
+                                        <input class="form-control" id="codforn_mod" name="codforn_mod" readonly type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.desfornitore%</span>
+                                        <input class="form-control" id="desforn_mod" name="desforn_mod" type="text" onblur="controllaDescrizione('desforn_mod')"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.numggscafatt%</span>
+                                        <input class="form-control" id="ggscadfat_mod" name="ggscadfat_mod" type="text" onblur="controllaQuantita('ggscadfat_mod')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-5">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.indfornitore%</span>
+                                        <input class="form-control" id="indforn_mod" name="indforn_mod" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.cittafornitore%</span>
+                                        <input class="form-control" id="cittaforn_mod" name="cittaforn_mod" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">%ml.capfornitore%</span>
+                                        <input class="form-control" id="capforn_mod" name="capforn_mod" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-8">
+                                    <label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_mod_messaggio"></span></small></label>
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="bonifico_mod" autocomplete="off" value="BONIFICO">Bonifico</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="riba_mod" autocomplete="off" value="RIBA">%ml.riba%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="rimdiretta_mod" autocomplete="off" value="RIM_DIR">%ml.rimdiretta%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="assegnobancario_mod" autocomplete="off" value="ASS_BAN">%ml.assegnobancario%</label>
+                                        <label class="btn btn-primary"><input type="radio" name="tipoadd_mod" id="addebitodiretto_mod" autocomplete="off" value="ADD_DIR">%ml.addebitodiretto%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-modifica-fornitore-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ----------------------- -->
@@ -214,26 +214,26 @@
 <!-- ----------------------- -->
 
 <div class="container">
-	<div class="modal fade" id="cancella-fornitore-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Cancella fornitore</h4>
-	        	</div>
-	        	<div class="modal-body">	        		        	
-					<form method="post" id="cancellaFornitoreForm" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
-						<p>Elimino il fornitore ?</p>
-						<input type="hidden" id="idfornitore" name="idfornitore">
-			        </form>
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-fornitore-form">Ok</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+    <div class="modal fade" id="cancella-fornitore-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancella fornitore</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="cancellaFornitoreForm" action="../anagrafica/cancellaFornitoreFacade.class.php?modo=start" >
+                        <p>Elimino il fornitore ?</p>
+                        <input type="hidden" id="idfornitore" name="idfornitore">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-cancella-fornitore-form">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ----------->
