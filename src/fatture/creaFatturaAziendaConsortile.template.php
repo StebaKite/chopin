@@ -1,148 +1,144 @@
 <?php
 
 require_once 'fattura.abstract.class.php';
+require_once 'fatture.business.interface.php';
+require_once 'utility.class.php';
+require_once 'fattura.class.php';
+require_once 'cliente.class.php';
+require_once 'fornitore.class.php';
 
-class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract {
+class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements FattureBusinessInterface {
 
-	public static $_instance = null;
-	
-	private static $pagina = "/fatture/creaFatturaAziendaConsortile.form.html";
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	//-----------------------------------------------------------------------------
+    public function getInstance() {
+        if (!isset($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]))
+            $_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE] = serialize(new CreaFatturaAziendaConsortileTemplate());
+        return unserialize($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]);
+    }
 
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    public function inizializzaPagina() {
 
-	private function  __clone() { }
+    }
 
-	/**
-	 * Singleton Pattern
-	 */
+    public function controlliLogici() {
 
-	public static function getInstance() {
+    }
 
-		if( !is_object(self::$_instance) )
+    public function displayPagina() {
 
-			self::$_instance = new CreaFatturaAziendaConsortileTemplate();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $fattura = Fattura::getInstance();
+        $cliente = Cliente::getInstance();
+        $cliente->load($db);
 
-		return self::$_instance;
-	}
+        $thead_dettagli = "<tr></tr>";
+        $tbody_dettagli = "<tr></tr>";
 
-	// template ------------------------------------------------
+        $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_AZIENDA_CONSORTILE;
 
-	public function inizializzaPagina() {}
+        /**
+         * Prepara la tabella dei dettagli inseriti
+         */
+        if (parent::isNotEmpty($fattura->getDettagli())) {
 
-	public function controlliLogici() {
-		
-	}
+            $thead_dettagli = "<tr>" .
+                    "<th class='text-center'>Quantit&agrave;</th>" .
+                    "<th>Articolo</th>" .
+                    "<th class='text-right'>Importo</th>" .
+                    "<th class='text-right'>Totale</th>" .
+                    "<th class='text-right'>Imponibile</th>" .
+                    "<th class='text-right'>Iva</th>" .
+                    "<th></th>" .
+                    "</tr>";
 
-	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
+            $tbody_dettagli = "";
+            $d_x_array = "";
 
-		$thead_dettagli = "<tr></tr>";
-		$tbody_dettagli = "<tr></tr>";
-		
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
+            $d = explode(",", $fattura->getDettagli());
 
-		/**
-		 * Prepara la tabella dei dettagli inseriti
-		 */
-			
-		if ($_SESSION['dettagliInseriti'] != "") {
-		
-			$thead_dettagli =
-			"<tr>" .
-			"<th class='dt-center'>Quantit&agrave;</th>" .
-			"<th>Articolo</th>" .
-			"<th class='dt-right'>Importo</th>" .
-			"<th class='dt-right'>Totale</th>" .
-			"<th class='dt-right'>Imponibile</th>" .
-			"<th class='dt-right'>Iva</th>" .
-			"<th></th>" .
-			"</tr>";	
-		
-			$tbody_dettagli = "";
-			$d_x_array = "";
-		
-			$d = explode(",", $_SESSION['dettagliInseriti']);
-				
-			foreach($d as $ele) {
-		
-				$e = explode("#",$ele);
-				$id = $e[0];
-		
-				$dettaglio =
-				"<tr id='" . trim($id) . "'>" .
-				"<td class='dt-center'>" . $e[1] . "</td>" .
-				"<td>" . $e[2] . "</td>" .
-				"<td class='dt-right'>" . number_format($e[3], 2, ',', '.') . "</td>" .
-				"<td class='dt-right'>" . number_format($e[4], 2, ',', '.') . "</td>" .
-				"<td class='dt-right'>" . number_format($e[5], 2, ',', '.') . "</td>" .
-				"<td class='dt-right'>" . number_format($e[6], 2, ',', '.') . "</td>" .
-				"<td id='icons'><a class='tooltip' onclick='cancellaDettaglioPagina(" . trim($id) . ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" .
-				"</tr>";
-		
-				$tbody_dettagli = $tbody_dettagli . $dettaglio;
-		
-				/**
-				 * Prepara la valorizzazione dell'array di pagina per i dettagli inseriti
-				 */
-				$d_x_array = $d_x_array . "'" . $ele . "',";
-			}
-		}
-				
-		$replace = array(
-				'%titoloPagina%' => $this->getTitoloPagina(),
-				'%numfat%' => $_SESSION["numfat"],
-				'%datafat%' => $_SESSION["datafat"],
-				'%empy_selected%' => ($_SESSION["meserif"] == "") ? "selected" : "",
-				'%gen_selected%' => ($_SESSION["meserif"] == "Gennaio") ? "selected" : "",
-				'%feb_selected%' => ($_SESSION["meserif"] == "Febbraio") ? "selected" : "",
-				'%mar_selected%' => ($_SESSION["meserif"] == "Marzo") ? "selected" : "",
-				'%apr_selected%' => ($_SESSION["meserif"] == "Aprile") ? "selected" : "",
-				'%mag_selected%' => ($_SESSION["meserif"] == "Maggio") ? "selected" : "",
-				'%giu_selected%' => ($_SESSION["meserif"] == "Giugno") ? "selected" : "",
-				'%lug_selected%' => ($_SESSION["meserif"] == "Luglio") ? "selected" : "",
-				'%ago_selected%' => ($_SESSION["meserif"] == "Agosto") ? "selected" : "",
-				'%set_selected%' => ($_SESSION["meserif"] == "Settembre") ? "selected" : "",
-				'%ott_selected%' => ($_SESSION["meserif"] == "Ottobre") ? "selected" : "",
-				'%nov_selected%' => ($_SESSION["meserif"] == "Novembre") ? "selected" : "",
-				'%dic_selected%' => ($_SESSION["meserif"] == "Dicembre") ? "selected" : "",			
-				'%tipoadd%' => $_SESSION["tipoadd"],
-				'%ragsocbanca%' => str_replace("'", "&apos;", $_SESSION["ragsocbanca"]),
-				'%ibanbanca%' => $_SESSION["ibanbanca"],
-				'%azione%' => $this->getAzione(),
-				'%confermaTip%' => $this->getConfermaTip(),
-				'%descli%' => $_SESSION["descli"],
-				'%villa-checked%' => ($_SESSION["codneg"] == "VIL") ? "checked" : "",
-				'%brembate-checked%' => ($_SESSION["codneg"] == "BRE") ? "checked" : "",
-				'%trezzo-checked%' => ($_SESSION["codneg"] == "TRE") ? "checked" : "",
-				'%thead_dettagli%' => $thead_dettagli,
-				'%tbody_dettagli%' => $tbody_dettagli,
-				'%dettagliInseriti%' => $_SESSION["dettagliInseriti"],
-				'%arrayDettagliInseriti%' => $d_x_array,
-				'%arrayIndexDettagliInseriti%' => $_SESSION["indexDettagliInseriti"],
-				'%elenco_fornitori%' => $_SESSION["elenco_fornitori"],
-				'%elenco_clienti%' => $_SESSION["elenco_clienti"],
-				'%titolo%' => $_SESSION["titolo"]
-		);
-		
-		$utility = Utility::getInstance();
-		
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-	}
+            foreach ($d as $ele) {
+
+                $e = explode("#", $ele);
+                $id = $e[0];
+
+                $dettaglio = "" .
+                        "<tr id='" . trim($id) . "'>" .
+                        "<td class='text-center'>" . $e[1] . "</td>" .
+                        "<td>" . $e[2] . "</td>" .
+                        "<td class='text-right'>" . number_format($e[3], 2, ',', '.') . "</td>" .
+                        "<td class='text-right'>" . number_format($e[4], 2, ',', '.') . "</td>" .
+                        "<td class='text-right'>" . number_format($e[5], 2, ',', '.') . "</td>" .
+                        "<td class='text-right'>" . number_format($e[6], 2, ',', '.') . "</td>" .
+                        "<td><a onclick='cancellaDettaglioPagina(" . trim($id) . ")'><span class='glyphicon glyphicon-trash'></span></a></td>" .
+                        "</tr>";
+
+                $tbody_dettagli .= $dettaglio;
+
+                /**
+                 * Prepara la valorizzazione dell'array di pagina per i dettagli inseriti
+                 */
+                $d_x_array .= "'" . $ele . "',";
+            }
+        }
+
+        $replace = array(
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%azione%' => $_SESSION[self::AZIONE],
+            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%titolo%' => $_SESSION[$fattura->getDesTitolo()],
+            '%numfat%' => $fattura->getNumFattura(),
+            '%datafat%' => $fattura->getDatFattura(),
+            '%empty_selected%' => (parent::isEmpty($fattura->getMesRiferimento())) ? "selected" : "",
+            '%gen_selected%' => ($fattura->getMesRiferimento() == "Gennaio") ? "selected" : "",
+            '%feb_selected%' => ($fattura->getMesRiferimento() == "Febbraio") ? "selected" : "",
+            '%mar_selected%' => ($fattura->getMesRiferimento() == "Marzo") ? "selected" : "",
+            '%apr_selected%' => ($fattura->getMesRiferimento() == "Aprile") ? "selected" : "",
+            '%mag_selected%' => ($fattura->getMesRiferimento() == "Maggio") ? "selected" : "",
+            '%giu_selected%' => ($fattura->getMesRiferimento() == "Giugno") ? "selected" : "",
+            '%lug_selected%' => ($fattura->getMesRiferimento() == "Luglio") ? "selected" : "",
+            '%ago_selected%' => ($fattura->getMesRiferimento() == "Agosto") ? "selected" : "",
+            '%set_selected%' => ($fattura->getMesRiferimento() == "Settembre") ? "selected" : "",
+            '%ott_selected%' => ($fattura->getMesRiferimento() == "Ottobre") ? "selected" : "",
+            '%nov_selected%' => ($fattura->getMesRiferimento() == "Novembre") ? "selected" : "",
+            '%dic_selected%' => ($fattura->getMesRiferimento() == "Dicembre") ? "selected" : "",
+            '%tipoadd%' => $fattura->getTipAddebito(),
+            '%ragsocbanca%' => str_replace("'", "&apos;", $fattura->getDesRagsocBanca()),
+            '%ibanbanca%' => $fattura->getCodIbanBanca(),
+            '%descli%' => $fattura->getDesCliente(),
+            '%villa-checked%' => ($fattura->getCodNegozio() == "VIL") ? "checked" : "",
+            '%brembate-checked%' => ($fattura->getCodNegozio() == "BRE") ? "checked" : "",
+            '%trezzo-checked%' => ($fattura->getCodNegozio() == "TRE") ? "checked" : "",
+            '%thead_dettagli%' => $thead_dettagli,
+            '%tbody_dettagli%' => $tbody_dettagli,
+            '%dettagliInseriti%' => $fattura->getDettagli(),
+            '%arrayDettagliInseriti%' => $d_x_array,
+            '%arrayIndexDettagliInseriti%' => $fattura->getIndexDettagli(),
+            '%elenco_clienti%' => $this->caricaElencoClienti($cliente)
+        );
+
+        $utility = Utility::getInstance();
+
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+    }
+
+    public function go() {
+
+    }
+
+    public function start() {
+
+    }
+
 }
-		
 ?>
-				
-		
-	
-	
+
+
+
