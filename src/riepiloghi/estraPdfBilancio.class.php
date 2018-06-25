@@ -2,220 +2,190 @@
 
 require_once 'riepiloghi.abstract.class.php';
 require_once 'riepiloghi.extractor.interface.php';
+require_once 'utility.class.php';
+require_once 'pdf.class.php';
+require_once 'bilancio.class.php';
 
-class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiExtractorInterface {
+class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public static $azioneEstraiPdfBilancio = "../riepiloghi/estraiPdfBilancioFacade.class.php?modo=go";
-	public static $queryCosti = "/riepiloghi/costi.sql";
-	public static $queryCostiConSaldi = "/riepiloghi/costiConSaldi.sql";
-	public static $queryRicavi = "/riepiloghi/ricavi.sql";
-	public static $queryRicaviConSaldi = "/riepiloghi/ricaviConSaldi.sql";
-	public static $queryAttivo = "/riepiloghi/attivo.sql";
-	public static $queryPassivo = "/riepiloghi/passivo.sql";
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	function __construct() {
+    public function getInstance() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+        if (!isset($_SESSION[self::ESTRAI_PDF_BILANCIO]))
+            $_SESSION[self::ESTRAI_PDF_BILANCIO] = serialize(new EstraiPdfBilancio());
+        return unserialize($_SESSION[self::ESTRAI_PDF_BILANCIO]);
+    }
 
-		require_once 'utility.class.php';
+    public function start() {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $bilancio = Bilancio::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
+        $pdf = Pdf::getInstance();
+        $pdf->setLogo($this->root . $array["logo"]);
+        $pdf->setCreator($array["productName"]);
 
-	private function  __clone() { }
+        if ($bilancio->getTipoBilancio() == self::ESERCIZIO) {
+            $pdf->setTitle("BILANCIO ESERCIZIO");
+            $pdf->setTitle1("Anno " . $bilancio->getAnnoEsercizioSel());
+        }
 
-	/**
-	 * Singleton Pattern
-	 */
+        if ($bilancio->getTipoBilancio() == self::PERIODICO) {
+            $pdf->setTitle("BILANCIO ESERCIZIO");
+            $pdf->setTitle1("Dal " . $bilancio->GetDataregDa() . " al " . $bilancio->GetDataregA());
+        }
 
-	public static function getInstance() {
+        $pdf->AliasNbPages();
 
-		if( !is_object(self::$_instance) )
+        /**
+         * Generazione del documento
+         */
+        $pdf = $this->generaSezioneIntestazione($pdf, $bilancio);
+        $pdf = $this->generaSezioneTabellaBilancio($pdf, $bilancio);
 
-			self::$_instance = new EstraiPdfBilancio();
+        if ($bilancio->getSoloContoEconomico() == "N") {
+            $pdf = $this->generaSezioneIntestazione($pdf, $bilancio);
+            $pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $bilancio);
+        }
 
-		return self::$_instance;
-	}
+        $pdf->Output();
+    }
 
-	public function start() {
+    public function generaSezioneIntestazione($pdf, $bilancio) {
 
-		require_once 'utility.class.php';
-		require_once 'pdf.class.php';
+        if ($bilancio->getCodnegSel() != "CAS") {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+            if ($bilancio->getCodnegSel() != "") {
+                $negozio = "";
+                $negozio = ($bilancio->getCodnegSel() == "VIL") ? "Villa D'Adda" : $negozio;
+                $negozio = ($bilancio->getCodnegSel() == "BRE") ? "Brembate" : $negozio;
+                $negozio = ($bilancio->getCodnegSel() == "TRE") ? "Trezzo" : $negozio;
 
-		$_SESSION["logo"] = self::$root . $array["logo"];
-		$_SESSION["creator"] = "Nexus6";
+                $pdf->setTitle2("Negozio di " . $negozio);
+            } else {
+                $pdf->setTitle2("Tutti i negozi");
+            }
+        } else {
+            $pdf->setTitle2("");
+        }
 
-		$pdf = Pdf::getInstance();
+        return $pdf;
+    }
 
-		$pdf->AliasNbPages();
+    private function generaSezioneTabellaBilancio($pdf, $bilancio) {
 
-		/**
-		 * Generazione del documento
-		*/
-		$pdf = $this->generaSezioneIntestazione($pdf);
-		$pdf = $this->generaSezioneTabellaBilancio($pdf, $utility);
+        $fill = true;
 
-		if ($_SESSION["soloContoEconomico"] == "N") {
-			$pdf = $this->generaSezioneIntestazione($pdf);
-			$pdf = $this->generaSezioneTabellaBilancioEsercizio($pdf, $utility);
-		}
+        /**
+         * Costi
+         */
+        if ($bilancio->getNumCostiTrovati() > 0) {
 
-		$pdf->Output();
-	}
+            $pdf->AddPage();
+            $pdf->SetFont('', 'B', 12);
+            $pdf->SetFillColor(171, 224, 245);
+            $pdf->Cell($w[0], 6, 'COSTI' . str_repeat(' ', 87) . 'Parziale ' . EURO . str_repeat(' ', 19) . 'Totale ' . EURO, '', 0, 'L', $fill);
+            $pdf->Ln();
+            $pdf->Ln();
 
-	public function generaSezioneIntestazione($pdf) {
+            $pdf->SetFont('Arial', '', 11);
 
-		if ($_SESSION["codneg_sel"] != "CAS") {
-			
-			if ($_SESSION["codneg_sel"] != "") {
-				$negozio = "";
-				$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-				$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-				$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-				
-				$_SESSION["title2"] = "Negozio di " . $negozio;
-			}
-			else {
-				$_SESSION["title2"] = "Tutti i negozi";
-			}
-		}
-		else {
-			$_SESSION["title2"] = "";
-		}		
-		
-		return $pdf;
-	}
+            $pdf->BilancioTable($bilancio->getCostiBilancio(), 1);
+            $pdf->TotaleCostiTable($bilancio->getTotaleCosti());
+        }
 
-	private function generaSezioneTabellaBilancio($pdf, $utility) {
+        /**
+         * Ricavi
+         */
+        if ($bilancio->getNumRicaviTrovati() > 0) {
 
-		require_once 'database.class.php';
-		
-		$replace = array(
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%catconto%' => $_SESSION["catconto_sel"],
-				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
-		);
-		
-		$db = Database::getInstance();
-		$fill = true;		
-		
-		/**
-		 * Costi
-		 */
-		if ($this->ricercaCosti($utility, $db, $replace) > 0) {
-		
-			$pdf->AddPage();
-			$pdf->SetFont('','B',12);
-			$pdf->SetFillColor(171,224,245);
-			$pdf->Cell($w[0],6,'COSTI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
-			$pdf->Ln();
-			$pdf->Ln();
-			
-			$pdf->SetFont('Arial','',11);
-		
-			$pdf->BilancioTable(pg_fetch_all($_SESSION['costiBilancio']), 1);			
-			$pdf->TotaleCostiTable($_SESSION['totaleCosti']);
-		}		
-		
-		/**
-		 * Ricavi
-		 */		
-		if ($this->ricercaRicavi($utility, $db, $replace) > 0) {
-			
-			$pdf->AddPage();		
-			$pdf->SetFont('','B',12);
-			$pdf->SetFillColor(171,224,245);
-			$pdf->Cell($w[0],6,'RICAVI' . str_repeat(' ',87) . 'Parziale ' . EURO . str_repeat(' ',19) . 'Totale ' . EURO,'',0,'L',$fill);
-			$pdf->Ln();
-			$pdf->Ln();
-			$pdf->SetFont('Arial','',11);
-		
-			$pdf->BilancioTableRicavi(pg_fetch_all($_SESSION['ricaviBilancio']), -1);
-			$pdf->TotaleRicaviTable(abs($_SESSION['totaleRicavi']));			
-		}
-		
-		/**
-		 * Riepilogo totali
-		 */
-		if (($_SESSION['numCostiTrovati'] > 0) or ($_SESSION['numRicaviTrovati'] > 0)) {
-			
-			if (abs($_SESSION['totaleRicavi']) >= abs($_SESSION['totaleCosti'])) {
-				$pdf->BilancioCostiTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
-			}
-			else {
-				if (abs($_SESSION['totaleRicavi']) < abs($_SESSION['totaleCosti'])) {
-					$pdf->BilancioRicaviTable(abs($_SESSION['totaleRicavi']), abs($_SESSION['totaleCosti']));
-				}				
-			}		
-		}
-		
-		return $pdf;
-	}
-	
-	private function generaSezioneTabellaBilancioEsercizio($pdf, $utility) {
-		
-		require_once 'database.class.php';
-		
-		$replace = array(
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%catconto%' => $_SESSION["catconto_sel"],
-				'%codnegozio%' => ($_SESSION["codneg_sel"] == "") ? "'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'"
-		);
-		
-		$db = Database::getInstance();
-		$fill = true;				
+            $pdf->AddPage();
+            $pdf->SetFont('', 'B', 12);
+            $pdf->SetFillColor(171, 224, 245);
+            $pdf->Cell($w[0], 6, 'RICAVI' . str_repeat(' ', 87) . 'Parziale ' . EURO . str_repeat(' ', 19) . 'Totale ' . EURO, '', 0, 'L', $fill);
+            $pdf->Ln();
+            $pdf->Ln();
+            $pdf->SetFont('Arial', '', 11);
 
-		/**
-		 * Attivo
-		 */
-		if ($this->ricercaAttivo($utility, $db, $replace) > 0) {
-			
-			$pdf->AddPage();
-			$pdf->SetFont('','B',12);
-		    $pdf->SetFillColor(171,224,245);
-			$pdf->Cell($w[0],6,"ATTIVITA'" . str_repeat(' ',82) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
-			$pdf->Ln();
-			$pdf->Ln();
-			$pdf->SetFillColor(224,235,255);
-			$pdf->SetFont('Arial','',11);
-		
-			$pdf->BilancioEsercizioTable(pg_fetch_all($_SESSION['attivoBilancio']));			
-	 		$pdf->TotaleAttivoTable(abs($_SESSION['totaleAttivo']));
-		}
-		
-		/**
-		 * Passivo
-		 */
-		if ($this->ricercaPassivo($utility, $db, $replace) > 0) {
-			
-			$pdf->AddPage();
-			$pdf->SetFont('','B',12);
-			$pdf->SetFillColor(171,224,245);		
-			$pdf->Cell($w[0],6,"PASSIVITA'" . str_repeat(' ',80) . 'Parziale ' . EURO . str_repeat(' ',18) . 'Totale ' . EURO,'',0,'L',$fill);
-			$pdf->Ln();
-			$pdf->Ln();			
-			$pdf->SetFillColor(224,235,255);
-			$pdf->SetFont('Arial','',11);
-		
-			$pdf->BilancioEsercizioTable(pg_fetch_all($_SESSION['passivoBilancio']));
-			$pdf->TotalePassivoTable(abs($_SESSION['totalePassivo']));		
-		}
-		
-		return $pdf;
-	}		
+            $pdf->BilancioTableRicavi($bilancio->getRicaviBilancio(), -1);
+            $pdf->TotaleRicaviTable(abs($bilancio->getTotaleRicavi()));
+        }
+
+        /**
+         * Riepilogo totali
+         */
+        if (($bilancio->getNumCostiTrovati() > 0) or ( $bilancio->getNumRicaviTrovati() > 0)) {
+
+            if (abs($bilancio->getTotaleRicavi()) >= abs($bilancio->getTotaleCosti())) {
+                $pdf->BilancioCostiTable(abs($bilancio->getTotaleRicavi()), abs($bilancio->getTotaleCosti()));
+            } else {
+                if (abs($bilancio->getTotaleRicavi()) < abs($bilancio->getTotaleCosti())) {
+                    $pdf->BilancioRicaviTable(abs($bilancio->getTotaleRicavi()), abs($bilancio->getTotaleCosti()));
+                }
+            }
+        }
+
+        return $pdf;
+    }
+
+    private function generaSezioneTabellaBilancioEsercizio($pdf, $bilancio) {
+
+        $fill = true;
+
+        /**
+         * Attivo
+         */
+        if ($bilancio->getNumAttivoTrovati() > 0) {
+
+            $pdf->AddPage();
+            $pdf->SetFont('', 'B', 12);
+            $pdf->SetFillColor(171, 224, 245);
+            $pdf->Cell($w[0], 6, "ATTIVITA'" . str_repeat(' ', 82) . 'Parziale ' . EURO . str_repeat(' ', 18) . 'Totale ' . EURO, '', 0, 'L', $fill);
+            $pdf->Ln();
+            $pdf->Ln();
+            $pdf->SetFillColor(224, 235, 255);
+            $pdf->SetFont('Arial', '', 11);
+
+            $pdf->BilancioEsercizioTable($bilancio->getAttivoBilancio());
+            $pdf->TotaleAttivoTable(abs($bilancio->getNumAttivoTrovati()));
+        }
+
+        /**
+         * Passivo
+         */
+        if ($bilancio->getNumPassivoTrovati() > 0) {
+
+            $pdf->AddPage();
+            $pdf->SetFont('', 'B', 12);
+            $pdf->SetFillColor(171, 224, 245);
+            $pdf->Cell($w[0], 6, "PASSIVITA'" . str_repeat(' ', 80) . 'Parziale ' . EURO . str_repeat(' ', 18) . 'Totale ' . EURO, '', 0, 'L', $fill);
+            $pdf->Ln();
+            $pdf->Ln();
+            $pdf->SetFillColor(224, 235, 255);
+            $pdf->SetFont('Arial', '', 11);
+
+            $pdf->BilancioEsercizioTable($bilancio->getPassivoBilancio());
+            $pdf->TotalePassivoTable(abs($bilancio->getTotalePassivo()));
+        }
+
+        return $pdf;
+    }
+
+    public function go() {
+
+    }
+
 }
 
 ?>

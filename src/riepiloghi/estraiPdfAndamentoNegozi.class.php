@@ -2,145 +2,114 @@
 
 require_once 'riepiloghi.abstract.class.php';
 require_once 'riepiloghi.extractor.interface.php';
+require_once 'utility.class.php';
+require_once 'pdf.class.php';
+require_once 'riepilogo.class.php';
 
-class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiExtractorInterface {
+class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
-	private static $_instance = null;
+//    private static $_instance = null;
+//    public $_datiMCT = array();
+//    public $_totaliCostiRicavi = array();
+//    public static $azioneEstraiPdfAndamentoNegozi = "../riepiloghi/estraiPdfAndamentoNegoziFacade.class.php?modo=start";
 
-	public $_datiMCT = array();
-	public $_totaliCostiRicavi = array();
-	
-	public static $azioneEstraiPdfAndamentoNegozi = "../riepiloghi/estraiPdfAndamentoNegoziFacade.class.php?modo=start";
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	function __construct() {
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+    public function getInstance() {
 
-		require_once 'utility.class.php';
+        if (!isset($_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO]))
+            $_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO] = serialize(new EstraiPdfAndamentoNegozi());
+        return unserialize($_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO]);
+    }
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function start() {
 
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
+        $riepilogo = Riepilogo::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-	private function  __clone() { }
-	
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-	
-			self::$_instance = new EstraiPdfAndamentoNegozi();
-	
-			return self::$_instance;
-	}
-	
-	public function start() {
-	
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'pdf.class.php';
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		$_SESSION["logo"] = self::$root . $array["logo"];
-		$_SESSION["creator"] = "Nexus6";
-	
-		$pdf = Pdf::getInstance();
-		$db = Database::getInstance();
-		
-		$pdf->AliasNbPages();
+        $pdf = Pdf::getInstance();
+        $pdf->setLogo($this->root . $array["logo"]);
+        $pdf->setCreator($array["productName"]);
 
-		/**
-		 * Generazione del documento
-		 */
-		
-		$pdf = $this->generaSezioneIntestazione($pdf);
-		$pdf = $this->generaSezioneTabellaProgressivi($pdf, $utility, $db, $_SESSION["elencoVociAndamentoNegozio"]);
-		$pdf = $this->generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $_SESSION["totaliComplessiviAcquistiMesi"], $_SESSION["totaliComplessiviRicaviMesi"]);
-		$pdf = $this->generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $_SESSION["totaliAcquistiMesi"], $_SESSION["totaliRicaviMesi"]);
-		
-		$pdf->Output();
-	}
-	
-	public function generaSezioneIntestazione($pdf) {
+        $pdf->AliasNbPages();
 
-		unset($_SESSION["title"]);
-		unset($_SESSION["title1"]);
-		unset($_SESSION["title2"]);
-		
-		$_SESSION["title"] = "Progressivi Mensili Chopin";
-		$_SESSION["title1"] = "Dal " . $_SESSION["datareg_da"] . " al " . $_SESSION["datareg_a"];
-		
-		$negozio = "";
-		$negozio = ($_SESSION["codneg_sel"] == "VIL") ? "Villa D'Adda" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "BRE") ? "Brembate" : $negozio;
-		$negozio = ($_SESSION["codneg_sel"] == "TRE") ? "Trezzo" : $negozio;
-		
-		if ($_SESSION["codneg_sel"] != "") {
-			$_SESSION["title2"] = "Negozio di " . $negozio;
-		}
-		
-		return $pdf;
-	}
+        /**
+         * Generazione del documento
+         */
+        $pdf = $this->generaSezioneIntestazione($pdf, $riepilogo);
+        $pdf = $this->generaSezioneTabellaProgressivi($pdf, $riepilogo);
+        $pdf = $this->generaSezioneTabellaUtilePerdita($pdf, $riepilogo);
+        $pdf = $this->generaSezioneTabellaMctProgressivi($pdf, $riepilogo);
 
-	private function generaSezioneTabellaProgressivi($pdf, $utility, $db, $elencoVoci) {
+        $pdf->Output();
+    }
 
-		$codnegozio = "";
-		$codnegozio = ($_SESSION["codneg_sel"] == "") ?"'VIL','TRE','BRE'" : "'" . $_SESSION["codneg_sel"] . "'";
-		
-		$replace = array(
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%codnegozio%' => $codnegozio
-		);
+    public function go() {
 
-		$this->ricercaVociAndamentoCostiNegozio($utility, $db, $replace);
-		$this->ricercaVociAndamentoRicaviNegozio($utility, $db, $replace);
-		
-		$pdf->AddPage('L');
-	
-		$header = array("Costi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-		$pdf->SetFont('Arial','',9);
-		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoCostiNegozio"], 1);
+    }
 
-		$pdf->AddPage('L');
-		
-		$header = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-		$pdf->progressiviNegozioTable($header, $_SESSION["elencoVociAndamentoRicaviNegozio"], -1);
-		
-		return $pdf;
-	}
-	
-	private function generaSezioneTabellaUtilePerdita($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
+    public function generaSezioneIntestazione($pdf, $riepilogo) {
 
-		$pdf->AddPage('L');
-		
-		$header = array("Utile/Perdita", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-		$pdf->progressiviUtilePerditaTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
+        $pdf->setTitle("Progressivi Mensili Chopin");
+        $pdf->setTitle1("Dal " . $riepilogo->getDataregDa() . " al " . $riepilogo->getDataregA());
 
-		return $pdf;
-	}
-	
-	private function generaSezioneTabellaMctProgressivi($pdf, $utility, $db, $totaliAcquistiMesi, $totaliRicaviMesi) {
+        if ($_SESSION["codneg_sel"] != "") {
+            $negozio = ($riepilogo->getCodnegSel() == self::VILLA) ? "Villa D'Adda" : $negozio;
+            $negozio = ($riepilogo->getCodnegSel() == self::BREMBATE) ? "Brembate" : $negozio;
+            $negozio = ($riepilogo->getCodnegSel() == self::TREZZO) ? "Trezzo" : $negozio;
+            $pdf->setTitle1("Negozio di " . $negozio);
+        }
+        return $pdf;
+    }
 
-		$pdf->Cell(100,10,'','',0,'R',$fill);
-		$pdf->Ln();
-		
-		$header = array("Margine di Contribuzione", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
-		$pdf->SetFont('Arial','',9);
-		$pdf->progressiviMctTable($header, $totaliAcquistiMesi, $totaliRicaviMesi);
+    private function generaSezioneTabellaProgressivi($pdf, $riepilogo) {
 
-		return $pdf;
-	}
-}	
+        $pdf->AddPage('L');
+
+        $headerCosti = array("Costi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->progressiviNegozioTable($headerCosti, $riepilogo->getCostiAndamentoNegozio(), 1);
+
+        $pdf->AddPage('L');
+
+        $headerRicavi = array("Ricavi", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+        $pdf->progressiviNegozioTable($headerRicavi, $riepilogo->getRicaviAndamentoNegozio(), -1);
+
+        return $pdf;
+    }
+
+    private function generaSezioneTabellaUtilePerdita($pdf, $riepilogo) {
+
+        $pdf->AddPage('L');
+
+        $header = array("Utile/Perdita", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+        $pdf->progressiviUtilePerditaTable($header, $riepilogo->getTotaliComplessiviAcquistiMesi(), $riepilogo->getTotaliComplessiviRicaviMesi());
+
+        return $pdf;
+    }
+
+    private function generaSezioneTabellaMctProgressivi($pdf, $riepilogo) {
+
+        $pdf->Cell(100, 10, '', '', 0, 'R', $fill);
+        $pdf->Ln();
+
+        $header = array("Margine di Contribuzione", "Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic", "Totale");
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->progressiviMctTable($header, $riepilogo->getTotaliAcquistiMesi(), $riepilogo->getTotaliRicaviMesi());
+
+        return $pdf;
+    }
+
+}
 
 ?>
