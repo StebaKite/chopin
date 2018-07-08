@@ -22,7 +22,7 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
 
         $negozio = ($codneg == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
         $negozio = ($codneg == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
-        $negozio = ($codneg == self::BRE) ? self::NEGOZIO_BREMBATE : $negozio;
+        $negozio = ($codneg == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
 
         $prefisso = ($codneg == self::VILLA) ? "" : $prefisso;
         $prefisso = ($codneg == self::TREZZO) ? "T" : $prefisso;

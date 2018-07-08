@@ -1,163 +1,3 @@
-<script type="text/javascript">
-
-    var indexDettInseriti = [ %arrayIndexDettagliInseriti% ];
-    var dettInseriti = [ %arrayDettagliInseriti% ];
-    var contatore = 0;
-
-    function prelevaNumeroFattura(negozio) {
-
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                $("#numfat").val(xmlhttp.responseText);
-            }
-        }
-        xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1200&codneg=" + negozio, true);
-        xmlhttp.send();
-
-        // Inizializzazione della banca. Uguale per tutti i negozi
-
-        $("#ragsocbanca").val("BCC Treviglio - Filiale di Carvico");
-        $("#ibanbanca").val("IT48F0889952780000000420186");
-    }
-
-    function aggiungiDettaglio() {
-
-        var rowCount = $('#dettagli tbody tr').length;
-
-        if (rowCount === 1) {
-            $("#dettagli thead").append("<tr>" +
-                    "<th class='text-center'>Quantit&agrave;</th>" +
-                    "<th>Articolo</th>" +
-                    "<th class='text-right'>Importo</th>" +
-                    "<th class='text-right'>Totale</th>" +
-                    "<th class='text-right'>Imponibile</th>" +
-                    "<th class='text-right'>Iva</th>" +
-                    "<th></th>" +
-                    "</tr>");
-        }
-
-        contatore = contatore + 1;
-
-        var quantita = $("#quantita").val();
-        var articolo = $("#articolo").val();
-        var articoloNormalizzato = replaceAll(articolo.trim(), ",", ".");
-        var importo = $("#importo").val();
-        var importoNormalizzato = importo.trim().replace(",", ".");
-        var totale = $("#totale").val();
-        var totaleNormalizzato = totale.trim().replace(",", ".");
-        var imponibile = $("#imponibile").val();
-        var imponibileNormalizzato = imponibile.trim().replace(",", ".");
-        var iva = $("#iva").val();
-        var ivaNormalizzato = iva.trim().replace(",", ".");
-
-        $("#dettagli tbody").append("<tr id='" + contatore + "'>" +
-                "<td class='text-center'>" + quantita + "</td>" +
-                "<td>" + articoloNormalizzato + "</td>" +
-                "<td class='text-right'>" + importoNormalizzato + "</td>" +
-                "<td class='text-right'>" + totaleNormalizzato + "</td>" +
-                "<td class='text-right'>" + imponibileNormalizzato + "</td>" +
-                "<td class='text-right'>" + ivaNormalizzato + "</td>" +
-                "<td><a onclick='cancellaDettaglioFattura(" + contatore + ")'><span class='glyphicon glyphicon-trash'></span></a></td>" +
-                "</tr>");
-
-        var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato;
-        addDett(elemento, contatore);
-
-        $("#quantita").val("");
-        $("#articolo").val("");
-        $("#importo").val("");
-        $("#totale").val("");
-        $("#imponibile").val("");
-        $("#iva").val("");
-    }
-
-    function addDett(dettaglio, contatore) {
-
-        dettInseriti.push(dettaglio);
-        aggiornaDettaglioInseriti(dettInseriti);
-
-        indexDettInseriti.push(contatore);
-        aggiornaIndexDettaglioInseriti(indexDettInseriti);
-    }
-
-    function aggiornaDettaglioInseriti(dettInseriti) {
-        $("#dettagliInseriti").val(dettInseriti);
-    }
-
-    function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
-        $("#indexDettagliInseriti").val(indexDettInseriti);
-    }
-
-    function calcolaImponibile() {
-
-        var importo = $("#importo").val();
-        var quantita = $("#quantita").val();
-
-        var importoNormalizzato = importo.trim().replace(",", ".");
-
-        if (importoNormalizzato > 0) {
-
-            var totale = importoNormalizzato * quantita;
-            $("#totale").val(totale);
-
-            imponibile_e_iva();
-        }
-    }
-
-    function imponibile_e_iva() {
-
-        var totale = $("#totale").val();
-        var totaleNormalizzato = totale.trim().replace(",", ".");
-
-        var aliquota = $("input[name=aliquota]:checked").val();
-
-        var imponibile = totaleNormalizzato / aliquota;
-        var imponibileArrotondato = imponibile.toFixed(2);
-
-        $("#imponibile").val(imponibileArrotondato);
-
-        if (aliquota === "1.05") {
-            var iva = imponibileArrotondato * 0.05;
-        }
-
-        var ivaArrotondata = iva.toFixed(2);
-        $("#iva").val(ivaArrotondata);
-    }
-
-    $(document).ready(function () {
-        $('#dettagli').dataTable({
-            "paging": false,
-            "searching": false,
-            "info": false,
-            "columnDefs": [
-                {"targets": 0, "orderable": false},
-                {"targets": 1, "orderable": false},
-                {"targets": 2, "orderable": false},
-                {"targets": 3, "orderable": false},
-                {"targets": 4, "orderable": false},
-                {"targets": 5, "orderable": false},
-                {"targets": 6, "orderable": false}
-            ],
-            "language": {
-                "lengthMenu": "Visualizza _MENU_ righe per pagina",
-                "zeroRecords": " ",
-                "info": "Pagina _PAGE_ di _PAGES_",
-                "infoEmpty": " ",
-                "infoFiltered": "(righe filtrate da _MAX_ totali)",
-                "search": "Cerca:",
-                "paginate": {
-                    "first": "Prima",
-                    "last": "Ultima",
-                    "next": "Prossima",
-                    "previous": "Precedente"
-                }
-            }
-        });
-    });
-
-</script>
-
 <div class="container-fluid">
     <div class="panel panel-default">
         <!-- Default panel contents -->
@@ -166,9 +6,15 @@
                 <div class="col-sm-7">
                     <h4>%titoloPagina%</h4>
                 </div>
+                <div class="col-sm-5">
+                    <div class="btn-group pull-right">
+                        <button id="nuovo-dett-fattura-aziende" class="btn btn-primary btn-default">%ml.nuovoDett%</button>
+                    </div>
+                </div>
             </div>
             <br/>
         </div>
+
         <div class="panel-body">
             <form method="post" id="nuovaFatturaForm" action="../fatture/creaFatturaAziendaConsortileFacade.class.php?modo=go" >
 
@@ -203,34 +49,10 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-2">
-                        <div class='input-group'>
-                            <span class="input-group-addon">Titolo</span>
-                            <input class="form-control" id="titolo" name="titolo" type="text" value="%titolo%"/>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 ui-front">
-                        <div class='input-group' id="cliente_control_group">
-                            <span class="input-group-addon">%ml.azcons%</span>
-                            <select class="selectCliFor" data-live-search="true" id="cliente" name="cliente" >
-                                %elenco_clienti%
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-2">
-                        <div class='input-group'>
-                            <span class="input-group-addon">%ml.tipaddebito%</span>
-                            <input class="form-control" id="tipoadd" name="tipoadd" type="text" size="15" maxlength="10" value="%tipoadd%"/>
-                        </div>
-                    </div>
                     <div class="col-sm-3">
                         <div class='input-group'>
                             <span class="input-group-addon">Neg</span>
-                            <select class="selectNegozio" id="codneg" name="codneg" >
+                            <select class="selectNegozio" id="codneg" name="codneg" onchange="prelevaNumeroFattura(this.value)" >
                                 <option value=" ">&nbsp;</option>
                                 <option value="VIL">%ml.villa%</option>
                                 <option value="BRE">%ml.brembate%</option>
@@ -242,17 +64,39 @@
                 <div class="form-group row">
                     <div class="col-sm-2">
                         <div class='input-group'>
-                            <span class="input-group-addon">%ml.numfatt%</span>
-                            <input class="form-control" id="numfatt" name="numfatt" type="text" maxlength="10" value='%numfat%'/>
+                            <span class="input-group-addon">Titolo</span>
+                            <input class="form-control" id="titolo" name="titolo" type="text" value="%titolo%"/>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6 ui-front">
+                        <div class='input-group' id="cliente_control_group">
+                            <span class="input-group-addon">%ml.azcons%</span>
+                            <select class="selectCliFor" data-live-search="true" id="cliente" name="cliente" onchange="prelevaTipoAddebitoCliente(this.value);" >
+                                %elenco_clienti%
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.tipaddebito%</span>
+                            <input class="form-control" id="tipoadd" name="tipoadd" type="text" maxlength="10" value="%tipoadd%"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.numfatt%</span>
+                            <input class="form-control" id="numfat" name="numfat" type="text" maxlength="10" value='%numfat%'/>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
                         <div class='input-group'>
                             <span class="input-group-addon">%ml.banca%</span>
                             <input class="form-control" id="ragsocbanca" name="ragsocbanca" type="text" maxlength="100" value='%ragsocbanca%'/>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class='input-group'>
                             <span class="input-group-addon">%ml.iban%</span>
                             <input class="form-control" id="ibanbanca" name="ibanbanca" type="text" maxlength="40" value='%ibanbanca%'/>
@@ -260,25 +104,22 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-default" id="nuovo-dett-fattura-aziende">%ml.nuovoDett%</button>
-                        <button type="button" class="btn btn-default" id="creaFatt">%ml.creaFat%</button>
-                    </div>
-                </div>
-                <div class="form-group row">
                     <div class="col-sm-12">
                         <div class="control-group" id="dettagli_control_group">
                             <label for="dettagli">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_messaggio"></span></small></label>
-                            <table class="table table-bordered table-hover" id="dettagli">
-                                <thead>%thead_dettagli%</thead>
-                                <tbody>%tbody_dettagli%</tbody>
-                            </table>
+                            <table class="table table-bordered table-hover" id="dettagli"></table>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
-                <input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
-
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="btn-group">
+                            <button id="submit" type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -299,47 +140,46 @@
                 <div class="modal-body">
                     <div class="well well-sm">
                         <div class="form-group row">
-                            <div class="col-sm-1">
+                            <div class="col-sm-3">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.quantita%</span>
-                                    <input class="form-control" type="text" id="quantita" name="quantita" maxlength="10" onblur="calcolaImponibile()"/>
+                                    <input class="form-control" type="text" id="quantita" name="quantita" maxlength="10" onblur="calcolaImponibileFattura()"/>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.articolo%</span>
-                                    <input class="form-control" type="text" id="articolo" name="articolo" maxlength="10" onblur="calcolaImponibile()"/>
+                                    <input class="form-control" type="text" id="articolo" name="articolo" maxlength="100" onblur="calcolaImponibileFattura()"/>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.importo%</span>
-                                    <input class="form-control" type="text" id="importo" name="importo" maxlength="20" onblur="calcolaImponibile()"/>
+                                    <input class="form-control" type="text" id="importo" name="importo" maxlength="20" onblur="calcolaImponibileFattura()"/>
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label>%ml.tipaddebito%&nbsp;<small><span class="text-danger" id="tipoadd_cre_messaggio"></span></small></label>
                                 <div class="btn-group" data-toggle="buttons">
                                     <label class="btn btn-primary active"><input type="radio" id="aliquota5" name="aliquota" autocomplete="off" value="1.05" checked /><label for="aliquota5">%ml.aliquota5%</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.totale%</span>
-                                    <input class="form-control" type="text" id="totale" name="totale" maxlength="20" onblur="imponibile_e_iva()"/>
+                                    <input class="form-control" type="text" id="totale" name="totale" maxlength="20" onblur="imponibileFattura()"/>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.imponibile%</span>
                                     <input class="form-control" type="text" id="imponibile" name="imponibile" maxlength="20">
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class='input-group'>
                                     <span class="input-group-addon">%ml.iva%</span>
                                     <input class="form-control" type="text" id="iva" name="iva" maxlength="20"/>
@@ -347,6 +187,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuova-fattura">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
                 </div>
             </div>
         </div>

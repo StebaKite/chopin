@@ -31,6 +31,8 @@ interface MainNexus6Interface {
     const UTILE = "Utile";
     const PAREGGIO = "Pareggio";
     const PERDITA = "Perdita";
+    const CONTRIBUTO = "CONTRIBUTO";
+    const VENDITA = "VENDITA";
 
     /**
      *  Messaggi

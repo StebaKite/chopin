@@ -2,6 +2,7 @@
 
 require_once 'fattura.abstract.class.php';
 require_once 'fatture.business.interface.php';
+require_once 'database.class.php';
 require_once 'utility.class.php';
 require_once 'fattura.class.php';
 require_once 'cliente.class.php';
@@ -34,59 +35,13 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements Fa
         $db = Database::getInstance();
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
+
         $fattura = Fattura::getInstance();
         $cliente = Cliente::getInstance();
+
         $cliente->load($db);
 
-        $thead_dettagli = "<tr></tr>";
-        $tbody_dettagli = "<tr></tr>";
-
         $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_AZIENDA_CONSORTILE;
-
-        /**
-         * Prepara la tabella dei dettagli inseriti
-         */
-        if (parent::isNotEmpty($fattura->getDettagli())) {
-
-            $thead_dettagli = "<tr>" .
-                    "<th class='text-center'>Quantit&agrave;</th>" .
-                    "<th>Articolo</th>" .
-                    "<th class='text-right'>Importo</th>" .
-                    "<th class='text-right'>Totale</th>" .
-                    "<th class='text-right'>Imponibile</th>" .
-                    "<th class='text-right'>Iva</th>" .
-                    "<th></th>" .
-                    "</tr>";
-
-            $tbody_dettagli = "";
-            $d_x_array = "";
-
-            $d = explode(",", $fattura->getDettagli());
-
-            foreach ($d as $ele) {
-
-                $e = explode("#", $ele);
-                $id = $e[0];
-
-                $dettaglio = "" .
-                        "<tr id='" . trim($id) . "'>" .
-                        "<td class='text-center'>" . $e[1] . "</td>" .
-                        "<td>" . $e[2] . "</td>" .
-                        "<td class='text-right'>" . number_format($e[3], 2, ',', '.') . "</td>" .
-                        "<td class='text-right'>" . number_format($e[4], 2, ',', '.') . "</td>" .
-                        "<td class='text-right'>" . number_format($e[5], 2, ',', '.') . "</td>" .
-                        "<td class='text-right'>" . number_format($e[6], 2, ',', '.') . "</td>" .
-                        "<td><a onclick='cancellaDettaglioPagina(" . trim($id) . ")'><span class='glyphicon glyphicon-trash'></span></a></td>" .
-                        "</tr>";
-
-                $tbody_dettagli .= $dettaglio;
-
-                /**
-                 * Prepara la valorizzazione dell'array di pagina per i dettagli inseriti
-                 */
-                $d_x_array .= "'" . $ele . "',";
-            }
-        }
 
         $replace = array(
             '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
@@ -112,18 +67,11 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements Fa
             '%ragsocbanca%' => str_replace("'", "&apos;", $fattura->getDesRagsocBanca()),
             '%ibanbanca%' => $fattura->getCodIbanBanca(),
             '%descli%' => $fattura->getDesCliente(),
-            '%villa-checked%' => ($fattura->getCodNegozio() == "VIL") ? "checked" : "",
-            '%brembate-checked%' => ($fattura->getCodNegozio() == "BRE") ? "checked" : "",
-            '%trezzo-checked%' => ($fattura->getCodNegozio() == "TRE") ? "checked" : "",
-            '%thead_dettagli%' => $thead_dettagli,
-            '%tbody_dettagli%' => $tbody_dettagli,
-            '%dettagliInseriti%' => $fattura->getDettagli(),
-            '%arrayDettagliInseriti%' => $d_x_array,
-            '%arrayIndexDettagliInseriti%' => $fattura->getIndexDettagli(),
+            '%villa-checked%' => ($fattura->getCodNegozio() == self::VILLA) ? self::CHECK_THIS_ITEM : "",
+            '%brembate-checked%' => ($fattura->getCodNegozio() == self::BREMBATE) ? self::CHECK_THIS_ITEM : "",
+            '%trezzo-checked%' => ($fattura->getCodNegozio() == self::TREZZO) ? self::CHECK_THIS_ITEM : "",
             '%elenco_clienti%' => $this->caricaElencoClienti($cliente)
         );
-
-        $utility = Utility::getInstance();
 
         $template = $utility->tailFile($utility->getTemplate($form), $replace);
         echo $utility->tailTemplate($template);

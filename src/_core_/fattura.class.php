@@ -35,13 +35,14 @@ class Fattura extends CoreBase implements CoreInterface {
     private $catCliente, $desCliente, $indCliente, $cittaCliente, $capCliente, $pivaCliente, $cfisCliente;
     private $tipAddebito;
     private $codNegozio;
-    private $numFattura, $notaPiede;
+    private $tipFattura, $numFattura, $numFatturaUltimo, $notaPiede, $notaTesta;
     private $desRagsocBanca, $codIbanBanca;
-    private $dettagli, $indexDettagli;
     private $anno, $nmese, $giorno;
     private $meserif, $mesenome;
-    private $totDettagli, $totImponibile, $totIva;
+    private $totDettagli, $totImponibile, $totIva, $totImponibile10, $totIva10, $totImponibile22, $totIva22;
     private $elencoAziendeConsortili;
+    private $assistito;
+    private $aliquotaIva;
     private $mese = array(
         '01' => 'Gennaio',
         '02' => 'Febbraio',
@@ -62,6 +63,7 @@ class Fattura extends CoreBase implements CoreInterface {
      */
 
     const AGGIORNA_NUMERO_FATTURA = "/fatture/aggiornaNumeroFattura.sql";
+    const RICERCA_NUMERO_FATTURA = "/fatture/ricercaNumeroFattura.sql";
 
     /*
      * Metodi
@@ -90,8 +92,8 @@ class Fattura extends CoreBase implements CoreInterface {
         $this->setNumFattura(self::EMPTYSTRING);
         $this->setDesRagsocBanca(self::EMPTYSTRING);
         $this->setCodIbanBanca(self::EMPTYSTRING);
-        $this->setDettagli(self::EMPTYSTRING);
-        $this->setIndexDettagli(self::EMPTYSTRING);
+
+        $_SESSION[self::FATTURA] = serialize($this);
     }
 
     public function aggiornaNumeroFattura($db) {
@@ -110,6 +112,32 @@ class Fattura extends CoreBase implements CoreInterface {
         $result = $db->getData($sql);
 
         return $result;
+    }
+
+    /**
+     * Questo metodo preleva l'ultimo progressivo fattura utilizzato
+     *
+     * @param unknown $db
+     */
+    public function caricaNumeroFattura($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $replace = array(
+            '%cat_cliente%' => $this->getCatCliente(),
+            '%neg_progr%' => $this->getCodNegozio()
+        );
+
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_NUMERO_FATTURA;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        foreach (pg_fetch_all($result) as $row) {
+            $this->setNumFatturaUltimo($row['num_fattura_ultimo']);
+            $this->setNotaPiede($row["nota_testa_fattura"]);
+            $this->setNotaTesta($row["nota_piede_fattura"]);
+        }
     }
 
     // Getters & Setters
@@ -194,22 +222,6 @@ class Fattura extends CoreBase implements CoreInterface {
         $this->codIbanBanca = $codIbanBanca;
     }
 
-    public function getDettagli() {
-        return $this->dettagli;
-    }
-
-    public function setDettagli($dettagli) {
-        $this->dettagli = $dettagli;
-    }
-
-    public function getIndexDettagli() {
-        return $this->indexDettagli;
-    }
-
-    public function setIndexDettagli($indexDettagli) {
-        $this->indexDettagli = $indexDettagli;
-    }
-
     public function getAnno() {
         return $this->anno;
     }
@@ -250,8 +262,8 @@ class Fattura extends CoreBase implements CoreInterface {
         $this->mesenome = $mesenome;
     }
 
-    public function getMese() {
-        return $this->mese;
+    public function getMese($mesenum) {
+        return $this->mese[$mesenum];
     }
 
     public function setMese($mese) {
@@ -344,6 +356,78 @@ class Fattura extends CoreBase implements CoreInterface {
 
     public function setElencoAziendeConsortili($elencoAziendeConsortili) {
         $this->elencoAziendeConsortili = $elencoAziendeConsortili;
+    }
+
+    public function getNumFatturaUltimo() {
+        return $this->numFatturaUltimo;
+    }
+
+    public function setNumFatturaUltimo($numFatturaUltimo) {
+        $this->numFatturaUltimo = $numFatturaUltimo;
+    }
+
+    public function getNotaTesta() {
+        return $this->notaTesta;
+    }
+
+    public function setNotaTesta($notaTesta) {
+        $this->notaTesta = $notaTesta;
+    }
+
+    public function getTipFattura() {
+        return $this->tipFattura;
+    }
+
+    public function setTipFattura($tipFattura) {
+        $this->tipFattura = $tipFattura;
+    }
+
+    public function getAssistito() {
+        return $this->assistito;
+    }
+
+    public function setAssistito($assistito) {
+        $this->assistito = $assistito;
+    }
+
+    public function getAliquotaIva() {
+        return $this->aliquotaIva;
+    }
+
+    public function setAliquotaIva($aliquotaIva) {
+        $this->aliquotaIva = $aliquotaIva;
+    }
+
+    public function getTotImponibile10() {
+        return $this->totImponibile10;
+    }
+
+    public function setTotImponibile10($totImponibile10) {
+        $this->totImponibile10 = $totImponibile10;
+    }
+
+    public function getTotIva10() {
+        return $this->totIva10;
+    }
+
+    public function setTotIva10($totIva10) {
+        $this->totIva10 = $totIva10;
+    }
+
+    public function getTotImponibile22() {
+        return $this->totImponibile22;
+    }
+
+    public function setTotImponibile22($totImponibile22) {
+        $this->totImponibile22 = $totImponibile22;
+    }
+
+    public function getTotIva22() {
+        return $this->totIva22;
+    }
+
+    public function setTotIva22($totIva22) {
+        $this->totIva22 = $totIva22;
     }
 
 }

@@ -1,52 +1,39 @@
 <?php
 
 require_once 'fattura.abstract.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'fattura.class.php';
+require_once 'fatture.business.interface.php';
 
-class PrelevaProgressivoFattura extends FatturaAbstract {
+class PrelevaProgressivoFattura extends FatturaAbstract implements FattureBusinessInterface {
 
-	public static $replace;
+    function __construct() {
 
-	private static $_instance = null;
+        self::$root = $_SERVER['DOCUMENT_ROOT'];
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+    }
 
-	function __construct() {
+    public function getInstance() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+        if (!isset($_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA]))
+            $_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA] = serialize(new PrelevaProgressivoFattura());
+        return unserialize($_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA]);
+    }
 
-		require_once 'utility.class.php';
+    public function start() {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	}
+        $fattura = Fattura::getInstance();
+        $db = Database::getInstance();
+        $numeroFatturaUltimo = $fattura->caricaNumeroFattura($db);
+        echo $fattura->getNumfatturaUltimo() + 1;
+    }
 
-	private function  __clone() { }
+    public function go() {
 
-	/**
-	 * Singleton Pattern
-	 */
+    }
 
-	public static function getInstance() {
-
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new PrelevaProgressivoFattura();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-		
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-
-		$numeroFatturaUltimo = $this->caricaNumeroFattura($utility, $db, $_SESSION["catcliente"], $_SESSION["codneg"]);
-
-		echo $numeroFatturaUltimo + 1;		
-	}
 }
-				
+
 ?>

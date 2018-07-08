@@ -1,6 +1,8 @@
 <?php
 
 require_once 'fattura.class.php';
+require_once 'dettaglioFattura.class.php';
+require_once 'cliente.class.php';
 
 class FattureController {
 
@@ -14,6 +16,8 @@ class FattureController {
      * Oggetti
      */
     const FATTURA = "Obj_fattura";
+    const DETTAGLIO_FATTURA = "Obj_dettagliofattura";
+    const CLIENTE = "Obj_cliente";
 
     /**
      * Metodi
@@ -35,25 +39,47 @@ class FattureController {
         // Salvataggio dei campi della request negli oggetti di pertinenza
 
         $fattura = Fattura::getInstance();
+        $dettaglioFattura = DettaglioFattura::getInstance();
+        $cliente = Cliente::getInstance();
 
         if (isset($_REQUEST["datafat"])) {
-            $fattura->setDatafat($_REQUEST["datafat"]);
+            $fattura->setDatFattura($_REQUEST["datafat"]);
             $fattura->setMeserif($_REQUEST["meserif"]);
-            $fattura->setTitolo($_REQUEST["titolo"]);
+            $fattura->setDesTitolo($_REQUEST["titolo"]);
             $fattura->setCatCliente("1200");
-            $fattura->setCliente($_REQUEST["cliente"]);
-            $fattura->setTipoadd($_REQUEST["tipoadd"]);
-            $fattura->setCodneg($_REQUEST["codneg"]);
-            $fattura->setNumfat($_REQUEST["numfat"]);
-            $fattura->setRagsocBanca($_REQUEST["ragsocbanca"]);
-            $fattura->setIbanBanca($_REQUEST["ibanbanca"]);
-            $fattura->setDettagliInseriti($_REQUEST["dettagliInseriti"]);
-            $fattura->setIndexDettagliInseriti($_REQUEST["indexDettagliInseriti"]);
+            $fattura->setDesCliente($_REQUEST["cliente"]);
+            $fattura->setTipAddebito($_REQUEST["tipoadd"]);
+            $fattura->setCodNegozio($_REQUEST["codneg"]);
+            $fattura->setNumFattura($_REQUEST["numfat"]);
+            $fattura->setDesRagsocBanca($_REQUEST["ragsocbanca"]);
+            $fattura->setCodIbanBanca($_REQUEST["ibanbanca"]);
+        }
+
+        if (isset($_REQUEST["catcliente"])) {
+            $fattura->setCatCliente($_REQUEST["catcliente"]);
+            $fattura->setCodNegozio($_REQUEST["codneg"]);
+        }
+
+        if (isset($_REQUEST["idcliente"])) {
+            $cliente->setIdCliente($_REQUEST["idcliente"]);
+        }
+
+        if (isset($_REQUEST["quantita"])) {
+            $dettaglioFattura->setIdArticolo(rand(1, 99999));
+            $dettaglioFattura->setQtaArticolo($_REQUEST["quantita"]);
+            $dettaglioFattura->setDesArticolo($_REQUEST["articolo"]);
+            $dettaglioFattura->setImpArticolo($_REQUEST["importo"]);
+            $dettaglioFattura->setCodAliquota($_REQUEST["aliquota"]);
+            $dettaglioFattura->setImpTotale($_REQUEST["totale"]);
+            $dettaglioFattura->setImpImponibile($_REQUEST["imponibile"]);
+            $dettaglioFattura->setImpIva($_REQUEST["iva"]);
         }
 
         // Serializzo in sessione gli oggetti modificati
 
         $_SESSION[self::FATTURA] = serialize($fattura);
+        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($dettaglioFattura);
+        $_SESSION[self::CLIENTE] = serialize($cliente);
 
         if ($this->getRequest() == "start") {
             $this->fattureFunction->start();

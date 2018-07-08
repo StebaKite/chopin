@@ -21,6 +21,7 @@ interface CoreInterface extends MainNexus6Interface {
     const LAVORO_PIANIFICATO = "Obj_lavoropianificato";
     const BILANCIO = "Obj_bilancio";
     const FATTURA = "Obj_fattura";
+    const DETTAGLIO_FATTURA = "Obj_dettagliofattura";
 
 }
 

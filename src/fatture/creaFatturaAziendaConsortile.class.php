@@ -4,6 +4,8 @@ require_once 'fattura.abstract.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'fattura.class.php';
+require_once 'cliente.class.php';
+require_once 'dettaglioFattura.class.php';
 require_once 'creaFatturaAziendaConsortile.template.php';
 require_once 'fatturaAziendaConsortile.class.php';
 require_once 'fatture.business.interface.php';
@@ -37,10 +39,12 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
     public function start() {
 
         $fattura = Fattura::getInstance();
+        $dettaglioFattura = DettaglioFattura::getInstance();
         $utility = Utility::getInstance();
         $creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
 
         $fattura->prepara();
+        $dettaglioFattura->prepara();
         $this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 
         $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
@@ -54,10 +58,13 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
     public function go() {
 
         $fattura = Fattura::getInstance();
+        $dettaglioFattura = DettaglioFattura::getInstance();
+        $cliente = Cliente::getInstance();
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
         $fatturaAziendaConsortile = FatturaAziendaConsortile::getInstance();
+        $fatturaAziendaConsortile->initialize();
         $fatturaAziendaConsortile->setLogo($this->root . $array["logo"]);
         $fatturaAziendaConsortile->setCreator($array["productName"]);
 
@@ -66,16 +73,16 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         /**
          * Se il mese di riferimento in pagina non è stato selezionato lo ricavo dalla data fattura
          */
-        $fattura->setAnno(substr($fattura->getDatafat(), 6));
-        $fattura->setNmese(substr($fattura->getDatafat(), 3, 2));
-        $fattura->setGiorno(substr($fattura->getDatafat(), 0, 2));
+        $fattura->setAnno(substr($fattura->getDatFattura(), 6));
+        $fattura->setNmese(substr($fattura->getDatFattura(), 3, 2));
+        $fattura->setGiorno(substr($fattura->getDatFattura(), 0, 2));
         $mm = str_pad($fattura->getNmese(), 2, "0", STR_PAD_LEFT);
         $fattura->setMeserif($mm);
 
         if (parent::isNotEmpty($fattura->getMeserif()))
-            $fattura->setMesenome($fattura->getMese[$fattura->getMeserif()]);
+            $fattura->setMesenome($fattura->getMese($fattura->getMeserif()));
         else
-            $fattura->setMesenome($fattura->getMese[$nm]);
+            $fattura->setMesenome($fattura->getMese($nm));
 
         /**
          * Aggiorno il numero fattura per l'azienda consortile e negozio
@@ -90,14 +97,14 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
             $fatturaAziendaConsortile = $this->intestazione($fatturaAziendaConsortile);
             $fatturaAziendaConsortile = $this->sezionePagamento($fatturaAziendaConsortile, $fattura);
             $fatturaAziendaConsortile = $this->sezioneBanca($fatturaAziendaConsortile, $fattura);
-            $fatturaAziendaConsortile = $this->sezioneDestinatario($fatturaAziendaConsortile, $fattura);
+            $fatturaAziendaConsortile = $this->sezioneDestinatario($fatturaAziendaConsortile, $cliente);
             $fatturaAziendaConsortile = $this->sezioneIdentificativiFattura($fatturaAziendaConsortile, $fattura);
-            $fatturaAziendaConsortile = $this->sezioneDettagliFattura($fatturaAziendaConsortile, $fattura);
+            $fatturaAziendaConsortile = $this->sezioneDettagliFattura($fatturaAziendaConsortile, $fattura, $dettaglioFattura);
             $fatturaAziendaConsortile = $this->sezioneNotaPiede($fatturaAziendaConsortile, $fattura);
 
             $fatturaAziendaConsortile = $this->sezioneTotali($fatturaAziendaConsortile, $fattura);
 
-            $fattura->Output();
+            $fatturaAziendaConsortile->Output();
         }
 
         $creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
@@ -121,11 +128,9 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         return $fatturaAziendaConsortile;
     }
 
-    private function sezioneDettagliFattura($fatturaAziendaConsortile, $fattura) {
+    private function sezioneDettagliFattura($fatturaAziendaConsortile, $fattura, $dettaglioFattura) {
 
         $fatturaAziendaConsortile->boxDettagli();
-
-        $d = explode(",", $fattura->getDettagli());
 
         $tot_imponibile = 0;
         $tot_iva = 0;
@@ -141,23 +146,21 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
 
         $fatturaAziendaConsortile->Ln();
 
-        foreach ($d as $ele) {
+        foreach ($dettaglioFattura->getDettagliFattura() as $ele) {
 
-            $e = explode("#", $ele);
-
-            $linea = array("QUANTITA" => $e[1],
-                "ARTICOLO" => $e[2],
-                "IMPORTO U." => $e[3],
-                "TOTALE" => $e[4],
-                "IMPONIBILE" => $e[5],
-                "IVA" => $e[6]
+            $linea = array("QUANTITA" => $ele[DettaglioFattura::QTA_ARTICOLO],
+                "ARTICOLO" => $ele[DettaglioFattura::DES_ARTICOLO],
+                "IMPORTO U." => $ele[DettaglioFattura::IMP_ARTICOLO],
+                "TOTALE" => $ele[DettaglioFattura::IMP_TOTALE],
+                "IMPONIBILE" => $ele[DettaglioFattura::IMP_IMPONIBILE],
+                "IVA" => $ele[DettaglioFattura::IMP_IVA]
             );
 
             $fatturaAziendaConsortile->aggiungiLineaLiberaAziendaConsortile($w, $linea);
 
-            $tot_dettagli += $e[4];
-            $tot_imponibile += $e[5];
-            $tot_iva += $e[6];
+            $tot_dettagli += $ele[DettaglioFattura::IMP_TOTALE];
+            $tot_imponibile += $ele[DettaglioFattura::IMP_IMPONIBILE];
+            $tot_iva += $ele[DettaglioFattura::IMP_IVA];
         }
 
         $fattura->setTotDettagli($tot_dettagli);

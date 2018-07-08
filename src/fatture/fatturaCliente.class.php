@@ -1,31 +1,28 @@
 <?php
 
 require_once 'fatturaBase.class.php';
+require_once 'fatture.business.interface.php';
 
-class FatturaCliente extends FatturaBase {
+class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
 
-    private static $_instance = null;
-
-    private function __clone() {
-
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
     }
 
-    /**
-     * Singleton Pattern
-     */
-    public static function getInstance() {
+    public function getInstance() {
 
-        if (!is_object(self::$_instance))
-            self::$_instance = new FatturaCliente();
-
-        return self::$_instance;
+        if (!isset($_SESSION[self::FATTURA_CLIENTE]))
+            $_SESSION[self::FATTURA_CLIENTE] = serialize(new FatturaCliente());
+        return unserialize($_SESSION[self::FATTURA_CLIENTE]);
     }
 
     public function identificativiFatturaCliente($giorno, $meserif, $anno, $numfat, $codneg) {
 
-        $negozio = ($codneg == "VIL") ? "Villa d'Adda" : $negozio;
-        $negozio = ($codneg == "TRE") ? "Trezzo" : $negozio;
-        $negozio = ($codneg == "BRE") ? "Brembate" : $negozio;
+        $negozio = ($codneg == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
+        $negozio = ($codneg == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
+        $negozio = ($codneg == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
 
         /**
          * Eccezione:
@@ -33,8 +30,8 @@ class FatturaCliente extends FatturaBase {
          * - le fatture di Trezzo hanno una T dopo il progressivo
          */
         $nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
-        $nfat = ($codneg == "BRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : $nfat;
-        $nfat = ($codneg == "TRE") ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "T" : $nfat;
+        $nfat = ($codneg == self::BREMBATE) ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "B" : $nfat;
+        $nfat = ($codneg == self::TREZZO) ? str_pad($numfat, 2, "0", STR_PAD_LEFT) . "T" : $nfat;
 
         $r1 = 10;
         $r2 = $r1 + 192;
@@ -300,6 +297,14 @@ class FatturaCliente extends FatturaBase {
 
         $this->SetXY($r1 + 34, $y1 + 10);
         $this->Cell(10, 6, EURO . " " . number_format($netto, 2, ',', '.'), "", 0, "R");
+    }
+
+    public function go() {
+
+    }
+
+    public function start() {
+
     }
 
 }

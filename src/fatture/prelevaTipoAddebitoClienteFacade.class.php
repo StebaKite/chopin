@@ -1,15 +1,14 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/fatture:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/fatture:/var/www/html/chopin/src/utility');
+require_once 'fatture.controller.class.php';
 require_once 'prelevaTipoAddebitoCliente.class.php';
 
 session_start();
+xdebug_disable();
 
-$prelevaTipoAddebitoCliente = PrelevaTipoAddebitoCliente::getInstance();
+$_SESSION["Obj_fatturecontroller"] = serialize(new FattureController(PrelevaTipoAddebitoCliente::getInstance()));
 
-if ($_GET["modo"] == "start") {
-	$_SESSION["descliente"] = $_REQUEST["descliente"];
-	$prelevaTipoAddebitoCliente->start();
-}
-
+$controller = unserialize($_SESSION["Obj_fatturecontroller"]);
+$controller->start();
 ?>

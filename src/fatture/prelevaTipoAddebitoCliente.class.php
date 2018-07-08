@@ -1,65 +1,40 @@
 <?php
 
 require_once 'fattura.abstract.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'cliente.class.php';
+require_once 'fatture.business.interface.php';
 
-class PrelevaTipoAddebitoCliente extends FatturaAbstract {
+class PrelevaTipoAddebitoCliente extends FatturaAbstract implements FattureBusinessInterface {
 
-	public static $replace;
+    function __construct() {
 
-	private static $_instance = null;
+        self::$root = $_SERVER['DOCUMENT_ROOT'];
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+    }
 
-	function __construct() {
+    public function getInstance() {
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+        if (!isset($_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE]))
+            $_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE] = serialize(new PrelevaTipoAddebitoCliente());
+        return unserialize($_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE]);
+    }
 
-		require_once 'utility.class.php';
+    public function start() {
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	}
+        $cliente = Cliente::getInstance();
+        $db = Database::getInstance();
+        $cliente->caricaTipoAddebitoCliente($db);
 
-	private function  __clone() { }
+        echo $cliente->getTipAddebito();
+    }
 
-	/**
-	 * Singleton Pattern
-	 */
+    public function go() {
 
-	public static function getInstance() {
+    }
 
-		if( !is_object(self::$_instance) )
-
-			self::$_instance = new PrelevaTipoAddebitoCliente();
-
-		return self::$_instance;
-	}
-
-	// ------------------------------------------------
-
-	public function start() {
-		
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-
-		/**
-		 * Questi dati vengono ricaricati in sessione dalla funzione caricaTipoAddebitoCliente
-		 */
-		unset($_SESSION["indirizzocliente"]);
-		unset($_SESSION["cittacliente"]);
-		unset($_SESSION["capcliente"]);
-		unset($_SESSION["pivacliente"]);
-		unset($_SESSION["cfiscliente"]);
-		
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-
-		$db->beginTransaction();
-		$idcliente = $this->leggiDescrizioneCliente($db, $utility, $_SESSION["descliente"]);
-		$db->commitTransaction();
-		
-		$tipoAddebitoCliente = $this->caricaTipoAddebitoCliente($utility, $db, $idcliente);
-
-		echo $tipoAddebitoCliente;		
-	}
 }
-				
+
 ?>

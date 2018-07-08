@@ -1,324 +1,187 @@
-<body>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+                <div class="col-sm-5">
+                    <div class="btn-group pull-right">
+                        <button id="nuovo-dett-fattura-cliente" class="btn btn-primary btn-default">%ml.nuovoDett%</button>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
 
-<script type="text/javascript">
+        <div class="panel-body">
+            <form method="post" id="nuovaFatturaForm" action="../fatture/creaFatturaClienteFacade.class.php?modo=go" >
 
-var indexDettInseriti = [%arrayIndexDettagliInseriti%];
-var dettInseriti = [%arrayDettagliInseriti%];
-var contatore = 0;
-
-var elencoFornitori = [%elenco_fornitori%];
-var elencoClienti = [%elenco_clienti%];
-
-function prelevaNumeroFattura(negozio) {
-
-	var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            $( "#numfat" ).val(xmlhttp.responseText);
-        }
-    } 
-    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=1000&codneg=" + negozio, true);
-    xmlhttp.send();		
-    
-    // Inizializzazione della banca. Uguale per tutti i negozi
-
-   	$( "#ragsocbanca" ).val("BCC Treviglio - Filiale di Carvico");
-   	$( "#ibanbanca" ).val("IT48F0889952780000000420186");
-}
-
-function aggiungiDettaglio() {
-	
-	var rowCount = $('#dettagli tbody tr').length;
-	
-	if (rowCount == 1) {
-		$( "#dettagli thead" ).append("<tr>" + 
-			"<th class='dt-center'>Quantit&agrave;</th>" + 
-			"<th>Articolo</th>" + 
-			"<th class='dt-right'>Importo</th>" +
-			"<th class='dt-right'>Totale</th>" +
-			"<th class='dt-right'>Imponibile</th>" +
-			"<th class='dt-right'>Iva</th>" +
-			"<th class='dt-right'>% Aliq</th>" +
-			"<th>&nbsp;</th>" +
-			"</tr>");
-	}
-
-	contatore = contatore + 1;
-	
-	var quantita = $("#quantita").val();	
-	var articolo = $("#articolo").val();
-	var articoloNormalizzato = replaceAll(articolo.trim(),",",".");
-	var importo = $("#importo").val();
-	var importoNormalizzato = importo.trim().replace(",", ".");
-	var totale = $("#totale").val();
-	var totaleNormalizzato = totale.trim().replace(",", ".");
-	var imponibile = $("#imponibile").val();
-	var imponibileNormalizzato = imponibile.trim().replace(",", ".");
-	var iva = $("#iva").val();
-	var ivaNormalizzato = iva.trim().replace(",", ".");
-	
-	var aliquota = $("input[name=aliquota]:checked").val();
-	
-	if (aliquota == "1.05") {
-		var aliq = 5;		
-	}
-	if (aliquota == "1.10") {
-		var aliq = 10;		
-	}
-	if (aliquota == "1.22") {
-		var aliq = 22;		
-	}
-	if (aliquota == "1") {
-		var aliq = "";		
-	}
-	
-	$( "#dettagli tbody" ).append( "<tr id='" + contatore + "'>" +
-        "<td class='dt-center'>" + quantita + "</td>" +
-        "<td>" + articoloNormalizzato + "</td>" +
-        "<td class='dt-right'>" + importoNormalizzato + "</td>" +
-        "<td class='dt-right'>" + totaleNormalizzato + "</td>" +
-        "<td class='dt-right'>" + imponibileNormalizzato + "</td>" +
-        "<td class='dt-right'>" + ivaNormalizzato + "</td>" +
-        "<td class='dt-right'>" + aliq + "</td>" +
-    	"<td id='icons' class='tooltip'><a onclick='cancellaDettaglioFattura(" + contatore + ")'><li class='ui-state-default ui-corner-all' title='Cancella'><span class='ui-icon ui-icon-trash'></span></li></a></td>" +
-      "</tr>" );
-	
-	var elemento = contatore + "#" + quantita + "#" + articoloNormalizzato + "#" + importoNormalizzato + "#" + totaleNormalizzato + "#" + imponibileNormalizzato + "#" + ivaNormalizzato + "#" + aliq;
-	addDett(elemento, contatore);
-	
-	$("#quantita").val("");
-	$("#articolo").val("");
-	$("#importo").val("");
-	$("#totale").val("");
-	$("#imponibile").val("");
-	$("#iva").val("");
-	$("#aliquota").val("");
-
-	var tipofat = $("input[name=tipofat]:checked").val();
-
-	// Per il contributo è ammesso solo un singolo dettaglio
-	
-	if (tipofat == "CONTRIBUTO") {		
-		$("#nuovo-dett-fattura-cliente").hide();
-	}
-}
-
-function addDett(dettaglio, contatore) {
-	
-	dettInseriti.push(dettaglio);
-	aggiornaDettaglioInseriti(dettInseriti);
-
-	indexDettInseriti.push(contatore);
-	aggiornaIndexDettaglioInseriti(indexDettInseriti);
-}
-
-function aggiornaDettaglioInseriti(dettInseriti) {
- $("#dettagliInseriti").val(dettInseriti);
-}
-
-function aggiornaIndexDettaglioInseriti(indexDettInseriti) {
-	$("#indexDettagliInseriti").val(indexDettInseriti);
-}
-
-function calcolaImponibile() {
-	
-	var importo = $("#importo").val();
-	var quantita = $("#quantita").val();
-	var importoNormalizzato = importo.trim().replace(",", ".");
-	
-	var totale = importoNormalizzato * quantita;	
-	$("#totale").val(totale);
-	
-	var aliquota = $("input[name=aliquota]:checked").val();
-	
-	var imponibile = totale / aliquota;
-	var imponibileArrotondato = imponibile.toFixed(2);
-	
-	$("#imponibile").val(imponibileArrotondato);
-	
-	if (aliquota == "1.05") {
-		var iva = imponibileArrotondato * 0.05;		
-	}
-	if (aliquota == "1.10") {
-		var iva = imponibileArrotondato * 0.10;		
-	}
-	if (aliquota == "1.22") {
-		var iva = imponibileArrotondato * 0.22;		
-	}
-	if (aliquota == "1") {
-		var iva = 0;		
-	}
-	
-	var ivaArrotondata = iva.toFixed(2);
-	$("#iva").val(ivaArrotondata);	
-}
-
-function gestisciAssistito(tipofattura) {
-	
-	if (tipofattura == "CONTRIBUTO") {
-		$("#linea_assistito").show();
-	}
-	else {
-		$("#linea_assistito").hide();		
-	}
-}
-
-$(document).ready( function () {
-    $('#dettagli').dataTable( {
-    	"paging": false,
-    	"searching": false,
-    	"info": false,
-    	"columnDefs": [
-       	    {"targets": 0, "orderable": false},
-       	    {"targets": 1, "orderable": false},
-    	    {"targets": 2, "orderable": false},
-    	    {"targets": 3, "orderable": false},
-    	    {"targets": 4, "orderable": false},
-    	    {"targets": 5, "orderable": false},
-    	    {"targets": 6, "orderable": false},
-    	    {"targets": 7, "orderable": false}
-    		],
-       		"language": {
-                "lengthMenu": "Visualizza _MENU_ righe per pagina",
-                "zeroRecords": " ",
-                "info": "Pagina _PAGE_ di _PAGES_",
-                "infoEmpty": " ",
-                "infoFiltered": "(righe filtrate da _MAX_ totali)",
-                "search": "Cerca:",
-                "paginate": {
-                    "first":      "Prima",
-                    "last":       "Ultima",
-                    "next":       "Prossima",
-                    "previous":   "Precedente"
-                }
-         }	    		
-    } );
-} );
-
-</script>
-
-<div id="body">
-	<div id="main">
-		<h2>%titoloPagina%</h2>
-
-		<form method="post" action="%azione%" >
-			<table class="datiCreate" cellpadding="5px">
-				<tbody>
-					<tr>
-						<td class="td">%ml.datafat% :</td>
-						<td colspan="4" class="tooltip"><input class="datepicker" type="text" id="datafat" name="datafat" size="10" maxlength="10" value='%datafat%'/></td>
-					</tr>					
-					<tr>
-						<td>%ml.famcli% :</td>
-						<td><input type="text" id="titolo" name="titolo" size="15" maxlength="30"value="%titolo%" /></td>
-						<td><div><input type="text" id="cliente" name="cliente" size="40" value="%descli%" /></div></td>
-					</tr>				
-					<tr>
-						<td>%ml.tipaddebito% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="tipoadd" name="tipoadd" size="15" maxlength="10" value='%tipoadd%'/></td>
-					</tr>
-					<tr>				
-						<td>%ml.negozio% :</td>						
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="villa" name="codneg" value="VIL" %villa-checked% onchange="prelevaNumeroFattura(this.value)"><label for="villa">%ml.villa%</label>
-								<input type="radio" id="brembate" name="codneg" value="BRE" %brembate-checked% onchange="prelevaNumeroFattura(this.value)"><label for="brembate">%ml.brembate%</label>
-								<input type="radio" id="trezzo" name="codneg" value="TRE" %trezzo-checked% onchange="prelevaNumeroFattura(this.value)"><label for="trezzo">%ml.trezzo%</label>
-							</div>
-						</td>					
-					</tr>				
-					<tr>
-						<td>%ml.numfatt% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="numfat" name="numfat" size="10" maxlength="10" value='%numfat%' /></td>
-					</tr>				
-					<tr>
-						<td>%ml.banca% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="ragsocbanca" name="ragsocbanca" size="60" maxlength="100" value='%ragsocbanca%'/></td>				
-					</tr>				
-					<tr>
-						<td>%ml.iban% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="ibanbanca" name="ibanbanca" size="32" maxlength="40" value='%ibanbanca%'/></td>				
-					</tr>
-					<tr>				
-						<td>%ml.tipofat% :</td>						
-						<td colspan="2">
-							<div class="radioset" >
-								<input type="radio" id="contributo" name="tipofat" value="CONTRIBUTO" %contributo-checked% onchange="gestisciAssistito(this.value)"/><label for="contributo">%ml.contributo%</label>
-								<input type="radio" id="vendita" name="tipofat" value="VENDITA" %vendita-checked% onchange="gestisciAssistito(this.value)"/><label for="vendita">%ml.vendita%</label>
-							</div>
-						</td>					
-					</tr>				
-					<tr id="linea_assistito" style="display:none;">
-						<td>%ml.assistito% :</td>
-						<td class="tooltip" colspan="2"><input type="text" id="assistito" name="assistito" size="60" maxlength="60" value='%assistito%'/></td>				
-					</tr>
-					<tr><td><h2>Dettagli</h2></td></tr>
-					<tr>
-						<td colspan="4">
-							<table id="dettagli" class="display">
-							    <thead>%thead_dettagli%</thead>
-							    <tbody>%tbody_dettagli%</tbody>
-							</table>			
-						</td>
-					</tr>										
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="3" align="right" class="tooltip">
-							<button id="nuovo-dett-fattura-cliente" class="button" title="%ml.nuovoDettTip%" >%ml.nuovoDett%</button>
-							<button id="creaFatt" class="button" title="%ml.creaFattTip%" >%ml.creaFat%</button>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-			<input type="hidden" size='150' id="dettagliInseriti" name="dettagliInseriti" value="%dettagliInseriti%" />
-			<input type="hidden" size='150' id="indexDettagliInseriti" name="indexDettagliInseriti" value="%arrayIndexDettagliInseriti%" />
-		</form>
-	</div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group' id="datafat_control_group">
+                            <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                <input type='text' class="form-control" id="datafat" name="datafat"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Neg</span>
+                            <select class="selectNegozio" id="codneg" name="codneg" onchange="prelevaNumeroFattura(this.value)" >
+                                <option value=" ">&nbsp;</option>
+                                <option value="VIL">%ml.villa%</option>
+                                <option value="BRE">%ml.brembate%</option>
+                                <option value="TRE">%ml.trezzo%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 ui-front">
+                        <div class='input-group' id="cliente_control_group">
+                            <span class="input-group-addon">%ml.famcli%</span>
+                            <select class="selectCliFor" data-live-search="true" id="cliente" name="cliente" onchange="prelevaTipoAddebitoCliente(this.value);" >
+                                %elenco_clienti%
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.numfatt%</span>
+                            <input class="form-control" id="numfat" name="numfat" type="text" maxlength="10" value='%numfat%'/>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.tipaddebito%</span>
+                            <input class="form-control" id="tipoadd" name="tipoadd" type="text" maxlength="10" value="%tipoadd%"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary"><input type="radio" id="contributo" name="tipofat" autocomplete="off" value="CONTRIBUTO" onchange="gestisciAssistito(this.value)"/>%ml.contributo%</label>
+                            <label class="btn btn-primary active"><input type="radio" id="vendita" name="tipofat" autocomplete="off" value="VENDITA" checked onchange="gestisciAssistito(this.value)"/>%ml.vendita%</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" id="linea_assistito" style="display:none;">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.assistito%</span>
+                            <input class="form-control" id="assistito" name="assistito" type="text" maxlength="60" value='%assistito%'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-5">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.banca%</span>
+                            <input class="form-control" id="ragsocbanca" name="ragsocbanca" type="text" maxlength="100" value='%ragsocbanca%'/>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class='input-group'>
+                            <span class="input-group-addon">%ml.iban%</span>
+                            <input class="form-control" id="ibanbanca" name="ibanbanca" type="text" maxlength="40" value='%ibanbanca%'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="control-group" id="dettagli_control_group">
+                            <label for="dettagli">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_messaggio"></span></small></label>
+                            <table class="table table-bordered table-hover" id="dettagli"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="btn-group">
+                            <button id="submit" type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-<div id="nuovo-dettaglio-fattura-cliente-form" title="Nuovo Dettaglio Fattura"> 
-	<form>
-		<table class="datiCreate" cellpadding="5px">
-			<tbody>
-				<tr>
-					<td>%ml.quantita% :</td>
-					<td class="tooltip"><input type="text" id="quantita" name="quantita" size="10" maxlength="10" ></td>
-				</tr>								
-				<tr>
-					<td>%ml.articolo% :</td>
-					<td class="tooltip"><textarea id="articolo" name="articolo" rows="2" cols="50" title="%ml.articoloTip%"></textarea></td>
-				</tr>
-				<tr>
-					<td>%ml.importo% :</td>
-					<td class="tooltip" colspan="2"><input type="text" id="importo" name="importo" size="20" maxlength="20" onblur="calcolaImponibile()" /></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<div class="radioset" >
-							<input type="radio" id="aliquota5" name="aliquota" value="1.05" checked onchange="calcolaImponibile()"/><label for="aliquota5">%ml.aliquota5%</label>
-							<input type="radio" id="aliquota10" name="aliquota" value="1.10" onchange="calcolaImponibile()"/><label for="aliquota10">%ml.aliquota10%</label>
-							<input type="radio" id="aliquota22" name="aliquota" value="1.22" onchange="calcolaImponibile()"/><label for="aliquota22">%ml.aliquota22%</label>
-							<input type="radio" id="fc" name="aliquota" value="1" onchange="calcolaImponibile()"/><label for="fc">%ml.fc%</label>
-						</div>
-					</td>					
-				</tr>
-				<tr>
-					<td>%ml.totale% :</td>
-					<td class="tooltip"><input type="text" id="totale" name="totale" size="10" maxlength="20"></td>				
-				</tr>													
-				<tr>
-					<td>%ml.imponibile% :</td>
-					<td class="tooltip"><input type="text" id="imponibile" name="imponibile" size="10" maxlength="20"></td>				
-				</tr>				
-				<tr>
-					<td>%ml.iva% :</td>
-					<td class="tooltip"><input type="text" id="iva" name="iva" size="10" maxlength="20"></td>				
-				</tr>				
-			</tbody>
-		</table> 	 
-  </form>
-</div>
+<!-- ----------------------- -->
+<!-- NUOVO DETTAGLIO FATTURA -->
+<!-- ----------------------- -->
 
-<br/>
+<div class="container">
+    <div class="modal fade" id="nuovo-dettaglio-fattura-cliente-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo dettaglio fattura</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.quantita%</span>
+                                    <input class="form-control" type="text" id="quantita" name="quantita" maxlength="10" onblur="calcolaImponibileFattura()"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.articolo%</span>
+                                    <input class="form-control" type="text" id="articolo" name="articolo" maxlength="100" onblur="calcolaImponibileFattura()"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.importo%</span>
+                                    <input class="form-control" type="text" id="importo" name="importo" maxlength="20" onblur="calcolaImponibileFattura()"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-primary active"><input type="radio" id="aliquota5" name="aliquota" autocomplete="off" value="1.05" checked onchange="calcolaImponibileFattura()"/>%ml.aliquota5%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="aliquota10" name="aliquota" autocomplete="off" value="1.10" onchange="calcolaImponibileFattura()"/>%ml.aliquota10%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="aliquota22" name="aliquota" autocomplete="off" value="1.22" onchange="calcolaImponibileFattura()"/>%ml.aliquota22%</label>
+                                    <label class="btn btn-primary"><input type="radio" id="fc" name="aliquota" autocomplete="off" value="1" onchange="calcolaImponibileFattura()"/>%ml.fc%</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.totale%</span>
+                                    <input class="form-control" type="text" id="totale" name="totale" maxlength="20" onblur="imponibileFattura()"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.imponibile%</span>
+                                    <input class="form-control" type="text" id="imponibile" name="imponibile" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group'>
+                                    <span class="input-group-addon">%ml.iva%</span>
+                                    <input class="form-control" type="text" id="iva" name="iva" maxlength="20"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovodett-nuova-fattura">Ok</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

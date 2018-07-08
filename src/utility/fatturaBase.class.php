@@ -26,6 +26,99 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
         $this->size = $size;
     }
 
+    function initialize($orientation = 'P', $unit = 'mm', $size = 'A4') {
+        // Some checks
+        $this->_dochecks();
+        // Initialization of properties
+        $this->page = 0;
+        $this->n = 2;
+        $this->buffer = '';
+        $this->pages = array();
+        $this->PageSizes = array();
+        $this->state = 0;
+        $this->fonts = array();
+        $this->FontFiles = array();
+        $this->diffs = array();
+        $this->images = array();
+        $this->links = array();
+        $this->InHeader = false;
+        $this->InFooter = false;
+        $this->lasth = 0;
+        $this->FontFamily = '';
+        $this->FontStyle = '';
+        $this->FontSizePt = 12;
+        $this->underline = false;
+        $this->DrawColor = '0 G';
+        $this->FillColor = '0 g';
+        $this->TextColor = '0 g';
+        $this->ColorFlag = false;
+        $this->ws = 0;
+
+        // Font path
+        if (defined('FPDF_FONTPATH')) {
+            $this->fontpath = FPDF_FONTPATH;
+            if (substr($this->fontpath, -1) != '/' && substr($this->fontpath, -1) != '\\')
+                $this->fontpath .= '/';
+        }
+        elseif (is_dir(dirname(__FILE__) . '/font'))
+            $this->fontpath = dirname(__FILE__) . '/font/';
+        else
+            $this->fontpath = '';
+
+        // Core fonts
+        $this->CoreFonts = array('courier', 'helvetica', 'times', 'symbol', 'zapfdingbats');
+        // Scale factor
+        if ($unit == 'pt')
+            $this->k = 1;
+        elseif ($unit == 'mm')
+            $this->k = 72 / 25.4;
+        elseif ($unit == 'cm')
+            $this->k = 72 / 2.54;
+        elseif ($unit == 'in')
+            $this->k = 72;
+        else
+            $this->Error('Incorrect unit: ' . $unit);
+
+        // Page sizes
+        $this->StdPageSizes = array('a3' => array(841.89, 1190.55), 'a4' => array(595.28, 841.89), 'a5' => array(420.94, 595.28),
+            'letter' => array(612, 792), 'legal' => array(612, 1008));
+        $size = $this->_getpagesize($size);
+        $this->DefPageSize = $size;
+        $this->CurPageSize = $size;
+        // Page orientation
+        $orientation = strtolower($orientation);
+
+        if ($orientation == 'p' || $orientation == 'portrait') {
+            $this->DefOrientation = 'P';
+            $this->w = $size[0];
+            $this->h = $size[1];
+        } elseif ($orientation == 'l' || $orientation == 'landscape') {
+            $this->DefOrientation = 'L';
+            $this->w = $size[1];
+            $this->h = $size[0];
+        } else
+            $this->Error('Incorrect orientation: ' . $orientation);
+
+        $this->CurOrientation = $this->DefOrientation;
+        $this->wPt = $this->w * $this->k;
+        $this->hPt = $this->h * $this->k;
+        // Page margins (1 cm)
+        $margin = 28.35 / $this->k;
+        $this->SetMargins($margin, $margin);
+        // Interior cell margin (1 mm)
+        $this->cMargin = $margin / 10;
+        // Line width (0.2 mm)
+        $this->LineWidth = .567 / $this->k;
+        // Automatic page break
+        $this->SetAutoPageBreak(true, 2 * $margin);
+        // Default display mode
+        $this->SetDisplayMode('default');
+        // Enable compression
+        $this->SetCompression(true);
+        // Set default PDF version number
+        $this->PDFVersion = '1.3';
+    }
+
     public function getInstance() {
         if (!isset($_SESSION[self::PDF_FATTURA_BASE]))
             $_SESSION[self::PDF_FATTURA_BASE] = serialize(new FatturaBase());
@@ -236,7 +329,7 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
         $articolo = explode("\\", $linea["ARTICOLO"]);
 
         $this->Cell($w[1], 6, iconv('UTF-8', 'windows-1252', $articolo[0]), "", 0, "L");
-        $this->Cell($w[2], 6, number_format($linea["PREZZO"], 2, ',', '.'), "", 0, 'R');
+        $this->Cell($w[2], 6, number_format($linea["IMPORTO U."], 2, ',', '.'), "", 0, 'R');
         $this->Cell($w[3], 6, number_format($linea["TOTALE"], 2, ',', '.'), "", 0, 'R');
         $this->Cell($w[4], 6, number_format($linea["IMPONIBILE"], 2, ',', '.'), "", 0, 'R');
         $this->Cell($w[5], 6, number_format($linea["IVA"], 2, ',', '.'), "", 0, 'R');

@@ -1,16 +1,14 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/fatture:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/fatture:/var/www/html/chopin/src/utility');
+require_once 'fatture.controller.class.php';
 require_once 'prelevaProgressivoFattura.class.php';
 
 session_start();
+xdebug_disable();
 
-$prelevaProgressivoFattura = PrelevaProgressivoFattura::getInstance();
+$_SESSION["Obj_fatturecontroller"] = serialize(new FattureController(PrelevaProgressivoFattura::getInstance()));
 
-if ($_GET["modo"] == "start") {
-	$_SESSION["catcliente"] = $_REQUEST["catcliente"];
-	$_SESSION["codneg"] = $_REQUEST["codneg"];	
-	$prelevaProgressivoFattura->start();
-}
-
+$controller = unserialize($_SESSION["Obj_fatturecontroller"]);
+$controller->start();
 ?>

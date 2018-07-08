@@ -62,6 +62,7 @@ class Cliente extends CoreBase implements CoreInterface {
     const LEGGI_CLIENTE_X_ID = "/anagrafica/leggiIdCliente.sql";
     const CANCELLA_CLIENTE = "/anagrafica/deleteCliente.sql";
     const AGGIORNA_CLIENTE = "/anagrafica/updateCliente.sql";
+    const RICERCA_DATI_CLIENTE = "/fatture/ricercaDatiCliente.sql";
 
     // Metodi
 
@@ -340,14 +341,41 @@ class Cliente extends CoreBase implements CoreInterface {
             $this->setQtaClienti(null);
         }
         return $result;
-
-
-
-
-        return $result;
     }
 
-    /*     * **********************************************************************
+    /**
+     * Questo metodo preleva il tipo addebito di un cliente
+     *
+     * @param unknown $db
+     */
+    public function caricaTipoAddebitoCliente($db) {
+
+        $tipoAddebito = "";
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $replace = array(
+            '%id_cliente%' => $this->getIdCliente()
+        );
+
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_DATI_CLIENTE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setTipAddebito($row['tip_addebito']);
+                $this->setDesCliente($row['des_cliente']);
+                $this->setDesIndirizzoCliente($row['des_indirizzo_cliente']);
+                $this->setDesCittaCliente($row['des_citta_cliente']);
+                $this->setCapCliente($row['cap_cliente']);
+                $this->setCodPiva($row['cod_piva']);
+                $this->setCodFisc($row['cod_fisc']);
+            }
+            $_SESSION[self::CLIENTE] = serialize($this);
+        }
+    }
+
+    /*     * *********************************************************************
      * Getters e setters
      */
 
