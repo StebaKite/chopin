@@ -135,8 +135,10 @@ class Fattura extends CoreBase implements CoreInterface {
 
         foreach (pg_fetch_all($result) as $row) {
             $this->setNumFatturaUltimo($row['num_fattura_ultimo']);
-            $this->setNotaPiede($row["nota_testa_fattura"]);
-            $this->setNotaTesta($row["nota_piede_fattura"]);
+            $this->setNotaTesta($row["nota_testa_fattura"]);
+            $this->setNotaPiede($row["nota_piede_fattura"]);
+
+            $_SESSION[self::FATTURA] = serialize($this);
         }
     }
 

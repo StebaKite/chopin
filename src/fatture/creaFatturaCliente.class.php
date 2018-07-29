@@ -128,11 +128,13 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
 
     private function sezioneNotaTesta($documento, $fattura) {
 
+        $utility = Utility::getInstance();
+
         if (parent::isNotEmpty($fattura->getNotaTesta())) {
             $nota = explode("\\", $fattura->getNotaTesta());
 
             $replace = array(
-                '%ASSISTITO%' => trim($fattura->getAssistito)
+                '%ASSISTITO%' => trim($fattura->getAssistito())
             );
 
             /**

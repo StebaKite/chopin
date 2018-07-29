@@ -21,6 +21,7 @@ class DettaglioFattura extends Fattura implements CoreInterface {
 
     // Nomi colonne dettaglio fattura
 
+    const ID_ARTICOLO = "id_articolo";
     const QTA_ARTICOLO = "qta_articolo";
     const DES_ARTICOLO = "des_articolo";
     const IMP_ARTICOLO = "imp_articolo";
@@ -50,6 +51,7 @@ class DettaglioFattura extends Fattura implements CoreInterface {
 
     public function aggiungi() {
         $item = array(
+            DettaglioFattura::ID_ARTICOLO => $this->getIdArticolo(),
             DettaglioFattura::QTA_ARTICOLO => $this->getQtaArticolo(),
             DettaglioFattura::DES_ARTICOLO => trim($this->getDesArticolo()),
             DettaglioFattura::IMP_ARTICOLO => trim($this->getImpArticolo()),
@@ -68,6 +70,19 @@ class DettaglioFattura extends Fattura implements CoreInterface {
             sort($this->dettagliFattura);
         }
         $this->setQtaDettagliFattura($this->getQtaDettagliFattura() + 1);
+        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
+    }
+
+    public function cancella($db) {
+        $dettagliDiff = array();
+        foreach ($this->getDettagliFattura() as $unDettaglio) {
+            if (trim($unDettaglio[DettaglioFattura::ID_ARTICOLO]) != trim($this->getIdArticolo())) {
+                array_push($dettagliDiff, $unDettaglio);
+            } else {
+                $this->setQtaDettagliFattura($this->getQtaDettagliFattura() - 1);
+            }
+        }
+        $this->setDettagliFattura($dettagliDiff);
         $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
     }
 

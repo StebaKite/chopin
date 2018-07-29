@@ -53,6 +53,8 @@ class FattureController {
             $fattura->setNumFattura($_REQUEST["numfat"]);
             $fattura->setDesRagsocBanca($_REQUEST["ragsocbanca"]);
             $fattura->setCodIbanBanca($_REQUEST["ibanbanca"]);
+            $fattura->setTipFattura($_REQUEST["tipofat"]);
+            $fattura->setAssistito($_REQUEST["assistito"]);
         }
 
         if (isset($_REQUEST["catcliente"])) {
@@ -65,7 +67,7 @@ class FattureController {
         }
 
         if (isset($_REQUEST["quantita"])) {
-            $dettaglioFattura->setIdArticolo(rand(1, 99999));
+            $dettaglioFattura->setIdArticolo(rand());
             $dettaglioFattura->setQtaArticolo($_REQUEST["quantita"]);
             $dettaglioFattura->setDesArticolo($_REQUEST["articolo"]);
             $dettaglioFattura->setImpArticolo($_REQUEST["importo"]);
@@ -73,6 +75,10 @@ class FattureController {
             $dettaglioFattura->setImpTotale($_REQUEST["totale"]);
             $dettaglioFattura->setImpImponibile($_REQUEST["imponibile"]);
             $dettaglioFattura->setImpIva($_REQUEST["iva"]);
+        }
+
+        if (isset($_REQUEST["idarticolo"])) {
+            $dettaglioFattura->setIdArticolo($_REQUEST["idarticolo"]);
         }
 
         // Serializzo in sessione gli oggetti modificati

@@ -101,7 +101,7 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
 
             foreach ($dettaglioFattura->getDettagliFattura() as $unDettaglio) {
 
-                $cancella_parms = $dettaglioFattura->getIdArticolo();
+                $cancella_parms = $unDettaglio[DettaglioFattura::ID_ARTICOLO];
 
                 $bottoneCancella = self::CANCELLA_DETTAGLIO_FATTURA_HREF . $cancella_parms . self::CANCELLA_ICON;
 

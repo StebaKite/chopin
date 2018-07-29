@@ -107,7 +107,7 @@ function imponibileFattura() {
 
 //---------------------------------------------------------------------------------
 
-function prelevaNumeroFattura(negozio) {
+function prelevaNumeroFattura(negozio, catcliente) {
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -115,7 +115,7 @@ function prelevaNumeroFattura(negozio) {
             $("#numfat").val(xmlhttp.responseText);
         }
     }
-    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?catcliente=1200&codneg=" + negozio, true);
+    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?catcliente=" + catcliente + "&codneg=" + negozio, true);
     xmlhttp.send();
 
     // Inizializzazione della banca. Uguale per tutti i negozi
@@ -212,34 +212,15 @@ function gestisciAssistito(tipofattura) {
 
 //---------------------------------------------------------------------------------
 
-function cancellaDettaglioFattura(id) {
+function cancellaDettaglioFattura(idarticolo) {
 
-    $("#" + id).remove();
-
-    var rowCount = $("#dettagli tbody tr").length;
-
-    if (rowCount == 1) {
-        $("#dettagli thead tr").remove();
-        $("#dettagli").removeClass("datiCreateSottile");
-    }
-
-    var c = parseInt(id.toString());
-    var index = jQuery.inArray(c, indexDettInseriti);
-    if (index == -1) {
-        var cc = id.toString();
-        var index = jQuery.inArray(cc, indexDettInseriti);
-    }
-
-    if (index > -1) {
-        indexDettInseriti.splice(index, 1);
-        aggiornaIndexDettaglioInseriti(indexDettInseriti);
-
-        dettInseriti.splice(index, 1);
-        aggiornaDettaglioInseriti(dettInseriti);
-    }
-
-    // Scopro il bottone nuovo dettaglio nascosto dalla funzione di creazione fattura nel caso di contributo
-
-    $("#nuovo-dett-fattura-cliente").show();
-    $("#nuovo-dett-fattura-aziende").show();
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            var dettagliTable = xmlhttp.responseText;
+            $("#dettagli").html(dettagliTable);
+        }
+    };
+    xmlhttp.open("GET", "cancellaNuovoDettaglioFatturaFacade.class.php?modo=go&idarticolo=" + idarticolo, true);
+    xmlhttp.send();
 }
