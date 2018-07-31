@@ -1,6 +1,8 @@
 <?php
 
 require_once 'saldi.abstract.class.php';
+require_once 'utility.class.php';
+require_once 'nexus6.main.interface.php';
 
 /**
  * Questa classe è rieseguibile.
@@ -8,251 +10,219 @@ require_once 'saldi.abstract.class.php';
  * @author stefano
  *
  */
-class RiportoSaldoPeriodico extends SaldiAbstract {
+class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface {
 
-	public static $messaggio;
-	public static $querySaldoConto = "/saldi/saldoConto.sql";
+//    public static $messaggio;
+//    public static $querySaldoConto = "/saldi/saldoConto.sql";
 
-	public static $mese = array(
-			'01' => 'gennaio',
-			'02' => 'febbraio',
-			'03' => 'marzo',
-			'04' => 'aprile',
-			'05' => 'maggio',
-			'06' => 'giugno',
-			'07' => 'luglio',
-			'08' => 'agosto',
-			'09' => 'settembre',
-			'10' => 'ottobre',
-			'11' => 'novembre',
-			'12' => 'dicembre'
-	);
-	
-	private static $_instance = null;
+    function __construct() {
 
-	function __construct() {
+        self::$root = '/var/www/html';
 
-		self::$root = '/var/www/html';
+        static $mese = array(
+            '01' => 'gennaio',
+            '02' => 'febbraio',
+            '03' => 'marzo',
+            '04' => 'aprile',
+            '05' => 'maggio',
+            '06' => 'giugno',
+            '07' => 'luglio',
+            '08' => 'agosto',
+            '09' => 'settembre',
+            '10' => 'ottobre',
+            '11' => 'novembre',
+            '12' => 'dicembre'
+        );
+    }
 
-		require_once 'utility.class.php';
+    public function getInstance() {
+        if (!isset($_SESSION[self::RIPORTO_SALDO]))
+            $_SESSION[self::SALDO] = serialize(new RiportoSaldoPeriodico());
+        return unserialize($_SESSION[self::RIPORTO_SALDO]);
+    }
 
-		$utility = Utility::getInstance();
-		$config = $utility->getConfig();
-		
-		self::$testata = self::$root . $config['testataPagina'];
-		self::$piede = self::$root . $config['piedePagina'];
-		self::$messaggioErrore = self::$root . $config['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $config['messaggioInfo'];
-	}
+    public function start($db, $pklavoro) {
 
-	private function  __clone() { }
+        $riportoStatoPatrimoniale_Ok = FALSE;
+        $riportoContoEconomico_Ok = FALSE;
 
-	/**
-	 * Singleton Pattern
-	 */
+        $utility = Utility::getInstance();
+        $config = $utility->getConfig();
 
-	public static function getInstance() {
+        $negozi = explode(',', $config['negozi']);
 
-		if( !is_object(self::$_instance) )
+        /**
+         * Determino il mese da estrarre rispetto alla data di esecuzione del lavoro pianificato
+         */
+        $dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];
+        $dataEstrazioneRegistrazioni = date("Y/m/d", strtotime('-1 month', strtotime($_SESSION["dataEsecuzioneLavoro"])));
 
-			self::$_instance = new RiportoSaldoPeriodico();
+        $dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
+        $mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
+        $descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
 
-		return self::$_instance;
-	}
+        $anno = ($mesePrecedente == 12) ? date("Y", strtotime('-1 year', strtotime($_SESSION["dataEsecuzioneLavoro"]))) : date("Y", strtotime($_SESSION["dataEsecuzioneLavoro"]));
 
-	// ------------------------------------------------
-	
-	public function start($db, $pklavoro) {
-		
-		require_once 'utility.class.php';
-		
-		$riportoStatoPatrimoniale_Ok = FALSE;
-		$riportoContoEconomico_Ok = FALSE;
+        if ($this->isAnnoBisestile($anno)) {
+            $ggMese = array(
+                '01' => '31', '02' => '29', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
+                '07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
+            );
+        } else {
+            $ggMese = array(
+                '01' => '31', '02' => '28', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
+                '07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
+            );
+        }
 
-		$utility = Utility::getInstance();
-		$config = $utility->getConfig();
-		
-		$negozi = explode(',', $config['negozi']);
-				
-		/**
-		 * Determino il mese da estrarre rispetto alla data di esecuzione del lavoro pianificato
-		 */
+        /**
+         * Riporto stato patrimoniale
+         */
+        $result = $this->prelevaStatoPatrimoniale($db, $utility);
 
-		$dataGenerazioneSaldo = $_SESSION["dataEsecuzioneLavoro"];	
-		$dataEstrazioneRegistrazioni = date("Y/m/d", strtotime('-1 month', strtotime($_SESSION["dataEsecuzioneLavoro"])));
-		
-		$dataLavoro = explode("/", $dataEstrazioneRegistrazioni);
-		$mesePrecedente = str_pad($dataLavoro[1], 2, "0", STR_PAD_LEFT);
-		$descrizioneSaldo = "Riporto saldo di " . SELF::$mese[$mesePrecedente];
-		
-		$anno = ($mesePrecedente == 12) ? date("Y", strtotime('-1 year', strtotime($_SESSION["dataEsecuzioneLavoro"]))) : date("Y", strtotime($_SESSION["dataEsecuzioneLavoro"]));
+        if ($result) {
 
-		if ($this->isAnnoBisestile($anno)) {
-			$ggMese = array(
-					'01' => '31', '02' => '29', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
-					'07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
-			);
-		}
-		else {
-			$ggMese = array(
-					'01' => '31', '02' => '28', '03' => '31', '04' => '30', '05' => '31', '06' => '30',
-					'07' => '31', '08' => '31', '09' => '30', '10' => '31', '11' => '30', '12' => '31'
-			);
-		}
-		
-		/**
-		 * Riporto stato patrimoniale
-		 */
-		
-		$result = $this->prelevaStatoPatrimoniale($db, $utility);		
-		
-		if ($result) {
-			
-			$this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+            $this->riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
-			$da = '01/' . $mesePrecedente . '/' . $anno;
-			$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-			
-			$riportoStatoPatrimoniale_Ok = TRUE;
-		}
-		
-		/**
-		 * Riporto conto economico.
-		 * Il primo riporto dell'anno non viene fatto. I conti ripartono da zero.
-		 */
-		
-		if (date("m/d", strtotime($_SESSION["dataEsecuzioneLavoro"])) != "01/01") {
+            $da = '01/' . $mesePrecedente . '/' . $anno;
+            $a = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
 
-			$result = $this->prelevaContoEconomico($db, $utility);
-			
-			if ($result) {
+            $riportoStatoPatrimoniale_Ok = TRUE;
+        }
 
-				$this->riportoContoEconomico($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
-					
-				$da = '01/' . $mesePrecedente . '/' . $anno;
-				$a  = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
-				
-				$riportoContoEconomico_Ok = TRUE;
-			}				
-		}
-		
-		/**
-		 * Se uno dei due riporti è andato bene considero il lavoro eseguito  
-		 */
-		
-		if (($riportoStatoPatrimoniale_Ok) or ($riportoContoEconomico_Ok)) { 
-			$this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');			
-			return TRUE;
-		}
-		else return FALSE;
-	}
-	
-	private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+        /**
+         * Riporto conto economico.
+         * Il primo riporto dell'anno non viene fatto. I conti ripartono da zero.
+         */
+        if (date("m/d", strtotime($_SESSION["dataEsecuzioneLavoro"])) != "01/01") {
 
-		require_once 'menubanner.template.php';
+            $result = $this->prelevaContoEconomico($db, $utility);
 
-		$config = $utility->getConfig();
-				
-		$conti = pg_fetch_all($statoPatrimoniale);
+            if ($result) {
 
-		/**
-		 * Scansione di tutti i conti dello Stato Patrimoniale
-		 */
-		
-		foreach($conti as $conto) {
-		
-			/**
-			 * Per ciascun conto effettuo la totalizzazione delle registrazioni per ciascun negozio
-			 */
-			$dareAvere_conto = ($conto['tip_conto'] = "Avere") ? "A" : "D";		// prelevo il tipo del conto Dare/Avere
-						
-			foreach($negozi as $negozio){
-					
-				$replace = array(
-						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-						'%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
-						'%codnegozio%' => $negozio,
-						'%codconto%' => $conto['cod_conto'],
-						'%codsottoconto%' => $conto['cod_sottoconto']
-				);
-					
-				$sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
-		
-				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);				
-				$result = $db->execSql($sql);
-					
-				if ($result) {
-						
-					$totale_conto = 0;	//default
-					$dareAvere = "";	//default
+                $this->riportoContoEconomico($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
-					/**
-					 * Faccio la somma algebrica di tutti i totali estratti.
-					 * Normalmente dalla query di totalizzazione viene fuori una riga con un totale, ma nel caso
-					 * di conti con importo negativo e segno contrario escono due righe.
-					 *
-					 */
-								
-					foreach(pg_fetch_all($result) as $row) {							
- 						$totale_conto = $totale_conto + $row['tot_conto'];
-					}
-					
-					/**
-					 * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
-					 */
+                $da = '01/' . $mesePrecedente . '/' . $anno;
+                $a = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
 
-					$dareAvere = ($totale_conto > 0) ? "D" : "A";					
-					$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
-				}
-			}
-		}		
-	}
-	
-	private function riportoContoEconomico($db, $pklavoro, $utility, $negozi, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+                $riportoContoEconomico_Ok = TRUE;
+            }
+        }
 
-		require_once 'menubanner.template.php';
+        /**
+         * Se uno dei due riporti è andato bene considero il lavoro eseguito
+         */
+        if (($riportoStatoPatrimoniale_Ok) or ( $riportoContoEconomico_Ok)) {
+            $this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
+            return TRUE;
+        } else
+            return FALSE;
+    }
 
-		$config = $utility->getConfig();
-		
-		$conti = pg_fetch_all($contoEconomico);
-			
-		foreach($conti as $conto) {
-				
-			foreach($negozi as $negozio){
-					
-				$replace = array(
-						'%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-						'%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
-						'%codnegozio%' => $negozio,
-						'%codconto%' => $conto['cod_conto'],
-						'%codsottoconto%' => $conto['cod_sottoconto']
-				);
-					
-				$sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
-		
-				$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-				$result = $db->execSql($sql);
-					
-				if (result) {
-					foreach(pg_fetch_all($result) as $row) {
-						
-						/**
-						 * Se il conto ha un totale movimenti = zero il saldo non viene riportato
-						 */
-						if ($row['tot_conto'] != 0) {
-		
-							/**
-							 * tip_conto =  1 > Dare
-							 * tip_conto = -1 > Avere
-							 */
-							$dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
-							$this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
-						}
-					}
-				}
-			}
-		}
-	}
+    private function riportoStatoPatrimoniale($db, $pklavoro, $utility, $negozi, $statoPatrimoniale, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+
+        require_once 'menubanner.template.php';
+
+        $config = $utility->getConfig();
+
+        $conti = pg_fetch_all($statoPatrimoniale);
+
+        /**
+         * Scansione di tutti i conti dello Stato Patrimoniale
+         */
+        foreach ($conti as $conto) {
+
+            /**
+             * Per ciascun conto effettuo la totalizzazione delle registrazioni per ciascun negozio
+             */
+            $dareAvere_conto = ($conto['tip_conto'] = "Avere") ? "A" : "D";  // prelevo il tipo del conto Dare/Avere
+
+            foreach ($negozi as $negozio) {
+
+                $replace = array(
+                    '%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
+                    '%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+                    '%codnegozio%' => $negozio,
+                    '%codconto%' => $conto['cod_conto'],
+                    '%codsottoconto%' => $conto['cod_sottoconto']
+                );
+
+                $sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
+
+                $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+                $result = $db->execSql($sql);
+
+                if ($result) {
+
+                    $totale_conto = 0; //default
+                    $dareAvere = ""; //default
+
+                    /**
+                     * Faccio la somma algebrica di tutti i totali estratti.
+                     * Normalmente dalla query di totalizzazione viene fuori una riga con un totale, ma nel caso
+                     * di conti con importo negativo e segno contrario escono due righe.
+                     *
+                     */
+                    foreach (pg_fetch_all($result) as $row) {
+                        $totale_conto = $totale_conto + $row['tot_conto'];
+                    }
+
+                    /**
+                     * L'attribuzione del segno viene fatto osservanto il totale ottenuto dalla somma algebrica degli importi
+                     */
+                    $dareAvere = ($totale_conto > 0) ? "D" : "A";
+                    $this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($totale_conto), $dareAvere);
+                }
+            }
+        }
+    }
+
+    private function riportoContoEconomico($db, $pklavoro, $utility, $negozi, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+
+        require_once 'menubanner.template.php';
+
+        $config = $utility->getConfig();
+
+        $conti = pg_fetch_all($contoEconomico);
+
+        foreach ($conti as $conto) {
+
+            foreach ($negozi as $negozio) {
+
+                $replace = array(
+                    '%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
+                    '%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
+                    '%codnegozio%' => $negozio,
+                    '%codconto%' => $conto['cod_conto'],
+                    '%codsottoconto%' => $conto['cod_sottoconto']
+                );
+
+                $sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
+
+                $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+                $result = $db->execSql($sql);
+
+                if (result) {
+                    foreach (pg_fetch_all($result) as $row) {
+
+                        /**
+                         * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+                         */
+                        if ($row['tot_conto'] != 0) {
+
+                            /**
+                             * tip_conto =  1 > Dare
+                             * tip_conto = -1 > Avere
+                             */
+                            $dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
+                            $this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 ?>

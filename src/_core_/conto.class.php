@@ -23,6 +23,7 @@ class Conto extends CoreBase implements CoreInterface {
     // dati sottoconto
 
     private $codConto;
+    private $codContoSel;
     private $desConto;
     private $catConto;
     private $tipConto;
@@ -32,6 +33,10 @@ class Conto extends CoreBase implements CoreInterface {
     private $indVisibilitaSottoconti;
     private $conti;
     private $qtaConti;
+    private $contiStatoPatrimoniale;
+    private $qtaContiStatoPatrimoniale;
+    private $contiContoEconomico;
+    private $qtaContiContoEconomico;
     private $catContoSel;
     private $tipContoSel;
 
@@ -42,6 +47,9 @@ class Conto extends CoreBase implements CoreInterface {
     const AGGIORNA_CONTO = "/configurazioni/updateConto.sql";
     const INSERISCI_CONTO = "/configurazioni/creaConto.sql";
     const CANCELLA_CONTO = "/configurazioni/deleteConto.sql";
+    const LEGGI_CONTI_STATO_PATRIMONIALE = "/configurazioni/ricercaContiStatoPatrimoniale.sql";
+    const LEGGI_CONTI_CONTO_ECONOMICO = "/configurazioni/ricercaContiContoEconomico.sql";
+    const LEGGI_TUTTI_CONTI = "/configurazioni/ricercaTuttiConti.sql";
 
     // Metodi
 
@@ -191,6 +199,69 @@ class Conto extends CoreBase implements CoreInterface {
         }
     }
 
+    public function leggiStatoPatrimoniale($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CONTI_STATO_PATRIMONIALE;
+
+        $sql = $utility->getTemplate($sqlTemplate);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            $this->setContiStatoPatrimoniale(pg_fetch_all($result));
+            $this->setQtaContiStatoPatrimoniale(pg_num_rows($result));
+        } else {
+            $this->setContiStatoPatrimoniale(self::NULL_VALUE);
+            $this->setQtaContiStatoPatrimoniale(self::ZERO_VALUE);
+        }
+        return $result;
+    }
+
+    public function leggiContoEconomico($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CONTI_CONTO_ECONOMICO;
+
+        $sql = $utility->getTemplate($sqlTemplate);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            $this->setContiContoEconomico(pg_fetch_all($result));
+            $this->setQtaContiContoEconomico(pg_num_rows($result));
+        } else {
+            $this->setContiContoEconomico(self::NULL_VALUE);
+            $this->setQtaContiContoEconomico(self::ZERO_VALUE);
+        }
+        return $result;
+    }
+
+    /**
+     * Questo metodo preleva tutti i conti esistenti
+     * @param unknown $db
+     * @param unknown $utility
+     */
+    public function leggiTuttiConti($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_TUTTI_CONTI;
+
+        $sql = $utility->getTemplate($sqlTemplate);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            $this->setConti(pg_fetch_all($result));
+            $this->setQtaConti(pg_num_rows($result));
+        } else {
+            $this->setConti(self::NULL_VALUE);
+            $this->setQtaConti(self::ZERO_VALUE);
+        }
+
+        return $result;
+    }
+
     // Getters eSetters
 
     public function getRoot() {
@@ -287,7 +358,6 @@ class Conto extends CoreBase implements CoreInterface {
 
     public function setCatContoSel($catContoSel) {
         $this->catContoSel = $catContoSel;
-        return $this;
     }
 
     public function getTipContoSel() {
@@ -296,7 +366,46 @@ class Conto extends CoreBase implements CoreInterface {
 
     public function setTipContoSel($tipContoSel) {
         $this->tipContoSel = $tipContoSel;
-        return $this;
+    }
+
+    public function getContiStatoPatrimoniale() {
+        return $this->contiStatoPatrimoniale;
+    }
+
+    public function setContiStatoPatrimoniale($contiStatoPatrimoniale) {
+        $this->contiStatoPatrimoniale = $contiStatoPatrimoniale;
+    }
+
+    public function getQtaContiStatoPatrimoniale() {
+        return $this->qtaContiStatoPatrimoniale;
+    }
+
+    public function setQtaContiStatoPatrimoniale($qtaContiStatoPatrimoniale) {
+        $this->qtaContiStatoPatrimoniale = $qtaContiStatoPatrimoniale;
+    }
+
+    public function getContiContoEconomico() {
+        return $this->contiContoEconomico;
+    }
+
+    public function setContiContoEconomico($contiContoEconomico) {
+        $this->contiContoEconomico = $contiContoEconomico;
+    }
+
+    public function getQtaContiContoEconomico() {
+        return $this->qtaContiContoEconomico;
+    }
+
+    public function setQtaContiContoEconomico($qtaContiContoEconomico) {
+        $this->qtaContiContoEconomico = $qtaContiContoEconomico;
+    }
+
+    public function getCodContoSel() {
+        return $this->qtaCodContoSel;
+    }
+
+    public function setCodContoSel($codContoSel) {
+        $this->codContoSel = $codContoSel;
     }
 
 }

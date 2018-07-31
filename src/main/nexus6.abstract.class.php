@@ -18,22 +18,11 @@ abstract class Nexus6Abstract {
     public static $elenco_conti;
     public static $elenco_mercati;
     public static $errorStyle = "border-color:#ff0000; border-width:1px;";
-    // Query ------------------------------------------------------------------------------
-//    public static $queryRicercaCausali = "/primanota/ricercaCausali.sql";
-//    public static $queryRicercaFornitori = "/primanota/ricercaFornitori.sql";
-//    public static $queryRicercaClienti = "/primanota/ricercaClienti.sql";
-//    public static $queryRicercaConti = "/primanota/ricercaConti.sql";
-//    public static $queryTrovaDescrizioneFornitore = "/anagrafica/trovaDescFornitore.sql";
-//    public static $queryCreaEvento = "/main/creaEvento.sql";
-//    public static $queryChiudiEvento = "/main/chiudiEvento.sql";
-//    public static $queryCreaSaldo = "/saldi/creaSaldo.sql";
-//    public static $queryAggiornaSaldo = "/saldi/aggiornaSaldo.sql";
-//    public static $queryLeggiSaldo = "/saldi/leggiSaldo.sql";
-//    public static $queryCancellaSaldo = "/saldi/cancellaSaldo.sql";
+
+    /*
+     * Query ------------------------------------------------------------------------------
+     */
     public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
-//    public static $queryLeggiTuttiConti = "/configurazioni/leggiTuttiConti.sql";
-//    public static $queryRicercaMercati = "/configurazioni/leggiTuttiMercati.sql";
-//    public static $queryRicercaMercatiNegozio = "/primanota/ricercaMercati.sql";
     public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
     public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
     public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";

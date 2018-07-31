@@ -129,6 +129,7 @@ interface MainNexus6Interface {
     const PRIMANOTA_CONTROLLER = "Obj_primanotacontroller";
     const SCADENZE_CONTROLLER = "Obj_scadenzecontroller";
     const RIEPILOGO = "Obj_riepilogo";
+    const RIPORTO_SALDO = "Obj_riportosaldo";
 
 }
 
