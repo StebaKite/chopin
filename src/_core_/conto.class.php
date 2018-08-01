@@ -15,6 +15,7 @@ class Conto extends CoreBase implements CoreInterface {
     const DES_CONTO = "des_conto";
     const CAT_CONTO = "cat_conto";
     const TIP_CONTO = "tip_conto";
+    const TOT_CONTO = "tot_conto";
     const DAT_CREAZIONE_CONTO = "dat_creazione_conto";
     const IND_PRESENZA_IN_BILANCIO = "ind_presenza_in_bilancio";
     const NUM_RIGA_BILANCIO = "num_riga_bilancio";

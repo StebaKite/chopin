@@ -86,6 +86,32 @@ class Saldo extends CoreBase implements CoreInterface {
         return $result;
     }
 
+    public function leggiSaldoConto($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $replace = array(
+            '%datareg_da%' => $this->getDataregDa(),
+            '%datareg_a%' => $this->getDataregA(),
+            '%codnegozio%' => $this->getCodNegozio(),
+            '%codconto%' => $this->getCodConto(),
+            '%codsottoconto%' => $this->getCodSottoconto()
+        );
+
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::SALDO_CONTO;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setImpSaldo(trim($row[Conto::TOT_CONTO]));
+            }
+        }
+        $_SESSION[self::SALDO] = serialize($this);
+        return $result;
+    }
+
     public function cancellaSaldo($db) {
 
         $utility = Utility::getInstance();

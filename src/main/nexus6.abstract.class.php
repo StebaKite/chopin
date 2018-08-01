@@ -22,7 +22,6 @@ abstract class Nexus6Abstract {
     /*
      * Query ------------------------------------------------------------------------------
      */
-    public static $queryLavoriPianificati = "/main/lavoriPianificati.sql";
     public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
     public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
     public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
@@ -310,23 +309,6 @@ abstract class Nexus6Abstract {
         return $elencoClienti;
     }
 
-// *******************************************
-// *******************************************
-// *******************************************
-
-    public function leggiLavoriPianificatiBatchMode($db, $utility, $project_root) {
-
-        $replace = array();
-
-        $array = $utility->getConfig();
-        $sqlTemplate = $project_root . $array['query'] . self::$queryLavoriPianificati;
-
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-
-        return $result;
-    }
-
     /**
      * Questo metodo determina l'ambiente sulla bae degli utenti preenti loggati
      * @param array
@@ -343,6 +325,10 @@ abstract class Nexus6Abstract {
             $_SESSION["ambiente"] = "PROD";
         }
     }
+
+// *******************************************
+// *******************************************
+// *******************************************
 
     /**
      * Questo metodo effettua un controllo sullo scadenziario dei fornitori.

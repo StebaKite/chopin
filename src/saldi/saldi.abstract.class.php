@@ -5,12 +5,14 @@ require_once 'saldo.class.php';
 
 abstract class SaldiAbstract extends Nexus6Abstract {
 
-    private static $_instance = null;
     public static $messaggio;
+
+    const SALDO = "Obj_saldo";
 
     /*
      * Query ---------------------------------------------------------------
      */
+
     public static $queryCreaLavoroPianificato = "/main/creaLavoroPianificato.sql";
 
     /*
@@ -28,21 +30,7 @@ abstract class SaldiAbstract extends Nexus6Abstract {
     /**
      * Metodi comuni di utilita della prima note
      */
-
-    /**
-     * Se il saldo c'è già sulla tabella viene aggiornato altrimenti viene inserito
-     * @param unknown $db
-     * @param unknown $utility
-     * @param unknown $codnegozio
-     * @param unknown $codconto
-     * @param unknown $codsottoconto
-     * @param unknown $datsaldo
-     * @param unknown $dessaldo
-     * @param unknown $impsaldo
-     * @param unknown $inddareavere
-     * @return unknown
-     */
-    public function inserisciSaldo($db, $utility, $codnegozio, $codconto, $codsottoconto, $datsaldo, $dessaldo, $impsaldo, $inddareavere) {
+    public function gestioneSaldo($db) {
 
         $saldo = Saldo::getInstance();
 

@@ -4,69 +4,69 @@ require_once 'nexus6.abstract.class.php';
 
 abstract class StrumentiAbstract extends Nexus6Abstract {
 
-	private static $_instance = null;
+    /**
+     * Query ---------------------------------------------------------------
+     */
+    public static $queryRicercaRegistrazioniConto = "/strumenti/ricercaRegistrazioniConto.sql";
+    public static $queryUpdateDettaglioRegistrazione = "/strumenti/updateDettaglioRegistrazione.sql";
 
-	// Query ---------------------------------------------------------------
+    /**
+     * Metodi comuni
+     */
 
-	public static $queryRicercaRegistrazioniConto = "/strumenti/ricercaRegistrazioniConto.sql";
-	public static $queryUpdateDettaglioRegistrazione = "/strumenti/updateDettaglioRegistrazione.sql";
+    /**
+     * Questo metodo carica tutte le registrazioni che hanno almeno un dettaglio su un sottoconto specifico
+     * @param unknown $utility
+     * @param unknown $db
+     */
+    public function caricaRegistrazioniConto($utility, $db) {
 
-	/**
-	 * Metodi comuni
-	 */
+        $filtriRegistrazione = "";
+        $filtriDettaglio = "";
 
-	/**
-	 * Questo metodo carica tutte le registrazioni che hanno almeno un dettaglio su un sottoconto specifico
-	 * @param unknown $utility
-	 * @param unknown $db
-	 */
-	public function caricaRegistrazioniConto($utility, $db) {
+        if ($_SESSION["codneg_sel"] != "") {
+            $filtriRegistrazione .= "and reg.cod_negozio = '" . $_SESSION["codneg_sel"] . "'";
+        }
 
-		$filtriRegistrazione = "";
-		$filtriDettaglio = "";
+        if ($_SESSION["conto_sel"] != "") {
 
-		if ($_SESSION["codneg_sel"] != "") {
-			$filtriRegistrazione .= "and reg.cod_negozio = '" . $_SESSION["codneg_sel"] . "'";
-		}
+            $conto = explode(" - ", $_SESSION["conto_sel"]);
 
-		if ($_SESSION["conto_sel"] != "") {
+            $filtriDettaglio .= "and detreg.cod_conto = '" . $conto[0] . "'";
+            $filtriDettaglio .= "and detreg.cod_sottoconto = '" . $conto[1] . "'";
+        }
 
-			$conto = explode(" - ", $_SESSION["conto_sel"]);
+        $replace = array(
+            '%datareg_da%' => $_SESSION["datareg_da"],
+            '%datareg_a%' => $_SESSION["datareg_a"],
+            '%filtri-registrazione%' => $filtriRegistrazione,
+            '%filtri-dettaglio%' => $filtriDettaglio,
+        );
 
-			$filtriDettaglio .= "and detreg.cod_conto = '" . $conto[0] . "'";
-			$filtriDettaglio .= "and detreg.cod_sottoconto = '" . $conto[1] . "'";
-		}
+        $array = $utility->getConfig();
+        $sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniConto;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
-		$replace = array(
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%filtri-registrazione%' => $filtriRegistrazione,
-				'%filtri-dettaglio%' => $filtriDettaglio,
-		);
+        $result = $db->execSql($sql);
 
-		$array = $utility->getConfig();
-		$sqlTemplate = self::$root . $array['query'] . self::$queryRicercaRegistrazioniConto;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        return $result;
+    }
 
- 		$result = $db->execSql($sql);
+    public function updateDettaglioRegistrazione($db, $utility, $id_dettaglio_registrazione, $conto, $sottoconto) {
 
-		return $result;
-	}
+        $array = $utility->getConfig();
+        $replace = array(
+            '%id_dettaglio_registrazione%' => trim($id_dettaglio_registrazione),
+            '%cod_conto%' => trim($conto),
+            '%cod_sottoconto%' => trim($sottoconto)
+        );
+        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateDettaglioRegistrazione;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
-	public function updateDettaglioRegistrazione($db, $utility, $id_dettaglio_registrazione, $conto, $sottoconto) {
+        $result = $db->execSql($sql);
+        return $result;
+    }
 
-		$array = $utility->getConfig();
-		$replace = array(
-				'%id_dettaglio_registrazione%' => trim($id_dettaglio_registrazione),
-				'%cod_conto%' => trim($conto),
-				'%cod_sottoconto%' => trim($sottoconto)
-		);
-		$sqlTemplate = self::$root . $array['query'] . self::$queryUpdateDettaglioRegistrazione;
-		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-
-		$result = $db->execSql($sql);
-		return $result;
-	}
 }
 
 ?>

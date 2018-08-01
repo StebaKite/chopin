@@ -42,9 +42,9 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
     // fitri di ricerca
     // Queries
 
-    const LOAD_LAVORI_PIANIFICATI = "/main/lavoriPianificati.sql";
-    const CAMBIO_STATO = "/main/cambioStatoLavoroPianificato.sql";
-    const LEGGI_LAVORI_ANNO_CORRENTE = "/main/lavoriPianificatiAnnoCorrente.sql";
+    const LOAD_LAVORI_PIANIFICATI = "/strumenti/lavoriPianificati.sql";
+    const CAMBIO_STATO = "/strumenti/cambioStatoLavoroPianificato.sql";
+    const LEGGI_LAVORI_ANNO_CORRENTE = "/strumenti/lavoriPianificatiAnnoCorrente.sql";
 
     // Metodi
 
@@ -90,6 +90,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             $this->setLavoriPianificati(null);
             $this->setQtaLavoriPianificati(0);
         }
+        $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
         return $result;
     }
 
@@ -147,6 +148,8 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
                 $this->setDatLavoro($row[self::DAT_LAVORO]);
                 $this->setPkLavoroPianificato($row[self::PK_LAVORO_PIANIFICATO]);
 
+                $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
+
                 if ($this->runClass($db))
                     error_log("Lavoro " . $this->getDesLavoro() . " eseguito!");
                 else
@@ -166,7 +169,8 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             if (class_exists($className)) {
                 $instance = new $className();
                 $this->setDatEsecuzioneLavoro(str_replace("-", "/", $this->getDatLavoro()));
-                if ($instance->start($db, $this->getLavoroPianificato())) {
+                if ($instance->start($db, $this->getPkLavoroPianificato())) {
+                    $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
                     return true;
                 } else {
                     return false;
