@@ -218,7 +218,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%datareg_a%' => $this->getDataregA()
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if (pg_num_rows($result) > 0) {
@@ -252,7 +252,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%datareg_a%' => $this->getDataregA()
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if (pg_num_rows($result) > 0) {
@@ -281,7 +281,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::ATTIVO_COMPARATI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if (pg_num_rows($result) > 0) {
@@ -312,7 +312,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::PASSIVO_COMPARATI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if (pg_num_rows($result) > 0) {
@@ -382,7 +382,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::quotation($negozio)
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -427,7 +427,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::quotation($negozio)
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -474,7 +474,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::quotation($negozio)
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -513,7 +513,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -546,7 +546,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -580,7 +580,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => $this->getCodnegSel()
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if (pg_num_rows($result) > 0) {
@@ -636,7 +636,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -667,7 +667,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

@@ -117,7 +117,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->root . $array['query'] . self::LEGGI_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -151,7 +151,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->root . $array['query'] . self::CANCELLA_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -188,7 +188,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_REGISTRAZIONE;
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         // esegue la query
 
@@ -228,7 +228,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -257,7 +257,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         $_SESSION[self::REGISTRAZIONE] = serialize($this);
@@ -274,7 +274,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             '%dat_registrazione%' => trim($this->getDatRegistrazione())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -296,7 +296,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             '%dat_registrazione%' => trim($this->getDatRegistrazione())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_FATTURA_CLIENTE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

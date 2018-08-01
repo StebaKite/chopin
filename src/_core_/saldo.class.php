@@ -71,22 +71,27 @@ class Saldo extends CoreBase implements CoreInterface {
             '%dat_saldo%' => $this->getDatSaldo()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SALDO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
-            $saldo = pg_fetch_all($result);
-            foreach ($saldo as $row) {
-                $this->setDesSaldo(trim($row[self::DES_SALDO]));
-                $this->setImpSaldo(trim($row[self::IMP_SALDO]));
-                $this->setIndDareavere(trim($row[self::IND_DAREAVERE]));
+            if (pg_num_rows($result) > 0) {
+                foreach (pg_fetch_all($result) as $row) {
+                    $this->setDesSaldo(trim($row[self::DES_SALDO]));
+                    $this->setImpSaldo(trim($row[self::IMP_SALDO]));
+                    $this->setIndDareavere(trim($row[self::IND_DAREAVERE]));
+                }
+                $_SESSION[self::SALDO] = serialize($this);
             }
         }
-        $_SESSION[self::SALDO] = serialize($this);
         return $result;
     }
 
-    public function leggiSaldoConto($db) {
+    public function leggiSaldoConto($db, $project_root) {
+
+        if (parent::isNotEmpty($project_root)) {
+            $this->setRoot($project_root);
+        }
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
@@ -100,15 +105,9 @@ class Saldo extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::SALDO_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if ($result) {
-            foreach (pg_fetch_all($result) as $row) {
-                $this->setImpSaldo(trim($row[Conto::TOT_CONTO]));
-            }
-        }
-        $_SESSION[self::SALDO] = serialize($this);
         return $result;
     }
 
@@ -124,7 +123,7 @@ class Saldo extends CoreBase implements CoreInterface {
             '%dat_saldo%' => $this->getDatSaldo()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_SALDO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -144,7 +143,7 @@ class Saldo extends CoreBase implements CoreInterface {
             '%ind_dareavere%' => $this->getIndDareavere()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SALDO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -164,7 +163,7 @@ class Saldo extends CoreBase implements CoreInterface {
             '%ind_dareavere%' => $this->getIndDareavere()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SALDO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -175,7 +174,7 @@ class Saldo extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_DATE_RIPORTO;
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -200,7 +199,7 @@ class Saldo extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CARICA_SALDI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

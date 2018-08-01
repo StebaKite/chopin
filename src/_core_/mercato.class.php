@@ -67,7 +67,7 @@ class Mercato extends CoreBase implements CoreInterface {
         $replace = array();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_MERCATI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -91,7 +91,7 @@ class Mercato extends CoreBase implements CoreInterface {
             '%cod_negozio%' => $this->getCodNegozio()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_MERCATO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result)
@@ -111,7 +111,7 @@ class Mercato extends CoreBase implements CoreInterface {
             '%cod_negozio%' => trim($this->getCodNegozio()),
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_MERCATO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
         return $result;
     }
@@ -125,7 +125,7 @@ class Mercato extends CoreBase implements CoreInterface {
             '%id_mercato%' => $this->getIdMercato()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_MERCATO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
 // 		if ($result) $this->load($db);		// refresh dei mercati caricati
@@ -139,7 +139,7 @@ class Mercato extends CoreBase implements CoreInterface {
             '%id_mercato%' => trim($this->getIdMercato())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_MERCATO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         foreach (pg_fetch_all($result) as $row) {
@@ -160,7 +160,7 @@ class Mercato extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_MERCATI_NEGOZIO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

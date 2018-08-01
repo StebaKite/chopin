@@ -49,7 +49,7 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CATEGORIE_CLIENTE;
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
         $elecat = "";

@@ -76,7 +76,7 @@ class Conto extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -99,7 +99,7 @@ class Conto extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -135,7 +135,7 @@ class Conto extends CoreBase implements CoreInterface {
             '%num_riga_bilancio%' => $this->getNumRigaBilancio()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei conti caricati
@@ -174,7 +174,7 @@ class Conto extends CoreBase implements CoreInterface {
             '%num_riga_bilancio%' => $this->getNumRigaBilancio()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei conti caricati
@@ -192,7 +192,7 @@ class Conto extends CoreBase implements CoreInterface {
             '%cod_conto%' => $this->getCodConto()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         if ($db->getData($sql)) {
             $this->load($db);  // refresh dei conti caricati
@@ -200,13 +200,17 @@ class Conto extends CoreBase implements CoreInterface {
         }
     }
 
-    public function leggiStatoPatrimoniale($db) {
+    public function leggiStatoPatrimoniale($db, $project_root) {
+
+        if (parent::isNotEmpty($project_root)) {
+            $this->setRoot($project_root);
+        }
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CONTI_STATO_PATRIMONIALE;
 
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -219,13 +223,17 @@ class Conto extends CoreBase implements CoreInterface {
         return $result;
     }
 
-    public function leggiContoEconomico($db) {
+    public function leggiContoEconomico($db, $project_root) {
+
+        if (parent::isNotEmpty($project_root)) {
+            $this->setRoot($project_root);
+        }
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CONTI_CONTO_ECONOMICO;
 
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -249,7 +257,7 @@ class Conto extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_TUTTI_CONTI;
 
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
         if ($result) {

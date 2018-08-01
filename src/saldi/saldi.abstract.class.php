@@ -40,7 +40,7 @@ abstract class SaldiAbstract extends Nexus6Abstract {
              * Se il saldo calcolato è significativo, aggiorno il saldo del conto
              * altrimenti elimino il saldo del conto
              */
-            if ($saldo->getImpSaldp() != 0) {
+            if ($saldo->getImpSaldo() != 0) {
                 $saldo->aggiornaSaldo($db);
             } else {
                 $saldo->cancellaSaldo($db);
@@ -50,7 +50,7 @@ abstract class SaldiAbstract extends Nexus6Abstract {
             /**
              * Se il saldo calcolato è significativo, creo il saldo del conto
              */
-            if ($impsaldo != 0) {
+            if ($saldo->getImpSaldo() != 0) {
                 $saldo->creaSaldo($db);
             }
         }

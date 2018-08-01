@@ -77,7 +77,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DETTAGLI_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -128,7 +128,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                 );
 
                 $sqlTemplate = $this->root . $array['query'] . self::CANCELLA_DETTAGLIO_REGISTRAZIONE;
-                $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+                $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
                 $result = $db->execSql($sql);
 
                 if ($result)
@@ -151,7 +151,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             '%cod_sottoconto%' => trim($this->getCodSottoconto())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_DETTAGLIO_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -195,7 +195,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             '%id_dettaglio_registrazione%' => trim($this->getIdDettaglioRegistrazione()),
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -238,7 +238,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             '%id_dettaglio_registrazione%' => trim($this->getIdDettaglioRegistrazione()),
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {

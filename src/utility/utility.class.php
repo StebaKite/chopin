@@ -88,6 +88,20 @@ class Utility implements UtilityComponentInterface {
         }
     }
 
+    public function getQueryTemplate($fileName) {
+
+        if (file_exists($fileName)) {
+
+            $temp = fopen($fileName, "r");
+            $template = fread($temp, filesize($fileName));
+            fclose($temp);
+
+            return $template;
+        } else {
+            error_log("Template file " . $fileName . " not found!");
+        }
+    }
+
     /*
      * Prende in input il file della lingua e restituisce una array associativa
      */

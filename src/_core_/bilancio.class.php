@@ -141,7 +141,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -181,7 +181,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -217,7 +217,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -253,7 +253,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -291,7 +291,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -326,7 +326,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -362,7 +362,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
         );
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

@@ -96,7 +96,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             '%num_gg_scadenza_fattura%' => $this->getNumGgScadenzaFattura()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei fornitori caricati
@@ -126,7 +126,7 @@ class Fornitore extends CoreBase implements CoreInterface {
 
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::ULTIMO_CODICE_FORNITORE;
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $rows = pg_fetch_all($db->getData($sql));
 
         foreach ($rows as $row) {
@@ -141,7 +141,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -163,7 +163,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         /**
@@ -183,7 +183,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         }
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         if ($db->getData($sql)) {
             $this->load($db); // refresh dei fornitori caricati
             $_SESSION[self::FORNITORE] = serialize($this);
@@ -197,7 +197,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             '%id_fornitore%' => trim($this->getIdFornitore())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_FORNITORE_X_ID;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         foreach (pg_fetch_all($result) as $row) {
@@ -229,7 +229,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             '%num_gg_scadenza_fattura%' => $this->getNumGgScadenzaFattura()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
@@ -245,7 +245,7 @@ class Fornitore extends CoreBase implements CoreInterface {
 
         $replace = array('%des_fornitore%' => trim($this->getDesFornitore()));
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DESCRIZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         $this->setIdFornitore("");

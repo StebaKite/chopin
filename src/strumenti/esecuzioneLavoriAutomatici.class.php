@@ -11,7 +11,7 @@ class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
 
     public function start() {
 
-        echo "Start lavori pianificati...\n";
+        error_log("Start lavori pianificati...");
 
         $utility = Utility::getInstance();
         $array = $utility->getConfigInBatchMode(self::$project_root);
@@ -22,16 +22,16 @@ class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
             $db = Database::getInstance();
 
 
-            if ($lavoroPianificato->load($db)) {
+            if ($lavoroPianificato->load($db, self::$project_root)) {
                 $db->beginTransaction();
                 $lavoroPianificato->esegui($db);
                 $db->commitTransaction();
             }
         } else {
-            echo "ATTENZIONE: Lavori pianificati non attivi!!\n";
+            error_log("ATTENZIONE: Lavori pianificati non attivi!!");
         }
 
-        echo "...End lavori pianificati\n";
+        error_log("...End lavori pianificati");
     }
 
 }

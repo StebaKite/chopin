@@ -137,7 +137,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -157,7 +157,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_SCADENZE_REGISTRAZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -198,7 +198,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         return $result;
@@ -224,7 +224,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SCADENZA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         return $result;
@@ -241,7 +241,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::PAGA_SCADENZA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         return $result;
@@ -256,7 +256,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SCADENZA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
 
@@ -329,7 +329,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%sta_scadenza%' => trim($this->getStaScadenza())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -383,7 +383,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%num_fattura%' => trim($this->getNumFattura())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_SCADENZA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -421,7 +421,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%num_fattura%' => $this->getNumFattura()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         /*
@@ -472,7 +472,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%num_fattura%' => $this->getNumFattura()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_DATA_SCADENZA_FORNITORE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         /*
@@ -515,7 +515,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%cod_negozio%' => trim($this->getCodNegozioSel())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_DA_PAGARE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -536,7 +536,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_SCADENZE_PAGATE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

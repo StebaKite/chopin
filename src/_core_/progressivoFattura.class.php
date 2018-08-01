@@ -54,7 +54,7 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
         $replace = array();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_PROGRESSIVI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -79,7 +79,7 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_PROGRESSIVO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -110,7 +110,7 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_PROGRESSIVI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {

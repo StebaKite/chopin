@@ -97,7 +97,7 @@ class Cliente extends CoreBase implements CoreInterface {
 
         $array = $utility->getConfig();
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_ULTIMO_CODICE_CLIENTE;
-        $sql = $utility->getTemplate($sqlTemplate);
+        $sql = $utility->getQueryTemplate($sqlTemplate);
         $rows = pg_fetch_all($db->getData($sql));
 
         foreach ($rows as $row) {
@@ -123,7 +123,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%cat_cliente%' => trim($this->getCatCliente())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CLIENTE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -162,7 +162,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%cod_fisc%' => $this->getCodFisc(),
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_CODICE_FISCALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         if (pg_num_rows($db->getData($sql)) > 0) {
             $this->setCfiscEsistente("true");
@@ -179,7 +179,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%id_cliente%' => trim($idcliente)
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_PARTITA_IVA;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         if (pg_num_rows($db->getData($sql)) > 0) {
             $this->setPivaEsistente("true");
@@ -195,7 +195,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%des_cliente%' => trim($this->getDesCliente())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_DESCRIZIONE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         foreach (pg_fetch_all($result) as $row) {
@@ -212,7 +212,7 @@ class Cliente extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_CLIENTE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -235,7 +235,7 @@ class Cliente extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CLIENTE_X_ID;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         foreach (pg_fetch_all($result) as $row) {
@@ -281,7 +281,7 @@ class Cliente extends CoreBase implements CoreInterface {
             );
 
             $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CLIENTE;
-            $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+            $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
             $result = $db->getData($sql);
 
             if ($result) {
@@ -310,7 +310,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%cat_cliente%' => ($this->getCatCliente() != "") ? "'" . str_replace("'", "''", $this->getCatCliente()) . "'" : "null"
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CLIENTE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -330,7 +330,7 @@ class Cliente extends CoreBase implements CoreInterface {
             '%id_cliente%' => trim($this->getIdCliente())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::$queryLeggiScadenzeAperteCliente;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -358,7 +358,7 @@ class Cliente extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_DATI_CLIENTE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

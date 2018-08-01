@@ -72,7 +72,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             '%ind_gruppo%' => $this->getIndGruppo()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         return $result;
@@ -88,7 +88,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             '%cod_sottoconto%' => $this->getCodSottoconto()
         );
         $sqlTemplate = $this->root . $array['query'] . self::CANCELLA_SOTTOCONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         if ($db->getData($sql)) {
             $sottocontiDiff = array();
@@ -112,7 +112,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             '%cod_conto%' => $this->getCodConto()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_SOTTOCONTI;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -155,7 +155,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             $sqlTemplate = $this->getRoot() . $array['query'] . Sottoconto::RICERCA_REGISTRAZIONI_CONTO;
         }
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         $result = $db->getData($sql);
 
@@ -210,7 +210,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . Sottoconto::AGGIORNA_SOTTOCONTO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {

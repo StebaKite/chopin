@@ -59,20 +59,12 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         return unserialize($_SESSION[self::LAVORO_PIANIFICATO]);
     }
 
-    public function load($db) {
+    public function load($db, $project_root) {
 
-        /**
-         * 	colonne array LavoriPianificati
-         *
-         * 	pk_lavoro_pianificato
-         * 	dat_lavoro
-         * 	des_lavoro
-         * 	fil_esecuzione_lavoro
-         * 	cla_esecuzione_lavoro
-         * 	sta_lavoro
-         * 	tms_esecuzione
-         *
-         */
+        if (parent::isNotEmpty($project_root)) {
+            $this->setRoot($project_root);
+        }
+
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
@@ -80,7 +72,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
 
         $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::LOAD_LAVORI_PIANIFICATI;
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -133,7 +125,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             '%pk_lavoro_pianificato%' => $this->getPkLavoroPianificato()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::CAMBIO_STATO;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
         return $result;
     }
@@ -146,14 +138,15 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
                 $this->setClaEsecuzioneLavoro($row[self::CLA_ESECUZIONE_LAVORO]);
                 $this->setFilEsecuzioneLavoro($row[self::FIL_ESECUZIONE_LAVORO]);
                 $this->setDatLavoro($row[self::DAT_LAVORO]);
+                $this->setDesLavoro($row[self::DES_LAVORO]);
                 $this->setPkLavoroPianificato($row[self::PK_LAVORO_PIANIFICATO]);
 
                 $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
 
                 if ($this->runClass($db))
-                    error_log("Lavoro " . $this->getDesLavoro() . " eseguito!");
+                    error_log("Lavoro " . $this->getDesLavoro() . " (" . $this->getDatLavoro() . ") " . " eseguito!");
                 else
-                    error_log("Lavoro " . $this->getDesLavoro() . " in crash!");
+                    error_log("Lavoro " . $this->getDesLavoro() . " (" . $this->getDatLavoro() . ") " . " in crash!");
             }
         }
     }
@@ -200,7 +193,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
 
         $sqlTemplate = $this->root . $array['query'] . self::LEGGI_LAVORI_ANNO_CORRENTE;
 
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {

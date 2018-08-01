@@ -5,6 +5,7 @@ require_once 'utility.class.php';
 require_once 'nexus6.main.interface.php';
 require_once 'lavoroPianificato.class.php';
 require_once 'conto.class.php';
+require_once 'sottoconto.class.php';
 require_once 'saldo.class.php';
 
 /**
@@ -19,7 +20,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
     public static $querySaldoConto = "/saldi/saldoConto.sql";
 
     function __construct() {
-//        self::$root = '/var/www/html';
+        self::$root = '/var/www/html';
     }
 
     public function getInstance() {
@@ -82,7 +83,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         /**
          * Riporto stato patrimoniale
          */
-        if ($conto->leggiStatoPatrimoniale($db)) {
+        if ($conto->leggiStatoPatrimoniale($db, self::$root)) {
 
             $this->riportoStatoPatrimoniale($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
@@ -96,13 +97,11 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
          * Riporto conto economico.
          * Il primo riporto dell'anno non viene fatto. I conti ripartono da zero.
          */
-        if (date("m/d", strtotime($_SESSION["dataEsecuzioneLavoro"])) != "01/01") {
+        if (date("m/d", strtotime($lavoroPianificato->getDatLavoro())) != "01/01") {
 
-            $result = $this->prelevaContoEconomico($db, $utility);
+            if ($conto->leggiContoEconomico($db, self::$root)) {
 
-            if ($result) {
-
-                $this->riportoContoEconomico($db, $pklavoro, $utility, $negozi, $result, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+                $this->riportoContoEconomico($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
                 $da = '01/' . $mesePrecedente . '/' . $anno;
                 $a = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -115,7 +114,8 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
          * Se uno dei due riporti è andato bene considero il lavoro eseguito
          */
         if (($riportoStatoPatrimoniale_Ok) or ( $riportoContoEconomico_Ok)) {
-            $this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
+            $lavoroPianificato->setStaLavoro("10");
+            $lavoroPianificato->cambioStato($db);
             return TRUE;
         } else
             return FALSE;
@@ -124,6 +124,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
     private function riportoStatoPatrimoniale($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
         $config = $utility->getConfig();
+        $saldo = Saldo::getInstance();
 
         /**
          * Tutti i conti dello Stato Patrimoniale
@@ -135,8 +136,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
              */
 //            $dareAvere_conto = ($conto[Conto::TIP_CONTO] = "Avere") ? "A" : "D";  // prelevo il tipo del conto Dare/Avere
 
-            $saldo = Saldo::getInstance();
-
             foreach ($negozi as $negozio) {
 
                 $saldo->setDataregDA('01/' . $mesePrecedente . '/' . $anno);
@@ -146,7 +145,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                 $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
                 $_SESSION[self::SALDO] = serialize($saldo);
 
-                if ($saldo->leggiSaldoConto($db)) {
+                $result = $saldo->leggiSaldoConto($db, self::$root);
+                $numTot = pg_num_rows($result);
+
+                if ($numTot > 0) {
 
                     $totale_conto = 0; //default
                     $dareAvere = ""; //default
@@ -178,46 +180,58 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         }
     }
 
-    private function riportoContoEconomico($db, $pklavoro, $utility, $negozi, $contoEconomico, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
-
-        require_once 'menubanner.template.php';
+    private function riportoContoEconomico($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
         $config = $utility->getConfig();
+        $saldo = Saldo::getInstance();
 
-        $conti = pg_fetch_all($contoEconomico);
-
-        foreach ($conti as $conto) {
+        foreach ($conto->getContiContoEconomico() as $conto) {
 
             foreach ($negozi as $negozio) {
 
-                $replace = array(
-                    '%datareg_da%' => '01/' . $mesePrecedente . '/' . $anno,
-                    '%datareg_a%' => $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno,
-                    '%codnegozio%' => $negozio,
-                    '%codconto%' => $conto['cod_conto'],
-                    '%codsottoconto%' => $conto['cod_sottoconto']
-                );
+                $saldo->setDataregDA('01/' . $mesePrecedente . '/' . $anno);
+                $saldo->setDataregA($ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno);
+                $saldo->setCodNegozio($negozio);
+                $saldo->setCodConto($conto[Conto::COD_CONTO]);
+                $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
+                $_SESSION[self::SALDO] = serialize($saldo);
 
-                $sqlTemplate = self::$root . $config['query'] . self::$querySaldoConto;
+                $result = $saldo->leggiSaldoConto($db, self::$root);
+                $numTot = pg_num_rows($result);
 
-                $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-                $result = $db->execSql($sql);
+                if ($numTot > 0) {
 
-                if (result) {
+                    $totale_conto = 0; //default
+                    $dareAvere = ""; //default
+
+                    /**
+                     * Faccio la somma algebrica di tutti i totali estratti.
+                     * Normalmente dalla query di totalizzazione viene fuori una riga con un totale, ma nel caso
+                     * di conti con importo negativo e segno contrario escono due righe.
+                     *
+                     */
                     foreach (pg_fetch_all($result) as $row) {
+                        $totale_conto = $totale_conto + $row[Conto::TOT_CONTO];
+                    }
+
+                    /**
+                     * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+                     */
+                    if ($totale_conto != 0) {
 
                         /**
-                         * Se il conto ha un totale movimenti = zero il saldo non viene riportato
+                         * tip_conto =  1 > Dare
+                         * tip_conto = -1 > Avere
                          */
-                        if ($row['tot_conto'] != 0) {
+                        $dareAvere = ($row[Conto::TIP_CONTO] == 1) ? "D" : "A";
 
-                            /**
-                             * tip_conto =  1 > Dare
-                             * tip_conto = -1 > Avere
-                             */
-                            $dareAvere = ($row['tip_conto'] == 1) ? "D" : "A";
-                            $this->inserisciSaldo($db, $utility, $negozio, $conto['cod_conto'], $conto['cod_sottoconto'], $dataGenerazioneSaldo, $descrizioneSaldo, abs($row['tot_conto']), $dareAvere);
-                        }
+                        $saldo->setDatSaldo($dataGenerazioneSaldo);
+                        $saldo->setDesSaldo($descrizioneSaldo);
+                        $saldo->setImpSaldo(abs($totale_conto));
+                        $saldo->setIndDareavere($dareAvere);
+                        $_SESSION[self::SALDO] = serialize($saldo);
+
+                        $this->gestioneSaldo($db);
                     }
                 }
             }

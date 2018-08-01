@@ -71,7 +71,7 @@ class Causale extends CoreBase implements CoreInterface {
         $replace = array();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -121,7 +121,7 @@ class Causale extends CoreBase implements CoreInterface {
             '%cat_causale%' => trim($this->getCatCausale())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -148,7 +148,7 @@ class Causale extends CoreBase implements CoreInterface {
             '%cod_causale%' => trim($this->getCodCausale())
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
         if ($db->getData($sql)) {
             $causaliDiff = array();
@@ -175,7 +175,7 @@ class Causale extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         if ($result) {
@@ -210,7 +210,7 @@ class Causale extends CoreBase implements CoreInterface {
         );
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
         if ($result) {
@@ -254,7 +254,7 @@ class Causale extends CoreBase implements CoreInterface {
         $replace = array('%cod_causale%' => $this->getCodCausale());
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_CONTI_CAUSALE;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
         $conti = "<option value=''></option>";
