@@ -1,211 +1,197 @@
 <?php
 
 require_once 'primanota.abstract.class.php';
+require_once 'StrumentiBusinessInterface.php';
 
-class ImportaExcelCorrispettivoMercatoStep1 extends PrimanotaAbstract {
+class ImportaExcelCorrispettivoMercatoStep1 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
-	private static $_instance = null;
+    public static $azioneImportaExcelCorrispettivoMercatoStep1 = "../primanota/importaExcelCorrispettivoMercatoStep1Facade.class.php?modo=go";
+    public static $azioneImportaExcelCorrispettivoMercatoStep2 = "../primanota/importaExcelCorrispettivoMercatoStep2Facade.class.php?modo=go";
 
-	public static $azioneImportaExcelCorrispettivoMercatoStep1 = "../primanota/importaExcelCorrispettivoMercatoStep1Facade.class.php?modo=go";
-	public static $azioneImportaExcelCorrispettivoMercatoStep2 = "../primanota/importaExcelCorrispettivoMercatoStep2Facade.class.php?modo=go";
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	function __construct() {
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
+    public function getInstance() {
 
-		require_once 'utility.class.php';
+        if (!isset($_SESSION[self::IMPORTA_EXCEL_CORRISPETTIVI_MERCATO_STEP1]))
+        $_SESSION[self::IMPORTA_EXCEL_CORRISPETTIVI_MERCATO_STEP1] = serialize(new ImportaExcelCorrispettivoMercatoStep1());
+        return unserialize($_SESSION[self::IMPORTA_EXCEL_CORRISPETTIVI_MERCATO_STEP1]);
+        }
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        <<<<<<
 
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
+        public function start() {
 
-	private function  __clone() { }
+        require_once 'importaExcelCorrispettivoMercatoStep1.template.php';
+        require_once 'utility.class.php';
 
-	/**
-	 * Singleton Pattern
-	 */
+        $utility = Utility::getInstance();
 
-	public static function getInstance() {
+        $importaExcelCorrispettivoMercatoStep1Template = ImportaExcelCorrispettivoMercatoStep1Template::getInstance();
+        $this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
 
-		if( !is_object(self::$_instance) )
+        // Data del giorno preimpostata solo in entrata -------------------------
 
-			self::$_instance = new ImportaExcelCorrispettivoMercatoStep1();
+        $_SESSION["anno"] = date("Y");
+        $_SESSION["mese"] = date("m") - 1; // il mese è dimimuito di 1 per coincidere con i fogli del file excel
+        if (!isset($_SESSION["datada"]))
+        $_SESSION["datada"] = date("01/m/Y");
+        if (!isset($_SESSION["dataa"]))
+        $_SESSION["dataa"] = date("d/m/Y");
 
-			return self::$_instance;
-	}
+        unset($_SESSION["codneg"]);
+        unset($_SESSION["mercati"]);
+        unset($_SESSION["file"]);
+        unset($_SESSION["corrispettiviTrovati"]);
+        unset($_SESSION["corrispettiviIncompleti"]);
 
-	// ------------------------------------------------
+        // Compone la pagina
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+        echo $utility->tailTemplate($template);
 
-	public function start() {
+        $importaExcelCorrispettivoMercatoStep1Template->displayPagina();
 
-		require_once 'importaExcelCorrispettivoMercatoStep1.template.php';
-		require_once 'utility.class.php';
+        if (isset($_SESSION["messaggioImportFileOk"])) {
+        self::$replace = array('%messaggio%' => $_SESSION["messaggioImportFileOk"]);
+        unset($_SESSION["messaggioImportFileOk"]);
+        $template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+        echo $utility->tailTemplate($template);
+        } else {
+            if (isset($_SESSION["messaggioImportFileErr"])) {
+                self::$replace = array('%messaggio%' => $_SESSION["messaggioImportFileErr"]);
+                unset($_SESSION["messaggioImportFileErr"]);
+                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+                echo $utility->tailTemplate($template);
+            }
+        }
 
-		$utility = Utility::getInstance();
+        include(self::$piede);
+    }
 
-		$importaExcelCorrispettivoMercatoStep1Template = ImportaExcelCorrispettivoMercatoStep1Template::getInstance();
-		$this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
+    public function go() {
 
-		// Data del giorno preimpostata solo in entrata -------------------------
+        require_once 'importaExcelCorrispettivoMercatoStep1.template.php';
+        require_once 'utility.class.php';
+        require_once 'excel_reader2.php';
 
-		$_SESSION["anno"] = date("Y");
-		$_SESSION["mese"] = date("m") - 1;	// il mese è dimimuito di 1 per coincidere con i fogli del file excel
-		if (!isset($_SESSION["datada"])) $_SESSION["datada"] = date("01/m/Y");
-		if (!isset($_SESSION["dataa"]))  $_SESSION["dataa"] = date("d/m/Y");
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		unset($_SESSION["codneg"]);
-		unset($_SESSION["mercati"]);
-		unset($_SESSION["file"]);
-		unset($_SESSION["corrispettiviTrovati"]);
-		unset($_SESSION["corrispettiviIncompleti"]);
-			
-		// Compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+        $importaExcelCorrispettivoMercatoStep1Template = ImportaExcelCorrispettivoMercatoStep1Template::getInstance();
 
-		$importaExcelCorrispettivoMercatoStep1Template->displayPagina();
+        if ($importaExcelCorrispettivoMercatoStep1Template->controlliLogici()) {
 
-		if (isset($_SESSION["messaggioImportFileOk"])) {
-			self::$replace = array('%messaggio%' => $_SESSION["messaggioImportFileOk"]);
-			unset($_SESSION["messaggioImportFileOk"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-			echo $utility->tailTemplate($template);
-		}
-		else {
-			if (isset($_SESSION["messaggioImportFileErr"])) {
-				self::$replace = array('%messaggio%' => $_SESSION["messaggioImportFileErr"]);
-				unset($_SESSION["messaggioImportFileErr"]);
-				$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-				echo $utility->tailTemplate($template);
-			}
-		}
+            $users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
 
-		include(self::$piede);
-	}
+            if (strpos($users, $array['usernameProdLogin']) === false) {
+                $path = str_replace("%user%", "stefano", $array["filePath"]);
+            } else {
+                $path = str_replace("%user%", $array["usernameProdLogin"], $array["filePath"]);
+            }
 
-	public function go() {
+            $data = new Spreadsheet_Excel_Reader($path . "/" . $_SESSION["file"]);
+            $sheets = $_SESSION["mese"];
+            $mese = str_pad($_SESSION["mese"] + 1, 2, "0", STR_PAD_LEFT);
 
-		require_once 'importaExcelCorrispettivoMercatoStep1.template.php';
-		require_once 'utility.class.php';
-		require_once 'excel_reader2.php';
+            $dataDa = strtotime(str_replace("/", "-", $_SESSION["datada"]));
+            $dataA = strtotime(str_replace("/", "-", $_SESSION["dataa"]));
 
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+            $corrispettivi = array();
+            $completi = 0;
+            $incompleti = 0;
 
-		$importaExcelCorrispettivoMercatoStep1Template = ImportaExcelCorrispettivoMercatoStep1Template::getInstance();
+            // Ciclo righe
+            for ($i = 1; $i <= $data->sheets[$sheets]['numRows']; $i++) {
 
-		if ($importaExcelCorrispettivoMercatoStep1Template->controlliLogici()) {
+                $corrispettivo = array();
 
-			$users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
-			
-			if (strpos($users, $array['usernameProdLogin']) === false) {
-				$path = str_replace("%user%", "stefano", $array["filePath"]);				
-			}
-			else {
-				$path = str_replace("%user%", $array["usernameProdLogin"], $array["filePath"]);
-			}					
-			
-			$data=new Spreadsheet_Excel_Reader($path . "/" . $_SESSION["file"]);
-			$sheets=$_SESSION["mese"];
-			$mese = str_pad($_SESSION["mese"] + 1, 2, "0", STR_PAD_LEFT);
+                // Ciclo colonne
+                for ($j = 1; $j <= $data->sheets[$sheets]['numCols']; $j++) {
+                    if ($j <= 4) {
+                        if ($data->sheets[$sheets]['cells'][$i][$j] != "") {
+                            if (is_numeric($data->sheets[$sheets]['cells'][$i][$j])) {
 
-			$dataDa = strtotime(str_replace("/", "-", $_SESSION["datada"]));
-			$dataA = strtotime(str_replace("/", "-", $_SESSION["dataa"]));
-				
-			$corrispettivi = array();
-			$completi = 0;
-			$incompleti = 0;
-				
-			// Ciclo righe
-			for($i=1;$i<=$data->sheets[$sheets]['numRows'];$i++) {
-					
-				$corrispettivo = array();
-					
-				// Ciclo colonne
-				for($j=1;$j<=$data->sheets[$sheets]['numCols'];$j++){
-					if ($j <= 4) {
-						if($data->sheets[$sheets]['cells'][$i][$j]!="") {
-							if (is_numeric($data->sheets[$sheets]['cells'][$i][$j])) {
-									
-								$cella = $data->sheets[$sheets]['cells'][$i][$j];
-								if ($j == 1) {
-									$giorno = str_pad($data->sheets[$sheets]['cells'][$i][$j], 2, "0", STR_PAD_LEFT);
-									$cella =   $giorno . "/" .$mese . "/" . $_SESSION["anno"];
-									$datareg = strtotime(str_replace("/", "-", $cella));
-								}
-								if (($datareg >= $dataDa) and ($datareg <= $dataA)) {
-									array_push($corrispettivo, $cella);
-								}
-							}
-						}
-					}
-				}
-				if (count($corrispettivo) == 4) {
-					array_push($corrispettivi, $corrispettivo);
-					unset($corrispettivo);
-					$completi ++;
-				}
-				else {
-					if (count($corrispettivo) > 0) $incompleti ++;
-				}
-			}
-				
-			$_SESSION["corrispettiviTrovati"] = $corrispettivi;
-			$_SESSION["corrispettiviIncompleti"] = $incompleti;
-				
-			if (($incompleti == 0) and ($completi > 0))  {
-				$this->preparaPaginaStep2($importaExcelCorrispettivoMercatoStep1Template);
-			}
-			else {
-				$this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
-			}
-				
-			// Compone la pagina
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
-				
-			$importaExcelCorrispettivoMercatoStep1Template->displayPagina();
-			include(self::$piede);
-		}
-		else {
-				
-			$this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
+                                $cella = $data->sheets[$sheets]['cells'][$i][$j];
+                                if ($j == 1) {
+                                    $giorno = str_pad($data->sheets[$sheets]['cells'][$i][$j], 2, "0", STR_PAD_LEFT);
+                                    $cella = $giorno . "/" . $mese . "/" . $_SESSION["anno"];
+                                    $datareg = strtotime(str_replace("/", "-", $cella));
+                                }
+                                if (($datareg >= $dataDa) and ( $datareg <= $dataA)) {
+                                    array_push($corrispettivo, $cella);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (count($corrispettivo) == 4) {
+                    array_push($corrispettivi, $corrispettivo);
+                    unset($corrispettivo);
+                    $completi ++;
+                } else {
+                    if (count($corrispettivo) > 0)
+                        $incompleti ++;
+                }
+            }
 
-			// Compone la pagina
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
+            $_SESSION["corrispettiviTrovati"] = $corrispettivi;
+            $_SESSION["corrispettiviIncompleti"] = $incompleti;
 
-			$importaExcelCorrispettivoMercatoStep1Template->displayPagina();
-				
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
+            if (($incompleti == 0) and ( $completi > 0)) {
+                $this->preparaPaginaStep2($importaExcelCorrispettivoMercatoStep1Template);
+            } else {
+                $this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
+            }
 
-			include(self::$piede);
-		}
-	}
+            // Compone la pagina
+            $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+            $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+            echo $utility->tailTemplate($template);
 
-	public function preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template) {
+            $importaExcelCorrispettivoMercatoStep1Template->displayPagina();
+            include(self::$piede);
+        } else {
 
-		$importaExcelCorrispettivoMercatoStep1Template->setAzione(self::$azioneImportaExcelCorrispettivoMercatoStep1);
-		$importaExcelCorrispettivoMercatoStep1Template->setConfermaTip("%ml.confermaimportaExcelCorrispettivoMercatoStep1%");
-		$importaExcelCorrispettivoMercatoStep1Template->setTitoloPagina("%ml.importaExcelCorrispettivoMercatoStep1%");
-	}
+            $this->preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template);
 
-	public function preparaPaginaStep2($importaExcelCorrispettivoMercatoStep1Template) {
+            // Compone la pagina
+            $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+            $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+            echo $utility->tailTemplate($template);
 
-		$importaExcelCorrispettivoMercatoStep1Template->setAzione(self::$azioneImportaExcelCorrispettivoMercatoStep2);
-		$importaExcelCorrispettivoMercatoStep1Template->setConfermaTip("%ml.confermaimportaExcelCorrispettivoMercatoStep2%");
-		$importaExcelCorrispettivoMercatoStep1Template->setTitoloPagina("%ml.importaExcelCorrispettivoMercatoStep2%");
-	}
+            $importaExcelCorrispettivoMercatoStep1Template->displayPagina();
+
+            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+            echo $utility->tailTemplate($template);
+
+            include(self::$piede);
+        }
+    }
+
+    public function preparaPaginaStep1($importaExcelCorrispettivoMercatoStep1Template) {
+
+        $importaExcelCorrispettivoMercatoStep1Template->setAzione(self::$azioneImportaExcelCorrispettivoMercatoStep1);
+        $importaExcelCorrispettivoMercatoStep1Template->setConfermaTip("%ml.confermaimportaExcelCorrispettivoMercatoStep1%");
+        $importaExcelCorrispettivoMercatoStep1Template->setTitoloPagina("%ml.importaExcelCorrispettivoMercatoStep1%");
+    }
+
+    public function preparaPaginaStep2($importaExcelCorrispettivoMercatoStep1Template) {
+
+        $importaExcelCorrispettivoMercatoStep1Template->setAzione(self::$azioneImportaExcelCorrispettivoMercatoStep2);
+        $importaExcelCorrispettivoMercatoStep1Template->setConfermaTip("%ml.confermaimportaExcelCorrispettivoMercatoStep2%");
+        $importaExcelCorrispettivoMercatoStep1Template->setTitoloPagina("%ml.importaExcelCorrispettivoMercatoStep2%");
+    }
+
 }
 
 ?>

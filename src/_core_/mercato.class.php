@@ -9,7 +9,9 @@ class Mercato extends CoreBase implements CoreInterface {
 
     private $root;
 
-    // Nomi colonne tabella Mercato
+    /*
+     * Nomi colonne tabella Mercato
+     */
 
     const ID_MERCATO = "id_mercato";
     const COD_MERCATO = "cod_mercato";
@@ -18,7 +20,9 @@ class Mercato extends CoreBase implements CoreInterface {
     const COD_NEGOZIO = "cod_negozio";
     const QTA_REGISTRAZIONI_MERCATO = "tot_registrazioni_mercato";
 
-    // dati Mercato
+    /*
+     * Dati Mercato
+     */
 
     private $idMercato;
     private $codMercato;
@@ -28,7 +32,15 @@ class Mercato extends CoreBase implements CoreInterface {
     private $mercati;
     private $qtaMercati;
 
-    // Altri dati funzionali
+    /*
+     * Altri dati funzionali
+     */
+    private $file;
+    private $mese;
+    private $anno;
+    private $datada;
+    private $dataa;
+
     // Queries
 
     const RICERCA_MERCATI = "/anagrafica/ricercaMercato.sql";
@@ -51,13 +63,19 @@ class Mercato extends CoreBase implements CoreInterface {
     }
 
     public function prepara() {
-        $this->setIdMercato(null);
-        $this->setCodMercato(null);
-        $this->setDesMercato(null);
-        $this->setCittaMercato(null);
-        $this->setCodNegozio(null);
-        $this->setMercati(null);
-        $this->setQtaMercati(0);
+        $this->setIdMercato(self::NULL_VALUE);
+        $this->setCodMercato(self::NULL_VALUE);
+        $this->setDesMercato(self::NULL_VALUE);
+        $this->setCittaMercato(self::NULL_VALUE);
+        $this->setCodNegozio(self::NULL_VALUE);
+        $this->setMercati(self::NULL_VALUE);
+        $this->setQtaMercati(self::ZERO_VALUE);
+
+        $this->setFile(parent::NULL_VALUE);
+        $this->setMese(parent::NULL_VALUE);
+        $this->setAnno(parent::NULL_VALUE);
+        $this->setDatada(parent::NULL_VALUE);
+        $this->setDataa(parent::NULL_VALUE);
     }
 
     public function load($db) {
@@ -238,6 +256,46 @@ class Mercato extends CoreBase implements CoreInterface {
 
     public function setQtaMercati($qtaMercati) {
         $this->qtaMercati = $qtaMercati;
+    }
+
+    public function getFile() {
+        return $this->file;
+    }
+
+    public function setFile($file) {
+        $this->file = $file;
+    }
+
+    public function getMese() {
+        return $this->mese;
+    }
+
+    public function setMese($mese) {
+        $this->mese = $mese;
+    }
+
+    public function getAnno() {
+        return $this->anno;
+    }
+
+    public function setAnno($anno) {
+        $this->anno = $anno;
+    }
+
+    public function getDatada() {
+        return $this->datada;
+    }
+
+    public function setDatada($datada) {
+        $this->datada = $datada;
+    }
+
+    public function getDataa() {
+        return $this->dataa;
+    }
+
+    public function setDataa($dataa) {
+        $this->dataa = $dataa;
     }
 
 }

@@ -10,6 +10,7 @@ interface CoreInterface extends MainNexus6Interface {
     const CONTO = "Obj_conto";
     const CATEGORIA_CLIENTE = "Obj_categoriacliente";
     const MERCATO = "Obj_mercato";
+    const NEGOZIO = "Obj_negozio";
     const REGISTRAZIONE = "Obj_registrazione";
     const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
     const CAUSALE = "Obj_causale";
