@@ -67,6 +67,11 @@ class PrimanotaController {
             $dettaglioRegistrazione->setIdDettaglioRegistrazione($_REQUEST["iddettaglio"]);
         }
 
+        if (isset($_REQUEST["importo_dettaglio"])) {
+            $scadenzaFornitore->setImpInScadenza($_REQUEST["importo"]);
+            $scadenzaCliente->setImportoScadenza($_REQUEST["importo"]);
+        }
+
         if (isset($_REQUEST["dareAvere"])) {
             $dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
             $dettaglioRegistrazione->setCodSottoconto($_REQUEST["codsottoconto"]);

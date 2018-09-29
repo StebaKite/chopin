@@ -368,6 +368,30 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         }
     }
 
+    public function ripartisciImporto() {
+    
+        /*
+         * Alcune note:
+         *
+         * La ripartizione dell'importo di una registrazione viene eseguito all'uscita del oampo importo del primo dettaglio.
+         * Una volta ripartito l'importo su tutte le scadenze presenti che hanno importo = 0, le sucessive modifiche agli 
+         * importi dei dettagli non avranno effetti sugli importi delle scadenze.
+         *   
+         * - Se l'importo da suddividere = 0 non fa niente
+         * - Conteggio scadenze con importo = 0, se non vi sono scadenze con importo = 0 non fa niente
+         * 
+         */
+
+         if ($this->getImpInScadenza() != 0) {
+
+
+             
+             
+             
+             
+         }
+    }
+        
     public function cancella($db) {
         /**
          * Cancello la scadenza dalla tabella DB

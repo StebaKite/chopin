@@ -519,7 +519,7 @@ function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, impor
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (xmlhttp.responseText !== "") {
                     var dettagliTable = xmlhttp.responseText;
-                    $("#" + idTable).html(dettagliTable); // modifica registrazione
+                    $("#" + idTable).html(dettagliTable);
 
                     var imp = $("#importo" + conto + sottoconto).val();
                     $("#importo" + conto + sottoconto).focus().val('').val(imp);
@@ -530,7 +530,24 @@ function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, impor
         };
         xmlhttp.open("GET", "../primanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
         xmlhttp.send();
-    }
+    }   
+}
+
+//---------------------------------------------------------------------
+
+function ripartisciImportoSuScadenze(importo) {
+    
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            if (xmlhttp.responseText !== "") {
+                var scadenzeTable = xmlhttp.responseText;
+                $("#scadenzesuppl_cre").html(scadenzeTable);
+            }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/scadenziaImportoDettaglioRegistrazioneFacade.class.php?modo=go&importo_dettaglio=" + importo, true);
+    xmlhttp.send();
 }
 
 //---------------------------------------------------------------------

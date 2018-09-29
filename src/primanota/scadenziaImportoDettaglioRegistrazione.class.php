@@ -1,0 +1,34 @@
+<?php
+
+require_once 'primanota.abstract.class.php';
+require_once 'primanota.business.interface.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'scadenzaFornitore.class.php';
+
+class ScadenziaImportoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
+
+    function __construct() {
+
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
+
+    public function getInstance() {
+        if (!isset($_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE])) {
+            $_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE] = serialize(new ScadenziaImportoDettaglioRegistrazione());
+        }
+        return unserialize($_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE]);
+    }
+
+    public function start() {
+        $this->go();
+    }
+
+    public function go() {
+        $db = Database::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaFornitore->ripartisciImporto();
+        
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+    }
+}

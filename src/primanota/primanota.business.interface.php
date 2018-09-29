@@ -28,6 +28,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CREA_INCASSO = "Obj_creaincasso";
 	const MODIFICA_INCASSO = "Obj_modificaincasso";
 	const CREA_PAGAMENTO = "Obj_creapagamento";
+	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_scadenziaimportodettaglioregistrazione";
 	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
 	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
 	const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
