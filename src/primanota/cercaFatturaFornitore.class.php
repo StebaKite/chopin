@@ -16,7 +16,7 @@ class CercaFatturaFornitore extends PrimanotaAbstract implements PrimanotaBusine
 		$this->array = $this->utility->getConfig();
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CERCA_FATTURA_FORNITORE])) $_SESSION[self::CERCA_FATTURA_FORNITORE] = serialize(new CercaFatturaFornitore());
 		return unserialize($_SESSION[self::CERCA_FATTURA_FORNITORE]);

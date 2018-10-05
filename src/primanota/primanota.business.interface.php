@@ -28,10 +28,13 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const CREA_INCASSO = "Obj_creaincasso";
 	const MODIFICA_INCASSO = "Obj_modificaincasso";
 	const CREA_PAGAMENTO = "Obj_creapagamento";
-	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_scadenziaimportodettaglioregistrazione";
-	const AGGIORNA_IMPORTO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornaimportodettaglioregistrazione";
-	const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
-	const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
+	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_FORNITORE = "Obj_scadenziaimportodettaglioregistrazionefornitore";
+	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE = "Obj_scadenziaimportodettaglioregistrazionecliente";
+	const AGGIORNA_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornadettaglioregistrazione";
+
+        const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
+	
+        const AGGIUNGI_DETTAGLIO_REGISTRAZIONE = "Obj_aggiungidettaglioregistrazione";
 	const AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE = "Obj_aggiunginuovodettagliocontofornitore";
 	const AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE = "Obj_aggiunginuovodettagliocontocliente";
 	const CANCELLA_DETTAGLIO_REGISTRAZIONE = "Obj_cancelladettaglioregistrazione";
@@ -89,7 +92,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 
 	// Metodi
 
-	public function getInstance();
+	public static function getInstance();
 	public function start();
 	public function go();
 }

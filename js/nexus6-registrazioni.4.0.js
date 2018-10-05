@@ -334,10 +334,12 @@ function visualizzaRegistrazione(idRegistrazione)
 
                         if (fornitore !== "") {
                             $("#scadenzesuppl_vis").html($(this).find("scadenzesupplfornitore").text());
+                            $("#fornitore_vis_label").show();
                             $("#cliente_vis_label").hide();
                         }
                         if (cliente !== "") {
                             $("#scadenzesuppl_vis").html($(this).find("scadenzesupplcliente").text());
+                            $("#cliente_vis_label").show();
                             $("#fornitore_vis_label").hide();
                         }
 
@@ -506,12 +508,13 @@ function validaModificaRegistrazione()
 // Function di aggiornamento
 // ---------------------------------------------------------------------
 
-function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, importo, idDettaglio)
+function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, importo, segno, idDettaglio)
 {
+    var importoDettNormalizzato;
     if (importo === "")
-        var importoDett = 0;
+        importoDettNormalizzato = 0;
     else
-        var importoDett = importo;
+        importoDettNormalizzato = importo.trim().replace(",", ".");
 
     if (conto !== "") {
         var xmlhttp = new XMLHttpRequest();
@@ -521,21 +524,18 @@ function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, impor
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + idTable).html(dettagliTable);
 
-                    var imp = $("#importo" + conto + sottoconto).val();
-                    $("#importo" + conto + sottoconto).focus().val('').val(imp);
-
                     controllaDettagliRegistrazione(idTable);
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDett + "&iddettaglio=" + idDettaglio, true);
+        xmlhttp.open("GET", "../primanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
         xmlhttp.send();
     }   
 }
 
 //---------------------------------------------------------------------
 
-function ripartisciImportoSuScadenze(importo) {
+function ripartisciImportoSuScadenzeFornitore(importo) {
     
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -546,32 +546,25 @@ function ripartisciImportoSuScadenze(importo) {
             }
         }
     };
-    xmlhttp.open("GET", "../primanota/scadenziaImportoDettaglioRegistrazioneFacade.class.php?modo=go&importo_dettaglio=" + importo, true);
+    xmlhttp.open("GET", "../primanota/scadenziaImportoDettaglioRegistrazioneFornitoreFacade.class.php?modo=go&importo_dettaglio=" + importo, true);
     xmlhttp.send();
 }
 
 //---------------------------------------------------------------------
 
-function modificaSegnoDettaglioRegistrazione(idTable, conto, sottoconto, segno, idDettaglio)
-{
-    if (conto !== "") {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
-                    var dettagliTable = xmlhttp.responseText;
-                    $("#" + idTable).html(dettagliTable);
-
-                    var segno = $("#segno" + conto + sottoconto).val();
-                    $("#segno" + conto + sottoconto).focus().val('').val(segno);
-
-                    controllaDettagliRegistrazione(idTable);
-                }
+function ripartisciImportoSuScadenzeCliente(importo) {
+    
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            if (xmlhttp.responseText !== "") {
+                var scadenzeTable = xmlhttp.responseText;
+                $("#scadenzesuppl_cre").html(scadenzeTable);
             }
-        };
-        xmlhttp.open("GET", "../primanota/aggiornaSegnoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
-        xmlhttp.send();
-    }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/scadenziaImportoDettaglioRegistrazioneClienteFacade.class.php?modo=go&importo_dettaglio=" + importo, true);
+    xmlhttp.send();
 }
 
 //---------------------------------------------------------------------
@@ -650,10 +643,12 @@ function cancellaNuovaScadenzaCliente(idTable, idCliente, datScad, numFatt)
 
 function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfatt, importo)
 {
+    var importoScadNormalizzato;
+        
     if (importo === "")
-        var importoScad = 0;
+        importoScadNormalizzato = 0;
     else
-        var importoScad = importo;
+        importoScadNormalizzato = importo.trim().replace(",", ".");
 
     if (datascad !== "") {
         var xmlhttp = new XMLHttpRequest();
@@ -663,12 +658,12 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
 
-                    var imp = $("#impscad" + idfornitore + datascad + numfatt).val();
-                    $("#impscad" + idfornitore + datascad + numfatt).focus().val('').val(imp);
+//                    var imp = $("#impscad" + idfornitore + datascad + numfatt).val();
+//                    $("#impscad" + idfornitore + datascad + numfatt).focus().val('').val(imp);
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importoScad, true);
+        xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importoScadNormalizzato, true);
         xmlhttp.send();
     }
 }
@@ -677,10 +672,12 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
 
 function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, importo)
 {
+    var importoScadNormalizzato;
+    
     if (importo === "")
-        var importoScad = 0;
+        importoScadNormalizzato = 0;
     else
-        var importoScad = importo;
+        importoScadNormalizzato = importo.trim().replace(",", ".");
 
     if (datascad !== "") {
         var xmlhttp = new XMLHttpRequest();
@@ -690,12 +687,12 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
 
-                    var imp = $("#impscad" + idcliente + datascad + numfatt).val();
-                    $("#impscad" + idcliente + datascad + numfatt).focus().val('').val(imp);
+//                    var imp = $("#impscad" + idcliente + datascad + numfatt).val();
+//                    $("#impscad" + idcliente + datascad + numfatt).focus().val('').val(imp);
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_cli=" + datascad + "&numfatt=" + numfatt + "&impscad_cli=" + importoScad, true);
+        xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_cli=" + datascad + "&numfatt=" + numfatt + "&impscad_cli=" + importoScadNormalizzato, true);
         xmlhttp.send();
     }
 }

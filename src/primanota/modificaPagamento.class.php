@@ -20,7 +20,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_PAGAMENTO])) {
             $_SESSION[self::MODIFICA_PAGAMENTO] = serialize(new ModificaPagamento());
         }
@@ -70,7 +70,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
             '%fornitore%' => trim($fornitore->getIdFornitore()),
             '%scadenzepagate%' => trim($this->makeTabellaFatturePagate($scadenzaFornitore)),
             '%scadenzedapagare%' => trim($this->makeTabellaFattureDaPagare($scadenzaFornitore)),
-            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
             '%conti%' => $causale->getContiCausale()
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

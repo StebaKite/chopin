@@ -14,7 +14,7 @@ class RimuoviFatturaIncassata extends PrimanotaAbstract implements PrimanotaBusi
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::RIMUOVI_FATTURA_INCASSATA])) $_SESSION[self::RIMUOVI_FATTURA_INCASSATA] = serialize(new RimuoviFatturaIncassata());
         return unserialize($_SESSION[self::RIMUOVI_FATTURA_INCASSATA]);

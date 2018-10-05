@@ -18,7 +18,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]))
             $_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE] = serialize(new RicercaRegistrazioneTemplate());
         return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]);
@@ -93,15 +93,13 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
         $risultato_ricerca = "";
 
         if ($registrazione->getQtaRegistrazioni() > 0) {
-
+            
             $risultato_ricerca = "" .
                     "<div class='row'>" .
-                    "   <div class='col-sm-4'>" .
-                    "       <div class='input-group input-group-sm'>" .
-                    "           <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
-                    "       </div>" .
-                    "   </div>" .
-                    "   <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-4'>" .
+                    "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+                    "    </div>" .
+                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .

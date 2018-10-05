@@ -19,7 +19,7 @@ class VisualizzaIncasso extends PrimanotaAbstract implements PrimanotaBusinessIn
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::VISUALIZZA_INCASSO])) $_SESSION[self::VISUALIZZA_INCASSO] = serialize(new VisualizzaIncasso());
 		return unserialize($_SESSION[self::VISUALIZZA_INCASSO]);

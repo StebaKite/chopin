@@ -18,7 +18,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
 		$this->array = $this->utility->getConfig();
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO])) $_SESSION[self::CREA_CORRISPETTIVO_MERCATO] = serialize(new CreaCorrispettivoMercato());
 		return unserialize($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]);

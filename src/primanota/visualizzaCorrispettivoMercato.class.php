@@ -18,7 +18,7 @@ class VisualizzaCorrispettivoMercato extends PrimanotaAbstract implements Priman
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO])) $_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO] = serialize(new VisualizzaCorrispettivoMercato());
 		return unserialize($_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO]);

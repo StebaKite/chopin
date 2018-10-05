@@ -16,7 +16,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE])) $_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE] = serialize(new CalcolaDataScadenzaFornitore());
 		return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE]);

@@ -21,7 +21,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_INCASSO])) {
             $_SESSION[self::MODIFICA_INCASSO] = serialize(new ModificaIncasso());
         }
@@ -72,7 +72,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
             '%cliente%' => trim($cliente->getIdCliente()),
             '%scadenzeincassate%' => trim($this->makeTabellaFattureIncassate($scadenzaCliente)),
             '%scadenzedaincassare%' => trim($this->makeTabellaFattureDaIncassare($scadenzaCliente)),
-            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
             '%conti%' => $causale->getContiCausale()
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

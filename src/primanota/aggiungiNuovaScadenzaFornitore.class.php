@@ -15,7 +15,7 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE])) $_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE] = serialize(new AggiungiNuovaScadenzaFornitore());
 		return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE]);

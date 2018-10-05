@@ -5,31 +5,34 @@ require_once 'primanota.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'dettaglioRegistrazione.class.php';
+require_once 'registrazione.class.php';
 
-class AggiornaSegnoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+class AggiornaSegnoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    function __construct() {
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE])) $_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaSegnoDettaglioRegistrazione());
-		return unserialize($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE]);
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public function start() {
-		$this->go();
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE]))
+            $_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaSegnoDettaglioRegistrazione());
+        return unserialize($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE]);
+    }
 
-	public function go()
-	{
-		$db = Database::getInstance();
-		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$dettaglioRegistrazione->aggiornaSegno($db);
-		echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
-	}
+    public function start() {
+        $this->go();
+    }
+
+    public function go() {
+        $db = Database::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $dettaglioRegistrazione->aggiornaSegno($db);
+        $registrazione = Registrazione::getInstance();
+
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+    }
+
 }
 
 ?>

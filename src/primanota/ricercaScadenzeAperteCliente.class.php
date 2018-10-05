@@ -18,7 +18,7 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
 		$this->array = $this->utility->getConfig();
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE])) $_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE] = serialize(new RicercaScadenzeAperteCliente());
 		return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE]);

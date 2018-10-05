@@ -16,7 +16,7 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE])) {
             $_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE] = serialize(new AggiungiNuovoDettaglioContoFornitore());
         }
@@ -61,7 +61,7 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
                 $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
                 $dettaglioRegistrazione->aggiungi();
             }
-            echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
+            echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
         } else {
             echo "";
         }

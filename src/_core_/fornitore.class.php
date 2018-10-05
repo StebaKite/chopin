@@ -58,7 +58,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::FORNITORE]))
             $_SESSION[self::FORNITORE] = serialize(new Fornitore());

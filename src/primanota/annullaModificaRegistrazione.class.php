@@ -19,7 +19,7 @@ class AnnullaModificaRegistrazione extends PrimanotaAbstract implements Primanot
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE])) $_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE] = serialize(new AnnullaModificaRegistrazione());
         return unserialize($_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE]);

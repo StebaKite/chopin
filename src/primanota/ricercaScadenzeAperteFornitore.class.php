@@ -16,7 +16,7 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE]))
             $_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE] = serialize(new RicercaScadenzeAperteFornitore());
         return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE]);

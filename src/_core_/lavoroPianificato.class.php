@@ -52,7 +52,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::LAVORO_PIANIFICATO]))
             $_SESSION[self::LAVORO_PIANIFICATO] = serialize(new LavoroPianificato());
@@ -91,7 +91,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         if ($this->getQtaLavoriPianificati() > 0) {
 
         } else
-            $this->load($db);
+            $this->load($db, $this->getRoot());
 
         if ($this->getQtaLavoriPianificati() > 0) {
 
@@ -113,7 +113,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
                 }
             }
         }
-        $this->load($db); // Riestrazione dei lavori pianificati a valle dei cambi stato
+        $this->load($db, $this->getRoot()); // Riestrazione dei lavori pianificati a valle dei cambi stato
     }
 
     public function cambioStato($db) {

@@ -14,7 +14,7 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::AGGIUNGI_FATTURA_PAGATA])) $_SESSION[self::AGGIUNGI_FATTURA_PAGATA] = serialize(new AggiungiFatturaPagata());
         return unserialize($_SESSION[self::AGGIUNGI_FATTURA_PAGATA]);

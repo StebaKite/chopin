@@ -1,6 +1,6 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
+//set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/configurazioni:/var/www/html/chopin/src/utility');
 require_once 'aggiornaDataScadenzaFornitore.class.php';
 require_once 'primanota.controller.class.php';
 

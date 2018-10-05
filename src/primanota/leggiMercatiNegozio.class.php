@@ -12,7 +12,7 @@ class LeggiMercatiNegozio extends PrimanotaAbstract implements PrimanotaBusiness
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::LEGGI_MERCATI_NEGOZIO])) $_SESSION[self::LEGGI_MERCATI_NEGOZIO] = serialize(new LeggiMercatiNegozio());
 		return unserialize($_SESSION[self::LEGGI_MERCATI_NEGOZIO]);

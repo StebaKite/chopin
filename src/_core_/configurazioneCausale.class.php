@@ -40,7 +40,7 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CONFIGURAZIONE_CAUSALE]))
             $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize(new ConfigurazioneCausale());
         return unserialize($_SESSION[self::CONFIGURAZIONE_CAUSALE]);

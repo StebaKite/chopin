@@ -17,7 +17,7 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract  implements Primano
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO])) $_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO] = serialize(new ModificaCorrispettivoNegozio());
 		return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO]);
@@ -56,7 +56,7 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract  implements Primano
 				'%descreg%' => trim($registrazione->getDesRegistrazione()),
 				'%causale%' => trim($causale->getCodCausale()),
 				'%codneg%' => $negozio,
-				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
 				'%contiCausale%' => $causale->getContiCausale()
 		);
 		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

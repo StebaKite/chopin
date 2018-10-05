@@ -14,7 +14,7 @@ class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements Primanot
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE])) $_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE] = serialize(new AggiungiNuovaScadenzaCliente());
 		return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE]);

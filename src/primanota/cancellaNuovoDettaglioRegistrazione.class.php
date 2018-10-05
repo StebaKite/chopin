@@ -5,6 +5,7 @@ require_once 'primanota.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'dettaglioRegistrazione.class.php';
+require_once 'registrazione.class.php';
 
 class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
@@ -13,7 +14,7 @@ class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE]))
             $_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE] = serialize(new CancellaNuovoDettaglioRegistrazione());
         return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE]);
@@ -27,9 +28,8 @@ class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $db = Database::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->cancella($db);
-        echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
+        $registrazione = Registrazione::getInstance();
+
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
     }
-
 }
-
-?>

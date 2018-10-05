@@ -16,7 +16,7 @@ class CancellaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CANCELLA_REGISTRAZIONE])) $_SESSION[self::CANCELLA_REGISTRAZIONE] = serialize(new CancellaRegistrazione());
 		return unserialize($_SESSION[self::CANCELLA_REGISTRAZIONE]);

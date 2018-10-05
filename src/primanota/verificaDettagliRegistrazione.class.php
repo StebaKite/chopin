@@ -11,10 +11,12 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
-		if (!isset($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE])) $_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE] = serialize(new VerificaDettagliRegistrazione());
-		return unserialize($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE]);
+            if (!isset($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE])) {
+                $_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE] = serialize(new VerificaDettagliRegistrazione());
+            }
+            return unserialize($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE]);
 	}
 
 	public function start()

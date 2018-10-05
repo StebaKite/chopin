@@ -23,7 +23,7 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 		$this->array = $this->utility->getConfig();
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CREA_PAGAMENTO])) $_SESSION[self::CREA_PAGAMENTO] = serialize(new CreaPagamento());
 		return unserialize($_SESSION[self::CREA_PAGAMENTO]);

@@ -19,7 +19,7 @@ class AnnullaNuovoCorrispettivoMercato extends PrimanotaAbstract implements Prim
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO])) $_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO] = serialize(new AnnullaNuovoCorrispettivoMercato());
 		return unserialize($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO]);

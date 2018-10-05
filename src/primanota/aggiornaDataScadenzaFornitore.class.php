@@ -13,7 +13,7 @@ class AggiornaDataScadenzaFornitore extends PrimanotaAbstract implements Primano
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::AGGIORNA_DATA_SCADENZA_FORNITORE])) $_SESSION[self::AGGIORNA_DATA_SCADENZA_FORNITORE] = serialize(new AggiornaDataScadenzaFornitore());
         return unserialize($_SESSION[self::AGGIORNA_DATA_SCADENZA_FORNITORE]);

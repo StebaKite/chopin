@@ -63,13 +63,13 @@ class PrimanotaController {
         if (isset($_REQUEST["importo"])) {
             $dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
             $dettaglioRegistrazione->setCodSottoconto($_REQUEST["codsottoconto"]);
-            $dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo"]);
+            $dettaglioRegistrazione->setImpRegistrazione(str_replace(",", ".", $_REQUEST["importo"]));
             $dettaglioRegistrazione->setIdDettaglioRegistrazione($_REQUEST["iddettaglio"]);
         }
 
         if (isset($_REQUEST["importo_dettaglio"])) {
-            $scadenzaFornitore->setImpInScadenza($_REQUEST["importo"]);
-            $scadenzaCliente->setImportoScadenza($_REQUEST["importo"]);
+            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $_REQUEST["importo_dettaglio"]));
+            $scadenzaCliente->setImportoScadenza(str_replace(",", ".", $_REQUEST["importo_dettaglio"]));
         }
 
         if (isset($_REQUEST["dareAvere"])) {
@@ -121,14 +121,14 @@ class PrimanotaController {
             $scadenzaFornitore->setIdFornitore($_REQUEST["idfornitore"]);
             $scadenzaFornitore->setDatScadenza($_REQUEST["datascad_for"]);
             $scadenzaFornitore->setDatScadenzaNuova($_REQUEST["datascad_new"]);
-            $scadenzaFornitore->setImpInScadenza($_REQUEST["impscad_for"]);
+            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $_REQUEST["impscad_for"]));
             $scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
         }
 
         if (isset($_REQUEST["datascad_cli"])) {
             $scadenzaCliente->setIdCliente($_REQUEST["idcliente"]);
             $scadenzaCliente->setDatRegistrazione($_REQUEST["datascad_cli"]);
-            $scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli"]);
+            $scadenzaCliente->setImpRegistrazione(str_replace(",", ".", $_REQUEST["impscad_cli"]));
             $scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
         }
 

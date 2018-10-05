@@ -53,7 +53,7 @@ class Saldo extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::SALDO]))
             $_SESSION[self::SALDO] = serialize(new Saldo());
         return unserialize($_SESSION[self::SALDO]);

@@ -32,7 +32,7 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CATEGORIA_CLIENTE]))
             $_SESSION[self::CATEGORIA_CLIENTE] = serialize(new CategoriaCliente());
         return unserialize($_SESSION[self::CATEGORIA_CLIENTE]);

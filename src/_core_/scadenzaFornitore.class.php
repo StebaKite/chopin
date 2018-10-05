@@ -78,7 +78,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::SCADENZA_FORNITORE]))
             $_SESSION[self::SCADENZA_FORNITORE] = serialize(new ScadenzaFornitore());
@@ -383,15 +383,46 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
          */
 
          if ($this->getImpInScadenza() != 0) {
-
-
              
+            // conto le scadenze presenti con importo = 0
              
-             
-             
-         }
+            $numScadenze = 0;
+            foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+                if ($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] == self::ZERO_VALUE) {
+                    $numScadenze ++;
+                }
+            }
+            
+            // ripartisco l'importo scadenza calcolato e valorizzo gli importi delle scadenze a zero
+            
+            if ($numScadenze > 0) {
+                $nuoveScadenze = array();
+                $impDaRipartire = round($this->getImpInScadenza() / $numScadenze, 2);
+                foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+                    
+                    if ($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] == self::ZERO_VALUE) {
+                        $this->setImpInScadenza($impDaRipartire); 
+                    } else {
+                        $this->setImpInScadenza($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA]);
+                    }
+                    
+                    $item = array(
+                        ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
+                        ScadenzaFornitore::DAT_SCADENZA => $unaScadenza[ScadenzaFornitore::DAT_SCADENZA],
+                        ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
+                        ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA],
+                        ScadenzaFornitore::TIP_ADDEBITO => $unaScadenza[ScadenzaFornitore::TIP_ADDEBITO],
+                        ScadenzaFornitore::STA_SCADENZA => $unaScadenza[ScadenzaFornitore::STA_SCADENZA],
+                        ScadenzaFornitore::NOTA_SCADENZA => $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA]
+                    );
+                    array_push($nuoveScadenze, $item);
+                }
+                $this->setScadenzeDaPagare($nuoveScadenze);
+                $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
+            }
+        }
     }
-        
+
     public function cancella($db) {
         /**
          * Cancello la scadenza dalla tabella DB

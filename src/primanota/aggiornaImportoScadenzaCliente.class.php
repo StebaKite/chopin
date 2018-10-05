@@ -13,7 +13,7 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE])) $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE] = serialize(new AggiornaImportoScadenzaCliente());
 		return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE]);

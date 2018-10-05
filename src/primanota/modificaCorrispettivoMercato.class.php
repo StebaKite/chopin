@@ -18,7 +18,7 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO])) $_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO] = serialize(new ModificaCorrispettivoMercato());
 		return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO]);
@@ -84,7 +84,7 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
 				'%codneg%' => $negozio,
 				'%mercato%' => trim($mercato->getIdMercato()),
 				'%mercatiNegozio%' => $elenco_mercati,
-				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione)),
+				'%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
 				'%contiCausale%' => $causale->getContiCausale()
 		);
 		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

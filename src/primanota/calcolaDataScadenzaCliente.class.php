@@ -30,7 +30,7 @@ class CalcolaDataScadenzaCliente extends PrimanotaAbstract implements PrimanotaB
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE])) $_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE] = serialize(new CalcolaDataScadenzaCliente());
         return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE]);

@@ -19,7 +19,7 @@ class AnnullaNuovoIncasso extends PrimanotaAbstract implements PrimanotaBusiness
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::ANNULLA_NUOVO_INCASSO])) $_SESSION[self::ANNULLA_NUOVO_INCASSO] = serialize(new AnnullaNuovoIncasso());
 		return unserialize($_SESSION[self::ANNULLA_NUOVO_INCASSO]);

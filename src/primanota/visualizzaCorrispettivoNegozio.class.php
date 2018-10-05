@@ -17,7 +17,7 @@ class VisualizzaCorrispettivoNegozio extends PrimanotaAbstract implements Priman
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO])) $_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO] = serialize(new VisualizzaCorrispettivoNegozio());
 		return unserialize($_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO]);

@@ -13,7 +13,7 @@ class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBu
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CANCELLA_SCADENZA_FORNITORE])) $_SESSION[self::CANCELLA_SCADENZA_FORNITORE] = serialize(new CancellaScadenzaFornitore());
 		return unserialize($_SESSION[self::CANCELLA_SCADENZA_FORNITORE]);

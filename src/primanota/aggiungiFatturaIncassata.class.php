@@ -14,7 +14,7 @@ class AggiungiFatturaIncassata extends PrimanotaAbstract implements PrimanotaBus
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
     
-    public function getInstance()
+    public static function getInstance()
     {
         if (!isset($_SESSION[self::AGGIUNGI_FATTURA_INCASSATA])) $_SESSION[self::AGGIUNGI_FATTURA_INCASSATA] = serialize(new AggiungiFatturaIncassata());
         return unserialize($_SESSION[self::AGGIUNGI_FATTURA_INCASSATA]);

@@ -21,7 +21,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
 		$this->array = $this->utility->getConfig();
 	}
 	
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::VISUALIZZA_REGISTRAZIONE])) $_SESSION[self::VISUALIZZA_REGISTRAZIONE] = serialize(new VisualizzaRegistrazione());
 		return unserialize($_SESSION[self::VISUALIZZA_REGISTRAZIONE]);

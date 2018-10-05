@@ -13,7 +13,7 @@ class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInt
 		$this->root = $_SERVER['DOCUMENT_ROOT'];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::LOAD_CONTI_CAUSALE])) $_SESSION[self::LOAD_CONTI_CAUSALE] = serialize(new LoadContiCausale());
 		return unserialize($_SESSION[self::LOAD_CONTI_CAUSALE]);

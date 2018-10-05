@@ -6,34 +6,33 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'dettaglioRegistrazione.class.php';
 require_once 'sottoconto.class.php';
+require_once 'registrazione.class.php';
 
-class AggiungiNuovoDettaglioCorrispettivoNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+class AggiungiNuovoDettaglioCorrispettivoNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    function __construct() {
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO])) $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO] = serialize(new AggiungiNuovoDettaglioCorrispettivoNegozio());
-		return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO]);
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public function start() {
-		$this->go();
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO]))
+            $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO] = serialize(new AggiungiNuovoDettaglioCorrispettivoNegozio());
+        return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO]);
+    }
 
-	public function go()
-	{
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function start() {
+        $this->go();
+    }
 
-		$dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivo($db, $utility, $array);
-		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-		echo $this->makeTabellaDettagliRegistrazione($dettaglioRegistrazione);
-	}
+    public function go() {
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $registrazione = Registrazione::getInstance();
+
+        $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivo($db, $utility, $array);
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+    }
 }
-
-?>

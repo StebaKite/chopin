@@ -400,7 +400,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
     }
 
-    public function makeTabellaDettagliRegistrazione($dettaglioRegistrazione) {
+    public function makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione) {
         $thead = "";
         $tbody = "";
 
@@ -425,31 +425,37 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
                 $bottoneCancella = self::CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF . $cancella_parms . self::CANCELLA_ICON;
 
-                $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
-                $modifica_parms .= trim($codConto[0]) . ",";
-                $modifica_parms .= trim($codConto[1]) . ",";
-                $modifica_parms .= "this.value,";
-                $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
-
-                $onModifyImporto = " onkeyup=" . '"' . "modificaImportoDettaglioRegistrazione(" . $modifica_parms . ')"';
-                $onModifySegno = " onkeyup=" . '"' . "modificaSegnoDettaglioRegistrazione(" . $modifica_parms . ')"';
                 $idImportoDettaglio = " id='importo" . trim($codConto[0]) . trim($codConto[1]) . "' ";
                 $idSegnoDettaglio = " id='segno" . trim($codConto[0]) . trim($codConto[1]) . "' ";
 
-                $onBlurImporto = " onblur=" . '"' . "ripartisciImportoSuScadenze(" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . ")";
+                $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
+                $modifica_parms .= trim($codConto[0]) . ",";
+                $modifica_parms .= trim($codConto[1]) . ",";
+                $modifica_parms .= "$('#" . $idImportoDettaglio . "').val()" . ",";
+                $modifica_parms .= "$('#" . $idSegnoDettaglio . "').val()" . ",";
+                $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
+
+                if (parent::isNotEmpty($registrazione->getIdFornitore())) {
+                    $onBlurImporto = ' onblur=' . '"modificaDettaglioRegistrazione(' . $modifica_parms . '); ' . 'ripartisciImportoSuScadenzeFornitore(this.value)"';                    
+                }                
+                elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
+                    $onBlurImporto = ' onblur=' . '"modificaDettaglioRegistrazione(' . $modifica_parms . '); ' . 'ripartisciImportoSuScadenzeCliente(this.value)"';                    
+                }                
+
+                $onBlurSegno = ' onblur=' . '"' . 'modificaDettaglioRegistrazione(' . $modifica_parms . ')"';
                 
                 $tbody .= "<tr>" .
                         "	<td>" . $unDettaglio[DettaglioRegistrazione::COD_CONTO] . "</td>" .
                         "	<td>" .
                         "       <div class='input-group'>" .
                         "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
-                        "		    <input class='form-control' type='text' maxlength='10'" . $idImportoDettaglio . $onModifyImporto . $onBlurImporto . " value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+                        "		    <input class='form-control' type='text' maxlength='10'" . $idImportoDettaglio . $onBlurImporto . " value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
                         "       </div>" .
                         "	</td>" .
                         "	<td>" .
                         "       <div class='input-group'>" .
                         "           <span class='input-group-addon'>D/A</span>" .
-                        "		    <input class='form-control' type='text' maxlength='1'" . $idSegnoDettaglio . $onModifySegno . " value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+                        "		    <input class='form-control' type='text' maxlength='1'" . $idSegnoDettaglio . $onBlurSegno . " value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
                         "       </div>" .
                         "	</td>" .
                         "	<td id='icons'>" . $bottoneCancella . "</td>" .
@@ -500,11 +506,11 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
             $tbody = "<tbody>";
             $thead = "<thead>" .
-                    "	<tr>" .
-                    "		<th width='180'>Data</th>" .
-                    "		<th width='100'>Stato</th>" .
-                    "		<th width='180'>Importo</th>" .
-                    "		<th width='60'>&nbsp;</th>" .
+                    "   <tr>" .
+                    "       <th width='180'>Data</th>" .
+                    "       <th width='100'>Stato</th>" .
+                    "       <th width='180'>Importo</th>" .
+                    "       <th width='60'>&nbsp;</th>" .
                     "	</tr>" .
                     "</thead>";
 
@@ -519,7 +525,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($numFatt) . ",";
                 $modifica_parms .= "this.value";
 
-                $onModifyImporto = " onkeyup=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
+                $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
                 $onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaFornitore(" . $modifica_parms;
                 $idImportoDettaglio = " id='impscad" . trim($idFornitore) . trim($dataScadenza) . trim($numFatt) . "' ";
 
@@ -534,7 +540,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 }
 
                 $tbody .= "<tr>" .
-                        "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+                        "       <td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
                         "	<td " . $tdclass . ">" . $stato . "</td>" .
                         "	<td>" .
                         "       <div class='input-group'>" .
@@ -599,10 +605,10 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
             $tbody = "<tbody>";
             $thead = "<thead>" .
                     "	<tr>" .
-                    "		<th width='180'>Data</th>" .
-                    "		<th width='100'>Stato</th>" .
-                    "		<th width='180'>Importo</th>" .
-                    "		<th width='60'>&nbsp;</th>" .
+                    "       <th width='180'>Data</th>" .
+                    "       <th width='100'>Stato</th>" .
+                    "       <th width='180'>Importo</th>" .
+                    "       <th width='60'>&nbsp;</th>" .
                     "	</tr>" .
                     "</thead>";
 
@@ -617,7 +623,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($numFatt) . ",";
                 $modifica_parms .= "this.value";
 
-                $onModifyImporto = " onkeyup=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
+                $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
                 $onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaCliente(" . $modifica_parms;
                 $idImportoDettaglio = " id='impscad" . trim($idCliente) . trim($dataScadenza) . trim($numFatt) . "' ";
 

@@ -23,7 +23,7 @@ class CreaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterfac
 		$this->array = $this->utility->getConfig();
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CREA_INCASSO])) $_SESSION[self::CREA_INCASSO] = serialize(new CreaIncasso());
 		return unserialize($_SESSION[self::CREA_INCASSO]);

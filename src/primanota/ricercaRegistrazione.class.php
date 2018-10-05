@@ -26,7 +26,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE]))
             $_SESSION[self::RICERCA_REGISTRAZIONE] = serialize(new RicercaRegistrazione());
         return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE]);

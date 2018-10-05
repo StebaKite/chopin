@@ -76,10 +76,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $this->setRoot($_SERVER['DOCUMENT_ROOT']);
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
-        if (!isset($_SESSION[self::SCADENZA_CLIENTE]))
+        if (!isset($_SESSION[self::SCADENZA_CLIENTE])) {
             $_SESSION[self::SCADENZA_CLIENTE] = serialize(new ScadenzaCliente());
+        }
         return unserialize($_SESSION[self::SCADENZA_CLIENTE]);
     }
 
@@ -311,6 +312,61 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         }
         $this->setScadenzeIncassate($scadenzeIncassateDiff);
         $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+    }
+
+    public function ripartisciImporto() {
+    
+        /*
+         * Alcune note:
+         *
+         * La ripartizione dell'importo di una registrazione viene eseguito all'uscita del oampo importo del primo dettaglio.
+         * Una volta ripartito l'importo su tutte le scadenze presenti che hanno importo = 0, le sucessive modifiche agli 
+         * importi dei dettagli non avranno effetti sugli importi delle scadenze.
+         *   
+         * - Se l'importo da suddividere = 0 non fa niente
+         * - Conteggio scadenze con importo = 0, se non vi sono scadenze con importo = 0 non fa niente
+         * 
+         */
+
+         if ($this->getImportoScadenza() != 0) {
+             
+            // conto le scadenze presenti con importo = 0
+             
+            $numScadenze = 0;
+            foreach ($this->getScadenzeDaIncassare() as $unaScadenza) {
+                if ($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] == self::ZERO_VALUE) {
+                    $numScadenze ++;
+                }
+            }
+            
+            // ripartisco l'importo scadenza calcolato e valorizzo gli importi delle scadenze a zero
+            
+            if ($numScadenze > 0) {
+                $nuoveScadenze = array();
+                $impDaRipartire = round($this->getImportoScadenza() / $numScadenze, 2);
+                foreach ($this->getScadenzeDaIncassare() as $unaScadenza) {
+                    
+                    if ($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] == self::ZERO_VALUE) {
+                        $this->setImportoScadenza($impDaRipartire); 
+                    } else {
+                        $this->setImportoScadenza($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]);
+                    }
+                    
+                    $item = array(
+                        ScadenzaCliente::ID_CLIENTE => $unaScadenza[ScadenzaCliente::ID_CLIENTE],
+                        ScadenzaCliente::DAT_REGISTRAZIONE => $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE],
+                        ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImportoScadenza(),
+                        ScadenzaCliente::NUM_FATTURA => $unaScadenza[ScadenzaCliente::NUM_FATTURA],
+                        ScadenzaCliente::TIP_ADDEBITO => $unaScadenza[ScadenzaCliente::TIP_ADDEBITO],
+                        ScadenzaCliente::STA_SCADENZA => $unaScadenza[ScadenzaCliente::STA_SCADENZA],
+                        ScadenzaCliente::NOTA => $unaScadenza[ScadenzaCliente::NOTA]
+                    );
+                    array_push($nuoveScadenze, $item);
+                }
+                $this->setScadenzeDaIncassare($nuoveScadenze);
+                $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+            }
+        }
     }
 
     public function cancella($db) {
