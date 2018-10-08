@@ -242,7 +242,7 @@ $("#causale_cormer_cre").change(
         function () {
             var causale = $("#causale_cormer_cre").val();
 
-            if (causale != "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange =
                         function () {
@@ -263,7 +263,7 @@ $("#causale_cormer_mod").change(
         function () {
             var causale = $("#causale_cormer_mod").val();
 
-            if (causale != "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange =
                         function () {
@@ -284,7 +284,7 @@ $("#causale_corneg_cre").change(
         function () {
             var causale = $("#causale_corneg_cre").val();
 
-            if (causale != "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange =
                         function () {
@@ -305,7 +305,7 @@ $("#causale_corneg_mod").change(
         function () {
             var causale = $("#causale_corneg_mod").val();
 
-            if (causale != "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange =
                         function () {
@@ -402,21 +402,21 @@ function validaNuovoCorrispettivoMercato()
     var esito = "";
 
     controllaDataRegistrazione("datareg_cormer_cre");
-    if ($("#datareg_cormer_cre_messaggio").text() == "")
+    if (isEmpty($("#datareg_cormer_cre_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_cormer_cre").val() != "") {
+    if (isNotEmpty($("#descreg_cormer_cre").val())) {
         if (controllaDescrizione("descreg_cormer_cre"))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_cormer_cre").val() != "") {
+    if (isNotEmpty($("#causale_cormer_cre").val())) {
         controllaDettagliRegistrazione("dettagli_cormer_cre");
-        if ($("#dettagli_cormer_cre_messaggio").text() == "")
+        if (isEmpty($("#dettagli_cormer_cre_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -442,21 +442,21 @@ function validaNuovoCorrispettivoNegozio()
     var esito = "";
 
     controllaDataRegistrazione("datareg_corneg_cre");
-    if ($("#datareg_corneg_cre_messaggio").text() == "")
+    if (isEmpty($("#datareg_corneg_cre_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_corneg_cre").val() != "") {
+    if (isNotEmpty($("#descreg_corneg_cre").val())) {
         if (controllaDescrizione("descreg_corneg_cre"))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_corneg_cre").val() != "") {
+    if (isNotEmpty($("#causale_corneg_cre").val())) {
         controllaDettagliRegistrazione("dettagli_corneg_cre");
-        if ($("#dettagli_corneg_cre_messaggio").text() == "")
+        if (isEmpty($("#dettagli_corneg_cre_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -544,21 +544,21 @@ function validaModificaCorrispettivoMercato()
     var esito = "";
 
     controllaDataRegistrazione("datareg_cormer_mod");
-    if ($("#datareg_cormer_mod_messaggio").text() == "")
+    if (isEmpty($("#datareg_cormer_mod_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_cormer_mod").val() != "") {
+    if (isNotEmpty($("#descreg_cormer_mod").val())) {
         if (controllaDescrizione("descreg_cormer_mod"))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_cormer_mod").val() != "") {
+    if (isNotEmpty($("#causale_cormer_mod").val())) {
         controllaDettagliRegistrazione("dettagli_cormer_mod");
-        if ($("#dettagli_cormer_mod_messaggio").text() == "")
+        if (isEmpty($("#dettagli_cormer_mod_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -641,21 +641,21 @@ function validaModificaCorrispettivoNegozio()
     var esito = "";
 
     controllaDataRegistrazione("datareg_corneg_mod");
-    if ($("#datareg_corneg_mod_messaggio").text() == "")
+    if (isEmpty($("#datareg_corneg_mod_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_corneg_mod").val() != "") {
+    if (isNotEmpty($("#descreg_corneg_mod").val())) {
         if (controllaDescrizione("descreg_corneg_mod"))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_corneg_mod").val() != "") {
+    if (isNotEmpty($("#causale_corneg_mod").val())) {
         controllaDettagliRegistrazione("dettagli_corneg_mod");
-        if ($("#dettagli_corneg_mod_messaggio").text() == "")
+        if (isEmpty($("#dettagli_corneg_mod_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";

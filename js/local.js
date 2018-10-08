@@ -1,60 +1,3 @@
-//$("#menu-accordion").accordion({
-//    active: false,
-//    collapsible: true
-//});
-//
-//var formatDateJQ = "dd/mm/yy";
-//
-//$(".button").button();
-//
-//$(".radioset").buttonset();
-//
-//$(".tabs").tabs();
-//
-//$("#vtabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
-//$("#vtabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
-//
-//$("#msg").dialog({
-//    autoOpen: false,
-//    modal: true,
-//    width: 500,
-//    buttons: [
-//        {
-//            text: "Ok",
-//            click: function () {
-//                aggiungiDettaglio();
-//                $(this).dialog("close");
-//            }
-//        },
-//        {
-//            text: "Cancel",
-//            click: function () {
-//                $(this).dialog("close");
-//            }
-//        }
-//    ]
-//});
-//
-//$(".datepicker").datepicker();
-//
-//$(".data").datepicker({
-//    showAnim: "slideDown",
-//    inline: true,
-//    changeMonth: true,
-//    changeYear: true,
-//    bgiframe: true,
-//    dateFormat: formatDateJQ,
-//    constrainInput: true
-//});
-//
-//
-//$("#slider").slider({
-//    range: true,
-//    values: [5, 10]
-//});
-//
-//$(".spinner").spinner();
-
 $('select').selectpicker();
 
 $('.selectNormal').selectpicker({
@@ -82,71 +25,6 @@ $('.selectCatCli').selectpicker({
     style: 'btn-info',
     size: 'auto'
 });
-//
-//$("#menu").menu();
-//
-//$(".tooltip").tooltip();
-//
-//$(".selectmenu")
-//        .selectmenu({width: 200})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuMeserif")
-//        .selectmenu({width: 100})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuCliente")
-//        .selectmenu({width: 200})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuConto")
-//        .selectmenu({width: 300})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuContoCambioConto")
-//        .selectmenu({width: 400})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuCategoria")
-//        .selectmenu({width: 150})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuTipoConto")
-//        .selectmenu({width: 100})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuNegozio")
-//        .selectmenu({width: 120})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuStato")
-//        .selectmenu({width: 100})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectCategoriaConti")
-//        .selectmenu({width: 150})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//$(".selectmenuContiInc")
-//        .selectmenu({width: 450})
-//        .selectmenu("menuWidget")
-//        .addClass("overflow");
-//
-//
-//$(".selectmenuFornitore").selectmenu({width: 350});
-//$(".selectmenuCliente").selectmenu({width: 350});
-//$(".selectannoesercizio").selectmenu({width: 70});
-//$(".selectmenuDataRipSaldo").selectmenu({width: 150});
 
 // -----------------------------------------------------------------
 // Ajax su campi di input
@@ -230,12 +108,12 @@ function controllaDataRegistrazione(campoDat)
      */
     var datareg = $("#" + campoDat).val();
 
-    if (datareg !== "") {
+    if (isNotEmpty(datareg)) {
 
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     $("#" + campoDat + "_messaggio").html(xmlhttp.responseText);
                     $("#" + campoDat + "_control_group").addClass("has-error");
                 } else {
@@ -253,7 +131,7 @@ function controllaDataRegistrazione(campoDat)
 
 function controllaData(campoData)
 {
-    if ($("#" + campoData).val() !== "") {
+    if (isNotEmpty($("#" + campoData).val())) {
         $("#" + campoData + "_control_group").removeClass("has-error");
         $("#" + campoData + "_messaggio").html("");
         return true;
@@ -268,7 +146,7 @@ function controllaData(campoData)
 
 function controllaCodice(campoCod)
 {
-    if ($("#" + campoCod).val() !== "") {
+    if (isNotEmpty($("#" + campoCod).val())) {
         $("#" + campoCod + "_control_group").removeClass("has-error");
         $("#" + campoCod + "_messaggio").html("");
         return true;
@@ -283,7 +161,7 @@ function controllaCodice(campoCod)
 
 function controllaDescrizione(campoDes)
 {
-    if ($("#" + campoDes).val() !== "") {
+    if (isNotEmpty($("#" + campoDes).val())) {
         $("#" + campoDes + "_control_group").removeClass("has-error");
         $("#" + campoDes + "_messaggio").html("");
         return true;
@@ -301,7 +179,7 @@ function controllaCausale(campoCau)
     /**
      * La causale è obbligatoria
      */
-    if ($("#" + campoCau).val() !== "") {
+    if (isNotEmpty($("#" + campoCau).val())) {
         $("#" + campoCau + "_control_group").removeClass("has-error");
         $("#" + campoCau + "_messaggio").html("");
         return true;
@@ -342,7 +220,7 @@ function controllaNumeroFattura(campoFat)
 {
     var numfatt = $("#" + campoFat).val();
 
-    if (numfatt !== "") {
+    if (isNotEmpty(numfatt)) {
         $("#" + campoFat + "_control_group").removeClass("has-error");
         $("#" + campoFat + "_messaggio").html("");
         return true;
@@ -360,9 +238,9 @@ function validaNumeroFattura(campoCli, campoForn, campoFat, campoDat)
     var cliente = $("#" + campoCli).val();
     var fornitore = $("#" + campoForn).val();
 
-    if ((fornitore !== " ") && (fornitore !== "")) {
+    if (isNotEmpty(fornitore)) {
         controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat);        
-    } else if ((cliente !== " ") && (cliente !== "")) {
+    } else if (isNotEmpty(cliente)) {
         controllaNumeroFatturaCliente(campoCli, campoFat, campoDat);
     }
 }
@@ -376,11 +254,11 @@ function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat)
     var numfattOrig = $("#" + campoFat + "_orig").val();
     var datareg = $("#" + campoDat).val();
 
-    if ((numfatt !== "") && (datareg !== "") && (fornitore !== "")) {
+    if (isNotEmpty(numfatt) && isNotEmpty(datareg) && isNotEmpty(fornitore)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== " ") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     if (numfatt !== numfattOrig) {
                         $("#" + campoDat + "_control_group").addClass("has-error");
                         $("#" + campoFat + "_control_group").addClass("has-error");
@@ -415,11 +293,11 @@ function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat)
     var numfattOrig = $("#" + campoFat + "_orig").val();
     var datareg = $("#" + campoDat).val();
     
-    if ((numfatt !== "") && (datareg !== "") && (cliente !== "")) {
+    if (isNotEmpty(numfatt) && isNotEmpty(datareg) && isNotEmpty(cliente)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== " ") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     if (numfatt !== numfattOrig) {
                         $("#" + campoDat + "_control_group").addClass("has-error");
                         $("#" + campoFat + "_control_group").addClass("has-error");
@@ -456,7 +334,7 @@ function controllaDettagliRegistrazione(campoDet)
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
-            if (xmlhttp.responseText !== "") {
+            if (isNotEmpty(xmlhttp.responseText)) {
                 $("#" + campoDet + "_control_group").addClass("has-error");
                 $("#" + campoDet + "_messaggio").html("Completa i dettagli");
             } else {

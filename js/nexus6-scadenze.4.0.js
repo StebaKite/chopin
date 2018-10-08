@@ -187,7 +187,7 @@ function validaModificaScadenza(type)
      */
     var esito = "";
 
-    if ($("#datascad_" + type).val() !== "") {
+    if (isNotEmpty($("#datascad_" + type).val())) {
         if (controllaData("datascad_" + type)) {
             esito = esito + "1";
         } else {
@@ -195,7 +195,7 @@ function validaModificaScadenza(type)
         }
     }
 
-    if ($("#notascad_" + type).val() !== "") {
+    if (isNotEmpty($("#notascad_" + type).val())) {
         if (controllaDescrizione("notascad_" + type)) {
             esito = esito + "1";
         } else {
@@ -203,7 +203,7 @@ function validaModificaScadenza(type)
         }
     }
 
-    if ($("#impscad_" + type).val() !== "") {
+    if (isNotEmpty($("#impscad_" + type).val())) {
         if (controllaImporto("impscad_" + type)) {
             esito = esito + "1";
         } else {
@@ -211,7 +211,7 @@ function validaModificaScadenza(type)
         }
     }
 
-    if ($("#fatscad_" + type).val() !== "") {
+    if (isNotEmpty($("#fatscad_" + type).val())) {
         if (controllaNumeroFattura("fatscad_" + type)) {
             esito = esito + "1";
         } else {

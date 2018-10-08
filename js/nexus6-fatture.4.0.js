@@ -155,61 +155,6 @@ function gestisciAssistito(tipofattura) {
     }
 }
 
-
-
-
-
-//$( "#nuovo-dettaglio-fattura-aziende-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 510,
-//	height: 420,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				aggiungiDettaglio();
-//				$( this ).dialog( "close" );
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-//
-////---------------------------------------------------------------------------------
-//
-//$( "#nuovo-dett-fattura-cliente" ).click(function( event ) {
-//	$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog( "open" );
-//	event.preventDefault();
-//});
-//
-//$( "#nuovo-dettaglio-fattura-cliente-form" ).dialog({
-//	autoOpen: false,
-//	modal: true,
-//	width: 510,
-//	height: 420,
-//	buttons: [
-//		{
-//			text: "Ok",
-//			click: function() {
-//				aggiungiDettaglio();
-//				$( this ).dialog( "close" );
-//			}
-//		},
-//		{
-//			text: "Cancel",
-//			click: function() {
-//				$( this ).dialog( "close" );
-//			}
-//		}
-//	]
-//});
-
 //---------------------------------------------------------------------------------
 
 function cancellaDettaglioFattura(idarticolo) {

@@ -24,11 +24,11 @@ $("#nuovo-pagamento").click(function (event) {
 //---------------------------------------------------------------------------------
 
 function trovaScadenzeFornitore() {
-	
+
     var idfornitore = $("#fornitore_pag_cre").val();
     var codnegozio = $("#codneg_pag_cre").val();
 
-    if (idfornitore !== "") {
+    if (isNotEmpty(idfornitore)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -175,12 +175,11 @@ $("#causale_pag_cre").change(
         function () {
             var causale = $("#causale_pag_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         $("#conti_pag").html(xmlhttp.responseText);
-//                        $("#conti_pag").selectmenu("refresh");
                     }
                 };
                 xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
@@ -195,12 +194,12 @@ $("#causale_pag_mod").change(
         function () {
             var causale = $("#causale_pag_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         $("#conti_pag_mod").html(xmlhttp.responseText);
-                        $("#conti_pag_mod").selectmenu("refresh");
+//                        $("#conti_pag_mod").selectmenu("refresh");
                     }
                 };
                 xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
@@ -238,21 +237,21 @@ function validaPagamento(type)
     var esito = "";
 
     controllaDataRegistrazione("datareg_pag_" + type);
-    if ($("#datareg_pag_" + type + "_messaggio").text() === "")
+    if (isEmpty($("#datareg_pag_" + type + "_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_pag_" + type).val() !== "") {
+    if (isNotEmpty($("#descreg_pag_" + type).val())) {
         if (controllaDescrizione("descreg_pag_" + type))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_pag_" + type).val() !== "") {
+    if (isNotEmpty($("#causale_pag_" + type).val())) {
         controllaDettagliRegistrazione("dettagli_pag_" + type);
-        if ($("#dettagli_pag_" + type + "_messaggio").text() === "")
+        if (isEmpty($("#dettagli_pag_" + type + "_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";

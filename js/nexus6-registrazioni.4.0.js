@@ -32,9 +32,9 @@ $("#nuovaRegistrazione").click(function () {
 
 $("#button-nuova-scadenza-nuova-registrazione-form").click(function () {
 
-    if ($("#fornitore_cre").val() !== "") {
+    if (isNotEmpty($("#fornitore_cre").val())) {
         $("#nuovaDataScadenzaCreazioneForm").attr("action", "../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=go");
-    } else if ($("#cliente_cre").val() !== "") {
+    } else if (isNotEmpty($("#cliente_cre").val())) {
         $("#nuovaDataScadenzaCreazioneForm").attr("action", "../primanota/aggiungiNuovaScadenzaClienteFacade.class.php?modo=go");
     }
     $("#nuova-data-scadenza-creazione-dialog").modal("show");
@@ -44,9 +44,9 @@ $("#button-nuova-scadenza-nuova-registrazione-form").click(function () {
 
 $("#button-nuova-scadenza-modifica-registrazione-form").click(function () {
 
-    if ($("#fornitore_mod").val() !== "") {
+    if (isNotEmpty($("#fornitore_mod").val())) {
         $("#nuovaDataScadenzaModificaForm").attr("action", "../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=go");
-    } else if ($("#cliente_mod").val() !== "") {
+    } else if (isNotEmpty($("#cliente_mod").val())) {
         $("#nuovaDataScadenzaCreazioneForm").attr("action", "../primanota/aggiungiNuovaScadenzaClienteFacade.class.php?modo=go");
     }
     $("#nuova-data-scadenza-modifica-dialog").modal("show");
@@ -106,24 +106,24 @@ $("#button-ok-nuovascad-nuova-registrazione-form").click(
             var cliente = $("#cliente_cre").val();
             var numfatt = $("#numfatt_cre").val();
 
-            if (fornitore !== "")
+            if (isNotEmpty(fornitore))
             {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        if (xmlhttp.responseText !== "") {
+                        if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_cre").html(xmlhttp.responseText);
                         }
                     }
                 };
                 xmlhttp.open("GET", "aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
                 xmlhttp.send();
-            } else if (cliente !== "")
+            } else if (isNotEmpty(cliente))
             {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        if (xmlhttp.responseText !== "") {
+                        if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_cre").html(xmlhttp.responseText);
                         }
                     }
@@ -144,24 +144,24 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
             var cliente = $("#cliente_mod").val();
             var numfatt = $("#numfatt_mod").val();
 
-            if (fornitore !== " ")
+            if (isNotEmpty(fornitore))
             {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        if (xmlhttp.responseText !== "") {
+                        if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_mod").html(xmlhttp.responseText);
                         }
                     }
                 };
                 xmlhttp.open("GET", "../primanota/aggiungiNuovaScadenzaFornitoreFacade.class.php?modo=start&fornitore=" + fornitore + "&datascad_for=" + datascad + "&impscad_for=" + impscad + "&numfatt=" + numfatt, true);
                 xmlhttp.send();
-            } else if (cliente !== " ")
+            } else if (isNotEmpty(cliente))
             {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        if (xmlhttp.responseText !== "") {
+                        if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_mod").html(xmlhttp.responseText);
                         }
                     }
@@ -276,19 +276,20 @@ function modificaRegistrazione(idRegistrazione)
                         $("#descreg_mod").val($(this).find("descreg").text());
 
                         var causale = $(this).find("causale").text();
-                        if (causale === "")
+                        if (isEmpty(causale))
                             causale = " ";
+                        
                         $("#causale_mod").selectpicker('val', causale);
 
                         var negozio = $(this).find("codneg").text();
                         $("#codneg_mod").selectpicker('val', negozio);
 
                         var fornitore = $(this).find("fornitore").text();
-                        if (fornitore === "")
+                        if (isEmpty(fornitore))
                             fornitore = " ";
 
                         var cliente = $(this).find("cliente").text();
-                        if (cliente === "")
+                        if (isEmpty(cliente))
                             cliente = " ";
 
                         $("#fornitore_mod").selectpicker('val', fornitore);
@@ -296,9 +297,9 @@ function modificaRegistrazione(idRegistrazione)
                         $("#numfatt_mod").val($(this).find("numfatt").text());
                         $("#numfatt_mod_orig").val($(this).find("numfattorig").text());
 
-                        if (fornitore !== " ")
+                        if (isNotEmpty(fornitore))
                             $("#scadenzesuppl_mod").html($(this).find("scadenzesupplfornitore").text());
-                        if (cliente !== " ")
+                        if (isNotEmpty(cliente))
                             $("#scadenzesuppl_mod").html($(this).find("scadenzesupplcliente").text());
 
                         $("#dettagli_mod").html($(this).find("dettagli").text());
@@ -339,12 +340,12 @@ function visualizzaRegistrazione(idRegistrazione)
 
                         $("#numfatt_vis").html($(this).find("numfatt").text());
 
-                        if (fornitore !== "") {
+                        if (isNotEmpty(fornitore)) {
                             $("#scadenzesuppl_vis").html($(this).find("scadenzesupplfornitore").text());
                             $("#fornitore_vis_label").show();
                             $("#cliente_vis_label").hide();
                         }
-                        if (cliente !== "") {
+                        if (isNotEmpty(cliente)) {
                             $("#scadenzesuppl_vis").html($(this).find("scadenzesupplcliente").text());
                             $("#cliente_vis_label").show();
                             $("#fornitore_vis_label").hide();
@@ -374,12 +375,12 @@ function validaNuovaRegistrazione() {
     var esito = "";
 
     controllaDataRegistrazione("datareg_cre");
-    if ($("#datareg_cre_messaggio").text() === "")
+    if (isEmpty($("#datareg_cre_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_cre").val() !== "") {
+    if (isNotEmpty($("#descreg_cre").val())) {
         if (controllaDescrizione("descreg_cre")) {
             esito = esito + "1";
         } else {
@@ -387,9 +388,9 @@ function validaNuovaRegistrazione() {
         }
     }
 
-    if ($("#causale_cre").val() !== "") {
+    if (isNotEmpty($("#causale_cre").val())) {
         controllaDettagliRegistrazione("dettagli_cre");
-        if ($("#dettagli_cre_messaggio").text() === "")
+        if (isEmpty($("#dettagli_cre_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -450,12 +451,12 @@ function validaModificaRegistrazione()
     var esito = "";
 
     controllaDataRegistrazione("datareg_mod");
-    if ($("#datareg_mod_messaggio").text() === "")
+    if (isEmpty($("#datareg_mod_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_mod").val() !== "") {
+    if (isNotEmpty($("#descreg_mod").val())) {
         if (controllaDescrizione("descreg_mod")) {
             esito = esito + "1";
         } else {
@@ -463,9 +464,9 @@ function validaModificaRegistrazione()
         }
     }
 
-    if ($("#causale_mod").val() !== "") {
+    if (isNotEmpty($("#causale_mod").val())) {
         controllaDettagliRegistrazione("dettagli_mod");
-        if ($("#dettagli_mod_messaggio").text() === "")
+        if (isEmpty($("#dettagli_mod_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -483,7 +484,7 @@ function validaModificaRegistrazione()
         esito = esito + "0";
     }
 
-    if (($("#fornitore_mod").val() !== "") || $("#cliente_mod").val() !== "") {
+    if (isNotEmpty($("#fornitore_mod").val()) || isNotEmpty($("#cliente_mod").val())) {
         if (controllaNumeroFattura("numfatt_mod"))
             esito = esito + "1";
         else
@@ -492,7 +493,7 @@ function validaModificaRegistrazione()
 
     if (isNotEmpty($("#fornitore_mod").val())) {
         controllaNumeroFatturaFornitore("fornitore_mod", "numfatt_mod", "datareg_mod");
-        if ($("#numfatt_mod_messaggio").text() === "")
+        if (isEmpty($("#numfatt_mod_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -518,16 +519,16 @@ function validaModificaRegistrazione()
 function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importo, segno, idDettaglio)
 {
     var importoDettNormalizzato;
-    if (importo === "")
+    if (isEmpty(importo))
         importoDettNormalizzato = 0;
     else
         importoDettNormalizzato = importo.trim().replace(",", ".");
 
-    if (conto !== "") {
+    if (isNotEmpty(conto)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + idTable).html(dettagliTable);
 
@@ -556,7 +557,7 @@ function ripartisciImportoSuScadenzeFornitore(importo) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            if (xmlhttp.responseText !== "") {
+            if (isNotEmpty(xmlhttp.responseText)) {
                 var scadenzeTable = xmlhttp.responseText;
                 $("#scadenzesuppl_cre").html(scadenzeTable);
             }
@@ -573,7 +574,7 @@ function ripartisciImportoSuScadenzeCliente(importo) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            if (xmlhttp.responseText !== "") {
+            if (isNotEmpty(xmlhttp.responseText)) {
                 var scadenzeTable = xmlhttp.responseText;
                 $("#scadenzesuppl_cre").html(scadenzeTable);
             }
@@ -587,12 +588,12 @@ function ripartisciImportoSuScadenzeCliente(importo) {
 
 function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
 {
-    if (idfornitore !== "")
+    if (isNotEmpty(idfornitore))
     {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + campoDett).html(dettagliTable);
                     $("#" + campoDett).show();
@@ -609,12 +610,12 @@ function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
 
 function aggiungiDettaglioContoCliente(idcliente, campoDett)
 {
-    if (idcliente !== "")
+    if (isNotEmpty(idcliente))
     {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + campoDett).html(dettagliTable);
                     $("#" + campoDett).show();
@@ -661,21 +662,18 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
 {
     var importoScadNormalizzato;
         
-    if (importo === "")
+    if (isEmpty(importo))
         importoScadNormalizzato = 0;
     else
         importoScadNormalizzato = importo.trim().replace(",", ".");
 
-    if (datascad !== "") {
+    if (isNotEmpty(datascad)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
-
-//                    var imp = $("#impscad" + idfornitore + datascad + numfatt).val();
-//                    $("#impscad" + idfornitore + datascad + numfatt).focus().val('').val(imp);
                 }
             }
         };
@@ -690,21 +688,18 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
 {
     var importoScadNormalizzato;
     
-    if (importo === "")
+    if (isEmpty(importo))
         importoScadNormalizzato = 0;
     else
         importoScadNormalizzato = importo.trim().replace(",", ".");
 
-    if (datascad !== "") {
+    if (isNotEmpty(datascad)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (isNotEmpty(xmlhttp.responseText)) {
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
-
-//                    var imp = $("#impscad" + idcliente + datascad + numfatt).val();
-//                    $("#impscad" + idcliente + datascad + numfatt).focus().val('').val(imp);
                 }
             }
         };
@@ -749,7 +744,7 @@ $("#fornitore_cre").change(
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    if (xmlhttp.responseText !== "") {
+                    if (isNotEmpty(xmlhttp.responseText)) {
                         $("#datascad_cre_label").show();
                         $("#scadenzesuppl_cre").html(xmlhttp.responseText);
                     }
@@ -771,7 +766,7 @@ $("#fornitore_mod").change(
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    if (xmlhttp.responseText !== "") {
+                    if (isNotEmpty(xmlhttp.responseText)) {
                         $("#scadenzesuppl_mod").html(xmlhttp.responseText);
                     }
                 }
@@ -792,7 +787,7 @@ $("#cliente_cre").change(
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    if (xmlhttp.responseText !== "") {
+                    if (isNotEmpty(xmlhttp.responseText)) {
                         $("#datascad_cre_label").show();
                         $("#scadenzesuppl_cre").html(xmlhttp.responseText);
                     }
@@ -814,7 +809,7 @@ $("#cliente_mod").change(
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    if (xmlhttp.responseText !== "") {
+                    if (isNotEmpty(xmlhttp.responseText)) {
                         $("#scadenzesuppl_mod").html(xmlhttp.responseText);
                     }
                 }
@@ -830,7 +825,7 @@ $("#causale_cre").change(
         function () {
             var causale = $("#causale_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -850,7 +845,7 @@ $("#causale_mod").change(
         function () {
             var causale = $("#causale_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -870,7 +865,7 @@ $("#causale_inc").change(
         function () {
             var causale = $("#causale_inc").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -890,7 +885,7 @@ $("#causale_inc_mod").change(
         function () {
             var causale = $("#causale_inc_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -910,7 +905,7 @@ $("#causale_pag_cre").change(
         function () {
             var causale = $("#causale_pag_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -930,7 +925,7 @@ $("#causale_pag_mod").change(
         function () {
             var causale = $("#causale_pag_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -950,7 +945,7 @@ $("#causale_cormer_cre").change(
         function () {
             var causale = $("#causale_cormer_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -970,7 +965,7 @@ $("#causale_cormer_mod").change(
         function () {
             var causale = $("#causale_cormer_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -990,7 +985,7 @@ $("#causale_corneg_cre").change(
         function () {
             var causale = $("#causale_corneg_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -1010,7 +1005,7 @@ $("#causale_corneg_mod").change(
         function () {
             var causale = $("#causale_corneg_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {

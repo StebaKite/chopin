@@ -28,7 +28,7 @@ $("#cliente_inc_cre").keyup(function () {
     var descliente = $("#cliente_inc_cre").val();
     var codnegozio = $("#codneg_inc_cre").val();
 
-    if (descliente !== "") {
+    if (isNotEmpty(descliente)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -56,7 +56,7 @@ $("#cliente_inc_mod").keyup(function () {
     var descliente = $("#cliente_inc_mod").val();
     var codnegozio = $("#codneg_inc_mod").val();
 
-    if (descliente !== "") {
+    if (isNotEmpty(descliente)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -203,7 +203,7 @@ $("#causale_inc_cre").change(
         function () {
             var causale = $("#causale_inc_cre").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -223,7 +223,7 @@ $("#causale_inc_mod").change(
         function () {
             var causale = $("#causale_inc_mod").val();
 
-            if (causale !== "") {
+            if (isNotEmpty(causale)) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -282,21 +282,21 @@ function validaIncasso(type)
     var esito = "";
 
     controllaDataRegistrazione("datareg_inc_" + type);
-    if ($("#datareg_inc_" + type + "_messaggio").text() === "")
+    if (isEmpty($("#datareg_inc_" + type + "_messaggio").text()))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if ($("#descreg_inc_" + type).val() !== "") {
+    if (isNotEmpty($("#descreg_inc_" + type).val())) {
         if (controllaDescrizione("descreg_inc_" + type))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#causale_inc_" + type).val() !== "") {
+    if (isNotEmpty($("#causale_inc_" + type).val())) {
         controllaDettagliRegistrazione("dettagli_inc_" + type);
-        if ($("#dettagli_inc_" + type + "_messaggio").text() === "")
+        if (isEmpty($("#dettagli_inc_" + type + "_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";

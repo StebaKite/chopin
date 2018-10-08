@@ -31,14 +31,16 @@ $("#button-nuovo-sottoconto-nuovo-conto-form").click(function () {
 
     $("#desconto_cre_control_group").removeClass("has-error");
 
-    if (codconto == "")
+    if (isEmpty(codconto))
         $("#codconto_cre_control_group").addClass("has-error");
-    if (desconto == "")
+    
+    if (isNotEmpty(desconto))
         $("#desconto_cre_control_group").addClass("has-error");
+    
     if (!controllaNumero("numrigabilancio_cre"))
         $("#numrigabilancio_cre_control_group").addClass("has-error");
 
-    if ((codconto != "") && (desconto != "") && (numrigabilancio != "")) {
+    if (isNotEmpty(codconto) && isNotEmpty(desconto) && isNotEmpty(numrigabilancio)) {
         if (!$("#codconto_cre_control_group").hasClass("has-error") && !$("#numrigabilancio_cre_control_group").hasClass("has-error"))
             $("#nuovo-sottoconto-nuovo-conto-dialog").modal("show");
     }
@@ -54,14 +56,16 @@ $("#button-nuovo-sottoconto-modifica-conto-form").click(function () {
 
     $("#desconto_mod_control_group").removeClass("has-error");
 
-    if (codconto == "")
+    if (isEmpty(codconto))
         $("#codconto_mod_control_group").addClass("has-error");
-    if (desconto == "")
+    
+    if (isEmpty(desconto))
         $("#desconto_mod_control_group").addClass("has-error");
+    
     if (!controllaNumero("numrigabilancio_mod"))
         $("#numrigabilancio_mod_control_group").addClass("has-error");
 
-    if ((codconto != "") && (desconto != "") && (numrigabilancio != "")) {
+    if (isNotEmpty(codconto) && isNotEmpty(desconto) && isNotEmpty(numrigabilancio)) {
         if (!$("#codconto_mod_control_group").hasClass("has-error") && !$("#numrigabilancio_mod_control_group").hasClass("has-error"))
             $("#nuovo-sottoconto-modifica-conto-dialog").modal("show");
     }
@@ -369,7 +373,7 @@ function validaNuovoConto() {
      */
     var esito = "";
 
-    if ($("#codconto_cre").val() != "") {
+    if (isNotEmpty($("#codconto_cre").val())) {
         if (controllaCodice("codconto_cre")) {
             esito = esito + "1";
         } else {
@@ -377,7 +381,7 @@ function validaNuovoConto() {
         }
     }
 
-    if ($("#desconto_cre").val() != "") {
+    if (isNotEmpty($("#desconto_cre").val())) {
         if (controllaDescrizione("desconto_cre")) {
             esito = esito + "1";
         } else {
@@ -385,7 +389,7 @@ function validaNuovoConto() {
         }
     }
 
-    if ($("#numrigabilancio_cre").val() != "") {
+    if (isNotEmpty($("#numrigabilancio_cre").val())) {
         if (controllaNumero("numrigabilancio_cre")) {
             esito = esito + "1";
         } else {
@@ -412,7 +416,7 @@ function validaModificaConto() {
      */
     var esito = "";
 
-    if ($("#codconto_mod").val() != "") {
+    if (isNotEmpty($("#codconto_mod").val())) {
         if (controllaCodice("codconto_mod")) {
             esito = esito + "1";
         } else {
@@ -420,7 +424,7 @@ function validaModificaConto() {
         }
     }
 
-    if ($("#desconto_mod").val() != "") {
+    if (isNotEmpty($("#desconto_mod").val())) {
         if (controllaDescrizione("desconto_mod")) {
             esito = esito + "1";
         } else {
@@ -428,7 +432,7 @@ function validaModificaConto() {
         }
     }
 
-    if ($("#numrigabilancio_mod").val() != "") {
+    if (isNotEmpty($("#numrigabilancio_mod").val())) {
         if (controllaNumero("numrigabilancio_mod")) {
             esito = esito + "1";
         } else {
@@ -454,7 +458,7 @@ function controllaConto(campoCodConto)
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            if (xmlhttp.responseText != "") {
+            if (isNotEmpty(xmlhttp.responseText)) {
                 $("#" + campoCodConto + "_control_group").addClass("has-error");
             }
         }
