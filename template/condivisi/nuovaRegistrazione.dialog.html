@@ -46,23 +46,6 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-sm-4 ui-front">
-                                    <div class='input-group' id="numfatt_cre_control_group">
-                                        <span class="input-group-addon">%ml.numfatt%<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
-                                        <input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre');"/>
-                                    </div>
-                                </div>
-                                <div class="col-sm-8">
-                                    <div class='input-group' id="causale_cre_control_group">
-                                        <span class="input-group-addon">%ml.codcau%</span>
-                                        <select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
-                                            <option value=" ">&nbsp;</option>
-                                            %elenco_causali_cre%
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <div class="col-sm-6 ui-front">
                                     <div class='input-group' id="fornitore_cre_control_group">
                                         <span class="input-group-addon">%ml.codforn%</span>
@@ -77,6 +60,24 @@
                                         <select class="selectCliFor" data-live-search="true" id="cliente_cre" name="cliente_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre'); controllaCausale('causale_cre');" >
                                             %elenco_clienti%
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-8">
+                                    <div class='input-group' id="causale_cre_control_group">
+                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_causali_cre%
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 ui-front">
+                                    <div class='input-group' id="numfatt_cre_control_group">
+                                        <span class="input-group-addon">%ml.numfatt%&nbsp;<small><span class="text-danger" id="numfatt_cre_messaggio"></span></small></span>
+                                        <input class="form-control" id="numfatt_cre" name="numfatt_cre" type="text" onblur="controllaNumeroFattura('numfatt_cre'); controllaClienteFornitore('fornitore_cre', 'cliente_cre'); validaNumeroFattura('cliente_cre', 'fornitore_cre', 'numfatt_cre', 'datareg_cre');"/>
+                                        <input class="form-control" id="numfatt_cre_orig" name="numfatt_cre_orig" type="hidden" value=" " />
                                     </div>
                                 </div>
                             </div>

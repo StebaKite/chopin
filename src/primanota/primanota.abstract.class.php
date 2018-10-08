@@ -431,8 +431,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
                 $modifica_parms .= trim($codConto[0]) . ",";
                 $modifica_parms .= trim($codConto[1]) . ",";
-                $modifica_parms .= "$('#" . $idImportoDettaglio . "').val()" . ",";
-                $modifica_parms .= "$('#" . $idSegnoDettaglio . "').val()" . ",";
+                $modifica_parms .= "$('#importo" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
+                $modifica_parms .= "$('#segno" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
                 $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
 
                 if (parent::isNotEmpty($registrazione->getIdFornitore())) {

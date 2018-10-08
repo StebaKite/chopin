@@ -244,7 +244,7 @@ $("#button-ok-nuovo-incasso-form").click(
             if (validaIncasso("cre")) {
                 $("#testo-messaggio-successo").html("Incasso salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovoIncassoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore l'incasso non può essere salvato");
@@ -260,7 +260,7 @@ $("#button-ok-modifica-incasso-form").click(
             if (validaIncasso("mod")) {
                 $("#testo-messaggio-successo").html("Incasso salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaIncassoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore l'incasso non può essere salvato");

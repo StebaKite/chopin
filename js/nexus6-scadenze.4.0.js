@@ -76,7 +76,7 @@ $("#button-ok-modifica-scadenza-form").click(
             if (validaModificaScadenza("mod")) {
                 $("#testo-messaggio-successo").html("Scadenza fornitore salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaScadenzaForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la scadenza non può essere salvata");
@@ -92,7 +92,7 @@ $("#button-ok-modifica-scadenza-cliente-form").click(
             if (validaModificaScadenza("cli_mod")) {
                 $("#testo-messaggio-successo").html("Scadenza cliente salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaScadenzaClienteForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la scadenza non può essere salvata");

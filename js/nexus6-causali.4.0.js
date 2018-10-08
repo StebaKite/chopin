@@ -25,7 +25,7 @@ $("#button-ok-nuova-causale-form").click(
 		if (validaCausale("cre")) {
 			$("#testo-messaggio-successo").html("Causale salvata con successo!");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#nuovaCausaleForm").submit();			
 		}
 		else {
@@ -118,7 +118,7 @@ $("#button-ok-modifica-causale-form").click(
 		if (validaCausale("mod")) {
 			$("#testo-messaggio-successo").html("Causale salvata con successo");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#modificaCausaleForm").submit();			
 		}
 		else {
@@ -212,7 +212,7 @@ $("#button-ok-cancella-causale-form").click(
 	function() {
 		$("#testo-messaggio-successo").html("Ho cancellato la causale");
 		$("#messaggio-successo-dialog").modal("show");						
-		sleep(3000);
+		sleep(2000);
 		$("#cancellaCausaleForm").submit();			
 	}
 );

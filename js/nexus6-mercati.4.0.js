@@ -21,7 +21,7 @@ $("#button-ok-nuovo-mercato-form").click(
 		if (validaNuovoMercato()) {
 			$("#testo-messaggio-successo").html("Mercato salvato con successo!");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#nuovoMercatoForm").submit();			
 		}
 		else {
@@ -38,7 +38,7 @@ $("#button-ok-modifica-mercato-form").click(
 		if (validaModificaMercato()) {
 			$("#testo-messaggio-successo").html("Mercato salvato con successo");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#modificaMercatoForm").submit();			
 		}
 		else {
@@ -94,7 +94,7 @@ $("#button-ok-cancella-mercato-form").click(
 	function() {
 		$("#testo-messaggio-successo").html("Mercato cancellato!");
 		$("#messaggio-successo-dialog").modal("show");						
-		sleep(3000);
+		sleep(2000);
 		$("#cancellaMercatoForm").submit();			
 	}
 );

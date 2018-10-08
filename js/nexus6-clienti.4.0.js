@@ -24,7 +24,7 @@ $("#button-ok-nuovo-cliente-form").click(
 		if (validaNuovoCliente()) {
 			$("#testo-messaggio-successo").html("Cliente salvato con successo, conto cliente creato!");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#nuovoClienteForm").submit();			
 		}
 		else {
@@ -41,7 +41,7 @@ $("#button-ok-modifica-cliente-form").click(
 		if (validaModificaCliente()) {
 			$("#testo-messaggio-successo").html("Cliente salvato con successo");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#modificaClienteForm").submit();			
 		}
 		else {
@@ -232,7 +232,7 @@ $("#button-ok-cancella-cliente-form").click(
 	function() {
 		$("#testo-messaggio-successo").html("Cliente cancellato!");
 		$("#messaggio-successo-dialog").modal("show");						
-		sleep(3000);
+		sleep(2000);
 		$("#cancellaClienteForm").submit();			
 	}
 );

@@ -2,8 +2,6 @@
 
 require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
-require_once 'utility.class.php';
-require_once 'database.class.php';
 require_once 'registrazione.class.php';
 require_once 'dettaglioRegistrazione.class.php';
 

@@ -35,7 +35,7 @@ $("#button-ok-modifica-progressivo-form").click(
 		if (validaProgressivo("mod")) {
 			$("#testo-messaggio-successo").html("Progressivo fattura salvato con successo");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#modificaProgressivoForm").submit();			
 		}
 		else {

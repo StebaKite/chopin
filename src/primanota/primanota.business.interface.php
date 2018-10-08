@@ -31,6 +31,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_FORNITORE = "Obj_scadenziaimportodettaglioregistrazionefornitore";
 	const SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE = "Obj_scadenziaimportodettaglioregistrazionecliente";
 	const AGGIORNA_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornadettaglioregistrazione";
+	const AGGIORNA_TABELLA_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornatabelladettaglioregistrazione";
 
         const AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE = "Obj_aggiornasegnodettaglioregistrazione";
 	

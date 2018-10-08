@@ -12,6 +12,10 @@ $("#nuovaRegistrazione").click(function () {
             document.getElementById("nuovaRegistrazioneForm").reset();
             $("#codneg_cre").selectpicker('val', ' ');
             $("#causale_cre").selectpicker('val', ' ');
+            $("#datareg_cre_control_group").removeClass("has-error");
+            $("#numfatt_cre_control_group").removeClass("has-error");
+            $("#numfatt_cre_messaggio").html("");
+            $("#fornitore_cre_control_group").removeClass("has-error");            
             $("#fornitore_cre").selectpicker('val', ' ');
             $("#cliente_cre").selectpicker('val', ' ');
             $("#scadenzesuppl_cre").html("");
@@ -67,7 +71,7 @@ $("#button-ok-nuova-registrazione-form").click(
             if (validaNuovaRegistrazione()) {
                 $("#testo-messaggio-successo").html("Registrazione salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovaRegistrazioneForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la registrazione non può essere salvata");
@@ -83,7 +87,7 @@ $("#button-ok-modifica-registrazione-form").click(
             if (validaModificaRegistrazione()) {
                 $("#testo-messaggio-successo").html("Registrazione salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaRegistrazioneForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la registrazione non può essere salvata");
@@ -236,7 +240,7 @@ $("#button-ok-cancella-registrazione-form").click(
         function () {
             $("#testo-messaggio-successo").html("Registrazione cancellata!");
             $("#messaggio-successo-dialog").modal("show");
-            sleep(3000);
+            sleep(2000);
             $("#cancellaRegistrazioneForm").submit();
         }
 );
@@ -264,6 +268,9 @@ function modificaRegistrazione(idRegistrazione)
                         $("#fornitore_mod_control_group").removeClass("has-error");
                         $("#cliente_mod_control_group").removeClass("has-error");
                         $("#numfatt_mod_control_group").removeClass("has-error");
+                        $("#numfatt_mod_messaggio").html("");
+                        $("#dettagli_mod_control_group").removeClass("has-error");
+                        $("#dettagli_mod_messaggio").html("");
 
                         $("#datareg_mod").val($(this).find("datareg").text());
                         $("#descreg_mod").val($(this).find("descreg").text());
@@ -400,22 +407,22 @@ function validaNuovaRegistrazione() {
         esito = esito + "0";
     }
 
-    if (($("#fornitore_cre").val() !== "") || $("#cliente_cre").val() !== "") {
+    if (isNotEmpty($("#fornitore_cre").val()) || isNotEmpty($("#cliente_cre").val())) {
         if (controllaNumeroFattura("numfatt_cre"))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
 
-    if ($("#fornitore_cre").val() !== "") {
+    if (isNotEmpty($("#fornitore_cre").val())) {
         controllaNumeroFatturaFornitore("fornitore_cre", "numfatt_cre", "datareg_cre");
-        if ($("#fornitore_cre_messaggio").text() === "")
+        if (isEmpty($("#numfatt_cre_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
-    } else if ($("#cliente_cre").val() !== "") {
+    } else if (isNotEmpty($("#cliente_cre").val())) {
         controllaNumeroFatturaCliente("cliente_cre", "numfatt_cre", "datareg_cre");
-        if ($("#cliente_cre_messaggio").text() === "")
+        if (isEmpty($("#numfatt_cre_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -483,15 +490,15 @@ function validaModificaRegistrazione()
             esito = esito + "0";
     }
 
-    if ($("#fornitore_mod").val() !== "") {
+    if (isNotEmpty($("#fornitore_mod").val())) {
         controllaNumeroFatturaFornitore("fornitore_mod", "numfatt_mod", "datareg_mod");
-        if ($("#fornitore_mod_messaggio").text() === "")
+        if ($("#numfatt_mod_messaggio").text() === "")
             esito = esito + "1";
         else
             esito = esito + "0";
-    } else if ($("#cliente_mod").val() !== "") {
+    } else if (isNotEmpty($("#cliente_mod").val())) {
         controllaNumeroFatturaCliente("cliente_mod", "numfatt_mod", "datareg_mod");
-        if ($("#cliente_mod_messaggio").text() === "")
+        if (isEmpty($("#numfatt_mod_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
@@ -508,7 +515,7 @@ function validaModificaRegistrazione()
 // Function di aggiornamento
 // ---------------------------------------------------------------------
 
-function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, importo, segno, idDettaglio)
+function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importo, segno, idDettaglio)
 {
     var importoDettNormalizzato;
     if (importo === "")
@@ -528,9 +535,18 @@ function modificaImportoDettaglioRegistrazione(idTable, conto, sottoconto, impor
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/aggiornaImportoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
+        xmlhttp.open("GET", "../primanota/aggiornaDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
         xmlhttp.send();
     }   
+}
+
+//---------------------------------------------------------------------
+
+function aggiornaTabellaDettaglioRegistrazione() {
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "../primanota/aggiornaTabellaDettaglioRegistrazioneFacade.class.php?modo=go", true);
+    xmlhttp.send();
 }
 
 //---------------------------------------------------------------------
@@ -736,7 +752,6 @@ $("#fornitore_cre").change(
                     if (xmlhttp.responseText !== "") {
                         $("#datascad_cre_label").show();
                         $("#scadenzesuppl_cre").html(xmlhttp.responseText);
-                        controllaNumeroFattura("numfatt_cre");
                     }
                 }
             };
@@ -758,7 +773,6 @@ $("#fornitore_mod").change(
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     if (xmlhttp.responseText !== "") {
                         $("#scadenzesuppl_mod").html(xmlhttp.responseText);
-                        controllaNumeroFattura("numfatt_mod");
                     }
                 }
             };
@@ -781,7 +795,6 @@ $("#cliente_cre").change(
                     if (xmlhttp.responseText !== "") {
                         $("#datascad_cre_label").show();
                         $("#scadenzesuppl_cre").html(xmlhttp.responseText);
-                        controllaNumeroFattura("numfatt_cre");
                     }
                 }
             };
@@ -803,7 +816,6 @@ $("#cliente_mod").change(
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     if (xmlhttp.responseText !== "") {
                         $("#scadenzesuppl_mod").html(xmlhttp.responseText);
-                        controllaNumeroFattura("numfatt_mod");
                     }
                 }
             };

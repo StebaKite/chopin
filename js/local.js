@@ -355,11 +355,22 @@ function controllaNumeroFattura(campoFat)
 
 //---------------------------------------------------------------------
 
+function validaNumeroFattura(campoCli, campoForn, campoFat, campoDat)
+{
+    var cliente = $("#" + campoCli).val();
+    var fornitore = $("#" + campoForn).val();
+
+    if ((fornitore !== " ") && (fornitore !== "")) {
+        controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat);        
+    } else if ((cliente !== " ") && (cliente !== "")) {
+        controllaNumeroFatturaCliente(campoCli, campoFat, campoDat);
+    }
+}
+
+//---------------------------------------------------------------------
+
 function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat)
 {
-    /**
-     * La fattura del fornitore immessa deve essere univoca
-     */
     var fornitore = $("#" + campoForn).val();
     var numfatt = $("#" + campoFat).val();
     var numfattOrig = $("#" + campoFat + "_orig").val();
@@ -369,24 +380,27 @@ function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
+                if (xmlhttp.responseText !== " ") {
                     if (numfatt !== numfattOrig) {
+                        $("#" + campoDat + "_control_group").addClass("has-error");
                         $("#" + campoFat + "_control_group").addClass("has-error");
                         $("#" + campoForn + "_control_group").addClass("has-error");
                         $("#" + campoFat + "_messaggio").html(xmlhttp.responseText);
                     } else {
+                        $("#" + campoDat + "_control_group").removeClass("has-error");
                         $("#" + campoFat + "_control_group").removeClass("has-error");
                         $("#" + campoForn + "_control_group").removeClass("has-error");
-                        $("#" + campoFat + "_control_group").html("");
+                        $("#" + campoFat + "_messaggio").html("");
                     }
                 } else {
+                    $("#" + campoDat + "_control_group").removeClass("has-error");
                     $("#" + campoFat + "_control_group").removeClass("has-error");
                     $("#" + campoForn + "_control_group").removeClass("has-error");
-                    $("#" + campoFat + "_control_group").html("");
+                    $("#" + campoFat + "_messaggio").html("");
                 }
             }
         };
-        xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&desfornitore=" + fornitore + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+        xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&fornitore_mod=" + fornitore + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, true);
         xmlhttp.send();
     } else
         return true;
@@ -396,29 +410,36 @@ function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat)
 
 function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat)
 {
-    /**
-     * La fattura del cliente immessa deve essere univoca
-     */
     var cliente = $("#" + campoCli).val();
     var numfatt = $("#" + campoFat).val();
+    var numfattOrig = $("#" + campoFat + "_orig").val();
     var datareg = $("#" + campoDat).val();
-
+    
     if ((numfatt !== "") && (datareg !== "") && (cliente !== "")) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                if (xmlhttp.responseText !== "") {
-                    $("#" + campoFat + "_control_group").addClass("has-error");
-                    $("#" + campoCli + "_control_group").addClass("has-error");
-                    $("#" + campoFat + "_control_group").html(xmlhttp.responseText);
+                if (xmlhttp.responseText !== " ") {
+                    if (numfatt !== numfattOrig) {
+                        $("#" + campoDat + "_control_group").addClass("has-error");
+                        $("#" + campoFat + "_control_group").addClass("has-error");
+                        $("#" + campoCli + "_control_group").addClass("has-error");
+                        $("#" + campoFat + "_messaggio").html(xmlhttp.responseText);
+                    } else {
+                        $("#" + campoDat + "_control_group").removeClass("has-error");
+                        $("#" + campoFat + "_control_group").removeClass("has-error");
+                        $("#" + campoCli + "_control_group").removeClass("has-error");
+                        $("#" + campoFat + "_messaggio").html("");
+                    }
                 } else {
+                    $("#" + campoDat + "_control_group").removeClass("has-error");
                     $("#" + campoFat + "_control_group").removeClass("has-error");
                     $("#" + campoCli + "_control_group").removeClass("has-error");
-                    $("#" + campoFat + "_control_group").html("");
+                    $("#" + campoFat + "_messaggio").html("");
                 }
             }
         };
-        xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&descliente=" + cliente + "&numfatt=" + numfatt + "&datareg=" + datareg, true);
+        xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&cliente_mod=" + cliente + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, true);
         xmlhttp.send();
     } else
         return true;
@@ -441,6 +462,7 @@ function controllaDettagliRegistrazione(campoDet)
             } else {
                 $("#" + campoDet + "_control_group").removeClass("has-error");
                 $("#" + campoDet + "_messaggio").html("");
+                aggiornaTabellaDettaglioRegistrazione();
             }
         }
     };
@@ -497,4 +519,20 @@ function controllaQuantita(campoQta) {
         $("#" + campoQta + "_messaggio").html("non valido");
         return false;
     }
+}
+
+function isNotEmpty(campo) {
+    
+    if ((campo !== "") && (campo !== " ")) {
+        return true;
+    }
+    return false;
+}
+
+function isEmpty(campo) {
+    
+    if ((campo === "") || (campo === " ") || (campo === null)) {
+        return true;
+    }
+    return false;
 }

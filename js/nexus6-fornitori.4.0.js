@@ -25,7 +25,7 @@ $("#button-ok-nuovo-fornitore-form").click(
 		if (validaNuovoFornitore()) {
 			$("#testo-messaggio-successo").html("Fornitore salvato con successo, conto fornitore creato!");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#nuovoFornitoreForm").submit();			
 		}
 		else {
@@ -42,7 +42,7 @@ $("#button-ok-modifica-fornitore-form").click(
 		if (validaModificaFornitore()) {
 			$("#testo-messaggio-successo").html("Fornitore salvato con successo");
 			$("#messaggio-successo-dialog").modal("show");						
-			sleep(3000);
+			sleep(2000);
 			$("#modificaFornitoreForm").submit();			
 		}
 		else {
@@ -65,7 +65,7 @@ $("#button-ok-cancella-fornitore-form").click(
 	function() {
 		$("#testo-messaggio-successo").html("Fornitore cancellato!");
 		$("#messaggio-successo-dialog").modal("show");						
-		sleep(3000);
+		sleep(2000);
 		$("#cancellaFornitoreForm").submit();			
 	}
 );

@@ -216,7 +216,7 @@ $("#button-ok-nuovo-pagamento-form").click(
             if (validaPagamento("cre")) {
                 $("#testo-messaggio-successo").html("Pagamento salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovoPagamentoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");
@@ -344,7 +344,7 @@ $("#button-ok-modifica-pagamento-form").click(
             if (validaPagamento("mod")) {
                 $("#testo-messaggio-successo").html("Pagamento salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaPagamentoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");

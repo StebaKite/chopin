@@ -112,7 +112,7 @@ $("#button-ok-nuovo-conto-form").click(
             if (validaNuovoConto()) {
                 $("#testo-messaggio-successo").html("Conto salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovoContoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il conto non può essere salvato");
@@ -128,7 +128,7 @@ $("#button-ok-modifica-conto-form").click(
             if (validaModificaConto()) {
                 $("#testo-messaggio-successo").html("Conto salvato con successo");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaContoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il conto non può essere salvato");
@@ -191,7 +191,7 @@ $("#button-ok-cancella-conto-form").click(
         function () {
             $("#testo-messaggio-successo").html("Ho cancellato il conto e tutti i suoi sottoconti");
             $("#messaggio-successo-dialog").modal("show");
-            sleep(3000);
+            sleep(2000);
             $("#cancellaContoForm").submit();
         }
 );

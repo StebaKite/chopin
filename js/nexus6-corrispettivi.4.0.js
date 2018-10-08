@@ -364,7 +364,7 @@ $("#button-ok-nuovo-corrispettivo-mercato-form").click(
             if (validaNuovoCorrispettivoMercato()) {
                 $("#testo-messaggio-successo").html("Corrispettivo mercato salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovoCorrispettivoMercatoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il corrispettivo non può essere salvato");
@@ -380,7 +380,7 @@ $("#button-ok-nuovo-corrispettivo-negozio-form").click(
             if (validaNuovoCorrispettivoNegozio()) {
                 $("#testo-messaggio-successo").html("Corrispettivo negozio salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#nuovoCorrispettivoNegozioForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il corrispettivo non può essere salvato");
@@ -619,7 +619,7 @@ $("#button-ok-modifica-corrispettivo-mercato-form").click(
             if (validaModificaCorrispettivoMercato()) {
                 $("#testo-messaggio-successo").html("Corrispettivo salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaCorrispettivoMercatoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il corrispettivo non può essere salvato");
@@ -710,7 +710,7 @@ $("#button-ok-modifica-corrispettivo-negozio-form").click(
             if (validaModificaCorrispettivoNegozio()) {
                 $("#testo-messaggio-successo").html("Corrispettivo salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(3000);
+                sleep(2000);
                 $("#modificaCorrispettivoNegozioForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il corrispettivo non può essere salvato");
