@@ -6,8 +6,8 @@ html, body {
     font-family: Rajdhani, sans-serif;
 }
 
-.scrollable-panel{
-    height:400px;
+.scrollable-panel {
+    height: 500px;
     overflow-y:auto;
     width:100%;
 }

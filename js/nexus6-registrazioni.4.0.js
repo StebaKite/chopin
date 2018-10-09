@@ -10,14 +10,17 @@ $("#nuovaRegistrazione").click(function () {
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
             document.getElementById("nuovaRegistrazioneForm").reset();
-            $("#codneg_cre").selectpicker('val', ' ');
-            $("#causale_cre").selectpicker('val', ' ');
+            $("#descreg_cre_control_group").removeClass("has-error");
+            $("#causale_cre_control_group").removeClass("has-error");
             $("#datareg_cre_control_group").removeClass("has-error");
             $("#numfatt_cre_control_group").removeClass("has-error");
-            $("#numfatt_cre_messaggio").html("");
             $("#fornitore_cre_control_group").removeClass("has-error");            
+            $("#cliente_cre_control_group").removeClass("has-error");            
+            $("#codneg_cre").selectpicker('val', ' ');
+            $("#causale_cre").selectpicker('val', ' ');
             $("#fornitore_cre").selectpicker('val', ' ');
             $("#cliente_cre").selectpicker('val', ' ');
+            $("#numfatt_cre_messaggio").html("");
             $("#scadenzesuppl_cre").html("");
             $("#dettagli_cre").html("");
             $("#dettagli_cre_messaggio").html("");
@@ -71,7 +74,7 @@ $("#button-ok-nuova-registrazione-form").click(
             if (validaNuovaRegistrazione()) {
                 $("#testo-messaggio-successo").html("Registrazione salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("nuova-registrazione-dialog").modal("hide");
                 $("#nuovaRegistrazioneForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la registrazione non può essere salvata");
@@ -87,7 +90,7 @@ $("#button-ok-modifica-registrazione-form").click(
             if (validaModificaRegistrazione()) {
                 $("#testo-messaggio-successo").html("Registrazione salvata con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("modifica-registrazione-dialog").modal("hide");
                 $("#modificaRegistrazioneForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore la registrazione non può essere salvata");
@@ -178,28 +181,23 @@ $("#button-ok-nuovodett-nuova-registrazione-form").click(
         function () {
 
             var D_A = $("#newsegnodett_cre").val();
-
-            // tolgo eventuali virgole nella descrizione del conto
-
             var conto = $("#conti").val().replace(",", ".");
-            var idconto = conto.substring(0, 6);
-
-            // normalizzo la virgola dell'importo
-
             var importo = $("#newimpdett_cre").val();
             var importoNormalizzato = importo.trim().replace(",", ".");
 
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange =
-                    function () {
-                        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                            var sottocontiTable = xmlhttp.responseText;
-                            $("#dettagli_cre").html(sottocontiTable);
-                            controllaDettagliRegistrazione("dettagli_cre");
-                        }
-                    };
-            xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
-            xmlhttp.send();
+            if (isNotEmpty(D_A) && isNotEmpty(conto) && isNotEmpty(importo)) {                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange =
+                        function () {
+                            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                                var sottocontiTable = xmlhttp.responseText;
+                                $("#dettagli_cre").html(sottocontiTable);
+                                controllaDettagliRegistrazione("dettagli_cre");
+                            }
+                        };
+                xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+                xmlhttp.send();
+            }
         }
 );
 
@@ -209,28 +207,23 @@ $("#button-ok-nuovodett-modifica-registrazione-form").click(
         function () {
 
             var D_A = $("#newsegnodett_mod").val();
-
-            // tolgo eventuali virgole nella descrizione del conto
-
             var conto = $("#conti_mod").val().replace(",", ".");
-            var idconto = conto.substring(0, 6);
-
-            // normalizzo la virgola dell'importo
-
             var importo = $("#newimpdett_mod").val();
             var importoNormalizzato = importo.trim().replace(",", ".");
 
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange =
-                    function () {
-                        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                            var sottocontiTable = xmlhttp.responseText;
-                            $("#dettagli_mod").html(sottocontiTable);
-                            controllaDettagliRegistrazione("dettagli_mod");
-                        }
-                    };
-            xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
-            xmlhttp.send();
+            if (isNotEmpty(D_A) && isNotEmpty(conto) && isNotEmpty(importo)) {                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange =
+                        function () {
+                            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                                var sottocontiTable = xmlhttp.responseText;
+                                $("#dettagli_mod").html(sottocontiTable);
+                                controllaDettagliRegistrazione("dettagli_mod");
+                            }
+                        };
+                xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+                xmlhttp.send();                
+            }
         }
 );
 
@@ -376,58 +369,47 @@ function validaNuovaRegistrazione() {
 
     controllaDataRegistrazione("datareg_cre");
     if (isEmpty($("#datareg_cre_messaggio").text()))
-        esito = esito + "1";
+        esito += "1";
     else
-        esito = esito + "0";
+        esito += "0";
 
     if (isNotEmpty($("#descreg_cre").val())) {
         if (controllaDescrizione("descreg_cre")) {
-            esito = esito + "1";
+            esito += "1";
         } else {
-            esito = esito + "0";
+            esito += "0";
         }
     }
 
     if (isNotEmpty($("#causale_cre").val())) {
         controllaDettagliRegistrazione("dettagli_cre");
         if (isEmpty($("#dettagli_cre_messaggio").text()))
-            esito = esito + "1";
+            esito += "1";
         else
-            esito = esito + "0";
+            esito += "0";
     }
 
     if (controllaCausale("causale_cre")) {
-        esito = esito + "1";
+        esito += "1";
     } else {
-        esito = esito + "0";
+        esito += "0";
     }
 
     if (controllaClienteFornitore("fornitore_cre", "cliente_cre")) {
-        esito = esito + "1";
+        esito += "1";
     } else {
-        esito = esito + "0";
+        esito += "0";
     }
-
-    if (isNotEmpty($("#fornitore_cre").val()) || isNotEmpty($("#cliente_cre").val())) {
+    
+    if (isEmpty($("#numfatt_cre_messaggio").text())) {
+        esito += "1";
         if (controllaNumeroFattura("numfatt_cre"))
-            esito = esito + "1";
+            esito += "1";
         else
-            esito = esito + "0";
+            esito += "0";
     }
-
-    if (isNotEmpty($("#fornitore_cre").val())) {
-        controllaNumeroFatturaFornitore("fornitore_cre", "numfatt_cre", "datareg_cre");
-        if (isEmpty($("#numfatt_cre_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    } else if (isNotEmpty($("#cliente_cre").val())) {
-        controllaNumeroFatturaCliente("cliente_cre", "numfatt_cre", "datareg_cre");
-        if (isEmpty($("#numfatt_cre_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
+    else
+        esito += "0";
 
     if (esito === "1111111") {
         return true;
@@ -452,58 +434,44 @@ function validaModificaRegistrazione()
 
     controllaDataRegistrazione("datareg_mod");
     if (isEmpty($("#datareg_mod_messaggio").text()))
-        esito = esito + "1";
+        esito += "1";
     else
-        esito = esito + "0";
+        esito += "0";
 
     if (isNotEmpty($("#descreg_mod").val())) {
         if (controllaDescrizione("descreg_mod")) {
-            esito = esito + "1";
+            esito += "1";
         } else {
-            esito = esito + "0";
+            esito += "0";
         }
     }
 
-    if (isNotEmpty($("#causale_mod").val())) {
-        controllaDettagliRegistrazione("dettagli_mod");
-        if (isEmpty($("#dettagli_mod_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
+    if (isEmpty($("#dettagli_mod_messaggio").text()))
+        esito += "1";
+    else
+        esito += "0";
 
     if (controllaCausale("causale_mod")) {
-        esito = esito + "1";
+        esito += "1";
     } else {
-        esito = esito + "0";
+        esito += "0";
     }
 
     if (controllaClienteFornitore("fornitore_mod", "cliente_mod")) {
-        esito = esito + "1";
+        esito += "1";
     } else {
-        esito = esito + "0";
+        esito += "0";
     }
 
-    if (isNotEmpty($("#fornitore_mod").val()) || isNotEmpty($("#cliente_mod").val())) {
+    if (isEmpty($("#numfatt_mod_messaggio").text())) {
+        esito += "1";
         if (controllaNumeroFattura("numfatt_mod"))
-            esito = esito + "1";
+            esito += "1";
         else
-            esito = esito + "0";
+            esito += "0";
     }
-
-    if (isNotEmpty($("#fornitore_mod").val())) {
-        controllaNumeroFatturaFornitore("fornitore_mod", "numfatt_mod", "datareg_mod");
-        if (isEmpty($("#numfatt_mod_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    } else if (isNotEmpty($("#cliente_mod").val())) {
-        controllaNumeroFatturaCliente("cliente_mod", "numfatt_mod", "datareg_mod");
-        if (isEmpty($("#numfatt_mod_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
+    else
+        esito += "0";
 
     if (esito === "1111111") {
         return true;
