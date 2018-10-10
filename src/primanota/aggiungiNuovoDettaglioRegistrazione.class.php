@@ -29,6 +29,7 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
         $dettaglioRegistrazione->setIdRegistrazione(0);
+        $dettaglioRegistrazione->setIndContoPrincipale("N");
         $dettaglioRegistrazione->aggiungi();
         echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
     }

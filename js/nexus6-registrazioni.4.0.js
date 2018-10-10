@@ -16,11 +16,14 @@ $("#nuovaRegistrazione").click(function () {
             $("#numfatt_cre_control_group").removeClass("has-error");
             $("#fornitore_cre_control_group").removeClass("has-error");            
             $("#cliente_cre_control_group").removeClass("has-error");            
+            $("#scadenzesuppl_cre_control_group").removeClass("has-error");
+            $("#dettagli_cre_control_group").removeClass("has-error");
             $("#codneg_cre").selectpicker('val', ' ');
             $("#causale_cre").selectpicker('val', ' ');
             $("#fornitore_cre").selectpicker('val', ' ');
             $("#cliente_cre").selectpicker('val', ' ');
             $("#numfatt_cre_messaggio").html("");
+            $("#scadenzesuppl_cre_messaggio").html("");
             $("#scadenzesuppl_cre").html("");
             $("#dettagli_cre").html("");
             $("#dettagli_cre_messaggio").html("");

@@ -328,15 +328,17 @@ function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat)
 function controllaDettagliRegistrazione(campoDet)
 {
     /**
-     * I dettagli della registrazione devono essere presenti Gli importi del
-     * Dare e Avere devono quadrare
+     * I dettagli della registrazione devono essere presenti e gli importi del
+     * Dare e Avere suivari conti devono annularsi.
+     * L'importo inserito sul conto principale (fornitore/cliente) deve quadrare con la
+     * somma degli importi di tutte le scadenze
      */
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
             if (isNotEmpty(xmlhttp.responseText)) {
                 $("#" + campoDet + "_control_group").addClass("has-error");
-                $("#" + campoDet + "_messaggio").html("Completa i dettagli");
+                $("#" + campoDet + "_messaggio").html(xmlhttp.responseText);
             } else {
                 $("#" + campoDet + "_control_group").removeClass("has-error");
                 $("#" + campoDet + "_messaggio").html("");

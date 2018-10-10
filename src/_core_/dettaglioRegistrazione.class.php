@@ -18,6 +18,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     const COD_CONTO = "cod_conto";
     const COD_SOTTOCONTO = "cod_sottoconto";
     const DAT_INSERIMENTO = "dat_inserimento";
+    const IND_CONTO_PRINCIPALE = "ind_conto_principale";
 
     // dati registrazione
 
@@ -35,6 +36,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     private $aliquota;
     private $impIva;
     private $imponibile;
+    private $indContoPrincipale;
+    
     // dati per controlli in pagina
 
     private $campoMsgControlloPagina;
@@ -90,6 +93,19 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         return $result;
     }
 
+    public function getImportoContoPrincipale() {
+        
+        $importoContoPrincipale = 0;
+        foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+            if ($unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE] == "Y") {
+                $importoContoPrincipale = $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+                break;
+            }
+        }
+        return $importoContoPrincipale;
+    }
+    
+    
     public function aggiornaDettaglio() {
 
         // aggiorno array dei dettagli        
@@ -110,7 +126,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                     DettaglioRegistrazione::IND_DAREAVERE => $this->getIndDareavere(),
                     DettaglioRegistrazione::COD_CONTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO],
                     DettaglioRegistrazione::COD_SOTTOCONTO => $unDettaglio[DettaglioRegistrazione::COD_SOTTOCONTO],
-                    DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO]
+                    DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO],
+                    DettaglioRegistrazione::IND_CONTO_PRINCIPALE => $unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE]
                 );
                 array_push($dettagliDiff, $item);
             }
@@ -127,7 +144,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             DettaglioRegistrazione::IND_DAREAVERE => trim($this->getIndDareavere()),
             DettaglioRegistrazione::COD_CONTO => trim($this->getCodConto()),
             DettaglioRegistrazione::COD_SOTTOCONTO => trim($this->getCodSottoconto()),
-            DettaglioRegistrazione::DAT_INSERIMENTO => date("Y/m/d")
+            DettaglioRegistrazione::DAT_INSERIMENTO => date("Y/m/d"),
+            DettaglioRegistrazione::IND_CONTO_PRINCIPALE => trim($this->getIndContoPrincipale())                
         );
 
         if ($this->getQtaDettagliRegistrazione() == 0) {
@@ -356,7 +374,6 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setIdTablePagina($idTablePagina) {
         $this->idTablePagina = $idTablePagina;
-        return $this;
     }
 
     public function getMsgControlloPagina() {
@@ -365,7 +382,6 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setMsgControlloPagina($msgControlloPagina) {
         $this->msgControlloPagina = $msgControlloPagina;
-        return $this;
     }
 
     public function getNomeCampo() {
@@ -374,7 +390,6 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setNomeCampo($nomeCampo) {
         $this->nomeCampo = $nomeCampo;
-        return $this;
     }
 
     public function getLabelNomeCampo() {
@@ -383,7 +398,6 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setLabelNomeCampo($labelNomeCampo) {
         $this->labelNomeCampo = $labelNomeCampo;
-        return $this;
     }
 
     public function getCampoMsgControlloPagina() {
@@ -392,7 +406,14 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setCampoMsgControlloPagina($campoMsgControlloPagina) {
         $this->campoMsgControlloPagina = $campoMsgControlloPagina;
-        return $this;
+    }
+
+    public function getIndContoPrincipale() {
+        return $this->indContoPrincipale;
+    }
+
+    public function setIndContoPrincipale($indContoPrincipale) {
+        $this->indContoPrincipale = $indContoPrincipale;
     }
 
 }

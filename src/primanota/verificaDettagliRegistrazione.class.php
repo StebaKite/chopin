@@ -3,6 +3,9 @@
 require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
 require_once 'dettaglioRegistrazione.class.php';
+require_once 'registrazione.class.php';
+require_once 'scadenzaFornitore.class.php';
+require_once 'scadenzaCliente.class.php';
 
 class VerificaDettagliRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
@@ -18,10 +21,32 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
     }
 
     public function start() {
+        $registrazione = Registrazione::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-        if ($dettaglioRegistrazione->verificaQuadratura())
+        if ($dettaglioRegistrazione->verificaQuadratura()) {
+
+            // Fornitore
+            
+            if (parent::isNotEmpty($registrazione->getIdFornitore())) {                
+                $scadenzaFornitore = ScadenzaFornitore::getInstance();
+                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenze();                
+                $importoContoFornitore = $dettaglioRegistrazione->getImportoContoPrincipale();
+                
+                if ($importoTotaleScadenze != $importoContoFornitore) {
+                    echo "Errore scadenze";
+                }
+            }
+            
+            // Cliente
+            
+            
+            
+            
+            
+            
+            
             echo "";
-        else
+        } else             
             echo "Errore dettagli";
     }
 

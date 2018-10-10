@@ -59,6 +59,7 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
                 // compongo la colonna "conto" da inserire nel dettaglio
                 $dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
                 $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
+                $dettaglioRegistrazione->setIndContoPrincipale("Y");
                 $dettaglioRegistrazione->aggiungi();
             }
             echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
