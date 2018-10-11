@@ -83,7 +83,7 @@ $("#button-ok-nuovodett-nuovo-pagamento-form").click(
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     var sottocontiTable = xmlhttp.responseText;
                     $("#dettagli_pag_cre").html(sottocontiTable);
-                    controllaDettagliRegistrazione("dettagli_pag_cre");
+                    controllaDettagliPagamento("dettagli_pag_cre");
                 }
             };
             xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
@@ -215,7 +215,7 @@ $("#button-ok-nuovo-pagamento-form").click(
             if (validaPagamento("cre")) {
                 $("#testo-messaggio-successo").html("Pagamento salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("nuovo-pagamento-dialog").modal("hide");
                 $("#nuovoPagamentoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");
@@ -343,7 +343,7 @@ $("#button-ok-modifica-pagamento-form").click(
             if (validaPagamento("mod")) {
                 $("#testo-messaggio-successo").html("Pagamento salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("modifica-pagamento-dialog").modal("hide");
                 $("#modificaPagamentoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");

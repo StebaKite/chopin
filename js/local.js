@@ -192,18 +192,29 @@ function controllaCausale(campoCau)
 
 //---------------------------------------------------------------------
 
+function controllaFornitore(campoForn)
+{
+    if (isEmpty($("#" + campoForn).val())) {
+        $("#" + campoForn + "_control_group").addClass("has-error");        
+    } else {
+        $("#" + campoForn + "_control_group").removeClass("has-error");
+    }
+}
+
+//---------------------------------------------------------------------
+
 function controllaClienteFornitore(campoForn, campoCli)
 {
     /**
      * Il cliente e il fornitore sono mutualmente esclusivi Possono mancare
      * entrambi
      */
-    if (($("#" + campoForn).val() !== " ") && ($("#" + campoCli).val() !== " "))
+    if (isNotEmpty($("#" + campoForn).val()) && isNotEmpty($("#" + campoCli).val()))
     {
         $("#" + campoForn + "_control_group").addClass("has-error");
         $("#" + campoCli + "_control_group").addClass("has-error");
         return false;
-    } else if (($("#" + campoForn).val() === " ") && ($("#" + campoCli).val() === " ")) {
+    } else if (isEmpty($("#" + campoForn).val()) && isEmpty($("#" + campoCli).val())) {
         $("#" + campoForn + "_control_group").addClass("has-error");
         $("#" + campoCli + "_control_group").addClass("has-error");
         return false;
@@ -347,6 +358,31 @@ function controllaDettagliRegistrazione(campoDet)
         }
     };
     xmlhttp.open("GET", "../primanota/verificaDettagliRegistrazioneFacade.class.php?modo=start", true);
+    xmlhttp.send();
+}
+
+function controllaDettagliPagamento(campoDet)
+{
+    /**
+     * I dettagli del pagamento devono essere presenti e gli importi del
+     * Dare e Avere sui vari conti devono annularsi.
+     * L'importo inserito sul conto principale (fornitore) deve quadrare con la
+     * somma degli importi delle scadenze pagate
+     */
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            if (isNotEmpty(xmlhttp.responseText)) {
+                $("#" + campoDet + "_control_group").addClass("has-error");
+                $("#" + campoDet + "_messaggio").html(xmlhttp.responseText);
+            } else {
+                $("#" + campoDet + "_control_group").removeClass("has-error");
+                $("#" + campoDet + "_messaggio").html("");
+                aggiornaTabellaDettaglioRegistrazione();
+            }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/verificaDettagliPagamentoFacade.class.php?modo=start", true);
     xmlhttp.send();
 }
 

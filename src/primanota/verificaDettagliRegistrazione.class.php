@@ -39,13 +39,16 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
             
             // Cliente
             
-            
-            
-            
-            
-            
-            
-            echo "";
+            elseif (parent::isNotEmpty($registrazione->getIdCliente())) {                
+                $scadenzaCliente = ScadenzaCliente::getInstance();
+                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenze();                
+                $importoContoCliente = $dettaglioRegistrazione->getImportoContoPrincipale();
+                
+                if ($importoTotaleScadenze != $importoContoCliente) {
+                    echo "Errore scadenze";
+                }
+            }            
+            echo "";        // tutto ok
         } else             
             echo "Errore dettagli";
     }

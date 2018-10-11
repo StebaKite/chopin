@@ -27,7 +27,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <div class='input-group'>
                                         <span class="input-group-addon">Neg</span>
                                         <select class="selectNegozio" id="codneg_pag_cre" name="codneg_pag_cre">
@@ -38,7 +38,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     <div class='input-group' id="descreg_pag_cre_control_group">
                                         <span class="input-group-addon">%ml.descreg%</span>
                                         <input class="form-control" id="descreg_pag_cre" name="descreg_pag_cre" type="text" onblur="controllaDescrizione('descreg_pag_cre')"/>
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <div class='input-group' id="causale_pag_cre_control_group">
                                         <span class="input-group-addon">%ml.codcau%</span>
                                         <select class="selectCausale" data-live-search="true" id="causale_pag_cre" name="causale_pag_cre" >
@@ -55,10 +55,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-5 ui-front">
+                                <div class="col-sm-6 ui-front">
                                     <div class="input-group" id="fornitore_pag_cre_control_group">
                                         <span class="input-group-addon">%ml.codforn%</span>
-                                        <select data-live-search="true" id="fornitore_pag_cre" name="fornitore_pag_cre" onchange="trovaScadenzeFornitore(); aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre'); controllaClienteFornitore('fornitore_pag_cre', 'cliente_pag_cre'); controllaCausale('causale_pag_cre');" >
+                                        <select data-live-search="true" id="fornitore_pag_cre" name="fornitore_pag_cre" onchange="trovaScadenzeFornitore(); aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre'); controllaFornitore('fornitore_pag_cre'); controllaCausale('causale_pag_cre');" >
                                             %elenco_fornitori%
                                         </select>
                                     </div>
@@ -92,7 +92,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-pagamento-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-ok-nuovo-pagamento-form">Ok</button>
                     <button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuovo-pagamento-form">Nuovo Dettaglio</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
                 </div>
