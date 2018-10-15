@@ -4,97 +4,97 @@
 <!-- ------------- -->
 
 <div class="container">
-	<div class="modal fade" id="nuovo-incasso-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuovo Incasso</h4>
-	        	</div>
-	        	<div class="modal-body">
+    <div class="modal fade" id="nuovo-incasso-dialog" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuovo Incasso</h4>
+                </div>
+                <div class="modal-body">
 
-					<form method="post" id="nuovoIncassoForm" action="../primanota/creaIncassoFacade.class.php?modo=go" >
-					
-						<div class="well well-sm">
-							<div class="form-group row">
-								<div class="col-sm-3">
-							  		<div class="control-group" id="datareg_inc_cre_control_group">
-										<div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
-					                		<input type='text' class="form-control" id="datareg_inc_cre" name="datareg_inc_cre"/>
-					                		<span class="input-group-addon">
-					                    		<span class="glyphicon glyphicon-calendar"></span>
-					                 		</span>
-					            		</div>			
-				            		</div>
-							  	</div>
-							  	<div class="col-sm-3">
-				 					<div class='input-group'>
-										<span class="input-group-addon">Neg</span>
-										<select class="selectNegozio" id="codneg_inc_cre" name="codneg_inc_cre">
-											<option value=" ">&nbsp;</option>
-											<option value="VIL">%ml.villa%</option>
-											<option value="BRE">%ml.brembate%</option>
-											<option value="TRE">%ml.trezzo%</option>
-										</select>			
-									</div>	
-							  	</div>
-							  	<div class="col-sm-5">
-									<div class='input-group' id="descreg_inc_cre_control_group">
-										<span class="input-group-addon">%ml.descreg%</span>
-										<input class="form-control" id="descreg_inc_cre" name="descreg_inc_cre" type="text" onblur="controllaDescrizione('descreg_inc_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class='input-group' id="causale_inc_cre_control_group">
-										<span class="input-group-addon">%ml.codcau%</span>
-										<select class="selectCausale" data-live-search="true" id="causale_inc_cre" name="causale_inc_cre" >
-											<option value=" ">&nbsp;</option>
-											%elenco_causali_inc_cre%
-										</select>			
-									</div>
-							  	</div>
-							  	<div class="col-sm-4 ui-front">
-									<div class='input-group' id="cliente_inc_cre_control_group">
-										<span class="input-group-addon">%ml.codclie%</span>
-										<select class="selectCliFor" data-live-search="true" id="cliente_inc_cre" name="cliente_inc_cre" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_cre'); controllaClienteFornitore('fornitore_inc_cre','cliente_inc_cre'); controllaCausale('causale_inc_cre');" >
-											%elenco_clienti%
-										</select>			
-									</div>	
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-6">
-							  		<div class="control-group" id="scadenze_chiuse_inc_cre_control_group">
-							    		<label for="scadenze_chiuse_inc_cre">Fatture incluse nell'incasso<small><span class="text-danger" id="scadenze_chiuse_inc_cre_messaggio"></span></small></label>
-										<table class="table table-bordered table-hover" id="scadenze_chiuse_inc_cre"></table>
-									</div>	
-							  	</div>
-							  	<div class="col-sm-6">
-							  		<div class="control-group" id="scadenze_aperte_inc_cre_control_group">
-							    		<label for="scadenze_aperte_inc_cre">Fatture rimanenti da incassare<small><span class="text-danger" id="scadenze_aperte_inc_cre_messaggio"></span></small></label>
-										<table class="table table-bordered table-hover" id="scadenze_aperte_inc_cre"></table>
-									</div>	
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-							  		<div class="control-group" id="dettagli_inc_cre_control_group">
-							    		<label for="dettagli_inc_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_inc_cre_messaggio"></span></small></label>
-										<table class="table table-bordered table-hover" id="dettagli_inc_cre"></table>
-									</div>	
-							  	</div>
-							</div>
-						</div>
-					</form>	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-default" data-dismiss="modal" id="button-ok-nuovo-incasso-form">Ok</button>
-	          		<button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuovo-incasso-form">Nuovo Dettaglio</button>
-	          		<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
+                    <form method="post" id="nuovoIncassoForm" action="../primanota/creaIncassoFacade.class.php?modo=go" >
+
+                        <div class="well well-sm">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <div class="control-group" id="datareg_inc_cre_control_group">
+                                        <div class='input-group date' data-provide='datepicker' data-date-format="dd-mm-yyyy" data-date-autoclose='true' data-date-today-highlight='true'>
+                                            <input type='text' class="form-control" id="datareg_inc_cre" name="datareg_inc_cre"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>			
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class='input-group'>
+                                        <span class="input-group-addon">Neg</span>
+                                        <select class="selectNegozio" id="codneg_inc_cre" name="codneg_inc_cre">
+                                            <option value=" ">&nbsp;</option>
+                                            <option value="VIL">%ml.villa%</option>
+                                            <option value="BRE">%ml.brembate%</option>
+                                            <option value="TRE">%ml.trezzo%</option>
+                                        </select>			
+                                    </div>	
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class='input-group' id="descreg_inc_cre_control_group">
+                                        <span class="input-group-addon">%ml.descreg%</span>
+                                        <input class="form-control" id="descreg_inc_cre" name="descreg_inc_cre" type="text" onblur="controllaDescrizione('descreg_inc_cre')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <div class='input-group' id="causale_inc_cre_control_group">
+                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <select class="selectCausale" data-live-search="true" id="causale_inc_cre" name="causale_inc_cre" >
+                                            <option value=" ">&nbsp;</option>
+                                            %elenco_causali_inc_cre%
+                                        </select>			
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ui-front">
+                                    <div class='input-group' id="cliente_inc_cre_control_group">
+                                        <span class="input-group-addon">%ml.codclie%</span>
+                                        <select class="selectCliFor" data-live-search="true" id="cliente_inc_cre" name="cliente_inc_cre" onchange="trovaScadenzeCliente('inc_cre'); aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_cre'); controllaCliente('cliente_inc_cre'); controllaCausale('causale_inc_cre');" >
+                                            %elenco_clienti%
+                                        </select>			
+                                    </div>	
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <div class="control-group" id="scadenze_chiuse_inc_cre_control_group">
+                                        <label for="scadenze_chiuse_inc_cre">Fatture incluse nell'incasso<small><span class="text-danger" id="scadenze_chiuse_inc_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="scadenze_chiuse_inc_cre"></table>
+                                    </div>	
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="control-group" id="scadenze_aperte_inc_cre_control_group">
+                                        <label for="scadenze_aperte_inc_cre">Fatture rimanenti da incassare<small><span class="text-danger" id="scadenze_aperte_inc_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="scadenze_aperte_inc_cre"></table>
+                                    </div>	
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <div class="control-group" id="dettagli_inc_cre_control_group">
+                                        <label for="dettagli_inc_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_inc_cre_messaggio"></span></small></label>
+                                        <table class="table table-bordered table-hover" id="dettagli_inc_cre"></table>
+                                    </div>	
+                                </div>
+                            </div>
+                        </div>
+                    </form>	
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="button-ok-nuovo-incasso-form">Ok</button>
+                    <button type="button" class="btn btn-default" id="button-nuovo-dettaglio-nuovo-incasso-form">Nuovo Dettaglio</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

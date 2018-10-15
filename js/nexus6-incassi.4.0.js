@@ -23,12 +23,12 @@ $("#nuovo-incasso").click(function (event) {
 
 //---------------------------------------------------------------------------------
 
-$("#cliente_inc_cre").keyup(function () {
+function trovaScadenzeCliente(idfunz) {
 
-    var descliente = $("#cliente_inc_cre").val();
-    var codnegozio = $("#codneg_inc_cre").val();
+    var idcliente = $("#cliente_" + idfunz).val();
+    var codnegozio = $("#codneg_" + idfunz).val();
 
-    if (isNotEmpty(descliente)) {
+    if (isNotEmpty(idcliente)) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -38,16 +38,16 @@ $("#cliente_inc_cre").keyup(function () {
 
                 $(xmldoc).find("scadenzecliente").each(
                         function () {
-                            $("#scadenze_chiuse_inc_cre").html($(this).find("scadenzeincassate").text());
-                            $("#scadenze_aperte_inc_cre").html($(this).find("scadenzedaincassare").text());
+                            $("#scadenze_chiuse_" + idfunz).html($(this).find("scadenzeincassate").text());
+                            $("#scadenze_aperte_" + idfunz).html($(this).find("scadenzedaincassare").text());
                         }
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_cre=" + descliente + "&codnegozio_inc_cre=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&cliente_" + idfunz + "=" + idcliente + "&codnegozio_" + idfunz + "=" + codnegozio, true);
         xmlhttp.send();
     }
-});
+}
 
 //---------------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ $("#button-ok-nuovodett-nuovo-incasso-form").click(
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     var sottocontiTable = xmlhttp.responseText;
                     $("#dettagli_inc_cre").html(sottocontiTable);
-                    controllaDettagliRegistrazione("dettagli_inc_cre");
+                    controllaDettagliIncasso("dettagli_inc_cre");
                 }
             };
             xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
@@ -244,7 +244,7 @@ $("#button-ok-nuovo-incasso-form").click(
             if (validaIncasso("cre")) {
                 $("#testo-messaggio-successo").html("Incasso salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("nuovo-incasso-dialog").modal("hide");
                 $("#nuovoIncassoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore l'incasso non può essere salvato");
@@ -260,7 +260,7 @@ $("#button-ok-modifica-incasso-form").click(
             if (validaIncasso("mod")) {
                 $("#testo-messaggio-successo").html("Incasso salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                sleep(2000);
+                $("#modifica-incasso-dialog").modal("hide");
                 $("#modificaIncassoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore l'incasso non può essere salvato");
@@ -380,3 +380,32 @@ function modificaIncasso(idIncasso)
     xmlhttp.open("GET", "../primanota/modificaIncassoFacade.class.php?modo=start&idinc=" + idIncasso, true);
     xmlhttp.send();
 }
+
+//---------------------------------------------------------------------------------
+
+function controllaDettagliIncasso(campoDet)
+{
+    /**
+     * I dettagli dell'incasso devono essere presenti e gli importi del
+     * Dare e Avere sui vari conti devono annularsi.
+     * L'importo inserito sul conto principale (cliente) deve quadrare con la
+     * somma degli importi delle scadenze incassate
+     */
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            if (isNotEmpty(xmlhttp.responseText)) {
+                $("#" + campoDet + "_control_group").addClass("has-error");
+                $("#" + campoDet + "_messaggio").html(xmlhttp.responseText);
+            } else {
+                $("#" + campoDet + "_control_group").removeClass("has-error");
+                $("#" + campoDet + "_messaggio").html("");
+                aggiornaTabellaDettaglioRegistrazione();
+            }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/verificaDettagliIncassoFacade.class.php?modo=start", true);
+    xmlhttp.send();
+}
+
+//---------------------------------------------------------------------------------

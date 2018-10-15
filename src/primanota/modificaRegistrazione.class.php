@@ -77,7 +77,6 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 
         $causale->setCodCausale($registrazione->getCodCausale());
-        $causale->loadContiConfigurati($db);
 
         $risultato_xml = $this->root . $array['template'] . self::XML_MODIFICA_REGISTRAZIONE;
 
@@ -93,7 +92,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             '%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)),
             '%scadenzesupplcliente%' => trim($this->makeTabellaScadenzeCliente($scadenzaCliente)),
             '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
-            '%conti%' => trim($causale->getContiCausale())
+            '%conti%' => trim($causale->loadContiConfigurati($db))
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
         echo $utility->tailTemplate($template);

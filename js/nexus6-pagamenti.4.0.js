@@ -23,10 +23,10 @@ $("#nuovo-pagamento").click(function (event) {
 
 //---------------------------------------------------------------------------------
 
-function trovaScadenzeFornitore() {
+function trovaScadenzeFornitore(idfunz) {
 
-    var idfornitore = $("#fornitore_pag_cre").val();
-    var codnegozio = $("#codneg_pag_cre").val();
+    var idfornitore = $("#fornitore_" + idfunz).val();
+    var codnegozio = $("#codneg_" + idfunz).val();
 
     if (isNotEmpty(idfornitore)) {
         var xmlhttp = new XMLHttpRequest();
@@ -38,13 +38,13 @@ function trovaScadenzeFornitore() {
 
                 $(xmldoc).find("scadenzefornitore").each(
                         function () {
-                            $("#scadenze_chiuse_pag_cre").html($(this).find("scadenzepagate").text());
-                            $("#scadenze_aperte_pag_cre").html($(this).find("scadenzedapagare").text());
+                            $("#scadenze_chiuse_" + idfunz).html($(this).find("scadenzepagate").text());
+                            $("#scadenze_aperte_" + idfunz).html($(this).find("scadenzedapagare").text());
                         }
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_pag_cre=" + idfornitore + "&codnegozio_pag_cre=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_" + idfunz +"=" + idfornitore + "&codnegozio_" + idfunz + "=" + codnegozio, true);
         xmlhttp.send();
     }
 }
@@ -113,7 +113,7 @@ $("#button-ok-nuovodett-modifica-pagamento-form").click(
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     var sottocontiTable = xmlhttp.responseText;
                     $("#dettagli_pag_mod").html(sottocontiTable);
-                    controllaDettagliRegistrazione("dettagli_pag_mod");
+                    controllaDettagliPagamento("dettagli_pag_mod");
                 }
             };
             xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
@@ -343,7 +343,7 @@ $("#button-ok-modifica-pagamento-form").click(
             if (validaPagamento("mod")) {
                 $("#testo-messaggio-successo").html("Pagamento salvato con successo!");
                 $("#messaggio-successo-dialog").modal("show");
-                $("modifica-pagamento-dialog").modal("hide");
+                $("#modifica-pagamento-dialog").modal("hide");
                 $("#modificaPagamentoForm").submit();
             } else {
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");
@@ -351,6 +351,33 @@ $("#button-ok-modifica-pagamento-form").click(
             }
         }
 );
+
+//---------------------------------------------------------------------------------
+
+function controllaDettagliPagamento(campoDet)
+{
+    /**
+     * I dettagli del pagamento devono essere presenti e gli importi del
+     * Dare e Avere sui vari conti devono annularsi.
+     * L'importo inserito sul conto principale (fornitore) deve quadrare con la
+     * somma degli importi delle scadenze pagate
+     */
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            if (isNotEmpty(xmlhttp.responseText)) {
+                $("#" + campoDet + "_control_group").addClass("has-error");
+                $("#" + campoDet + "_messaggio").html(xmlhttp.responseText);
+            } else {
+                $("#" + campoDet + "_control_group").removeClass("has-error");
+                $("#" + campoDet + "_messaggio").html("");
+                aggiornaTabellaDettaglioRegistrazione();
+            }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/verificaDettagliPagamentoFacade.class.php?modo=start", true);
+    xmlhttp.send();
+}
 
 //---------------------------------------------------------------------------------
 

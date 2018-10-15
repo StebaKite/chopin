@@ -12,7 +12,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     const AGGIUNGI_FATTURA_INCASSATA_HREF = "<a onclick='aggiungiFatturaIncassata(";
     const RIMUOVI_FATTURA_PAGATA_HREF = "<a onclick='rimuoviFatturaPagata(";
     const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
-    const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = "<a onclick='cancellaDettaglioNuovaRegistrazione(";
+    const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = '<a onclick=cancellaDettaglioNuovaRegistrazione(';
 
     // Query ---------------------------------------------------------------
 
@@ -531,23 +531,29 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
                 $stato = ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == "10") ? "Pagata" : "Da Pagare";
 
+                $tbody .= "<tr>" .
+                        "       <td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" ;
+                
                 if ($stato == "Da Pagare") {
                     $tdclass = $data_ko;
                     $bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
-                } else {
+                    $tbody .= "" .
+                            "	<td " . $tdclass . ">" . $stato . "</td>" .
+                            "	<td>" .
+                            "       <div class='input-group'>" .
+                            "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+                            "		    <input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
+                            "       </div>" .
+                            "	</td>";
+                }
+                else {
                     $tdclass = $data_ok;
                     $bottoneCancella = self::OK_ICON;
+                    $tbody .= "" .
+                            "	<td " . $tdclass . ">" . $stato . "</td>" .
+                            "	<td>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" ;
                 }
-
-                $tbody .= "<tr>" .
-                        "       <td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
-                        "	<td " . $tdclass . ">" . $stato . "</td>" .
-                        "	<td>" .
-                        "       <div class='input-group'>" .
-                        "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
-                        "		    <input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "'></input>" .
-                        "       </div>" .
-                        "	</td>" .
+                $tbody .= "" .
                         "	<td>" . $bottoneCancella . "</td>" .
                         "</tr>";
             }
@@ -629,23 +635,29 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
                 $stato = ($unaScadenza[ScadenzaCliente::STA_SCADENZA] == "10") ? "Incassata" : "Da Incassare";
 
+                $tbody .= "<tr>" .
+                        "	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" ;
+                
                 if ($stato == "Da Incassare") {
                     $tdclass = $data_ko;
                     $bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
-                } else {
+                    $tbody .= "" .
+                            "	<td " . $tdclass . ">" . $stato . "</td>" .
+                            "	<td>" .
+                            "       <div class='input-group'>" .
+                            "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+                            "			<input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "'></input>" .
+                            "       </div>" .
+                            "	</td>";
+                }
+                else {
                     $tdclass = $data_ok;
                     $bottoneCancella = self::OK_ICON;
+                    $tbody .= "" .
+                            "	<td " . $tdclass . ">" . $stato . "</td>" .
+                            "	<td>" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>";                    
                 }
-
-                $tbody .= "<tr>" .
-                        "	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
-                        "	<td " . $tdclass . ">" . $stato . "</td>" .
-                        "	<td>" .
-                        "       <div class='input-group'>" .
-                        "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
-                        "			<input class='form-control' type='text' maxlength='10' " . $idImportoDettaglio . $onModifyImporto . "value='" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "'></input>" .
-                        "       </div>" .
-                        "	</td>" .
+                $tbody .= "" .
                         "	<td>" . $bottoneCancella . "</td>" .
                         "</tr>";
             }

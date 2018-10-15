@@ -3,7 +3,6 @@
 require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
 require_once 'dettaglioRegistrazione.class.php';
-require_once 'registrazione.class.php';
 require_once 'scadenzaFornitore.class.php';
 
 class VerificaDettagliPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterface {
@@ -20,7 +19,6 @@ class VerificaDettagliPagamento extends PrimanotaAbstract implements PrimanotaBu
     }
 
     public function start() {
-        $registrazione = Registrazione::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         if ($dettaglioRegistrazione->verificaQuadratura()) {
 

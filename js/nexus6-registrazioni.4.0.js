@@ -300,6 +300,7 @@ function modificaRegistrazione(idRegistrazione)
 
                         $("#dettagli_mod").html($(this).find("dettagli").text());
                         $("#conti_mod").html($(this).find("conti").text());
+                        $('#conti_mod').selectpicker('refresh');
                     }
             );
             $("#modifica-registrazione-dialog").modal("show");

@@ -270,7 +270,6 @@ class Causale extends CoreBase implements CoreInterface {
             }
         }
         $conti .= "</select>";
-        $this->setContiCausale($conti);
         return $conti;
     }
 
