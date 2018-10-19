@@ -347,6 +347,16 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         return $importoTotaleScadenze;
     }
 
+    public function getSommaImportiScadenzeDaPagare() {
+        
+        $importoTotaleScadenze = 0;
+        
+        foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+            $importoTotaleScadenze += $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA];
+        }        
+        return $importoTotaleScadenze;
+    }
+
     public function getSommaImportiScadenzePagate() {
         
         $importoTotaleScadenze = 0;

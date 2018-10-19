@@ -249,6 +249,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
         $_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
     }
 
+
     /*     * **********************************************************************
      * Getters e setters
      */

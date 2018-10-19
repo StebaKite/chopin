@@ -323,6 +323,16 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         return $importoTotaleScadenze;
     }
 
+    public function getSommaImportiScadenzeDaIncassare() {
+        
+        $importoTotaleScadenze = 0;
+        
+        foreach ($this->getScadenzeDaIncassare() as $unaScadenza) {
+            $importoTotaleScadenze += $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE];
+        }        
+        return $importoTotaleScadenze;
+    }
+
     public function rimuoviScadenzaIncassata() {
         $scadenzeIncassateDiff = array();
         foreach ($this->getScadenzeIncassate() as $unaScadenza) {

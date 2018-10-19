@@ -722,7 +722,7 @@ $("#fornitore_cre").change(
                     }
                 }
             };
-            xmlhttp.open("GET", "../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore + "&datareg=" + datareg, true);
+            xmlhttp.open("GET", "../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idfornitore + "&datareg_cre=" + datareg, true);
             xmlhttp.send();
         }
 );
@@ -743,7 +743,7 @@ $("#fornitore_mod").change(
                     }
                 }
             };
-            xmlhttp.open("GET", "../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg=" + datareg, true);
+            xmlhttp.open("GET", "../primanota/calcolaDataScadenzaFornitoreFacade.class.php?modo=start&desfornitore=" + desfornitore + "&datareg_mod=" + datareg, true);
             xmlhttp.send();
         }
 );

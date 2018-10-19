@@ -22,11 +22,7 @@ class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInt
     public function start() {
         $causale = Causale::getInstance();
         $db = Database::getInstance();
-
-        if ($causale->loadContiConfigurati($db))
-            echo $causale->getContiCausale();
-        else
-            echo EMPTYSTRING;
+        echo $causale->loadContiConfigurati($db);
     }
 
     public function go() {

@@ -101,6 +101,8 @@ class PrimanotaController {
             $registrazione->setNumFattura($_REQUEST["numfatt_cre"]);
             $registrazione->setStaRegistrazione("00");
             $registrazione->setIdMercato("");
+            $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
+            $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
         }
 
         if (isset($_REQUEST["idfornitore"])) {
@@ -108,6 +110,8 @@ class PrimanotaController {
             $scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
             $scadenzaFornitore->setDatScadenza($_REQUEST["datareg"]);
             $registrazione->setIdFornitore($_REQUEST["idfornitore"]);
+            $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
+            $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
         }
 
         if (isset($_REQUEST["idcliente"])) {
