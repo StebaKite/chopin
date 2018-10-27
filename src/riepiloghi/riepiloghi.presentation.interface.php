@@ -30,6 +30,7 @@ interface RiepiloghiPresentationInterface extends MainNexus6Interface {
     const GENERA_BILANCIO_ESERCIZIO_TEMPLATE = "Obj_generabilancioeserciziotemplate";
     const GENERA_BILANCIO_PERIODICO_TEMPLATE = "Obj_generabilancioperiodicotemplate";
     const RIEPILOGO_NEGOZI_TEMPLATE = "Obj_riepilogonegozitemplate";
+    const ANDAMENTO_NEGOZI_TEMPLATE = "Obj_andamentonegozitemplate";
     const RIEPILOGO_MERCATI_TEMPLATE = "Obj_riepilogomercatitemplate";
 
     /**

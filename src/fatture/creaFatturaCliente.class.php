@@ -94,7 +94,7 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
             $fatturaCliente = $this->intestazione($fatturaCliente);
             $fatturaCliente = $this->sezionePagamento($fatturaCliente, $fattura);
             $fatturaCliente = $this->sezioneBanca($fatturaCliente, $fattura);
-            $fatturaCliente = $this->sezioneDestinatario($fatturaCliente, $cliente);
+            $fatturaCliente = $this->sezioneDestinatario($fatturaCliente, $cliente, $fattura);
             $fatturaCliente = $this->sezioneIdentificativiFattura($fatturaCliente, $fattura);
 
             if ($fattura->getTipFattura() == self::CONTRIBUTO) {

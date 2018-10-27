@@ -97,7 +97,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
             $fatturaAziendaConsortile = $this->intestazione($fatturaAziendaConsortile);
             $fatturaAziendaConsortile = $this->sezionePagamento($fatturaAziendaConsortile, $fattura);
             $fatturaAziendaConsortile = $this->sezioneBanca($fatturaAziendaConsortile, $fattura);
-            $fatturaAziendaConsortile = $this->sezioneDestinatario($fatturaAziendaConsortile, $cliente);
+            $fatturaAziendaConsortile = $this->sezioneDestinatario($fatturaAziendaConsortile, $cliente, $fattura);
             $fatturaAziendaConsortile = $this->sezioneIdentificativiFattura($fatturaAziendaConsortile, $fattura);
             $fatturaAziendaConsortile = $this->sezioneDettagliFattura($fatturaAziendaConsortile, $fattura, $dettaglioFattura);
             $fatturaAziendaConsortile = $this->sezioneNotaPiede($fatturaAziendaConsortile, $fattura);

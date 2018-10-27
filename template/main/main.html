@@ -1,10 +1,32 @@
 <script type="text/javascript">
 
-//---------------------------------------------------------
-//ToDo List
-//---------------------------------------------------------
+    $( document ).ready( function(){
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
 
-// get data from local storage or create an empty array
+                var parser = new DOMParser();
+                var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");
+
+                $(xmldoc).find("messaggio").each(
+                    function () {                            
+                        $("#notifiche_errori").html($(this).find("errori").text());
+                        $("#notifiche_scadfor").html($(this).find("scadenzefor").text());
+                        $("#notifiche_scadcli").html($(this).find("scadenzecli").text());
+                        $("#notifiche-dialog").modal("show");
+                    }
+                );
+            }
+        };
+        xmlhttp.open("GET", "controlliAperturaFacade.class.php?modo=start", true);
+        xmlhttp.send();
+    });
+
+    //---------------------------------------------------------
+    //ToDo List
+    //---------------------------------------------------------
+
+    // get data from local storage or create an empty array
     var todoTasks = (localStorage.todoTasks == undefined ? [] : JSON.parse(localStorage.todoTasks))
 
     $(function () {
@@ -172,4 +194,39 @@
     </div>
     <div class="placeholder entryTitle" id="placeholder_title"></div>
     <div class="placeholder entryTime" id="placeholder_time"></div>
+</div>
+
+<div class="container">
+    <div class="modal fade" id="notifiche-dialog" role="dialog">
+        <div class="modal-dialog" style="width:1000px; height: 500px;">
+      <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notifiche di apertura</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well well-sm">
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <div id="notifiche_errori"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <div id="notifiche_scadfor"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <div id="notifiche_scadcli"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

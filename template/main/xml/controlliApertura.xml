@@ -1,0 +1,5 @@
+<messaggio>
+    <errori><![CDATA[%errori%]]></errori>
+    <scadenzefor><![CDATA[%scadenzefor%]]></scadenzefor>
+    <scadenzecli><![CDATA[%scadenzecli%]]></scadenzecli>
+</messaggio>

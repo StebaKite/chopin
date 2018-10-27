@@ -43,6 +43,8 @@ $("#dialog-link, #icons li").hover(
             $(this).removeClass("ui-state-hover");
         }
 );
+  
+$('.modal-dialog').draggable();
 
 //---------------------------------------------------------------
 // Funzioni comuni

@@ -72,8 +72,8 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
         return $documento;
     }
 
-    public function sezioneDestinatario($documento, $cliente) {
-        $documento->destinatario($cliente->getDesCliente(), $cliente->getDesIndirizzoCliente(), $cliente->getDesCittaCliente(), $cliente->getCapCliente(), $cliente->getCodPiva(), $cliente->getCodFisc());
+    public function sezioneDestinatario($documento, $cliente, $fattura) {
+        $documento->destinatario($cliente->getDesCliente(), $cliente->getDesIndirizzoCliente(), $cliente->getDesCittaCliente(), $cliente->getCapCliente(), $cliente->getCodPiva(), $cliente->getCodFisc(), $fattura->getDesTitolo());
         return $documento;
     }
 

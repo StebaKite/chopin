@@ -1,6 +1,5 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/riepiloghi:/var/www/html/chopin/src/utility');
 require_once 'estraiPdfRiepilogoNegozio.class.php';
 require_once 'riepiloghi.controller.class.php';
 
@@ -11,4 +10,3 @@ $_SESSION["Obj_riepiloghicontroller"] = serialize(new RiepiloghiController(Estra
 
 $controller = unserialize($_SESSION["Obj_riepiloghicontroller"]);
 $controller->start();
-?>

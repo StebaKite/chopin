@@ -96,7 +96,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
             $fatturaEntePubblico = $this->intestazione($fatturaEntePubblico);
             $fatturaEntePubblico = $this->sezionePagamento($fatturaEntePubblico, $fattura);
             $fatturaEntePubblico = $this->sezioneBanca($fatturaEntePubblico, $fattura);
-            $fatturaEntePubblico = $this->sezioneDestinatario($fatturaEntePubblico, $cliente);
+            $fatturaEntePubblico = $this->sezioneDestinatario($fatturaEntePubblico, $cliente, $fattura);
             $fatturaEntePubblico = $this->sezioneIdentificativiFattura($fatturaEntePubblico, $fattura);
 
             if ($fattura->getTipFattura() == self::CONTRIBUTO) {

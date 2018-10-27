@@ -2,65 +2,63 @@
 
 require_once 'nexus6.abstract.class.php';
 require_once 'main.presentation.interface.php';
+require_once 'utility.class.php';
 
 class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 
-	function __construct() {
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-		require_once 'utility.class.php';
+        $this->testata = $this->root . $this->array['testataPagina'];
+        $this->piede = $this->root . $this->array['piedePagina'];
+        $this->messaggioErrore = $this->root . $this->array['messaggioErrore'];
+        $this->messaggioInfo = $this->root . $this->array['messaggioInfo'];
+    }
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array['testataPagina'];
-		$this->piede = $this->root . $this->array['piedePagina'];
-		$this->messaggioErrore = $this->root . $this->array['messaggioErrore'];
-		$this->messaggioInfo = $this->root . $this->array['messaggioInfo'];		
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION["Obj_maintemplate"]))
+            $_SESSION["Obj_maintemplate"] = serialize(new MainTemplate());
+        return unserialize($_SESSION["Obj_maintemplate"]);
+    }
 
-	public static function getInstance() {
+    public function controlliLogici() {
+        
+    }
 
-		if (!isset($_SESSION["Obj_maintemplate"])) $_SESSION["Obj_maintemplate"] = serialize(new MainTemplate());
-		return unserialize($_SESSION["Obj_maintemplate"]);		
-	}
+    public function displayPagina() {
 
-	public function controlliLogici() {}
-	
-	public function displayPagina() {
+        // Template --------------------------------------------------------------
 
-		require_once 'utility.class.php';
-		
-		// Template --------------------------------------------------------------
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$utility = Utility::getInstance();		
-		$array = $utility->getConfig();		
+        $form = $this->root . $array['template'] . self::MAIN_PAGE;
 
-		$form = $this->root . $array['template'] . self::MAIN_PAGE;
-				
-		$this->getEnvironment ( $array );
-						
-		// Pagina -----------------------------------------------------
-		
-		$replace = array(
-			'%avvisoDiv%' => $_SESSION['avvisoDiv'],
-			'%avvisoDialog%' => $_SESSION['avvisoDialog'],
-			'%menu%' => $this->makeMenu($utility),
-		    '%amb%' => $_SESSION['ambiente'],
-		    '%users%' => $_SESSION['users'],
-		    
-		);
+        $this->getEnvironment($array);
 
-		unset($_SESSION['avvisoDialog']);
-		unset($_SESSION['avvisoDiv']);
-		
-		$template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
-		echo $utility->tailTemplate($template);		
-		
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-		
-		include($this->piede);		
-	}
+        // Pagina -----------------------------------------------------
+
+        $replace = array(
+            '%messaggio%' => $_SESSION['messaggio'],
+            '%menu%' => $this->makeMenu($utility),
+            '%amb%' => $_SESSION['ambiente'],
+            '%users%' => $_SESSION['users'],
+        );
+
+        unset($_SESSION['avvisoDialog']);
+        unset($_SESSION['avvisoDiv']);
+
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
+
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+
+        include($this->piede);
+    }
+
 }
+
 ?>

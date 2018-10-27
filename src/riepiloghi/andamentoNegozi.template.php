@@ -14,9 +14,9 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPr
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]))
-            $_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE] = serialize(new AndamentoNegoziTemplate());
-        return unserialize($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]);
+        if (!isset($_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE]))
+            $_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE] = serialize(new AndamentoNegoziTemplate());
+        return unserialize($_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE]);
     }
 
     // template ------------------------------------------------
