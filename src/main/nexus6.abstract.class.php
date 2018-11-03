@@ -1,5 +1,7 @@
 <?php
 
+require_once 'lavoroPianificato.class.php';
+
 abstract class Nexus6Abstract {
 
     public static $root;
@@ -132,6 +134,11 @@ abstract class Nexus6Abstract {
             if ($array["operazioni_item_1"] == "Y")
                 $operazioni .= "<li><a href='../primanota/ricercaRegistrazioneFacade.class.php?modo=start'>" . $array["operazioni_item_1_name"] . "</a></li>";
 
+            $operazioni .= "<li role='separator' class='divider'></li>";
+            
+            if ($array["operazioni_item_2"] == "Y")
+                $operazioni .= "<li><a href='../strumenti/cambiaContoStep1Facade.class.php?modo=start'>" . $array["operazioni_item_2_name"] . "</a></li>";
+            
             $operazioni .= "</ul></li>";
         }
         $menu .= $operazioni;
@@ -311,6 +318,17 @@ abstract class Nexus6Abstract {
         return $elencoClienti;
     }
 
+    public function caricaElencoConti($conto) {
+        $elencoConti = "<option value=' '>&nbsp;</option>";
+        foreach ($conto->getConti() as $unConto) {            
+            $value = trim($unConto[Sottoconto::COD_CONTO]) . "." . trim($unConto[Sottoconto::COD_SOTTOCONTO]);
+            $descr = $unConto[Sottoconto::COD_CONTO] . "." . $unConto[Sottoconto::COD_SOTTOCONTO] . " - " . $unConto[Sottoconto::DES_SOTTOCONTO]; 
+            $selected = (trim($conto->getCodContoSel()) === trim($value)) ? "selected" : "";
+            $elencoConti .= "<option value='" . $value . "' " . $selected . " >" . $descr . "</option>";
+        }
+        return $elencoConti;
+    }
+
     /**
      * Questo metodo determina l'ambiente sulla bae degli utenti preenti loggati
      * @param array
@@ -396,6 +414,21 @@ abstract class Nexus6Abstract {
         return $scadenze;
     }
 
+    /**
+     * Questo metodo setta come da eseguire le prima data utile di riporto saldo e tutte le successive
+     * @param type $db
+     * @param type $datRegistrazione
+     */
+    public function ricalcolaSaldi($db, $datRegistrazione) {
+        $lavoroPianificato = LavoroPianificato::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        if ($array['lavoriPianificatiAttivati'] == "Si") {
+            $lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $datRegistrazione));
+            $lavoroPianificato->settaDaEseguire($db);
+        }
+    }
 }
 
 ?>

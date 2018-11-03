@@ -169,9 +169,9 @@ andamentoNegozi = Andamento Negozi
 confrontoNegozi = Confronto progressivi mensili negozi
 andamentoMercati = Andamento Mercati
 
-cambioContoStep1 = Cambio conto : Passo 1 - Ricerca registrazioni
-cambioContoStep2 = Cambio conto : Passo 2 - Selezione conto di destinazione
-cambioContoStep3 = Cambio conto : Passo 3 - Conferma
+cambioContoStep1 = Ricerca registrazioni
+cambioContoStep2 = Scelta conto destinazione
+cambioContoStep3 = Conferma migrazione operazioni
 
 ricercaMercato = Ricerca Mercato
 

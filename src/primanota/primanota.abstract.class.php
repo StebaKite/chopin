@@ -703,17 +703,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "<table id='" . $scadenzaCliente->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
     }
 
-    public function ricalcolaSaldi($db, $datRegistrazione) {
-        $lavoroPianificato = LavoroPianificato::getInstance();
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-
-        if ($array['lavoriPianificatiAttivati'] == "Si") {
-            $lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $datRegistrazione));
-            $lavoroPianificato->settaDaEseguire($db);
-        }
-    }
-
     public function calcolaDataScadenza($data, $numGiorniScadenza) {
         /**
          * Se i giorni scadenza fattura del fornitore sono = 0 non viene calcolata da data scadenza

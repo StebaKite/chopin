@@ -1,151 +1,115 @@
 <?php
 
 require_once 'strumenti.abstract.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'cambiaContoStep3.template.php';
+require_once 'strumenti.business.interface.php';
+require_once 'cambiaContoStep1.class.php';
 
-class CambiaContoStep3 extends StrumentiAbstract {
+class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public static $azioneConferma = "../strumenti/cambiaContoStep3Facade.class.php?modo=go";
-	
-	function __construct() {
-	
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	
-		require_once 'utility.class.php';
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
-	
-	private function  __clone() { }
-	
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-	
-			self::$_instance = new CambiaContoStep3();
-	
-		return self::$_instance;
-	}
-	
-	public function start() {
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-		require_once 'cambiaContoStep3.template.php';
-		require_once 'utility.class.php';
+    public static function getInstance() {
+        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP3]))
+            $_SESSION[self::CAMBIA_CONTO_STEP3] = serialize(new CambiaContoStep3());
+        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP3]);
+    }
 
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
-		$this->preparaPagina($cambiaContoStep3Template);
-		
-		// compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+    public function start() {
 
-		$cambiaContoStep3Template->displayPagina();
-		include(self::$piede);
-	}
+        $registrazione = Registrazione::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $registrazione->preparaFiltri();
 
-	public function go() {
-		
-		require_once 'cambiaContoStep3.template.php';
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
-		require_once 'cambiaContoStep1.class.php';
-		
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+        $cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
+        $this->preparaPagina($cambiaContoStep3Template);
 
-		/**
-		 * Sposto le registrazioni in sessione sul nuovo conto
-		 */
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-		$cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
+        $cambiaContoStep3Template->displayPagina();
+        include($this->piede);
+    }
 
-		$db = Database::getInstance();
-		$db->beginTransaction();
-		
-		$utility = Utility::getInstance();
-		
-		if ($this->spostaDettagliRegistrazioni($db, $utility)) {
+    public function go() {
 
-			/**
-			 * Rigenero i saldi a partire dal mese successivo a quello aggiornato dallo spostamento sino all'ultimo 
-			 * già eseguito
-			 */
-				
-			$array = $utility->getConfig();
-			
-			if ($array['lavoriPianificatiAttivati'] == "Si") {
-			
-				$datareg_da = strtotime(str_replace('/', '-', $_SESSION["datareg_da"]));
-				$this->rigenerazioneSaldi($db, $utility, $datareg_da);
-			}
+        $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $conto = Conto::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $db = Database::getInstance();
+        $db->beginTransaction();
+        $cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
 
-			$db->commitTransaction();
+        if ($this->spostaDettagliRegistrazioni($db, $registrazione, $dettaglioRegistrazione, $conto->getCodContoSelNuovo())) {
 
-			$_SESSION["messaggioCambioConto"] = "Operazione effettuata con successo";
-			
-			$cambiaContoStep1 = CambiaContoStep1::getInstance();
-			$cambiaContoStep1->start();				
-		}
-		else {
-			
-			$db->rollbackTransaction();
-				
-			$this->preparaPagina($cambiaContoStep3Template);
-			
-			$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-			$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-			echo $utility->tailTemplate($template);
+            /**
+             * Rigenero i saldi a partire dal mese successivo a quello aggiornato dallo spostamento sino all'ultimo 
+             * già eseguito
+             */
+            $array = $utility->getConfig();
 
-			$cambiaContoStep3Template->displayPagina();
-			
-			$_SESSION["messaggio"] = "Errore fatale durante lo spostamento dei dettagli" ;
-			
-			self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-			$template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-			echo $utility->tailTemplate($template);
-				
-			include(self::$piede);	
-		}
-	}
+            if ($array['lavoriPianificatiAttivati'] == "Si") {
+                $datareg_da = strtotime(str_replace('/', '-', $_SESSION["datareg_da"]));
+                $this->ricalcolaSaldi($db, $datareg_da);
+            }
+            $db->commitTransaction();
+            $_SESSION["messaggioCambioConto"] = "Operazione effettuata con successo";
+            $cambiaContoStep1 = CambiaContoStep1::getInstance();
+            $cambiaContoStep1->go();
+            
+        } else {
 
-	protected function spostaDettagliRegistrazioni($db, $utility) {
-				
-		$registrazioniTrovate = $this->caricaRegistrazioniConto($utility, $db);		
-		$conto = explode(" - ", $_SESSION["conto_sel_nuovo"]);
-		
-		foreach(pg_fetch_all($registrazioniTrovate) as $row) {
+            $db->rollbackTransaction();
+            $this->preparaPagina($cambiaContoStep3Template);
+            
+            $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+            $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+            echo $utility->tailTemplate($template);
 
-			$result = $this->updateDettaglioRegistrazione($db, $utility, $row['id_dettaglio_registrazione'], $conto[0], $conto[1]);
-			if (!$result) return false;
-		}
-		return true;
-	}	
-	
-	public function preparaPagina($ricercaRegistrazioneTemplate) {
+            $_SESSION[self::MESSAGGIO] = "Errore fatale durante lo spostamento dei dettagli";
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
+            $replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $replace);
+            echo $utility->tailTemplate($template);
 
-		$_SESSION["azione"] = self::$azioneConferma;
-		$_SESSION["titoloPagina"] = "%ml.cambioContoStep3%";
-	}
+            $cambiaContoStep3Template->displayPagina();
+            include($this->piede);
+        }
+    }
+
+    protected function spostaDettagliRegistrazioni($db, $registrazione, $dettaglioRegistrazione, $contoSelNuovo) {
+
+        foreach ($registrazione->getRegistrazioni() as $row) {
+            $dettaglioRegistrazione->setIdRegistrazione($row['id_dettaglio_registrazione']);
+            $dettaglioRegistrazione->setCodConto(explode(".", $contoSelNuovo)[0]);
+            $dettaglioRegistrazione->setCodSottoconto(explode(".", $contoSelNuovo)[1]);
+            if (!$dettaglioRegistrazione->aggiornaConto($db)) {
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    public function preparaPagina($ricercaRegistrazioneTemplate) {
+
+        $_SESSION[self::AZIONE] = self::AZIONE_CAMBIA_CONTO_STEP3;
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.cambioContoStep3%";
+    }
 }
-	
+
 ?>

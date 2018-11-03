@@ -61,10 +61,12 @@ class Registrazione extends CoreBase implements CoreInterface {
     private $datRegistrazioneA;
     private $codNegozioSel;
     private $codCausaleSel;
+    private $codContoSel;
 
     // Queries
 
     const LEGGI_REGISTRAZIONE = "/primanota/leggiRegistrazione.sql";
+    const LEGGI_REGISTRAZIONI_CONTO = "/strumenti/ricercaRegistrazioniConto.sql";
     const CANCELLA_REGISTRAZIONE = "/primanota/deleteRegistrazione.sql";
     const RICERCA_REGISTRAZIONE = "/primanota/ricercaRegistrazione.sql";
     const CREA_REGISTRAZIONE = "/primanota/creaRegistrazione.sql";
@@ -141,6 +143,51 @@ class Registrazione extends CoreBase implements CoreInterface {
         return $result;
     }
 
+    /**
+     * Questo metodo carica tutte le registrazioni che hanno almeno un dettaglio su un sottoconto specifico
+     * @param unknown $db
+     */
+    public function leggiRegistrazioniConto($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $filtriRegistrazione = "";
+        $filtriDettaglio = "";
+
+        if (parent::isNotEmpty($this->getCodNegozioSel())) {
+            $filtriRegistrazione .= "and reg.cod_negozio = '" . $this->getCodNegozioSel() . "'";
+        }
+
+        if (parent::isNotEmpty($this->getCodContoSel())) {
+            $conto = explode(".", $this->getCodContoSel());
+
+            $filtriDettaglio .= "and detreg.cod_conto = '" . $conto[0] . "'";
+            $filtriDettaglio .= "and detreg.cod_sottoconto = '" . $conto[1] . "'";
+        }
+
+        $replace = array(
+            '%datareg_da%' => $this->getDatRegistrazioneDa(),
+            '%datareg_a%' => $this->getDatRegistrazioneA(),
+            '%filtri-registrazione%' => $filtriRegistrazione,
+            '%filtri-dettaglio%' => $filtriDettaglio,
+        );
+
+        $sqlTemplate = $this->root . $array['query'] . self::LEGGI_REGISTRAZIONI_CONTO;
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
+        
+        if ($result) {
+            $this->setRegistrazioni(pg_fetch_all($result));
+            $this->setQtaRegistrazioni(pg_num_rows($result));
+        } else {
+            $this->setRegistrazioni(null);
+            $this->setQtaRegistrazioni(0);
+        }
+        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        return $result;
+    }    
+    
     public function cancella($db) {
 
         $utility = Utility::getInstance();
@@ -442,6 +489,14 @@ class Registrazione extends CoreBase implements CoreInterface {
 
     public function setCodCausaleSel($codCausaleSel) {
         $this->codCausaleSel = $codCausaleSel;
+    }
+
+    public function getCodContoSel() {
+        return $this->codContoSel;
+    }
+
+    public function setCodContoSel($codContoSel) {
+        $this->codContoSel = $codContoSel;
     }
 
     public function getRegistrazioni() {

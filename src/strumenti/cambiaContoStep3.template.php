@@ -2,91 +2,62 @@
 
 require_once 'strumenti.abstract.class.php';
 
-class CambiaContoStep3Template extends StrumentiAbstract {
+class CambiaContoStep3Template extends StrumentiAbstract implements StrumentiPresentationInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	private static $pagina = "/strumenti/cambiaContoStep3.form.html";
+    public function getInstance() {
+        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP3_TEMPLATE]))
+            $_SESSION[self::CAMBIA_CONTO_STEP3_TEMPLATE] = serialize(new CambiaContoStep3Template());
+        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP3_TEMPLATE]);
+    }
 
-	//-----------------------------------------------------------------------------
+    public function inizializzaPagina() {
+        
+    }
 
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    public function controlliLogici() {
 
-	private function  __clone() { }
+        $esito = TRUE;
+        $msg = "<br>";
 
-	/**
-	 * Singleton Pattern
-	 */
+        if ($msg != "<br>") {
+            $_SESSION["messaggio"] = $msg;
+        } else {
+            unset($_SESSION["messaggio"]);
+        }
 
-	public static function getInstance() {
+        return $esito;
+    }
 
-		if( !is_object(self::$_instance) )
+    public function displayPagina() {
 
-			self::$_instance = new CambiaContoStep3Template();
+        $registrazione = Registrazione::getInstance();
+        $conto = Conto::getInstance();
+        $utility = Utility::getInstance();
+        $db = Database::getInstance();
+        $array = $utility->getConfig();
 
-		return self::$_instance;
-	}
+        $form = $this->root . $array['template'] . self::PAGINA_CAMBIO_CONTO_STEP3;
 
-	// template ------------------------------------------------
-	
-	public function inizializzaPagina() {}
-	
-	public function controlliLogici() {
-		
-		$esito = TRUE;
-		$msg = "<br>";
-		
-		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
-		}
-		else {
-			unset($_SESSION["messaggio"]);
-		}
-		
-		return $esito;
-	}
-
-	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
-		$bottone_conferma = "";
-		
-		$numRegSel = $_SESSION['numRegTrovate'];
-		$contoDest = $_SESSION['conto_sel_nuovo'];		
-
-		if ($_SESSION['conto_sel_nuovo'] != $_SESSION['conto_sel']) {
-			$bottone_conferma = "<button class='button' title='%ml.confermaTip%' >%ml.conferma%</button>";
-		}
-		else {
-			$bottone_conferma = "<p><strong>Il conto di destinazione coincide con il conto attuale dei dettagli !</strong></p>";
-		}		
-		
-		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%conto_sel%' => $_SESSION["conto_sel"],
-				'%confermaTip%' => $_SESSION["confermaTip"],				
-				'%numRegSel%' => $_SESSION['numRegTrovate'],
-				'%conto_sel_nuovo%' => $_SESSION['conto_sel_nuovo'],
-				'%bottoneConferma%' => $bottone_conferma
-		);
-	
-		$utility = Utility::getInstance();
-	
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-	}
-}	
+        $replace = array(
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%azione%' => $_SESSION[self::AZIONE],
+            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
+            '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
+            '%numRegSel%' => $registrazione->getQtaRegistrazioni(),
+            '%contoOrig%' => $registrazione->getCodContoSel(),
+            '%contoDest%' => $conto->getCodContoSelNuovo(),
+            '%codneg_sel%' => $conto->getCodContoSel(),
+        );
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+    }
+}
 
 ?>

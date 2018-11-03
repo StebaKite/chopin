@@ -25,6 +25,7 @@ class Conto extends CoreBase implements CoreInterface {
 
     private $codConto;
     private $codContoSel;
+    private $codContoSelNuovo;
     private $desConto;
     private $catConto;
     private $tipConto;
@@ -267,6 +268,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setConti(self::NULL_VALUE);
             $this->setQtaConti(self::ZERO_VALUE);
         }
+        $_SESSION[self::CONTO] = serialize($this);
 
         return $result;
     }
@@ -417,6 +419,13 @@ class Conto extends CoreBase implements CoreInterface {
         $this->codContoSel = $codContoSel;
     }
 
+    public function getCodContoSelNuovo() {
+        return $this->codContoSelNuovo;
+    }
+
+    public function setCodContoSelNuovo($codContoSelNuovo) {
+        $this->codContoSelNuovo = $codContoSelNuovo;
+    }
 }
 
 ?>

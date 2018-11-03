@@ -52,6 +52,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     const CERCA_DETTAGLI_REGISTRAZIONE = "/primanota/leggiDettagliRegistrazione.sql";
     const AGGIORNA_DETTAGLIO_REGISTRAZIONE = "/primanota/aggiornaDettaglioRegistrazione.sql";
     const CANCELLA_DETTAGLIO_REGISTRAZIONE = "/primanota/deleteDettaglioRegistrazione.sql";
+    const AGGIORNA_CONTO_DETTAGLIO_REGISTRAZIONE = "/strumenti/aggiornaContoDettaglioRegistrazione.sql";
 
     // Metodi
 
@@ -247,6 +248,24 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         
         return $result;
     }
+    
+    public function aggiornaConto($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        
+        $replace = array(
+            '%id_dettaglio_registrazione%' => trim($this->getIdRegistrazione()),
+            '%cod_conto%' => trim($this->getCodConto()),
+            '%cod_sottoconto%' => trim($this->getCodSottoconto())
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CONTO_DETTAGLIO_REGISTRAZIONE;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+
+        $result = $db->execSql($sql);
+        return $result;
+    }
+    
 
     public function getRoot() {
         return $this->root;

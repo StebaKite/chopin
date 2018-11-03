@@ -1,6 +1,7 @@
 select 
 	conto.cod_conto,
 	sottoconto.cod_sottoconto,
+        sottoconto.des_sottoconto,
 	conto.tip_conto
 from contabilita.conto
 	inner join contabilita.sottoconto

@@ -1,150 +1,121 @@
 <?php
 
 require_once 'strumenti.abstract.class.php';
+require_once 'strumenti.presentation.interface.php';
+require_once 'utility.class.php';
+require_once 'registrazione.class.php';
+require_once 'dettaglioRegistrazione.class.php';
+require_once 'conto.class.php';
+require_once 'sottoconto.class.php';
 
-class CambiaContoStep1Template extends StrumentiAbstract {
+class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPresentationInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	private static $pagina = "/strumenti/cambiaContoStep1.form.html";
+    public function getInstance() {
+        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]))
+            $_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE] = serialize(new CambiaContoStep1Template());
+        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]);
+    }
 
-	//-----------------------------------------------------------------------------
+    public function inizializzaPagina() {
+        
+    }
 
-	function __construct() {
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    public function controlliLogici() {
+        $esito = TRUE;
+        $msg = "<br>";
 
-	private function  __clone() { }
+        // ----------------------------------------------
+        // Eventuali controlli da backend
+        // ----------------------------------------------
 
-	/**
-	 * Singleton Pattern
-	 */
+        if ($msg != "<br>") {
+            $_SESSION[self::MESSAGGIO] = $msg;
+        } else {
+            unset($_SESSION[self::MESSAGGIO]);
+        }
+        return $esito;
+    }
 
-	public static function getInstance() {
+    public function displayPagina() {
 
-		if( !is_object(self::$_instance) )
+        $registrazione = Registrazione::getInstance();
+        $conto = Conto::getInstance();
+        $utility = Utility::getInstance();
+        $db = Database::getInstance();
+        $array = $utility->getConfig();
 
-			self::$_instance = new CambiaContoStep1Template();
+        $form = $this->root . $array['template'] . self::PAGINA_CAMBIO_CONTO_STEP1;
+        $risultato_ricerca = "";
+        $dati = "";
 
-		return self::$_instance;
-	}
+        // Creo l'elenco delle registrazioni trovate
+        
+         if ($registrazione->getQtaRegistrazioni() > 0) {
 
-	// template ------------------------------------------------
-	
-	public function inizializzaPagina() {}
-	
-	public function controlliLogici() {
-		
-		$esito = TRUE;
-		$msg = "<br>";
-		
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
-		
-		if ($_SESSION["datareg_da"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di inizio ricerca";
-			$esito = FALSE;
-		}
+            $dati = array(
+                "labeldatReg" => "%ml.datregistrazione%",
+                "labeldesReg" => "%ml.desReg%",
+                "labelstaReg" => "%ml.staReg%",
+                "labelimpReg" => "%ml.impReg%",
+                "labelindDareAvere" => "%ml.indDareAvere%",
+                "labelconto" => "%ml.conto%",
+                "labelsottoconto" => "%ml.sottoconto%"
+            );
+            
+            $risultato_ricerca = $this->intestazione($dati);
+            
+            foreach ($registrazione->getRegistrazioni() as $row) {
 
-		if ($_SESSION["datareg_a"] == "") {
-			$msg = $msg . "<br>&ndash; Manca la data di fine ricerca";
-			$esito = FALSE;
-		}
+                $risultato_ricerca .= "" . 
+                    "<tr>" .
+                    "   <td>" . trim($row[Registrazione::DAT_REGISTRAZIONE]) . "</td>" .
+                    "	<td>" . trim($row[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
+                    "	<td>" . trim($row[Registrazione::STA_REGISTRAZIONE]) . "</td>" .
+                    "	<td>" . trim($row[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "</td>" .
+                    "	<td>" . trim($row[DettaglioRegistrazione::IND_DAREAVERE]) . "</td>" .
+                    "	<td>" . trim($row[DettaglioRegistrazione::COD_CONTO]) . "</td>" .
+                    "	<td>" . trim($row[DettaglioRegistrazione::COD_SOTTOCONTO]) . "</td>" .
+                    "</tr>";
+            }
+            $risultato_ricerca .= "</tbody></table>";
 
-		if ($_SESSION["conto_sel"] == "") {
-			$msg = $msg . "<br>&ndash; Manca il conto da spostare";
-			$esito = FALSE;
-		}
-		
-		// ----------------------------------------------
-		
-		if ($msg != "<br>") {
-			$_SESSION["messaggio"] = $msg;
-		}
-		else {
-			unset($_SESSION["messaggio"]);
-		}
-		
-		return $esito;
-	}
+            $bottone_avanti = "<button class='button' title='%ml.avantiTip%' >%ml.avanti%</button>";
+        } else {
+        }
 
-	public function displayPagina() {
-	
-		require_once 'utility.class.php';
-	
-		// Template --------------------------------------------------------------
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		$form = self::$root . $array['template'] . self::$pagina;
-		$risultato_ricerca = "";
-		$bottone_avanti = "";
-		
-		if (isset($_SESSION["registrazioniTrovate"])) {
-			
-			$risultato_ricerca = 
-			"<table class='result'>" .
-			"	<thead>" .
-			"		<th width='72'>%ml.datReg%</th>" .
-			"		<th width='350'>%ml.desReg%</th>" .
-			"		<th width='50'>%ml.staReg%</th>" .
-			"		<th width='100'>%ml.impReg%</th>" .
-			"		<th width='50'>%ml.indDareAvere%</th>" .
-			"		<th width='100'>%ml.conto%</th>" .
-			"		<th width='100'>%ml.sottoconto%</th>" .
-			"	</thead>" .
-			"</table>" .
-			"<div class='scroll'>" .
-			"	<table class='result'>" .
-			"		<tbody>";
-			
-			$registrazioniTrovate = $_SESSION["registrazioniTrovate"];
-			$numReg = 0;			
-						
-			foreach(pg_fetch_all($registrazioniTrovate) as $row) {
+        $conto->leggiTuttiConti($db);
+        
+        $replace = array(
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%azione%' => $_SESSION[self::AZIONE],
+            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
+            '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
+            '%villa-selected%' => ($registrazione->getCodNegozioSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%brembate-selected%' => ($registrazione->getCodNegozioSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%trezzo-selected%' => ($registrazione->getCodNegozioSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,            
+            '%elenco_conti%' => $this->caricaElencoConti($conto),
+            '%risultato_ricerca%' => $risultato_ricerca
+        );
 
-				$numReg ++; 
-				$risultato_ricerca .= 
-				"<tr " . $class . ">" .
-				"	<td width='80'  align='center'>" . trim($row['dat_registrazione']) . "</td>" .
-				"	<td width='358' align='left'>" . trim($row['des_registrazione']) . "</td>" .
-				"	<td width='58'  align='center'>" . trim($row['sta_registrazione']) . "</td>" .
-				"	<td width='108'  align='center'>" . trim($row['imp_registrazione']) . "</td>" .
-				"	<td width='58'  align='center'>" . trim($row['ind_dareavere']) . "</td>" .
-				"	<td width='108'  align='center'>" . trim($row['cod_conto']) . "</td>" .
-				"	<td width='108'  align='center'>" . trim($row['cod_sottoconto']) . "</td>" .
-				"</tr>";						
-			}
-			$_SESSION['numRegTrovate'] = $numReg;
-			$risultato_ricerca = $risultato_ricerca . "</tbody></table></div>";
-			
-			$bottone_avanti = "<button class='button' title='%ml.avantiTip%' >%ml.avanti%</button>";
-		}
-		else {
-			
-		}
-			
-		$replace = array(
-				'%titoloPagina%' => $_SESSION["titoloPagina"],
-				'%azione%' => $_SESSION["azione"],
-				'%confermaTip%' => $_SESSION["confermaTip"],				
-				'%datareg_da%' => $_SESSION["datareg_da"],
-				'%datareg_a%' => $_SESSION["datareg_a"],
-				'%villa-selected%' => ($_SESSION["codneg_sel"] == "VIL") ? "selected" : "",
-				'%brembate-selected%' => ($_SESSION["codneg_sel"] == "BRE") ? "selected" : "",
-				'%trezzo-selected%' => ($_SESSION["codneg_sel"] == "TRE") ? "selected" : "",
-				'%elenco_conti%' => $_SESSION["elenco_conti"],
-				'%risultato_ricerca%' => $risultato_ricerca,
-				'%bottoneAvanti%' => $bottone_avanti
-		);
-	
-		$utility = Utility::getInstance();
-	
-		$template = $utility->tailFile($utility->getTemplate($form), $replace);
-		echo $utility->tailTemplate($template);
-	}
-}	
+        $template = $utility->tailFile($utility->getTemplate($form), $replace);
+        echo $utility->tailTemplate($template);
+    }
+
+    public function go() {
+        
+    }
+
+    public function start() {
+        
+    }
+
+}
 
 ?>

@@ -1,83 +1,58 @@
 <?php
 
 require_once 'strumenti.abstract.class.php';
+require_once 'utility.class.php';
+require_once 'database.class.php';
+require_once 'cambiaContoStep2.template.php';
+require_once 'strumenti.business.interface.php';
 
-class CambiaContoStep2 extends StrumentiAbstract {
+class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
-	private static $_instance = null;
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public static $azioneSelezioneNuovoConto = "../strumenti/cambiaContoStep3Facade.class.php?modo=start";
-		
-	function __construct() {
-	
-		self::$root = $_SERVER['DOCUMENT_ROOT'];
-	
-		require_once 'utility.class.php';
-	
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-	
-		self::$testata = self::$root . $array['testataPagina'];
-		self::$piede = self::$root . $array['piedePagina'];
-		self::$messaggioErrore = self::$root . $array['messaggioErrore'];
-		self::$messaggioInfo = self::$root . $array['messaggioInfo'];
-	}
-	
-	private function  __clone() { }
-	
-	/**
-	 * Singleton Pattern
-	 */
-	
-	public static function getInstance() {
-	
-		if( !is_object(self::$_instance) )
-	
-			self::$_instance = new CambiaContoStep2();
-	
-		return self::$_instance;
-	}
-	
-	public function start() {
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-		require_once 'cambiaContoStep2.template.php';
-		require_once 'utility.class.php';
+    public static function getInstance() {
+        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP2]))
+            $_SESSION[self::CAMBIA_CONTO_STEP2] = serialize(new CambiaContoStep2());
+        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP2]);
+    }
 
-		// Template
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		unset($_SESSION["conto_sel_nuovo"]);
-		
-		$cambiaContoStep2Template = CambiaContoStep2Template::getInstance();
-		$this->preparaPagina($cambiaContoStep2Template);
-		
-		// compone la pagina
-		$replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment ( $array, $_SESSION ), '%menu%' => $this->makeMenu($utility)));
-		$template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
-		echo $utility->tailTemplate($template);
+    public function start() {
 
-		$cambiaContoStep2Template->displayPagina();
-		include(self::$piede);
-	}
+        $registrazione = Registrazione::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $registrazione->preparaFiltri();
 
-	public function go() {}
-		
-	public function preparaPagina($ricercaRegistrazioneTemplate) {
+        $cambiaContoStep2Template = CambiaContoStep2Template::getInstance();
+        $this->preparaPagina($cambiaContoStep1Template);
 
-		require_once 'database.class.php';
-		require_once 'utility.class.php';
+        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
+        echo $utility->tailTemplate($template);
 
-		$_SESSION["azione"] = self::$azioneSelezioneNuovoConto;
-		$_SESSION["titoloPagina"] = "%ml.cambioContoStep2%";
-		
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
+        $cambiaContoStep2Template->displayPagina();
+        include($this->piede);
+    }
 
-		// Prelievo dei dati per popolare i combo -------------------------------------------------------------
-		
-		$_SESSION['elenco_conti'] = $this->caricaTuttiConti($utility, $db);
-	}
+    public function go() {
+        
+    }
+
+    public function preparaPagina($ricercaRegistrazioneTemplate) {
+
+        $_SESSION[self::AZIONE] = self::AZIONE_CAMBIA_CONTO_STEP2;
+        $_SESSION[self::TIP_CONFERMA] = "%ml.confermaContoDestinazione%";
+        $_SESSION[self::TITOLO_PAGINA] = "%ml.cambioContoStep2%";
+    }
 }
-	
+
 ?>
