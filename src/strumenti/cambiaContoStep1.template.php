@@ -100,7 +100,7 @@ class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPre
             '%villa-selected%' => ($registrazione->getCodNegozioSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%brembate-selected%' => ($registrazione->getCodNegozioSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%trezzo-selected%' => ($registrazione->getCodNegozioSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,            
-            '%elenco_conti%' => $this->caricaElencoConti($conto),
+            '%elenco_conti%' => $conto->preparaElencoConti(),
             '%risultato_ricerca%' => $risultato_ricerca
         );
 

@@ -42,6 +42,8 @@ class Conto extends CoreBase implements CoreInterface {
     private $catContoSel;
     private $tipContoSel;
 
+    private $selectPickerTutticonti;
+
     // Queries
 
     const RICERCA_CONTO = "/configurazioni/ricercaConto.sql";
@@ -269,10 +271,23 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setQtaConti(self::ZERO_VALUE);
         }
         $_SESSION[self::CONTO] = serialize($this);
-
         return $result;
     }
 
+    public function preparaElencoConti() {        
+        if ($this->isEmpty($this->getSelectPickerTutticonti())) {
+            $elencoConti = "<option value=' '>&nbsp;</option>";
+            foreach ($this->getConti() as $unConto) {            
+                $value = trim($unConto[Sottoconto::COD_CONTO]) . "." . trim($unConto[Sottoconto::COD_SOTTOCONTO]);
+                $descr = $unConto[Sottoconto::COD_CONTO] . "." . $unConto[Sottoconto::COD_SOTTOCONTO] . " - " . $unConto[Sottoconto::DES_SOTTOCONTO]; 
+                $elencoConti .= "<option value='" . $value . "' >" . $descr . "</option>";
+            }
+            $this->setSelectPickerTutticonti($elencoConti);            
+        }
+        $_SESSION[self::CONTO] = serialize($this);
+        return $this->getSelectPickerTutticonti();
+    }
+   
     // Getters eSetters
 
     public function getRoot() {
@@ -426,6 +441,15 @@ class Conto extends CoreBase implements CoreInterface {
     public function setCodContoSelNuovo($codContoSelNuovo) {
         $this->codContoSelNuovo = $codContoSelNuovo;
     }
+
+    public function setSelectPickerTutticonti($selectPickerTutticonti) {
+        $this->selectPickerTutticonti = $selectPickerTutticonti;
+    }
+
+    public function getSelectPickerTutticonti() {
+        return $this->selectPickerTutticonti;
+    }
+    
 }
 
 ?>

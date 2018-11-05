@@ -318,17 +318,6 @@ abstract class Nexus6Abstract {
         return $elencoClienti;
     }
 
-    public function caricaElencoConti($conto) {
-        $elencoConti = "<option value=' '>&nbsp;</option>";
-        foreach ($conto->getConti() as $unConto) {            
-            $value = trim($unConto[Sottoconto::COD_CONTO]) . "." . trim($unConto[Sottoconto::COD_SOTTOCONTO]);
-            $descr = $unConto[Sottoconto::COD_CONTO] . "." . $unConto[Sottoconto::COD_SOTTOCONTO] . " - " . $unConto[Sottoconto::DES_SOTTOCONTO]; 
-            $selected = (trim($conto->getCodContoSel()) === trim($value)) ? "selected" : "";
-            $elencoConti .= "<option value='" . $value . "' " . $selected . " >" . $descr . "</option>";
-        }
-        return $elencoConti;
-    }
-
     /**
      * Questo metodo determina l'ambiente sulla bae degli utenti preenti loggati
      * @param array

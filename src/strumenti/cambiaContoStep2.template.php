@@ -54,7 +54,7 @@ class CambiaContoStep2Template extends StrumentiAbstract implements StrumentiPre
             '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
             '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
             '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
-            '%elenco_conti%' => $this->caricaElencoConti($conto),            
+            '%elenco_conti%' => $conto->preparaElencoConti(),            
             '%numRegSel%' => $registrazione->getQtaRegistrazioni(),
             '%contoOrig%' => $registrazione->getCodContoSel(),
             '%conto_sel%' => $conto->getCodContoSel(),

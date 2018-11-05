@@ -6,30 +6,19 @@
     <link rel="icon" type="image/png" href="../../images/unicorn.png" />
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-
-    <link href="../../jquery/jquery-ui.css" rel="stylesheet">
+    <script src="../../js/bootstrap-datepicker.js"></script>
+    <script src="../../js/bootstrap-select.min.js"></script>
+    <script src="../../js/jquery-ui.min.js"></script>
 
     <style type="text/css" media="screen">
+        @import url("../../jquery/jquery-ui.css");
+        @import url("../../css/bootstrap-datepicker.css");
+        @import url("../../css/bootstrap-select.min.css");
         @import url("../../css/main.css");
     </style>
-
-
-    <!--
-            <style type="text/css" media="screen">
-                    @import url("../../css/jquery.css");
-                    @import url("../../css/style.css");
-            </style>
-            <script src="../../DataTables/media/js/jquery.js"></script>
-    -->
 
     <script src="../../jquery/jquery-ui.js"></script>
     <script src="../../jquery/jquery-ui.min.js"></script>
@@ -44,21 +33,16 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li><a href="../main/start.php"><span class="glyphicon glyphicon-home"></a></li>
+                            <li><a href="../main/start.php"><span class="glyphicon glyphicon-home"></span></a></li>
                             %menu%
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="divider-vertical"></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">%amb% <span class="glyphicon glyphicon-off"></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> %users%</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Esci</a></li>
-                                </ul>
                             </li>
                         </ul>
                     </div>
-                    <!--</div>-->
                 </div>
             </nav>
         </div>
