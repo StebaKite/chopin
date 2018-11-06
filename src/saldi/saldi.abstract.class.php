@@ -56,43 +56,6 @@ abstract class SaldiAbstract extends Nexus6Abstract {
         }
     }
 
-    public function caricaDateRiportoSaldo($db) {
-
-        $saldo = Saldo::getInstance();
-        $saldo->caricaDateRiporto($db);
-
-        $elencoDateRiportoSaldi = "";
-
-        foreach ($saldo->getDateRiportoSaldi() as $row) {
-
-            if ($row[Saldo::DAT_SALDO] == $saldo->getDatSaldoSel()) {
-                $elencoDateRiportoSaldi .= "<option value='" . $row[Saldo::DAT_SALDO] . "' selected >" . date("d/m/Y", strtotime($row[Saldo::DAT_SALDO])) . "</option>";
-            } else {
-                $elencoDateRiportoSaldi .= "<option value='" . $row[Saldo::DAT_SALDO] . "'>" . date("d/m/Y", strtotime($row[Saldo::DAT_SALDO])) . "</option>";
-            }
-        }
-        return $elencoDateRiportoSaldi;
-    }
-
-    public function caricaTuttiConti($db) {
-
-        $conto = Conto::getInstance();
-        $conto->leggiTuttiConti($db);
-
-        foreach ($conto->getConti() as $row) {
-
-            $conto = $row[Conto::COD_CONTO] . '-' . $row[Sottoconto::COD_SOTTOCONTO];
-            $desConto = $row[Conto::DES_CONTO] . ' - ' . $row[Sottoconto::DES_SOTTOCONTO];
-
-            if ($conto == $conto->getCodContoSel()) {
-                $elenco_conti .= "<option value='" . $conto . "' selected >" . $conto . ' : ' . $desConto . "</option>";
-            } else {
-                $elenco_conti .= "<option value='" . $conto . "'>" . $conto . ' : ' . $desConto . "</option>";
-            }
-        }
-        return $elenco_conti;
-    }
-
     public function inserisciLavoroPianificato($db, $utility, $dat_lavoro, $des_lavoro, $fil_esecuzione_lavoro, $cla_esecuzione_lavoro, $sta_lavoro) {
 
         $array = $utility->getConfig();
@@ -109,7 +72,4 @@ abstract class SaldiAbstract extends Nexus6Abstract {
         $result = $db->execSql($sql);
         return $result;
     }
-
 }
-
-?>

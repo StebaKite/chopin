@@ -130,6 +130,8 @@ interface MainNexus6Interface {
     const SCADENZE_CONTROLLER = "Obj_scadenzecontroller";
     const RIEPILOGO = "Obj_riepilogo";
     const RIPORTO_SALDO = "Obj_riportosaldo";
+    const PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE = "Obj_pinificazionelavoriprimosemestre";
+    const PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE = "Obj_pinificazionelavorisecondosemestre";
 
 }
 

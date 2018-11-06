@@ -10,6 +10,7 @@ interface FattureBusinessInterface extends MainNexus6Interface {
 
     const CREA_FATTURA_AZIENDA_CONSORTILE = "Obj_creafatturaaziendaconsortile";
     const CREA_FATTURA_CLIENTE = "Obj_creafatturacliente";
+    const CREA_FATTURA_CLIENTE_XML = "Obj_creafatturacliente_xml";
     const CREA_FATTURA_ENTE_PUBBLICO = "Obj_creafatturaentepubblico";
     const CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE = "Obj_creafatturaaziendaconsortiletemplate";
     const CREA_FATTURA_CLIENTE_TEMPLATE = "Obj_creafatturaclientetemplate";

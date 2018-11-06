@@ -32,10 +32,6 @@ class Saldo extends CoreBase implements CoreInterface {
     private $desSaldo;
     private $impSaldo;
     private $indDareavere;
-    private $saldi;
-    private $qtaSaldi;
-    private $dateRiportoSaldi;
-    private $qtaDateRiportoSaldi;
 
     // fitri di ricerca
     // Queries
@@ -43,8 +39,6 @@ class Saldo extends CoreBase implements CoreInterface {
     const CANCELLA_SALDO = "/saldi/cancellaSaldo.sql";
     const AGGIORNA_SALDO = "/saldi/aggiornaSaldo.sql";
     const CREA_SALDO = "/saldi/creaSaldo.sql";
-    const LEGGI_DATE_RIPORTO = "/saldi/ricercaDateRiportoSaldi.sql";
-    const CARICA_SALDI = "/saldi/ricercaSaldi.sql";
     const SALDO_CONTO = "/saldi/saldoConto.sql";
 
     // Metodi
@@ -54,8 +48,9 @@ class Saldo extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::SALDO]))
+        if (!isset($_SESSION[self::SALDO])) {
             $_SESSION[self::SALDO] = serialize(new Saldo());
+        }
         return unserialize($_SESSION[self::SALDO]);
     }
 
@@ -168,50 +163,6 @@ class Saldo extends CoreBase implements CoreInterface {
         return $result;
     }
 
-    public function caricaDateRiporto($db) {
-
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-
-        $sqlTemplate = $this->getRoot() . $array['query'] . self::LEGGI_DATE_RIPORTO;
-        $sql = $utility->getQueryTemplate($sqlTemplate);
-        $result = $db->getData($sql);
-
-        if ($result) {
-            $this->setDateRiportoSaldi(pg_fetch_all($result));
-            $this->setQtaDateRiportoSaldi(pg_num_rows($result));
-        } else {
-            $this->setDateRiportoSaldi(self::NULL_VALUE);
-            $this->setQtaDateRiportoSaldi(self::ZERO_VALUE);
-        }
-        $_SESSION[self::SALDO] = serialize($this);
-        return $result;
-    }
-
-    public function caricaSaldi($db) {
-
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-
-        $replace = array(
-            '%cod_negozio%' => $this->getCodNegozio(),
-            '%dat_saldo%' => $this->getDatSaldo()
-        );
-
-        $sqlTemplate = $this->getRoot() . $array['query'] . self::CARICA_SALDI;
-        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
-        $result = $db->getData($sql);
-
-        if ($result) {
-            $this->setSaldi(pg_fetch_all($result));
-            $this->setQtaSaldi(pg_num_rows($result));
-        } else {
-            $this->setSaldi(self::NULL_VALUE);
-            $this->setQtaSaldi(self::ZERO_VALUE);
-        }
-        return $result;
-    }
-
     // Getters e Setters
 
     public function getRoot() {
@@ -276,38 +227,6 @@ class Saldo extends CoreBase implements CoreInterface {
 
     public function setIndDareavere($indDareavere) {
         $this->indDareavere = $indDareavere;
-    }
-
-    public function getSaldi() {
-        return $this->saldi;
-    }
-
-    public function setSaldi($saldi) {
-        $this->saldi = $saldi;
-    }
-
-    public function getQtaSaldi() {
-        return $this->qtaSaldi;
-    }
-
-    public function setQtaSaldi($qtaSaldi) {
-        $this->qtaSaldi = $qtaSaldi;
-    }
-
-    public function getDateRiportoSaldi() {
-        return $this->dateRiportoSaldi;
-    }
-
-    public function setDateRiportoSaldi($dateRiportoSaldi) {
-        $this->dateRiportoSaldi = $dateRiportoSaldi;
-    }
-
-    public function getQtaDateRiportoSaldi() {
-        return $this->qtaDateRiportoSaldi;
-    }
-
-    public function setQtaDateRiportoSaldi($qtaDateRiportoSaldi) {
-        $this->qtaDateRiportoSaldi = $qtaDateRiportoSaldi;
     }
 
     public function getDatSaldoSel() {

@@ -1,12 +1,11 @@
 <?php
 
-set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility');
 require_once 'riportoSaldoPeriodico.class.php';
+require_once 'saldi.controller.class.php';
 
 session_start();
 
-$riportoSaldoPeriodico = RiportoSaldoPeriodico::getInstance();
+$_SESSION["Obj_saldicontroller"] = serialize(new SaldiController(RiportoSaldoPeriodico::getInstance()));
 
-if ($_GET["modo"] == "start") $riportoSaldoPeriodico->start();
-
-?>
+$controller = unserialize($_SESSION["Obj_saldicontroller"]);
+$controller->start();
