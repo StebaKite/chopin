@@ -133,11 +133,6 @@ abstract class Nexus6Abstract {
 
             if ($array["operazioni_item_1"] == "Y")
                 $operazioni .= "<li><a href='../primanota/ricercaRegistrazioneFacade.class.php?modo=start'>" . $array["operazioni_item_1_name"] . "</a></li>";
-
-            $operazioni .= "<li role='separator' class='divider'></li>";
-            
-            if ($array["operazioni_item_2"] == "Y")
-                $operazioni .= "<li><a href='../strumenti/cambiaContoStep1Facade.class.php?modo=start'>" . $array["operazioni_item_2_name"] . "</a></li>";
             
             $operazioni .= "</ul></li>";
         }
@@ -263,6 +258,32 @@ abstract class Nexus6Abstract {
         }
         $menu .= $fatture;
 
+        // S t r u m e n t i ------------------------------------------------------------
+
+        $strumenti = "";
+        
+        if ($array["strumenti"] == "Y") {
+            $strumenti .= "<li class='dropdown'>";
+            $strumenti .= "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>" . $array["strumenti_menu_title"];
+            $strumenti .= "<span class='caret'></span></a>";
+            $strumenti .= "<ul class='dropdown-menu'>";
+            
+            if ($array["strumenti_item_1"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/cambiaContoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_1_name"] . "</a></li>";
+
+            $strumenti .= "<li role='separator' class='divider'></li>";
+            
+            if ($array["strumenti_item_2"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/importaCorrispettivoNegozioStep1Facade.class.php?modo=start'>" . $array["strumenti_item_2_name"] . "</a></li>";
+            
+            if ($array["strumenti_item_3"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/importaCorrispettivoMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
+
+            $strumenti .= "</ul></li>";
+        }
+        $menu .= $strumenti;
+        
+        
         return $menu;
     }
 

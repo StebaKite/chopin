@@ -38,36 +38,57 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
         $xmlRoot->setAttribute('versione', 'FPR12');
         $xmlRoot->setAttribute('xmlns:ns2', 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2');
 
-        // Header Fattura ---------------------------
+        /****************************************************************************************
+         * Header Fattura
+         */
 
         $fatturaElettronicaHeader = $domtree->createElement("FatturaElettronicaHeader");       
 
-        // DatiTrasmissione ---------------------------
+        // DatiTrasmissione
 
         $datiTrasmissione = $fatturaElettronicaHeader->appendChild($domtree->createElement('DatiTrasmissione'));   
-        $fatturaElettronicaHeader->appendChild($this->makeDatiTrasmissione($datiTrasmissione, $domtree));       
+        $fatturaElettronicaHeader->appendChild($this->makeDatiTrasmissione($datiTrasmissione, $domtree, $fattura));       
 
-        // CedentePrestatore ---------------------------
+        // CedentePrestatore
 
         $cedentePrestatore = $fatturaElettronicaHeader->appendChild($domtree->createElement('CedentePrestatore'));
-        $fatturaElettronicaHeader->appendChild($this->makeCedentePrestatore($cedentePrestatore, $domtree));       
+        $fatturaElettronicaHeader->appendChild($this->makeCedentePrestatore($cedentePrestatore, $domtree, $fattura));       
 
-        // CessionarioCommittente ---------------------------
+        // CessionarioCommittente
 
         $cessionarioCommittente = $fatturaElettronicaHeader->appendChild($domtree->createElement('CessionarioCommittente'));
-        $fatturaElettronicaHeader->appendChild($this->makeCessionarioCommittente($cessionarioCommittente, $domtree));       
+        $fatturaElettronicaHeader->appendChild($this->makeCessionarioCommittente($cessionarioCommittente, $domtree, $fattura));       
+                
+        // Fine Header Fattura
 
-        // ---------------------------
+        $xmlRoot->appendChild($fatturaElettronicaHeader);       
 
+        /*******************************************************************************************
+         * Body Fattura
+         */
 
+        $fatturaElettronicaBody = $domtree->createElement("FatturaElettronicaBody");       
 
+        // DatiGenerali
 
+        $datiGenerali = $fatturaElettronicaBody->appendChild($domtree->createElement('DatiGenerali'));   
+        $fatturaElettronicaBody->appendChild($this->makeDatiGenerali($datiGenerali, $domtree, $fattura));       
 
+        // DatiBeniServizi
 
-
+        $datiBeniServizi = $fatturaElettronicaBody->appendChild($domtree->createElement('DatiBeniServizi'));   
+        $fatturaElettronicaBody->appendChild($this->makeDatiBeniServizi($datiBeniServizi, $domtree, $dettaglioFattura));       
 
         
-        $xmlRoot->appendChild($fatturaElettronicaHeader);       
+
+
+
+
+
+
+        // Fine Body Fattura
+        
+        $xmlRoot->appendChild($fatturaElettronicaBody);       
         
         // Salvo il file generato
         $domtree->save('C:/Temp/fattura.xml');
@@ -82,7 +103,7 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
      * @param type $domtree
      * @return type
      */
-    public function makeDatiTrasmissione($datiTrasmissione, $domtree) {
+    public function makeDatiTrasmissione($datiTrasmissione, $domtree, $fattura) {
 
         $idTrasmittente = $datiTrasmissione->appendChild($domtree->createElement('IdTrasmittente'));
             $idTrasmittente->appendChild($domtree->createElement('IdPaese','IT'));
@@ -101,7 +122,7 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
      * @param type $domtree
      * @return type
      */
-    public function makeCessionarioCommittente($cessionarioCommittente, $domtree) {
+    public function makeCessionarioCommittente($cessionarioCommittente, $domtree, $fattura) {
 
         $datiAnagrafici = $cessionarioCommittente->appendChild($domtree->createElement('DatiAnagrafici'));
 
@@ -128,7 +149,7 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
      * @param type $domtree
      * @return type
      */
-    public function makeCedentePrestatore($cedentePrestatore, $domtree) {
+    public function makeCedentePrestatore($cedentePrestatore, $domtree, $fattura) {
         
         $datiAnagrafici = $cedentePrestatore->appendChild($domtree->createElement('DatiAnagrafici'));
 
@@ -144,7 +165,6 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
 
             $datiAnagrafici->appendChild($domtree->createElement('RegimeFiscale','RF01'));
 
-
         $sede = $cedentePrestatore->appendChild($domtree->createElement('Sede'));
             $sede->appendChild($domtree->createElement('Indirizzo','Via del Melo'));                    
             $sede->appendChild($domtree->createElement('NumeroCivico','131'));                    
@@ -156,9 +176,53 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
         return $cedentePrestatore;        
     }
     
-    
-    
-    
+    /**
+     * 
+     * @param type $datiGenerali
+     * @param type $domtree
+     * @return type
+     */
+    public function makeDatiGenerali($datiGenerali, $domtree, $fattura) {
+        
+        $datiGeneraliDocumento = $datiGenerali->appendChild($domtree->createElement('DatiGeneraliDocumento'));
+            $datiGeneraliDocumento->appendChild($domtree->createElement('TipoDocumento','TD01'));       // fisso in config
+            $datiGeneraliDocumento->appendChild($domtree->createElement('Divisa','EUR'));
+            $datiGeneraliDocumento->appendChild($domtree->createElement('Data','2018-05-14'));
+            $datiGeneraliDocumento->appendChild($domtree->createElement('Numero','VIL-001'));
+            $datiGeneraliDocumento->appendChild($domtree->createElement('ImportoTotaleDocumento','921.10'));
+
+        return $datiGenerali;
+    }
+
+    public function makeDatiBeniServizi($datiBeniServizi, $domtree, $dettaglioFattura) {
+
+        // qui fai un ciclo sui dettagli della fattura per ciascun dettaglio genera un nodo dettaglioLinee
+        
+        $dettaglioLinee = $datiBeniServizi->appendChild($domtree->createElement('DettaglioLinee'));
+            $dettaglioLinee->appendChild($domtree->createElement('NumeroLinea','1'));              // ok, contatore dettagli
+            $dettaglioLinee->appendChild($domtree->createElement('Descrizione','Sedie PC'));       // DettaglioFattura::DES_ARTICOLO
+            $dettaglioLinee->appendChild($domtree->createElement('Quantita','10'));                // DettaglioFattura::QTA_ARTICOLO
+            $dettaglioLinee->appendChild($domtree->createElement('PrezzoUnitario','38.00'));       // DettaglioFattura::IMP_ARTICOLO
+            $dettaglioLinee->appendChild($domtree->createElement('PrezzoTotale','380.00'));        // DettaglioFattura::IMP_TOTALE
+            $dettaglioLinee->appendChild($domtree->createElement('AliquotaIVA','22.00'));          // DettaglioFattura::COD_ALIQUOTA
+
+        $dettaglioLinee = $datiBeniServizi->appendChild($domtree->createElement('DettaglioLinee'));
+            $dettaglioLinee->appendChild($domtree->createElement('NumeroLinea','2'));                   
+            $dettaglioLinee->appendChild($domtree->createElement('Descrizione','Pedane poggiapiedi'));
+            $dettaglioLinee->appendChild($domtree->createElement('Quantita','10'));
+            $dettaglioLinee->appendChild($domtree->createElement('PrezzoUnitario','37.50'));
+            $dettaglioLinee->appendChild($domtree->createElement('PrezzoTotale','375.00'));
+            $dettaglioLinee->appendChild($domtree->createElement('AliquotaIVA','22.00'));
+            
+        // fine ciclo dettagli fattura    
+            
+        $datiRiepilogo = $datiBeniServizi->appendChild($domtree->createElement('DatiRiepilogo'));
+            $datiRiepilogo->appendChild($domtree->createElement('AliquotaIVA','22.00'));            // DettaglioFattura::COD_ALIQUOTA
+            $datiRiepilogo->appendChild($domtree->createElement('ImponibileImporto','755.00'));     // Sommatoria DettaglioFattura::IMP_IMPONIBILE 
+            $datiRiepilogo->appendChild($domtree->createElement('Imposta','166.10'));               // Sommatoria DettaglioFattura::IMP_IVA
+                        
+        return $datiBeniServizi;        
+    }
     
     public function go() {
         

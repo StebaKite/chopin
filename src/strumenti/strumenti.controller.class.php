@@ -2,6 +2,7 @@
 
 require_once 'registrazione.class.php';
 require_once 'conto.class.php';
+require_once 'corrispettivo.class.php';
 
 class StrumentiController {
     
@@ -12,6 +13,7 @@ class StrumentiController {
 
     const REGISTRAZIONE = "Obj_registrazione";
     const CONTO = "Obj_conto";
+    const CORRISPETTIVO = "Obj_corrispettivo";
 
     // Metodi
     
@@ -31,6 +33,7 @@ class StrumentiController {
      
         $registrazione = Registrazione::getInstance();
         $conto = Conto::getInstance();
+        $corrispettivo = Corrispettivo::getInstance();
 
         // Cambia conto registrazioni ==============================================================
 
@@ -46,10 +49,22 @@ class StrumentiController {
             $conto->setCodContoSelNuovo($_REQUEST["conto_sel_nuovo"]);
         }
 
+        if (isset($_REQUEST["contocassa"])) {
+            
+            $corrispettivo->setMese($_REQUEST["mese"]);
+            $corrispettivo->setAnno($_REQUEST["anno"]);
+            $corrispettivo->setCodNeg($_REQUEST["codneg"]);
+            $corrispettivo->setFile($_REQUEST["file"]);
+            $corrispettivo->setDatada($_REQUEST["datada"]);
+            $corrispettivo->setDataa($_REQUEST["dataa"]);
+            $corrispettivo->setContoCassa($_REQUEST["contocassa"]);
+        }
+        
         // Serializzo in sessione gli oggetti modificati ========================================
 
         $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
         $_SESSION[self::CONTO] = serialize($conto);
+        $_SESSION[self::CORRISPETTIVO] = serialize($corrispettivo);
         
         if ($this->getRequest() == "start") {
             $this->strumentiFunction->start();
