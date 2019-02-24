@@ -27,8 +27,15 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     private $datada;
     private $dataa;
     private $contocassa;
+    private $corrispettiviTrovati;
+    private $corrispettiviIncompleti;
 
     // Altri dati funzionali
+    
+    private $statoStep1;
+    private $statoStep2;
+    private $statoStep3;
+    
     // Queries
     
     // Metodi
@@ -127,7 +134,43 @@ class Corrispettivo extends CoreBase implements CoreInterface {
         $this->contocassa = $contocassa;
     }
     
+    public function getCorrispettiviTrovati() {
+        return $this->corrispettiviTrovati;
+    }
 
+    public function setCorrispettiviTrovati($corrispettiviTrovati) {
+        $this->corrispettiviTrovati = $corrispettiviTrovati;
+    }
+    
+    public function getCorrispettiviIncompleti() {
+        return $this->corrispettiviIncompleti;
+    }
 
+    public function setCorrispettiviIncompleti($corrispettiviIncompleti) {
+        $this->corrispettiviIncompleti = $corrispettiviIncompleti;
+    }
+    
+    public function getStatoStep1() {
+        return $this->statoStep1;
+    }
 
+    public function setStatoStep1($statoStep1) {
+        $this->statoStep1 = $statoStep1;
+    }
+    
+    public function getStatoStep2() {
+        return $this->statoStep2;
+    }
+
+    public function setStatoStep2($statoStep2) {
+        $this->statoStep2 = $statoStep2;
+    }
+    
+    public function getStatoStep3() {
+        return $this->statoStep3;
+    }
+
+    public function setStatoStep3($statoStep3) {
+        $this->statoStep3 = $statoStep3;
+    }
 }

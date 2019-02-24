@@ -274,10 +274,10 @@ abstract class Nexus6Abstract {
             $strumenti .= "<li role='separator' class='divider'></li>";
             
             if ($array["strumenti_item_2"] == "Y")
-                $strumenti .= "<li><a href='../strumenti/importaCorrispettivoNegozioStep1Facade.class.php?modo=start'>" . $array["strumenti_item_2_name"] . "</a></li>";
+                $strumenti .= "<li><a href='../strumenti/importaExcelCorrispettiviNegozioStep1Facade.class.php?modo=start'>" . $array["strumenti_item_2_name"] . "</a></li>";
             
             if ($array["strumenti_item_3"] == "Y")
-                $strumenti .= "<li><a href='../strumenti/importaCorrispettivoMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
+                $strumenti .= "<li><a href='../strumenti/importaExcelCorrispettiviMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
 
             $strumenti .= "</ul></li>";
         }

@@ -1408,17 +1408,24 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
          */
         for ($i = 1; $i < 13; $i++) {
             $utilePerditaMesi[$i] = abs($totaliRicaviMesi[$i]) - $totaliAcquistiMesi[$i];
-            if ($utilePerditaMesi[$i] < 0)
+            if ($utilePerditaMesi[$i] < 0) {
                 $classe[$i] = "class='bg-warning'";
+            }
 
             $totaleUtilePerdita = $totaleUtilePerdita + $utilePerditaMesi[$i];
 
             for ($j = $i; $j < 13; $j++) {
-                $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
-                if ($progrUtilePerditaMesi[$j] < 0)
-                    $progrClasse[$j] = "class='bg-warning'";
-                else
-                    $progrClasse[$j] = "";
+                if ($utilePerditaMesi[$i] > 0) {
+                    $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
+                    if ($progrUtilePerditaMesi[$j] < 0) {
+                        $progrClasse[$j] = "class='bg-warning'";
+                    } else {
+                        $progrClasse[$j] = "";
+                    }
+                }
+                else {
+                    $progrUtilePerditaMesi[$j] = 0;
+                }                
             }
         }
 

@@ -692,7 +692,7 @@ function cancellaDettaglioNuovaRegistrazione(idTable, codContoComposto)
             controllaDettagliRegistrazione(idTable);
         }
     };
-    xmlhttp.open("GET", "cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codContoComposto, true);
+    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codContoComposto, true);
     xmlhttp.send();
 }
 

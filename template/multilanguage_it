@@ -175,8 +175,8 @@ cambioContoStep3 = Conferma migrazione operazioni
 
 ricercaMercato = Ricerca Mercato
 
-importaExcelCorrispettivoNegozioStep1 = Importa Corrispettivi Negozio : Passo 1 - Controllo file
-importaExcelCorrispettivoNegozioStep2 = Importa Corrispettivi Negozio: Passo 2 - Importazione dei dati
+importaExcelCorrispettivoNegozioStep1 = Importa Corrispettivi Negozio
+importaExcelCorrispettivoNegozioStep2 = Importa Corrispettivi Negozio
 importaExcelCorrispettivoMercatoStep1 = Importa Corrispettivi Mercato : Passo 1 - Controllo file
 importaExcelCorrispettivoMercatoStep2 = Importa Corrispettivi Mercato: Passo 2 - Importazione dei dati
 

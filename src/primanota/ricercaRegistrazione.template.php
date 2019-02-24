@@ -219,9 +219,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
                             "	<td>" . trim($unaRegistrazione[Registrazione::NUM_FATTURA]) . "</td>" .
                             "	<td>" . trim($unaRegistrazione[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
                             "	<td>" . trim($unaRegistrazione[Registrazione::COD_CAUSALE]) . " &ndash; " . trim($unaRegistrazione[Causale::DES_CAUSALE]) . "</td>" .
-                            "	<td>" . $bottoneVisualizza . "</td>" .
-                            "	<td>" . $bottoneModifica . "</td>" .
-                            "	<td>" . $bottoneCancella . "</td>" .
+                            "	<td align='center'>" . $bottoneVisualizza . "</td>" .
+                            "	<td align='center'>" . $bottoneModifica . "</td>" .
+                            "	<td align='center'>" . $bottoneCancella . "</td>" .
                             "</tr>";
                 }
 // 				elseif (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_DETTAGLIO_REGISTRAZIONE) {

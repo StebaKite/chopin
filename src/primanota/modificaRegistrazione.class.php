@@ -43,6 +43,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         $array = $utility->getConfig();
 
         $registrazione->prepara();
+        $dettaglioRegistrazione->prepara();
         $cliente->prepara();
         $fornitore->prepara();
 

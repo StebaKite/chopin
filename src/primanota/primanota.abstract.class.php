@@ -41,7 +41,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     public static $queryDeleteScadenzaCliente = "/primanota/deleteScadenzaCliente.sql";
     public static $queryPrelevaRegistrazioneOriginaleCliente = "/primanota/leggiRegistrazioneOriginaleCliente.sql";
     public static $queryPrelevaRegistrazioneOriginaleFornitore = "/primanota/leggiRegistrazioneOriginaleFornitore.sql";
-    public static $queryTrovaCorrispettivo = "/primanota/trovaCorrispettivo.sql";
     public static $queryTrovaScadenzaFornitore = "/primanota/trovaScadenzaFornitore.sql";
     public static $queryTrovaScadenzaCliente = "/primanota/trovaScadenzaCliente.sql";
     public static $queryPrelevaCapocontoFornitore = "/primanota/ricercaCapocontoFornitore.sql";
@@ -845,6 +844,17 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 else
                     return false;
             }
+            else {
+                $dettaglioRegistrazione->setIdDettaglioRegistrazione($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
+                $dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
+                $dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
+
+                if ($dettaglioRegistrazione->aggiorna($db)) {
+                    
+                }  // tutto ok
+                else
+                    return false;
+            }
         }
         return true;
     }
@@ -1284,24 +1294,6 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
         $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
         return $db->getData($sql);
-    }
-
-    public function isNew($db, $utility, $datareg, $codneg, $conto, $importo) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%dat_registrazione%' => trim($datareg),
-            '%cod_negozio%' => trim($codneg),
-            '%cod_conto%' => substr(trim($conto), 0, 3),
-            '%imp_registrazione%' => str_replace(",", ".", trim($importo))
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-
-        if (pg_num_rows($db->execSql($sql)) > 0) {
-            return false;
-        }
-        return true;
     }
 
     public function prelevaDatiScadenzeRegistrazione($utility) {

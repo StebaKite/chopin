@@ -112,7 +112,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
                     }
                 }
 
-                /*                 * *
+                /**
                  * Ricalcolo i saldi dei conti
                  */
                 $this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());

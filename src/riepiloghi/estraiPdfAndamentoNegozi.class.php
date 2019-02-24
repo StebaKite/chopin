@@ -8,11 +8,6 @@ require_once 'riepilogo.class.php';
 
 class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
-//    private static $_instance = null;
-//    public $_datiMCT = array();
-//    public $_totaliCostiRicavi = array();
-//    public static $azioneEstraiPdfAndamentoNegozi = "../riepiloghi/estraiPdfAndamentoNegoziFacade.class.php?modo=start";
-
     function __construct() {
         $this->root = $_SERVER['DOCUMENT_ROOT'];
         $this->utility = Utility::getInstance();
@@ -63,7 +58,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiB
         $pdf->setTitle("Progressivi Mensili Chopin");
         $pdf->setTitle1("Dal " . $riepilogo->getDataregDa() . " al " . $riepilogo->getDataregA());
 
-        if ($_SESSION["codneg_sel"] != "") {
+        if (parent::isNotEmpty($riepilogo->getCodnegSel())) {
             $negozio = ($riepilogo->getCodnegSel() == self::VILLA) ? "Villa D'Adda" : $negozio;
             $negozio = ($riepilogo->getCodnegSel() == self::BREMBATE) ? "Brembate" : $negozio;
             $negozio = ($riepilogo->getCodnegSel() == self::TREZZO) ? "Trezzo" : $negozio;
