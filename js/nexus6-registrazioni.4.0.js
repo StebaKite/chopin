@@ -401,21 +401,21 @@ function validaNuovaRegistrazione() {
 
     if (controllaClienteFornitore("fornitore_cre", "cliente_cre")) {
         esito += "1";
-    } else {
-        esito += "0";
-    }
-    
-    if (isEmpty($("#numfatt_cre_messaggio").text())) {
-        esito += "1";
-        if (controllaNumeroFattura("numfatt_cre"))
-            esito += "1";
+        
+        if (isNotEmpty($("#fornitore_cre").val()) || isNotEmpty($("#cliente_cre").val())) {
+            if (controllaNumeroFattura("numfatt_cre"))
+                esito += "1";
+            else
+                esito += "0";            
+        }
         else
-            esito += "0";
+            esito += "1";            
     }
-    else
-        esito += "0";
+    else {
+        esito += "00";
+    }
 
-    if (esito === "1111111") {
+    if (esito === "111111") {
         return true;
     } else {
         return false;
@@ -650,6 +650,40 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
             }
         };
         xmlhttp.open("GET", "../primanota/aggiornaImportoScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_for=" + datascad + "&numfatt=" + numfatt + "&impscad_for=" + importoScadNormalizzato, true);
+        xmlhttp.send();
+    }
+}
+
+function modificaDataScadenzaFornitore(idTable, idfornitore, datascad_old, datascad_new, numfatt) {
+    
+    if (isNotEmpty(datascad_old)) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                if (isNotEmpty(xmlhttp.responseText)) {
+                    var scadenzeTable = xmlhttp.responseText;
+                    $("#" + idTable).html(scadenzeTable);
+                }
+            }
+        };
+        xmlhttp.open("GET", "../primanota/aggiornaDataScadenzaFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&datascad_old_for=" + datascad_old  + "&datascad_new_for=" + datascad_new + "&numfatt=" + numfatt, true);
+        xmlhttp.send();
+    }
+}
+
+function modificaDataScadenzaCliente(idTable, idcliente, datascad_old, datascad_new, numfatt) {
+    
+    if (isNotEmpty(datascad_old)) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                if (isNotEmpty(xmlhttp.responseText)) {
+                    var scadenzeTable = xmlhttp.responseText;
+                    $("#" + idTable).html(scadenzeTable);
+                }
+            }
+        };
+        xmlhttp.open("GET", "../primanota/aggiornaDataScadenzaClienteFacade.class.php?modo=go&idcliente=" + idcliente + "&datascad_old_cli=" + datascad_old  + "&datascad_new_cli=" + datascad_new + "&numfatt=" + numfatt, true);
         xmlhttp.send();
     }
 }

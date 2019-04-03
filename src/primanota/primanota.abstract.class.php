@@ -524,19 +524,37 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($numFatt) . ",";
                 $modifica_parms .= "this.value";
 
+                $mod_data_parms = "'" . $scadenzaFornitore->getIdTableScadenzeAperte() . "',";
+                $mod_data_parms .= trim($idFornitore) . ",";
+                $mod_data_parms .= trim($dataScadenza) . ",";
+                $mod_data_parms .= "this.value,";
+                $mod_data_parms .= trim($numFatt);
+
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
+                $onModifyData = " onchange=" . '"' . "modificaDataScadenzaFornitore(" . $mod_data_parms . ')"';
                 $onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaFornitore(" . $modifica_parms;
                 $idImportoDettaglio = " id='impscad" . trim($idFornitore) . trim($dataScadenza) . trim($numFatt) . "' ";
+                $idDataDettaglio = " id='datscad" . trim($idFornitore) . trim($dataScadenza) . trim($numFatt) . "' ";
 
                 $stato = ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == "10") ? "Pagata" : "Da Pagare";
 
-                $tbody .= "<tr>" .
-                        "       <td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" ;
+                $tbody .= "<tr>" ;
                 
                 if ($stato == "Da Pagare") {
                     $tdclass = $data_ko;
                     $bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
+
                     $tbody .= "" .
+                            "   <td>" .
+                            "       <div class='input-group' id='datareg_cre_control_group'>" .
+                            "           <div class='input-group date' data-provide='datepicker' data-date-format='dd-mm-yyyy' data-date-autoclose='true' data-date-today-highlight='true'>" .
+                            "               <input type='text' class='form-control'" . $idDataDettaglio . $onModifyData .  "value='" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "'></input>" .
+                            "               <span class='input-group-addon'>" .
+                            "                   <span class='glyphicon glyphicon-calendar'></span>" .
+                            "               </span>" .
+                            "           </div>" .
+                            "       </div>" .
+                            "   </td>" .
                             "	<td " . $tdclass . ">" . $stato . "</td>" .
                             "	<td>" .
                             "       <div class='input-group'>" .
@@ -605,7 +623,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         $thead = "";
         $tbody = "";
 
-        if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
+            if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
 
             $tbody = "<tbody>";
             $thead = "<thead>" .
@@ -627,20 +645,38 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($dataScadenza) . ",";
                 $modifica_parms .= trim($numFatt) . ",";
                 $modifica_parms .= "this.value";
+                
+                $mod_data_parms = "'" . $scadenzaCliente->getIdTableScadenzeAperte() . "',";
+                $mod_data_parms .= trim($idCliente) . ",";
+                $mod_data_parms .= trim($dataScadenza) . ",";
+                $mod_data_parms .= "this.value,";
+                $mod_data_parms .= trim($numFatt);
 
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
+                $onModifyData = " onchange=" . '"' . "modificaDataScadenzaCliente(" . $mod_data_parms . ')"';                
                 $onClickCancella = " onclick=" . '"' . "cancellaNuovaScadenzaCliente(" . $modifica_parms;
                 $idImportoDettaglio = " id='impscad" . trim($idCliente) . trim($dataScadenza) . trim($numFatt) . "' ";
+                $idDataDettaglio = " id='datscad" . trim($idCliente) . trim($dataScadenza) . trim($numFatt) . "' ";
 
                 $stato = ($unaScadenza[ScadenzaCliente::STA_SCADENZA] == "10") ? "Incassata" : "Da Incassare";
 
-                $tbody .= "<tr>" .
-                        "	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" ;
+                $tbody .= "<tr>" ;
+//                        "	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" ;
                 
                 if ($stato == "Da Incassare") {
                     $tdclass = $data_ko;
                     $bottoneCancella = "<a" . $onClickCancella . ')"><span class="glyphicon glyphicon-trash"></span></a>';
                     $tbody .= "" .
+                            "   <td>" .
+                            "       <div class='input-group' id='datareg_cre_control_group'>" .
+                            "           <div class='input-group date' data-provide='datepicker' data-date-format='dd-mm-yyyy' data-date-autoclose='true' data-date-today-highlight='true'>" .
+                            "               <input type='text' class='form-control'" . $idDataDettaglio . $onModifyData .  "value='" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "'></input>" .
+                            "               <span class='input-group-addon'>" .
+                            "                   <span class='glyphicon glyphicon-calendar'></span>" .
+                            "               </span>" .
+                            "           </div>" .
+                            "       </div>" .
+                            "   </td>" .                            
                             "	<td " . $tdclass . ">" . $stato . "</td>" .
                             "	<td>" .
                             "       <div class='input-group'>" .

@@ -136,6 +136,18 @@ class PrimanotaController {
             $scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
         }
 
+        if (isset($_REQUEST["datascad_new_for"])) {
+            $scadenzaFornitore->setDatScadenza($_REQUEST["datascad_old_for"]);
+            $scadenzaFornitore->setDatScadenzaNuova($_REQUEST["datascad_new_for"]);
+            $scadenzaFornitore->setNumFattura($_REQUEST["numfatt"]);
+        }
+
+        if (isset($_REQUEST["datascad_new_cli"])) {
+            $scadenzaCliente->setDatRegistrazione($_REQUEST["datascad_old_cli"]);
+            $scadenzaCliente->setDatScadenzaNuova($_REQUEST["datascad_new_cli"]);
+            $scadenzaCliente->setNumFattura($_REQUEST["numfatt"]);
+        }
+        
         if (isset($_REQUEST["idreg"])) {
             $registrazione->setIdRegistrazione($_REQUEST["idreg"]);
         }

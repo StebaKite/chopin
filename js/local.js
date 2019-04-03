@@ -228,9 +228,9 @@ function controllaClienteFornitore(campoForn, campoCli)
         $("#" + campoCli + "_control_group").addClass("has-error");
         return false;
     } else if (isEmpty($("#" + campoForn).val()) && isEmpty($("#" + campoCli).val())) {
-        $("#" + campoForn + "_control_group").addClass("has-error");
-        $("#" + campoCli + "_control_group").addClass("has-error");
-        return false;
+        $("#" + campoForn + "_control_group").removeClass("has-error");
+        $("#" + campoCli + "_control_group").removeClass("has-error");
+        return true;
     } else {
         $("#" + campoForn + "_control_group").removeClass("has-error");
         $("#" + campoCli + "_control_group").removeClass("has-error");
