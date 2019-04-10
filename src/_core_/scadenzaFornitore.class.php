@@ -321,12 +321,12 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
             '%dat_scadenza%' => trim($this->getDatScadenza()),
             '%imp_in_scadenza%' => trim($this->getImpInScadenza()),
-            '%nota_in_scadenza%' => trim($this->getNotaScadenza()),
-            '%tip_addebito%' => trim($this->getTipAddebito()),
-            '%cod_negozio%' => trim($this->getCodNegozio()),
+            '%nota_in_scadenza%' => parent::isNotEmpty(trim($this->getNotaScadenza())) ? parent::quotation(trim($this->getNotaScadenza())) : parent::NULL_VALUE,
+            '%tip_addebito%' => parent::isNotEmpty(trim($this->getTipAddebito())) ? parent::quotation(trim($this->getTipAddebito())) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty(trim($this->getCodNegozio())) ? parent::quotation(trim($this->getCodNegozio())) : parent::NULL_VALUE,
             '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? trim($this->getIdFornitore()) : parent::NULL_VALUE,
-            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? "'" . trim($this->getNumFattura()) . "'" : parent::NULL_VALUE,
-            '%sta_scadenza%' => trim($this->getStaScadenza())
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? parent::quotation(trim($this->getNumFattura())) : parent::NULL_VALUE,
+            '%sta_scadenza%' => parent::isNotEmpty($this->getStaScadenza()) ? parent::quotation(trim($this->getStaScadenza())) : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);

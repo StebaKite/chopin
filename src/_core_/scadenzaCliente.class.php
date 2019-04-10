@@ -299,12 +299,12 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
             '%dat_registrazione%' => trim($this->getDatRegistrazione()),
             '%imp_registrazione%' => trim($this->getImpRegistrazione()),
-            '%nota%' => trim($this->getNota()),
-            '%tip_addebito%' => trim($this->getTipAddebito()),
-            '%cod_negozio%' => trim($this->getCodNegozio()),
-            '%id_cliente%' => trim($this->getIdCliente()),
-            '%num_fattura%' => trim($this->getNumFattura()),
-            '%sta_scadenza%' => trim($this->getStaScadenza())
+            '%nota%' => parent::isNotEmpty($this->getNota()) ? parent::quotation(trim($this->getNota())) : parent::NULL_VALUE,
+            '%tip_addebito%' => parent::isNotEmpty($this->getTipAddebito()) ? parent::quotation(trim($this->getTipAddebito())) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation(trim($this->getCodNegozio())) : parent::NULL_VALUE,
+            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? trim($this->getIdCliente()) : parent::NULL_VALUE,
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? parent::quotation(trim($this->getNumFattura())) : parent::NULL_VALUE,
+            '%sta_scadenza%' => parent::isNotEmpty($this->getStaScadenza()) ? parent::quotation(trim($this->getStaScadenza())) : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
