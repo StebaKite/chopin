@@ -204,12 +204,14 @@ class Registrazione extends CoreBase implements CoreInterface {
     }
 
     public function preparaFiltri() {
-        if ($this->getDatRegistrazioneDa() == "")
+        if (parent::isEmpty($this->getDatRegistrazioneDa()))
             $this->setDatRegistrazioneDa(date("d-m-Y"));
-        if ($this->getDatRegistrazioneA() == "")
+        if (parent::isEmpty($this->getDatRegistrazioneA()))
             $this->setDatRegistrazioneA(date("d-m-Y"));
-        if ($this->getCodNegozioSel() == "")
+        if (parent::isEmpty($this->getCodNegozioSel()))
             $this->setCodNegozioSel("");
+
+        $_SESSION[self::REGISTRAZIONE] = serialize($this);
     }
 
     public function load($db) {

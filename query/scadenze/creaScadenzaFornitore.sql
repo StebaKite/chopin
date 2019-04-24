@@ -15,11 +15,11 @@ VALUES
 	%id_registrazione%,
 	'%dat_scadenza%',
 	%imp_in_scadenza%,
-	'%nota_in_scadenza%',
-	'%tip_addebito%',
-	'%cod_negozio%',
+	%nota_in_scadenza%,
+	%tip_addebito%,
+	%cod_negozio%,
 	%id_fornitore%,
 	%num_fattura%,
-	'%sta_scadenza%',
+	%sta_scadenza%,
 	null
 	)

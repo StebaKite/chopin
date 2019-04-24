@@ -748,7 +748,11 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
              * alla data ottenuta viene sostituito il giorno con l'ultimo giorno del mese corrispondente
              */
             $dataScadenza = $this->sommaGiorniData($data, "-", $numGiorniScadenza);
-            return $dataScadenza;
+            
+            $data = explode("-", $dataScadenza);
+            $mese = $data[1];
+            $anno = $data[2];            
+            return SELF::$ggMese[$mese] . "-" . $mese . "-" . $anno;
         } else
             return "";
     }

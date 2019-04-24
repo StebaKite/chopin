@@ -93,7 +93,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
                     $idfornitore_break = trim($row[ScadenzaFornitore::ID_FORNITORE]);
                     $datscadenza_break = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
                     $desfornitore = trim($row[Fornitore::DES_FORNITORE]);
-                    $numfatt = trim($row[ScadenzaFornitore::NUM_FATTURA]);
                     $datscadenza = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
                 }
 
@@ -153,7 +152,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
                     $datscadenza_break = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
                     $desfornitore = trim($row[Fornitore::DES_FORNITORE]);
                     $datscadenza = trim($row[ScadenzaFornitore::DAT_SCADENZA]);
-                    $numfatt = trim($row[ScadenzaFornitore::NUM_FATTURA]);
 
                     $totale_scadenze += $totale_fornitore;
                     $totale_fornitore = 0;
@@ -184,7 +182,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
                     'descrizione' => $desfornitore,
                     'data' => $datscadenza,
                     'nota' => $notascadenza,
-                    'numfatt' => $numfatt,
+                    'numfatt' => trim($row[ScadenzaFornitore::NUM_FATTURA]),
                     'tipaddebito' => $tipaddebito,
                     'stascadenza' => $stascadenza,
                     'tdclass' => $tdclass,
@@ -271,7 +269,4 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
 
         echo $utility->tailTemplate($template);
     }
-
 }
-
-?>

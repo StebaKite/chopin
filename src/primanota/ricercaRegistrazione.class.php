@@ -43,10 +43,12 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         unset($_SESSION[self::FUNCTION_REFERER]);
         unset($_SESSION[self::MSG]);
 
-        $registrazione->preparaFiltri();
+        $registrazione->prepara();
         $dettaglioRegistrazione->prepara();
         $scadenzaCliente->prepara();
         $scadenzaFornitore->prepara();
+        
+        $registrazione->preparaFiltri();
         $this->setRefererFunctionName("");
 
         $ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
