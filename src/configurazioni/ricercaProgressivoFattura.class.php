@@ -66,12 +66,9 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
 
     private function refreshProgressiviFattura($db, $progressivoFattura) {
 
-        if (sizeof($progressivoFattura->getProgressiviFattura()) == 0) {
-
-            if (!$progressivoFattura->load($db)) {
-                $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-                return false;
-            }
+        if (!$progressivoFattura->load($db)) {
+            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+            return false;
         }
         return true;
     }

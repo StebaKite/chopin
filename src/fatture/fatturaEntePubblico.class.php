@@ -71,6 +71,8 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $r2 = $r1 + 192;
         $y1 = 260;
         $y2 = $y1 + 15;
+
+
         $this->SetFillColor(230, 230, 230);
         $this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2 - $y1), 2.5, 'DF');
         $this->Line($r1, $y1 + 6, $r2, $y1 + 6);

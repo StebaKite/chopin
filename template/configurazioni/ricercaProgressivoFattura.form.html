@@ -1,112 +1,112 @@
 <body>
-<script type="text/javascript">
+    <script type="text/javascript">
 
-$(document).ready(function(){
-	
-	$(".datepicker").datepicker();
-	
-	$("#myInput").on("keyup", 
-		function() {
-			var value = $(this).val().toLowerCase();
-			$("#myTable tr").filter(
-				function() {
-					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-				}
-			);
-		}
-	);				
-});
+        $(document).ready(function () {
 
-</script>
-<!-- ------------------- -->
-<!-- RICERCA             -->
-<!-- ------------------- -->
-<div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-				<div class="col-sm-5">
-					<div class="btn-group pull-right">				
-<!-- 						<button id="nuovoProgressivo" class="btn btn-primary btn-default">%ml.nuovoprogressivo%</button> -->
-					</div>	
-				</div>			
-			</div>
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
-</div>
+            $(".datepicker").datepicker();
 
-<!-- -------------------- -->
-<!-- MODIFICA PROGRESSIVO -->
-<!-- -------------------- -->
+            $("#myInput").on("keyup",
+                    function () {
+                        var value = $(this).val().toLowerCase();
+                        $("#myTable tr").filter(
+                                function () {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                }
+                        );
+                    }
+            );
+        });
 
-<div class="container">
-	<div class="modal fade" id="modifica-progressivo-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Progressivo</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="modificaProgressivoForm" action="../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go" >
+    </script>
+    <!-- ------------------- -->
+    <!-- RICERCA             -->
+    <!-- ------------------- -->
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
 
-						<div class="well well-sm">
-						
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class='input-group' id="catcliente_mod_control_group">
-										<span class="input-group-addon">%ml.categoria%</span>
-										<input class="form-control" id="catcliente_mod" name="catcliente_mod" type="text" readonly />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-									<div class='input-group' id="codnegozio_mod_control_group">
-										<span class="input-group-addon">%ml.negozio%</span>
-										<input class="form-control" id="codnegozio_mod" name="codnegozio_mod" type="text" readonly />
-									</div>
-							  	</div>
-							  	<div class="col-sm-4">
-									<div class='input-group' id="numfatt_mod_control_group">
-										<span class="input-group-addon">%ml.numfatt%</span>
-										<input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" maxlength="10" />
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-									<div class='input-group' id="numfatt_mod_control_group">
-										<span class="input-group-addon">%ml.notatesta%</span>
-										<textarea class="form-control" id="notatesta_mod" name="notatesta_mod" rows="4"></textarea>
-									</div>
-							  	</div>													  	
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-12">
-									<div class='input-group' id="numfatt_mod_control_group">
-										<span class="input-group-addon">%ml.notapiede%</span>
-										<textarea class="form-control" id="notapiede_mod" name="notapiede_mod" rows="4"></textarea>
-									</div>
-							  	</div>													  	
-							</div>							
-						</div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <h4>%titoloPagina%</h4>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="btn-group pull-right">				
+                            <!-- 						<button id="nuovoProgressivo" class="btn btn-primary btn-default">%ml.nuovoprogressivo%</button> -->
+                        </div>	
+                    </div>			
+                </div>
+            </div>
+            <div class="panel-body scrollable-panel">
+                %risultato_ricerca%
+            </div>
+        </div>
+    </div>
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-progressivo-form">Ok</button>
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
-</div>
+    <!-- -------------------- -->
+    <!-- MODIFICA PROGRESSIVO -->
+    <!-- -------------------- -->
+
+    <div class="container">
+        <div class="modal fade" id="modifica-progressivo-dialog" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modifica Progressivo</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form method="post" id="modificaProgressivoForm" action="../configurazioni/modificaProgressivoFatturaFacade.class.php?modo=go" >
+
+                            <div class="well well-sm">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <div class='input-group' id="catcliente_mod_control_group">
+                                            <span class="input-group-addon">%ml.categoria%</span>
+                                            <input class="form-control" id="catcliente_mod" name="catcliente_mod" type="text" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class='input-group' id="codnegozio_mod_control_group">
+                                            <span class="input-group-addon">%ml.negozio%</span>
+                                            <input class="form-control" id="codnegozio_mod" name="codnegozio_mod" type="text" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class='input-group' id="numfatt_mod_control_group">
+                                            <span class="input-group-addon">%ml.numfatt%</span>
+                                            <input class="form-control" id="numfatt_mod" name="numfatt_mod" type="text" maxlength="10" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <div class='input-group' id="numfatt_mod_control_group">
+                                            <span class="input-group-addon">%ml.notatesta%</span>
+                                            <textarea class="form-control" id="notatesta_mod" name="notatesta_mod" rows="4"></textarea>
+                                        </div>
+                                    </div>													  	
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <div class='input-group' id="numfatt_mod_control_group">
+                                            <span class="input-group-addon">%ml.notapiede%</span>
+                                            <textarea class="form-control" id="notapiede_mod" name="notapiede_mod" rows="4"></textarea>
+                                        </div>
+                                    </div>													  	
+                                </div>							
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-progressivo-form">Ok</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

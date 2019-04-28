@@ -46,7 +46,9 @@ class FattureController {
             $fattura->setDatFattura($_REQUEST["datafat"]);
             $fattura->setMeserif($_REQUEST["meserif"]);
             $fattura->setDesTitolo($_REQUEST["titolo"]);
-            $fattura->setCatCliente("1200");
+//            
+//            $fattura->setCatCliente("1200");
+//            
             $fattura->setDesCliente($_REQUEST["cliente"]);
             $fattura->setTipAddebito($_REQUEST["tipoadd"]);
             $fattura->setCodNegozio($_REQUEST["codneg"]);

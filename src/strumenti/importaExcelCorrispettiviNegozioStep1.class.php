@@ -97,10 +97,21 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
 
             $users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
 
-            if (strpos($users, $array['usernameProdLogin']) === false) {
-                $path = str_replace("%user%", "stefano", $array["filePath"]);
+            // Prelievo filepath in base al sistema operativo ospitante
+            
+            $agent = $_SERVER['HTTP_USER_AGENT'];
+            if (strpos($agent, 'Windows') === false) {
+                $filepath = $array["linuxFilePath"];
             } else {
-                $path = str_replace("%user%", $array["usernameProdLogin"], $array["filePath"]);
+                $filepath = $array["windowsFilePath"];                
+            }
+            
+            // sostituzione della userid all'interno del filepath prelevato in configurazione
+            
+            if (strpos($users, $array['usernameProdLogin']) === false) {
+                $path = str_replace("%user%", "stefano", $filepath);
+            } else {
+                $path = str_replace("%user%", $array["usernameProdLogin"], $filepath);
             }
 
             $data = new Spreadsheet_Excel_Reader($path . "/" . $corrispettivo->getFile());

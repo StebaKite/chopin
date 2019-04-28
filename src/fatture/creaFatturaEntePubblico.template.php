@@ -37,8 +37,14 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract implements Fatture
         $array = $utility->getConfig();
 
         $fattura = Fattura::getInstance();
+        $dettaglioFattura = DettaglioFattura::getInstance();
         $cliente = Cliente::getInstance();
 
+        $disableNuovoDettButton = '';
+        if ($dettaglioFattura->getQtaDettagliFattura() > 0) {
+            $disableNuovoDettButton = 'disabled';
+        }
+                
         $cliente->load($db);
 
         $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_ENTE_PUBBLICO;
@@ -54,6 +60,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract implements Fatture
             '%ragsocbanca%' => str_replace("'", "&apos;", $fattura->getDesRagsocBanca()),
             '%ibanbanca%' => $fattura->getCodIbanBanca(),
             '%descli%' => $fattura->getDesCliente(),
+            '%disableNuovoDettaglioButton%' => $disableNuovoDettButton,
             '%contributo-checked%' => ($fattura->getTipFattura() == self::CONTRIBUTO) ? self::CHECK_THIS_ITEM : "",
             '%vendita-checked%' => ($fattura->getTipFattura() == self::VENDITA) ? self::CHECK_THIS_ITEM : "",
             '%assistito%' => $fattura->getAssistito(),
