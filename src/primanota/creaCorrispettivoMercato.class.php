@@ -9,46 +9,45 @@ require_once 'dettaglioRegistrazione.class.php';
 require_once 'ricercaRegistrazione.class.php';
 require_once 'lavoroPianificato.class.php';
 
-class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+    function __construct() {
 
-	public static function getInstance()
-	{
-		if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO])) $_SESSION[self::CREA_CORRISPETTIVO_MERCATO] = serialize(new CreaCorrispettivoMercato());
-		return unserialize($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]);
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function start()
-	{
-		$registragione = Registrazione::getInstance();
-		$registragione->prepara();
-		
-		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$dettaglioRegistrazione->prepara();
-		$dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_cre");
-		
-		$_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-		echo "Ok";
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]))
+            $_SESSION[self::CREA_CORRISPETTIVO_MERCATO] = serialize(new CreaCorrispettivoMercato());
+        return unserialize($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]);
+    }
 
-	public function go()
-	{
-		$registrazione = Registrazione::getInstance();
-		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$utility = Utility::getInstance();
+    public function start() {
+        $registragione = Registrazione::getInstance();
+        $registragione->prepara();
 
-		$this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $dettaglioRegistrazione->prepara();
+        $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_cre");
 
-		$_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-		$controller = unserialize($_SESSION["Obj_primanotacontroller"]);
-		$controller->start();
-	}
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        echo "Ok";
+    }
+
+    public function go() {
+        $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $utility = Utility::getInstance();
+
+        $this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
+
+        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
+        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        $controller->start();
+    }
+
 }
 
 ?>

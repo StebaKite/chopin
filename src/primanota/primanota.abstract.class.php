@@ -757,7 +757,45 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
             return "";
     }
 
-    public function aggiungiDettagliCorrispettivo($db, $utility, $array) {
+    public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+        $dettaglioRegistrazione->setIdRegistrazione(0);
+        $sottoconto = Sottoconto::getInstance();
+
+        /**
+         * Dettaglio sul conto selezionato
+         */
+        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+
+        $dettaglioRegistrazione->setCodConto($dettaglioRegistrazione->getCodConto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setIndDareAvere("D");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio conto erario
+         */
+        $dettaglioRegistrazione->setCodConto($array['contoErarioNegozi']);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio Cassa/Banca
+         */
+        $dettaglioRegistrazione->setCodConto($array['contoCorrispettivoNegozi']);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        return $dettaglioRegistrazione;
+    }
+
+    public function aggiungiDettagliCorrispettivoMercato($db, $utility, $array) {
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
         $dettaglioRegistrazione->setIdRegistrazione(0);
@@ -811,7 +849,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 }
             }
 
-            /*             * *
+            /** 
              * Ricalcolo i saldi dei conti
              */
             if ($dettagli_ok) {

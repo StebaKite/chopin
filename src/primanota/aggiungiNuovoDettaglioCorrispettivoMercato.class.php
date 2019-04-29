@@ -31,7 +31,7 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
         $array = $utility->getConfig();
         $registrazione = Registrazione::getInstance();
 
-        $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivo($db, $utility, $array);
+        $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivoMercato($db, $utility, $array);
         $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
         echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
     }
