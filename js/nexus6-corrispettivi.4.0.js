@@ -211,12 +211,13 @@ $("#button-ok-nuovodett-modifica-corrispettivo-negozio-form").click(
             var imponibileNormalizzato = imponibile.trim().replace(",", ".");
             var iva = $("#iva_corneg_mod").val();
             var ivaNormalizzato = iva.trim().replace(",", ".");
+            var aliquota = "";
 
             if ($('#aliquota10_corneg_mod').is(':checked')) {
-                var aliquota = $("#aliquota10_corneg_mod").val();
+                aliquota = $("#aliquota10_corneg_mod").val();
             }
             if ($('#aliquota20_corneg_mod').is(':checked')) {
-                var aliquota = $("#aliquota20_corneg_mod").val();
+                aliquota = $("#aliquota20_corneg_mod").val();
             }
 
             var conto = $("#conti_corneg_mod").val().replace(",", ".");			// tolgo eventuali virgole nella descrizione del conto
@@ -720,3 +721,45 @@ $("#button-ok-modifica-corrispettivo-negozio-form").click(
 );
 
 //---------------------------------------------------------------------------------
+
+function modificaDettaglioCorrispettivo(idTable, conto, sottoconto, importo, segno, idDettaglio)
+{
+    var importoDettNormalizzato;
+    if (isEmpty(importo))
+        importoDettNormalizzato = 0;
+    else
+        importoDettNormalizzato = importo.trim().replace(",", ".");
+
+    if (isNotEmpty(conto)) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                if (isNotEmpty(xmlhttp.responseText)) {
+                    var dettagliTable = xmlhttp.responseText;
+                    $("#" + idTable).html(dettagliTable);
+
+                    controllaDettagliRegistrazione(idTable);
+                }
+            }
+        };
+        xmlhttp.open("GET", "../primanota/aggiornaDettaglioCorrispettivoFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
+        xmlhttp.send();
+    }   
+}
+
+//---------------------------------------------------------------------------------
+
+function cancellaDettaglioNuovoCorrispettivo(idTable, codContoComposto, segno)
+{
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            var dettagliTable = xmlhttp.responseText;
+            $("#" + idTable).html(dettagliTable);
+            controllaDettagliRegistrazione(idTable);
+        }
+    };
+    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioCorrispettivoFacade.class.php?modo=go&codconto=" + codContoComposto + "&dareAvere=" + segno, true);
+    xmlhttp.send();
+}
+

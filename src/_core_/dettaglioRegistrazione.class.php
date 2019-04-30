@@ -16,6 +16,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     const IMP_REGISTRAZIONE = "imp_registrazione";
     const IND_DAREAVERE = "ind_dareavere";
     const COD_CONTO = "cod_conto";
+    const COD_CONTO_COMPOSTO = "cod_conto_composto";
     const COD_SOTTOCONTO = "cod_sottoconto";
     const DAT_INSERIMENTO = "dat_inserimento";
     const IND_CONTO_PRINCIPALE = "ind_conto_principale";
@@ -28,6 +29,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     private $indDareavere;
     private $codConto;
     private $codSottoconto;
+    private $codContoComposto;
     private $datInserimento;
     private $dettagliRegistrazione;
     private $qtaDettagliRegistrazione;
@@ -116,8 +118,10 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
             $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
             $codConto = explode(".", $contoComposto[0]);
+//            $codConto = explode(".", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
+            $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
 
-            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto())))
+            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto())) or ($segno != $this->getIndDareavere()))
                 array_push($dettagliDiff, $unDettaglio);
             else {
                 $item = array(
@@ -126,6 +130,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                     DettaglioRegistrazione::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
                     DettaglioRegistrazione::IND_DAREAVERE => $this->getIndDareavere(),
                     DettaglioRegistrazione::COD_CONTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO],
+                    DettaglioRegistrazione::COD_CONTO_COMPOSTO => trim($this->getCodContoComposto()),
                     DettaglioRegistrazione::COD_SOTTOCONTO => $unDettaglio[DettaglioRegistrazione::COD_SOTTOCONTO],
                     DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO],
                     DettaglioRegistrazione::IND_CONTO_PRINCIPALE => $unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE]
@@ -138,34 +143,52 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     }
         
     public function aggiungi() {
-        $item = array(
-            DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => trim($this->getIdDettaglioRegistrazione()),
-            DettaglioRegistrazione::ID_REGISTRAZIONE => $this->getIdRegistrazione(),
-            DettaglioRegistrazione::IMP_REGISTRAZIONE => trim($this->getImpRegistrazione()),
-            DettaglioRegistrazione::IND_DAREAVERE => trim($this->getIndDareavere()),
-            DettaglioRegistrazione::COD_CONTO => trim($this->getCodConto()),
-            DettaglioRegistrazione::COD_SOTTOCONTO => trim($this->getCodSottoconto()),
-            DettaglioRegistrazione::DAT_INSERIMENTO => date("Y/m/d"),
-            DettaglioRegistrazione::IND_CONTO_PRINCIPALE => trim($this->getIndContoPrincipale())                
-        );
 
-        if ($this->getQtaDettagliRegistrazione() == 0) {
-            $resultset = array();
-            array_push($resultset, $item);
-            $this->setDettagliRegistrazione($resultset);
-        } else {
-            array_push($this->dettagliRegistrazione, $item);
-            sort($this->dettagliRegistrazione);
+        $aggiungiDettaglio = TRUE;
+        foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+
+            $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO]);
+            $codConto = explode(".", $contoComposto[0]);
+            $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
+        
+            if ((trim($codConto[0]) == trim($this->getCodConto())) and ( trim($codConto[1]) == trim($this->getCodSottoconto())) and ($segno == $this->getIndDareavere())) {
+                $aggiungiDettaglio = FALSE;
+            }
         }
-        $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() + 1);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+
+        if ($aggiungiDettaglio) {
+            $item = array(
+                DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => trim($this->getIdDettaglioRegistrazione()),
+                DettaglioRegistrazione::ID_REGISTRAZIONE => $this->getIdRegistrazione(),
+                DettaglioRegistrazione::IMP_REGISTRAZIONE => trim($this->getImpRegistrazione()),
+                DettaglioRegistrazione::IND_DAREAVERE => trim($this->getIndDareavere()),
+                DettaglioRegistrazione::COD_CONTO => trim($this->getCodContoComposto()),
+                DettaglioRegistrazione::COD_CONTO_COMPOSTO => trim($this->getCodContoComposto()),
+                DettaglioRegistrazione::COD_SOTTOCONTO => trim($this->getCodSottoconto()),
+                DettaglioRegistrazione::DAT_INSERIMENTO => date("Y/m/d"),
+                DettaglioRegistrazione::IND_CONTO_PRINCIPALE => trim($this->getIndContoPrincipale())                
+            );
+
+            if ($this->getQtaDettagliRegistrazione() == 0) {
+                $resultset = array();
+                array_push($resultset, $item);
+                $this->setDettagliRegistrazione($resultset);
+            } else {
+                array_push($this->dettagliRegistrazione, $item);
+                sort($this->dettagliRegistrazione);
+            }
+            $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() + 1);
+            $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);            
+        }
     }
 
     public function cancella($db) {
         $dettagliDiff = array();
         foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
             $conto = explode(" - ", trim($unDettaglio[self::COD_CONTO]));
-            if (trim($conto[0]) != trim($this->getCodConto())) {
+            $segno = $unDettaglio[self::IND_DAREAVERE];
+            
+            if (trim($conto[0]) != trim($this->getCodConto()) or ($segno != $this->getIndDareavere())) {
                 array_push($dettagliDiff, $unDettaglio);
             } else {
                 $utility = Utility::getInstance();
@@ -433,6 +456,14 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public function setIndContoPrincipale($indContoPrincipale) {
         $this->indContoPrincipale = $indContoPrincipale;
+    }
+    
+    function getCodContoComposto() {
+        return $this->codContoComposto;
+    }
+
+    function setCodContoComposto($codContoComposto) {
+        $this->codContoComposto = $codContoComposto;
     }
 
 }

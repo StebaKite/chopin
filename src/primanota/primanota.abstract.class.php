@@ -13,6 +13,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     const RIMUOVI_FATTURA_PAGATA_HREF = "<a onclick='rimuoviFatturaPagata(";
     const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
     const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = '<a onclick=cancellaDettaglioNuovaRegistrazione(';
+    const CANCELLA_DETTAGLIO_NUOVO_CORRISPETTIVO_HREF = '<a onclick=cancellaDettaglioNuovoCorrispettivo(';
 
     // Query ---------------------------------------------------------------
 
@@ -466,6 +467,69 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "";
     }
 
+    public function makeTabellaDettagliCorrispettivo($registrazione, $dettaglioRegistrazione) {
+        $thead = "";
+        $tbody = "";
+
+        if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() > 0) {
+
+            $tbody = "<tbody>";
+            $thead = "<thead>" .
+                    "	<tr>" .
+                    "		<th width='500'>Conto</th>" .
+                    "		<th width='180'>Importo</th>" .
+                    "		<th width='100'>Segno</th>" .
+                    "		<th width='50'>&nbsp;</th>" .
+                    "	</tr>" .
+                    "</thead>";
+
+            foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+                $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO]);
+                $codConto = explode(".", $contoComposto[0]);
+                $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
+
+                $cancella_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
+                $cancella_parms .= trim($contoComposto[0]) . ",'";
+                $cancella_parms .= $segno . "'";
+
+                $bottoneCancella = self::CANCELLA_DETTAGLIO_NUOVO_CORRISPETTIVO_HREF . $cancella_parms . self::CANCELLA_ICON;
+
+                $idImportoDettaglio = " id='importo" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "' ";
+                $idSegnoDettaglio = " id='segno" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "' ";
+
+                $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
+                $modifica_parms .= trim($codConto[0]) . ",";
+                $modifica_parms .= trim($codConto[1]) . ",";
+                $modifica_parms .= "$('#importo" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "').val()" . ",";
+                $modifica_parms .= "$('#segno" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "').val()" . ",";
+                $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
+
+                $onBlurImporto = ' onblur=' . '"modificaDettaglioCorrispettivo(' . $modifica_parms . ')"';                    
+                $onBlurSegno   = ' onblur=' . '"modificaDettaglioCorrispettivo(' . $modifica_parms . ')"';
+                
+                $tbody .= "<tr>" .
+                        "	<td>" . $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO] . "</td>" .
+                        "	<td>" .
+                        "       <div class='input-group'>" .
+                        "           <span class='input-group-addon'><span class='glyphicon glyphicon-euro'></span></span>" .
+                        "		    <input class='form-control' type='text' maxlength='10'" . $idImportoDettaglio . $onBlurImporto . " value='" . $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE] . "'></input>" .
+                        "       </div>" .
+                        "	</td>" .
+                        "	<td>" .
+                        "       <div class='input-group'>" .
+                        "           <span class='input-group-addon'>D/A</span>" .
+                        "		    <input class='form-control' type='text' maxlength='1'" . $idSegnoDettaglio . $onBlurSegno . " value='" . $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE] . "'></input>" .
+                        "       </div>" .
+                        "	</td>" .
+                        "	<td id='icons'>" . $bottoneCancella . "</td>" .
+                        "</tr>";
+            }
+            $tbody .= "</tbody>";
+            return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
+        }
+        return "";
+    }
+
     public function makeTabellaReadOnlyDettagliRegistrazione($dettaglioRegistrazione) {
         $thead = "";
         $tbody = "";
@@ -758,6 +822,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     }
 
     public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
+        
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
         $dettaglioRegistrazione->setIdRegistrazione(0);
@@ -772,14 +837,24 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         $sottoconto->leggi($db);
         $sottoconto->searchSottoconto($_cc[1]);
 
-        $dettaglioRegistrazione->setCodConto($dettaglioRegistrazione->getCodConto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
         $dettaglioRegistrazione->setIndDareAvere("D");
         $dettaglioRegistrazione->aggiungi();
 
         /**
          * Dettaglio conto erario
          */
-        $dettaglioRegistrazione->setCodConto($array['contoErarioNegozi']);
+        $_cc = explode(".", $array['contoErarioNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
         $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
         $dettaglioRegistrazione->setIndDareAvere("A");
         $dettaglioRegistrazione->aggiungi();
@@ -787,7 +862,15 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         /**
          * Dettaglio Cassa/Banca
          */
-        $dettaglioRegistrazione->setCodConto($array['contoCorrispettivoNegozi']);
+        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
         $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
         $dettaglioRegistrazione->setIndDareAvere("A");
         $dettaglioRegistrazione->aggiungi();
@@ -810,14 +893,22 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         $sottoconto->leggi($db);
         $sottoconto->searchSottoconto($_cc[1]);
 
-        $dettaglioRegistrazione->setCodConto($dettaglioRegistrazione->getCodConto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
         $dettaglioRegistrazione->setIndDareAvere("D");
         $dettaglioRegistrazione->aggiungi();
 
         /**
          * Dettaglio conto erario
          */
-        $dettaglioRegistrazione->setCodConto($array['contoErarioMercati']);
+        $_cc = explode(".", $array['contoErarioMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
         $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
         $dettaglioRegistrazione->setIndDareAvere("A");
         $dettaglioRegistrazione->aggiungi();
@@ -825,7 +916,15 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         /**
          * Dettaglio Cassa/Banca
          */
-        $dettaglioRegistrazione->setCodConto($array['contoCorrispettivoMercati']);
+        $_cc = explode(".", $array['contoCorrispettivoMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
         $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
         $dettaglioRegistrazione->setIndDareAvere("A");
         $dettaglioRegistrazione->aggiungi();

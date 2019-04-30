@@ -63,6 +63,7 @@ class PrimanotaController {
         if (isset($_REQUEST["importo"])) {
             $dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
             $dettaglioRegistrazione->setCodSottoconto($_REQUEST["codsottoconto"]);
+            $dettaglioRegistrazione->setIndDareavere(strtoupper($_REQUEST["dareAvere"]));            
             $dettaglioRegistrazione->setImpRegistrazione(str_replace(",", ".", $_REQUEST["importo"]));
             $dettaglioRegistrazione->setIdDettaglioRegistrazione($_REQUEST["iddettaglio"]);
         }
@@ -81,6 +82,7 @@ class PrimanotaController {
 
         if (isset($_REQUEST["codconto"])) {
             $dettaglioRegistrazione->setCodConto($_REQUEST["codconto"]);
+            $dettaglioRegistrazione->setIndDareAvere($_REQUEST["dareAvere"]);
         }
 
         if (isset($_REQUEST["causale"])) {
@@ -360,7 +362,7 @@ class PrimanotaController {
             $dettaglioRegistrazione->setImponibile($_REQUEST["imponibile_corneg_cre"]);
         }
 
-        if (isset($_REQUEST["codconto_corneg_mod"])) {
+        if (isset($_REQUEST["codconto_corneg_mod"])) {  
             $dettaglioRegistrazione->setCodConto($_REQUEST["codconto_corneg_mod"]);
             $dettaglioRegistrazione->setImpRegistrazione($_REQUEST["importo_corneg_mod"]);
             $dettaglioRegistrazione->setAliquota($_REQUEST["aliquota_corneg_mod"]);

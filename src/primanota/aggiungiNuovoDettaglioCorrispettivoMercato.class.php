@@ -33,7 +33,7 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
 
         $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivoMercato($db, $utility, $array);
         $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+        echo $this->makeTabellaDettagliCorrispettivo($registrazione, $dettaglioRegistrazione);
     }
 
 }
