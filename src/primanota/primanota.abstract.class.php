@@ -419,20 +419,22 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
             foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
                 $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
                 $codConto = explode(".", $contoComposto[0]);
+                $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
 
                 $cancella_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
-                $cancella_parms .= trim($contoComposto[0]);
+                $cancella_parms .= trim($contoComposto[0]) . ",'";
+                $cancella_parms .= $segno . "'";
 
                 $bottoneCancella = self::CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF . $cancella_parms . self::CANCELLA_ICON;
 
-                $idImportoDettaglio = " id='importo" . trim($codConto[0]) . trim($codConto[1]) . "' ";
-                $idSegnoDettaglio = " id='segno" . trim($codConto[0]) . trim($codConto[1]) . "' ";
+                $idImportoDettaglio = " id='importo" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "' ";
+                $idSegnoDettaglio = " id='segno" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "' ";
 
                 $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
                 $modifica_parms .= trim($codConto[0]) . ",";
                 $modifica_parms .= trim($codConto[1]) . ",";
-                $modifica_parms .= "$('#importo" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
-                $modifica_parms .= "$('#segno" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
+                $modifica_parms .= "$('#importo" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "').val()" . ",";
+                $modifica_parms .= "$('#segno" . trim($codConto[0]) . trim($codConto[1]) . trim($segno) . "').val()" . ",";
                 $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
 
                 if (parent::isNotEmpty($registrazione->getIdFornitore())) {
@@ -631,6 +633,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                     $tdclass = $data_ok;
                     $bottoneCancella = self::OK_ICON;
                     $tbody .= "" .
+                            "	<td>" . $unaScadenza[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
                             "	<td " . $tdclass . ">" . $stato . "</td>" .
                             "	<td>" . $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" ;
                 }

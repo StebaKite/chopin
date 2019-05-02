@@ -716,7 +716,7 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
 
 //---------------------------------------------------------------------------------
 
-function cancellaDettaglioNuovaRegistrazione(idTable, codContoComposto)
+function cancellaDettaglioNuovaRegistrazione(idTable, codContoComposto, segno)
 {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -726,7 +726,7 @@ function cancellaDettaglioNuovaRegistrazione(idTable, codContoComposto)
             controllaDettagliRegistrazione(idTable);
         }
     };
-    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codContoComposto, true);
+    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + codContoComposto + "&dareAvere=" + segno, true);
     xmlhttp.send();
 }
 
