@@ -124,7 +124,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
     }
 
     private function sezioneIdentificativiFattura($fatturaAziendaConsortile, $fattura) {
-        $fatturaAziendaConsortile->identificativiFatturaAziendaConsortile($fattura->getGiorno(), $fattura->getMeserif(), $fattura->getAnno(), $fattura->getNumFattura(), $fattura->getCodNegozio());
+        $fatturaAziendaConsortile->identificativiFatturaAziendaConsortile($fattura->getGiorno(), $fattura->getNmese(), $fattura->getAnno(), $fattura->getNumFattura(), $fattura->getCodNegozio());
         return $fatturaAziendaConsortile;
     }
 
