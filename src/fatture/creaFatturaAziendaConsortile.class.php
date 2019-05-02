@@ -75,15 +75,14 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
          */
         $fattura->setAnno(substr($fattura->getDatFattura(), 6));
         $fattura->setNmese(substr($fattura->getDatFattura(), 3, 2));
-        $fattura->setGiorno(substr($fattura->getDatFattura(), 0, 2));
+        $fattura->setGiorno(substr($fattura->getDatFattura(), 0, 2));        
         $mm = str_pad($fattura->getNmese(), 2, "0", STR_PAD_LEFT);
-        $fattura->setMeserif($mm);
 
-        if (parent::isNotEmpty($fattura->getMeserif()))
-            $fattura->setMesenome($fattura->getMese($fattura->getMeserif()));
-        else
-            $fattura->setMesenome($fattura->getMese($nm));
-
+        if (parent::isEmpty($fattura->getMeserif())) {
+            $fattura->setMeserif($mm);
+        }
+        $fattura->setMesenome($fattura->getMese($fattura->getMeserif()));
+        
         /**
          * Aggiorno il numero fattura per l'azienda consortile e negozio
          */
