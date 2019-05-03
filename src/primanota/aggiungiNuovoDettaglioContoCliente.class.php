@@ -56,6 +56,7 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
 
             // compongo la colonna "conto" da inserire nel dettaglio
             $dettaglioRegistrazione->setCodConto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
+            $dettaglioRegistrazione->setCodContoComposto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
             $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
             $dettaglioRegistrazione->setIndContoPrincipale("Y");
             $dettaglioRegistrazione->aggiungi();

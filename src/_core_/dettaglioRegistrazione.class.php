@@ -130,7 +130,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                     DettaglioRegistrazione::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
                     DettaglioRegistrazione::IND_DAREAVERE => $this->getIndDareavere(),
                     DettaglioRegistrazione::COD_CONTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO],
-                    DettaglioRegistrazione::COD_CONTO_COMPOSTO => trim($this->getCodContoComposto()),
+                    DettaglioRegistrazione::COD_CONTO_COMPOSTO => $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO],
                     DettaglioRegistrazione::COD_SOTTOCONTO => $unDettaglio[DettaglioRegistrazione::COD_SOTTOCONTO],
                     DettaglioRegistrazione::DAT_INSERIMENTO => $unDettaglio[DettaglioRegistrazione::DAT_INSERIMENTO],
                     DettaglioRegistrazione::IND_CONTO_PRINCIPALE => $unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE]
