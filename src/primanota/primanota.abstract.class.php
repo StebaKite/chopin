@@ -824,116 +824,122 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
             return "";
     }
 
-    public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
-        
-        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-        $dettaglioRegistrazione->setIdRegistrazione(0);
-        $sottoconto = Sottoconto::getInstance();
-
-        /**
-         * Dettaglio sul conto selezionato
-         */
-        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setCodConto($_cc[0]);
-        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-        $dettaglioRegistrazione->setIndDareAvere("D");
-        $dettaglioRegistrazione->aggiungi();
-
-        /**
-         * Dettaglio conto erario
-         */
-        $_cc = explode(".", $array['contoErarioNegozi']);
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-        
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setCodConto($_cc[0]);
-        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
-        $dettaglioRegistrazione->setIndDareAvere("A");
-        $dettaglioRegistrazione->aggiungi();
-
-        /**
-         * Dettaglio Cassa/Banca
-         */
-        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-        
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setCodConto($_cc[0]);
-        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
-        $dettaglioRegistrazione->setIndDareAvere("A");
-        $dettaglioRegistrazione->aggiungi();
-
-        return $dettaglioRegistrazione;
-    }
-
-    public function aggiungiDettagliCorrispettivoMercato($db, $utility, $array) {
-        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-        $dettaglioRegistrazione->setIdRegistrazione(0);
-        $sottoconto = Sottoconto::getInstance();
-
-        /**
-         * Dettaglio sul conto selezionato
-         */
-        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setIndDareAvere("D");
-        $dettaglioRegistrazione->aggiungi();
-
-        /**
-         * Dettaglio conto erario
-         */
-        $_cc = explode(".", $array['contoErarioMercati']);
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-        
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setCodConto($_cc[0]);
-        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
-        $dettaglioRegistrazione->setIndDareAvere("A");
-        $dettaglioRegistrazione->aggiungi();
-
-        /**
-         * Dettaglio Cassa/Banca
-         */
-        $_cc = explode(".", $array['contoCorrispettivoMercati']);
-        $sottoconto->setCodConto($_cc[0]);
-        $sottoconto->setCodSottoconto($_cc[1]);
-        $sottoconto->leggi($db);
-        $sottoconto->searchSottoconto($_cc[1]);
-        
-        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-        $dettaglioRegistrazione->setCodConto($_cc[0]);
-        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
-        $dettaglioRegistrazione->setIndDareAvere("A");
-        $dettaglioRegistrazione->aggiungi();
-
-        return $dettaglioRegistrazione;
-    }
+    /**  
+     *  ***************************************************************
+     *  ***************************************************************
+     *  ***************************************************************
+     */
+//    
+//    public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
+//        
+//        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+//        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+//        $dettaglioRegistrazione->setIdRegistrazione(0);
+//        $sottoconto = Sottoconto::getInstance();
+//
+//        /**
+//         * Dettaglio sul conto selezionato
+//         */
+//        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setCodConto($_cc[0]);
+//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+//        $dettaglioRegistrazione->setIndDareAvere("D");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        /**
+//         * Dettaglio conto erario
+//         */
+//        $_cc = explode(".", $array['contoErarioNegozi']);
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//        
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setCodConto($_cc[0]);
+//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+//        $dettaglioRegistrazione->setIndDareAvere("A");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        /**
+//         * Dettaglio Cassa/Banca
+//         */
+//        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//        
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setCodConto($_cc[0]);
+//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+//        $dettaglioRegistrazione->setIndDareAvere("A");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        return $dettaglioRegistrazione;
+//    }
+//
+//    public function aggiungiDettagliCorrispettivoMercato($db, $utility, $array) {
+//        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+//        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+//        $dettaglioRegistrazione->setIdRegistrazione(0);
+//        $sottoconto = Sottoconto::getInstance();
+//
+//        /**
+//         * Dettaglio sul conto selezionato
+//         */
+//        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setIndDareAvere("D");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        /**
+//         * Dettaglio conto erario
+//         */
+//        $_cc = explode(".", $array['contoErarioMercati']);
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//        
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setCodConto($_cc[0]);
+//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+//        $dettaglioRegistrazione->setIndDareAvere("A");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        /**
+//         * Dettaglio Cassa/Banca
+//         */
+//        $_cc = explode(".", $array['contoCorrispettivoMercati']);
+//        $sottoconto->setCodConto($_cc[0]);
+//        $sottoconto->setCodSottoconto($_cc[1]);
+//        $sottoconto->leggi($db);
+//        $sottoconto->searchSottoconto($_cc[1]);
+//        
+//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+//        $dettaglioRegistrazione->setCodConto($_cc[0]);
+//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+//        $dettaglioRegistrazione->setIndDareAvere("A");
+//        $dettaglioRegistrazione->aggiungi();
+//
+//        return $dettaglioRegistrazione;
+//    }
 
     public function creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione) {
         $db = Database::getInstance();
@@ -968,25 +974,25 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         }
     }
 
-    public function aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione) {
-        $db = Database::getInstance();
-        $db->beginTransaction();
-        $array = $utility->getConfig();
-
-        if ($registrazione->aggiorna($db)) {
-            if ($this->aggiornaDettagli($db, $utility, $registrazione, $dettaglioRegistrazione)) {
-                $this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
-                $db->commitTransaction();
-                return true;
-            } else {
-                $db->rollbackTransaction();
-                return false;
-            }
-        } else {
-            $db->rollbackTransaction();
-            return false;
-        }
-    }
+//    public function aggiornaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione) {
+//        $db = Database::getInstance();
+//        $db->beginTransaction();
+//        $array = $utility->getConfig();
+//
+//        if ($registrazione->aggiorna($db)) {
+//            if ($this->aggiornaDettagli($db, $utility, $registrazione, $dettaglioRegistrazione)) {
+//                $this->ricalcolaSaldi($db, $registrazione->getDatRegistrazione());
+//                $db->commitTransaction();
+//                return true;
+//            } else {
+//                $db->rollbackTransaction();
+//                return false;
+//            }
+//        } else {
+//            $db->rollbackTransaction();
+//            return false;
+//        }
+//    }
 
     public function creaDettaglioCorrispettivonegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio) {
         $_cc = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]); // il codconto del dettaglio contiene anche la descrizione
@@ -1053,259 +1059,202 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
      * * *******************************************************************************
      * * *******************************************************************************
      */
-    public function inserisciDettaglioRegistrazione($db, $utility, $idRegistrazione, $conto, $sottoConto, $importo, $d_a) {
+//    public function inserisciDettaglioRegistrazione($db, $utility, $idRegistrazione, $conto, $sottoConto, $importo, $d_a) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_registrazione%' => trim($idRegistrazione),
+//            '%imp_registrazione%' => trim($importo),
+//            '%ind_dareavere%' => trim($d_a),
+//            '%cod_conto%' => trim($conto),
+//            '%cod_sottoconto%' => trim($sottoConto)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryCreaDettaglioRegistrazione;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//        return $result;
+//    }
 
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_registrazione%' => trim($idRegistrazione),
-            '%imp_registrazione%' => trim($importo),
-            '%ind_dareavere%' => trim($d_a),
-            '%cod_conto%' => trim($conto),
-            '%cod_sottoconto%' => trim($sottoConto)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryCreaDettaglioRegistrazione;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
-    }
+//    /**
+//     * Il metodo aggiorna i dati di una scadenza per un fornitore
+//     */
+//    public function aggiornaScadenza($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
+//
+//        $array = $utility->getConfig();
+//
+//        $scadenza_esistente = $this->trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $fornitore, $numfatt);
+//
+//        /**
+//         * Se la scadenza esiste la aggiorno altrimenti la inserisco.
+//         * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
+//         */
+//        $numrow = pg_num_rows($scadenza_esistente);
+//
+//        if ($numrow > 0) {
+//
+//            $replace = array(
+//                '%id_scadenza%' => trim($idScadenza),
+//                '%id_registrazione%' => trim($idRegistrazione),
+//                '%dat_scadenza%' => trim($datascad),
+//                '%imp_in_scadenza%' => trim($importo),
+//                '%nota_in_scadenza%' => trim($descreg),
+//                '%tip_addebito%' => trim($tipaddebito),
+//                '%cod_negozio%' => trim($codneg),
+//                '%id_fornitore%' => $fornitore,
+//                '%num_fattura%' => trim($numfatt),
+//                '%sta_scadenza%' => trim($staScadenza)
+//            );
+//            $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenza;
+//            $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//            $result = $db->execSql($sql);
+//            return $result;
+//        } else {
+//            $this->inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza);
+//        }
+//        return $scadenza_esistente;
+//    }
 
-    /**
-     * Il metodo aggiorna i dati di una scadenza per un fornitore
-     */
-    public function aggiornaScadenza($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza) {
+//    /**
+//     * Il metodo aggiorna i dati di una scadenza per un cliente
+//     */
+//    public function aggiornaScadenzaCliente($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
+//
+//        $array = $utility->getConfig();
+//
+//        $scadenza_esistente = $this->trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $cliente, $numfatt);
+//
+//        /**
+//         * Se la scadenza esiste la aggiorno altrimenti la inserisco.
+//         * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
+//         */
+//        if ($scadenza_esistente) {
+//            $replace = array(
+//                '%id_scadenza%' => trim($idScadenza),
+//                '%id_registrazione%' => trim($idRegistrazione),
+//                '%dat_registrazione%' => trim($datascad),
+//                '%imp_registrazione%' => trim($importo),
+//                '%nota_in_scadenza%' => trim($descreg),
+//                '%tip_addebito%' => trim($tipaddebito),
+//                '%cod_negozio%' => trim($codneg),
+//                '%id_cliente%' => $cliente,
+//                '%num_fattura%' => trim($numfatt),
+//                '%sta_scadenza%' => trim($staScadenza)
+//            );
+//            $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenzaCliente;
+//            $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//            $result = $db->execSql($sql);
+//            return $result;
+//        } else {
+//            $this->inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza);
+//        }
+//        return $scadenza_esistente;
+//    }
 
-        $array = $utility->getConfig();
+//    /**
+//     * Questo metodo dissocia un pagamento dalla registrazione originale sullo scadenziario fornitori
+//     */
+//    public function dissociaPagamentoScadenza($db, $utility, $idScadenza) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_scadenza%' => trim($idScadenza),
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryDissociaPagamento;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//        return $result;
+//    }
 
-        $scadenza_esistente = $this->trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $fornitore, $numfatt);
+//    /**
+//     * Questo metodo dissocia un incasso dalla registrazione originale sullo scadenziario clienti
+//     */
+//    public function dissociaIncassoScadenza($db, $utility, $idScadenza) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_scadenza%' => trim($idScadenza),
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryDissociaIncasso;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//        return $result;
+//    }
 
-        /**
-         * Se la scadenza esiste la aggiorno altrimenti la inserisco.
-         * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
-         */
-        $numrow = pg_num_rows($scadenza_esistente);
+//    public function updateStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_registrazione%' => trim($id_registrazione),
+//            '%sta_registrazione%' => trim($stareg)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoRegistrazione;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->getData($sql);
+//    }
 
-        if ($numrow > 0) {
+//    public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg, $staScadenza, $idmercato) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_registrazione%' => trim($id_registrazione),
+//            '%des_registrazione%' => trim($descreg),
+//            '%dat_scadenza%' => trim($datascad),
+//            '%dat_registrazione%' => trim($datareg),
+//            '%sta_registrazione%' => trim($stareg),
+//            '%num_fattura%' => trim($numfatt),
+//            '%cod_negozio%' => $codneg,
+//            '%cod_causale%' => $causale,
+//            '%id_fornitore%' => $fornitore,
+//            '%id_cliente%' => $cliente,
+//            '%id_mercato%' => $idmercato,
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateRegistrazione;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//
+//        return $result;
+//    }
 
-            $replace = array(
-                '%id_scadenza%' => trim($idScadenza),
-                '%id_registrazione%' => trim($idRegistrazione),
-                '%dat_scadenza%' => trim($datascad),
-                '%imp_in_scadenza%' => trim($importo),
-                '%nota_in_scadenza%' => trim($descreg),
-                '%tip_addebito%' => trim($tipaddebito),
-                '%cod_negozio%' => trim($codneg),
-                '%id_fornitore%' => $fornitore,
-                '%num_fattura%' => trim($numfatt),
-                '%sta_scadenza%' => trim($staScadenza)
-            );
-            $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenza;
-            $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-            $result = $db->execSql($sql);
-            return $result;
-        } else {
-            $this->inserisciScadenza($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $fornitore, $numfatt, $staScadenza);
-        }
-        return $scadenza_esistente;
-    }
+//    public function cancellaDettaglioRegistrazione($db, $utility, $id_dettaglioregistrazione) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_dettaglio_registrazione%' => trim($id_dettaglioregistrazione)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryDeleteDettaglioRegistrazione;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->getData($sql);
+//    }
 
-    /**
-     * Il metodo aggiorna i dati di una scadenza per un cliente
-     */
-    public function aggiornaScadenzaCliente($db, $utility, $idScadenza, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
+//    public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
+//        
+//    }
 
-        $array = $utility->getConfig();
+//    public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_fornitore%' => trim($idfornitore),
+//            '%id_registrazione%' => trim($idregistrazione)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->getData($sql);
+//        return $result;
+//    }
 
-        $scadenza_esistente = $this->trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $cliente, $numfatt);
-
-        /**
-         * Se la scadenza esiste la aggiorno altrimenti la inserisco.
-         * Il buco di numerazione può essersi creato in seguito alla cancellazione di un pagamento e relativa scadenza
-         */
-        if ($scadenza_esistente) {
-            $replace = array(
-                '%id_scadenza%' => trim($idScadenza),
-                '%id_registrazione%' => trim($idRegistrazione),
-                '%dat_registrazione%' => trim($datascad),
-                '%imp_registrazione%' => trim($importo),
-                '%nota_in_scadenza%' => trim($descreg),
-                '%tip_addebito%' => trim($tipaddebito),
-                '%cod_negozio%' => trim($codneg),
-                '%id_cliente%' => $cliente,
-                '%num_fattura%' => trim($numfatt),
-                '%sta_scadenza%' => trim($staScadenza)
-            );
-            $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateScadenzaCliente;
-            $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-            $result = $db->execSql($sql);
-            return $result;
-        } else {
-            $this->inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $importo, $descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza);
-        }
-        return $scadenza_esistente;
-    }
-
-    /**
-     * Questo metodo dissocia un pagamento dalla registrazione originale sullo scadenziario fornitori
-     */
-    public function dissociaPagamentoScadenza($db, $utility, $idScadenza) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_scadenza%' => trim($idScadenza),
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryDissociaPagamento;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
-    }
-
-    /**
-     * Questo metodo dissocia un incasso dalla registrazione originale sullo scadenziario clienti
-     */
-    public function dissociaIncassoScadenza($db, $utility, $idScadenza) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_scadenza%' => trim($idScadenza),
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryDissociaIncasso;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
-    }
-
-    /**
-     * Il metodo cancella una scadenza di una registrazione
-     */
-// 	public function cancellaScadenzaRegistrazione($db, $utility, $idScadenza) {
-// 		$array = $utility->getConfig();
-// 		$replace = array(
-// 				'%id_scadenza%' => trim($idScadenza),
-// 		);
-// 		$sqlTemplate = self::$root . $array['query'] . self::$queryDeleteScadenzaRegistrazione;
-// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-// 		$result = $db->getData($sql);
-// 		return $result;
-// 	}
-
-    /**
-     * Il metodo inserisce una scadenza per il cliente
-     */
-// 	public function inserisciScadenzaCliente($db, $utility, $idRegistrazione, $datareg, $importo,
-// 			$descreg, $tipaddebito, $codneg, $cliente, $numfatt, $staScadenza) {
-// 		$array = $utility->getConfig();
-// 		$replace = array(
-// 				'%id_registrazione%' => trim($idRegistrazione),
-// 				'%dat_registrazione%' => trim($datareg),
-// 				'%imp_registrazione%' => trim($importo),
-// 				'%nota%' => trim($descreg),
-// 				'%tip_addebito%' => trim($tipaddebito),
-// 				'%cod_negozio%' => trim($codneg),
-// 				'%id_cliente%' => $cliente,
-// 				'%num_fattura%' => trim($numfatt),
-// 				'%sta_scadenza%' => trim($staScadenza)
-// 		);
-// 		$sqlTemplate = self::$root . $array['query'] . self::$queryCreaScadenzaCliente;
-// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-// 		$result = $db->execSql($sql);
-// 		return $result;
-// 	}
-// 	public function leggiDettagliRegistrazione($db, $utility, $idregistrazione) {
-// 		$array = $utility->getConfig();
-// 		$replace = array(
-// 				'%id_registrazione%' => trim($idregistrazione)
-// 		);
-// 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiDettagliRegistrazione;
-// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-// 		$result = $db->getData($sql);
-// 		return $result;
-// 	}
-// 	public function leggiScadenzeRegistrazione($db, $utility, $idregistrazione) {
-// 		$array = $utility->getConfig();
-// 		$replace = array(
-// 				'%id_registrazione%' => trim($idregistrazione)
-// 		);
-// 		$sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeRegistrazione;
-// 		$sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-// 		$result = $db->getData($sql);
-// 		return $result;
-// 	}
-
-    public function updateStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_registrazione%' => trim($id_registrazione),
-            '%sta_registrazione%' => trim($stareg)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoRegistrazione;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->getData($sql);
-    }
-
-    public function updateRegistrazione($db, $utility, $id_registrazione, $totaleDare, $descreg, $datascad, $datareg, $numfatt, $causale, $fornitore, $cliente, $stareg, $codneg, $staScadenza, $idmercato) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_registrazione%' => trim($id_registrazione),
-            '%des_registrazione%' => trim($descreg),
-            '%dat_scadenza%' => trim($datascad),
-            '%dat_registrazione%' => trim($datareg),
-            '%sta_registrazione%' => trim($stareg),
-            '%num_fattura%' => trim($numfatt),
-            '%cod_negozio%' => $codneg,
-            '%cod_causale%' => $causale,
-            '%id_fornitore%' => $fornitore,
-            '%id_cliente%' => $cliente,
-            '%id_mercato%' => $idmercato,
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateRegistrazione;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-
-        return $result;
-    }
-
-    public function cancellaDettaglioRegistrazione($db, $utility, $id_dettaglioregistrazione) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_dettaglio_registrazione%' => trim($id_dettaglioregistrazione)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryDeleteDettaglioRegistrazione;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->getData($sql);
-    }
-
-    public function prelevaScadenzeAperteFornitore($db, $utility, $idfornitore) {
-        
-    }
-
-    public function prelevaScadenzeFornitore($db, $utility, $idfornitore, $idregistrazione) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_fornitore%' => trim($idfornitore),
-            '%id_registrazione%' => trim($idregistrazione)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeFornitore;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->getData($sql);
-        return $result;
-    }
-
-    public function prelevaScadenzeCliente($db, $utility, $idcliente, $idregistrazione) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_cliente%' => trim($idcliente),
-            '%id_registrazione%' => trim($idregistrazione)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeCliente;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->getData($sql);
-        return $result;
-    }
+//    public function prelevaScadenzeCliente($db, $utility, $idcliente, $idregistrazione) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_cliente%' => trim($idcliente),
+//            '%id_registrazione%' => trim($idregistrazione)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryLeggiScadenzeCliente;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->getData($sql);
+//        return $result;
+//    }
 
 // 	public function leggiScadenzaCliente($db, $utility, $idcliente, $idincasso) {
 // 		$array = $utility->getConfig();
@@ -1350,37 +1299,37 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 // 		return $result;
 // 	}
 
-    public function trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $idfornitore, $numfatt) {
+//    public function trovaScadenzaFornitore($db, $utility, $idRegistrazione, $datascad, $codneg, $idfornitore, $numfatt) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_fornitore%' => trim($idfornitore),
+//            '%id_registrazione%' => trim($idRegistrazione),
+//            '%dat_scadenza%' => trim($datascad),
+//            '%cod_negozio%' => trim($codneg),
+//            '%num_fattura%' => trim($numfatt)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaFornitore;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//        return $result;
+//    }
 
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_fornitore%' => trim($idfornitore),
-            '%id_registrazione%' => trim($idRegistrazione),
-            '%dat_scadenza%' => trim($datascad),
-            '%cod_negozio%' => trim($codneg),
-            '%num_fattura%' => trim($numfatt)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaFornitore;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
-    }
-
-    public function trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $idcliente, $numfatt) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_cliente%' => trim($idcliente),
-            '%id_registrazione%' => trim($idRegistrazione),
-            '%dat_registrazione%' => trim($datascad),
-            '%cod_negozio%' => trim($codneg),
-            '%num_fattura%' => trim($numfatt)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaCliente;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
-    }
+//    public function trovaScadenzaCliente($db, $utility, $idRegistrazione, $datascad, $codneg, $idcliente, $numfatt) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_cliente%' => trim($idcliente),
+//            '%id_registrazione%' => trim($idRegistrazione),
+//            '%dat_registrazione%' => trim($datascad),
+//            '%cod_negozio%' => trim($codneg),
+//            '%num_fattura%' => trim($numfatt)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaScadenzaCliente;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//        return $result;
+//    }
 
 // 	public function cambiaStatoScadenzaFornitore($db, $utility, $idfornitore, $numeroFattura, $statoScadenza, $idregistrazione) {
 // 		$array = $utility->getConfig();
@@ -1407,17 +1356,17 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 // 		$result = $db->execSql($sql);
 // 	}
 
-    public function cambioStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_registrazione%' => trim($id_registrazione),
-            '%sta_registrazione%' => trim($stareg)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoRegistrazione;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-    }
+//    public function cambioStatoRegistrazione($db, $utility, $id_registrazione, $stareg) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_registrazione%' => trim($id_registrazione),
+//            '%sta_registrazione%' => trim($stareg)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryUpdateStatoRegistrazione;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        $result = $db->execSql($sql);
+//    }
 
 // 	public function cancellaScadenzaFornitore($db, $utility, $id_registrazione) {
 // 		$array = $utility->getConfig();
@@ -1438,89 +1387,89 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 // 		return $db->execSql($sql);
 // 	}
 
-    public function prelevaIdRegistrazioneOriginaleCliente($db, $utility, $id_cliente, $num_fattura) {
+//    public function prelevaIdRegistrazioneOriginaleCliente($db, $utility, $id_cliente, $num_fattura) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_cliente%' => trim($id_cliente),
+//            '%num_fattura%' => trim($num_fattura)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaRegistrazioneOriginaleCliente;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        return $db->execSql($sql);
+//    }
 
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_cliente%' => trim($id_cliente),
-            '%num_fattura%' => trim($num_fattura)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaRegistrazioneOriginaleCliente;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        return $db->execSql($sql);
-    }
+//    public function prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $id_fornitore, $num_fattura) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%id_fornitore%' => trim($id_fornitore),
+//            '%num_fattura%' => trim($num_fattura)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaRegistrazioneOriginaleFornitore;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        return $db->execSql($sql);
+//    }
 
-    public function prelevaIdRegistrazioneOriginaleFornitore($db, $utility, $id_fornitore, $num_fattura) {
+//    public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $importo) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%dat_registrazione%' => trim($datareg),
+//            '%cod_negozio%' => trim($codneg),
+//            '%cod_conto%' => substr(trim($conto), 0, 3),
+//            '%imp_registrazione%' => str_replace(",", ".", trim($importo))
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        return $db->getData($sql);
+//    }
 
-        $array = $utility->getConfig();
-        $replace = array(
-            '%id_fornitore%' => trim($id_fornitore),
-            '%num_fattura%' => trim($num_fattura)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaRegistrazioneOriginaleFornitore;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        return $db->execSql($sql);
-    }
+//    public function prelevaDatiScadenzeRegistrazione($utility) {
+//
+//        require_once 'database.class.php';
+//
+//        $db = Database::getInstance();
+//
+//        $result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
+//
+//        if ($result) {
+//            if (pg_num_rows($result) > 1) {
+//                $_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);
+//                $_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);
+//            } else {
+//                unset($_SESSION["numeroScadenzeRegistrazione"]);
+//                unset($_SESSION["elencoScadenzeRegistrazione"]);
+//            }
+//        } else {
+//            error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<");
+//        }
+//    }
 
-    public function cercaCorrispettivo($db, $utility, $datareg, $codneg, $conto, $importo) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%dat_registrazione%' => trim($datareg),
-            '%cod_negozio%' => trim($codneg),
-            '%cod_conto%' => substr(trim($conto), 0, 3),
-            '%imp_registrazione%' => str_replace(",", ".", trim($importo))
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        return $db->getData($sql);
-    }
-
-    public function prelevaDatiScadenzeRegistrazione($utility) {
-
-        require_once 'database.class.php';
-
-        $db = Database::getInstance();
-
-        $result = $this->leggiScadenzeRegistrazione($db, $utility, $_SESSION["idRegistrazione"]);
-
-        if ($result) {
-            if (pg_num_rows($result) > 1) {
-                $_SESSION["numeroScadenzeRegistrazione"] = pg_num_rows($result);
-                $_SESSION["elencoScadenzeRegistrazione"] = pg_fetch_all($result);
-            } else {
-                unset($_SESSION["numeroScadenzeRegistrazione"]);
-                unset($_SESSION["elencoScadenzeRegistrazione"]);
-            }
-        } else {
-            error_log(">>>>>> Errore prelievo scadenze registrazione (dettagli) : " . $_SESSION["idRegistrazione"] . " <<<<<<<<");
-        }
-    }
-
-    /**
-     * Questo metodo preleva il capoconto di un fornitore accedendo con il codice fornitore che corrisponde al sottoconto
-     */
-    public function leggiContoFornitore($db, $utility, $cod_fornitore) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%cod_fornitore%' => trim($cod_fornitore)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoFornitore;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        return $db->execSql($sql);
-    }
-
-    public function leggiContoCliente($db, $utility, $cod_cliente) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%cod_cliente%' => trim($cod_cliente)
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoCliente;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        return $db->execSql($sql);
-    }
+//    /**
+//     * Questo metodo preleva il capoconto di un fornitore accedendo con il codice fornitore che corrisponde al sottoconto
+//     */
+//    public function leggiContoFornitore($db, $utility, $cod_fornitore) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%cod_fornitore%' => trim($cod_fornitore)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoFornitore;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        return $db->execSql($sql);
+//    }
+//
+//    public function leggiContoCliente($db, $utility, $cod_cliente) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%cod_cliente%' => trim($cod_cliente)
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryPrelevaCapocontoCliente;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//        return $db->execSql($sql);
+//    }
 
 }
 

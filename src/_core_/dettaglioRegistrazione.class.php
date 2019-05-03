@@ -182,6 +182,122 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         }
     }
 
+    public function aggiungiDettagliCorrispettivoMercato($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        
+        $this->setIdDettaglioRegistrazione(0);
+        $this->setIdRegistrazione(0);
+
+        /**
+         * Dettaglio sul conto selezionato
+         */
+        $sottoconto = Sottoconto::getInstance();
+        
+        $_cc = explode(".", $this->getCodConto());
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setIndDareAvere("D");
+        $this->aggiungi();
+
+        /**
+         * Dettaglio conto erario
+         */
+        $_cc = explode(".", $array['contoErarioMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setCodConto($_cc[0]);
+        $this->setCodSottoconto($_cc[1]);
+        $this->setImpRegistrazione($this->getImpIva());
+        $this->setIndDareAvere("A");
+        $this->aggiungi();
+
+        /**
+         * Dettaglio Cassa/Banca
+         */
+        $_cc = explode(".", $array['contoCorrispettivoMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setCodConto($_cc[0]);
+        $this->setCodSottoconto($_cc[1]);
+        $this->setImpRegistrazione($this->getImponibile());
+        $this->setIndDareAvere("A");
+        $this->aggiungi();
+
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+    }
+    
+    public function aggiungiDettagliCorrispettivoNegozio($db) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $this->setIdDettaglioRegistrazione(0);
+        $this->setIdRegistrazione(0);
+
+        /**
+         * Dettaglio sul conto selezionato
+         */
+        $sottoconto = Sottoconto::getInstance();
+        
+        $_cc = explode(".", $this->getCodConto());
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setCodConto($_cc[0]);
+        $this->setCodSottoconto($_cc[1]);
+        $this->setIndDareAvere("D");
+        $this->aggiungi();
+
+        /**
+         * Dettaglio conto erario
+         */
+        $_cc = explode(".", $array['contoErarioNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setCodConto($_cc[0]);
+        $this->setCodSottoconto($_cc[1]);
+        $this->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+        $this->setIndDareAvere("A");
+        $this->aggiungi();
+
+        /**
+         * Dettaglio Cassa/Banca
+         */
+        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $this->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $this->setCodConto($_cc[0]);
+        $this->setCodSottoconto($_cc[1]);
+        $this->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+        $this->setIndDareAvere("A");
+        $this->aggiungi();
+
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+    }    
+    
     public function cancella($db) {
         $dettagliDiff = array();
         foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
