@@ -68,7 +68,7 @@ function calcolaImponibileFattura() {
     if (importoNormalizzato > 0) {
 
         var totale = importoNormalizzato * quantita;
-        $("#totale").val(totale);
+        $("#totale").val(totale.toFixed(2));
 
         imponibileFattura();
     }
