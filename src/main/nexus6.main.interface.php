@@ -75,7 +75,7 @@ interface MainNexus6Interface {
      */
     const VISUALIZZA_ICON = ")'><span class='glyphicon glyphicon-eye-open'></span></a>";
     const MODIFICA_ICON = ")'><span class='glyphicon glyphicon-edit'></span></a>";
-    const CANCELLA_ICON = ")><span class='glyphicon glyphicon-trash'></span></a>";
+    const CANCELLA_ICON = ")'><span class='glyphicon glyphicon-trash'></span></a>";
     const OK_ICON = "<span class='glyphicon glyphicon-ok'></span>";
     const LISTA_ICON = ")'><span class='glyphicon glyphicon-list-alt'></span></a>";
     const CONFIGURA_ICON = ")'><span class='glyphicon glyphicon-wrench'></span></a>";

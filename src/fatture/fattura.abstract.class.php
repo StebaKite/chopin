@@ -114,7 +114,7 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
                         "   <td>" . $unDettaglio[DettaglioFattura::IMP_TOTALE] . "</td>" .
                         "   <td>" . $unDettaglio[DettaglioFattura::IMP_IMPONIBILE] . "</td>" .
                         "   <td>" . $unDettaglio[DettaglioFattura::IMP_IVA] . "</td>" .
-                        "   <td>" . $bottoneCancella . "</td>" .
+                        "   <td align='center'>" . $bottoneCancella . "</td>" .
                         "</tr>";
             }
             $tbody .= "</tbody>";
