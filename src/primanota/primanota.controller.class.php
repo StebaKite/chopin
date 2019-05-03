@@ -176,7 +176,7 @@ class PrimanotaController {
             $dettaglioRegistrazione->setCodConto($cc[0]);
             $dettaglioRegistrazione->setCodSottoconto($cc[1]);
         }
-
+        
         // Registrazione incasso ==========================================================
 
         if (isset($_REQUEST["cliente_inc_cre"])) {
