@@ -90,12 +90,24 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                 /**
                  * Controllo gli importi dei due reparti per vedere se creare il corrispettivo
                  */
+                $corrispettivo->setDatareg($datareg);
+                $corrispettivo->setCodNeg($negozio);
+                
+                if ($corrispettivo->getContoCassa() == "S") {
+                    $conto = explode(" - ",$array['contoCassa']);
+                } else {
+                    $conto = explode(" - ",$array['contoBanca']);
+                }
+                
+                $corrispettivo->setConto($conto[0]);                                        
+                
                 if ($importo10 > 0) {
 
+                    $corrispettivo->setImporto($importo10);
                     /**
                      * Controllo che il corrispettivo non sia già stato inserito
                      */
-                    if ($this->isNew($db, $utility, $datareg, $negozio, $contoCorrispettivo[0], $importo10)) {
+                    if ($corrispettivo->isNew($db)) {
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo10, $iva10, $corrispettivo);
                         if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
@@ -107,8 +119,10 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                 }
 
                 if ($importo22 > 0) {
+                    
+                    $corrispettivo->setImporto($importo22);
 
-                    if ($this->isNew($db, $utility, $datareg, $negozio, $contoCorrispettivo[0], $importo22)) {
+                    if ($corrispettivo->isNew($db)) {
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22, $corrispettivo);
                         if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
@@ -121,6 +135,8 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
             }
             if (!isset($_SESSION["messaggioImportFileErr"])) {
                 $db->commitTransaction();
+                $_SESSION["buttonDisabled"] = "disabled";
+                $_SESSION[self::AZIONE] = parent::EMPTYSTRING;
                 $_SESSION["messaggioImportFileOk"] = "<br/>&ndash; corrispettivi inseriti " . $corrispettiviInseriti;
                 $_SESSION["messaggioImportFileOk"] .= "<br/>&ndash; corrispettivi gi&agrave; esistenti " . $corrispettiviIgnorati;
             }
@@ -216,8 +232,9 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
 
                     switch ($numEle) {
                         case 1:
-                            $conto = substr($ele, 0, 3);
-                            $sottoConto = substr($ele, 3);
+                            $cc = explode(".",$ele);
+                            $conto = $cc[0];
+                            $sottoConto = $cc[1];
                             break;
                         case 2:
                             $importo = $ele;

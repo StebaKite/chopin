@@ -29,7 +29,10 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     private $contocassa;
     private $corrispettiviTrovati;
     private $corrispettiviIncompleti;
-
+    private $datareg;
+    private $conto;
+    private $importo;
+    
     // Altri dati funzionali
     
     private $statoStep1;
@@ -37,6 +40,8 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     private $statoStep3;
     
     // Queries
+    
+    const CERCA_CORRISPETTIVO = "/primanota/trovaCorrispettivo.sql";
     
     // Metodi
 
@@ -60,12 +65,26 @@ class Corrispettivo extends CoreBase implements CoreInterface {
         $this->setContoCassa(null);
     }
     
-    
+    public function isNew($db) : bool {
 
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        $conto = explode(".",$this->getConto());
+        $replace = array(
+            '%dat_registrazione%' => trim($this->getDatareg()),
+            '%cod_negozio%' => trim($this->getCodNeg()),
+            '%cod_conto%' => $conto[0],
+            '%imp_registrazione%' => str_replace(",", ".", trim($this->getImporto()))
+        );
+        
+        $sqlTemplate = $this->root . $array['query'] . self::CERCA_CORRISPETTIVO;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
-
-
-
+        if (pg_num_rows($db->execSql($sql)) > 0) {
+            return false;
+        }
+        return true;
+    }
     
     /**
      * Getters & Setters
@@ -173,4 +192,29 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     public function setStatoStep3($statoStep3) {
         $this->statoStep3 = $statoStep3;
     }
+    
+    public function getDatareg() {
+        return $this->datareg;
+    }
+
+    public function setDatareg($datareg) {
+        $this->datareg = $datareg;
+    }
+    
+    public function getConto() {
+        return $this->conto;
+    }
+
+    public function setConto($conto) {
+        $this->conto = $conto;
+    }
+    
+    public function getImporto() {
+        return $this->importo;
+    }
+
+    public function setImporto($importo) {
+        $this->importo = $importo;
+    }
+    
 }

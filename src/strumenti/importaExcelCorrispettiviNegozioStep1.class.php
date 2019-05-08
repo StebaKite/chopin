@@ -33,7 +33,9 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
         $corrispettivo = Corrispettivo::getInstance();
         $importaExcelCorrispettiviNegozioTemplate = ImportaExcelCorrispettiviNegozioStep1Template::getInstance();
 
-        $this->preparaPaginaStep1($importaExcelCorrispettiviNegozioTemplate);
+        if (parent::isEmpty($_SESSION["buttonDisabled"])) {
+            $this->preparaPaginaStep1($importaExcelCorrispettiviNegozioTemplate);
+        }
 
         // Data del giorno preimpostata solo in entrata -------------------------
 
@@ -59,7 +61,9 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
             $corrispettivo->setStatoStep2("complete");
             $corrispettivo->setStatoStep3("complete");            
         }
-        else {$corrispettivo->setStatoStep3("disabled");};
+        else {
+            $corrispettivo->setStatoStep3("disabled");            
+        }
 
         $_SESSION[self::CORRISPETTIVO] = serialize($corrispettivo);
 
@@ -114,7 +118,12 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
                 $path = str_replace("%user%", $array["usernameProdLogin"], $filepath);
             }
 
-            $data = new Spreadsheet_Excel_Reader($path . "/" . $corrispettivo->getFile());
+            if (strpos($agent, 'Windows') === false) {
+                $data = new Spreadsheet_Excel_Reader($path . "/" . $corrispettivo->getFile());
+            } else {
+                $data = new Spreadsheet_Excel_Reader($path . "\\" . $corrispettivo->getFile());
+            }
+            
             $sheets = $corrispettivo->getMese();
             $mese = str_pad($corrispettivo->getMese() + 1, 2, "0", STR_PAD_LEFT);
 
@@ -191,9 +200,9 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
             $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
             $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
             echo $utility->tailTemplate($template);
-            
+
             self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             $_SESSION[self::MSG] = $utility->tailTemplate($template);
         }
         $importaExcelCorrispettiviNegozioTemplate->displayPagina();
@@ -202,6 +211,7 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
 
     public function preparaPaginaStep1($importaExcelCorrispettiviNegozioTemplate) {
 
+        
         $_SESSION[self::AZIONE] = self::AZIONE_IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1;
         $_SESSION[self::TIP_CONFERMA] = "%ml.confermaimportaExcelCorrispettivoNegozioStep1%";
         $_SESSION[self::TITOLO_PAGINA] = "%ml.importaExcelCorrispettivoNegozioStep1%";

@@ -5,7 +5,6 @@ require_once 'strumenti.presentation.interface.php';
 
 abstract class StrumentiAbstract extends Nexus6Abstract implements StrumentiPresentationInterface {
 
-    public static $queryTrovaCorrispettivo = "/primanota/trovaCorrispettivo.sql";
     
     public function intestazione($dati): string {
         
@@ -45,21 +44,21 @@ abstract class StrumentiAbstract extends Nexus6Abstract implements StrumentiPres
                 "   <tbody id='myTable'>";
     }
 
-    public function isNew($db, $utility, $datareg, $codneg, $conto, $importo) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%dat_registrazione%' => trim($datareg),
-            '%cod_negozio%' => trim($codneg),
-            '%cod_conto%' => substr(trim($conto), 0, 3),
-            '%imp_registrazione%' => str_replace(",", ".", trim($importo))
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-
-        if (pg_num_rows($db->execSql($sql)) > 0) {
-            return false;
-        }
-        return true;
-    }
+//    public function isNew($db, $utility, $datareg, $codneg, $conto, $importo) {
+//
+//        $array = $utility->getConfig();
+//        $replace = array(
+//            '%dat_registrazione%' => trim($datareg),
+//            '%cod_negozio%' => trim($codneg),
+//            '%cod_conto%' => substr(trim($conto), 0, 3),
+//            '%imp_registrazione%' => str_replace(",", ".", trim($importo))
+//        );
+//        $sqlTemplate = self::$root . $array['query'] . self::$queryTrovaCorrispettivo;
+//        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+//
+//        if (pg_num_rows($db->execSql($sql)) > 0) {
+//            return false;
+//        }
+//        return true;
+//    }
 }
