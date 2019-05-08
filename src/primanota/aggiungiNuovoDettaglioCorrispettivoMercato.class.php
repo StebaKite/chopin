@@ -4,9 +4,9 @@ require_once 'primanota.abstract.class.php';
 require_once 'primanota.business.interface.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
-require_once 'dettaglioRegistrazione.class.php';
 require_once 'sottoconto.class.php';
 require_once 'registrazione.class.php';
+require_once 'dettaglioRegistrazione.class.php';
 
 class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
@@ -27,15 +27,10 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
 
     public function go() {
         $db = Database::getInstance();
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
         $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
 
-        $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivoMercato($db, $utility, $array);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        $dettaglioRegistrazione->aggiungiDettagliCorrispettivoMercato($db);
         echo $this->makeTabellaDettagliCorrispettivo($registrazione, $dettaglioRegistrazione);
     }
-
 }
-
-?>
