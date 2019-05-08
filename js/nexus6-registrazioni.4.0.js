@@ -463,21 +463,21 @@ function validaModificaRegistrazione()
 
     if (controllaClienteFornitore("fornitore_mod", "cliente_mod")) {
         esito += "1";
-    } else {
-        esito += "0";
-    }
-
-    if (isEmpty($("#numfatt_mod_messaggio").text())) {
-        esito += "1";
-        if (controllaNumeroFattura("numfatt_mod"))
-            esito += "1";
+        
+        if (isNotEmpty($("#fornitore_mod").val()) || isNotEmpty($("#cliente_mod").val())) {
+            if (controllaNumeroFattura("numfatt_mod"))
+                esito += "1";
+            else
+                esito += "0";            
+        }
         else
-            esito += "0";
+            esito += "1";            
     }
-    else
-        esito += "0";
+    else {
+        esito += "00";
+    }
 
-    if (esito === "1111111") {
+    if (esito === "111111") {
         return true;
     } else {
         return false;

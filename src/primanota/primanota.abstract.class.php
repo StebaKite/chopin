@@ -442,7 +442,9 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 }                
                 elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
                     $onBlurImporto = ' onblur=' . '"modificaDettaglioRegistrazione(' . $modifica_parms . '); ' . 'ripartisciImportoSuScadenzeCliente(this.value)"';                    
-                }                
+                } else {
+                    $onBlurImporto = ' onblur=' . '"modificaDettaglioRegistrazione(' . $modifica_parms . ')"';
+                }             
 
                 $onBlurSegno = ' onblur=' . '"' . 'modificaDettaglioRegistrazione(' . $modifica_parms . ')"';
                 
