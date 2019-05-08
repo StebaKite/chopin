@@ -67,7 +67,6 @@ class DettaglioFattura extends Fattura implements CoreInterface {
             $this->setDettagliFattura($resultset);
         } else {
             array_push($this->dettagliFattura, $item);
-            sort($this->dettagliFattura);
         }
         $this->setQtaDettagliFattura($this->getQtaDettagliFattura() + 1);
         $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
