@@ -35,10 +35,14 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
             $esito = FALSE;
         }
         if (parent::isEmpty($corrispettivo->getMese())) {
+            $msg = $msg . "<br>&ndash; Manca il mese di riferimento";
+            $esito = FALSE;
+        }
+        if (parent::isEmpty($corrispettivo->getFile())) {
             $msg = $msg . "<br>&ndash; Manca il file";
             $esito = FALSE;
         }
-
+        
         if ($msg != "<br>") {
             $_SESSION["messaggio"] = $msg;
         } else {
@@ -59,7 +63,7 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
         if (parent::isNotEmpty($corrispettivo->getCorrispettiviTrovati())) {
 
             $dati = array(
-                "labeldata" => "Data%",
+                "labeldata" => "Data",
                 "labeltotale" => "Totale",
                 "labelrep1" => "REP1 10%",
                 "labelrep2" => "REP2 22%"
@@ -111,9 +115,13 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
 //            '%esitoAnno%' => $_SESSION["esitoAnno"],
 //            '%esitoNegozio%' => $_SESSION["esitoNegozio"],
 //            '%esitoFile%' => $_SESSION["esitoFile"],
-            '%corrispettivi_da_importare%' => $corrispettivi_da_importare
+            '%disabled%' => $_SESSION["buttonDisabled"],
+            '%corrispettivi_da_importare%' => $corrispettivi_da_importare,
+            '%msg_errore%' => $_SESSION["messaggioImportFileErr"],
+            '%msg_ok%' => $_SESSION["messaggioImportFileOk"]    
         );
 
+        $_SESSION["buttonDisabled"] = "";
         $template = $utility->tailFile($utility->getTemplate($form), $replace);
         echo $utility->tailTemplate($template);
     }

@@ -26,6 +26,7 @@ function bs_input_file() {
         }
     );
 }
+
 $(function() {
     bs_input_file();
 });    
@@ -69,7 +70,7 @@ $(function() {
                 </div>
             </div>
             <br/>
-            <form method="post" action="%azione%">
+            <form method="post" id="searchForm" action="%azione%">
                 
                 <div class="form-group">
                     <div class="row">
@@ -78,7 +79,7 @@ $(function() {
                             <div class="form-group">
                                 <div class="input-group input-file" name="Fichier1">
                                     <span class="input-group-addon">%ml.file%</span>
-                                    <input type="text" class="form-control" name="file" placeholder='Scegli un file...' />
+                                    <input type="text" class="form-control" id="file" name="file" placeholder='Scegli un file...' />
                                 </div>
                             </div>                            
                         </div>   
@@ -154,7 +155,7 @@ $(function() {
                             </div>                        
                         </div>
                         <div class="col-sm-6">
-                            <button id="submit" type="submit" class="btn btn-primary white pull-right">
+                            <button id="submit" type="submit" class="btn btn-primary white pull-right %disabled%">
                                 <span class="glyphicon glyphicon-ok"></span>
                             </button>
                         </div>                        
@@ -162,8 +163,9 @@ $(function() {
                 </div>
             </form>
         </div>
-        <br>
-        <h2>%file%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%incompleti%</h2>
+        <h2>&nbsp;&nbsp;&nbsp;%file%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%incompleti%</h2>
+        <h4>&nbsp;&nbsp;&nbsp;%msg_errore%</h4>
+        <h4>&nbsp;&nbsp;&nbsp;%msg_ok%</h4>
         <br>
         <div class="panel-body scrollable-panel">
             %corrispettivi_da_importare%
