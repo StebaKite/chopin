@@ -44,7 +44,7 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	const MODIFICA_PAGAMENTO_HREF = "<a onclick='modificaPagamento(";
 	const MODIFICA_INCASSO_HREF = "<a onclick='modificaIncasso(";
 	
-	const CANCELLA_REGISTRAZIONE_HREF = "<a onclick=cancellaRegistrazione(";
+	const CANCELLA_REGISTRAZIONE_HREF = "<a onclick='cancellaRegistrazione(";
 	
 	// Errori e messaggi
 

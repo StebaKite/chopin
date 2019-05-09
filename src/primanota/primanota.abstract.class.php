@@ -832,116 +832,116 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
      *  ***************************************************************
      */
 //    
-//    public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
-//        
-//        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-//        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-//        $dettaglioRegistrazione->setIdRegistrazione(0);
-//        $sottoconto = Sottoconto::getInstance();
-//
-//        /**
-//         * Dettaglio sul conto selezionato
-//         */
-//        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setCodConto($_cc[0]);
-//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-//        $dettaglioRegistrazione->setIndDareAvere("D");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        /**
-//         * Dettaglio conto erario
-//         */
-//        $_cc = explode(".", $array['contoErarioNegozi']);
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//        
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setCodConto($_cc[0]);
-//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
-//        $dettaglioRegistrazione->setIndDareAvere("A");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        /**
-//         * Dettaglio Cassa/Banca
-//         */
-//        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//        
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setCodConto($_cc[0]);
-//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
-//        $dettaglioRegistrazione->setIndDareAvere("A");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        return $dettaglioRegistrazione;
-//    }
-//
-//    public function aggiungiDettagliCorrispettivoMercato($db, $utility, $array) {
-//        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-//        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-//        $dettaglioRegistrazione->setIdRegistrazione(0);
-//        $sottoconto = Sottoconto::getInstance();
-//
-//        /**
-//         * Dettaglio sul conto selezionato
-//         */
-//        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setIndDareAvere("D");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        /**
-//         * Dettaglio conto erario
-//         */
-//        $_cc = explode(".", $array['contoErarioMercati']);
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//        
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setCodConto($_cc[0]);
-//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
-//        $dettaglioRegistrazione->setIndDareAvere("A");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        /**
-//         * Dettaglio Cassa/Banca
-//         */
-//        $_cc = explode(".", $array['contoCorrispettivoMercati']);
-//        $sottoconto->setCodConto($_cc[0]);
-//        $sottoconto->setCodSottoconto($_cc[1]);
-//        $sottoconto->leggi($db);
-//        $sottoconto->searchSottoconto($_cc[1]);
-//        
-//        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
-//        $dettaglioRegistrazione->setCodConto($_cc[0]);
-//        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
-//        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
-//        $dettaglioRegistrazione->setIndDareAvere("A");
-//        $dettaglioRegistrazione->aggiungi();
-//
-//        return $dettaglioRegistrazione;
-//    }
+    public function aggiungiDettagliCorrispettivoNegozio($db, $utility, $array) {
+        
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+        $dettaglioRegistrazione->setIdRegistrazione(0);
+        $sottoconto = Sottoconto::getInstance();
+
+        /**
+         * Dettaglio sul conto selezionato
+         */
+        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+        $dettaglioRegistrazione->setIndDareAvere("D");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio conto erario
+         */
+        $_cc = explode(".", $array['contoErarioNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio Cassa/Banca
+         */
+        $_cc = explode(".", $array['contoCorrispettivoNegozi']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        return $dettaglioRegistrazione;
+    }
+
+    public function aggiungiDettagliCorrispettivoMercato($db, $utility, $array) {
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+        $dettaglioRegistrazione->setIdRegistrazione(0);
+        $sottoconto = Sottoconto::getInstance();
+
+        /**
+         * Dettaglio sul conto selezionato
+         */
+        $_cc = explode(".", $dettaglioRegistrazione->getCodConto());
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setIndDareAvere("D");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio conto erario
+         */
+        $_cc = explode(".", $array['contoErarioMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImpIva());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        /**
+         * Dettaglio Cassa/Banca
+         */
+        $_cc = explode(".", $array['contoCorrispettivoMercati']);
+        $sottoconto->setCodConto($_cc[0]);
+        $sottoconto->setCodSottoconto($_cc[1]);
+        $sottoconto->leggi($db);
+        $sottoconto->searchSottoconto($_cc[1]);
+        
+        $dettaglioRegistrazione->setCodContoComposto($sottoconto->getCodConto() . "." . $sottoconto->getCodSottoconto() . " - " . $sottoconto->getDesSottoconto());
+        $dettaglioRegistrazione->setCodConto($_cc[0]);
+        $dettaglioRegistrazione->setCodSottoconto($_cc[1]);
+        $dettaglioRegistrazione->setImpRegistrazione($dettaglioRegistrazione->getImponibile());
+        $dettaglioRegistrazione->setIndDareAvere("A");
+        $dettaglioRegistrazione->aggiungi();
+
+        return $dettaglioRegistrazione;
+    }
 
     public function creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione) {
         $db = Database::getInstance();
