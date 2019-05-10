@@ -558,10 +558,16 @@ function ripartisciImportoSuScadenzeCliente(importo) {
 
 //---------------------------------------------------------------------
 
-function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
+function aggiungiDettaglioContoFornitore(idfornitore, campoDett, campoCausale)
 {
     if (isNotEmpty(idfornitore))
     {
+        if (isNotEmpty(campoCausale)) {
+            var causale = $("#" + campoCausale).val();
+        } else {
+            var causale = "";
+        }
+        
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -573,7 +579,7 @@ function aggiungiDettaglioContoFornitore(idfornitore, campoDett)
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore, true);
+        xmlhttp.open("GET", "../primanota/aggiungiNuovoDettaglioContoFornitoreFacade.class.php?modo=go&idfornitore=" + idfornitore + "&codCausale=" + causale, true);
         xmlhttp.send();
     }
 }
