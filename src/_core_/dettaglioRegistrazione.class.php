@@ -118,10 +118,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
             $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
             $codConto = explode(".", $contoComposto[0]);
-//            $codConto = explode(".", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
-            $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
 
-            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto())) or ($segno != $this->getIndDareavere()))
+            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto())))
                 array_push($dettagliDiff, $unDettaglio);
             else {
                 $item = array(
@@ -149,9 +147,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
             $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO]);
             $codConto = explode(".", $contoComposto[0]);
-            $segno = $unDettaglio[DettaglioRegistrazione::IND_DAREAVERE];
         
-            if ((trim($codConto[0]) == trim($this->getCodConto())) and ( trim($codConto[1]) == trim($this->getCodSottoconto())) and ($segno == $this->getIndDareavere())) {
+            if ((trim($codConto[0]) == trim($this->getCodConto())) and ( trim($codConto[1]) == trim($this->getCodSottoconto()))) {
                 $aggiungiDettaglio = FALSE;
             }
         }
@@ -302,9 +299,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $dettagliDiff = array();
         foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
             $conto = explode(" - ", trim($unDettaglio[self::COD_CONTO]));
-            $segno = $unDettaglio[self::IND_DAREAVERE];
             
-            if (trim($conto[0]) != trim($this->getCodConto()) or ($segno != $this->getIndDareavere())) {
+            if (trim($conto[0]) != trim($this->getCodConto())) {
                 array_push($dettagliDiff, $unDettaglio);
             } else {
                 $utility = Utility::getInstance();
