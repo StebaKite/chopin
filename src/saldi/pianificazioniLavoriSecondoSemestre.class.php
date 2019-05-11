@@ -64,6 +64,7 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract implements MainN
         $statoLavoro = "00";
 
         $utility = Utility::getInstance();
+        $lavoroPianificato = LavoroPianificato::getInstance();
 
         if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-07-01', 'Riporto saldi ' . SELF::$mese['07'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
             return FALSE;
@@ -88,7 +89,9 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract implements MainN
         }
 
         echo "Pianificazione lavori del secondo semestre anno " . $anno;
-        $this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
+        $lavoroPianificato->setStaLavoro("10");
+        $lavoroPianificato->setPkLavoroPianificato($pklavoro);        
+        $lavoroPianificato->cambioStato($db);
         return TRUE;
     }
 }

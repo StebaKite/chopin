@@ -59,6 +59,8 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
          * Questo lavoro viene pianificato per il 30/12 di ogni anno. Se viene eseguito in questa data somma 1 all'anno
          * altrimenti lascia l'anno corrente. Deve essere eseguito al più tardi entro la fine del mese di gennaio. 
          */
+        $anno = date("Y");
+        
         if (date("m") == "12") {
             $anno = date("Y") + 1;
         }
@@ -71,6 +73,7 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
         $statoLavoro = "00";
 
         $utility = Utility::getInstance();
+        $lavoroPianificato = LavoroPianificato::getInstance();
 
         if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-01-01', 'Riporto saldi ' . SELF::$mese['01'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
             return FALSE;
@@ -95,7 +98,9 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
         }
 
         echo "Pianificazione lavori del primo semestre anno " . $anno;
-        $this->cambioStatoLavoroPianificato($db, $utility, $pklavoro, '10');
+        $lavoroPianificato->setStaLavoro("10");
+        $lavoroPianificato->setPkLavoroPianificato($pklavoro);        
+        $lavoroPianificato->cambioStato($db);
         return TRUE;
     }
 }
