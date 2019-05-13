@@ -10,12 +10,6 @@ abstract class SaldiAbstract extends Nexus6Abstract {
     const SALDO = "Obj_saldo";
 
     /*
-     * Query ---------------------------------------------------------------
-     */
-
-    public static $queryCreaLavoroPianificato = "/main/creaLavoroPianificato.sql";
-
-    /*
      * Getters e Setters ---------------------------------------------------
      */
 
@@ -54,22 +48,5 @@ abstract class SaldiAbstract extends Nexus6Abstract {
                 $saldo->creaSaldo($db);
             }
         }
-    }
-
-    public function inserisciLavoroPianificato($db, $utility, $dat_lavoro, $des_lavoro, $fil_esecuzione_lavoro, $cla_esecuzione_lavoro, $sta_lavoro) {
-
-        $array = $utility->getConfig();
-        $replace = array(
-            '%dat_lavoro%' => $dat_lavoro,
-            '%des_lavoro%' => $des_lavoro,
-            '%fil_esecuzione_lavoro%' => $fil_esecuzione_lavoro,
-            '%cla_esecuzione_lavoro%' => $cla_esecuzione_lavoro,
-            '%sta_lavoro%' => $sta_lavoro
-        );
-        $sqlTemplate = self::$root . $array['query'] . self::$queryCreaLavoroPianificato;
-
-        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
-        $result = $db->execSql($sql);
-        return $result;
     }
 }

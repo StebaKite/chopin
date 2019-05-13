@@ -45,6 +45,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
     const LOAD_LAVORI_PIANIFICATI = "/strumenti/lavoriPianificati.sql";
     const CAMBIO_STATO = "/strumenti/cambioStatoLavoroPianificato.sql";
     const LEGGI_LAVORI_ANNO_CORRENTE = "/strumenti/lavoriPianificatiAnnoCorrente.sql";
+    const CREA_LAVORO = "/strumenti/creaLavoroPianificato.sql"; 
 
     // Metodi
 
@@ -208,6 +209,25 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         return $result;
     }
 
+    public function inserisci($db) {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        
+        $replace = array(
+            '%dat_lavoro%' => $this->getDatLavoro(),
+            '%des_lavoro%' => $this->getDesLavoro(),
+            '%fil_esecuzione_lavoro%' => $this->getFilEsecuzioneLavoro(),
+            '%cla_esecuzione_lavoro%' => $this->getClaEsecuzioneLavoro(),
+            '%sta_lavoro%' => $this->getStaLavoro()
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::CREA_LAVORO;
+
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->execSql($sql);
+        return $result;
+    }
+        
     // Getters e Setters
 
     public function getRoot() {

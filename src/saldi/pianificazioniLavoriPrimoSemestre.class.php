@@ -75,27 +75,61 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
         $utility = Utility::getInstance();
         $lavoroPianificato = LavoroPianificato::getInstance();
 
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-01-01', 'Riporto saldi ' . SELF::$mese['01'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-02-01', 'Riporto saldi ' . SELF::$mese['02'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-03-01', 'Riporto saldi ' . SELF::$mese['03'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-04-01', 'Riporto saldi ' . SELF::$mese['04'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-05-01', 'Riporto saldi ' . SELF::$mese['05'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-06-01', 'Riporto saldi ' . SELF::$mese['06'], $fileEsecuzioneLavoro, $classeEsecuzioneLavoro, $statoLavoro)) {
-            return FALSE;
-        }
-        if (!$this->inserisciLavoroPianificato($db, $utility, $anno . '-06-30', 'Pianificazioni semestre 2', 'pianificazioniLavoriSecondoSemestre', 'PianificazioniLavoriSecondoSemestre', $statoLavoro)) {
-            return FALSE;
-        }
+        // Riporto saldi Gennaio
+        $lavoroPianificato->setDatLavoro($anno . '-01-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['01']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Riporto saldi Febbraio
+        $lavoroPianificato->setDatLavoro($anno . '-02-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['02']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Riporto saldi Marzo
+        $lavoroPianificato->setDatLavoro($anno . '-03-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['03']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Riporto saldi Aprile
+        $lavoroPianificato->setDatLavoro($anno . '-04-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['04']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Riporto saldi Maggio
+        $lavoroPianificato->setDatLavoro($anno . '-05-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['05']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Riporto saldi Giugno
+        $lavoroPianificato->setDatLavoro($anno . '-06-01');
+        $lavoroPianificato->setDesLavoro('Riporto saldi ' . SELF::$mese['06']);
+        $lavoroPianificato->setFilEsecuzioneLavoro($fileEsecuzioneLavoro);
+        $lavoroPianificato->setClaEsecuzioneLavoro($classeEsecuzioneLavoro);
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
+
+        // Pianificazione secondo semestre
+        $lavoroPianificato->setDatLavoro($anno . '-06-30');
+        $lavoroPianificato->setDesLavoro('Pianificazioni semestre 2');
+        $lavoroPianificato->setFilEsecuzioneLavoro('pianificazioniLavoriSecondoSemestre');
+        $lavoroPianificato->setClaEsecuzioneLavoro('PianificazioniLavoriSecondoSemestre');
+        $lavoroPianificato->setStaLavoro($statoLavoro);
+        if (!$lavoroPianificato->inserisci($db)) return FALSE;
 
         echo "Pianificazione lavori del primo semestre anno " . $anno;
         $lavoroPianificato->setStaLavoro("10");

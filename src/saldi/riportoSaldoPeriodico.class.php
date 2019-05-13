@@ -180,13 +180,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                     $saldo->setImpSaldo(abs($totale_conto));
                     $saldo->setIndDareavere($dareAvere);
                     $_SESSION[self::SALDO] = serialize($saldo);
-
-                    if ((trim($conto[Conto::COD_CONTO]) == "215") and (trim($conto[Sottoconto::COD_SOTTOCONTO]) == "66")) {
-                        echo "Conto 215.66";
-                    }
-                    if ((trim($conto[Conto::COD_CONTO]) == "291") and (trim($conto[Sottoconto::COD_SOTTOCONTO]) == "10")) {
-                        echo "Conto 291.10";
-                    }
                     
                     $this->gestioneSaldo($db);
                 }
@@ -244,13 +237,6 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                         $saldo->setImpSaldo(abs($totale_conto));
                         $saldo->setIndDareavere($dareAvere);
                         $_SESSION[self::SALDO] = serialize($saldo);
-
-                        if ((trim($conto[Conto::COD_CONTO]) == "215") and (trim($conto[Sottoconto::COD_SOTTOCONTO]) == "66")) {
-                            echo "Conto 215.66";
-                        }
-                        if ((trim($conto[Conto::COD_CONTO]) == "291") and (trim($conto[Sottoconto::COD_SOTTOCONTO]) == "10")) {
-                            echo "Conto 291.10";
-                        }
 
                         $this->gestioneSaldo($db);
                     }
