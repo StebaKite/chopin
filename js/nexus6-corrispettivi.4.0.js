@@ -749,7 +749,7 @@ function modificaDettaglioCorrispettivo(idTable, conto, sottoconto, importo, seg
 
 //---------------------------------------------------------------------------------
 
-function cancellaDettaglioNuovoCorrispettivo(idTable, codContoComposto, segno)
+function cancellaDettaglioNuovoCorrispettivo(idTable, codContoComposto)
 {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -759,7 +759,7 @@ function cancellaDettaglioNuovoCorrispettivo(idTable, codContoComposto, segno)
             controllaDettagliRegistrazione(idTable);
         }
     };
-    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioCorrispettivoFacade.class.php?modo=go&codconto=" + codContoComposto + "&dareAvere=" + segno, true);
+    xmlhttp.open("GET", "../primanota/cancellaNuovoDettaglioCorrispettivoFacade.class.php?modo=go&codconto=" + codContoComposto, true);
     xmlhttp.send();
 }
 
