@@ -278,6 +278,9 @@ abstract class Nexus6Abstract {
             
             if ($array["strumenti_item_3"] == "Y")
                 $strumenti .= "<li><a href='../strumenti/importaExcelCorrispettiviMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
+            
+            if ($array["strumenti_item_4"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/esecuzioneOnlineLavoriAutomaticiFacade.class.php?modo=start'>" . $array["strumenti_item_4_name"] . "</a></li>";
 
             $strumenti .= "</ul></li>";
         }

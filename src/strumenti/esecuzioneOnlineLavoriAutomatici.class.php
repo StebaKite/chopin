@@ -4,12 +4,13 @@ require_once 'strumenti.abstract.class.php';
 require_once 'lavoroPianificato.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
+require_once 'main.template.php';
 
-class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
+class EsecuzioneOnlineLavoriAutomatici extends StrumentiAbstract {
 
     public function start() {
 
-        error_log("Start lavori pianificati...");
+        error_log("Start online lavori pianificati...");
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
@@ -38,9 +39,11 @@ class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
             error_log("ATTENZIONE: Lavori pianificati non attivi!!");
         }
 
-        error_log("...End lavori pianificati");
+        error_log("...End lavori pianificati online");
+        
+        $mainTemplate = MainTemplate::getInstance();
+        $mainTemplate->displayPagina();
     }
-
 }
 
 ?>

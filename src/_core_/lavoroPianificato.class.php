@@ -137,13 +137,6 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             
             if ((strtotime($row[self::DAT_LAVORO]) <= strtotime($oggi)) && ($row[self::STA_LAVORO] == self::SALDO_DA_CALCOLARE)) {
 
-                echo("--------------------------------------------\n");
-                echo("dat_lavoro:" . $row[self::DAT_LAVORO] . "\n");
-                echo("oggi:" . $oggi . "\n");
-                echo("sta_lavoro:" . $row[self::STA_LAVORO] . "\n");
-                echo("eseguo:" . $row[self::PK_LAVORO_PIANIFICATO] . "\n");
-                echo("--------------------------------------------\n");
-                
                 $this->setClaEsecuzioneLavoro($row[self::CLA_ESECUZIONE_LAVORO]);
                 $this->setFilEsecuzioneLavoro($row[self::FIL_ESECUZIONE_LAVORO]);
                 $this->setDatLavoro($row[self::DAT_LAVORO]);

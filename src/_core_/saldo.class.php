@@ -70,14 +70,10 @@ class Saldo extends CoreBase implements CoreInterface {
         $result = $db->getData($sql);
 
         if ($result) {
-            if (pg_num_rows($result) > 0) {
-                foreach (pg_fetch_all($result) as $row) {
-                    $this->setDesSaldo(trim($row[self::DES_SALDO]));
-                    $this->setImpSaldo(trim($row[self::IMP_SALDO]));
-                    $this->setIndDareavere(trim($row[self::IND_DAREAVERE]));
-                }
-                $_SESSION[self::SALDO] = serialize($this);
+            if (pg_num_rows($result) === 0) {
+                return FALSE;
             }
+            return TRUE;
         }
         return $result;
     }
