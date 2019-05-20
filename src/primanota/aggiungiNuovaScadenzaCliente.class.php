@@ -7,36 +7,40 @@ require_once 'database.class.php';
 require_once 'cliente.class.php';
 require_once 'scadenzaCliente.class.php';
 
-class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    function __construct() {
 
-	public static function getInstance()
-	{
-		if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE])) $_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE] = serialize(new AggiungiNuovaScadenzaCliente());
-		return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE]);
-	}
-	public function start() {
-		$this->go();
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public function go()
-	{
-		$db = Database::getInstance();
-		$cliente = Cliente::getInstance();
-		$scadenzaCliente = ScadenzaCliente::getInstance();
-		
-		$cliente->setIdCliente($scadenzaCliente->getIdCliente()); 
-		$cliente->leggi($db);
+    public static function getInstance() {
+        if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE]))
+            $_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE] = serialize(new AggiungiNuovaScadenzaCliente());
+        return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE]);
+    }
 
-		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
-		$scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
-		$scadenzaCliente->aggiungi();
-		echo $this->makeTabellaScadenzeCliente($scadenzaCliente);
-	}
+    public function start() {
+        $this->go();
+    }
+
+    public function go() {
+        $db = Database::getInstance();
+        $cliente = Cliente::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
+        $registrazione = Registrazione::getInstance();
+
+        $cliente->setIdCliente($registrazione->getIdCliente());
+        $cliente->leggi($db);
+
+        $scadenzaCliente->setIdCliente($cliente->getIdCliente());
+        $scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
+        $scadenzaCliente->setNumFattura($registrazione->getNumFattura());
+        $scadenzaCliente->aggiungi();
+        
+        echo $this->makeTabellaScadenzeCliente($scadenzaCliente);
+    }
+
 }
 
 ?>

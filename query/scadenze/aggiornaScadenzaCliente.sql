@@ -1,5 +1,6 @@
 UPDATE contabilita.scadenza_cliente
    SET
+        dat_registrazione = '%dat_scadenza_nuova%',
         imp_registrazione = %imp_registrazione%,
         nota = '%nota%',
         tip_addebito = '%tip_addebito%',

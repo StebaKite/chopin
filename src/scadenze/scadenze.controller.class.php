@@ -86,7 +86,9 @@ class ScadenzeController {
         }
 
         if (isset($_REQUEST["datascad_cli_mod"])) {
-            $scadenzaCliente->setDatScadenza($_REQUEST["datascad_cli_mod"]);
+            if ($_REQUEST["datascad_cli_mod"] != $scadenzaCliente->getDatRegistrazione())
+                $scadenzaCliente->setDatScadenzaNuova($_REQUEST["datascad_cli_mod"]);            
+            
             $scadenzaCliente->setNota($_REQUEST["notascad_cli_mod"]);
             $scadenzaCliente->setCodNegozio($_REQUEST["negozio_cli_mod"]);
             $scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli_mod"]);

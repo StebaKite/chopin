@@ -226,6 +226,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaCliente->setIdCliente($registrazione->getIdCliente());
             $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaCliente->setDatRegistrazione($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);
+            $scadenzaCliente->setDatScadenzaNuova($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]);
 
             $scadenzaCliente->setImpRegistrazione($unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE]);
             $scadenzaCliente->setNota($registrazione->getDesRegistrazione());

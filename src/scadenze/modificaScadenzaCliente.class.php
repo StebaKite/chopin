@@ -63,8 +63,10 @@ class ModificaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusine
 
     public function go() {
         $scadenza = ScadenzaCliente::getInstance();
+        $registrazione = Registrazione::getInstance();
         $db = Database::getInstance();
 
+        $scadenza->setIdCliente($registrazione->getIdCliente());
         $scadenza->aggiorna($db);
 
         $_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance()));
