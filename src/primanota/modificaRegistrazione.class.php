@@ -143,7 +143,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
                  * - aggiorno quelle esistenti con i dati variati dell'operazione
                  */
 
-                if ($registrazione->getIdFornitore() != " ") {
+                if (parent::isNotEmpty($registrazione->getIdFornitore())) {
                     if ($this->aggiornaScadenzeFornitore($db, $utility, $registrazione, $scadenzaFornitore, $fornitore)) {
                         
                     }  // tutto ok
@@ -152,7 +152,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
                         return false;
                     }
                 } else {
-                    if ($registrazione->getIdCliente() != " ") {
+                    if (parent::isNotEmpty($registrazione->getIdCliente())) {
                         if ($this->aggiornaScadenzeCliente($db, $utility, $registrazione, $scadenzaCliente, $cliente)) {
                             
                         }  // tutto ok
@@ -183,6 +183,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaFornitore->setIdFornitore($registrazione->getIdFornitore());
             $scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaFornitore->setDatScadenza($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
+            $scadenzaFornitore->setDatScadenzaNuova($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]);
 
             /**
              *  se la registrazione è una nota di accredito (causale 1110) inverte il segno dell'importo in scadenza

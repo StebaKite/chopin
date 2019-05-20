@@ -210,6 +210,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
 
         $replace = array(
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
+            '%dat_scadenza_nuova%' => trim($this->getDatScadenzaNuova()),
             '%dat_scadenza%' => trim($this->getDatScadenza()),
             '%imp_in_scadenza%' => trim($this->getImpInScadenza()),
             '%nota_scadenza%' => trim($this->getNotaScadenza()),

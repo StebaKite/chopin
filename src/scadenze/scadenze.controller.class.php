@@ -73,7 +73,9 @@ class ScadenzeController {
         }
 
         if (isset($_REQUEST["datascad_mod"])) {
-            $scadenzaFornitore->setIdScadenza($_REQUEST["datascad_mod"]);
+            if ($_REQUEST["datascad_mod"] != $scadenzaFornitore->getDatScadenzaNuova())
+                $scadenzaFornitore->setDatScadenzaNuova($_REQUEST["datascad_mod"]);
+                        
             $scadenzaFornitore->setNotaScadenza($_REQUEST["notascad_mod"]);
             $scadenzaFornitore->setCodNegozio($_REQUEST["negozio_mod"]);
             $scadenzaFornitore->setImpInScadenza($_REQUEST["impscad_mod"]);
@@ -84,7 +86,7 @@ class ScadenzeController {
         }
 
         if (isset($_REQUEST["datascad_cli_mod"])) {
-            $scadenzaCliente->setIdScadenza($_REQUEST["datascad_cli_mod"]);
+            $scadenzaCliente->setDatScadenza($_REQUEST["datascad_cli_mod"]);
             $scadenzaCliente->setNota($_REQUEST["notascad_cli_mod"]);
             $scadenzaCliente->setCodNegozio($_REQUEST["negozio_cli_mod"]);
             $scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli_mod"]);

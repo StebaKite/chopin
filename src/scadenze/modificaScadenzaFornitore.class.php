@@ -66,8 +66,10 @@ class ModificaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBusi
 
     public function go() {
         $scadenza = ScadenzaFornitore::getInstance();
+        $registrazione = Registrazione::getInstance();
         $db = Database::getInstance();
 
+        $scadenza->setIdFornitore($registrazione->getIdFornitore());
         $scadenza->aggiorna($db);
 
         $_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeFornitore::getInstance()));

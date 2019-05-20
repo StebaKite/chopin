@@ -1,6 +1,7 @@
 UPDATE contabilita.scadenza
    SET
-   		imp_in_scadenza = %imp_in_scadenza%, 
+        dat_scadenza = '%dat_scadenza_nuova%',
+        imp_in_scadenza = %imp_in_scadenza%, 
         nota_scadenza = '%nota_scadenza%', 
         tip_addebito = '%tip_addebito%', 
         cod_negozio = '%cod_negozio%', 
