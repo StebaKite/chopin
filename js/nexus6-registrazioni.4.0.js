@@ -488,9 +488,12 @@ function validaModificaRegistrazione()
 // Function di aggiornamento
 // ---------------------------------------------------------------------
 
-function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importo, segno, idDettaglio)
+function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importoField, segnoField, idDettaglio)
 {
     var importoDettNormalizzato;
+    var importo = $("#" + importoField).val();
+    var segno = $("#" + segnoField).val();    
+    
     if (isEmpty(importo))
         importoDettNormalizzato = 0;
     else

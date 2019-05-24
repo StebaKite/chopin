@@ -370,7 +370,7 @@ function controllaDettagliRegistrazione(campoDet)
             }
         }
     };
-    xmlhttp.open("GET", "../primanota/verificaDettagliRegistrazioneFacade.class.php?modo=start", true);
+    xmlhttp.open("GET", "../primanota/verificaDettagliRegistrazioneFacade.class.php?modo=start&scadenzeTable=" + campoDet, true);
     xmlhttp.send();
 }
 

@@ -327,6 +327,7 @@ function modificaPagamento(idPagamento)
                         $("#scadenze_aperte_pag_mod").html($(this).find("scadenzedapagare").text());
                         $("#dettagli_pag_mod").html($(this).find("dettagli").text());
                         $("#conti_pag_mod").html($(this).find("conti").text());
+                        $("#conti_pag_mod").selectpicker('refresh');
                     }
             );
             $("#modifica-pagamento-dialog").modal("show");

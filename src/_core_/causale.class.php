@@ -269,8 +269,8 @@ class Causale extends CoreBase implements CoreInterface {
                 $conti .= "<option value='" . trim($unConto[Sottoconto::COD_CONTO]) . "." . trim($unConto[Sottoconto::COD_SOTTOCONTO]) . " - " . trim($unConto[Sottoconto::DES_SOTTOCONTO]) . "'>" . trim($unConto[Sottoconto::DES_SOTTOCONTO]) . "</option>";
             }
         }
-        $conti .= "</select>";
-        return $conti;
+        $this->setContiCausale($conti);
+        $_SESSION[self::CAUSALE] = serialize($this);
     }
 
     // Getters & Setters

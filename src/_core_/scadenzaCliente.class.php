@@ -51,8 +51,10 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
     private $qtaScadenzeDaIncassare;
     private $scadenzeIncassate;
     private $qtaScadenzeIncassate;
+    private $scadenzeTable;
+    
     // fitri di ricerca
-
+    
     private $datScadenzaDa;
     private $datScadenzaA;
     private $codNegozioSel;
@@ -804,6 +806,15 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
 
     public function setDatScadenzaNuova($datScadenzaNuova) {
         $this->datScadenzaNuova = $datScadenzaNuova;
+        return $this;
+    }
+
+    public function getScadenzeTable() {
+        return $this->scadenzeTable;
+    }
+
+    public function setScadenzeTable($scadenzeTable) {
+        $this->scadenzeTable = $scadenzeTable;
         return $this;
     }
 

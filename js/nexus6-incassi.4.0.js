@@ -176,7 +176,7 @@ $("#button-ok-nuovodett-modifica-incasso-form").click(
 
             // tolgo eventuali virgole nella descrizione del conto
 
-            var conto = $("#conti_inc-mod").val().replace(",", ".");
+            var conto = $("#conti_inc_mod").val().replace(",", ".");
             var idconto = conto.substring(0, 6);
 
             // normalizzo la virgola dell'importo
@@ -372,6 +372,7 @@ function modificaIncasso(idIncasso)
                         $("#scadenze_aperte_inc_mod").html($(this).find("scadenzedaincassare").text());
                         $("#dettagli_inc_mod").html($(this).find("dettagli").text());
                         $("#conti_inc_mod").html($(this).find("conti").text());
+                        $("#conti_inc_mod").selectpicker('refresh');
                     }
             );
             $("#modifica-incasso-dialog").modal("show");

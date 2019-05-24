@@ -29,7 +29,8 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
             
             if (parent::isNotEmpty($registrazione->getIdFornitore())) {                
                 $scadenzaFornitore = ScadenzaFornitore::getInstance();
-                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzeDaPagare();                
+                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzePagate();                
+//                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzeDaPagare();                
                 $importoContoFornitore = $dettaglioRegistrazione->getImportoContoPrincipale();
                 
                 if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoFornitore)) {
@@ -41,7 +42,8 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
             
             elseif (parent::isNotEmpty($registrazione->getIdCliente())) {                
                 $scadenzaCliente = ScadenzaCliente::getInstance();
-                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeDaIncassare();                
+                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeIncassate();                
+//                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeDaIncassare();                
                 $importoContoCliente = $dettaglioRegistrazione->getImportoContoPrincipale();
                 
                 if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoCliente)) {

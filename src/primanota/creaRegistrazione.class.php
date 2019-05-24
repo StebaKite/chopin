@@ -95,7 +95,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
              */
             if ($dettagli_ok) {
                 if (parent::isNotEmpty($registrazione->getIdFornitore())) {
-                    if ($scadenzaFornitore->getDatScadenza() != "") {
+                    if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
                         if (!$this->creaScadenzeFornitore($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaFornitore)) {
                             $db->rollbackTransaction();
                             return false;
@@ -103,7 +103,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
                     }
                 } else {
                     if (parent::isNotEmpty($registrazione->getIdCliente())) {
-                        if ($scadenzaCliente->getDatRegistrazione() != "") {
+                        if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
                             if (!$this->creaScadenzeCliente($utility, $db, $registrazione, $dettaglioRegistrazione, $scadenzaCliente)) {
                                 $db->rollbackTransaction();
                                 return false;

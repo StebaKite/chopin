@@ -178,6 +178,10 @@ class PrimanotaController {
             $dettaglioRegistrazione->setCodSottoconto($cc[1]);
         }
         
+        if (isset($_REQUEST["scadenzeTable"])) {
+            $scadenzaCliente->setScadenzeTable($_REQUEST["scadenzeTable"]);
+        }
+        
         // Registrazione incasso ==========================================================
 
         if (isset($_REQUEST["cliente_inc_cre"])) {
