@@ -356,7 +356,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                 return false;
             else {
                 $totale = round($totDare, 2) - round($totAvere, 2);
-                if ($totale == 0)
+                $tot = round($totale,2);
+                if ($tot == 0)
                     return true;
                 else
                     return false;
