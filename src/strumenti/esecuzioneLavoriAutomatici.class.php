@@ -7,18 +7,22 @@ require_once 'database.class.php';
 
 class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
 
+    private static $linuxProjectRoot = "/var/www/html";
+    private static $windowsProjectRoot = "D:\Programmi\Apache24\Apache24\htdocs";
+    
     public function start() {
 
         error_log("Start lavori pianificati...");
 
         $utility = Utility::getInstance();
-        $array = $utility->getConfig();
+
+        $so = shell_exec("uname -a");
+        error_log("Operating system detected : ". $so);
         
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-        if (strpos($agent, 'Windows') === false) {
-            $project_root = $array['linuxProjectRoot'];
+        if (strpos($so, 'Windows') === false) {
+            $project_root = self::$linuxProjectRoot;
         } else {
-            $project_root = $array['windowsProjectRoot'];
+            $project_root = self::$windowsProjectRoot;
         }
         
         $array = $utility->getConfigInBatchMode($project_root);
