@@ -9,6 +9,8 @@ $("#nuovaRegistrazione").click(function () {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            
+            // pulizia degli elementi in pagina
             document.getElementById("nuovaRegistrazioneForm").reset();
             $("#descreg_cre_control_group").removeClass("has-error");
             $("#causale_cre_control_group").removeClass("has-error");
@@ -26,6 +28,19 @@ $("#nuovaRegistrazione").click(function () {
             $("#scadenzesuppl_cre_messaggio").html("");
             $("#scadenzesuppl_cre").html("");
             $("#dettagli_cre").html("");
+            
+            // pulizia delle altre tabelle incluse nella pagina ricerca registrazioni
+            $("#dettagli_mod").html("");
+            $("#dettagli_inc_cre").html("");
+            $("#dettagli_inc_mod").html("");
+            $("#dettagli_pag_cre").html("");
+            $("#dettagli_pag_mod").html("");
+            $("#dettagli_cormer_cre").html("");
+            $("#dettagli_cormer_mod").html("");
+            $("#dettagli_corneg_cre").html("");
+            $("#dettagli_corneg_mod").html("");
+            
+            // pulizia del messaggio
             $("#dettagli_cre_messaggio").html("");
             $("#nuova-registrazione-dialog").modal("show");
         }

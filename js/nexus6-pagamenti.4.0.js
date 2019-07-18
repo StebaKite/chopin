@@ -6,6 +6,8 @@ $("#nuovo-pagamento").click(function (event) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            
+            // pulizia degli elementi della pagina
             document.getElementById("nuovoPagamentoForm").reset();
             $("#codneg_pag_cre").selectpicker('val', ' ');
             $("#causale_pag_cre").selectpicker('val', ' ');
@@ -13,6 +15,18 @@ $("#nuovo-pagamento").click(function (event) {
             $("#scadenze_aperte_pag_cre").html("");
             $("#scadenze_chiuse_pag_cre").html("");
             $("#dettagli_pag_cre").html("");
+            
+            // pulizia delle altre tabelle incluse nella pagina ricerca registrazioni
+            $("#dettagli_cre").html("");
+            $("#dettagli_mod").html("");
+            $("#dettagli_inc_cre").html("");
+            $("#dettagli_inc_mod").html("");
+            $("#dettagli_cormer_cre").html("");
+            $("#dettagli_cormer_mod").html("");
+            $("#dettagli_corneg_cre").html("");
+            $("#dettagli_corneg_mod").html("");
+            
+            // pulizia del messaggio
             $("#dettagli_pag_cre_messaggio").html("");
             $("#nuovo-pagamento-dialog").modal("show");
         }

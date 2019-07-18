@@ -6,6 +6,8 @@ $("#nuovo-incasso").click(function (event) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
+            
+            // pulizia degli elementi in pagina
             document.getElementById("nuovoIncassoForm").reset();
             $("#codneg_inc_cre").selectpicker('val', ' ');
             $("#causale_inc_cre").selectpicker('val', ' ');
@@ -13,6 +15,18 @@ $("#nuovo-incasso").click(function (event) {
             $("#scadenze_aperte_inc_cre").html("");
             $("#scadenze_chiuse_inc_cre").html("");
             $("#dettagli_inc_cre").html("");
+            
+            // pulizia delle altre tabelle incluse nella pagina ricerca registrazioni
+            $("#dettagli_cre").html("");
+            $("#dettagli_mod").html("");
+            $("#dettagli_pag_cre").html("");
+            $("#dettagli_pag_mod").html("");
+            $("#dettagli_cormer_cre").html("");
+            $("#dettagli_cormer_mod").html("");
+            $("#dettagli_corneg_cre").html("");
+            $("#dettagli_corneg_mod").html("");
+            
+            // pulizia del messaggio
             $("#dettagli_inc_cre_messaggio").html("");
             $("#nuovo-incasso-dialog").modal("show");
         }
