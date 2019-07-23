@@ -27,7 +27,8 @@ class AggiornaDataScadenzaCliente extends PrimanotaAbstract implements Primanota
     {
         $db = Database::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaCliente->aggiornaData($db);
-        echo $this->makeTabellaScadenzeCliente($scadenzaCliente);
+        echo $this->makeTabellaScadenzeCliente($scadenzaCliente,$dettaglioRegistrazione);
     }
 }
