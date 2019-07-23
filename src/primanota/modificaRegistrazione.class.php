@@ -90,8 +90,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             '%cliente%' => trim($cliente->getIdCliente()),
             '%numfatt%' => trim($registrazione->getNumFattura()),
             '%numfattorig%' => trim($registrazione->getNumFatturaOrig()),
-            '%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore)),
-            '%scadenzesupplcliente%' => trim($this->makeTabellaScadenzeCliente($scadenzaCliente)),
+            '%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettaglioRegistrazione)),
+            '%scadenzesupplcliente%' => trim($this->makeTabellaScadenzeCliente($scadenzaCliente,$dettaglioRegistrazione)),
             '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
             '%conti%' => trim($causale->loadContiConfigurati($db))
         );

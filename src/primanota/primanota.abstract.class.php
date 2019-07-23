@@ -560,7 +560,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "";
     }
 
-    public function makeTabellaScadenzeFornitore($scadenzaFornitore) {
+    public function makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione) {
         $data_ko = "class='bg-danger'";
         $data_ok = "class='bg-success'";
 
@@ -588,13 +588,15 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($idFornitore) . ",";
                 $modifica_parms .= trim($dataScadenza) . ",";
                 $modifica_parms .= trim($numFatt) . ",";
-                $modifica_parms .= "this.value";
+                $modifica_parms .= "this.value,";
+                $modifica_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
                 $mod_data_parms = "'" . $scadenzaFornitore->getIdTableScadenzeAperte() . "',";
                 $mod_data_parms .= trim($idFornitore) . ",";
                 $mod_data_parms .= trim($dataScadenza) . ",";
                 $mod_data_parms .= "this.value,";
-                $mod_data_parms .= trim($numFatt);
+                $mod_data_parms .= trim($numFatt) . ",";
+                $mod_data_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
                 $onModifyData = " onchange=" . '"' . "modificaDataScadenzaFornitore(" . $mod_data_parms . ')"';
@@ -683,7 +685,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "<table id='" . $scadenzaFornitore->getIdTableScadenzeAperte() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
     }
 
-    public function makeTabellaScadenzeCliente($scadenzaCliente) {
+    public function makeTabellaScadenzeCliente($scadenzaCliente,$dettagliRegistrazione) {
         $data_ko = "class='bg-danger'";
         $data_ok = "class='bg-success'";
 
@@ -711,13 +713,15 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms .= trim($idCliente) . ",";
                 $modifica_parms .= trim($dataScadenza) . ",";
                 $modifica_parms .= trim($numFatt) . ",";
-                $modifica_parms .= "this.value";
+                $modifica_parms .= "this.value,";
+                $modifica_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
                 
                 $mod_data_parms = "'" . $scadenzaCliente->getIdTableScadenzeAperte() . "',";
                 $mod_data_parms .= trim($idCliente) . ",";
                 $mod_data_parms .= trim($dataScadenza) . ",";
                 $mod_data_parms .= "this.value,";
-                $mod_data_parms .= trim($numFatt);
+                $mod_data_parms .= trim($numFatt) . ",";
+                $mod_data_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
                 $onModifyData = " onchange=" . '"' . "modificaDataScadenzaCliente(" . $mod_data_parms . ')"';                

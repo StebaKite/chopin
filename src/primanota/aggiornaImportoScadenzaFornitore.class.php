@@ -27,8 +27,9 @@ class AggiornaImportoScadenzaFornitore extends PrimanotaAbstract implements Prim
 	{
 		$db = Database::getInstance();
 		$scadenzaFornitore = ScadenzaFornitore::getInstance();
+                $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
 		$scadenzaFornitore->aggiornaImporto($db);
-		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);
 	}
 }
 

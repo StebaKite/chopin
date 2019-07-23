@@ -26,8 +26,9 @@ class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBu
     public function go() {
         $db = Database::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaFornitore->cancella($db);
-        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
     }
 }
 

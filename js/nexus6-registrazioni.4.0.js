@@ -654,7 +654,7 @@ function cancellaNuovaScadenzaCliente(idTable, idCliente, datScad, numFatt)
 
 //---------------------------------------------------------------------------------
 
-function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfatt, importo)
+function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfatt, importo, idTableDet)
 {
     var importoScadNormalizzato;
         
@@ -670,6 +670,7 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
                 if (isNotEmpty(xmlhttp.responseText)) {
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
+                    controllaDettagliRegistrazione(idTableDet);                    
                 }
             }
         };
@@ -714,7 +715,7 @@ function modificaDataScadenzaCliente(idTable, idcliente, datascad_old, datascad_
 
 //---------------------------------------------------------------------------------
 
-function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, importo)
+function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, importo, idTableDet)
 {
     var importoScadNormalizzato;
     
@@ -730,6 +731,7 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
                 if (isNotEmpty(xmlhttp.responseText)) {
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
+                    controllaDettagliRegistrazione(idTableDet);                    
                 }
             }
         };

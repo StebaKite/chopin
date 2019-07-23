@@ -24,6 +24,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
         $db = Database::getInstance();
         $utility = Utility::getInstance();
         $registrazione = Registrazione::getInstance();
+        $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
         $fornitore = Fornitore::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
 
@@ -61,7 +62,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
                     $scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
                     $scadenzaFornitore->aggiungi();
 
-                    echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+                    echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
                 } else {
                     echo "<div class='alert alert-info' role='alert'>Il fornitore ha il numero di giorni scadenza fatture impostato a zero.</div>";
                 }

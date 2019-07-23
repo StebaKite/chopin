@@ -27,8 +27,10 @@ class AggiornaDataScadenzaFornitore extends PrimanotaAbstract implements Primano
     {
         $db = Database::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        
         $scadenzaFornitore->aggiornaData($db);
-        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettaglioRegistrazione);
     }
 }
 

@@ -29,8 +29,15 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
             
             if (parent::isNotEmpty($registrazione->getIdFornitore())) {                
                 $scadenzaFornitore = ScadenzaFornitore::getInstance();
-                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzePagate();                
-//                $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzeDaPagare();                
+                
+                if ($scadenzaFornitore->getQtaScadenzePagate() > 0) {
+                    $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzePagate();
+                }
+                else {
+                    if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
+                        $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzeDaPagare();                
+                    }
+                }
                 $importoContoFornitore = $dettaglioRegistrazione->getImportoContoPrincipale();
                 
                 if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoFornitore)) {
@@ -42,8 +49,15 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
             
             elseif (parent::isNotEmpty($registrazione->getIdCliente())) {                
                 $scadenzaCliente = ScadenzaCliente::getInstance();
-                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeIncassate();                
-//                $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeDaIncassare();                
+                
+                if ($scadenzaCliente->getQtaScadenzeIncassate() > 0) {
+                    $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeIncassate();                
+                }
+                else {
+                    if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
+                        $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeDaIncassare();                
+                    }
+                }
                 $importoContoCliente = $dettaglioRegistrazione->getImportoContoPrincipale();
                 
                 if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoCliente)) {

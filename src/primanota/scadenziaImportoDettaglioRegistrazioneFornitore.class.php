@@ -27,8 +27,9 @@ class ScadenziaImportoDettaglioRegistrazioneFornitore extends PrimanotaAbstract 
     public function go() {
         $db = Database::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaFornitore->ripartisciImporto();
         
-        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore);
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
     }
 }
