@@ -15,8 +15,9 @@ class CancellaNuovoDettaglioCorrispettivo extends PrimanotaAbstract implements P
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO]))
+        if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO])) {
             $_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO] = serialize(new CancellaNuovoDettaglioCorrispettivo());
+        }
         return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO]);
     }
 

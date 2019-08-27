@@ -14,8 +14,9 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE]))
+        if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE])) {
             $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE] = serialize(new AggiornaImportoScadenzaCliente());
+        }
         return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE]);
     }
 
@@ -32,6 +33,5 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
         $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
         echo $this->makeTabellaScadenzeCliente($scadenzaCliente, $dettaglioRegistrazione);
     }
-}
 
-?>
+}

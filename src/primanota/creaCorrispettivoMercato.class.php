@@ -19,8 +19,9 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]))
+        if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO])) {
             $_SESSION[self::CREA_CORRISPETTIVO_MERCATO] = serialize(new CreaCorrispettivoMercato());
+        }
         return unserialize($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]);
     }
 
@@ -49,5 +50,3 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
     }
 
 }
-
-?>

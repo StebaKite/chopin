@@ -16,8 +16,9 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO]))
+        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO])) {
             $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO] = serialize(new AggiungiNuovoDettaglioCorrispettivoMercato());
+        }
         return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO]);
     }
 

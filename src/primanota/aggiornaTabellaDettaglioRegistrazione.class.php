@@ -15,8 +15,9 @@ class AggiornaTabellaDettaglioRegistrazione extends PrimanotaAbstract implements
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_TABELLA_DETTAGLIO_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::AGGIORNA_TABELLA_DETTAGLIO_REGISTRAZIONE])) {
             $_SESSION[self::AGGIORNA_TABELLA_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaTabellaDettaglioRegistrazione());
+        }
         return unserialize($_SESSION[self::AGGIORNA_TABELLA_DETTAGLIO_REGISTRAZIONE]);
     }
 

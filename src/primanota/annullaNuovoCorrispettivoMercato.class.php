@@ -11,36 +11,34 @@ require_once 'dettaglioRegistrazione.class.php';
 require_once 'scadenzaCliente.class.php';
 require_once 'scadenzaFornitore.class.php';
 
+class AnnullaNuovoCorrispettivoMercato extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-class AnnullaNuovoCorrispettivoMercato extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+    function __construct() {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public static function getInstance()
-	{
-		if (!isset($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO])) $_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO] = serialize(new AnnullaNuovoCorrispettivoMercato());
-		return unserialize($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO]);
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO])) {
+            $_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO] = serialize(new AnnullaNuovoCorrispettivoMercato());
+        }
+        return unserialize($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO]);
+    }
 
-	public function start() {
-		$this->go();
-	}
+    public function start() {
+        $this->go();
+    }
 
-	public function go()
-	{
-		$registrazione = Registrazione::getInstance();
-		$dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
+    public function go() {
+        $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$registrazione->preparaFiltri();
-		$dettaglioRegistrazione->prepara();
+        $registrazione->preparaFiltri();
+        $dettaglioRegistrazione->prepara();
 
-		echo "Okay";
-	}
+        echo "Okay";
+    }
+
 }
-
-?>

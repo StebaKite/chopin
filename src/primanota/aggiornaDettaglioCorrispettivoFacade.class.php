@@ -9,5 +9,3 @@ $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(Aggiorn
 
 $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
 $controller->start();
-
-?>

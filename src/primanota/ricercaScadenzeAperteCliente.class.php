@@ -8,55 +8,52 @@ require_once 'registrazione.class.php';
 require_once 'scadenzaCliente.class.php';
 require_once 'cliente.class.php';
 
-class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
+class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public static function getInstance()
-	{
-		if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE])) $_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE] = serialize(new RicercaScadenzeAperteCliente());
-		return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE]);
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE])) {
+            $_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE] = serialize(new RicercaScadenzeAperteCliente());
+        }
+        return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE]);
+    }
 
-	public function start()
-	{
+    public function start() {
 
-		$registrazione = Registrazione::getInstance();
-		$scadenzaCliente = ScadenzaCliente::getInstance();
-		$cliente = Cliente::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$scadenzaCliente->setIdCliente($cliente->getIdCliente());
-		$scadenzaCliente->trovaScadenzeDaIncassare($db);
+        $registrazione = Registrazione::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
+        $cliente = Cliente::getInstance();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		/**
-		 * Nell'attributo numFattureDaIncassare ci appoggio la table html generata
-		 * Le scadenze si trovano nell'oggetto scadenzaCliente
-		 */
-		
-		$registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente));
-		$registrazione->setNumFattureIncassate("");
-		
-		$risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_CLIENTE_APERTE;
-		
-		$replace = array(
-				'%scadenzedaincassare%' => $registrazione->getNumFattureDaIncassare(),
-				'%scadenzeincassate%' => $registrazione->getNumFattureIncassate()
-		);
-		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
-		echo $utility->tailTemplate($template);
-	}
+        $scadenzaCliente->setIdCliente($cliente->getIdCliente());
+        $scadenzaCliente->trovaScadenzeDaIncassare($db);
 
-	public function go() {
-	}
+        /**
+         * Nell'attributo numFattureDaIncassare ci appoggio la table html generata
+         * Le scadenze si trovano nell'oggetto scadenzaCliente
+         */
+        $registrazione->setNumFattureDaIncassare($this->makeTabellaFattureDaIncassare($scadenzaCliente));
+        $registrazione->setNumFattureIncassate("");
+
+        $risultato_xml = $this->root . $array['template'] . self::XML_SCADENZE_CLIENTE_APERTE;
+
+        $replace = array(
+            '%scadenzedaincassare%' => $registrazione->getNumFattureDaIncassare(),
+            '%scadenzeincassate%' => $registrazione->getNumFattureIncassate()
+        );
+        $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+        echo $utility->tailTemplate($template);
+    }
+
+    public function go() {
+        
+    }
+
 }
-
-?>

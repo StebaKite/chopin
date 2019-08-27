@@ -29,7 +29,8 @@ class ScadenziaImportoDettaglioRegistrazioneCliente extends PrimanotaAbstract im
         $scadenzaCliente = ScadenzaCliente::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaCliente->ripartisciImporto();
-        
-        echo $this->makeTabellaScadenzeCliente($scadenzaCliente,$dettaglioRegistrazione);
+
+        echo $this->makeTabellaScadenzeCliente($scadenzaCliente, $dettaglioRegistrazione);
     }
+
 }

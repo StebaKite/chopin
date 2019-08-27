@@ -18,8 +18,9 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO]))
+        if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO])) {
             $_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO] = serialize(new ModificaCorrispettivoMercato());
+        }
         return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO]);
     }
 
@@ -109,5 +110,3 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
     }
 
 }
-
-?>

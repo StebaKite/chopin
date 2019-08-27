@@ -63,5 +63,3 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 	public function displayPagina();
 	
 }
-
-?>

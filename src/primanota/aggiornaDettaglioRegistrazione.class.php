@@ -13,8 +13,9 @@ class AggiornaDettaglioRegistrazione extends PrimanotaAbstract implements Priman
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE])) {
             $_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaDettaglioRegistrazione());
+        }
         return unserialize($_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE]);
     }
 
@@ -24,8 +25,9 @@ class AggiornaDettaglioRegistrazione extends PrimanotaAbstract implements Priman
 
     public function go() {
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-        $dettaglioRegistrazione->aggiornaDettaglio();        
-        $registrazione = Registrazione::getInstance();        
+        $dettaglioRegistrazione->aggiornaDettaglio();
+        $registrazione = Registrazione::getInstance();
         echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
     }
+
 }

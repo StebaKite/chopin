@@ -6,31 +6,30 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'scadenzaFornitore.class.php';
 
-class AggiornaImportoScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface
-{
-	function __construct() {
+class AggiornaImportoScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    function __construct() {
 
-	public static function getInstance()
-	{
-		if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE])) $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE] = serialize(new AggiornaImportoScadenzaFornitore());
-		return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE]);
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public function start() {
-		$this->go();
-	}
+    public static function getInstance() {
+        if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE])) {
+            $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE] = serialize(new AggiornaImportoScadenzaFornitore());
+        }
+        return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE]);
+    }
 
-	public function go()
-	{
-		$db = Database::getInstance();
-		$scadenzaFornitore = ScadenzaFornitore::getInstance();
-                $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
-		$scadenzaFornitore->aggiornaImporto($db);
-		echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);
-	}
+    public function start() {
+        $this->go();
+    }
+
+    public function go() {
+        $db = Database::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $dettagliRegistrazione = DettaglioRegistrazione::getInstance();
+        $scadenzaFornitore->aggiornaImporto($db);
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);
+    }
+
 }
-
-?>
