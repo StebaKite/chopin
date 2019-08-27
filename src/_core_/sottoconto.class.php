@@ -55,8 +55,9 @@ class Sottoconto extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::SOTTOCONTO]))
+        if (!isset($_SESSION[self::SOTTOCONTO])) {
             $_SESSION[self::SOTTOCONTO] = serialize(new Sottoconto());
+        }
         return unserialize($_SESSION[self::SOTTOCONTO]);
     }
 
@@ -95,8 +96,9 @@ class Sottoconto extends CoreBase implements CoreInterface {
             foreach ($this->getSottoconti() as $unSottoconto) {
                 if (trim($unSottoconto[self::COD_SOTTOCONTO]) != trim($this->getCodSottoconto())) {
                     array_push($sottocontiDiff, $unSottoconto);
-                } else
+                } else {
                     $this->setQtaSottoconti($this->getQtaSottoconti() - 1);
+                }
             }
             $this->setSottoconti($sottocontiDiff);
             $_SESSION[self::SOTTOCONTO] = serialize($this);
@@ -384,5 +386,3 @@ class Sottoconto extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

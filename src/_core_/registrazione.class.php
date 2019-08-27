@@ -82,8 +82,9 @@ class Registrazione extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::REGISTRAZIONE]))
+        if (!isset($_SESSION[self::REGISTRAZIONE])) {
             $_SESSION[self::REGISTRAZIONE] = serialize(new Registrazione());
+        }
         return unserialize($_SESSION[self::REGISTRAZIONE]);
     }
 
@@ -204,12 +205,15 @@ class Registrazione extends CoreBase implements CoreInterface {
     }
 
     public function preparaFiltri() {
-        if (parent::isEmpty($this->getDatRegistrazioneDa()))
+        if (parent::isEmpty($this->getDatRegistrazioneDa())) {
             $this->setDatRegistrazioneDa(date("d-m-Y"));
-        if (parent::isEmpty($this->getDatRegistrazioneA()))
+        }
+        if (parent::isEmpty($this->getDatRegistrazioneA())) {
             $this->setDatRegistrazioneA(date("d-m-Y"));
-        if (parent::isEmpty($this->getCodNegozioSel()))
+        }
+        if (parent::isEmpty($this->getCodNegozioSel())) {
             $this->setCodNegozioSel("");
+        }
 
         $_SESSION[self::REGISTRAZIONE] = serialize($this);
     }
@@ -248,8 +252,9 @@ class Registrazione extends CoreBase implements CoreInterface {
 
             $numReg = 0;
             foreach ($this->getRegistrazioni() as $unaRegistrazione) {
-                if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R")
+                if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R") {
                     $numReg ++;
+                }
             }
             $this->setQtaRegistrazioni($numReg);
         } else {
@@ -327,10 +332,11 @@ class Registrazione extends CoreBase implements CoreInterface {
         $result = $db->getData($sql);
 
         if ($result) {
-            if (pg_num_rows($result) > 0)
+            if (pg_num_rows($result) > 0) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
         return false;
     }
@@ -349,10 +355,11 @@ class Registrazione extends CoreBase implements CoreInterface {
         $result = $db->getData($sql);
 
         if ($result) {
-            if (pg_num_rows($result) > 0)
+            if (pg_num_rows($result) > 0) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         }
         return false;
     }
@@ -579,5 +586,3 @@ class Registrazione extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

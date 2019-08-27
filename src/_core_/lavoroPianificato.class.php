@@ -55,8 +55,9 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::LAVORO_PIANIFICATO]))
+        if (!isset($_SESSION[self::LAVORO_PIANIFICATO])) {
             $_SESSION[self::LAVORO_PIANIFICATO] = serialize(new LavoroPianificato());
+        }
         return unserialize($_SESSION[self::LAVORO_PIANIFICATO]);
     }
 
@@ -90,9 +91,10 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
     public function settaDaEseguire($db) {
 
         if ($this->getQtaLavoriPianificati() > 0) {
-
-        } else
+            
+        } else {
             $this->load($db, $this->getRoot());
+        }
 
         if ($this->getQtaLavoriPianificati() > 0) {
 
@@ -146,10 +148,11 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
 
                 $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
 
-                if ($this->runClass($db))
+                if ($this->runClass($db)) {
                     error_log("Lavoro " . $this->getDesLavoro() . " (" . $this->getDatLavoro() . ") " . " eseguito!");
-                else
+                } else {
                     error_log("Lavoro " . $this->getDesLavoro() . " (" . $this->getDatLavoro() . ") " . " in crash!");
+                }
             }
         }
     }
@@ -327,5 +330,3 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

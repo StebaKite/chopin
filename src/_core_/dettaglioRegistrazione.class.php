@@ -64,8 +64,9 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::DETTAGLIO_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::DETTAGLIO_REGISTRAZIONE])) {
             $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize(new DettaglioRegistrazione());
+        }
         return unserialize($_SESSION[self::DETTAGLIO_REGISTRAZIONE]);
     }
 
@@ -119,9 +120,9 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO]);
             $codConto = explode(".", $contoComposto[0]);
 
-            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto())))
+            if ((trim($codConto[0]) != trim($this->getCodConto())) or ( trim($codConto[1]) != trim($this->getCodSottoconto()))) {
                 array_push($dettagliDiff, $unDettaglio);
-            else {
+            } else {
                 $item = array(
                     DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE],
                     DettaglioRegistrazione::ID_REGISTRAZIONE => $unDettaglio[DettaglioRegistrazione::ID_REGISTRAZIONE],
@@ -313,8 +314,9 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                 $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
                 $result = $db->execSql($sql);
 
-                if ($result)
+                if ($result) {
                     $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
+                }
             }
         }
         $this->setDettagliRegistrazione($dettagliDiff);
@@ -346,24 +348,28 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
                 $importo = trim($unDettaglio[self::IMP_REGISTRAZIONE]);
                 $indDareAvere = trim($unDettaglio[self::IND_DAREAVERE]);
-                if ($indDareAvere == "D")
+                if ($indDareAvere == "D") {
                     $totDare += $importo;
-                if ($indDareAvere == "A")
+                }
+                if ($indDareAvere == "A") {
                     $totAvere += $importo;
+                }
             }
 
-            if (($totDare == 0) and ( $totAvere == 0))
+            if (($totDare == 0) and ( $totAvere == 0)) {
                 return false;
-            else {
+            } else {
                 $totale = round($totDare, 2) - round($totAvere, 2);
-                $tot = round($totale,2);
-                if ($tot == 0)
+                $tot = round($totale, 2);
+                if ($tot == 0) {
                     return true;
-                else
+                } else {
                     return false;
+                }
             }
-        } else
+        } else {
             return false;
+        }
     }
 
     public function aggiorna($db) {

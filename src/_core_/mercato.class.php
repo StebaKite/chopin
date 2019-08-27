@@ -45,8 +45,9 @@ class Mercato extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MERCATO]))
+        if (!isset($_SESSION[self::MERCATO])) {
             $_SESSION[self::MERCATO] = serialize(new Mercato());
+        }
         return unserialize($_SESSION[self::MERCATO]);
     }
 
@@ -94,8 +95,9 @@ class Mercato extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        if ($result)
-            $this->load($db);  // refresh dei mercati caricati
+        if ($result) {
+            $this->load($db);
+        }  // refresh dei mercati caricati
         return $result;
     }
 
@@ -241,5 +243,3 @@ class Mercato extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

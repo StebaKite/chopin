@@ -58,8 +58,9 @@ class Causale extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CAUSALE]))
+        if (!isset($_SESSION[self::CAUSALE])) {
             $_SESSION[self::CAUSALE] = serialize(new Causale());
+        }
         return unserialize($_SESSION[self::CAUSALE]);
     }
 
@@ -85,9 +86,6 @@ class Causale extends CoreBase implements CoreInterface {
     }
 
     public function caricaCausali($db) {
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-        $replace = array();
         $elencoCausali = "";
 
         if (sizeof($this->getQtaCausali()) == 0) {
@@ -356,5 +354,3 @@ class Causale extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

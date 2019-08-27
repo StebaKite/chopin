@@ -63,8 +63,9 @@ class Conto extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CONTO]))
+        if (!isset($_SESSION[self::CONTO])) {
             $_SESSION[self::CONTO] = serialize(new Conto());
+        }
         return unserialize($_SESSION[self::CONTO]);
     }
 
@@ -451,5 +452,3 @@ class Conto extends CoreBase implements CoreInterface {
     }
     
 }
-
-?>

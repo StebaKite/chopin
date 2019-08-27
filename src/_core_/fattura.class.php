@@ -76,8 +76,9 @@ class Fattura extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::FATTURA]))
+        if (!isset($_SESSION[self::FATTURA])) {
             $_SESSION[self::FATTURA] = serialize(new Fattura());
+        }
         return unserialize($_SESSION[self::FATTURA]);
     }
 

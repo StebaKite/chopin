@@ -80,8 +80,9 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::SCADENZA_FORNITORE]))
+        if (!isset($_SESSION[self::SCADENZA_FORNITORE])) {
             $_SESSION[self::SCADENZA_FORNITORE] = serialize(new ScadenzaFornitore());
+        }
         return unserialize($_SESSION[self::SCADENZA_FORNITORE]);
     }
 
@@ -172,9 +173,6 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }
 
     public function rimuoviScadenzeRegistrazione($db) {
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-
         foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
             if ($unaScadenza[ScadenzaFornitore::STA_SCADENZA] == '00') {
                 $this->setDatScadenza(strtotime(str_replace("/", "-", $unaScadenza[ScadenzaFornitore::DAT_SCADENZA])));
@@ -336,7 +334,6 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }
 
     public function getSommaImportiScadenze() {
-        
         $importoTotaleScadenze = 0;
         
         foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
@@ -349,7 +346,6 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }
 
     public function getSommaImportiScadenzeDaPagare() {
-        
         $importoTotaleScadenze = 0;
         
         foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
@@ -359,7 +355,6 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }
 
     public function getSommaImportiScadenzePagate() {
-        
         $importoTotaleScadenze = 0;
 
         foreach ($this->getScadenzePagate() as $unaScadenza) {
@@ -485,8 +480,9 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
                         or ( trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) != $dataScad)
                         or ( trim($unaScadenza[ScadenzaFornitore::NUM_FATTURA]) != trim($this->getNumFattura()))) {
                     array_push($scadenzeDiff, $unaScadenza);
-                } else
+                } else {
                     $this->setQtaScadenzeDaPagare($this->getQtaScadenzeDaPagare() - 1);
+                }
             }
             $this->setScadenzeDaPagare($scadenzeDiff);
             $_SESSION[self::SCADENZA_FORNITORE] = serialize($this);
@@ -521,9 +517,9 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             $scadenzeDiff = array();
             foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
 
-                if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
+                if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad) {
                     array_push($scadenzeDiff, $unaScadenza);
-                else {
+                } else {
                     $item = array(
                         ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],
                         ScadenzaFornitore::DAT_SCADENZA => $unaScadenza[ScadenzaFornitore::DAT_SCADENZA],
@@ -572,9 +568,9 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             $scadenzeDiff = array();
             foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
 
-                if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad)
+                if ($unaScadenza[ScadenzaFornitore::DAT_SCADENZA] != $dataScad) {
                     array_push($scadenzeDiff, $unaScadenza);
-                else {
+                } else {
                     $item = array(
                         ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],
                         ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenzaNuova(),
@@ -857,5 +853,3 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

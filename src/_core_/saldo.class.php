@@ -250,5 +250,3 @@ class Saldo extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

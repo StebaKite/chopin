@@ -33,8 +33,9 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CATEGORIA_CLIENTE]))
+        if (!isset($_SESSION[self::CATEGORIA_CLIENTE])) {
             $_SESSION[self::CATEGORIA_CLIENTE] = serialize(new CategoriaCliente());
+        }
         return unserialize($_SESSION[self::CATEGORIA_CLIENTE]);
     }
 
@@ -56,10 +57,11 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
 
         foreach (pg_fetch_all($result) as $row) {
 
-            if (trim($row['cat_cliente']) == trim($cliente->getCatCliente()))
+            if (trim($row['cat_cliente']) == trim($cliente->getCatCliente())) {
                 $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "' selected >" . trim($row[self::DES_CATEGORIA]) . "</option>";
-            else
+            } else {
                 $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "'>" . trim($row[self::DES_CATEGORIA]) . "</option>";
+            }
         }
         $this->setElencoCategorieCliente($elecat);
     }
@@ -97,5 +99,3 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

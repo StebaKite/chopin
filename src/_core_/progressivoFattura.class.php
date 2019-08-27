@@ -41,8 +41,9 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::PROGRESSIVO_FATTURA]))
+        if (!isset($_SESSION[self::PROGRESSIVO_FATTURA])) {
             $_SESSION[self::PROGRESSIVO_FATTURA] = serialize(new ProgressivoFattura());
+        }
         return unserialize($_SESSION[self::PROGRESSIVO_FATTURA]);
     }
 
@@ -189,5 +190,3 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

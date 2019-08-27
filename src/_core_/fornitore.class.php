@@ -60,8 +60,9 @@ class Fornitore extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::FORNITORE]))
+        if (!isset($_SESSION[self::FORNITORE])) {
             $_SESSION[self::FORNITORE] = serialize(new Fornitore());
+        }
         return unserialize($_SESSION[self::FORNITORE]);
     }
 
@@ -139,6 +140,8 @@ class Fornitore extends CoreBase implements CoreInterface {
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
+
+        $replace = [];
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_FORNITORE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -371,5 +374,3 @@ class Fornitore extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>
