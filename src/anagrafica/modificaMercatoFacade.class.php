@@ -10,5 +10,3 @@ $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(Modif
 
 $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 $controller->start();
-
-?>

@@ -10,5 +10,3 @@ $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(Cance
 
 $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 $controller->start();
-
-?>

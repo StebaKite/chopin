@@ -22,8 +22,9 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_CLIENTE]))
+        if (!isset($_SESSION[self::RICERCA_CLIENTE])) {
             $_SESSION[self::RICERCA_CLIENTE] = serialize(new RicercaCliente());
+        }
         return unserialize($_SESSION[self::RICERCA_CLIENTE]);
     }
 
@@ -62,12 +63,14 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 
             $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
             if ($pos === false) {
-                if ($cliente->getQtaClienti() > 0)
+                if ($cliente->getQtaClienti() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-                else
+                } else {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-            } else
+                }
+            } else {
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+            }
 
             $_SESSION[self::MSG] = $utility->tailTemplate($template);
         }
@@ -107,5 +110,3 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
 }
-
-?>

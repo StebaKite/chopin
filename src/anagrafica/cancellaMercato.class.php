@@ -10,34 +10,35 @@ require_once 'anagrafica.controller.class.php';
 
 class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CANCELLA_MERCATO])) $_SESSION[self::CANCELLA_MERCATO] = serialize(new CancellaMercato());
-		return unserialize($_SESSION[self::CANCELLA_MERCATO]);
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::CANCELLA_MERCATO])) {
+            $_SESSION[self::CANCELLA_MERCATO] = serialize(new CancellaMercato());
+        }
+        return unserialize($_SESSION[self::CANCELLA_MERCATO]);
+    }
 
-	public function start() {
+    public function start() {
 
-		$mercato = Mercato::getInstance();
-		$db = Database::getInstance();
+        $mercato = Mercato::getInstance();
+        $db = Database::getInstance();
 
-		$mercato->cancella($db);
-		
-		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
-		
-		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
-		$controller->setRequest("start");
-		$controller->start();
-	}
-	
-	public function go() {}
+        $mercato->cancella($db);
+
+        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
+
+        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        $controller->setRequest("start");
+        $controller->start();
+    }
+
+    public function go() {
+        
+    }
+
 }
-
-?>

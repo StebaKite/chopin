@@ -9,5 +9,3 @@ $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(Cerca
 
 $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
 $controller->start();
-
-?>

@@ -7,80 +7,80 @@ require_once 'fornitore.class.php';
 
 class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
-	function __construct() {
+    function __construct() {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CREA_FORNITORE_TEMPLATE])) $_SESSION[self::CREA_FORNITORE_TEMPLATE] = serialize(new CreaFornitoreTemplate());
-		return unserialize($_SESSION[self::CREA_FORNITORE_TEMPLATE]);
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::CREA_FORNITORE_TEMPLATE])) {
+            $_SESSION[self::CREA_FORNITORE_TEMPLATE] = serialize(new CreaFornitoreTemplate());
+        }
+        return unserialize($_SESSION[self::CREA_FORNITORE_TEMPLATE]);
+    }
 
-	// template ------------------------------------------------
+    // template ------------------------------------------------
 
-	public function inizializzaPagina() {}
+    public function inizializzaPagina() {
+        
+    }
 
-	public function controlliLogici() {
+    public function controlliLogici() {
 
-		$fornitore = Fornitore::getInstance();
+        $fornitore = Fornitore::getInstance();
 
-		$esito = TRUE;
-		$msg = "<br>";
+        $esito = TRUE;
+        $msg = "<br>";
 
-		/**
-		 * Controllo presenza dati obbligatori
-		 */
+        /**
+         * Controllo presenza dati obbligatori
+         */
+        if ($fornitore->getCodFornitore() == "") {
+            $msg = $msg . self::ERRORE_CODICE_FORNITORE;
+            $esito = FALSE;
+        }
 
-		if ($fornitore->getCodFornitore() == "") {
-			$msg = $msg . self::ERRORE_CODICE_FORNITORE;
-			$esito = FALSE;
-		}
+        if ($fornitore->getDesFornitore() == "") {
+            $msg = $msg . self::ERRORE_DESCRIZIONE_FORNITORE;
+            $esito = FALSE;
+        }
 
-		if ($fornitore->getDesFornitore() == "") {
-			$msg = $msg . self::ERRORE_DESCRIZIONE_FORNITORE;
-			$esito = FALSE;
-		}
+        // ----------------------------------------------
 
-		// ----------------------------------------------
+        if ($msg != "<br>") {
+            $_SESSION[self::MESSAGGIO] = $msg;
+        } else {
+            unset($_SESSION[self::MESSAGGIO]);
+        }
+        return $esito;
+    }
 
-		if ($msg != "<br>") {
-			$_SESSION[self::MESSAGGIO] = $msg;
-		}
-		else {
-			unset($_SESSION[self::MESSAGGIO]);
-		}
-		return $esito;
-	}
+    public function displayPagina() {
 
-	public function displayPagina() {
+        $form = $this->root . $this->array['template'] . self::PAGINA_CREA_FORNITORE;
 
-		$form = $this->root . $this->array['template'] . self::PAGINA_CREA_FORNITORE;
+        $fornitore = Fornitore::getInstance();
+        $replace = array(
+            '%titoloPagina%' => $this->getTitoloPagina(),
+            '%azione%' => $this->getAzione(),
+            '%confermaTip%' => $this->getConfermaTip(),
+            '%codfornitore%' => $fornitore->getCodFornitore(),
+            '%desfornitore%' => $fornitore->getDesFornitore(),
+            '%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),
+            '%cittafornitore%' => $fornitore->getDesCittaFornitore(),
+            '%capfornitore%' => $fornitore->getCapFornitore(),
+            '%tipoaddebito%' => $fornitore->getTipAddebito()
+        );
 
-		$fornitore = Fornitore::getInstance();
-		$replace = array(
-				'%titoloPagina%' => $this->getTitoloPagina(),
-				'%azione%' => $this->getAzione(),
-				'%confermaTip%' => $this->getConfermaTip(),
-				'%codfornitore%' => $fornitore->getCodFornitore(),
-				'%desfornitore%' => $fornitore->getDesFornitore(),
-				'%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),
-				'%cittafornitore%' => $fornitore->getDesCittaFornitore(),
-				'%capfornitore%' => $fornitore->getCapFornitore(),
-				'%tipoaddebito%' => $fornitore->getTipAddebito()
-		);
+        $template = $this->utility->tailFile($this->utility->getTemplate($form), $replace);
+        echo $this->utility->tailTemplate($template);
+    }
 
-		$template = $this->utility->tailFile($this->utility->getTemplate($form), $replace);
-		echo $this->utility->tailTemplate($template);
-	}
 }
-
-?>
