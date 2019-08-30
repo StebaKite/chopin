@@ -88,5 +88,3 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
     }
 
 }
-
-?>

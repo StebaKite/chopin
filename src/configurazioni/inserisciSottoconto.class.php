@@ -7,38 +7,39 @@ require_once 'modificaConto.class.php';
 require_once 'utility.class.php';
 require_once 'database.class.php';
 
-class InserisciSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
-{
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
+class InserisciSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::INSERISCI_SOTTOCONTO])) $_SESSION[self::INSERISCI_SOTTOCONTO] = serialize(new InserisciSottoconto());
-		return unserialize($_SESSION[self::INSERISCI_SOTTOCONTO]);
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function start() {}
+    public function getInstance() {
+        if (!isset($_SESSION[self::INSERISCI_SOTTOCONTO])) {
+            $_SESSION[self::INSERISCI_SOTTOCONTO] = serialize(new InserisciSottoconto());
+        }
+        return unserialize($_SESSION[self::INSERISCI_SOTTOCONTO]);
+    }
 
-	public function go() {
+    public function start() {}
 
-		$sottoconto = Sottoconto::getInstance();
-		$db = Database::getInstance();
-		$sottoconto->aggiungi($db);
+    public function go() {
 
-		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
-		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
-		$controller->start();
-	}
+        $sottoconto = Sottoconto::getInstance();
+        $db = Database::getInstance();
+        $sottoconto->aggiungi($db);
+
+        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
+        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        $controller->start();
+    }
+
 }
 
 ?>

@@ -9,5 +9,3 @@ $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniControll
 
 $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
 $controller->start();
-
-?>

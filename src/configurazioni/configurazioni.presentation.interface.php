@@ -38,15 +38,7 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
     const CANCELLA_CAUSALE_HREF = "<a onclick='cancellaCausale(";
     const MODIFICA_PROGRESSIVO_HREF = "<a onclick='modificaProgressivoFattura(";
     // Errori e messaggi
-// 	const ERRORE_CODICE_CONTO				= "<br>&ndash; Manca il codice del conto";
-// 	const ERRORE_CODICE_CONTO_NUMERICO		= "<br>&ndash; Il codice conto deve essere numerico";
-// 	const ERRORE_CODICE_CONTO_INVALIDO		= "<br>&ndash; Il codice conto deve essere maggiore di 100";
-//  	const ERRORE_DESCRIZIONE_CONTO			= "<br>&ndash; Manca la descrizione del conto";
-//  	const ERRORE_ASSENZA_SOTTOCONTI			= "<br>&ndash; Mancano i sottoconti";
-//  	const ERRORE_CODICE_CAUSALE				= "<br>&ndash; Manca il codice della causale";
-//  	const ERRORE_CODICE_CAUSALE_NUMERICO	= "<br>&ndash; Il codice causale deve essere numerico";
-//  	const ERRORE_CODICE_CAUSALE_INVALIDO	= "<br>&ndash; Il codice causale deve essere maggiore di 1000";
-//  	const ERRORE_DESCRIZIONE_CAUSALE		= "<br>&ndash; Manca la descrizione della causale";
+ 	
     // Oggetti
 
     const RICERCA_CONTO_TEMPLATE = "Obj_ricercacontotemplate";
@@ -70,5 +62,3 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 
     public function displayPagina();
 }
-
-?>

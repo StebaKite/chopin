@@ -6,35 +6,33 @@ require_once 'database.class.php';
 require_once 'utility.class.php';
 require_once 'sottoconto.class.php';
 
-class TogliNuovoSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
-{
-	function __construct() {
+class TogliNuovoSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-	}
+    function __construct() {
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::TOGLI_SOTTOCONTO])) $_SESSION[self::TOGLI_SOTTOCONTO] = serialize(new TogliNuovoSottoconto());
-		return unserialize($_SESSION[self::TOGLI_SOTTOCONTO]);
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+    }
 
-	public function start()
-	{
-		$conto = Conto::getInstance();
-		$sottoconto = Sottoconto::getInstance();
-		$db = Database::getInstance();
+    public function getInstance() {
+        if (!isset($_SESSION[self::TOGLI_SOTTOCONTO])) {
+            $_SESSION[self::TOGLI_SOTTOCONTO] = serialize(new TogliNuovoSottoconto());
+        }
+        return unserialize($_SESSION[self::TOGLI_SOTTOCONTO]);
+    }
 
-		$sottoconto->cancella($db);
-		$_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+    public function start() {
+        $conto = Conto::getInstance();
+        $sottoconto = Sottoconto::getInstance();
+        $db = Database::getInstance();
 
-		echo $this->makeTabellaSottoconti($conto, $sottoconto);
-	}
+        $sottoconto->cancella($db);
+        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
 
-	public function go()
-	{
-		$this->start();
-	}
+        echo $this->makeTabellaSottoconti($conto, $sottoconto);
+    }
+
+    public function go() {
+        $this->start();
+    }
+
 }
-
-?>

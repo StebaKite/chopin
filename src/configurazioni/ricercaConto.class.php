@@ -21,8 +21,9 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_CONTO]))
+        if (!isset($_SESSION[self::RICERCA_CONTO])) {
             $_SESSION[self::RICERCA_CONTO] = serialize(new RicercaConto());
+        }
         return unserialize($_SESSION[self::RICERCA_CONTO]);
     }
 
@@ -91,5 +92,3 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
     }
 
 }
-
-?>
