@@ -3,14 +3,12 @@
 require_once 'fattura.class.php';
 require_once 'dettaglioFattura.class.php';
 require_once 'cliente.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class FattureController {
+class FattureController extends Nexus6Abstract {
 
     public $fattureFunction = null;
     private $request;
-
-    const MODO = "modo";
-    const START = "start";
 
     /**
      * Oggetti
@@ -30,57 +28,51 @@ class FattureController {
     public function start() {
 
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST[self::MODO]))
-                $this->setRequest($_REQUEST[self::MODO]);
-            else
-                $this->setRequest(self::START);
+            $this->setRequest($this->getParmFromRequest("modo"));
+        } else {
+            $this->setRequest("start");         // default set
         }
-
-        // Salvataggio dei campi della request negli oggetti di pertinenza
 
         $fattura = Fattura::getInstance();
         $dettaglioFattura = DettaglioFattura::getInstance();
         $cliente = Cliente::getInstance();
 
-        if (isset($_REQUEST["datafat"])) {
-            $fattura->setDatFattura($_REQUEST["datafat"]);
-            $fattura->setMeserif($_REQUEST["meserif"]);
-            $fattura->setDesTitolo($_REQUEST["titolo"]);
-//            
-//            $fattura->setCatCliente("1200");
-//            
-            $fattura->setDesCliente($_REQUEST["cliente"]);
-            $fattura->setTipAddebito($_REQUEST["tipoadd"]);
-            $fattura->setCodNegozio($_REQUEST["codneg"]);
-            $fattura->setNumFattura($_REQUEST["numfat"]);
-            $fattura->setDesRagsocBanca($_REQUEST["ragsocbanca"]);
-            $fattura->setCodIbanBanca($_REQUEST["ibanbanca"]);
-            $fattura->setTipFattura($_REQUEST["tipofat"]);
-            $fattura->setAssistito($_REQUEST["assistito"]);
+        if (null !== filter_input(INPUT_POST, "datafat")) {
+            $fattura->setDatFattura($this->getParmFromRequest("datafat"));
+            $fattura->setMeserif($this->getParmFromRequest("meserif"));
+            $fattura->setDesTitolo($this->getParmFromRequest("titolo"));
+            $fattura->setDesCliente($this->getParmFromRequest("cliente"));
+            $fattura->setTipAddebito($this->getParmFromRequest("tipoadd"));
+            $fattura->setCodNegozio($this->getParmFromRequest("codneg"));
+            $fattura->setNumFattura($this->getParmFromRequest("numfat"));
+            $fattura->setDesRagsocBanca($this->getParmFromRequest("ragsocbanca"));
+            $fattura->setCodIbanBanca($this->getParmFromRequest("ibanbanca"));
+            $fattura->setTipFattura($this->getParmFromRequest("tipofat"));
+            $fattura->setAssistito($this->getParmFromRequest("assistito"));
         }
 
-        if (isset($_REQUEST["catcliente"])) {
-            $fattura->setCatCliente($_REQUEST["catcliente"]);
-            $fattura->setCodNegozio($_REQUEST["codneg"]);
+        if (null !== filter_input(INPUT_POST, "catcliente")) {
+            $fattura->setCatCliente($this->getParmFromRequest("catcliente"));
+            $fattura->setCodNegozio($this->getParmFromRequest("codneg"));
         }
 
-        if (isset($_REQUEST["idcliente"])) {
-            $cliente->setIdCliente($_REQUEST["idcliente"]);
+        if (null !== filter_input(INPUT_POST, "idcliente")) {
+            $cliente->setIdCliente($this->getParmFromRequest("idcliente"));
         }
 
-        if (isset($_REQUEST["quantita"])) {
+        if (null !== filter_input(INPUT_POST, "quantita")) {
             $dettaglioFattura->setIdArticolo(rand());
-            $dettaglioFattura->setQtaArticolo($_REQUEST["quantita"]);
-            $dettaglioFattura->setDesArticolo($_REQUEST["articolo"]);
-            $dettaglioFattura->setImpArticolo($_REQUEST["importo"]);
-            $dettaglioFattura->setCodAliquota($_REQUEST["aliquota"]);
-            $dettaglioFattura->setImpTotale($_REQUEST["totale"]);
-            $dettaglioFattura->setImpImponibile($_REQUEST["imponibile"]);
-            $dettaglioFattura->setImpIva($_REQUEST["iva"]);
+            $dettaglioFattura->setQtaArticolo($this->getParmFromRequest("quantita"));
+            $dettaglioFattura->setDesArticolo($this->getParmFromRequest("articolo"));
+            $dettaglioFattura->setImpArticolo($this->getParmFromRequest("importo"));
+            $dettaglioFattura->setCodAliquota($this->getParmFromRequest("aliquota"));
+            $dettaglioFattura->setImpTotale($this->getParmFromRequest("totale"));
+            $dettaglioFattura->setImpImponibile($this->getParmFromRequest("imponibile"));
+            $dettaglioFattura->setImpIva($this->getParmFromRequest("iva"));
         }
 
-        if (isset($_REQUEST["idarticolo"])) {
-            $dettaglioFattura->setIdArticolo($_REQUEST["idarticolo"]);
+        if (null !== filter_input(INPUT_POST, "idarticolo")) {
+            $dettaglioFattura->setIdArticolo($this->getParmFromRequest("idarticolo"));
         }
 
         // Serializzo in sessione gli oggetti modificati

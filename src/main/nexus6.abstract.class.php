@@ -442,6 +442,18 @@ abstract class Nexus6Abstract {
             $lavoroPianificato->settaDaEseguire($db);
         }
     }
+    
+    public function getParmFromRequest($parmName) {        
+        if (null !== filter_input(INPUT_POST, $parmName)) {
+            return filter_input(INPUT_POST, $parmName);            
+        } else {
+            if (null !== filter_input(INPUT_GET, $parmName)) {
+                return filter_input(INPUT_GET, $parmName);            
+            }            
+        }
+        return null;
+    }
+    
 }
 
 ?>

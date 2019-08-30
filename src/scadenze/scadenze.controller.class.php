@@ -3,14 +3,13 @@
 require_once 'scadenzaFornitore.class.php';
 require_once 'scadenzaCliente.class.php';
 require_once 'registrazione.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class ScadenzeController {
+class ScadenzeController extends Nexus6Abstract {
 
     public $scadenzeFunction = null;
     private $request;
 
-    const MODO = "modo";
-    const START = "start";
     const DATA_SCADENZA_DA = "datascad_da";
     const DATA_SCADENZA_A = "datascad_a";
     const COD_NEGOZIO_SELEZIONATO = "codneg_sel";
@@ -18,6 +17,7 @@ class ScadenzeController {
     const ID_PAGAMENTO = "idPagamento";
     const ID_SCADENZA = "idScadenza";
     const ID_SCADENZA_CLIENTE = "idScadenzaCliente";
+    
     // Oggetti
 
     const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
@@ -34,10 +34,9 @@ class ScadenzeController {
     public function start() {
 
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST[self::MODO]))
-                $this->setRequest($_REQUEST[self::MODO]);
-            else
-                $this->setRequest(self::START);
+            $this->setRequest($this->getParmFromRequest("modo"));
+        } else {
+            $this->setRequest("start");         // default set
         }
 
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
@@ -46,56 +45,55 @@ class ScadenzeController {
 
         // parametri della request
 
-        if (isset($_REQUEST[self::DATA_SCADENZA_DA])) {
-            $scadenzaFornitore->setDatScadenzaDa($_REQUEST[self::DATA_SCADENZA_DA]);
-            $scadenzaFornitore->setDatScadenzaA($_REQUEST[self::DATA_SCADENZA_A]);
-            $scadenzaFornitore->setCodNegozioSel($_REQUEST[self::COD_NEGOZIO_SELEZIONATO]);
-            $scadenzaFornitore->setStaScadenzaSel($_REQUEST[self::STATO_SCADENZA_SELEZIONATO]);
-
-            $scadenzaCliente->setDatScadenzaDa($_REQUEST[self::DATA_SCADENZA_DA]);
-            $scadenzaCliente->setDatScadenzaA($_REQUEST[self::DATA_SCADENZA_A]);
-            $scadenzaCliente->setCodNegozioSel($_REQUEST[self::COD_NEGOZIO_SELEZIONATO]);
-            $scadenzaCliente->setStaScadenzaSel($_REQUEST[self::STATO_SCADENZA_SELEZIONATO]);
+        if (null !== filter_input(INPUT_POST, "datascad_da")) {
+            $scadenzaFornitore->setDatScadenzaDa($this->getParmFromRequest("datascad_da"));
+            $scadenzaFornitore->setDatScadenzaA($this->getParmFromRequest("datascad_a"));
+            $scadenzaFornitore->setCodNegozioSel($this->getParmFromRequest("codneg_sel"));
+            $scadenzaFornitore->setStaScadenzaSel($this->getParmFromRequest("statoscad_sel"));
+            $scadenzaCliente->setDatScadenzaDa($this->getParmFromRequest("datascad_da"));
+            $scadenzaCliente->setDatScadenzaA($this->getParmFromRequest("datascad_a"));
+            $scadenzaCliente->setCodNegozioSel($this->getParmFromRequest("codneg_sel"));
+            $scadenzaCliente->setStaScadenzaSel($this->getParmFromRequest("statoscad_sel"));
         }
 
-        if (isset($_REQUEST[self::ID_PAGAMENTO])) {
-            $scadenzaFornitore->setIdPagamento($_REQUEST[self::ID_PAGAMENTO]);
-            $scadenzaFornitore->setIdScadenza($_REQUEST[self::ID_SCADENZA]);
-            $registrazione->setIdRegistrazione($_REQUEST[self::ID_PAGAMENTO]);
+        if (null !== filter_input(INPUT_POST, "idPagamento")) {
+            $scadenzaFornitore->setIdPagamento($this->getParmFromRequest("idPagamento"));
+            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest("idScadenza"));
+            $registrazione->setIdRegistrazione($this->getParmFromRequest("idPagamento"));
         }
 
-        if (isset($_REQUEST[self::ID_SCADENZA])) {
-            $scadenzaFornitore->setIdScadenza($_REQUEST[self::ID_SCADENZA]);
+        if (null !== filter_input(INPUT_POST, "idScadenza")) {
+            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest("idScadenza"));
         }
 
-        if (isset($_REQUEST[self::ID_SCADENZA_CLIENTE])) {
-            $scadenzaCliente->setIdScadenza($_REQUEST[self::ID_SCADENZA_CLIENTE]);
+        if (null !== filter_input(INPUT_POST, "idScadenzaCliente")) {
+            $scadenzaCliente->setIdScadenza($this->getParmFromRequest("idScadenzaCliente"));
         }
 
-        if (isset($_REQUEST["datascad_mod"])) {
-            if ($_REQUEST["datascad_mod"] != $scadenzaFornitore->getDatScadenzaNuova())
-                $scadenzaFornitore->setDatScadenzaNuova($_REQUEST["datascad_mod"]);
-                        
-            $scadenzaFornitore->setNotaScadenza($_REQUEST["notascad_mod"]);
-            $scadenzaFornitore->setCodNegozio($_REQUEST["negozio_mod"]);
-            $scadenzaFornitore->setImpInScadenza($_REQUEST["impscad_mod"]);
-            $scadenzaFornitore->setNumFattura($_REQUEST["fatscad_mod"]);
-            $scadenzaFornitore->setNumFatturaOrig($_REQUEST["fatscad_orig_mod"]);
-            $scadenzaFornitore->setIdFornitoreOrig($_REQUEST["fornitore_orig_mod"]);
-            $scadenzaFornitore->setCodNegozio($_REQUEST["negozio_mod"]);
+        if (null !== filter_input(INPUT_POST, "datascad_mod")) {
+            if ($this->getParmFromRequest("datascad_mod") != $scadenzaFornitore->getDatScadenzaNuova()) {
+                $scadenzaFornitore->setDatScadenzaNuova($this->getParmFromRequest("datascad_mod"));
+            }
+            $scadenzaFornitore->setNotaScadenza($this->getParmFromRequest("notascad_mod"));
+            $scadenzaFornitore->setCodNegozio($this->getParmFromRequest("negozio_mod"));
+            $scadenzaFornitore->setImpInScadenza($this->getParmFromRequest("impscad_mod"));
+            $scadenzaFornitore->setNumFattura($this->getParmFromRequest("fatscad_mod"));
+            $scadenzaFornitore->setNumFatturaOrig($this->getParmFromRequest("fatscad_orig_mod"));
+            $scadenzaFornitore->setIdFornitoreOrig($this->getParmFromRequest("fornitore_orig_mod"));
+            $scadenzaFornitore->setCodNegozio($this->getParmFromRequest("negozio_mod"));
         }
 
-        if (isset($_REQUEST["datascad_cli_mod"])) {
-            if ($_REQUEST["datascad_cli_mod"] != $scadenzaCliente->getDatRegistrazione())
-                $scadenzaCliente->setDatScadenzaNuova($_REQUEST["datascad_cli_mod"]);            
-            
-            $scadenzaCliente->setNota($_REQUEST["notascad_cli_mod"]);
-            $scadenzaCliente->setCodNegozio($_REQUEST["negozio_cli_mod"]);
-            $scadenzaCliente->setImpRegistrazione($_REQUEST["impscad_cli_mod"]);
-            $scadenzaCliente->setNumFattura($_REQUEST["fatscad_cli_mod"]);
-            $scadenzaCliente->setNumFatturaOrig($_REQUEST["fatscad_orig_cli_mod"]);
-            $scadenzaCliente->setIdClienteOrig($_REQUEST["fornitore_orig_cli_mod"]);
-            $scadenzaCliente->setCodNegozio($_REQUEST["negozio_cli_mod"]);
+        if (null !== filter_input(INPUT_POST, "datascad_cli_mod")) {
+            if ($this->getParmFromRequest("datascad_cli_mod") != $scadenzaCliente->getDatRegistrazione()) {
+                $scadenzaCliente->setDatScadenzaNuova($this->getParmFromRequest("datascad_cli_mod"));
+            }
+            $scadenzaCliente->setNota($this->getParmFromRequest("notascad_cli_mod"));
+            $scadenzaCliente->setCodNegozio($this->getParmFromRequest("negozio_cli_mod"));
+            $scadenzaCliente->setImpRegistrazione($this->getParmFromRequest("impscad_cli_mod"));
+            $scadenzaCliente->setNumFattura($this->getParmFromRequest("fatscad_cli_mod"));
+            $scadenzaCliente->setNumFatturaOrig($this->getParmFromRequest("fatscad_orig_cli_mod"));
+            $scadenzaCliente->setIdClienteOrig($this->getParmFromRequest("fornitore_orig_cli_mod"));
+            $scadenzaCliente->setCodNegozio($this->getParmFromRequest("negozio_cli_mod"));
         }
 
         // Serializzo in sessione gli oggetti modificati
@@ -121,5 +119,3 @@ class ScadenzeController {
     }
 
 }
-
-?>
