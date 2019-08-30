@@ -7,41 +7,39 @@ require_once 'utility.class.php';
 require_once 'modificaConto.class.php';
 require_once 'sottoconto.class.php';
 
-class CancellaSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface  {
+class CancellaSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-	function __construct() {
+    function __construct() {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CANCELLA_SOTTOCONTO])) $_SESSION[self::CANCELLA_SOTTOCONTO] = serialize(new CancellaSottoconto());
-		return unserialize($_SESSION[self::CANCELLA_SOTTOCONTO]);
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function start() {
-		
-		$sottoconto = Sottoconto::getInstance();
-		$db = Database::getInstance();
-		
-		$sottoconto->cancella($db);
-		
-		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
-		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
-		$controller->start();
-	}
-	
-	public function go() {
-		$this->start();
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::CANCELLA_SOTTOCONTO])) {
+            $_SESSION[self::CANCELLA_SOTTOCONTO] = serialize(new CancellaSottoconto());
+        }
+        return unserialize($_SESSION[self::CANCELLA_SOTTOCONTO]);
+    }
+
+    public function start() {
+        $sottoconto = Sottoconto::getInstance();
+        $db = Database::getInstance();
+        $sottoconto->cancella($db);
+
+        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
+        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        $controller->start();
+    }
+
+    public function go() {
+        $this->start();
+    }
+
 }
-
-?>

@@ -8,37 +8,34 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'conto.class.php';
 
-class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
-{
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CANCELLA_CONTO])) $_SESSION[self::CANCELLA_CONTO] = serialize(new CancellaConto());
-		return unserialize($_SESSION[self::CANCELLA_CONTO]);
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function start() {
+    public function getInstance() {
+        if (!isset($_SESSION[self::CANCELLA_CONTO])) {
+            $_SESSION[self::CANCELLA_CONTO] = serialize(new CancellaConto());
+        }
+        return unserialize($_SESSION[self::CANCELLA_CONTO]);
+    }
 
-		$conto = Conto::getInstance();
-		$utility = Utility::getInstance();
-		$db = Database::getInstance();
+    public function start() {
+        $conto = Conto::getInstance();
+        $db = Database::getInstance();
 
-		$conto->cancella($db);
-		
-		$_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
-		$controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
-		$controller->start();
-	}
+        $conto->cancella($db);
 
-	public function go() {
-		$this->start();
-	}	
+        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
+        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        $controller->start();
+    }
+
+    public function go() {
+        $this->start();
+    }
+
 }
-
-?>
