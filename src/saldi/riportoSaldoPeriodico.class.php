@@ -36,7 +36,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         return unserialize($_SESSION[self::RIPORTO_SALDO]);
     }
 
-    public function start($db, $pklavoro) {
+    public function start($db, $pklavoro, $project_root) {
 
         static $mese = array(
             '01' => 'gennaio',
@@ -88,11 +88,18 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         }
 
         /**
+         * Imposto la root del progetto
+         */
+        
+        $root = (parent::isNotEmpty(self::$root) ? self::$root : $project_root);
+        
+        /**
          * Riporto stato patrimoniale
          */
-        if ($conto->leggiStatoPatrimoniale($db, self::$root)) {
+                        
+        if ($conto->leggiStatoPatrimoniale($db, $root)) {
 
-            $this->riportoStatoPatrimoniale($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+            $this->riportoStatoPatrimoniale($db, $root, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
             $da = '01/' . $mesePrecedente . '/' . $anno;
             $a = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -106,9 +113,9 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
          */
         if (date("m/d", strtotime($lavoroPianificato->getDatLavoro())) != "01/01") {
 
-            if ($conto->leggiContoEconomico($db, self::$root)) {
+            if ($conto->leggiContoEconomico($db, $root)) {
 
-                $this->riportoContoEconomico($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
+                $this->riportoContoEconomico($db, $root, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese);
 
                 $da = '01/' . $mesePrecedente . '/' . $anno;
                 $a = $ggMese[$mesePrecedente] . '/' . $mesePrecedente . '/' . $anno;
@@ -128,10 +135,12 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
             return FALSE;
     }
 
-    private function riportoStatoPatrimoniale($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+    private function riportoStatoPatrimoniale($db, $root, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
         $config = $utility->getConfig();
         $saldo = Saldo::getInstance();
+
+        $saldo->setRoot($root);
 
         /**
          * Tutti i conti dello Stato Patrimoniale
@@ -187,11 +196,13 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         }
     }
 
-    private function riportoContoEconomico($db, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
+    private function riportoContoEconomico($db, $root, $lavoroPianificato, $utility, $negozi, $conto, $mesePrecedente, $anno, $dataGenerazioneSaldo, $descrizioneSaldo, $ggMese) {
 
         $config = $utility->getConfig();
         $saldo = Saldo::getInstance();
 
+        $saldo->setRoot($root);
+        
         foreach ($conto->getContiContoEconomico() as $conto) {
 
             foreach ($negozi as $negozio) {
@@ -203,7 +214,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                 $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
                 $_SESSION[self::SALDO] = serialize($saldo);
 
-                $result = $saldo->leggiSaldoConto($db, self::$root);
+                $result = $saldo->leggiSaldoConto($db, $root);
                 $numTot = pg_num_rows($result);
 
                 if ($numTot > 0) {

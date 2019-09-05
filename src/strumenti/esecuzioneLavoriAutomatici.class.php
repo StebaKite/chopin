@@ -35,7 +35,7 @@ class EsecuzioneLavoriAutomatici extends StrumentiAbstract {
 
             if ($lavoroPianificato->load($db, $project_root)) {
                 $db->beginTransaction();
-                $lavoroPianificato->esegui($db);
+                $lavoroPianificato->esegui($db, $project_root);
                 $db->commitTransaction();
             }
         } else {

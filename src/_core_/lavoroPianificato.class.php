@@ -131,7 +131,12 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         return $result;
     }
 
-    public function esegui($db) {
+    public function esegui($db, $project_root) {
+        
+        if (parent::isNotEmpty($project_root)) {
+            $this->setRoot($project_root);
+        }
+        
         $oggi = date("Y/m/d");
         foreach ($this->getLavoriPianificati() as $row) {
             
@@ -165,7 +170,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             if (class_exists($className)) {
                 $instance = new $className();
                 $this->setDatEsecuzioneLavoro(str_replace("-", "/", $this->getDatLavoro()));
-                if ($instance->start($db, $this->getPkLavoroPianificato())) {
+                if ($instance->start($db, $this->getPkLavoroPianificato(), $this->getRoot())) {
                     $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
                     return true;
                 } else {
