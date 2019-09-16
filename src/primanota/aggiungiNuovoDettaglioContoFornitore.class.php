@@ -42,7 +42,7 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
             $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
             $dettaglioRegistrazione->setIdRegistrazione(0);
             $dettaglioRegistrazione->setImpRegistrazione(0);
-            
+
             if ($registrazione->getCodCausale() === $array["pagamentoFornitori"]) {
                 $dettaglioRegistrazione->setIndDareavere("D");
             } else {
@@ -75,5 +75,3 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
     }
 
 }
-
-?>

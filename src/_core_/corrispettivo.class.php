@@ -50,8 +50,9 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CORRISPETTIVO]))
+        if (!isset($_SESSION[self::CORRISPETTIVO])) {
             $_SESSION[self::CORRISPETTIVO] = serialize(new Corrispettivo());
+        }
         return unserialize($_SESSION[self::CORRISPETTIVO]);
     }
     

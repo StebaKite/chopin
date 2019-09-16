@@ -61,8 +61,9 @@ class Bilancio extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::BILANCIO]))
+        if (!isset($_SESSION[self::BILANCIO])) {
             $_SESSION[self::BILANCIO] = serialize(new Bilancio());
+        }
         return unserialize($_SESSION[self::BILANCIO]);
     }
 
@@ -603,5 +604,3 @@ class Bilancio extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

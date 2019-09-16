@@ -17,8 +17,9 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE]))
+        if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE])) {
             $_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE] = serialize(new RicercaScadenzeAperteFornitore());
+        }
         return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE]);
     }
 
@@ -51,9 +52,7 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
     }
 
     public function go() {
-
+        
     }
 
 }
-
-?>

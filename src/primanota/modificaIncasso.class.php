@@ -111,5 +111,3 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
     }
 
 }
-
-?>

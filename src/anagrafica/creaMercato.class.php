@@ -10,42 +10,46 @@ require_once 'anagrafica.controller.class.php';
 
 class CreaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	function __construct() {
+    function __construct() {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-		
-		$this->testata = $this->root . $this->array[self::TESTATA];
-		$this->piede = $this->root . $this->array[self::PIEDE];
-		$this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-		$this->messaggioInfo = $this->root . $this->array[self::INFO];
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CREA_MERCATO])) $_SESSION[self::CREA_MERCATO] = serialize(new CreaMercato());
-		return unserialize($_SESSION[self::CREA_MERCATO]);
-	}
+        $this->testata = $this->root . $this->array[self::TESTATA];
+        $this->piede = $this->root . $this->array[self::PIEDE];
+        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
+        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+    }
 
-	public function start() {}
-	
-	public function go()
-	{
-		$mercato = Mercato::getInstance();
-		
-		$db = Database::getInstance();
-		$db->beginTransaction();
-		
-		if ($mercato->nuovo($db)) $db->commitTransaction();
-		else $db->rollbackTransaction();
-		
-		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
-		
-		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
-		$controller->setRequest("start");
-		$controller->start();
-	}
-}	
-	
-?>
+    public function getInstance() {
+        if (!isset($_SESSION[self::CREA_MERCATO])) {
+            $_SESSION[self::CREA_MERCATO] = serialize(new CreaMercato());
+        }
+        return unserialize($_SESSION[self::CREA_MERCATO]);
+    }
+
+    public function start() {
+        
+    }
+
+    public function go() {
+        $mercato = Mercato::getInstance();
+
+        $db = Database::getInstance();
+        $db->beginTransaction();
+
+        if ($mercato->nuovo($db)) {
+            $db->commitTransaction();
+        } else {
+            $db->rollbackTransaction();
+        }
+
+        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
+
+        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        $controller->setRequest("start");
+        $controller->start();
+    }
+
+}

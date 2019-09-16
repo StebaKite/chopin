@@ -22,8 +22,9 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_MERCATO]))
+        if (!isset($_SESSION[self::RICERCA_MERCATO])) {
             $_SESSION[self::RICERCA_MERCATO] = serialize(new RicercaMercato());
+        }
         return unserialize($_SESSION[self::RICERCA_MERCATO]);
     }
 
@@ -53,12 +54,14 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 
             $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
             if ($pos === false) {
-                if ($mercato->getQtaMercati() > 0)
+                if ($mercato->getQtaMercati() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-                else
+                } else {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-            } else
+                }
+            } else {
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+            }
 
             $_SESSION[self::MSG] = $utility->tailTemplate($template);
         }
@@ -86,5 +89,3 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
 }
-
-?>

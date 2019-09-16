@@ -436,8 +436,9 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                         or ( trim($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE]) != $dataReg)
                         or ( trim($unaScadenza[ScadenzaCliente::NUM_FATTURA]) != trim($this->getNumFattura()))) {
                     array_push($scadenzeDiff, $unaScadenza);
-                } else
+                } else {
                     $this->setQtaScadenzeDaIncassare($this->getQtaScadenzeDaIncassare() - 1);
+                }
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
             $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
@@ -468,9 +469,9 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             $scadenzeDiff = array();
             foreach ($this->getScadenzeDaIncassare() as $unaScadenza) {
 
-                if ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataScad)
+                if ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataScad) {
                     array_push($scadenzeDiff, $unaScadenza);
-                else {
+                } else {
                     $item = array(
                         ScadenzaCliente::ID_CLIENTE => $unaScadenza[ScadenzaCliente::ID_CLIENTE],
                         ScadenzaCliente::ID_SCADENZA => $unaScadenza[ScadenzaCliente::ID_SCADENZA],
@@ -514,9 +515,9 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             $scadenzeDiff = array();
             foreach ($this->getScadenzeDaIncassare() as $unaScadenza) {
 
-                if ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataScad)
+                if ($unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] != $dataScad) {
                     array_push($scadenzeDiff, $unaScadenza);
-                else {
+                } else {
                     $item = array(
                         ScadenzaCliente::ID_CLIENTE => $unaScadenza[ScadenzaCliente::ID_CLIENTE],
                         ScadenzaCliente::ID_SCADENZA => $unaScadenza[ScadenzaCliente::ID_SCADENZA],
@@ -819,5 +820,3 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

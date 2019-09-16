@@ -23,8 +23,9 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
     public function getInstance() {
 
-        if (!isset($_SESSION[self::RICERCA_FORNITORE]))
+        if (!isset($_SESSION[self::RICERCA_FORNITORE])) {
             $_SESSION[self::RICERCA_FORNITORE] = serialize(new RicercaFornitore());
+        }
         return unserialize($_SESSION[self::RICERCA_FORNITORE]);
     }
 
@@ -64,12 +65,14 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
             $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
             if ($pos === false) {
-                if ($fornitore->getQtaFornitori() > 0)
+                if ($fornitore->getQtaFornitori() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
-                else
+                } else {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-            } else
+                }
+            } else {
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+            }
 
             $_SESSION[self::MSG] = $utility->tailTemplate($template);
         }
@@ -109,5 +112,3 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
     }
 
 }
-
-?>

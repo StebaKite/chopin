@@ -16,8 +16,9 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE])) {
             $_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiungiNuovoDettaglioRegistrazione());
+        }
         return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE]);
     }
 
@@ -28,7 +29,7 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
     public function go() {
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
-        
+
         $db = Database::getInstance();
         $registrazione = Registrazione::getInstance();
         $sottoconto = Sottoconto::getInstance();
@@ -36,19 +37,19 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
         $dettaglioRegistrazione->setIdRegistrazione(0);
-        
-        if (parent::isNotEmpty($registrazione->getIdFornitore())) {            
+
+        if (parent::isNotEmpty($registrazione->getIdFornitore())) {
             $contoFornitori = explode(",", $array["contiFornitore"]);       // prelevo i codici dei conti fornitori in configurazione
             $sottoconto->setCodConto($contoFornitori[0]);                   // fornitori nazionali        
         } elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
             $contoClienti = explode(",", $array["contiCliente"]);           // prelevo i codici dei conti clienti in configurazione
-            $sottoconto->setCodConto($contoClienti[0]);                           
+            $sottoconto->setCodConto($contoClienti[0]);
         }
-        
+
         // Se nella descrizione del dettaglio da inserire e' presente il codice conto cliente/fornitore significa che è un dettaglio principale
-        
+
         if (strpos($dettaglioRegistrazione->getCodConto(), $sottoconto->getCodConto()) > -1) {
-            $dettaglioRegistrazione->setIndContoPrincipale("Y");            
+            $dettaglioRegistrazione->setIndContoPrincipale("Y");
         } else {
             $dettaglioRegistrazione->setIndContoPrincipale("N");
         }
@@ -56,6 +57,5 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $dettaglioRegistrazione->aggiungi();
         echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
     }
-}
 
-?>
+}

@@ -14,8 +14,9 @@ class CancellaScadenzaCliente extends PrimanotaAbstract implements PrimanotaBusi
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_SCADENZA_CLIENTE]))
+        if (!isset($_SESSION[self::CANCELLA_SCADENZA_CLIENTE])) {
             $_SESSION[self::CANCELLA_SCADENZA_CLIENTE] = serialize(new CancellaScadenzaCliente());
+        }
         return unserialize($_SESSION[self::CANCELLA_SCADENZA_CLIENTE]);
     }
 
@@ -32,5 +33,3 @@ class CancellaScadenzaCliente extends PrimanotaAbstract implements PrimanotaBusi
     }
 
 }
-
-?>

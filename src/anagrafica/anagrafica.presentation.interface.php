@@ -4,67 +4,63 @@ require_once 'nexus6.main.interface.php';
 
 interface AnagraficaPresentationInterface extends MainNexus6Interface {
 
-	// Nomi
+    // Nomi
 
-	const CLIENTI = "clientiTrovati";
-	const FORNITORI = "fornitoriTrovati";
-	const QTA_CLIENTI = "numClientiTrovati";
-	const QTA_FORNITORI = "numFornitoriTrovati";
-	const CATEGORIE_CLIENTE = "elenco_categorie_cliente";
-	const TITOLO = "titoloPagina";
-	const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
+    const CLIENTI = "clientiTrovati";
+    const FORNITORI = "fornitoriTrovati";
+    const QTA_CLIENTI = "numClientiTrovati";
+    const QTA_FORNITORI = "numFornitoriTrovati";
+    const CATEGORIE_CLIENTE = "elenco_categorie_cliente";
+    const TITOLO = "titoloPagina";
+    const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
+    // Pagine
 
-	// Pagine
+    const PAGINA_RICERCA_CLIENTE = "/anagrafica/ricercaCliente.form.html";
+    const PAGINA_RICERCA_FORNITORE = "/anagrafica/ricercaFornitore.form.html";
+    const PAGINA_CREA_FORNITORE = "/anagrafica/creaFornitore.form.html";
+    const PAGINA_CREA_CLIENTE = "/anagrafica/creaCliente.form.html";
+    const PAGINA_MODIFICA_CLIENTE = "/anagrafica/modificaCliente.form.html";
+    const PAGINA_MODIFICA_FORNITORE = "/anagrafica/modificaFornitore.form.html";
+    const PAGINA_RICERCA_MERCATO = "/anagrafica/ricercaMercato.form.html";
+    // Bottoni
 
-	const PAGINA_RICERCA_CLIENTE    = "/anagrafica/ricercaCliente.form.html";
-	const PAGINA_RICERCA_FORNITORE  = "/anagrafica/ricercaFornitore.form.html";
-	const PAGINA_CREA_FORNITORE     = "/anagrafica/creaFornitore.form.html";
-	const PAGINA_CREA_CLIENTE       = "/anagrafica/creaCliente.form.html";
-	const PAGINA_MODIFICA_CLIENTE   = "/anagrafica/modificaCliente.form.html";
-	const PAGINA_MODIFICA_FORNITORE = "/anagrafica/modificaFornitore.form.html";
-	const PAGINA_RICERCA_MERCATO    = "/anagrafica/ricercaMercato.form.html";
+    const MODIFICA_CLIENTE_HREF = "<a onclick='modificaCliente(";
+    const CANCELLA_CLIENTE_HREF = "<a onclick='cancellaCliente(";
+    const MODIFICA_FORNITORE_HREF = "<a onclick='modificaFornitore(";
+    const CANCELLA_FORNITORE_HREF = "<a onclick='cancellaFornitore(";
+    const MODIFICA_MERCATO_HREF = "<a onclick='modificaMercato(";
+    const CANCELLA_MERCATO_HREF = "<a onclick='cancellaMercato(";
+    // Actions
 
-	// Bottoni
+    const AZIONE_RICERCA_CLIENTE = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
+    const AZIONE_RICERCA_FORNITORE = "../anagrafica/ricercaFornitoreFacade.class.php?modo=go";
+    const AZIONE_RICERCA_MERCATO = "../anagrafica/ricercaMercatoFacade.class.php?modo=go";
+    // Errori e messaggi
 
-	const MODIFICA_CLIENTE_HREF   = "<a onclick='modificaCliente(";
-	const CANCELLA_CLIENTE_HREF   = "<a onclick='cancellaCliente(";
-	const MODIFICA_FORNITORE_HREF = "<a onclick='modificaFornitore(";
-	const CANCELLA_FORNITORE_HREF = "<a onclick='cancellaFornitore(";
-	const MODIFICA_MERCATO_HREF   = "<a onclick='modificaMercato(";
-	const CANCELLA_MERCATO_HREF   = "<a onclick='cancellaMercato(";
-	
-	// Actions
+    const ERRORE_CODICE_FORNITORE = "<br>&ndash; Manca il codice del fornitore";
+    const ERRORE_DESCRIZIONE_FORNITORE = "<br>&ndash; Manca la descrizione del fornitore";
+    const ERRORE_CATEGORIA_CLIENTE = "<br>&ndash; Manca la categoria del cliente";
+    const ERRORE_CODICE_CLIENTE = "<br>&ndash; Manca il codice del cliente";
+    const ERRORE_DESCRIZIONE_CLIENTE = "<br>&ndash; Manca la descrizione del cliente";
+    const ERRORE_PIVA_CLIENTE = "<br>&ndash; P.iva cliente gi&agrave; esistente";
+    const ERRORE_CFISC_CLIENTE = "<br>&ndash; C.fisc cliente gi&agrave; esistente";
+    // Oggetti
 
-	const AZIONE_RICERCA_CLIENTE   = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
-	const AZIONE_RICERCA_FORNITORE = "../anagrafica/ricercaFornitoreFacade.class.php?modo=go";
-	const AZIONE_RICERCA_MERCATO   = "../anagrafica/ricercaMercatoFacade.class.php?modo=go";
+    const RICERCA_CLIENTE_TEMPLATE = "Obj_ricercaclientetemplate";
+    const RICERCA_FORNITORE_TEMPLATE = "Obj_ricercafornitoretemplate";
+    const CREA_FORNITORE_TEMPLATE = "Obj_creafornitoretemplate";
+    const CREA_CLIENTE_TEMPLATE = "Obj_creaclientetemplate";
+    const MODIFICA_CLIENTE_TEMPLATE = "Obj_modificaclientetemplate";
+    const MODIFICA_FORNITORE_TEMPLATE = "Obj_modificafornitoretemplate";
+    const RICERCA_MERCATO_TEMPLATE = "Obj_ricercamercatotemplate";
 
-	// Errori e messaggi
+    // Metodi
 
-	const ERRORE_CODICE_FORNITORE		= "<br>&ndash; Manca il codice del fornitore";
-	const ERRORE_DESCRIZIONE_FORNITORE	= "<br>&ndash; Manca la descrizione del fornitore";
-	const ERRORE_CATEGORIA_CLIENTE		= "<br>&ndash; Manca la categoria del cliente";
-	const ERRORE_CODICE_CLIENTE			= "<br>&ndash; Manca il codice del cliente";
-	const ERRORE_DESCRIZIONE_CLIENTE	= "<br>&ndash; Manca la descrizione del cliente";
-	const ERRORE_PIVA_CLIENTE			= "<br>&ndash; P.iva cliente gi&agrave; esistente";
-	const ERRORE_CFISC_CLIENTE			= "<br>&ndash; C.fisc cliente gi&agrave; esistente";
+    public function getInstance();
 
-	// Oggetti
+    public function inizializzaPagina();
 
-	const RICERCA_CLIENTE_TEMPLATE     = "Obj_ricercaclientetemplate";
-	const RICERCA_FORNITORE_TEMPLATE   = "Obj_ricercafornitoretemplate";
-	const CREA_FORNITORE_TEMPLATE      = "Obj_creafornitoretemplate";
-	const CREA_CLIENTE_TEMPLATE		   = "Obj_creaclientetemplate";
-	const MODIFICA_CLIENTE_TEMPLATE    = "Obj_modificaclientetemplate";
-	const MODIFICA_FORNITORE_TEMPLATE  = "Obj_modificafornitoretemplate";
-	const RICERCA_MERCATO_TEMPLATE     = "Obj_ricercamercatotemplate";
+    public function controlliLogici();
 
-	// Metodi
-
-	public function getInstance();
-	public function inizializzaPagina();
-	public function controlliLogici();
-	public function displayPagina();
+    public function displayPagina();
 }
-
-?>

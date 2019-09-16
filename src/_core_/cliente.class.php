@@ -72,8 +72,9 @@ class Cliente extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CLIENTE]))
+        if (!isset($_SESSION[self::CLIENTE])) {
             $_SESSION[self::CLIENTE] = serialize(new Cliente());
+        }
         return unserialize($_SESSION[self::CLIENTE]);
     }
 
@@ -210,6 +211,8 @@ class Cliente extends CoreBase implements CoreInterface {
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
+
+        $replace = array();
 
         $sqlTemplate = $this->getRoot() . $array['query'] . self::QUERY_RICERCA_CLIENTE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -350,7 +353,6 @@ class Cliente extends CoreBase implements CoreInterface {
      */
     public function caricaTipoAddebitoCliente($db) {
 
-        $tipoAddebito = "";
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
         $replace = array(
@@ -548,5 +550,3 @@ class Cliente extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

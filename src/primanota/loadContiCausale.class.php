@@ -14,8 +14,9 @@ class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInt
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::LOAD_CONTI_CAUSALE]))
+        if (!isset($_SESSION[self::LOAD_CONTI_CAUSALE])) {
             $_SESSION[self::LOAD_CONTI_CAUSALE] = serialize(new LoadContiCausale());
+        }
         return unserialize($_SESSION[self::LOAD_CONTI_CAUSALE]);
     }
 
@@ -31,5 +32,3 @@ class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInt
     }
 
 }
-
-?>

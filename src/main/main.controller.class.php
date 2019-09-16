@@ -1,6 +1,8 @@
 <?php
 
-class MainController {
+require_once 'nexus6.abstract.class.php';
+
+class MainController extends Nexus6Abstract {
 
     public $mainFunction = null;
     private $request;
@@ -15,12 +17,13 @@ class MainController {
     }
 
     public function start() {
+        
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST["modo"]))
-                $this->setRequest($_REQUEST["modo"]);
-            else
-                $this->setRequest("start");
+            $this->setRequest($this->getParmFromRequest("modo"));
+        } else {
+            $this->setRequest("start");         // default set
         }
+        
 
         if ($this->getRequest() == "start") {
             $this->mainFunction->start();

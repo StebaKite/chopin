@@ -17,8 +17,9 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE]))
+        if (!isset($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE])) {
             $_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE] = serialize(new AggiungiNuovoDettaglioContoCliente());
+        }
         return unserialize($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE]);
     }
 
@@ -65,5 +66,3 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
     }
 
 }
-
-?>

@@ -109,5 +109,3 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
     }
 
 }
-
-?>

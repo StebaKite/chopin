@@ -16,8 +16,9 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE]))
+        if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE])) {
             $_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE] = serialize(new AggiungiNuovaScadenzaFornitore());
+        }
         return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE]);
     }
 
@@ -39,9 +40,7 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
         $scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
         $scadenzaFornitore->aggiungi();
 
-        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
+        echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);
     }
 
 }
-
-?>

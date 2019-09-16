@@ -19,8 +19,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]))
+        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE])) {
             $_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE] = serialize(new RicercaRegistrazioneTemplate());
+        }
         return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]);
     }
 
@@ -224,19 +225,6 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
                             "	<td align='center'>" . $bottoneCancella . "</td>" .
                             "</tr>";
                 }
-// 				elseif (trim($unaRegistrazione[Registrazione::TIPO_RIGA_REGISTRAZIONE]) == Registrazione::RIGA_DETTAGLIO_REGISTRAZIONE) {
-// 					$risultato_ricerca .=
-// 					"<tr>" .
-// 					"	<td colspan='2'></td>" .
-// 					"	<td colspan='6'><i>&ndash;&nbsp;Importo:&nbsp;" .
-// 					trim($unaRegistrazione[DettaglioRegistrazione::IMP_REGISTRAZIONE]) . "&nbsp;&nbsp;" .
-// 					trim($unaRegistrazione[DettaglioRegistrazione::IND_DAREAVERE]) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conto:&nbsp;" .
-// 					trim($unaRegistrazione[DettaglioRegistrazione::COD_CONTO]) .
-// 					trim($unaRegistrazione[DettaglioRegistrazione::COD_SOTTOCONTO]) . " &ndash; " .
-// 					trim($unaRegistrazione[Sottoconto::DES_SOTTOCONTO]) .
-// 					"   </i></td>" .
-// 					"</tr>";
-// 				}
             }
             $risultato_ricerca .= "</tbody></table>";
         } else {
@@ -318,5 +306,3 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
     }
 
 }
-
-?>

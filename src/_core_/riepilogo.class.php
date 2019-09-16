@@ -109,8 +109,9 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::RIEPILOGO]))
+        if (!isset($_SESSION[self::RIEPILOGO])) {
             $_SESSION[self::RIEPILOGO] = serialize(new Riepilogo());
+        }
         return unserialize($_SESSION[self::RIEPILOGO]);
     }
 
@@ -387,19 +388,25 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setCostoVariabileTrezzo(pg_fetch_all($result));
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setCostoVariabileBrembate(pg_fetch_all($result));
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setCostoVariabileVilla(pg_fetch_all($result));
+                }
             } else {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setCostoVariabileTrezzo(null);
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setCostoVariabileBrembate(null);
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setCostoVariabileVilla(null);
+                }
             }
         }
         $_SESSION[self::RIEPILOGO] = serialize($this);
@@ -432,19 +439,25 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setRicavoVenditaProdottiTrezzo(pg_fetch_all($result));
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setRicavoVenditaProdottiBrembate(pg_fetch_all($result));
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setRicavoVenditaProdottiVilla(pg_fetch_all($result));
+                }
             } else {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setRicavoVenditaProdottiTrezzo(null);
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setRicavoVenditaProdottiBrembate(null);
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setRicavoVenditaProdottiVilla(null);
+                }
             }
         }
         $_SESSION[self::RIEPILOGO] = serialize($this);
@@ -479,19 +492,25 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setCostoFissoTrezzo(pg_fetch_all($result));
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setCostoFissoBrembate(pg_fetch_all($result));
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setCostoFissoVilla(pg_fetch_all($result));
+                }
             } else {
-                if ($negozio == self::TREZZO)
+                if ($negozio == self::TREZZO) {
                     $this->setCostoFissoTrezzo(null);
-                if ($negozio == self::BREMBATE)
+                }
+                if ($negozio == self::BREMBATE) {
                     $this->setCostoFissoBrembate(null);
-                if ($negozio == self::VILLA)
+                }
+                if ($negozio == self::VILLA) {
                     $this->setCostoFissoVilla(null);
+                }
             }
         }
         $_SESSION[self::RIEPILOGO] = serialize($this);

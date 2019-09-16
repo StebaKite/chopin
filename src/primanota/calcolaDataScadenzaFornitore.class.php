@@ -15,8 +15,9 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE]))
+        if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE])) {
             $_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE] = serialize(new CalcolaDataScadenzaFornitore());
+        }
         return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE]);
     }
 
@@ -62,7 +63,7 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
                     $scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
                     $scadenzaFornitore->aggiungi();
 
-                    echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
+                    echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);
                 } else {
                     echo "<div class='alert alert-info' role='alert'>Il fornitore ha il numero di giorni scadenza fatture impostato a zero.</div>";
                 }
@@ -94,4 +95,5 @@ class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements Primanot
     public function go() {
         
     }
+
 }

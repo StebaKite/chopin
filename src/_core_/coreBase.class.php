@@ -11,17 +11,19 @@ abstract class CoreBase {
     const NULL_VALUE = "null";
 
     function isEmpty($param) {
-        if (($param == "") or ( $param == " ") or ( $param == null))
+        if (($param == "") or ( $param == " ") or ( $param == null)) {
             return TRUE;
-        else
+        } else {
             return FALSE;
+        }
     }
 
     function isNotEmpty($param) {
-        if (($param != "") and ( $param != " ") and ( $param != null))
+        if (($param != "") and ( $param != " ") and ( $param != null)) {
             return TRUE;
-        else
+        } else {
             return FALSE;
+        }
     }
 
     function quotation($param) {
@@ -29,5 +31,3 @@ abstract class CoreBase {
     }
 
 }
-
-?>

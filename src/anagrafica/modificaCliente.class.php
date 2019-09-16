@@ -10,67 +10,67 @@ require_once 'categoriaCliente.class.php';
 
 class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	function __construct() {
+    function __construct() {
 
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::MODIFICA_CLIENTE])) $_SESSION[self::MODIFICA_CLIENTE] = serialize(new ModificaCliente());
-		return unserialize($_SESSION[self::MODIFICA_CLIENTE]);
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::MODIFICA_CLIENTE])) {
+            $_SESSION[self::MODIFICA_CLIENTE] = serialize(new ModificaCliente());
+        }
+        return unserialize($_SESSION[self::MODIFICA_CLIENTE]);
+    }
 
-	public function start()
-	{
-		$cliente = Cliente::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		$cliente->leggi($db);
-		$_SESSION[self::CLIENTE] = serialize($cliente);
+    public function start() {
+        $cliente = Cliente::getInstance();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
 
-		$categoriaCliente = CategoriaCliente::getInstance();
-		$categoriaCliente->setCatCliente(trim($cliente->getCatCliente()));
-		$categoriaCliente->load();
-		$_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
+        $cliente->leggi($db);
+        $_SESSION[self::CLIENTE] = serialize($cliente);
 
-		$risultato_xml = $this->root . $array['template'] . self::XML_CLIENTE;
-		
-		$replace = array(
-				'%categoria%' => trim($cliente->getCatCliente()),
-				'%codice%' => trim($cliente->getCodCliente()),
-				'%descrizione%' => trim($cliente->getDesCliente()),
-				'%indirizzo%' => trim($cliente->getDesIndirizzoCliente()),
-				'%citta%' => trim($cliente->getDesCittaCliente()),
-				'%cap%' => trim($cliente->getCapCliente()),
-				'%tipoAddebito%' => trim($cliente->getTipAddebito()),
-				'%partitaIva%' => trim($cliente->getCodPiva()),
-				'%codiceFiscale%' => trim($cliente->getCodFisc()),
-				'%categorieCliente%' => trim($categoriaCliente->getElencoCategorieCliente())
-		);
-		$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
-		echo $utility->tailTemplate($template);
-	}
+        $categoriaCliente = CategoriaCliente::getInstance();
+        $categoriaCliente->setCatCliente(trim($cliente->getCatCliente()));
+        $categoriaCliente->load();
+        $_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
 
-	public function go()
-	{
-		$cliente = Cliente::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
+        $risultato_xml = $this->root . $array['template'] . self::XML_CLIENTE;
 
-		$db->beginTransaction();
-		
-		if ($cliente->update($db)) $db->commitTransaction();
-		else $db->rollbackTransaction();
-		
-		$_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
-		$controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
-		$controller->start();
-	}
+        $replace = array(
+            '%categoria%' => trim($cliente->getCatCliente()),
+            '%codice%' => trim($cliente->getCodCliente()),
+            '%descrizione%' => trim($cliente->getDesCliente()),
+            '%indirizzo%' => trim($cliente->getDesIndirizzoCliente()),
+            '%citta%' => trim($cliente->getDesCittaCliente()),
+            '%cap%' => trim($cliente->getCapCliente()),
+            '%tipoAddebito%' => trim($cliente->getTipAddebito()),
+            '%partitaIva%' => trim($cliente->getCodPiva()),
+            '%codiceFiscale%' => trim($cliente->getCodFisc()),
+            '%categorieCliente%' => trim($categoriaCliente->getElencoCategorieCliente())
+        );
+        $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+        echo $utility->tailTemplate($template);
+    }
+
+    public function go() {
+        $cliente = Cliente::getInstance();
+        $db = Database::getInstance();
+
+        $db->beginTransaction();
+
+        if ($cliente->update($db)) {
+            $db->commitTransaction();
+        } else {
+            $db->rollbackTransaction();
+        }
+
+        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
+        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        $controller->start();
+    }
+
 }
-
-?>

@@ -102,5 +102,3 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	public function start();
 	public function go();
 }
-
-?>

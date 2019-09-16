@@ -14,8 +14,9 @@ class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBu
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_SCADENZA_FORNITORE]))
+        if (!isset($_SESSION[self::CANCELLA_SCADENZA_FORNITORE])) {
             $_SESSION[self::CANCELLA_SCADENZA_FORNITORE] = serialize(new CancellaScadenzaFornitore());
+        }
         return unserialize($_SESSION[self::CANCELLA_SCADENZA_FORNITORE]);
     }
 
@@ -31,5 +32,3 @@ class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBu
         echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettagliRegistrazione);
     }
 }
-
-?>

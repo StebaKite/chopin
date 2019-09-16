@@ -15,8 +15,9 @@ class AggiornaSegnoDettaglioRegistrazione extends PrimanotaAbstract implements P
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE])) {
             $_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaSegnoDettaglioRegistrazione());
+        }
         return unserialize($_SESSION[self::AGGIORNA_SEGNO_DETTAGLIO_REGISTRAZIONE]);
     }
 
@@ -34,5 +35,3 @@ class AggiornaSegnoDettaglioRegistrazione extends PrimanotaAbstract implements P
     }
 
 }
-
-?>

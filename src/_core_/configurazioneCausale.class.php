@@ -41,8 +41,9 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONFIGURAZIONE_CAUSALE]))
+        if (!isset($_SESSION[self::CONFIGURAZIONE_CAUSALE])) {
             $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize(new ConfigurazioneCausale());
+        }
         return unserialize($_SESSION[self::CONFIGURAZIONE_CAUSALE]);
     }
 
@@ -215,5 +216,3 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
     }
 
 }
-
-?>

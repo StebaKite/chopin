@@ -81,5 +81,3 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract implements Primanot
     }
 
 }
-
-?>

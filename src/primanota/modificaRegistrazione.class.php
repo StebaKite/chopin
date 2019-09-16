@@ -257,5 +257,3 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
     }
 
 }
-
-?>

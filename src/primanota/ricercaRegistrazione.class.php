@@ -27,8 +27,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE])) {
             $_SESSION[self::RICERCA_REGISTRAZIONE] = serialize(new RicercaRegistrazione());
+        }
         return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE]);
     }
 
@@ -156,5 +157,3 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
     }
 
 }
-
-?>

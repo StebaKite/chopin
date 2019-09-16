@@ -38,8 +38,9 @@ class DettaglioFattura extends Fattura implements CoreInterface {
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::DETTAGLIO_FATTURA]))
+        if (!isset($_SESSION[self::DETTAGLIO_FATTURA])) {
             $_SESSION[self::DETTAGLIO_FATTURA] = serialize(new DettaglioFattura());
+        }
         return unserialize($_SESSION[self::DETTAGLIO_FATTURA]);
     }
 

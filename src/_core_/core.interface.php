@@ -25,5 +25,3 @@ interface CoreInterface extends MainNexus6Interface {
     const CORRISPETTIVO = "Obj_corrispettivo";
 
 }
-
-?>

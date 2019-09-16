@@ -8,30 +8,33 @@ require_once 'cliente.class.php';
 
 class CercaPivaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
-	function __construct() {}
+    function __construct() {
+        
+    }
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::CERCA_PIVA_CLIENTE])) $_SESSION[self::CERCA_PIVA_CLIENTE] = serialize(new CercaPivaCliente());
-		return unserialize($_SESSION[self::CERCA_PIVA_CLIENTE]);
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::CERCA_PIVA_CLIENTE])) {
+            $_SESSION[self::CERCA_PIVA_CLIENTE] = serialize(new CercaPivaCliente());
+        }
+        return unserialize($_SESSION[self::CERCA_PIVA_CLIENTE]);
+    }
 
-	public function start()
-	{
-		$cliente = Cliente::getInstance();
-		$db = Database::getInstance();
-		
-		$cliente->cercaConDescrizione($db);		
-		$cliente->cercaPartivaIva($db);
+    public function start() {
+        $cliente = Cliente::getInstance();
+        $db = Database::getInstance();
 
-		if ($cliente->getPivaEsistente() == "true") {
-			echo "gi&agrave; esistente";
-		} else {
-			echo "";
-		}
-	}
-	
-	public function go() {}	
+        $cliente->cercaConDescrizione($db);
+        $cliente->cercaPartivaIva($db);
+
+        if ($cliente->getPivaEsistente() == "true") {
+            echo "gi&agrave; esistente";
+        } else {
+            echo "";
+        }
+    }
+
+    public function go() {
+        
+    }
+
 }
-				
-?>

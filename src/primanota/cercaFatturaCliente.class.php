@@ -15,8 +15,9 @@ class CercaFatturaCliente extends PrimanotaAbstract implements PrimanotaBusiness
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CERCA_FATTURA_CLIENTE]))
+        if (!isset($_SESSION[self::CERCA_FATTURA_CLIENTE])) {
             $_SESSION[self::CERCA_FATTURA_CLIENTE] = serialize(new CercaFatturaCliente());
+        }
         return unserialize($_SESSION[self::CERCA_FATTURA_CLIENTE]);
     }
 
@@ -37,5 +38,3 @@ class CercaFatturaCliente extends PrimanotaAbstract implements PrimanotaBusiness
     }
 
 }
-
-?>

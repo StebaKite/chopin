@@ -24,8 +24,9 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::CREA_REGISTRAZIONE])) {
             $_SESSION[self::CREA_REGISTRAZIONE] = serialize(new CreaRegistrazione());
+        }
         return unserialize($_SESSION[self::CREA_REGISTRAZIONE]);
     }
 
@@ -227,5 +228,3 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
     }
 
 }
-
-?>

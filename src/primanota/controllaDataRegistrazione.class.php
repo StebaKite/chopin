@@ -16,8 +16,9 @@ class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaB
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]))
+        if (!isset($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE])) {
             $_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE] = serialize(new ControllaDataRegistrazione());
+        }
         return unserialize($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]);
     }
 
@@ -61,5 +62,3 @@ class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaB
     }
 
 }
-
-?>

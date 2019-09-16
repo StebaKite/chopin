@@ -1,8 +1,9 @@
 <?php
 
 require_once 'saldo.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class SaldiController {
+class SaldiController extends Nexus6Abstract {
     
     public $saldiFunction = null;
     private $request;
@@ -21,15 +22,12 @@ class SaldiController {
     public function start() {
 
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST["modo"]))
-                $this->setRequest($_REQUEST["modo"]);
-            else
-                $this->setRequest("start");
+            $this->setRequest($this->getParmFromRequest("modo"));
+        } else {
+            $this->setRequest("start");         // default set
         }
      
         $saldo = Saldo::getInstance();
-
-        // Serializzo in sessione gli oggetti modificati ========================================
 
         $_SESSION[self::SALDO] = serialize($saldo);
         
