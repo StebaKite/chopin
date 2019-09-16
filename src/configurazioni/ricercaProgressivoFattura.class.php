@@ -21,8 +21,9 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA]))
+        if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA])) {
             $_SESSION[self::RICERCA_PROGRESSIVO_FATTURA] = serialize(new RicercaProgressivoFattura());
+        }
         return unserialize($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA]);
     }
 
@@ -80,5 +81,3 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
     }
 
 }
-
-?>

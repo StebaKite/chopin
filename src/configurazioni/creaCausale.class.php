@@ -16,8 +16,9 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::CREA_CAUSALE]))
+        if (!isset($_SESSION[self::CREA_CAUSALE])) {
             $_SESSION[self::CREA_CAUSALE] = serialize(new CreaCausale());
+        }
         return unserialize($_SESSION[self::CREA_CAUSALE]);
     }
 
@@ -28,15 +29,15 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
 
     public function go() {
         $causale = Causale::getInstance();
-        $utility = Utility::getInstance();
 
         $db = Database::getInstance();
         $db->beginTransaction();
 
-        if ($causale->inserisci($db))
+        if ($causale->inserisci($db)) {
             $db->commitTransaction();
-        else
+        } else {
             $db->rollbackTransaction();
+        }
 
         $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
         $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
@@ -44,5 +45,3 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
     }
 
 }
-
-?>

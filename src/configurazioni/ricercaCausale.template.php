@@ -14,17 +14,18 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_CAUSALI_TEMPLATE]))
+        if (!isset($_SESSION[self::RICERCA_CAUSALI_TEMPLATE])) {
             $_SESSION[self::RICERCA_CAUSALI_TEMPLATE] = serialize(new RicercaCausaleTemplate());
+        }
         return unserialize($_SESSION[self::RICERCA_CAUSALI_TEMPLATE]);
     }
 
     public function inizializzaPagina() {
-
+        
     }
 
     public function controlliLogici() {
-
+        
     }
 
     public function displayPagina() {
@@ -101,5 +102,3 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
     }
 
 }
-
-?>

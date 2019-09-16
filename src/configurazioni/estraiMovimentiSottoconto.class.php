@@ -7,45 +7,41 @@ require_once 'utility.class.php';
 require_once 'database.class.php';
 require_once 'sottoconto.class.php';
 
+class EstraiMovimentiSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
-class EstraiMovimentiSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface
-{
-	
-	function __construct()
-	{
-		$this->root = $_SERVER['DOCUMENT_ROOT'];
-		$this->utility = Utility::getInstance();
-		$this->array = $this->utility->getConfig();
-	}
+    function __construct() {
+        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+    }
 
-	public function getInstance()
-	{
-		if (!isset($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO])) $_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO] = serialize(new EstraiMovimentiSottoconto());
-		return unserialize($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO]);
-	}
+    public function getInstance() {
+        if (!isset($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO])) {
+            $_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO] = serialize(new EstraiMovimentiSottoconto());
+        }
+        return unserialize($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO]);
+    }
 
-	public function start()
-	{
-		$sottoconto = Sottoconto::getInstance();
-		$db = Database::getInstance();
-		$utility = Utility::getInstance();
-		$array = $utility->getConfig();
-		
-		if ($sottoconto->cercaRegistrazioni($db)) {
-			
-			$risultato_xml = $this->root . $array['template'] . self::XML_SOTTOCONTO;
-			
-			$replace = array(
-					'%conto%' => trim($sottoconto->getCodConto()),
-					'%sottoconto%' => trim($sottoconto->getCodSottoconto()),
-					'%movimenti%' => $this->makeTabellaMovimentiSottoconto($sottoconto)
-			);
-			$template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
-			echo $utility->tailTemplate($template);
-		}	
-	}
-	
-	public function go() {}
+    public function start() {
+        $sottoconto = Sottoconto::getInstance();
+        $db = Database::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        if ($sottoconto->cercaRegistrazioni($db)) {
+
+            $risultato_xml = $this->root . $array['template'] . self::XML_SOTTOCONTO;
+
+            $replace = array(
+                '%conto%' => trim($sottoconto->getCodConto()),
+                '%sottoconto%' => trim($sottoconto->getCodSottoconto()),
+                '%movimenti%' => $this->makeTabellaMovimentiSottoconto($sottoconto)
+            );
+            $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
+            echo $utility->tailTemplate($template);
+        }
+    }
+
+    public function go() {}
+
 }
-
-?>

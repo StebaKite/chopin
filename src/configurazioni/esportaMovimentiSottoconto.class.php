@@ -17,8 +17,9 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
     }
 
     public function getInstance() {
-        if (!isset($_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO]))
+        if (!isset($_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO])) {
             $_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO] = serialize(new EsportaMovimentiSottoconto());
+        }
         return unserialize($_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO]);
     }
 
@@ -63,10 +64,11 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
         $negozio = ($sottoconto->getCodNegozio() == "BRE") ? "Brembate" : $negozio;
         $negozio = ($sottoconto->getCodNegozio() == "TRE") ? "Trezzo" : $negozio;
 
-        if ($negozio != "")
+        if ($negozio != "") {
             $pdf->setTitle1("Negozio di " . $negozio);
-        else
+        } else {
             $pdf->setTitle1("Tutti i negozi");
+        }
 
         $pdf->setTitle2($conto->getCatConto() . " : " . $conto->getDesConto() . " / " . $sottoconto->getDesSottoconto());
     }
@@ -160,5 +162,3 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
     }
 
 }
-
-?>
