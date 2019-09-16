@@ -28,8 +28,8 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class='input-group'>
-                                        <span class="input-group-addon">Neg</span>
+                                    <div class='input-group' id="codneg_cre_control_group">
+                                        <span class="input-group-addon">Neg&nbsp;<small><span class="text-danger" id="codneg_cre_messaggio"></span></small></span>
                                         <select class="selectNegozio" id="codneg_cre" name="codneg_cre" >
                                             <option value=" "> </option>
                                             <option value="VIL">%ml.villa%</option>
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class='input-group' id="descreg_cre_control_group">
-                                        <span class="input-group-addon">%ml.descreg%</span>
+                                        <span class="input-group-addon">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_cre_messaggio"></span></small></span>
                                         <input class="form-control" id="descreg_cre" name="descreg_cre" type="text" onblur="controllaDescrizione('descreg_cre')"/>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-8">
                                     <div class='input-group' id="causale_cre_control_group">
-                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <span class="input-group-addon">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_cre_messaggio"></span></small></span>
                                         <select class="selectCausale" data-live-search="true" id="causale_cre" name="causale_cre" >
                                             <option value=" "> </option>
                                             %elenco_causali_cre%

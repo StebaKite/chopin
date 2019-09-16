@@ -27,8 +27,8 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class='input-group'>
-                                        <span class="input-group-addon">Neg</span>
+                                    <div class='input-group' id='codneg_inc_mod_control_group'>
+                                        <span class="input-group-addon">Neg&nbsp;<small><span class="text-danger" id="codneg_inc_mod_messaggio"></span></small></span>
                                         <select class="selectNegozio" id="codneg_inc_mod" name="codneg_inc_mod">
                                             <option value=" ">&nbsp;</option>
                                             <option value="VIL" selected>%ml.villa%</option>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class='input-group' id="descreg_inc_mod_control_group">
-                                        <span class="input-group-addon">%ml.descreg%</span>
+                                        <span class="input-group-addon">%ml.descreg%&nbsp;<small><span class="text-danger" id="descreg_inc_mod_messaggio"></span></small></span>
                                         <input class="form-control" id="descreg_inc_mod" name="descreg_inc_mod" type="text" onblur="controllaDescrizione('descreg_inc_mod')"/>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-6">
                                     <div class='input-group' id="causale_inc_mod_control_group">
-                                        <span class="input-group-addon">%ml.codcau%</span>
+                                        <span class="input-group-addon">%ml.codcau%&nbsp;<small><span class="text-danger" id="causale_inc_mod_messaggio"></span></small></span>
                                         <select class="selectCausale" data-live-search="true" id="causale_inc_mod" name="causale_inc_mod" >
                                             <option value=" ">&nbsp;</option>
                                             %elenco_causali_inc_mod%
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="col-sm-6 ui-front">
                                     <div class='input-group' id="cliente_inc_mod_control_group">
-                                        <span class="input-group-addon">%ml.codclie%</span>
+                                        <span class="input-group-addon">%ml.codclie%&nbsp;<small><span class="text-danger" id="cliente_inc_mod_messaggio"></span></small></span>
                                         <select class="selectCliFor" data-live-search="true" id="cliente_inc_mod" name="cliente_inc_mod" onchange="aggiungiDettaglioContoCliente(this.value, 'dettagli_inc_mod'); controllaClienteFornitore('fornitore_inc_mod', 'cliente_inc_mod'); controllaCausale('causale_inc_mod');" >
                                             %elenco_clienti%
                                         </select>
@@ -90,7 +90,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-incasso-form">Ok</button>
+                    <button type="button" class="btn btn-primary" id="button-ok-modifica-incasso-form">Ok</button>
                     <button type="button" class="btn btn-primary" id="button-nuovo-dettaglio-modifica-incasso-form">Nuovo Dettaglio</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
                 </div>

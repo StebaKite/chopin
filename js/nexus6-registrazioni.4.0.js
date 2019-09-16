@@ -386,32 +386,55 @@ function validaNuovaRegistrazione() {
      */
     var esito = "";
 
-    controllaDataRegistrazione("datareg_cre");
-    if (isEmpty($("#datareg_cre_messaggio").text()))
+    if (isNotEmpty($("#datareg_cre").val())) {
+        controllaDataRegistrazione("datareg_cre");
+        if (isEmpty($("#datareg_cre_messaggio").text()))
+            esito += "1";
+        else
+            esito += "0";        
+    }
+    else {
+        esito += "0";        
+        $("#datareg_cre_messaggio").html("Obbligatorio");
+        $("#datareg_cre_control_group").addClass("has-error");
+    }
+
+    controllaCodice("codneg_cre");
+    if (isEmpty($("#codneg_cre_messaggio").text()))
         esito += "1";
     else
         esito += "0";
 
-    if (isNotEmpty($("#descreg_cre").val())) {
-        if (controllaDescrizione("descreg_cre")) {
-            esito += "1";
-        } else {
-            esito += "0";
-        }
+    if (controllaDescrizione("descreg_cre")) {
+        esito += "1";
+    } else {
+        esito += "0";
     }
 
-    if (isNotEmpty($("#causale_cre").val())) {
+    if (isNotEmpty($("#fornitore_cre").val()) || isNotEmpty($("#cliente_cre").val())) {
         controllaDettagliRegistrazione("dettagli_cre");
         if (isEmpty($("#dettagli_cre_messaggio").text()))
             esito += "1";
         else
             esito += "0";
     }
+    else {
+        esito += "0";        
+        $("#dettagli_cre_messaggio").html("Obbligatorio");
+        $("#dettagli_cre_control_group").addClass("has-error");        
+    }
 
-    if (controllaCausale("causale_cre")) {
-        esito += "1";
-    } else {
-        esito += "0";
+    if (isNotEmpty($("#causale_cre").val())) {
+        if (controllaCausale("causale_cre")) {
+            esito += "1";
+        } else {
+            esito += "0";
+        }
+    }
+    else {
+        esito += "0";        
+        $("#causale_cre_messaggio").html("Obbligatorio");
+        $("#causale_cre_control_group").addClass("has-error");        
     }
 
     if (controllaClienteFornitore("fornitore_cre", "cliente_cre")) {
@@ -430,7 +453,7 @@ function validaNuovaRegistrazione() {
         esito += "00";
     }
 
-    if (esito === "111111") {
+    if (esito === "1111111") {
         return true;
     } else {
         return false;
@@ -451,18 +474,29 @@ function validaModificaRegistrazione()
      */
     var esito = "";
 
-    controllaDataRegistrazione("datareg_mod");
-    if (isEmpty($("#datareg_mod_messaggio").text()))
+    if (isNotEmpty($("#datareg_mod").val())) {
+        controllaDataRegistrazione("datareg_mod");
+        if (isEmpty($("#datareg_mod_messaggio").text()))
+            esito += "1";
+        else
+            esito += "0";        
+    }
+    else {
+        esito += "0";        
+        $("#datareg_mod_messaggio").html("Obbligatorio");
+        $("#datareg_mod_control_group").addClass("has-error");
+    }
+    
+    controllaCodice("codneg_mod");
+    if (isEmpty($("#codneg_mod_messaggio").text()))
         esito += "1";
     else
         esito += "0";
 
-    if (isNotEmpty($("#descreg_mod").val())) {
-        if (controllaDescrizione("descreg_mod")) {
-            esito += "1";
-        } else {
-            esito += "0";
-        }
+    if (controllaDescrizione("descreg_mod")) {
+        esito += "1";
+    } else {
+        esito += "0";
     }
 
     if (isEmpty($("#dettagli_mod_messaggio").text()))
@@ -492,7 +526,7 @@ function validaModificaRegistrazione()
         esito += "00";
     }
 
-    if (esito === "111111") {
+    if (esito === "1111111") {
         return true;
     } else {
         return false;

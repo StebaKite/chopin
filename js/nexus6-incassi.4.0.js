@@ -295,28 +295,61 @@ function validaIncasso(type)
      */
     var esito = "";
 
-    controllaDataRegistrazione("datareg_inc_" + type);
-    if (isEmpty($("#datareg_inc_" + type + "_messaggio").text()))
+    if (isNotEmpty($("#datareg_inc_" + type).val())) {
+        controllaDataRegistrazione("datareg_inc_" + type);
+        if (isEmpty($("#datareg_inc_" + type + "_messaggio").text()))
+            esito = esito + "1";
+        else
+            esito = esito + "0";        
+    }
+    else {
+        esito += "0";        
+        $("#datareg_inc_" + type + "_messaggio").html("Obbligatorio");
+        $("#datareg_inc_" + type + "_control_group").addClass("has-error");        
+    }
+
+    controllaCodice("codneg_inc_" +  type);
+    if (isEmpty($("#codneg_inc_" + type + "_messaggio").text()))
+        esito += "1";
+    else
+        esito += "0";
+
+    if (controllaDescrizione("descreg_inc_" + type))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if (isNotEmpty($("#descreg_inc_" + type).val())) {
-        if (controllaDescrizione("descreg_inc_" + type))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
-
-    if (isNotEmpty($("#causale_inc_" + type).val())) {
+    if (isNotEmpty($("#cliente_inc_" + type).val())) {
         controllaDettagliRegistrazione("dettagli_inc_" + type);
         if (isEmpty($("#dettagli_inc_" + type + "_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
+    else {
+        esito += "0";        
+        $("#cliente_inc_" + type + "_messaggio").html("Obbligatorio");
+        $("#cliente_inc_" + type + "_control_group").addClass("has-error");   
+        if (isEmpty($("#dettagli_inc_" + type).text())) {
+            $("#dettagli_inc_" + type + "_messaggio").html("Obbligatorio");
+            $("#dettagli_inc_" + type + "_control_group").addClass("has-error");                    
+        }
+    }
 
-    if (esito === "111") {
+    if (isNotEmpty($("#causale_inc_" + type).val())) {
+        if (controllaCausale("causale_inc_" + type)) {
+            esito += "1";
+        } else {
+            esito += "0";
+        }
+    }
+    else {
+        esito += "0";        
+        $("#causale_inc_" + type + "_messaggio").html("Obbligatorio");
+        $("#causale_inc_" + type + "_control_group").addClass("has-error");        
+    }
+
+    if (esito === "11111") {
         return true;
     } else {
         return false;
@@ -369,6 +402,23 @@ function modificaIncasso(idIncasso)
 
             $(xmldoc).find("incasso").each(
                     function () {
+
+                        $("#datareg_inc_mod_control_group").removeClass("has-error");
+                        $("#descreg_inc_mod_control_group").removeClass("has-error");
+                        $("#causale_inc_mod_control_group").removeClass("has-error");
+                        $("#codneg_inc_mod_control_group").removeClass("has-error");
+                        $("#cliente_inc_mod_control_group").removeClass("has-error");
+                        $("#scadenze_chiuse_inc_mod_control_group").removeClass("has-error");
+                        $("#scadenze_aperte_inc_mod_control_group").removeClass("has-error");
+                        $("#dettagli_inc_mod_control_group").removeClass("has-error");
+
+                        $("#descreg_inc_mod_messaggio").html("");
+                        $("#causale_inc_mod_messaggio").html("");
+                        $("#codneg_inc_mod_messaggio").html("");
+                        $("#cliente_inc_mod_messaggio").html("");
+                        $("#scadenze_chiuse_inc_mod_messaggio").html("");
+                        $("#scadenze_aperte_inc_mod_messaggio").html("");
+                        $("#dettagli_inc_mod_messaggio").html("");
 
                         $("#datareg_inc_mod").val($(this).find("datareg").text());
                         $("#descreg_inc_mod").val($(this).find("descreg").text());
