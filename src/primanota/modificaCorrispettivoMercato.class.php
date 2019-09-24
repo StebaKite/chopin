@@ -93,15 +93,21 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
     public function go() {
         $registrazione = Registrazione::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $utility = Utility::getInstance();
         $db = Database::getInstance();
+
+        $array = $utility->getConfig();
+        $registrazione->setCodCausale($array["corrispettiviMercato"]);        
 
         $registrazione->aggiorna($db);
         
-        foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
-            $dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
-            $dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
-            $dettaglioRegistrazione->setIdDettaglioRegistrazione($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
-            $dettaglioRegistrazione->aggiorna($db);
+        if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() > 0) {
+            foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+                $dettaglioRegistrazione->setIndDareavere($unDettaglio[DettaglioRegistrazione::IND_DAREAVERE]);
+                $dettaglioRegistrazione->setImpRegistrazione($unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE]);
+                $dettaglioRegistrazione->setIdDettaglioRegistrazione($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
+                $dettaglioRegistrazione->aggiorna($db);
+            }
         }
 
         $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));

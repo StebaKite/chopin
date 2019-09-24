@@ -14,6 +14,8 @@ require_once 'causale.class.php';
 
 class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
+    public $negozio;
+    
     function __construct() {
         $this->root = $_SERVER['DOCUMENT_ROOT'];
         $this->utility = Utility::getInstance();
@@ -73,9 +75,9 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
         $dettaglioRegistrazione->setLabelNomeCampo("descreg_vis_label");
         $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 
-        $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $negozio;
+        $this->negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $this->negozio;
+        $this->negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $this->negozio;
+        $this->negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $this->negozio;
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->leggi($db);
@@ -86,7 +88,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
             '%datareg%' => trim($registrazione->getDatRegistrazione()),
             '%descreg%' => trim($registrazione->getDesRegistrazione()),
             '%causale%' => trim($causale->getDesCausale()),
-            '%codneg%' => $negozio,
+            '%codneg%' => $this->negozio,
             '%fornitore%' => trim($fornitore->getDesFornitore()),
             '%cliente%' => trim($cliente->getDesCliente()),
             '%numfatt%' => trim($registrazione->getNumFattura()),

@@ -45,6 +45,7 @@ $("#codneg_cormer_cre").change(
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     $("#mercato_cormer_cre").html(xmlhttp.responseText);
                     $("#mercato_cormer_cre").selectpicker("refresh");
+                    loadContiCorrispettivoMercato();
                 }
             }
             xmlhttp.open("GET", "leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_cre=" + this.value, true);
@@ -61,6 +62,7 @@ $("#codneg_cormer_mod").change(
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     $("#mercato_cormer_mod").html(xmlhttp.responseText);
                     $("#mercato_cormer_mod").selectpicker("refresh");
+                    loadContiCorrispettivoMercato();
                 }
             }
             xmlhttp.open("GET", "leggiMercatiNegozioFacade.class.php?modo=start&codneg_cormer_mod=" + this.value, true);
@@ -239,86 +241,57 @@ $("#button-ok-nuovodett-modifica-corrispettivo-negozio-form").click(
 
 //---------------------------------------------------------------------------------
 
-$("#causale_cormer_cre").change(
-        function () {
-            var causale = $("#causale_cormer_cre").val();
-
-            if (isNotEmpty(causale)) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange =
-                        function () {
-                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                $("#conti_cormer_cre").html(xmlhttp.responseText);
-                                $("#conti_cormer_cre").selectmenu("refresh");
-                            }
-                        }
-                xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-                xmlhttp.send();
+function loadContiCorrispettivoMercato() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange =
+            function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    $("#conti_cormer_cre").html(xmlhttp.responseText);
+                    $("#conti_cormer_cre").selectpicker("refresh");
+                }
             }
+    xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=2105", true);
+    xmlhttp.send();
+}
+
+//---------------------------------------------------------------------------------
+
+$("#codneg_corneg_cre").change(
+    function () {
+        if (isNotEmpty(causale)) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange =
+                    function () {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            $("#conti_corneg_cre").html(xmlhttp.responseText);
+                            $("#conti_corneg_cre").selectpicker("refresh");
+                        }
+                    }
+            xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=2100", true);
+            xmlhttp.send();
         }
+    }
 );
 
 //---------------------------------------------------------------------------------
 
-$("#causale_cormer_mod").change(
-        function () {
-            var causale = $("#causale_cormer_mod").val();
+$("#codneg_corneg_mod").change(
+    function () {
+        var causale = $("#causale_corneg_mod").val();
 
-            if (isNotEmpty(causale)) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange =
-                        function () {
-                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                $("#conti_cormer_mod").html(xmlhttp.responseText);
-                                $("#conti_cormer_mod").selectmenu("refresh");
-                            }
+        if (isNotEmpty(causale)) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange =
+                    function () {
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            $("#conti_corneg_mod").html(xmlhttp.responseText);
+                            $("#conti_corneg_mod").selectpicker("refresh");
                         }
-                xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-                xmlhttp.send();
-            }
+                    }
+            xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=2100", true);
+            xmlhttp.send();
         }
-);
-
-//---------------------------------------------------------------------------------
-
-$("#causale_corneg_cre").change(
-        function () {
-            var causale = $("#causale_corneg_cre").val();
-
-            if (isNotEmpty(causale)) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange =
-                        function () {
-                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                $("#conti_corneg_cre").html(xmlhttp.responseText);
-                                $("#conti_corneg_cre").selectmenu("refresh");
-                            }
-                        }
-                xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-                xmlhttp.send();
-            }
-        }
-);
-
-//---------------------------------------------------------------------------------
-
-$("#causale_corneg_mod").change(
-        function () {
-            var causale = $("#causale_corneg_mod").val();
-
-            if (isNotEmpty(causale)) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange =
-                        function () {
-                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                $("#conti_corneg_mod").html(xmlhttp.responseText);
-                                $("#conti_corneg_mod").selectmenu("refresh");
-                            }
-                        }
-                xmlhttp.open("GET", "loadContiCausaleFacade.class.php?modo=start&causale=" + causale, true);
-                xmlhttp.send();
-            }
-        }
+    }
 );
 
 //---------------------------------------------------------------------------------
@@ -415,13 +388,11 @@ function validaNuovoCorrispettivoMercato()
             esito = esito + "0";
     }
 
-    if (isNotEmpty($("#causale_cormer_cre").val())) {
-        controllaDettagliRegistrazione("dettagli_cormer_cre");
-        if (isEmpty($("#dettagli_cormer_cre_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
+    controllaDettagliRegistrazione("dettagli_cormer_cre");
+    if (isEmpty($("#dettagli_cormer_cre_messaggio").text()))
+        esito = esito + "1";
+    else
+        esito = esito + "0";
 
     if (esito == "111") {
         return true;
@@ -455,13 +426,11 @@ function validaNuovoCorrispettivoNegozio()
             esito = esito + "0";
     }
 
-    if (isNotEmpty($("#causale_corneg_cre").val())) {
-        controllaDettagliRegistrazione("dettagli_corneg_cre");
-        if (isEmpty($("#dettagli_corneg_cre_messaggio").text()))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
+    controllaDettagliRegistrazione("dettagli_corneg_cre");
+    if (isEmpty($("#dettagli_corneg_cre_messaggio").text()))
+        esito = esito + "1";
+    else
+        esito = esito + "0";
 
     if (esito == "111") {
         return true;
@@ -693,7 +662,10 @@ function modificaCorrispettivoNegozio(idRegistrazione)
                         $("#codneg_corneg_mod").selectpicker('val', negozio);
 
                         $("#dettagli_corneg_mod").html($(this).find("dettagli").text());
-                        $("#conti_corneg_mod").html($(this).find("contiCausale").text());
+                        
+                        var conti = $(this).find("contiCausale").text();
+                        $("#conti_corneg_mod").selectpicker('val', conti);
+                        $("#conti_corneg_mod").selectpicker('refresh');
                     }
             )
 

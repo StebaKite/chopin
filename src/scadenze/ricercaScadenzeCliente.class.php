@@ -20,7 +20,7 @@ class RicercaScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusines
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE]))
             $_SESSION[self::RICERCA_SCADENZE_CLIENTE] = serialize(new RicercaScadenzeCliente());
         return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE]);

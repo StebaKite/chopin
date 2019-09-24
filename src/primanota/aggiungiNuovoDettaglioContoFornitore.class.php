@@ -36,42 +36,48 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
         $fornitore = Fornitore::getInstance();
         $sottoconto = Sottoconto::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
 
-        // Se sono già presenti dettagli non aggiungo il conto fornitore
-        if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
-            $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-            $dettaglioRegistrazione->setIdRegistrazione(0);
-            $dettaglioRegistrazione->setImpRegistrazione(0);
+        // Se non esistono fatture da pagare per il fornitore non aggiungo il conto fornitore
+        if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
+            // Se sono già presenti dettagli non aggiungo il conto fornitore
+            if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
+                $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+                $dettaglioRegistrazione->setIdRegistrazione(0);
+                $dettaglioRegistrazione->setImpRegistrazione(0);
 
-            if ($registrazione->getCodCausale() === $array["pagamentoFornitori"]) {
-                $dettaglioRegistrazione->setIndDareavere("D");
+                if ($registrazione->getCodCausale() === $array["pagamentoFornitori"]) {
+                    $dettaglioRegistrazione->setIndDareavere("D");
+                } else {
+                    $dettaglioRegistrazione->setIndDareavere("A");
+                }
+
+                // cerco il fornitore selezionato usando la sua descrizione
+                $fornitore->setidFornitore($registrazione->getIdFornitore());
+                $fornitore->leggi($db);
+
+                if ($fornitore->getCodFornitore() != "") {
+                    // prelevo i codici dei conti fornitori in configurazione
+                    $contoFornitori = explode(",", $array["contiFornitore"]);
+                    $sottoconto->setCodConto($contoFornitori[0]); // fornitori nazionali
+                    // cerco il sottoconto corrispondene al fornitore
+                    $sottoconto->leggi($db);
+                    $sottoconto->searchSottoconto($fornitore->getCodFornitore());
+
+                    // compongo la colonna "conto" da inserire nel dettaglio
+                    $dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
+                    $dettaglioRegistrazione->setCodContoComposto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
+                    $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
+                    $dettaglioRegistrazione->setIndContoPrincipale("Y");
+                    $dettaglioRegistrazione->aggiungi();
+                }
+                echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
             } else {
-                $dettaglioRegistrazione->setIndDareavere("A");
+                echo self::EMPTYSTRING;
             }
-
-            // cerco il fornitore selezionato usando la sua descrizione
-            $fornitore->setidFornitore($registrazione->getIdFornitore());
-            $fornitore->leggi($db);
-
-            if ($fornitore->getCodFornitore() != "") {
-                // prelevo i codici dei conti fornitori in configurazione
-                $contoFornitori = explode(",", $array["contiFornitore"]);
-                $sottoconto->setCodConto($contoFornitori[0]); // fornitori nazionali
-                // cerco il sottoconto corrispondene al fornitore
-                $sottoconto->leggi($db);
-                $sottoconto->searchSottoconto($fornitore->getCodFornitore());
-
-                // compongo la colonna "conto" da inserire nel dettaglio
-                $dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
-                $dettaglioRegistrazione->setCodContoComposto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
-                $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
-                $dettaglioRegistrazione->setIndContoPrincipale("Y");
-                $dettaglioRegistrazione->aggiungi();
-            }
-            echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
         } else {
-            echo "";
+            echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
         }
     }
-
 }

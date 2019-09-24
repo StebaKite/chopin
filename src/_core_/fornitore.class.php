@@ -212,7 +212,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             $this->setTipAddebito($row[self::TIP_ADDEBITO]);
             $this->setDatCreazione($row[self::DAT_CREAZIONE]);
             $this->setNumGgScadenzaFattura($row[self::NUM_GG_SCADENZA_FATTURA]);
-            $this->setQtaRegistrazioniFornitore($row[self::QTA_REGISTRAZIONI_FORNITORE]);
+//            $this->setQtaRegistrazioniFornitore($row[self::QTA_REGISTRAZIONI_FORNITORE]);
         }
         return $result;
     }

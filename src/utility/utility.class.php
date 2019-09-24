@@ -4,7 +4,7 @@ require_once 'utility.component.interface.php';
 
 class Utility implements UtilityComponentInterface {
 
-    private static $root;
+    private $root;
     private static $languageReplace;
     private static $configuration;
     private static $configFile = "/chopin/config/chopin.config.ini";

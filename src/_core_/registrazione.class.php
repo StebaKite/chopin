@@ -124,22 +124,24 @@ class Registrazione extends CoreBase implements CoreInterface {
         $result = $db->getData($sql);
 
         if ($result) {
-            foreach (pg_fetch_all($result) as $row) {
-                $this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
-                $this->setDatScadenza(trim($row[self::DAT_SCADENZA]));
-                $this->setDesRegistrazione(trim($row[self::DES_REGISTRAZIONE]));
-                $this->setIdFornitore($row[self::ID_FORNITORE]);
-                $this->setIdCliente($row[self::ID_CLIENTE]);
-                $this->setCodCausale($row[self::COD_CAUSALE]);
-                $this->setNumFattura($row[self::NUM_FATTURA]);
-                $this->setNumFatturaOrig($row[self::NUM_FATTURA]);
-                $this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
-                $this->setDatInserimento($row[self::DAT_INSERIMENTO]);
-                $this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
-                $this->setCodNegozio($row[self::COD_NEGOZIO]);
-                $this->setIdMercato($row[self::ID_MERCATO]);
+            if (pg_num_rows($result) > 0) {
+                foreach (pg_fetch_all($result) as $row) {
+                    $this->setIdRegistrazione($row[self::ID_REGISTRAZIONE]);
+                    $this->setDatScadenza(trim($row[self::DAT_SCADENZA]));
+                    $this->setDesRegistrazione(trim($row[self::DES_REGISTRAZIONE]));
+                    $this->setIdFornitore($row[self::ID_FORNITORE]);
+                    $this->setIdCliente($row[self::ID_CLIENTE]);
+                    $this->setCodCausale($row[self::COD_CAUSALE]);
+                    $this->setNumFattura($row[self::NUM_FATTURA]);
+                    $this->setNumFatturaOrig($row[self::NUM_FATTURA]);
+                    $this->setDatRegistrazione(trim($row[self::DAT_REGISTRAZIONE]));
+                    $this->setDatInserimento($row[self::DAT_INSERIMENTO]);
+                    $this->setStaRegistrazione($row[self::STA_REGISTRAZIONE]);
+                    $this->setCodNegozio($row[self::COD_NEGOZIO]);
+                    $this->setIdMercato($row[self::ID_MERCATO]);
+                }
+                $_SESSION[self::REGISTRAZIONE] = serialize($this);
             }
-            $_SESSION[self::REGISTRAZIONE] = serialize($this);
         }
         return $result;
     }
@@ -251,10 +253,12 @@ class Registrazione extends CoreBase implements CoreInterface {
             $this->setRegistrazioni(pg_fetch_all($result));
 
             $numReg = 0;
-            foreach ($this->getRegistrazioni() as $unaRegistrazione) {
-                if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R") {
-                    $numReg ++;
-                }
+            if (sizeof($this->getRegistrazioni()) > 0) {
+                foreach ($this->getRegistrazioni() as $unaRegistrazione) {
+                    if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R") {
+                        $numReg ++;
+                    }
+                }                
             }
             $this->setQtaRegistrazioni($numReg);
         } else {

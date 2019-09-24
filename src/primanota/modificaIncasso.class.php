@@ -32,6 +32,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
         $registrazione = Registrazione::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $cliente = Cliente::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();
         $causale = Causale::getInstance();
 
@@ -72,7 +73,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
             '%cliente%' => trim($cliente->getIdCliente()),
             '%scadenzeincassate%' => trim($this->makeTabellaFattureIncassate($scadenzaCliente)),
             '%scadenzedaincassare%' => trim($this->makeTabellaFattureDaIncassare($scadenzaCliente)),
-            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
+            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente)),
             '%conti%' => $causale->getContiCausale()
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

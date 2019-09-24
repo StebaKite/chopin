@@ -10,12 +10,6 @@ class AnagraficaController extends Nexus6Abstract {
     public static $anagraficaFunction = null;
     private $request;
 
-    // Oggetti
-
-    const FORNITORE = "Obj_fornitore";
-    const CLIENTE = "Obj_cliente";
-    const MERCATO = "Obj_mercato";
-
     // Metodi
 
     public function __construct(AnagraficaBusinessInterface $anagraficaFunction) {
@@ -26,95 +20,95 @@ class AnagraficaController extends Nexus6Abstract {
     public function start() {
  
         if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest("modo"));
+            $this->setRequest($this->getParmFromRequest(self::MODO));
         } else {
-            $this->setRequest("start");         // default set
+            $this->setRequest(self::START);         // default set
         }
 
         $fornitore = Fornitore::getInstance();
         $cliente = Cliente::getInstance();
         $mercato = Mercato::getInstance();
 
-        if (null !== filter_input(INPUT_POST, "codforn_cre")) {
-            $descrizione = ($this->getParmFromRequest("desforn_cre") != "") ? str_replace("'", "''", $this->getParmFromRequest("desforn_cre")) : "";
+        if (null !== $this->getParmFromRequest(self::CODICE_FORNITORE_CREAZIONE)) {
+            $descrizione = ($this->getParmFromRequest(self::DES_FORNITORE_CREAZIONE) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::DES_FORNITORE_CREAZIONE)) : "";
             $fornitore->setDesFornitore($descrizione);
-            $indirizzo = ($this->getParmFromRequest("indforn_cre") != "") ? str_replace("'", "''", $this->getParmFromRequest("indforn_cre")) : "";
+            $indirizzo = ($this->getParmFromRequest(self::INDIRIZZO_FORNITORE_CREAZIONE) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::INDIRIZZO_FORNITORE_CREAZIONE)) : "";
             $fornitore->setDesIndirizzoFornitore($indirizzo);
-            $citta = ($this->getParmFromRequest("cittaforn_cre") != "") ? str_replace("'", "''", $this->getParmFromRequest("cittaforn_cre")) : "";
+            $citta = ($this->getParmFromRequest(self::CITTA_FORNITORE_CREAZIONE) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::CITTA_FORNITORE_CREAZIONE)) : "";
             $fornitore->setDesCittaFornitore($citta);
-            $fornitore->setCapFornitore($this->getParmFromRequest("capforn_cre"));
-            $fornitore->setTipAddebito($this->getParmFromRequest("tipoadd_cre"));
-            $fornitore->setNumGgScadenzaFattura($this->getParmFromRequest("ggscadfat_cre"));
+            $fornitore->setCapFornitore($this->getParmFromRequest(self::CAP_FORNITORE_CREAZIONE));
+            $fornitore->setTipAddebito($this->getParmFromRequest(self::TIPO_ADDEBITO_CREAZIONE));
+            $fornitore->setNumGgScadenzaFattura($this->getParmFromRequest(self::GIORNI_SCADENZA_FATTURA_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codforn_mod")) {
-            $descrizione = ($this->getParmFromRequest("desforn_mod") != "") ? str_replace("'", "''", $this->getParmFromRequest("desforn_mod")) : "";
+        if (null !== $this->getParmFromRequest(self::CODICE_FORNITORE_MODIFICA)) {
+            $descrizione = ($this->getParmFromRequest(self::DES_FORNITORE_MODIFICA) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::DES_FORNITORE_MODIFICA)) : "";
             $fornitore->setDesFornitore($descrizione);
-            $indirizzo = ($this->getParmFromRequest("indforn_mod") != "") ? str_replace("'", "''", $this->getParmFromRequest("indforn_mod")) : "";
+            $indirizzo = ($this->getParmFromRequest(self::INDIRIZZO_FORNITORE_MODIFICA) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::INDIRIZZO_FORNITORE_MODIFICA)) : "";
             $fornitore->setDesIndirizzoFornitore($indirizzo);
-            $citta = ($this->getParmFromRequest("cittaforn_mod") != "") ? str_replace("'", "''", $this->getParmFromRequest("cittaforn_mod")) : "";
+            $citta = ($this->getParmFromRequest(self::CITTA_FORNITORE_MODIFICA) != "") ? str_replace("'", "''", $this->getParmFromRequest(self::CITTA_FORNITORE_MODIFICA)) : "";
             $fornitore->setDesCittaFornitore($citta);
-            $fornitore->setCapFornitore($this->getParmFromRequest("capforn_mod"));
-            $fornitore->setTipAddebito($this->getParmFromRequest("tipoadd_mod"));
-            $fornitore->setNumGgScadenzaFattura($this->getParmFromRequest("ggscadfat_mod"));
+            $fornitore->setCapFornitore($this->getParmFromRequest(self::CAP_FORNITORE_MODIFICA));
+            $fornitore->setTipAddebito($this->getParmFromRequest(self::TIPO_ADDEBITO_MODIFICA));
+            $fornitore->setNumGgScadenzaFattura($this->getParmFromRequest(self::GIORNI_SCADENZA_FATTURA_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "codcli_cre")) {
-            $cliente->setCatCliente($this->getParmFromRequest("catcli_cre"));
-            $cliente->setCodCliente($this->getParmFromRequest("codcli_cre"));
-            $cliente->setDesCliente($this->getParmFromRequest("descli_cre"));
-            $cliente->setDesIndirizzoCliente($this->getParmFromRequest("indcli_cre"));
-            $cliente->setDesCittaCliente($this->getParmFromRequest("cittacli_cre"));
-            $cliente->setCapCliente($this->getParmFromRequest("capcli_cre"));
-            $cliente->setTipAddebito($this->getParmFromRequest("tipoadd_cre"));
-            $cliente->setCodPiva($this->getParmFromRequest("pivacli_cre"));
-            $cliente->setCodFisc($this->getParmFromRequest("cfiscli_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CLIENTE_CREAZIONE)) {
+            $cliente->setCatCliente($this->getParmFromRequest(self::CATEGORIA_CLIENTE_CREAZIONE));
+            $cliente->setCodCliente($this->getParmFromRequest(self::CODICE_CLIENTE_CREAZIONE));
+            $cliente->setDesCliente($this->getParmFromRequest(self::DES_CLIENTE_CREAZIONE));
+            $cliente->setDesIndirizzoCliente($this->getParmFromRequest(self::INDIRIZZO_CLIENTE_CREAZIONE));
+            $cliente->setDesCittaCliente($this->getParmFromRequest(self::CITTA_CLIENTE_CREAZIONE));
+            $cliente->setCapCliente($this->getParmFromRequest(self::CAP_CLIENTE_CREAZIONE));
+            $cliente->setTipAddebito($this->getParmFromRequest(self::TIPO_ADDEBITO_CLIENTE_CREAZIONE));
+            $cliente->setCodPiva($this->getParmFromRequest(self::PARTITA_IVA_CLIENTE_CREAZIONE));
+            $cliente->setCodFisc($this->getParmFromRequest(self::CODICE_FISCALE_CLIENTE_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codcli_mod")) {
-            $cliente->setCatCliente($this->getParmFromRequest("catcli_mod"));
-            $cliente->setDesCliente($this->getParmFromRequest("descli_mod"));
-            $cliente->setDesIndirizzoCliente($this->getParmFromRequest("indcli_mod"));
-            $cliente->setDesCittaCliente($this->getParmFromRequest("cittacli_mod"));
-            $cliente->setCapCliente($this->getParmFromRequest("capcli_mod"));
-            $cliente->setTipAddebito($this->getParmFromRequest("tipoadd_mod"));
-            $cliente->setCodPiva($this->getParmFromRequest("pivacli_mod"));
-            $cliente->setCodFisc($this->getParmFromRequest("cfiscli_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CLIENTE_MODIFICA)) {
+            $cliente->setCatCliente($this->getParmFromRequest(self::CATEGORIA_CLIENTE_MODIFICA));
+            $cliente->setDesCliente($this->getParmFromRequest(self::DES_CLIENTE_MODIFICA));
+            $cliente->setDesIndirizzoCliente($this->getParmFromRequest(self::INDIRIZZO_CLIENTE_MODIFICA));
+            $cliente->setDesCittaCliente($this->getParmFromRequest(self::CITTA_CLIENTE_MODIFICA));
+            $cliente->setCapCliente($this->getParmFromRequest(self::CAP_CLIENTE_MODIFICA));
+            $cliente->setTipAddebito($this->getParmFromRequest(self::TIPO_ADDEBITO_CLIENTE_MODIFICA));
+            $cliente->setCodPiva($this->getParmFromRequest(self::PARTITA_IVA_CLIENTE_MODIFICA));
+            $cliente->setCodFisc($this->getParmFromRequest(self::CODICE_FISCALE_CLIENTE_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "codmer_cre")) {
-            $mercato->setCodMercato($this->getParmFromRequest("codmer_cre"));
-            $mercato->setDesMercato($this->getParmFromRequest("desmer_cre"));
-            $mercato->setCittaMercato($this->getParmFromRequest("citmer_cre"));
-            $mercato->setCodNegozio($this->getParmFromRequest("negmer_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_MERCATO_CREAZIONE)) {
+            $mercato->setCodMercato($this->getParmFromRequest(self::CODICE_MERCATO_CREAZIONE));
+            $mercato->setDesMercato($this->getParmFromRequest(self::DES_MERCATO_CREAZIONE));
+            $mercato->setCittaMercato($this->getParmFromRequest(self::CITTA_MERCATO_CREAZIONE));
+            $mercato->setCodNegozio($this->getParmFromRequest(self::NEGOZIO_MERCATO_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codmer_mod")) {
-            $mercato->setCodMercato($this->getParmFromRequest("codmer_mod"));
-            $mercato->setDesMercato($this->getParmFromRequest("desmer_mod"));
-            $mercato->setCittaMercato($this->getParmFromRequest("citmer_mod"));
-            $mercato->setCodNegozio($this->getParmFromRequest("negmer_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_MERCATO_MODIFICA)) {
+            $mercato->setCodMercato($this->getParmFromRequest(self::CODICE_MERCATO_MODIFICA));
+            $mercato->setDesMercato($this->getParmFromRequest(self::DES_MERCATO_MODIFICA));
+            $mercato->setCittaMercato($this->getParmFromRequest(self::CITTA_MERCATO_MODIFICA));
+            $mercato->setCodNegozio($this->getParmFromRequest(self::NEGOZIO_MERCATO_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "codfisc")) {
-            $cliente->setCodFisc($this->getParmFromRequest("codfisc"));
+        if (null !== $this->getParmFromRequest(self::CODICE_FISCALE)) {
+            $cliente->setCodFisc($this->getParmFromRequest(self::CODICE_FISCALE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codpiva")) {
-            $cliente->setCodPiva($this->getParmFromRequest("codpiva"));
-            $cliente->setDesCliente($this->getParmFromRequest("descliente"));
+        if (null !== $this->getParmFromRequest(self::PARTITA_IVA)) {
+            $cliente->setCodPiva($this->getParmFromRequest(self::PARTITA_IVA));
+            $cliente->setDesCliente($this->getParmFromRequest(self::DES_CLIENTE));
         }
 
-        if (null !== filter_input(INPUT_POST, "idcliente")) {
-            $cliente->setIdCliente($this->getParmFromRequest("idcliente"));
+        if (null !== $this->getParmFromRequest(self::ID_CLIENTE)) {
+            $cliente->setIdCliente($this->getParmFromRequest(self::ID_CLIENTE));
         }
 
-        if (null !== filter_input(INPUT_POST, "idfornitore")) {
-            $fornitore->setIdFornitore($this->getParmFromRequest("idfornitore"));
+        if (null !== $this->getParmFromRequest(self::ID_FORNITORE)) {
+            $fornitore->setIdFornitore($this->getParmFromRequest(self::ID_FORNITORE));
         }
 
-        if (null !== filter_input(INPUT_POST, "idmercato")) {
-            $mercato->setIdMercato($this->getParmFromRequest("idmercato"));
+        if (null !== $this->getParmFromRequest(self::ID_MERCATO)) {
+            $mercato->setIdMercato($this->getParmFromRequest(self::ID_MERCATO));
         }
 
         // Serializzo in sessione gli oggetti modificati
@@ -123,10 +117,10 @@ class AnagraficaController extends Nexus6Abstract {
         $_SESSION[self::CLIENTE] = serialize($cliente);
         $_SESSION[self::MERCATO] = serialize($mercato);
 
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->anagraficaFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->anagraficaFunction->go();
         }
     }

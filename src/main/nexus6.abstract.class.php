@@ -2,24 +2,25 @@
 
 require_once 'lavoroPianificato.class.php';
 
-abstract class Nexus6Abstract {
+abstract class Nexus6Abstract implements MainNexus6Interface {
 
-    public static $root;
-    public static $testata;
-    public static $piede;
-    public static $messaggioInfo;
-    public static $messaggioErrore;
-    public static $azione;
-    public static $testoAzione;
-    public static $titoloPagina;
-    public static $confermaTip;
+    public $root;
+    public $testata;
+    public $piede;
+    public $messaggioInfo;
+    public $messaggioErrore;
+    public $azione;
+    public $testoAzione;
+    public $titoloPagina;
+    public $confermaTip;
     public static $replace;
-    public static $elenco_causali;
-    public static $elenco_fornitori;
-    public static $elenco_clienti;
-    public static $elenco_conti;
-    public static $elenco_mercati;
-    public static $errorStyle = "border-color:#ff0000; border-width:1px;";
+    public $menu;
+    public $elenco_causali;
+    public $elenco_fornitori;
+    public $elenco_clienti;
+    public $elenco_conti;
+    public $elenco_mercati;
+    public $errorStyle = "border-color:#ff0000; border-width:1px;";
 
     /*
      * Query ------------------------------------------------------------------------------
@@ -28,6 +29,343 @@ abstract class Nexus6Abstract {
     public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
     public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
 
+    /*
+     * Costanti
+     */
+    
+    const MODO = "modo";
+    const START = "start";
+    const GO = "go";
+    
+    const DATA_REGISTRAZIONE_DA_RICERCA = "datareg_da";
+    const DATA_REGISTRAZIONE_A_RICERCA = "datareg_a";
+    const CODICE_NEGOZIO_RICERCA = "codneg_sel";
+    const CAUSALE_RICERCA = "causale";
+    const DATA_REGISTRAZIONE = "datareg";
+    
+    const CATEGORIA_CONTO = "catconto";
+    const DES_CONTO = "desconto";
+    const DES_SOTTOCONTO = "dessottoconto";
+    
+    const IMPORTO_DETTAGLIO = "importo";
+    const CODICE_CONTO_DETTAGLIO = "codconto";
+    const CODICE_SOTTOCONTO_DETTAGLIO = "codsottoconto";
+    const DES_SOTTOCONTO_DETTAGLIO = "dessottoconto";
+    const DARE_AVERE_DETTAGLIO = "dareAvere";
+    const ID_DETTAGLIO = "iddettaglio";    
+    const IMPORTO_DETTAGLIO_IN_SCADENZA = "importo_dettaglio";
+    const CATEGORIA_CONTO_RICERCA = "catconto_sel";
+    const TIPO_CONTO_RICERCA = "tipconto_sel";
+    const CODICE_CONTO_RICERCA = "codconto_sel";
+    const CODICE_CONTO_NUOVO_MODIFICA = "conto_sel_nuovo";
+    const CODICE_CONTO_CASSA = "contocassa";
+    
+    const CODICE_CONTO_CREAZIONE = "codconto_cre";
+    const DES_CONTO_CREAZIONE = "desconto_cre";
+    const CATEGORIA_CONTO_CREAZIONE = "catconto_cre";
+    const INDICATORE_DARE_AVERE_CREAZIONE = "dareavere_cre";
+    const INDICATORE_PRESENZA_IN_BILANCIO_CREAZIONE = "indpresenza_cre";
+    const INDICATORE_VISUALIZZAZIONE_SOTTOCONTI_CREAZIONE = "indvissottoconti_cre";
+    const NUMERO_RIGA_BILANCIO_CREAZIONE = "numrigabilancio_cre";
+    
+    const CODICE_CONTO_MODIFICA = "codconto_mod";
+    const DES_CONTO_MODIFICA = "desconto_mod";
+    const CATEGORIA_CONTO_MODIFICA = "catconto_mod";
+    const INDICATORE_DARE_AVERE_MODIFICA = "dareavere_mod";
+    const INDICATORE_PRESENZA_IN_BILANCIO_MODIFICA = "indpresenza_mod";
+    const INDICATORE_VISUALIZZAZIONE_SOTTOCONTI_MODIFICA = "indvissottoconti_mod";
+    const NUMERO_RIGA_BILANCIO_MODIFICA = "numrigabilancio_mod";
+    
+    const CODICE_CONTO_GRUPPO_MODIFICA = "codconto_modgru";
+    const CODICE_SOTTOCONTO_GRUPPO_MODIFICA = "codsottoconto_modgru";
+    const INDICATORE_GRUPPO_MODIFICA = "indgruppo_modgru";
+    
+    const CODICE_SOTTOCONTO_GRUPPO_CREAZIONE = "codsottoconto_new";
+    const DES_SOTTOCONTO_GRUPPO_CREAZIONE = "dessottoconto_new";
+    const INDICATORE_GRUPPO_CREAZIONE = "indgruppo_new";
+    
+    const CODICE_SOTTOCONTO_GRUPPO_CANCELLAZIONE = "codsottoconto_del";
+    const CODICE_CONTO_GRUPPO_CANCELLAZIONE = "codconto_del";
+    
+    const CODICE_CONTO_RICERCA_MOVIMENTI = "ccon_mov";
+    const CODICE_SOTTOCONTO_RICERCA_MOVIMENTI = "csot_mov";
+    const DATA_REGISTRAZIONE_DA_RICERCA_MOVIMENTI = "dtda_mov";
+    const DATA_REGISTRAZIONE_A_RICERCA_MOVIMENTI = "dta_mov";
+    const CODICE_NEGOZIO_RICERCA_MOVIMENTI = "cneg_mov";
+    const SALDI_INCLUSI_RICERCA_MOVIMENTI = "sal_mov";
+   
+    const DATA_REGISTRAZIONE_CREAZIONE = "datareg_cre";
+    const DES_REGISTRAZIONE_CREAZIONE = "descreg_cre";
+    const CAUSALE_REGISTRAZIONE_CREAZIONE = "causale_cre";
+    const CODICE_NEGOZIO_REGISTRAZIONE_CREAZIONE = "codneg_cre";
+    const FORNITORE_REGISTRAZIONE_CREAZIONE = "fornitore_cre";
+    const CLIENTE_REGISTRAZIONE_CREAZIONE = "cliente_cre";
+    const NUMERO_FATTURA_REGISTRAZIONE_CREZIONE = "numfatt_cre";
+    const REGISTRAZIONE_APERTA = "00";
+    const REGISTRAZIONE_ERRATA = "02";    
+    const TABELLA_SCADENZE_APERTE_CREAZIONE = "scadenzesuppl_cre";
+    
+    const DATA_REGISTRAZIONE_MODIFICA = "datareg_mod";
+    const DES_REGISTRAZIONE_MODIFICA = "descreg_mod";
+    const CAUSALE_REGISTRAZIONE_MODIFICA = "causale_mod";
+    const CODICE_NEGOZIO_REGISTRAZIONE_MODIFICA = "codneg_mod";
+    const FORNITORE_REGISTRAZIONE_MODIFICA = "fornitore_mod";
+    const CLIENTE_REGISTRAZIONE_MODIFICA = "cliente_mod";
+    const NUMERO_FATTURA_REGISTRAZIONE_MODIFICA = "numfatt_mod";
+    const NUMERO_FATTURA_REGISTRAZIONE_ORIGINALE_MODIFICA = "numfatt_mod_orig";
+    const TABELLA_SCADENZE_APERTE_MODIFICA = "scadenzesuppl_mod";
+    const NOTA_TESTATA_MODIFICA = "notatesta_mod";
+    const NOTA_PIEDE_MODIFICA = "notapiede_mod";
+    
+    const CODICE_CONTO_DETTAGLIO_CREAZIONE   = "newcontodett_cre";
+    const IMPORTO_DETTAGLIO_CREAZIONE   = "newimpdett_cre";
+    const SEGNO_DETTAGLIO_CREAZIONE   = "newsegnodett_cre";
+    
+    const TABELLA_SCADENZE = "scadenzeTable";
+    
+    const CODICE_CLIENTE_INCASSO_CREAZIONE = "cliente_inc_cre";
+//    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codneg_inc_cre";
+    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codnegozio_inc_cre";
+    
+    const TABELLA_SCADENZE_APERTE_INCASSO_CREAZIONE = "scadenze_aperte_inc_cre";
+    const TABELLA_SCADENZE_CHIUSE_INCASSO_CREAZIONE = "scadenze_chiuse_inc_cre";
+    const TABELLA_DETTAGLI_INCASSO_CREAZIONE = "dettagli_inc_cre";
+    const DATA_REGISTRAZIONE_INCASSO_CREAZIONE = "datareg_inc_cre";
+    const DES_REGISTRAZIONE_INCASSO_CREAZIONE = "descreg_inc_cre";
+    const CODICE_CAUSALE_INCASSO_CREAZIONE = "causale_inc_cre";
+    const NUMERO_FATTURA_INCASSO_CREAZIONE = "numfatt_inc_cre";
+        
+    const CODICE_CLIENTE_INCASSO_MODIFICA = "cliente_inc_mod";
+    const CODICE_NEGOZIO_INCASSO_MODIFICA = "codneg_inc_mod";
+    const TABELLA_SCADENZE_APERTE_INCASSO_MODIFICA = "scadenze_aperte_inc_mod";
+    const TABELLA_SCADENZE_CHIUSE_INCASSO_MODIFICA = "scadenze_chiuse_inc_mod";
+    const TABELLA_DETTAGLI_INCASSO_MODIFICA = "dettagli_inc_mod";
+    const DATA_REGISTRAZIONE_INCASSO_MODIFICA = "datareg_inc_mod";
+    const DES_REGISTRAZIONE_INCASSO_MODIFICA = "descreg_inc_mod";
+    const CODICE_CAUSALE_INCASSO_MODIFICA = "causale_inc_mod";
+    const NUMERO_FATTURA_INCASSO_MODIFICA = "numfatt_inc_mod";    
+    
+    const NUMERO_FATTURA_FORNITORE = "numfatt";
+    const DATA_SCADENZA_FORNITORE = "datascad_for";
+    const DATA_SCADENZA_NUOVA = "datascad_new";
+    const IMPORTO_SCADENZA_FORNITORE = "impscad_for";
+
+    const DATA_SCADENZA_CLIENTE = "datascad_cli";
+    const IMPORTO_SCADENZA_CLIENTE = "impscad_cli";
+    
+    const DATA_SCADENZA_NUOVA_FORNITORE = "datascad_new_for";
+    const DATA_SCADENZA_VECCHIA_FORNITORE = "datascad_old_for";
+    
+    const DATA_SCADENZA_NUOVA_CLIENTE = "datascad_new_cli";
+    const DATA_SCADENZA_VECCHIA_CLIENTE = "datascad_old_cli";
+
+    const SCADENZE_APERTE_INCASSO_MODIFICA = "scadenze_aperte_inc_mod";
+    const SCADENZE_CHIUSE_INCASSO_MODIFICA = "scadenze_chiuse_inc_mod";
+    const DETTAGLIO_INCASSO_MODIFICA = "dettagli_inc_mod";
+
+    const ID_SCADENZA_CLIENTE = "idscadcli";
+    const TABELLA_SCADENZE_APERTE = "idtableaperte";
+    const TABELLA_SCADENZE_CHIUSE = "idtablechiuse";
+
+    const DATA_REGISTRAZIONE_PAGAMENTO_CREAZIONE = "datareg_pag_cre";
+    const DES_REGISTRAZIONE_PAGAMENTO_CREAZIONE = "descreg_pag_cre";
+    const CODICE_CAUSALE_PAGAMENTO_CREAZIONE = "causale_pag_cre";
+    const FORNITORE_PAGAMENTO_CREAZIONE = "fornitore_pag_cre";
+    const CODICE_NEGOZIO_PAGAMENTO_CREAZIONE = "codnegozio_pag_cre";
+    const NUMERO_FATTURA_PAGAMENTO_CREAZIONE = "numfatt_pag_cre";
+    const TABELLA_SCADENZE_APERTE_PAGAMENTO_CREAZIONE = "scadenze_aperte_pag_cre";
+    const TABELLA_SCADENZE_CHIUSE_PAGAMENTO_CREAZIONE = "scadenze_chiuse_pag_cre";
+    const DETTAGLI_PAGAMENTO_CREAZIONE = "dettagli_pag_cre";
+    
+    const DATA_REGISTRAZIONE_PAGAMENTO_MODIFICA = "datareg_pag_mod";
+    const DES_REGISTRAZIONE_PAGAMENTO_MODIFICA = "descreg_pag_mod";
+    const CODICE_CAUSALE_PAGAMENTO_MODIFICA = "causale_pag_mod";
+    const CODICE_NEGOZIO_PAGAMENTO_MODIFICA = "codneg_pag_mod";
+    const FORNITORE_PAGAMENTO_MODIFICA = "fornitore_pag_mod";
+    const NUMERO_FATTURA_PAGAMENTO_MODIFICA = "numfatt_pag_mod";
+    const TABELLA_SCADENZE_APERTE_PAGAMENTO_MODIFICA = "scadenze_aperte_pag_mod";
+    const TABELLA_SCADENZE_CHIUSE_PAGAMENTO_MODIFICA = "scadenze_chiuse_pag_mod";
+    const DETTAGLI_PAGAMENTO_MODIFICA = "dettagli_pag_mod";
+    
+    const ID_SCADENZA = "idscad";
+    const ID_SCADENZA_FORNITORE = "idscadfor";
+    
+    const DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_CREAZIONE = "datareg_cormer_cre";
+    const DES_CORRISPETTIVO_MERCATO_CREAZIONE = "descreg_cormer_cre";
+    const CAUSALE_CORRISPETTIVO_MERCATO_CREAZIONE = "causale_cormer_cre";
+    const MERCATO_CORRISPETTIVO_MERCATO_CREAZIONE = "mercato_cormer_cre";
+    const CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_CREAZIONE = "codneg_cormer_cre";
+    const CODICE_CONTO_CORRISPETTIVO_MERCATO_CREAZIONE = "codconto_cormer_cre";
+    const IMPORTO_CORRISPETTIVO_MERCATO_CREAZIONE = "importo_cormer_cre";
+    const ALIQUOTA_CORRISPETTIVO_MERCATO_CREAZIONE = "aliquota_cormer_cre";
+    const IVA_CORRISPETTIVO_MERCATO_CREAZIONE = "iva_cormer_cre";
+    const IMPONIBILE_CORRISPETTIVO_MERCATO_CREAZIONE = "imponibile_cormer_cre";
+    
+    const DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_MODIFICA = "datareg_cormer_mod";
+    const DES_CORRISPETTIVO_MERCATO_MODIFICA = "descreg_cormer_mod";
+    const CAUSALE_CORRISPETTIVO_MERCATO_MODIFICA = "causale_cormer_mod";
+    const CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_MODIFICA = "codneg_cormer_mod";
+    const CODICE_CONTO_CORRISPETTIVO_MERCATO_MODIFICA = "codconto_cormer_mod";
+    const IMPORTO_CORRISPETTIVO_MERCATO_MODIFICA = "importo_cormer_mod";
+    const ALIQUOTA_CORRISPETTIVO_MERCATO_MODIFICA = "aliquota_cormer_mod";
+    const IVA_CORRISPETTIVO_MERCATO_MODIFICA = "iva_cormer_mod";
+    const IMPONIBILE_CORRISPETTIVO_MERCATO_MODIFICA = "imponibile_cormer_mod";
+    const MERCATO_CORRISPETTIVO_MERCATO_MODIFICA = "mercato_cormer_mod";
+    
+    const DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_CREAZIONE = "datareg_corneg_cre";
+    const DES_CORRISPETTIVO_NEGOZIO_CREAZIONE = "descreg_corneg_cre";
+    const CAUSALE_CORRISPETTIVO_NEGOZIO_CREAZIONE = "causale_corneg_cre";
+    const MERCATO_CORRISPETTIVO_NEGOZIO_CREAZIONE = "mercato_corneg_cre";
+    const CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_CREAZIONE = "codneg_corneg_cre";
+    const CODICE_CONTO_CORRISPETTIVO_NEGOZIO_CREAZIONE = "codconto_corneg_cre";
+    const IMPORTO_CORRISPETTIVO_NEGOZIO_CREAZIONE = "importo_corneg_cre";
+    const ALIQUOTA_CORRISPETTIVO_NEGOZIO_CREAZIONE = "aliquota_corneg_cre";
+    const IVA_CORRISPETTIVO_NEGOZIO_CREAZIONE = "iva_corneg_cre";
+    const IMPONIBILE_CORRISPETTIVO_NEGOZIO_CREAZIONE = "imponibile_corneg_cre";
+    
+    const DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_MODIFICA = "datareg_corneg_mod";
+    const DES_CORRISPETTIVO_NEGOZIO_MODIFICA = "descreg_corneg_mod";
+    const CAUSALE_CORRISPETTIVO_NEGOZIO_MODIFICA = "causale_corneg_mod";
+    const CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_MODIFICA = "codneg_corneg_mod";
+    const CODICE_CONTO_CORRISPETTIVO_NEGOZIO_MODIFICA = "codconto_corneg_mod";
+    const IMPORTO_CORRISPETTIVO_NEGOZIO_MODIFICA = "importo_corneg_mod";
+    const ALIQUOTA_CORRISPETTIVO_NEGOZIO_MODIFICA = "aliquota_corneg_mod";
+    const IVA_CORRISPETTIVO_NEGOZIO_MODIFICA = "iva_corneg_mod";
+    const IMPONIBILE_CORRISPETTIVO_NEGOZIO_MODIFICA = "imponibile_corneg_mod";
+    const MERCATO_CORRISPETTIVO_NEGOZIO_MODIFICA = "mercato_corneg_mod";
+    
+    const CODICE_FORNITORE_CREAZIONE = "codforn_cre";
+    const DES_FORNITORE_CREAZIONE = "desforn_cre";
+    const INDIRIZZO_FORNITORE_CREAZIONE = "indforn_cre";
+    const CITTA_FORNITORE_CREAZIONE = "cittaforn_cre";
+    const CAP_FORNITORE_CREAZIONE = "capforn_cre";
+    const TIPO_ADDEBITO_CREAZIONE = "tipoadd_cre";
+    const GIORNI_SCADENZA_FATTURA_CREAZIONE = "ggscadfat_cre";
+    
+    const CODICE_FORNITORE_MODIFICA = "codforn_mod";
+    const DES_FORNITORE_MODIFICA = "desforn_mod";
+    const INDIRIZZO_FORNITORE_MODIFICA = "indforn_mod";
+    const CITTA_FORNITORE_MODIFICA = "cittaforn_mod";
+    const CAP_FORNITORE_MODIFICA = "capforn_mod";
+    const TIPO_ADDEBITO_MODIFICA = "tipoadd_mod";
+    const GIORNI_SCADENZA_FATTURA_MODIFICA = "ggscadfat_mod";
+    
+    const CODICE_CLIENTE_CREAZIONE = "codcli_cre";
+    const CATEGORIA_CLIENTE_CREAZIONE = "catcli_cre";
+    const DES_CLIENTE_CREAZIONE= "descli_cre";
+    const INDIRIZZO_CLIENTE_CREAZIONE = "indcli_cre";
+    const CITTA_CLIENTE_CREAZIONE = "cittacli_cre";
+    const CAP_CLIENTE_CREAZIONE = "capcli_cre";
+    const TIPO_ADDEBITO_CLIENTE_CREAZIONE = "tipoadd_cre";
+    const PARTITA_IVA_CLIENTE_CREAZIONE = "pivacli_cre";
+    const CODICE_FISCALE_CLIENTE_CREAZIONE = "cfiscli_cre";
+    
+    const CODICE_CLIENTE_MODIFICA = "codcli_mod";
+    const CATEGORIA_CLIENTE_MODIFICA = "catcli_mod";
+    const DES_CLIENTE_MODIFICA = "descli_mod";
+    const INDIRIZZO_CLIENTE_MODIFICA = "indcli_mod";
+    const CITTA_CLIENTE_MODIFICA = "cittacli_mod";
+    const CAP_CLIENTE_MODIFICA = "capcli_mod";
+    const TIPO_ADDEBITO_CLIENTE_MODIFICA = "tipoadd_mod";
+    const PARTITA_IVA_CLIENTE_MODIFICA = "pivacli_mod";
+    const CODICE_FISCALE_CLIENTE_MODIFICA = "cfiscli_mod";
+    
+    const CODICE_MERCATO_CREAZIONE = "codmer_cre";
+    const DES_MERCATO_CREAZIONE = "desmer_cre";
+    const CITTA_MERCATO_CREAZIONE = "citmer_cre";
+    const NEGOZIO_MERCATO_CREAZIONE = "negmer_cre";
+    
+    const CODICE_MERCATO_MODIFICA = "codmer_mod";
+    const DES_MERCATO_MODIFICA = "desmer_mod";
+    const CITTA_MERCATO_MODIFICA = "citmer_mod";
+    const NEGOZIO_MERCATO_MODIFICA = "negmer_mod";
+    
+    const CODICE_FISCALE = "codfisc";
+    const PARTITA_IVA = "codpiva";
+    const DES_CLIENTE = "descliente";
+    const CODICE_CAUSALE = "codCausale";
+    
+    const ID_CLIENTE = "idcliente";
+    const ID_FORNITORE = "idfornitore";
+    const ID_MERCATO = "idmercato";
+    const ID_REGISTRAZIONE = "idreg";
+    const ID_INCASSO = "idinc";
+    const ID_PAGAMENTO = "idpag";
+    const ID_PAGM = "idPagamento";
+    const ID_SCAD = "idScadenza";
+    const ID_SCAD_CLIENTE = "idScadenzaCliente";
+    
+    const DATA_SCADENZA_MODIFICA = "datascad_mod";
+    const NOTA_SCADENZA_MODIFICA = "notascad_mod";
+    const CODICE_NEGOZIO_SCADENZA_MODIFICA = "negozio_mod";
+    const IMPORTO_SCADENZA_MODIFICA = "impscad_mod";
+    const NUMERO_FATTURA_SCADENZA_MODIFICA = "fatscad_mod";
+    const NUMERO_FATTURA_SCADENZA_ORIGINALE_MODIFICA = "fatscad_orig_mod";
+    const FORNITORE_SCADENZA_ORIGINALE_MODIFICA = "fornitore_orig_mod";
+
+    const DATA_SCADENZA_CLIENTE_MODIFICA = "datascad_cli_mod";
+    const NOTA_SCADENZA_CLIENTE_MODIFICA = "notascad_cli_mod";
+    const CODICE_NEGOZIO_SCADENZA_CLIENTE_MODIFICA = "negozio_cli_mod";
+    const IMPORTO_SCADENZA_CLIENTE_MODIFICA = "impscad_cli_mod";
+    const NUMERO_FATTURA_SCADENZA_CLIENTE_MODIFICA = "fatscad_cli_mod";
+    const NUMERO_FATTURA_SCADENZA_CLIENTE_ORIGINALE_MODIFICA = "fatscad_orig_cli_mod";
+    const FORNITORE_SCADENZA_CLIENTE_ORIGINALE_MODIFICA = "fornitore_orig_cli_mod";
+    
+    const CODICE_CAUSALE_CREAZIONE = "codcausale_cre";
+    const DES_CAUSALE_CREAZIONE = "descausale_cre";
+    const CATEGORIA_CAUSALE_CREAZIONE = "catcausale_cre";
+    
+    const CODICE_CAUSALE_CONFIGURAZIONE = "codcausale_conf";
+    
+    const CODICE_CONTO_CONFIGURAZIONE = "codconto_conf";
+    
+    const CODICE_CAUSALE_MODIFICA = "codcausale_mod";
+    const DES_CAUSALE_MODIFICA = "descausale_mod";
+    const CATEGORIA_CAISALE_MODIFICA = "catcausale_mod";
+    
+    const CODICE_CAUSALE_CANCELLAZIONE = "codcausale_del";
+    
+    const CAT_CLIENTE_MODIFICA = "catcliente_mod";
+    const CODICE_NEGOZIO_MODIFICA = "codnegozio_mod";
+
+    const DATA_FATTURA = "datafat";
+    const MESE_RIFERIMENTO = "meserif";
+    const TITOLO = "titolo";
+    const RAGIONE_SOCIALE_CLIENTE = "cliente";
+    const TIPO_ADDEBITO = "tipoadd";
+    const CODICE_NEGOZIO = "codneg";
+    const NUMERO_FATTURA = "numfat";
+    const RAGIONE_SOCIALE_BANCA_APPOGGIO = "ragsocbanca";
+    const IBAN_BANCA_APPOGGIO = "ibanbanca";
+    const TIPO_FATTURA = "tipofat";
+    const NOME_COGNOME_ASSISTITO = "assistito";
+    
+    const CATEGORIA_CLIENTE = "catcliente";
+    const QUANTITA_ARTICOLO = "quantita";
+    const CODICE_ARTICOLO = "articolo";
+    const IMPORTO_UNITARIO = "importo";
+    const ALIQUOTA_IVA = "aliquota";
+    const TOTALE_FATTURA = "totale";
+    const IMPONIBILE_FATTURA = "imponibile";
+    const IVA_FATTURA = "iva";
+    const ID_ARTICOLO = "idarticolo";
+    
+    const ANNO_ESERCIZIO_RICERCA = "anno_eserczio_sel";
+    const INDICATORE_SOLO_CONTO_ECONOMICO = "S";
+    const INDICATORE_TUTTI_I_CONTI = "N";
+    const INDICATORE_SALDI_INCLUSI = "saldiInclusi";
+    const INDICATORE_CONTO_ECONOMICO = "soloContoEconomico";
+
+    const DATA_SCADENZA_DA_RICERCA = "datascad_da";
+    const DATA_SCADENZA_A_RICERCA = "datascad_a";
+    const STATO_SCADENZA_RICERCA = "statoscad_sel";
+
+    const MESE = "mese";
+    const ANNO = "anno";
+    const FILE = "file";
+    const DATA_IMPORTAZIONE_DA = "datada";
+    const DATA_IMPORTAZIONE_A = "dataa";
+    
     // Setters -----------------------------------------------------------------------------
 
     public function setTestata($testata) {
@@ -119,7 +457,7 @@ abstract class Nexus6Abstract {
 
             $home .= "</ul></li>";
         }
-        $menu .= $home;
+        $this->menu .= $home;
 
         // O p er a z i o n i ------------------------------------------------------------
 
@@ -136,7 +474,7 @@ abstract class Nexus6Abstract {
             
             $operazioni .= "</ul></li>";
         }
-        $menu .= $operazioni;
+        $this->menu .= $operazioni;
 
         // A n a g r a f i c h e ------------------------------------------------------------
 
@@ -157,7 +495,7 @@ abstract class Nexus6Abstract {
 
             $anagrafiche .= "</ul></li>";
         }
-        $menu .= $anagrafiche;
+        $this->menu .= $anagrafiche;
 
         // C o n f i g u r a z i o n i ------------------------------------------------------------
 
@@ -178,7 +516,7 @@ abstract class Nexus6Abstract {
 
             $configurazioni .= "</ul></li>";
         }
-        $menu .= $configurazioni;
+        $this->menu .= $configurazioni;
 
         // S c a d e n z e ------------------------------------------------------------
 
@@ -197,7 +535,7 @@ abstract class Nexus6Abstract {
 
             $scadenze .= "</ul></li>";
         }
-        $menu .= $scadenze;
+        $this->menu .= $scadenze;
 
         // R i e p i o l o g h i ------------------------------------------------------------
 
@@ -234,7 +572,7 @@ abstract class Nexus6Abstract {
 
             $riepiloghi .= "</ul></li>";
         }
-        $menu .= $riepiloghi;
+        $this->menu .= $riepiloghi;
 
         // F a t t u r e ------------------------------------------------------------
 
@@ -256,7 +594,7 @@ abstract class Nexus6Abstract {
             $fatture .= "<li><a href='../fatture/creaFatturaClienteXMLFacade.class.php?modo=start'>FatturaXML</a></li>";            
             $fatture .= "</ul></li>";
         }
-        $menu .= $fatture;
+        $this->menu .= $fatture;
 
         // S t r u m e n t i ------------------------------------------------------------
 
@@ -284,10 +622,10 @@ abstract class Nexus6Abstract {
 
             $strumenti .= "</ul></li>";
         }
-        $menu .= $strumenti;
+        $this->menu .= $strumenti;
         
         
-        return $menu;
+        return $this->menu;
     }
 
     public function isAnnoBisestile($anno) {

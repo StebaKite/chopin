@@ -100,10 +100,12 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     public function getImportoContoPrincipale() {
         
         $importoContoPrincipale = 0;
-        foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
-            if ($unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE] == "Y") {
-                $importoContoPrincipale = $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE];
-                break;
+        if ($this->getQtaDettagliRegistrazione() > 0) {
+            foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+                if ($unDettaglio[DettaglioRegistrazione::IND_CONTO_PRINCIPALE] == "Y") {
+                    $importoContoPrincipale = $unDettaglio[DettaglioRegistrazione::IMP_REGISTRAZIONE];
+                    break;
+                }
             }
         }
         return $importoContoPrincipale;
@@ -144,13 +146,15 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     public function aggiungi() {
 
         $aggiungiDettaglio = TRUE;
-        foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
+        if ($this->getQtaDettagliRegistrazione() > 0) {
+            foreach ($this->getDettagliRegistrazione() as $unDettaglio) {
 
-            $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO]);
-            $codConto = explode(".", $contoComposto[0]);
-        
-            if ((trim($codConto[0]) == trim($this->getCodConto())) and ( trim($codConto[1]) == trim($this->getCodSottoconto()))) {
-                $aggiungiDettaglio = FALSE;
+                $contoComposto = explode(" - ", $unDettaglio[DettaglioRegistrazione::COD_CONTO_COMPOSTO]);
+                $codConto = explode(".", $contoComposto[0]);
+
+                if ((trim($codConto[0]) == trim($this->getCodConto())) and ( trim($codConto[1]) == trim($this->getCodSottoconto()))) {
+                    $aggiungiDettaglio = FALSE;
+                }
             }
         }
 
@@ -368,7 +372,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                 }
             }
         } else {
-            return false;
+            return true;
         }
     }
 

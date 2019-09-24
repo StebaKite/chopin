@@ -16,7 +16,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE]))
             $_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE] = serialize(new RicercaScadenzeTemplate());
         return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE]);

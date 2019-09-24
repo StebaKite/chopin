@@ -70,7 +70,8 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
         $db = Database::getInstance();
         $db->beginTransaction();
 
-        $registrazione->setNumFattura("");
+        $registrazione->setNumFattura(trim($scadenzaFornitore->getNumFattura()));       // numero della fattura in scadenza
+        $registrazione->setCodNegozio(trim($scadenzaFornitore->getCodNegozio()));       // lo stesso negozio della fattura in scadenza
 
         if ($registrazione->inserisci($db)) {
             foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {

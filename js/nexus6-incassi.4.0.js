@@ -86,7 +86,7 @@ $("#cliente_inc_mod").keyup(function () {
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_mod=" + descliente + "&codnegozio_inc_mod=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&descliente_inc_mod=" + descliente + "&codneg_inc_mod=" + codnegozio, true);
         xmlhttp.send();
     }
 });

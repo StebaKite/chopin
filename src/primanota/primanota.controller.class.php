@@ -15,17 +15,6 @@ class PrimanotaController extends Nexus6Abstract {
     public $primanotaFunction = null;
     private $request;
 
-    // Oggetti
-
-    const REGISTRAZIONE = "Obj_registrazione";
-    const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
-    const CAUSALE = "Obj_causale";
-    const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
-    const SCADENZA_CLIENTE = "Obj_scadenzacliente";
-    const FORNITORE = "Obj_fornitore";
-    const CLIENTE = "Obj_cliente";
-    const MERCATO = "Obj_mercato";
-
     // Metodi
 
     public function __construct(PrimanotaBusinessInterface $primanotaFunction) {
@@ -36,9 +25,9 @@ class PrimanotaController extends Nexus6Abstract {
     public function start() {
 
         if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest("modo"));
+            $this->setRequest($this->getParmFromRequest(self::MODO));
         } else {
-            $this->setRequest("start");         // default set
+            $this->setRequest(self::START);         // default set
         }
 
         $registrazione = Registrazione::getInstance();
@@ -52,357 +41,357 @@ class PrimanotaController extends Nexus6Abstract {
 
         // Registrazione fatture ==============================================================
 
-        if (null !== filter_input(INPUT_POST, "datareg_da")) {
-            $registrazione->setDatRegistrazioneDa($this->getParmFromRequest("datareg_da"));
-            $registrazione->setDatRegistrazioneA($this->getParmFromRequest("datareg_a"));
-            $registrazione->setCodNegozioSel($this->getParmFromRequest("codneg_sel"));
-            $registrazione->setCodCausaleSel($this->getParmFromRequest("causale"));
-            $causale->setCodCausale($this->getParmFromRequest("causale"));
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA)) {
+            $registrazione->setDatRegistrazioneDa($this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA));
+            $registrazione->setDatRegistrazioneA($this->getParmFromRequest(self::DATA_REGISTRAZIONE_A_RICERCA));
+            $registrazione->setCodNegozioSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
+            $registrazione->setCodCausaleSel($this->getParmFromRequest(self::CAUSALE_RICERCA));
+            $causale->setCodCausale($this->getParmFromRequest(self::CAUSALE_RICERCA));
         }
 
-        if (null !== filter_input(INPUT_POST, "importo")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto"));
-            $dettaglioRegistrazione->setCodContoComposto($this->getParmFromRequest("codconto"));
-            $dettaglioRegistrazione->setCodSottoconto($this->getParmFromRequest("codsottoconto"));
-            $dettaglioRegistrazione->setIndDareavere(strtoupper($this->getParmFromRequest("dareAvere")));            
-            $dettaglioRegistrazione->setImpRegistrazione(str_replace(",", ".", $this->getParmFromRequest("importo")));
-            $dettaglioRegistrazione->setIdDettaglioRegistrazione($this->getParmFromRequest("iddettaglio"));
+        if (null !== $this->getParmFromRequest(self::IMPORTO_DETTAGLIO)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setCodContoComposto($this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setCodSottoconto($this->getParmFromRequest(self::CODICE_SOTTOCONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setIndDareavere(strtoupper($this->getParmFromRequest(self::DARE_AVERE_DETTAGLIO)));            
+            $dettaglioRegistrazione->setImpRegistrazione(str_replace(",", ".", $this->getParmFromRequest(self::IMPORTO_DETTAGLIO)));
+            $dettaglioRegistrazione->setIdDettaglioRegistrazione($this->getParmFromRequest(self::ID_DETTAGLIO));
         }
 
-        if (null !== filter_input(INPUT_POST, "importo_dettaglio")) {
-            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $this->getParmFromRequest("importo_dettaglio")));
-            $scadenzaCliente->setImportoScadenza(str_replace(",", ".", $this->getParmFromRequest("importo_dettaglio")));
+        if (null !== $this->getParmFromRequest(self::IMPORTO_DETTAGLIO_IN_SCADENZA)) {
+            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $this->getParmFromRequest(self::IMPORTO_DETTAGLIO_IN_SCADENZA)));
+            $scadenzaCliente->setImportoScadenza(str_replace(",", ".", $this->getParmFromRequest(self::IMPORTO_DETTAGLIO_IN_SCADENZA)));
         }
 
-        if (null !== filter_input(INPUT_POST, "dareAvere")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto"));
-            $dettaglioRegistrazione->setCodSottoconto($this->getParmFromRequest("codsottoconto"));
-            $dettaglioRegistrazione->setIndDareavere(strtoupper($this->getParmFromRequest("dareAvere")));
-            $dettaglioRegistrazione->setIdDettaglioRegistrazione($this->getParmFromRequest("iddettaglio"));
+        if (null !== $this->getParmFromRequest(self::DARE_AVERE_DETTAGLIO)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setCodSottoconto($this->getParmFromRequest(self::CODICE_SOTTOCONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setIndDareavere(strtoupper($this->getParmFromRequest(self::DARE_AVERE_DETTAGLIO)));
+            $dettaglioRegistrazione->setIdDettaglioRegistrazione($this->getParmFromRequest(self::ID_DETTAGLIO));
         }
 
-        if (null !== filter_input(INPUT_POST, "codconto")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto"));
-            $dettaglioRegistrazione->setIndDareAvere(strtoupper($this->getParmFromRequest("dareAvere")));
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO));
+            $dettaglioRegistrazione->setIndDareAvere(strtoupper($this->getParmFromRequest(self::DARE_AVERE_DETTAGLIO)));
         }
 
-        if (null !== filter_input(INPUT_POST, "causale")) {
-            $causale->setCodCausale($this->getParmFromRequest("causale"));
+        if (null !== $this->getParmFromRequest(self::CAUSALE_RICERCA)) {
+            $causale->setCodCausale($this->getParmFromRequest(self::CAUSALE_RICERCA));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg"));
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_cre")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_cre"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_cre"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_cre"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_cre"));
-            $registrazione->setIdFornitore($this->getParmFromRequest("fornitore_cre"));
-            $registrazione->setIdCliente($this->getParmFromRequest("cliente_cre"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_cre"));
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_CREAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setIdFornitore($this->getParmFromRequest(self::FORNITORE_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setIdCliente($this->getParmFromRequest(self::CLIENTE_REGISTRAZIONE_CREAZIONE));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_REGISTRAZIONE_CREZIONE));
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
+            $scadenzaCliente->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_CREAZIONE);
+            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_CREAZIONE);
         }
 
-        if (null !== filter_input(INPUT_POST, "idfornitore")) {
-            $scadenzaFornitore->setIdFornitore($this->getParmFromRequest("idfornitore"));
-            $scadenzaFornitore->setNumFattura($this->getParmFromRequest("numfatt"));
-            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest("datareg"));
-            $registrazione->setIdFornitore($this->getParmFromRequest("idfornitore"));
-            $registrazione->setCodCausale($this->getParmFromRequest("codCausale"));            
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
+        if (null !== $this->getParmFromRequest(self::ID_FORNITORE)) {
+            $scadenzaFornitore->setIdFornitore($this->getParmFromRequest(self::ID_FORNITORE));
+            $scadenzaFornitore->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
+            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest(self::DATA_REGISTRAZIONE));
+            $registrazione->setIdFornitore($this->getParmFromRequest(self::ID_FORNITORE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CODICE_CAUSALE));
+//            $scadenzaCliente->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_CREAZIONE);
+//            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_CREAZIONE);
         }
 
-        if (null !== filter_input(INPUT_POST, "idcliente")) {
-            $scadenzaCliente->setIdCliente($this->getParmFromRequest("idcliente"));
-            $scadenzaCliente->setNumFattura($this->getParmFromRequest("numfatt"));
-            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest("datareg"));
-            $registrazione->setIdCliente($this->getParmFromRequest("idcliente"));
+        if (null !== $this->getParmFromRequest(self::ID_CLIENTE)) {
+            $scadenzaCliente->setIdCliente($this->getParmFromRequest(self::ID_CLIENTE));
+            $scadenzaCliente->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
+            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE));
+            $registrazione->setIdCliente($this->getParmFromRequest(self::ID_CLIENTE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datascad_for")) {
-            $scadenzaFornitore->setIdFornitore($this->getParmFromRequest("idfornitore"));
-            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest("datascad_for"));
-            $scadenzaFornitore->setDatScadenzaNuova($this->getParmFromRequest("datascad_new"));
-            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $this->getParmFromRequest("impscad_for")));
-            $scadenzaFornitore->setNumFattura($this->getParmFromRequest("numfatt"));
+        if (null !== $this->getParmFromRequest(self::DATA_SCADENZA_FORNITORE)) {
+            $scadenzaFornitore->setIdFornitore($this->getParmFromRequest(self::ID_FORNITORE));
+            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest(self::DATA_SCADENZA_FORNITORE));
+            $scadenzaFornitore->setDatScadenzaNuova($this->getParmFromRequest(self::DATA_SCADENZA_NUOVA));
+            $scadenzaFornitore->setImpInScadenza(str_replace(",", ".", $this->getParmFromRequest(self::IMPORTO_SCADENZA_FORNITORE)));
+            $scadenzaFornitore->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datascad_cli")) {
-            $scadenzaCliente->setIdCliente($this->getParmFromRequest("idcliente"));
-            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest("datascad_cli"));
-            $scadenzaCliente->setImpRegistrazione(str_replace(",", ".", $this->getParmFromRequest("impscad_cli")));
-            $scadenzaCliente->setNumFattura($this->getParmFromRequest("numfatt"));
+        if (null !== $this->getParmFromRequest(self::DATA_SCADENZA_CLIENTE)) {
+            $scadenzaCliente->setIdCliente($this->getParmFromRequest(self::ID_CLIENTE));
+            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest(self::DATA_SCADENZA_CLIENTE));
+            $scadenzaCliente->setImpRegistrazione(str_replace(",", ".", $this->getParmFromRequest(self::IMPORTO_SCADENZA_CLIENTE)));
+            $scadenzaCliente->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datascad_new_for")) {
-            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest("datascad_old_for"));
-            $scadenzaFornitore->setDatScadenzaNuova($this->getParmFromRequest("datascad_new_for"));
-            $scadenzaFornitore->setNumFattura($this->getParmFromRequest("numfatt"));
+        if (null !== $this->getParmFromRequest(self::DATA_SCADENZA_NUOVA_FORNITORE)) {
+            $scadenzaFornitore->setDatScadenza($this->getParmFromRequest(self::DATA_SCADENZA_VECCHIA_FORNITORE));
+            $scadenzaFornitore->setDatScadenzaNuova($this->getParmFromRequest(self::DATA_SCADENZA_NUOVA_FORNITORE));
+            $scadenzaFornitore->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datascad_new_cli")) {
-            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest("datascad_old_cli"));
-            $scadenzaCliente->setDatScadenzaNuova($this->getParmFromRequest("datascad_new_cli"));
-            $scadenzaCliente->setNumFattura($this->getParmFromRequest("numfatt"));
+        if (null !== $this->getParmFromRequest(self::DATA_SCADENZA_NUOVA_CLIENTE)) {
+            $scadenzaCliente->setDatRegistrazione($this->getParmFromRequest(self::DATA_SCADENZA_VECCHIA_CLIENTE));
+            $scadenzaCliente->setDatScadenzaNuova($this->getParmFromRequest(self::DATA_SCADENZA_NUOVA_CLIENTE));
+            $scadenzaCliente->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_FORNITORE));
         }
         
-        if (null !== filter_input(INPUT_POST, "idreg")) {
-            $registrazione->setIdRegistrazione($this->getParmFromRequest("idreg"));
+        if (null !== $this->getParmFromRequest(self::ID_REGISTRAZIONE)) {
+            $registrazione->setIdRegistrazione($this->getParmFromRequest(self::ID_REGISTRAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_mod")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_mod"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_mod"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_mod"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_mod"));
-            $registrazione->setIdFornitore($this->getParmFromRequest("fornitore_mod"));
-            $registrazione->setIdCliente($this->getParmFromRequest("cliente_mod"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_mod"));
-            $registrazione->setNumFatturaOrig($this->getParmFromRequest("numfatt_mod_orig"));
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_mod");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_MODIFICA)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_MODIFICA));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_MODIFICA));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_REGISTRAZIONE_MODIFICA));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_REGISTRAZIONE_MODIFICA));
+            $registrazione->setIdFornitore($this->getParmFromRequest(self::FORNITORE_REGISTRAZIONE_MODIFICA));
+            $registrazione->setIdCliente($this->getParmFromRequest(self::CLIENTE_REGISTRAZIONE_MODIFICA));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_REGISTRAZIONE_MODIFICA));
+            $registrazione->setNumFatturaOrig($this->getParmFromRequest(self::NUMERO_FATTURA_REGISTRAZIONE_ORIGINALE_MODIFICA));
+//            $scadenzaCliente->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_MODIFICA);
+//            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_MODIFICA);
         }
 
-        if (null !== filter_input(INPUT_POST, "newcontodett_cre")) {
-            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest("newimpdett_cre"));
-            $dettaglioRegistrazione->setIndDareavere($this->getParmFromRequest("newsegnodett_cre"));
-            $temp = explode(" - ", $this->getParmFromRequest("newcontodett_cre"));      // Conto - descrizione
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO_CREAZIONE)) {
+            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest(self::IMPORTO_DETTAGLIO_CREAZIONE));
+            $dettaglioRegistrazione->setIndDareavere($this->getParmFromRequest(self::SEGNO_DETTAGLIO_CREAZIONE));
+            $temp = explode(" - ", $this->getParmFromRequest(self::CODICE_CONTO_DETTAGLIO_CREAZIONE));      // Conto - descrizione
             $cc = explode(".", $temp[0]);   // conto.sottoconto
             $dettaglioRegistrazione->setCodConto($cc[0]);   // conto
             $dettaglioRegistrazione->setCodSottoconto($cc[1]);  // sottoconto
         }
         
-        if (null !== filter_input(INPUT_POST, "scadenzeTable")) {
-            $scadenzaCliente->setScadenzeTable($this->getParmFromRequest("scadenzeTable"));
+        if (null !== $this->getParmFromRequest(self::TABELLA_SCADENZE)) {
+            $scadenzaCliente->setScadenzeTable($this->getParmFromRequest(self::TABELLA_SCADENZE));
         }
         
         // Registrazione incasso ==========================================================
 
-        if (null !== filter_input(INPUT_POST, "cliente_inc_cre")) {
-            $cliente->setIdCliente($this->getParmFromRequest("cliente_inc_cre"));
-            $scadenzaCliente->setCodNegozioSel($this->getParmFromRequest("codnegozio_inc_cre"));
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_cre");
-            $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_cre");
-            $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_cre");
+        if (null !== $this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_CREAZIONE)) {
+            $cliente->setIdCliente($this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_CREAZIONE));
+            $scadenzaCliente->setCodNegozioSel($this->getParmFromRequest(self::CODICE_NEGOZIO_INCASSO_CREAZIONE));
+            $scadenzaCliente->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_INCASSO_CREAZIONE);
+            $scadenzaCliente->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_INCASSO_CREAZIONE);
+            $dettaglioRegistrazione->setIdTablePagina(self::TABELLA_DETTAGLI_INCASSO_CREAZIONE);
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_inc_cre")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_inc_cre"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_inc_cre"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_inc_cre"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_inc_cre"));
-            $registrazione->setIdCliente($this->getParmFromRequest("cliente_inc_cre"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_inc_cre"));
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_INCASSO_CREAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_INCASSO_CREAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_INCASSO_CREAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CODICE_CAUSALE_INCASSO_CREAZIONE));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_INCASSO_CREAZIONE));
+            $registrazione->setIdCliente($this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_CREAZIONE));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_INCASSO_CREAZIONE));
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
         }
 
         // modifica incasso ===============================================================
 
-        if (null !== filter_input(INPUT_POST, "cliente_inc_mod")) {
-            $cliente->setIdCliente($this->getParmFromRequest("cliente_inc_mod"));
-            $scadenzaCliente->setCodNegozioSel($this->getParmFromRequest("codnegozio_inc_mod"));
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_mod");
-            $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_mod");
-            $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_mod");
+        if (null !== $this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_MODIFICA)) {
+            $cliente->setIdCliente($this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_MODIFICA));
+            $scadenzaCliente->setCodNegozioSel($this->getParmFromRequest(self::CODICE_NEGOZIO_INCASSO_MODIFICA));
+            $scadenzaCliente->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_INCASSO_MODIFICA);
+            $scadenzaCliente->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_INCASSO_MODIFICA);
+            $dettaglioRegistrazione->setIdTablePagina(self::TABELLA_DETTAGLI_INCASSO_MODIFICA);
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_inc_mod")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_inc_mod"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_inc_mod"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_inc_mod"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_inc_mod"));
-            $registrazione->setIdFornitore(" ");
-            $registrazione->setIdCliente($this->getParmFromRequest("cliente_inc_mod"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_inc_mod"));
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_INCASSO_MODIFICA)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_INCASSO_MODIFICA));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_INCASSO_MODIFICA));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CODICE_CAUSALE_INCASSO_MODIFICA));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_INCASSO_MODIFICA));
+            $registrazione->setIdFornitore(self::EMPTYSTRING);
+            $registrazione->setIdCliente($this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_MODIFICA));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_INCASSO_MODIFICA));
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
         }
 
-        if (null !== filter_input(INPUT_POST, "idinc")) {
-            $registrazione->setIdRegistrazione($this->getParmFromRequest("idinc"));
-            $scadenzaCliente->setIdTableScadenzeAperte("scadenze_aperte_inc_mod");
-            $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_mod");
-            $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_mod");
+        if (null !== $this->getParmFromRequest(self::ID_INCASSO)) {
+            $registrazione->setIdRegistrazione($this->getParmFromRequest(self::ID_INCASSO));
+            $scadenzaCliente->setIdTableScadenzeAperte(self::SCADENZE_APERTE_INCASSO_MODIFICA);
+            $scadenzaCliente->setIdTableScadenzeChiuse(self::SCADENZE_CHIUSE_INCASSO_MODIFICA);
+            $dettaglioRegistrazione->setIdTablePagina(self::DETTAGLIO_INCASSO_MODIFICA);
         }
 
         // aggiungi o rimuovi scadenze in creazione/modifica incasso ===================
 
-        if (null !== filter_input(INPUT_POST, "idscadcli")) {
-            $scadenzaCliente->setIdScadenza($this->getParmFromRequest("idscadcli"));
-            $scadenzaCliente->setIdTableScadenzeAperte($this->getParmFromRequest("idtableaperte"));
-            $scadenzaCliente->setIdTableScadenzeChiuse($this->getParmFromRequest("idtablechiuse"));
+        if (null !== $this->getParmFromRequest(self::ID_SCADENZA_CLIENTE)) {
+            $scadenzaCliente->setIdScadenza($this->getParmFromRequest(self::ID_SCADENZA_CLIENTE));
+            $scadenzaCliente->setIdTableScadenzeAperte($this->getParmFromRequest(self::TABELLA_SCADENZE_APERTE));
+            $scadenzaCliente->setIdTableScadenzeChiuse($this->getParmFromRequest(self::TABELLA_SCADENZE_CHIUSE));
         }
 
         // Registrazione pagamento =====================================================
         // ricerca scadenza aperte fornitore
         
-        if (null !== filter_input(INPUT_POST, "fornitore_pag_cre")) {
-            $fornitore->setIdFornitore($this->getParmFromRequest("fornitore_pag_cre"));
-            $scadenzaFornitore->setCodNegozioSel($_REQUEST["codnegozio_pag_cre"]);
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
-            $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");
-            $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_cre");
+        if (null !== $this->getParmFromRequest(self::FORNITORE_PAGAMENTO_CREAZIONE)) {
+            $fornitore->setIdFornitore($this->getParmFromRequest(self::FORNITORE_PAGAMENTO_CREAZIONE));
+            $scadenzaFornitore->setCodNegozioSel($this->getParmFromRequest(self::CODICE_NEGOZIO_PAGAMENTO_CREAZIONE));
+            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_PAGAMENTO_CREAZIONE);
+            $scadenzaFornitore->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_PAGAMENTO_CREAZIONE);
+            $dettaglioRegistrazione->setIdTablePagina(self::DETTAGLI_PAGAMENTO_CREAZIONE);
         }
 
         // creazione pagamento
         
-        if (null !== filter_input(INPUT_POST, "datareg_pag_cre")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_pag_cre"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_pag_cre"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_pag_cre"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_pag_cre"));
-            $registrazione->setIdFornitore($this->getParmFromRequest("fornitore_pag_cre"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_pag_cre"));
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_cre");
-            $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_cre");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_PAGAMENTO_CREAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_PAGAMENTO_CREAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_PAGAMENTO_CREAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CODICE_CAUSALE_PAGAMENTO_CREAZIONE));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_PAGAMENTO_CREAZIONE));
+            $registrazione->setIdFornitore($this->getParmFromRequest(self::FORNITORE_PAGAMENTO_CREAZIONE));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_PAGAMENTO_CREAZIONE));
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
+            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_PAGAMENTO_CREAZIONE);
+            $scadenzaFornitore->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_PAGAMENTO_CREAZIONE);
         }
 
         // modifica pagamento
         
-        if (null !== filter_input(INPUT_POST, "idpag")) {
-            $registrazione->setIdRegistrazione($this->getParmFromRequest("idpag"));
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_mod");
-            $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_mod");
-            $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_mod");
+        if (null !== $this->getParmFromRequest(self::ID_PAGAMENTO)) {
+            $registrazione->setIdRegistrazione($this->getParmFromRequest(self::ID_PAGAMENTO));
+            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_PAGAMENTO_MODIFICA);
+            $scadenzaFornitore->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_PAGAMENTO_MODIFICA);
+            $dettaglioRegistrazione->setIdTablePagina(self::DETTAGLI_PAGAMENTO_MODIFICA);
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_pag_mod")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_pag_mod"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_pag_mod"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_pag_mod"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_pag_mod"));
-            $registrazione->setIdFornitore($this->getParmFromRequest("fornitore_pag_mod"));
-            $registrazione->setNumFattura($this->getParmFromRequest("numfatt_pag_mod"));
-            $registrazione->setIdCliente(" ");
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
-            $scadenzaFornitore->setIdTableScadenzeAperte("scadenze_aperte_pag_mod");
-            $scadenzaFornitore->setIdTableScadenzeChiuse("scadenze_chiuse_pag_mod");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_PAGAMENTO_MODIFICA)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_PAGAMENTO_MODIFICA));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_REGISTRAZIONE_PAGAMENTO_MODIFICA));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CODICE_CAUSALE_PAGAMENTO_MODIFICA));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_PAGAMENTO_MODIFICA));
+            $registrazione->setIdFornitore($this->getParmFromRequest(self::FORNITORE_PAGAMENTO_MODIFICA));
+            $registrazione->setNumFattura($this->getParmFromRequest(self::NUMERO_FATTURA_PAGAMENTO_MODIFICA));
+            $registrazione->setIdCliente(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
+            $scadenzaFornitore->setIdTableScadenzeAperte(self::TABELLA_SCADENZE_APERTE_PAGAMENTO_MODIFICA);
+            $scadenzaFornitore->setIdTableScadenzeChiuse(self::TABELLA_SCADENZE_CHIUSE_PAGAMENTO_MODIFICA);
         }
 
         // aggiungi o rimuovi scadenze in creazione/modifica pagamento
         
-        if (null !== filter_input(INPUT_POST, "idscad")) {
-            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest("idscad"));
-            $scadenzaFornitore->setIdTableScadenzeAperte($this->getParmFromRequest("idtableaperte"));
-            $scadenzaFornitore->setIdTableScadenzeChiuse($this->getParmFromRequest("idtablechiuse"));
+        if (null !== $this->getParmFromRequest(self::ID_SCADENZA)) {
+            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest(self::ID_SCADENZA));
+            $scadenzaFornitore->setIdTableScadenzeAperte($this->getParmFromRequest(self::TABELLA_SCADENZE_APERTE));
+            $scadenzaFornitore->setIdTableScadenzeChiuse($this->getParmFromRequest(self::TABELLA_SCADENZE_CHIUSE));
         }
 
         // aggiungi o rimuovi scadenze in creazione/modifica incasso ===================
 
-        if (null !== filter_input(INPUT_POST, "idscadfor")) {
-            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest("idscadfor"));
-            $scadenzaFornitore->setIdTableScadenzeAperte($this->getParmFromRequest("idtableaperte"));
-            $scadenzaFornitore->setIdTableScadenzeChiuse($this->getParmFromRequest("idtablechiuse"));
+        if (null !== $this->getParmFromRequest(self::ID_SCADENZA_FORNITORE)) {
+            $scadenzaFornitore->setIdScadenza($this->getParmFromRequest(self::ID_SCADENZA_FORNITORE));
+            $scadenzaFornitore->setIdTableScadenzeAperte($this->getParmFromRequest(self::TABELLA_SCADENZE_APERTE));
+            $scadenzaFornitore->setIdTableScadenzeChiuse($this->getParmFromRequest(self::TABELLA_SCADENZE_CHIUSE));
         }
 
         // Registrazione corrispettivo mercato ==================================================
 
-        if (null !== filter_input(INPUT_POST, "codneg_cormer_cre")) {
-            $mercato->setCodNegozio($this->getParmFromRequest("codneg_cormer_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_CREAZIONE)) {
+            $mercato->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codneg_cormer_mod")) {
-            $mercato->setCodNegozio($this->getParmFromRequest("codneg_cormer_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_MODIFICA)) {
+            $mercato->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "codconto_cormer_cre")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto_cormer_cre"));
-            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest("importo_cormer_cre"));
-            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest("aliquota_cormer_cre"));
-            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest("iva_cormer_cre"));
-            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest("imponibile_cormer_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_MERCATO_CREAZIONE)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest(self::IMPORTO_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest(self::ALIQUOTA_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest(self::IVA_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest(self::IMPONIBILE_CORRISPETTIVO_MERCATO_CREAZIONE));
         }
         
-        if (null !== filter_input(INPUT_POST, "codconto_cormer_mod")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto_cormer_mod"));
-            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest("importo_cormer_mod"));
-            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest("aliquota_cormer_mod"));
-            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest("iva_cormer_mod"));
-            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest("imponibile_cormer_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_MERCATO_MODIFICA)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_MERCATO_MODIFICA));
+            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest(self::IMPORTO_CORRISPETTIVO_MERCATO_MODIFICA));
+            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest(self::ALIQUOTA_CORRISPETTIVO_MERCATO_MODIFICA));
+            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest(self::IVA_CORRISPETTIVO_MERCATO_MODIFICA));
+            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest(self::IMPONIBILE_CORRISPETTIVO_MERCATO_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_cormer_cre")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_cormer_cre"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_cormer_cre"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_cormer_cre"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_cormer_cre"));
-            $registrazione->setIdMercato($this->getParmFromRequest("mercato_cormer_cre"));
-            $registrazione->setIdFornitore(" ");
-            $registrazione->setIdCliente(" ");
-            $registrazione->setNumFattura("");
-            $registrazione->setStaRegistrazione("00");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_CREAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $registrazione->setIdMercato($this->getParmFromRequest(self::MERCATO_CORRISPETTIVO_MERCATO_CREAZIONE));
+            $registrazione->setIdFornitore(self::EMPTYSTRING);
+            $registrazione->setIdCliente(self::EMPTYSTRING);
+            $registrazione->setNumFattura(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_cormer_mod")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_cormer_mod"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_cormer_mod"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_cormer_mod"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_cormer_mod"));
-            $registrazione->setIdMercato($this->getParmFromRequest("mercato_cormer_mod"));
-            $registrazione->setIdFornitore(" ");
-            $registrazione->setIdCliente(" ");
-            $registrazione->setNumFattura("");
-            $registrazione->setStaRegistrazione("00");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_MODIFICA)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_MERCATO_MODIFICA));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_CORRISPETTIVO_MERCATO_MODIFICA));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_CORRISPETTIVO_MERCATO_MODIFICA));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_MERCATO_MODIFICA));
+            $registrazione->setIdMercato($this->getParmFromRequest(self::MERCATO_CORRISPETTIVO_MERCATO_MODIFICA));
+            $registrazione->setIdFornitore(self::EMPTYSTRING);
+            $registrazione->setIdCliente(self::EMPTYSTRING);
+            $registrazione->setNumFattura(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
         }
 
         // Registrazione corrispettivo negozio ==================================================
 
-        if (null !== filter_input(INPUT_POST, "codneg_corneg_cre")) {
-            $mercato->setCodNegozio($this->getParmFromRequest("codneg_corneg_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_CREAZIONE)) {
+            $mercato->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codneg_cormer_mod")) {
-            $mercato->setCodNegozio($this->getParmFromRequest("codneg_cormer_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_MODIFICA)) {
+            $mercato->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "codconto_corneg_cre")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto_corneg_cre"));
-            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest("importo_corneg_cre"));
-            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest("aliquota_corneg_cre"));
-            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest("iva_corneg_cre"));
-            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest("imponibile_corneg_cre"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_NEGOZIO_CREAZIONE)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest(self::IMPORTO_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest(self::ALIQUOTA_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest(self::IVA_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest(self::IMPONIBILE_CORRISPETTIVO_NEGOZIO_CREAZIONE));
         }
 
-        if (null !== filter_input(INPUT_POST, "codconto_corneg_mod")) {
-            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest("codconto_corneg_mod"));
-            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest("importo_corneg_mod"));
-            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest("aliquota_corneg_mod"));
-            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest("iva_corneg_mod"));
-            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest("imponibile_corneg_mod"));
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_NEGOZIO_MODIFICA)) {
+            $dettaglioRegistrazione->setCodConto($this->getParmFromRequest(self::CODICE_CONTO_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $dettaglioRegistrazione->setImpRegistrazione($this->getParmFromRequest(self::IMPORTO_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $dettaglioRegistrazione->setAliquota($this->getParmFromRequest(self::ALIQUOTA_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $dettaglioRegistrazione->setImpIva($this->getParmFromRequest(self::IVA_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $dettaglioRegistrazione->setImponibile($this->getParmFromRequest(self::IMPONIBILE_CORRISPETTIVO_NEGOZIO_MODIFICA));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_corneg_cre")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_corneg_cre"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_corneg_cre"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_corneg_cre"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_corneg_cre"));
-            $registrazione->setIdFornitore(" ");
-            $registrazione->setIdCliente(" ");
-            $registrazione->setNumFattura("");
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_CREAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_CREAZIONE));
+            $registrazione->setIdFornitore(self::EMPTYSTRING);
+            $registrazione->setIdCliente(self::EMPTYSTRING);
+            $registrazione->setNumFattura(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_corneg_mod")) {
-            $registrazione->setDatRegistrazione($this->getParmFromRequest("datareg_corneg_mod"));
-            $registrazione->setDesRegistrazione($this->getParmFromRequest("descreg_corneg_mod"));
-            $registrazione->setCodCausale($this->getParmFromRequest("causale_corneg_mod"));
-            $registrazione->setCodNegozio($this->getParmFromRequest("codneg_corneg_mod"));
-            $registrazione->setIdFornitore(" ");
-            $registrazione->setIdCliente(" ");
-            $registrazione->setNumFattura("");
-            $registrazione->setStaRegistrazione("00");
-            $registrazione->setIdMercato("");
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_MODIFICA)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DES_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $registrazione->setCodNegozio($this->getParmFromRequest(self::CODICE_NEGOZIO_CORRISPETTIVO_NEGOZIO_MODIFICA));
+            $registrazione->setIdFornitore(self::EMPTYSTRING);
+            $registrazione->setIdCliente(self::EMPTYSTRING);
+            $registrazione->setNumFattura(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::EMPTYSTRING);
+            $registrazione->setIdMercato(self::EMPTYSTRING);
         }
 
         // Serializzo in sessione gli oggetti modificati ========================================
@@ -416,10 +405,10 @@ class PrimanotaController extends Nexus6Abstract {
         $_SESSION[self::CLIENTE] = serialize($cliente);
         $_SESSION[self::MERCATO] = serialize($mercato);
 
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->primanotaFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->primanotaFunction->go();
         }
     }

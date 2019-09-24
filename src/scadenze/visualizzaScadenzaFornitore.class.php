@@ -17,7 +17,7 @@ class VisualizzaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBu
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE]))
             $_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE] = serialize(new VisualizzaScadenzaFornitore());
         return unserialize($_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE]);

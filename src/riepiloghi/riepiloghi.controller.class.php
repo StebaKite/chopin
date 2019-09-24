@@ -10,12 +10,6 @@ class RiepiloghiController extends Nexus6Abstract {
     private $request;
 
     /**
-     * Oggetti
-     */
-    const BILANCIO = "Obj_bilancio";
-    const RIEPILOGO = "Obj_riepilogo";
-
-    /**
      * Metodi
      */
     public function __construct(RiepiloghiBusinessInterface $riepiloghiFunction) {
@@ -26,35 +20,35 @@ class RiepiloghiController extends Nexus6Abstract {
     public function start() {
 
         if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest("modo"));
+            $this->setRequest($this->getParmFromRequest(self::MODO));
         } else {
-            $this->setRequest("start");         // default set
+            $this->setRequest(self::START);         // default set
         }
 
         $bilancio = Bilancio::getInstance();
         $riepilogo = Riepilogo::getInstance();
 
-        if (null !== filter_input(INPUT_POST, "anno_eserczio_sel")) {
-            $bilancio->setDataregDa("01/01/" . $this->getParmFromRequest("anno_eserczio_sel"));
-            $bilancio->setDataregA("31/12/" . $this->getParmFromRequest("anno_eserczio_sel"));
-            $bilancio->setAnnoEsercizioSel($this->getParmFromRequest("anno_eserczio_sel"));
-            $bilancio->setSoloContoEconomico("N");
-            $bilancio->setCodnegSel($this->getParmFromRequest("codneg_sel"));
-            $bilancio->setSaldiInclusi($this->getParmFromRequest("saldiInclusi"));
+        if (null !== $this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA)) {
+            $bilancio->setDataregDa("01/01/" . $this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA));
+            $bilancio->setDataregA("31/12/" . $this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA));
+            $bilancio->setAnnoEsercizioSel($this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA));
+            $bilancio->setSoloContoEconomico(self::INDICATORE_TUTTI_I_CONTI);
+            $bilancio->setCodnegSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
+            $bilancio->setSaldiInclusi($this->getParmFromRequest(self::INDICATORE_SALDI_INCLUSI));
         }
 
-        if (null !== filter_input(INPUT_POST, "datareg_da")) {
-            $bilancio->setDataregDa($this->getParmFromRequest("datareg_da"));
-            $bilancio->setDataregA($this->getParmFromRequest("datareg_a"));
-            $bilancio->setCodnegSel($this->getParmFromRequest("codneg_sel"));
-            $bilancio->setCatconto($this->getParmFromRequest("catconto_sel"));
-            $bilancio->setSaldiInclusi($this->getParmFromRequest("saldiInclusi"));
-            $bilancio->setSoloContoEconomico($this->getParmFromRequest("soloContoEconomico"));
-            $riepilogo->setDataregDa($this->getParmFromRequest("datareg_da"));
-            $riepilogo->setDataregA($this->getParmFromRequest("datareg_a"));
-            $riepilogo->setSaldiInclusi($this->getParmFromRequest("saldiInclusi"));
-            $riepilogo->setSoloContoEconomico($this->getParmFromRequest("soloContoEconomico"));
-            $riepilogo->setCodnegSel($this->getParmFromRequest("codneg_sel"));
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA)) {
+            $bilancio->setDataregDa($this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA));
+            $bilancio->setDataregA($this->getParmFromRequest(self::DATA_REGISTRAZIONE_A_RICERCA));
+            $bilancio->setCodnegSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
+            $bilancio->setCatconto($this->getParmFromRequest(self::CATEGORIA_CONTO_RICERCA));
+            $bilancio->setSaldiInclusi($this->getParmFromRequest(self::INDICATORE_SALDI_INCLUSI));
+            $bilancio->setSoloContoEconomico($this->getParmFromRequest(self::INDICATORE_CONTO_ECONOMICO));
+            $riepilogo->setDataregDa($this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA));
+            $riepilogo->setDataregA($this->getParmFromRequest(self::DATA_REGISTRAZIONE_A_RICERCA));
+            $riepilogo->setSaldiInclusi($this->getParmFromRequest(self::INDICATORE_SALDI_INCLUSI));
+            $riepilogo->setSoloContoEconomico($this->getParmFromRequest(self::INDICATORE_CONTO_ECONOMICO));
+            $riepilogo->setCodnegSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
         }
 
         // Serializzo in sessione gli oggetti modificati
@@ -62,10 +56,10 @@ class RiepiloghiController extends Nexus6Abstract {
         $_SESSION[self::BILANCIO] = serialize($bilancio);
         $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
 
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->riepiloghiFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->riepiloghiFunction->go();
         }
     }

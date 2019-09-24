@@ -13,6 +13,7 @@ $("#nuovaRegistrazione").click(function () {
             // pulizia degli elementi in pagina
             document.getElementById("nuovaRegistrazioneForm").reset();
             $("#descreg_cre_control_group").removeClass("has-error");
+            $("#codneg_cre_control_group").removeClass("has-error");
             $("#causale_cre_control_group").removeClass("has-error");
             $("#datareg_cre_control_group").removeClass("has-error");
             $("#numfatt_cre_control_group").removeClass("has-error");
@@ -24,6 +25,9 @@ $("#nuovaRegistrazione").click(function () {
             $("#causale_cre").selectpicker('val', ' ');
             $("#fornitore_cre").selectpicker('val', ' ');
             $("#cliente_cre").selectpicker('val', ' ');
+            $("#codneg_cre_messaggio").html("");
+            $("#descreg_cre_messaggio").html("");
+            $("#causale_cre_messaggio").html("");
             $("#numfatt_cre_messaggio").html("");
             $("#scadenzesuppl_cre_messaggio").html("");
             $("#scadenzesuppl_cre").html("");
@@ -134,6 +138,7 @@ $("#button-ok-nuovascad-nuova-registrazione-form").click(
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_cre").html(xmlhttp.responseText);
+                            controllaDettagliRegistrazione("scadenzesuppl_cre");
                         }
                     }
                 };
@@ -146,6 +151,7 @@ $("#button-ok-nuovascad-nuova-registrazione-form").click(
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_cre").html(xmlhttp.responseText);
+                            controllaDettagliRegistrazione("scadenzesuppl_cre");                            
                         }
                     }
                 };
@@ -172,6 +178,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_mod").html(xmlhttp.responseText);
+                            controllaDettagliRegistrazione("scadenzesuppl_mod");                            
                         }
                     }
                 };
@@ -184,6 +191,7 @@ $("#button-ok-nuovascad-modifica-registrazione-form").click(
                     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                         if (isNotEmpty(xmlhttp.responseText)) {
                             $("#scadenzesuppl_mod").html(xmlhttp.responseText);
+                            controllaDettagliRegistrazione("scadenzesuppl_mod");                            
                         }
                     }
                 };
@@ -208,6 +216,8 @@ $("#button-ok-nuovodett-nuova-registrazione-form").click(
                 xmlhttp.onreadystatechange =
                         function () {
                             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                                $("#scadenzesuppl_cre_control_group").removeClass("has-error");
+                                $("#scadenzesuppl_cre_messaggio").html("");                    
                                 var sottocontiTable = xmlhttp.responseText;
                                 $("#dettagli_cre").html(sottocontiTable);
                                 controllaDettagliRegistrazione("dettagli_cre");
@@ -234,6 +244,8 @@ $("#button-ok-nuovodett-modifica-registrazione-form").click(
                 xmlhttp.onreadystatechange =
                         function () {
                             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                                $("#scadenzesuppl_mod_control_group").removeClass("has-error");
+                                $("#scadenzesuppl_mod_messaggio").html("");                    
                                 var sottocontiTable = xmlhttp.responseText;
                                 $("#dettagli_mod").html(sottocontiTable);
                                 controllaDettagliRegistrazione("dettagli_mod");
@@ -279,6 +291,8 @@ function modificaRegistrazione(idRegistrazione)
                         $("#fornitore_mod_control_group").removeClass("has-error");
                         $("#cliente_mod_control_group").removeClass("has-error");
                         $("#numfatt_mod_control_group").removeClass("has-error");
+                        $("#descreg_mod_messaggio").html("");
+                        $("#causale_mod_messaggio").html("");
                         $("#numfatt_mod_messaggio").html("");
                         $("#dettagli_mod_control_group").removeClass("has-error");
                         $("#dettagli_mod_messaggio").html("");
@@ -321,7 +335,7 @@ function modificaRegistrazione(idRegistrazione)
             $("#modifica-registrazione-dialog").modal("show");
         }
     };
-    xmlhttp.open("GET", "../primanota/modificaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
+    xmlhttp.open("POST", "../primanota/modificaRegistrazioneFacade.class.php?modo=start&idreg=" + idRegistrazione, true);
     xmlhttp.send();
 }
 
@@ -453,7 +467,13 @@ function validaNuovaRegistrazione() {
         esito += "00";
     }
 
-    if (esito === "1111111") {
+    if (isEmpty($("#scadenzesuppl_cre_messaggio").text())) {
+        esito += "1";
+    } else {
+        esito += "0";
+    }
+
+    if (esito === "11111111") {
         return true;
     } else {
         return false;
@@ -526,7 +546,13 @@ function validaModificaRegistrazione()
         esito += "00";
     }
 
-    if (esito === "1111111") {
+    if (isEmpty($("#scadenzesuppl_mod_messaggio").text())) {
+        esito += "1";
+    } else {
+        esito += "0";
+    }
+
+    if (esito === "11111111") {
         return true;
     } else {
         return false;
@@ -537,7 +563,7 @@ function validaModificaRegistrazione()
 // Function di aggiornamento
 // ---------------------------------------------------------------------
 
-function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importoField, segnoField, idDettaglio)
+function modificaDettaglioRegistrazione(idTable, idTableScad, conto, sottoconto, importoField, segnoField, idDettaglio)
 {
     var importoDettNormalizzato;
     var importo = $("#" + importoField).val();
@@ -553,9 +579,12 @@ function modificaDettaglioRegistrazione(idTable, conto, sottoconto, importoField
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (isNotEmpty(xmlhttp.responseText)) {
+                    $("#" + idTable + "_control_group").removeClass("has-error");
+                    $("#" + idTable + "_messaggio").html("");                    
+                    $("#" + idTableScad + "_control_group").removeClass("has-error");
+                    $("#" + idTableScad + "_messaggio").html("");       
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + idTable).html(dettagliTable);
-
                     controllaDettagliRegistrazione(idTable);
                 }
             }
@@ -623,6 +652,8 @@ function aggiungiDettaglioContoFornitore(idfornitore, campoDett, campoCausale)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                $("#" + campoDett + "_control_group").removeClass("has-error");
+                $("#" + campoDett + "_messaggio").html("");                    
                 if (isNotEmpty(xmlhttp.responseText)) {
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + campoDett).html(dettagliTable);
@@ -645,6 +676,8 @@ function aggiungiDettaglioContoCliente(idcliente, campoDett)
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                $("#" + campoDett + "_control_group").removeClass("has-error");
+                $("#" + campoDett + "_messaggio").html("");                    
                 if (isNotEmpty(xmlhttp.responseText)) {
                     var dettagliTable = xmlhttp.responseText;
                     $("#" + campoDett).html(dettagliTable);
@@ -666,7 +699,10 @@ function cancellaNuovaScadenzaFornitore(idTable, idFornitore, datScad, numFatt)
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
             $("#" + idTable).html(xmlhttp.responseText);
-        }
+            $("#" + idTable + "_control_group").removeClass("has-error");
+            $("#" + idTable + "_messaggio").html("");                    
+            controllaDettagliRegistrazione(idTable);
+  }
     };
     xmlhttp.open("GET", "../primanota/cancellaScadenzaFornitoreFacade.class.php?modo=start&idfornitore=" + idFornitore + "&datascad_for=" + datScad + "&numfatt=" + numFatt, true);
     xmlhttp.send();
@@ -680,6 +716,9 @@ function cancellaNuovaScadenzaCliente(idTable, idCliente, datScad, numFatt)
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
             $("#" + idTable).html(xmlhttp.responseText);
+            $("#" + idTable + "_control_group").removeClass("has-error");
+            $("#" + idTable + "_messaggio").html("");                    
+            controllaDettagliRegistrazione(idTable);
         }
     };
     xmlhttp.open("GET", "../primanota/cancellaScadenzaClienteFacade.class.php?modo=start&idcliente=" + idCliente + "&datascad_cli=" + datScad + "&numfatt=" + numFatt, true);
@@ -701,10 +740,12 @@ function modificaImportoScadenzaFornitore(idTable, idfornitore, datascad, numfat
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                $("#" + idTable + "_control_group").removeClass("has-error");
+                $("#" + idTable + "_messaggio").html("");                    
                 if (isNotEmpty(xmlhttp.responseText)) {
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
-                    controllaDettagliRegistrazione(idTableDet);                    
+                    controllaDettagliRegistrazione(idTable);                    
                 }
             }
         };
@@ -763,9 +804,11 @@ function modificaImportoScadenzaCliente(idTable, idcliente, datascad, numfatt, i
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 if (isNotEmpty(xmlhttp.responseText)) {
+                    $("#" + idTable + "_control_group").removeClass("has-error");
+                    $("#" + idTable + "_messaggio").html("");                    
                     var scadenzeTable = xmlhttp.responseText;
                     $("#" + idTable).html(scadenzeTable);
-                    controllaDettagliRegistrazione(idTableDet);                    
+                    controllaDettagliRegistrazione(idTable);                    
                 }
             }
         };

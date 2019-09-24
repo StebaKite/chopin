@@ -82,12 +82,13 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
 
         if ($registrazione->inserisci($db)) {
 
-            foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
-                if ($this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)) {
-                    
-                } else {
-                    $dettagli_ok = false;
-                    break;
+            if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() > 0) {                
+                foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+                    if ($this->creaDettaglioRegistrazione($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)) {
+                    } else {
+                        $dettagli_ok = false;
+                        break;
+                    }
                 }
             }
 
@@ -150,6 +151,7 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
         $fornitore = Fornitore::getInstance();
         $fornitore->setIdFornitore($registrazione->getIdFornitore());
         $fornitore->leggi($db);
+        $array = $utility->getConfig();
 
         $scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
         $scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());

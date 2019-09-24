@@ -88,7 +88,7 @@ class Causale extends CoreBase implements CoreInterface {
     public function caricaCausali($db) {
         $elencoCausali = "";
 
-        if (sizeof($this->getQtaCausali()) == 0) {
+        if ($this->getQtaCausali() == 0) {
             $this->load($db);
             $_SESSION[self::CAUSALE] = serialize($this);
         }

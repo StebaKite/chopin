@@ -239,14 +239,16 @@ class Sottoconto extends CoreBase implements CoreInterface {
     }
 
     public function searchSottoconto($sottoconto) {
-        foreach ($this->getSottoconti() as $unSottoconto) {
-            if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) == trim($sottoconto)) {
-                $this->setCodSottoconto($unSottoconto[Sottoconto::COD_SOTTOCONTO]);
-                $this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
-                $this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
-                $this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
-                break;
-            }
+        if ($this->getQtaSottoconti() > 0) {
+            foreach ($this->getSottoconti() as $unSottoconto) {
+                if (trim($unSottoconto[Sottoconto::COD_SOTTOCONTO]) == trim($sottoconto)) {
+                    $this->setCodSottoconto($unSottoconto[Sottoconto::COD_SOTTOCONTO]);
+                    $this->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
+                    $this->setDatCreazioneSottoconto($unSottoconto[Sottoconto::DAT_CREAZIONE_SOTTOCONTO]);
+                    $this->setQtaRegistrazioniTrovate($unSottoconto[Sottoconto::NUM_REG_SOTTOCONTO]);
+                    break;
+                }
+            }            
         }
         $_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
     }
@@ -309,7 +311,6 @@ class Sottoconto extends CoreBase implements CoreInterface {
     }
 
     public function setSottoconti($sottoconti) {
-        sort($sottoconti);
         $this->sottoconti = $sottoconti;
     }
 

@@ -36,33 +36,42 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
         $cliente = Cliente::getInstance();
         $sottoconto = Sottoconto::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
 
-        // Se sono già presenti dettagli non aggiungo il conto fornitore
-        if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
-            $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-            $dettaglioRegistrazione->setIdRegistrazione(0);
-            $dettaglioRegistrazione->setImpRegistrazione(0);
-            $dettaglioRegistrazione->setIndDareavere("D");
+        // Se non esistono fatture da incassare per il cliente non aggiungo il conto cliente
+        if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
+            // Se sono già presenti dettagli non aggiungo il conto cliente
+            if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
+                $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+                $dettaglioRegistrazione->setIdRegistrazione(0);
+                $dettaglioRegistrazione->setImpRegistrazione(0);
+                $dettaglioRegistrazione->setIndDareavere("D");
 
-            // cerco il fornitore selezionato usando la sua descrizione
-            $cliente->setIdCliente($registrazione->getIdCliente());
-            $cliente->leggi($db);
+                // cerco il fornitore selezionato usando la sua descrizione
+                $cliente->setIdCliente($registrazione->getIdCliente());
+                $cliente->leggi($db);
 
-            // prelevo i codici dei conti fornitori in configurazione
-            $contoClienti = explode(",", $array["contiCliente"]);
-            $sottoconto->setCodConto($contoClienti[0]); // clienti nazionali
-            // cerco il sottoconto corrispondene al cliente
-            $sottoconto->leggi($db);
-            $sottoconto->searchSottoconto($cliente->getCodCliente());
+                // prelevo i codici dei conti fornitori in configurazione
+                $contoClienti = explode(",", $array["contiCliente"]);
+                $sottoconto->setCodConto($contoClienti[0]); // clienti nazionali
+                // cerco il sottoconto corrispondene al cliente
+                $sottoconto->leggi($db);
+                $sottoconto->searchSottoconto($cliente->getCodCliente());
 
-            // compongo la colonna "conto" da inserire nel dettaglio
-            $dettaglioRegistrazione->setCodConto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
-            $dettaglioRegistrazione->setCodContoComposto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
-            $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
-            $dettaglioRegistrazione->setIndContoPrincipale("Y");
-            $dettaglioRegistrazione->aggiungi();
-        }
-        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+                // compongo la colonna "conto" da inserire nel dettaglio
+                $dettaglioRegistrazione->setCodConto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
+                $dettaglioRegistrazione->setCodContoComposto($contoClienti[0] . "." . $cliente->getCodCliente() . " - " . $sottoconto->getDesSottoconto());
+                $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
+                $dettaglioRegistrazione->setIndContoPrincipale("Y");
+                $dettaglioRegistrazione->aggiungi();
+                
+                echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
+            } else {
+                echo self::EMPTYSTRING;
+            }
+        } else {
+            echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
+        }        
     }
-
 }

@@ -364,9 +364,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     }    
     
     public function dataScadenzaExist($datScadenza) {
-        foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
-            if (trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) == trim($datScadenza)) {
-                return true;
+        if ($this->getQtaScadenzeDaPagare() > 0) {
+            foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+                if (trim($unaScadenza[ScadenzaFornitore::DAT_SCADENZA]) == trim($datScadenza)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -521,16 +523,16 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
                     array_push($scadenzeDiff, $unaScadenza);
                 } else {
                     $item = array(
-                        ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],
+//                        ScadenzaFornitore::ID_SCADENZA => $unaScadenza[ScadenzaFornitore::ID_SCADENZA],     // No
                         ScadenzaFornitore::DAT_SCADENZA => $unaScadenza[ScadenzaFornitore::DAT_SCADENZA],
                         ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
                         ScadenzaFornitore::NOTA_SCADENZA => $unaScadenza[ScadenzaFornitore::NOTA_SCADENZA],
                         ScadenzaFornitore::TIP_ADDEBITO => $unaScadenza[ScadenzaFornitore::TIP_ADDEBITO],
-                        ScadenzaFornitore::COD_NEGOZIO => $unaScadenza[ScadenzaFornitore::COD_NEGOZIO],
+//                        ScadenzaFornitore::COD_NEGOZIO => $unaScadenza[ScadenzaFornitore::COD_NEGOZIO],     // no
                         ScadenzaFornitore::ID_FORNITORE => $unaScadenza[ScadenzaFornitore::ID_FORNITORE],
                         ScadenzaFornitore::NUM_FATTURA => $unaScadenza[ScadenzaFornitore::NUM_FATTURA],
                         ScadenzaFornitore::STA_SCADENZA => $unaScadenza[ScadenzaFornitore::STA_SCADENZA],
-                        ScadenzaFornitore::ID_PAGAMENTO => $unaScadenza[ScadenzaFornitore::ID_PAGAMENTO]
+//                        ScadenzaFornitore::ID_PAGAMENTO => $unaScadenza[ScadenzaFornitore::ID_PAGAMENTO]    // no
                     );
                     array_push($scadenzeDiff, $item);
                 }

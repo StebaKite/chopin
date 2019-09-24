@@ -27,7 +27,9 @@ class AggiornaDettaglioRegistrazione extends PrimanotaAbstract implements Priman
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->aggiornaDettaglio();
         $registrazione = Registrazione::getInstance();
-        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
     }
 
 }

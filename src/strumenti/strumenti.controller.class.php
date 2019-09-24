@@ -3,17 +3,12 @@
 require_once 'registrazione.class.php';
 require_once 'conto.class.php';
 require_once 'corrispettivo.class.php';
+require_once 'nexus6.abstract.class.php';
 
-class StrumentiController {
+class StrumentiController extends Nexus6Abstract {
     
     public $strumentiFunction = null;
     private $request;
-
-    // Oggetti
-
-    const REGISTRAZIONE = "Obj_registrazione";
-    const CONTO = "Obj_conto";
-    const CORRISPETTIVO = "Obj_corrispettivo";
 
     // Metodi
     
@@ -25,10 +20,10 @@ class StrumentiController {
     public function start() {
 
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST["modo"]))
-                $this->setRequest($_REQUEST["modo"]);
+            if (isset($_REQUEST[self::MODO]))
+                $this->setRequest($_REQUEST[self::MODO]);
             else
-                $this->setRequest("start");
+                $this->setRequest(self::START);
         }
      
         $registrazione = Registrazione::getInstance();
@@ -37,27 +32,26 @@ class StrumentiController {
 
         // Cambia conto registrazioni ==============================================================
 
-        if (isset($_REQUEST["datareg_da"])) {
-            $registrazione->setDatRegistrazioneDa($_REQUEST["datareg_da"]);
-            $registrazione->setDatRegistrazioneA($_REQUEST["datareg_a"]);
-            $registrazione->setCodNegozioSel($_REQUEST["codneg_sel"]);
-            $registrazione->setCodContoSel($_REQUEST["codconto_sel"]);
-            $conto->setCodContoSel($_REQUEST["codconto_sel"]);
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA)) {
+            $registrazione->setDatRegistrazioneDa($this->getParmFromRequest(self::DATA_REGISTRAZIONE_DA_RICERCA));
+            $registrazione->setDatRegistrazioneA($this->getParmFromRequest(self::DATA_REGISTRAZIONE_A_RICERCA));
+            $registrazione->setCodNegozioSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
+            $registrazione->setCodContoSel($this->getParmFromRequest(self::CODICE_CONTO_RICERCA));
+            $conto->setCodContoSel($this->getParmFromRequest(self::CODICE_CONTO_RICERCA));
         }
 
-        if (isset($_REQUEST["conto_sel_nuovo"])) {
-            $conto->setCodContoSelNuovo($_REQUEST["conto_sel_nuovo"]);
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_NUOVO_MODIFICA)) {
+            $conto->setCodContoSelNuovo($this->getParmFromRequest(self::CODICE_CONTO_NUOVO_MODIFICA));
         }
 
-        if (isset($_REQUEST["contocassa"])) {
-            
-            $corrispettivo->setMese($_REQUEST["mese"]);
-            $corrispettivo->setAnno($_REQUEST["anno"]);
-            $corrispettivo->setCodNeg($_REQUEST["codneg"]);
-            $corrispettivo->setFile($_REQUEST["file"]);
-            $corrispettivo->setDatada($_REQUEST["datada"]);
-            $corrispettivo->setDataa($_REQUEST["dataa"]);
-            $corrispettivo->setContoCassa($_REQUEST["contocassa"]);
+        if (null !== $this->getParmFromRequest(self::CODICE_CONTO_CASSA)) {
+            $corrispettivo->setMese($this->getParmFromRequest(self::MESE));
+            $corrispettivo->setAnno($this->getParmFromRequest(self::ANNO));
+            $corrispettivo->setCodNeg($this->getParmFromRequest(self::CODICE_NEGOZIO));
+            $corrispettivo->setFile($this->getParmFromRequest(self::FILE));
+            $corrispettivo->setDatada($this->getParmFromRequest(self::DATA_IMPORTAZIONE_DA));
+            $corrispettivo->setDataa($this->getParmFromRequest(self::DATA_IMPORTAZIONE_A));
+            $corrispettivo->setContoCassa($this->getParmFromRequest(self::CODICE_CONTO_CASSA));
         }
         
         // Serializzo in sessione gli oggetti modificati ========================================
@@ -66,10 +60,10 @@ class StrumentiController {
         $_SESSION[self::CONTO] = serialize($conto);
         $_SESSION[self::CORRISPETTIVO] = serialize($corrispettivo);
         
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->strumentiFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->strumentiFunction->go();
         }
     }    

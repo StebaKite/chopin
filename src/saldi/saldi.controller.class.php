@@ -8,10 +8,6 @@ class SaldiController extends Nexus6Abstract {
     public $saldiFunction = null;
     private $request;
 
-    // Oggetti
-
-    const SALDO = "Obj_saldo";
-
     // Metodi
     
     public function __construct(SaldiBusinessInterface $saldiFunction) {
@@ -22,19 +18,19 @@ class SaldiController extends Nexus6Abstract {
     public function start() {
 
         if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest("modo"));
+            $this->setRequest($this->getParmFromRequest(self::MODO));
         } else {
-            $this->setRequest("start");         // default set
+            $this->setRequest(self::START);         // default set
         }
      
         $saldo = Saldo::getInstance();
 
         $_SESSION[self::SALDO] = serialize($saldo);
         
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->saldiFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->saldiFunction->go();
         }
     }    

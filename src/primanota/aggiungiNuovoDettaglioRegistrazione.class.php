@@ -33,6 +33,8 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $db = Database::getInstance();
         $registrazione = Registrazione::getInstance();
         $sottoconto = Sottoconto::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
 
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
@@ -55,7 +57,7 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         }
 
         $dettaglioRegistrazione->aggiungi();
-        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
     }
 
 }

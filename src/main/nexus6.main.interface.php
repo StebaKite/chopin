@@ -132,6 +132,22 @@ interface MainNexus6Interface {
     const RIPORTO_SALDO = "Obj_riportosaldo";
     const PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE = "Obj_pinificazionelavoriprimosemestre";
     const PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE = "Obj_pinificazionelavorisecondosemestre";
+    const REGISTRAZIONE = "Obj_registrazione";
+    const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
+    const CAUSALE = "Obj_causale";
+    const SCADENZA_FORNITORE = "Obj_scadenzafornitore";
+    const SCADENZA_CLIENTE = "Obj_scadenzacliente";
+    const MERCATO = "Obj_mercato";   
+    const CONTROLLI_APERTURA = "Obj_controlliapertura";
+    const CONTO = "Obj_conto";
+    const SOTTOCONTO = "Obj_sottoconto";
+    const CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
+    const PROGRESSIVO_FATTURA = "Obj_progressivofattura";
+    const FATTURA = "Obj_fattura";
+    const DETTAGLIO_FATTURA = "Obj_dettagliofattura";
+    const BILANCIO = "Obj_bilancio";
+    const SALDO = "Obj_saldo";
+    const CORRISPETTIVO = "Obj_corrispettivo";    
 
 }
 

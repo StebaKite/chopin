@@ -59,7 +59,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
-        $_SESSION[self::CAUSALE] = $causale;
+//        $_SESSION[self::CAUSALE] = $causale;
 
         $ricercaRegistrazioneTemplate->displayPagina();
         include($this->piede);

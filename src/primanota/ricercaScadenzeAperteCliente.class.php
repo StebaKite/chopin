@@ -26,6 +26,7 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
     public function start() {
 
         $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();
         $cliente = Cliente::getInstance();
         $db = Database::getInstance();
@@ -35,6 +36,14 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
         $scadenzaCliente->setIdCliente($cliente->getIdCliente());
         $scadenzaCliente->trovaScadenzeDaIncassare($db);
 
+        /**
+         * Ripulisco i dettagli della registrazione inseriti precedentemente
+         */
+        
+        $dettaglioRegistrazione->setDettagliRegistrazione(self::EMPTYSTRING);
+        $dettaglioRegistrazione->setQtaDettagliRegistrazione(self::ZERO_VALUE);
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        
         /**
          * Nell'attributo numFattureDaIncassare ci appoggio la table html generata
          * Le scadenze si trovano nell'oggetto scadenzaCliente

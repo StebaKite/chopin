@@ -183,30 +183,34 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
         $tbody = "<tbody>";
 
-        foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare) {
-            $parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-            $bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . self::INCLUDI_ICON;
+        if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {            
+            foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare) {
+                $parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
+                $bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . self::INCLUDI_ICON;
 
-            $fatturaPagataNotExist = true;
-            foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata) {
-                if (trim($unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA]) == trim($unaScadenzaPagata[ScadenzaFornitore::NUM_FATTURA])
-                        and ( trim($unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA]) == trim($unaScadenzaPagata[ScadenzaFornitore::DAT_SCADENZA]))) {
-                    $fatturaPagataNotExist = false;
-                    break;
+                $fatturaPagataNotExist = true;
+                if ($scadenzaFornitore->getQtaScadenzePagate() > 0) {                
+                    foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata) {
+                        if (trim($unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA]) == trim($unaScadenzaPagata[ScadenzaFornitore::NUM_FATTURA])
+                                and ( trim($unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA]) == trim($unaScadenzaPagata[ScadenzaFornitore::DAT_SCADENZA]))) {
+                            $fatturaPagataNotExist = false;
+                            break;
+                        }
+                    }
                 }
-            }
-            /**
-             * Vengono escluse tutte le scadenze aggiunte alla tabella delle pagate
-             */
-            if ($fatturaPagataNotExist) {
-                $tableIsNotEmpty = true;
-                $tbody .= "<tr>" .
-                        "	<td>" . $bottoneAggiungiFatturaPagata . "</td>" .
-                        "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
-                        "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
-                        "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
-                        "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
-                        "</tr>";
+                /**
+                 * Vengono escluse tutte le scadenze aggiunte alla tabella delle pagate
+                 */
+                if ($fatturaPagataNotExist) {
+                    $tableIsNotEmpty = true;
+                    $tbody .= "<tr>" .
+                            "	<td>" . $bottoneAggiungiFatturaPagata . "</td>" .
+                            "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NUM_FATTURA] . "</td>" .
+                            "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::DAT_SCADENZA] . "</td>" .
+                            "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::IMP_IN_SCADENZA] . "</td>" .
+                            "	<td>" . $unaScadenzaDaPagare[ScadenzaFornitore::NOTA_SCADENZA] . "</td>" .
+                            "</tr>";
+                }
             }
         }
         $tbody .= "</tbody>";
@@ -266,30 +270,34 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
         $tbody = "<tbody>";
 
-        foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare) {
-            $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
-            $bottoneAggiungiFatturaIncassata = self::AGGIUNGI_FATTURA_INCASSATA_HREF . $parms . self::INCLUDI_ICON;
+        if ($scadenzaCliente->getQtaScadenzeDaIncassare() > 0) {
+            foreach ($scadenzaCliente->getScadenzeDaIncassare() as $unaScadenzaDaIncassare) {
+                $parms = $unaScadenzaDaIncassare[ScadenzaCliente::ID_SCADENZA] . ',"' . $scadenzaCliente->getIdTableScadenzeAperte() . '","' . $scadenzaCliente->getIdTableScadenzeChiuse() . '"';
+                $bottoneAggiungiFatturaIncassata = self::AGGIUNGI_FATTURA_INCASSATA_HREF . $parms . self::INCLUDI_ICON;
 
-            $fatturaIncassataNotExist = true;
-            foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata) {
-                if (trim($unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA]) == trim($unaScadenzaIncassata[ScadenzaCliente::NUM_FATTURA])
-                        and ( trim($unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE]) == trim($unaScadenzaIncassata[ScadenzaCliente::DAT_REGISTRAZIONE]))) {
-                    $fatturaIncassateNotExist = false;
-                    break;
+                $fatturaIncassataNotExist = true;
+                if ($scadenzaCliente->getQtaScadenzeIncassate() > 0) {
+                    foreach ($scadenzaCliente->getScadenzeIncassate() as $unaScadenzaIncassata) {
+                        if (trim($unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA]) == trim($unaScadenzaIncassata[ScadenzaCliente::NUM_FATTURA])
+                                and ( trim($unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE]) == trim($unaScadenzaIncassata[ScadenzaCliente::DAT_REGISTRAZIONE]))) {
+                            $fatturaIncassateNotExist = false;
+                            break;
+                        }
+                    }
                 }
-            }
-            /**
-             * Vengono escluse tutte le scadenze aggiunte alla tabella delle incassate
-             */
-            if ($fatturaIncassataNotExist) {
-                $tableIsNotEmpty = true;
-                $tbody .= "<tr>" .
-                        "	<td>" . $bottoneAggiungiFatturaIncassata . "</td>" .
-                        "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA] . "</td>" .
-                        "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
-                        "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
-                        "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NOTA] . "</td>" .
-                        "</tr>";
+                /**
+                 * Vengono escluse tutte le scadenze aggiunte alla tabella delle incassate
+                 */
+                if ($fatturaIncassataNotExist) {
+                    $tableIsNotEmpty = true;
+                    $tbody .= "<tr>" .
+                            "	<td>" . $bottoneAggiungiFatturaIncassata . "</td>" .
+                            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NUM_FATTURA] . "</td>" .
+                            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" .
+                            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>" .
+                            "	<td>" . $unaScadenzaDaIncassare[ScadenzaCliente::NOTA] . "</td>" .
+                            "</tr>";
+                }
             }
         }
         $tbody .= "</tbody>";
@@ -400,7 +408,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return "<table id='" . $scadenzaFornitore->getIdTableScadenzeChiuse() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
     }
 
-    public function makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione) {
+    public function makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente) {
         $thead = "";
         $tbody = "";
 
@@ -429,6 +437,14 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $idSegnoDettaglio = " id='segno" . trim($codConto[0]) . trim($codConto[1]) . "' ";
 
                 $modifica_parms = "'" . $dettaglioRegistrazione->getIdTablePagina() . "',";
+                
+                if (parent::isNotEmpty($registrazione->getIdFornitore())) {
+                    $modifica_parms .= "'" . $scadenzaFornitore->getIdTableScadenzeAperte()  . "',";
+                }
+                elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
+                    $modifica_parms .= "'" . $scadenzaCliente->getIdTableScadenzeAperte()  . "',";
+                }
+                
                 $modifica_parms .= trim($codConto[0]) . ",";
                 $modifica_parms .= trim($codConto[1]) . ",";
                 $modifica_parms .= "'importo" . trim($codConto[0]) . trim($codConto[1]) . "',";
@@ -468,7 +484,8 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
             $tbody .= "</tbody>";
             return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered'>" . $thead . $tbody . "</table>";
         }
-        return "";
+        return "<table id='" . $dettaglioRegistrazione->getIdTablePagina() . "' class='table table-bordered'></table>";
+//        return "";
     }
 
     public function makeTabellaDettagliCorrispettivo($registrazione, $dettaglioRegistrazione) {
@@ -587,7 +604,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms = "'" . $scadenzaFornitore->getIdTableScadenzeAperte() . "',";
                 $modifica_parms .= trim($idFornitore) . ",";
                 $modifica_parms .= trim($dataScadenza) . ",";
-                $modifica_parms .= trim($numFatt) . ",";
+                $modifica_parms .= "'" . trim($numFatt) . "',";
                 $modifica_parms .= "this.value,";
                 $modifica_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
@@ -595,7 +612,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $mod_data_parms .= trim($idFornitore) . ",";
                 $mod_data_parms .= trim($dataScadenza) . ",";
                 $mod_data_parms .= "this.value,";
-                $mod_data_parms .= trim($numFatt) . ",";
+                $mod_data_parms .= "'" . trim($numFatt) . "',";
                 $mod_data_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaFornitore(" . $modifica_parms . ')"';
@@ -712,7 +729,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $modifica_parms = "'" . $scadenzaCliente->getIdTableScadenzeAperte() . "',";
                 $modifica_parms .= trim($idCliente) . ",";
                 $modifica_parms .= trim($dataScadenza) . ",";
-                $modifica_parms .= trim($numFatt) . ",";
+                $modifica_parms .= "'" . trim($numFatt) . "',";
                 $modifica_parms .= "this.value,";
                 $modifica_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
                 
@@ -720,7 +737,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 $mod_data_parms .= trim($idCliente) . ",";
                 $mod_data_parms .= trim($dataScadenza) . ",";
                 $mod_data_parms .= "this.value,";
-                $mod_data_parms .= trim($numFatt) . ",";
+                $mod_data_parms .= "'" . trim($numFatt) . "',";
                 $mod_data_parms .= "'" . $dettagliRegistrazione->getIdTablePagina() . "'";
 
                 $onModifyImporto = " onblur=" . '"' . "modificaImportoScadenzaCliente(" . $modifica_parms . ')"';
@@ -946,12 +963,14 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
         if ($registrazione->inserisci($db)) {
 
-            foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
-                if ($this->creaDettaglioCorrispettivonegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)) {
-                    
-                } else {
-                    $dettagli_ok = false;
-                    break;
+            if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() > 0) {
+                foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+                    if ($this->creaDettaglioCorrispettivonegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $unDettaglio)) {
+
+                    } else {
+                        $dettagli_ok = false;
+                        break;
+                    }
                 }
             }
 

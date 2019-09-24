@@ -42,6 +42,9 @@ class CreaCorrispettivoNegozio extends primanotaAbstract implements PrimanotaBus
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $utility = Utility::getInstance();
 
+        $array = $utility->getConfig();
+        $registrazione->setCodCausale($array["corrispettiviNegozio"]);        
+
         $this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
 
         $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));

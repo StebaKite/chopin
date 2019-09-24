@@ -37,7 +37,6 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
     const DATA_KO = "class='bg-danger'";
     const DATA_OK = "";
     const DATA_CHIUSA = "class='bg-info'";
-    const REGISTRAZIONE_APERTA = "00";
     const ERRORE_DATA_INIZIO_RICERCA = "<br>&ndash; Manca la data di inizio ricerca";
     const ERRORE_DATA_FINE_RICERCA = "<br>&ndash; Manca la data di fine ricerca";
     // Oggetti
@@ -47,7 +46,7 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
 
     // Metodi
 
-    public function getInstance();
+    public static function getInstance();
 // 	public function inizializzaPagina();
 // 	public function controlliLogici();
 // 	public function displayPagina();

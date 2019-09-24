@@ -32,6 +32,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $fornitore = Fornitore::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
         $causale = Causale::getInstance();
 
         $utility = Utility::getInstance();
@@ -70,7 +71,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
             '%fornitore%' => trim($fornitore->getIdFornitore()),
             '%scadenzepagate%' => trim($this->makeTabellaFatturePagate($scadenzaFornitore)),
             '%scadenzedapagare%' => trim($this->makeTabellaFattureDaPagare($scadenzaFornitore)),
-            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione)),
+            '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente)),
             '%conti%' => $causale->getContiCausale()
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);

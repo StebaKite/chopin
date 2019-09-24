@@ -25,6 +25,7 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
 
     public function start() {
         $registrazione = Registrazione::getInstance();
+        $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $fornitore = Fornitore::getInstance();
         $db = Database::getInstance();
@@ -33,6 +34,14 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
 
         $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
         $scadenzaFornitore->trovaScadenzeDaPagare($db);
+        
+        /**
+         * Ripulisco i dettagli della registrazione inseriti precedentemente
+         */
+        
+        $dettaglioRegistrazione->setDettagliRegistrazione(self::EMPTYSTRING);
+        $dettaglioRegistrazione->setQtaDettagliRegistrazione(self::ZERO_VALUE);
+        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
 
         /**
          * Nell'attributo numFattureDaPagare ci appoggio la table html generata

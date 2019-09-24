@@ -17,7 +17,7 @@ class ModificaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBusi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_SCADENZA_FORNITORE]))
             $_SESSION[self::MODIFICA_SCADENZA_FORNITORE] = serialize(new ModificaScadenzaFornitore());
         return unserialize($_SESSION[self::MODIFICA_SCADENZA_FORNITORE]);

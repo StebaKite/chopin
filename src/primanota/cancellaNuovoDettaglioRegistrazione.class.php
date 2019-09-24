@@ -29,7 +29,9 @@ class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->cancella($db);
         $registrazione = Registrazione::getInstance();
+        $scadenzaFornitore = ScadenzaFornitore::getInstance();
+        $scadenzaCliente = ScadenzaCliente::getInstance();
 
-        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione);
+        echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
     }
 }

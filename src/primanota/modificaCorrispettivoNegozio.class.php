@@ -64,7 +64,11 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract implements Primanot
     public function go() {
         $registrazione = Registrazione::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
+        $utility = Utility::getInstance();
         $db = Database::getInstance();
+        
+        $array = $utility->getConfig();
+        $registrazione->setCodCausale($array["corrispettiviNegozio"]);        
 
         $registrazione->aggiorna($db);
 

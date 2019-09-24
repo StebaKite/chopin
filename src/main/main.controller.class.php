@@ -7,10 +7,6 @@ class MainController extends Nexus6Abstract {
     public $mainFunction = null;
     private $request;
 
-    // Oggetti
-
-    const CONTROLLI_APERTURA = "Obj_controlliapertura";
-
     public function __construct(MainBusinessInterface $mainFunction) {
         $this->mainFunction = $mainFunction;
         $this->setRequest(null);
@@ -18,17 +14,12 @@ class MainController extends Nexus6Abstract {
 
     public function start() {
         
-        if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest("modo"));
-        } else {
-            $this->setRequest("start");         // default set
-        }
-        
+        $this->setRequest(self::START);         // default set
 
-        if ($this->getRequest() == "start") {
+        if ($this->getRequest() == self::START) {
             $this->mainFunction->start();
         }
-        if ($this->getRequest() == "go") {
+        if ($this->getRequest() == self::GO) {
             $this->mainFunction->go();
         }
     }

@@ -5,7 +5,7 @@ interface MainBusinessInterface {
     // Oggetti
 
     const MAIN = "Obj_main";
-    const CONTROLLI_APERTURA = "Obj_controlliapertura";
+//    const CONTROLLI_APERTURA = "Obj_controlliapertura";
     const XML_CONTROLLI_APERTURA = "/main/xml/controlliApertura.xml";
 
     // Metodi

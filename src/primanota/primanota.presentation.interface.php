@@ -6,9 +6,6 @@ interface PrimanotaPresentationInterface extends MainNexus6Interface {
 
 	// Nomi
 
-	const REGISTRAZIONE_APERTA = "00";
-	const REGISTRAZIONE_ERRATA = "02";
-
 	const CORRISPETTIVO_MERCATO = "corrispettiviMercato";
 	const CORRISPETTIVO_NEGOZIO = "corrispettiviNegozio";
 	const PAGAMENTO = 'pagamentoFornitori';
