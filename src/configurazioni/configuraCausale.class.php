@@ -15,7 +15,7 @@ class ConfiguraCausale extends ConfigurazioniAbstract implements ConfigurazioniB
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CONFIGURA_CAUSALE])) {
             $_SESSION[self::CONFIGURA_CAUSALE] = serialize(new ConfiguraCausale());
         }

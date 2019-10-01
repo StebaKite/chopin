@@ -11,7 +11,7 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::FATTURA_ENTE_PUBBLICO]))
             $_SESSION[self::FATTURA_ENTE_PUBBLICO] = serialize(new FatturaEntePubblico());

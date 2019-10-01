@@ -15,7 +15,7 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_PROGRESSIVO_FATTURA])) {
             $_SESSION[self::MODIFICA_PROGRESSIVO_FATTURA] = serialize(new ModificaProgressivoFattura());
         }

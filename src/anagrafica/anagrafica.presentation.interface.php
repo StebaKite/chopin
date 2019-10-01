@@ -11,7 +11,6 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
     const QTA_CLIENTI = "numClientiTrovati";
     const QTA_FORNITORI = "numFornitoriTrovati";
     const CATEGORIE_CLIENTE = "elenco_categorie_cliente";
-    const TITOLO = "titoloPagina";
     const QTA_REGISTRAZIONI_FORNITORE = "tot_registrazioni_fornitore";
     // Pagine
 
@@ -56,7 +55,7 @@ interface AnagraficaPresentationInterface extends MainNexus6Interface {
 
     // Metodi
 
-    public function getInstance();
+    public static function getInstance();
 
     public function inizializzaPagina();
 

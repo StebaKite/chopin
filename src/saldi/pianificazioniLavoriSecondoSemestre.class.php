@@ -45,7 +45,7 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract implements MainN
         self::$root = '/var/www/html';
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE])) {
             $_SESSION[self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE] = serialize(new PianificazioniLavoriSecondoSemestre());
         }

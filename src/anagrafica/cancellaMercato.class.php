@@ -16,7 +16,7 @@ class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_MERCATO])) {
             $_SESSION[self::CANCELLA_MERCATO] = serialize(new CancellaMercato());
         }

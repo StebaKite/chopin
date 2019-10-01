@@ -21,7 +21,7 @@ class CancellaSottoconto extends ConfigurazioniAbstract implements Configurazion
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_SOTTOCONTO])) {
             $_SESSION[self::CANCELLA_SOTTOCONTO] = serialize(new CancellaSottoconto());
         }

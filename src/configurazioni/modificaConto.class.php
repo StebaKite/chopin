@@ -22,7 +22,7 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_CONTO])) {
             $_SESSION[self::MODIFICA_CONTO] = serialize(new ModificaConto());
         }

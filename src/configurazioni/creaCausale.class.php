@@ -15,7 +15,7 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_CAUSALE])) {
             $_SESSION[self::CREA_CAUSALE] = serialize(new CreaCausale());
         }

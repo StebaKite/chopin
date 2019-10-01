@@ -15,7 +15,7 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_CAUSALE])) {
             $_SESSION[self::MODIFICA_CAUSALE] = serialize(new ModificaCausale());
         }

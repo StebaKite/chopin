@@ -29,7 +29,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE]))
             $_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE] = serialize(new CreaFatturaAziendaConsortile());

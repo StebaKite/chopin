@@ -22,7 +22,7 @@ class CreaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterf
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_MERCATO])) {
             $_SESSION[self::CREA_MERCATO] = serialize(new CreaMercato());
         }

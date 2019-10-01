@@ -20,7 +20,7 @@ class RicercaConto extends ConfigurazioniAbstract implements ConfigurazioniBusin
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_CONTO])) {
             $_SESSION[self::RICERCA_CONTO] = serialize(new RicercaConto());
         }

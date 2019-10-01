@@ -17,7 +17,7 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_CONTO])) {
             $_SESSION[self::CREA_CONTO] = serialize(new CreaConto());
         }

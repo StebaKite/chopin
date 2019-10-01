@@ -20,7 +20,7 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::GENERA_BILANCIO_PERIODICO]))
             $_SESSION[self::GENERA_BILANCIO_PERIODICO] = serialize(new GeneraBilancioPeriodico());

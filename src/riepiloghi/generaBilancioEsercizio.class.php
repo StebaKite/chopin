@@ -20,7 +20,7 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::GENERA_BILANCIO_ESERCIZIO]))
             $_SESSION[self::GENERA_BILANCIO_ESERCIZIO] = serialize(new GeneraBilancioEsercizio());

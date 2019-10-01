@@ -23,7 +23,7 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_CLIENTE])) {
             $_SESSION[self::CREA_CLIENTE] = serialize(new CreaCliente());
         }

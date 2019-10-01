@@ -21,7 +21,7 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_MERCATO])) {
             $_SESSION[self::RICERCA_MERCATO] = serialize(new RicercaMercato());
         }

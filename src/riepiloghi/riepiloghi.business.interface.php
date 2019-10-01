@@ -26,7 +26,7 @@ interface RiepiloghiBusinessInterface extends MainNexus6Interface {
     const ESERCIZIO = "Esercizio";
     const PERIODICO = "Periodico";
 
-    public function getInstance();
+    public static function getInstance();
 
     public function start();
 

@@ -16,7 +16,7 @@ class CancellaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_CONTO])) {
             $_SESSION[self::CANCELLA_CONTO] = serialize(new CancellaConto());
         }

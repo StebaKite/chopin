@@ -23,7 +23,7 @@ class CancellaPagamento extends ScadenzeAbstract implements ScadenzeBusinessInte
 		$this->messaggioInfo = $this->root . $this->array[self::INFO];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		if (!isset($_SESSION[self::CANCELLA_PAGAMENTO])) $_SESSION[self::CANCELLA_PAGAMENTO] = serialize(new CancellaPagamento());
 		return unserialize($_SESSION[self::CANCELLA_PAGAMENTO]);

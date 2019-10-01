@@ -49,7 +49,7 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 
     // Metodi
 
-    public function getInstance();
+    public static function getInstance();
 
     public function start();
 

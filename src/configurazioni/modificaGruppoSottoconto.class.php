@@ -16,7 +16,7 @@ class ModificaGruppoSottoconto extends ConfigurazioniAbstract implements Configu
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_GRUPPO_SOTTOCONTO])) {
             $_SESSION[self::MODIFICA_GRUPPO_SOTTOCONTO] = serialize(new ModificaGruppoSottoconto());
         }

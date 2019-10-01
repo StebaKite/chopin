@@ -16,7 +16,7 @@ class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_CLIENTE])) {
             $_SESSION[self::CANCELLA_CLIENTE] = serialize(new CancellaCliente());
         }

@@ -13,7 +13,7 @@ class TogliNuovoSottoconto extends ConfigurazioniAbstract implements Configurazi
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::TOGLI_SOTTOCONTO])) {
             $_SESSION[self::TOGLI_SOTTOCONTO] = serialize(new TogliNuovoSottoconto());
         }

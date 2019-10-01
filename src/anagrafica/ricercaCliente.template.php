@@ -15,7 +15,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::RICERCA_CLIENTE_TEMPLATE])) {
             $_SESSION[self::RICERCA_CLIENTE_TEMPLATE] = serialize(new RicercaClienteTemplate());

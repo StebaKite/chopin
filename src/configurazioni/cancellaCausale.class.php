@@ -16,7 +16,7 @@ class CancellaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_CAUSALE])) {
             $_SESSION[self::CANCELLA_CAUSALE] = serialize(new CancellaCausale());
         }

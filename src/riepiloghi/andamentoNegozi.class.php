@@ -18,7 +18,7 @@ class AndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessIn
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::ANDAMENTO_NEGOZI]))
             $_SESSION[self::ANDAMENTO_NEGOZI] = serialize(new AndamentoNegozi());

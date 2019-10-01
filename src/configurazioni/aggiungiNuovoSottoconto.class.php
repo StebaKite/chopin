@@ -13,7 +13,7 @@ class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements Configur
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::AGGIUNGI_SOTTOCONTO])) {
             $_SESSION[self::AGGIUNGI_SOTTOCONTO] = serialize(new AggiungiNuovoSottoconto());
         }

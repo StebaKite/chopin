@@ -17,7 +17,7 @@ class VisualizzaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::VISUALIZZA_SCADENZA_CLIENTE]))
             $_SESSION[self::VISUALIZZA_SCADENZA_CLIENTE] = serialize(new VisualizzaScadenzaCliente());
         return unserialize($_SESSION[self::VISUALIZZA_SCADENZA_CLIENTE]);

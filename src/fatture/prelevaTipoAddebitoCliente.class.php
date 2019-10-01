@@ -15,7 +15,7 @@ class PrelevaTipoAddebitoCliente extends FatturaAbstract implements FattureBusin
         $array = $utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE]))
             $_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE] = serialize(new PrelevaTipoAddebitoCliente());

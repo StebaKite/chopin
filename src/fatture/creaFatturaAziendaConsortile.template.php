@@ -16,7 +16,7 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements Fa
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]))
             $_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE] = serialize(new CreaFatturaAziendaConsortileTemplate());
         return unserialize($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]);

@@ -20,7 +20,7 @@ class InserisciSottoconto extends ConfigurazioniAbstract implements Configurazio
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::INSERISCI_SOTTOCONTO])) {
             $_SESSION[self::INSERISCI_SOTTOCONTO] = serialize(new InserisciSottoconto());
         }

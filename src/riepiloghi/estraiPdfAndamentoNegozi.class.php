@@ -19,7 +19,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiB
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO]))
             $_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO] = serialize(new EstraiPdfAndamentoNegozi());

@@ -11,7 +11,7 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::FATTURA_CLIENTE]))
             $_SESSION[self::FATTURA_CLIENTE] = serialize(new FatturaCliente());

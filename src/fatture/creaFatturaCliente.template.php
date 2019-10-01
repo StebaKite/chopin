@@ -16,7 +16,7 @@ class CreaFatturaClienteTemplate extends FatturaAbstract implements FattureBusin
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE]))
             $_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE] = serialize(new CreaFatturaClienteTemplate());
         return unserialize($_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE]);

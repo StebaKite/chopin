@@ -13,7 +13,7 @@ class RicercaMercatoTemplate extends AnagraficaAbstract implements AnagraficaPre
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_MERCATO_TEMPLATE])) {
             $_SESSION[self::RICERCA_MERCATO_TEMPLATE] = serialize(new RicercaMercatoTemplate());
         }

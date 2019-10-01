@@ -14,7 +14,7 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]))
             $_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE] = serialize(new RiepilogoNegoziTemplate());
         return unserialize($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]);

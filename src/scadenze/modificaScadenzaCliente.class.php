@@ -17,7 +17,7 @@ class ModificaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusine
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_SCADENZA_CLIENTE]))
             $_SESSION[self::MODIFICA_SCADENZA_CLIENTE] = serialize(new ModificaScadenzaCliente());
         return unserialize($_SESSION[self::MODIFICA_SCADENZA_CLIENTE]);

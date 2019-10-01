@@ -16,7 +16,7 @@ class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPre
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]))
             $_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE] = serialize(new CambiaContoStep1Template());
         return unserialize($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]);

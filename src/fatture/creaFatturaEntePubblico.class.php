@@ -31,7 +31,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO]))
             $_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO] = serialize(new CreaFatturaEntePubblico());

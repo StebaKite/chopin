@@ -27,7 +27,7 @@ interface FattureBusinessInterface extends MainNexus6Interface {
     const AGGIUNGI_DETTAGLIO_FATTURA = "Obj_aggiungidetaggliofattura";
     const CANCELLA_DETTAGLIO_FATTURA = "Obj_cancelladetaggliofattura";
 
-    public function getInstance();
+    public static function getInstance();
 
     public function start();
 

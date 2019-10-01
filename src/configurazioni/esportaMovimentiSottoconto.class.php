@@ -16,7 +16,7 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO])) {
             $_SESSION[self::ESPORTA_MOVIMENTI_SOTTOCONTO] = serialize(new EsportaMovimentiSottoconto());
         }

@@ -20,7 +20,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::RIEPILOGO_NEGOZI]))
             $_SESSION[self::RIEPILOGO_NEGOZI] = serialize(new RiepilogoNegozi());

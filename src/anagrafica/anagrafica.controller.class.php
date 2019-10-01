@@ -7,7 +7,7 @@ require_once 'nexus6.abstract.class.php';
 
 class AnagraficaController extends Nexus6Abstract {
 
-    public static $anagraficaFunction = null;
+    public $anagraficaFunction = null;
     private $request;
 
     // Metodi

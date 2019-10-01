@@ -11,7 +11,7 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::FATTURA_AZIENDA_CONSORTILE]))
             $_SESSION[self::FATTURA_AZIENDA_CONSORTILE] = serialize(new FatturaAziendaConsortile());

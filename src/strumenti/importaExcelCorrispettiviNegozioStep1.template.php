@@ -13,7 +13,7 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE]))
             $_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE] = serialize(new ImportaExcelCorrispettiviNegozioStep1Template());
         return unserialize($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE]);

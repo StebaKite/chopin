@@ -148,6 +148,7 @@ interface MainNexus6Interface {
     const BILANCIO = "Obj_bilancio";
     const SALDO = "Obj_saldo";
     const CORRISPETTIVO = "Obj_corrispettivo";    
+    const CATEGORIA_CLIENTE_OBJ = "Obj_categoriacliente";
 
 }
 

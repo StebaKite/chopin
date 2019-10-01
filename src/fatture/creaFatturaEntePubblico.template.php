@@ -16,7 +16,7 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract implements Fatture
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE]))
             $_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE] = serialize(new CreaFatturaEntePubblicoTemplate());
         return unserialize($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE]);

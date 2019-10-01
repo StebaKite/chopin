@@ -15,7 +15,7 @@ class PrelevaProgressivoFattura extends FatturaAbstract implements FattureBusine
         $array = $utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA]))
             $_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA] = serialize(new PrelevaProgressivoFattura());

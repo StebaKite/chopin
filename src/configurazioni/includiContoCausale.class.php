@@ -15,7 +15,7 @@ class IncludiContoCausale extends ConfigurazioniAbstract implements Configurazio
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::INCLUDI_CONTO_CAUSALE])) {
             $_SESSION[self::INCLUDI_CONTO_CAUSALE] = serialize(new IncludiContoCausale());
         }

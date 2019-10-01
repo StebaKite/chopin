@@ -115,7 +115,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->PDFVersion = '1.3';
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::PDF]))
             $_SESSION[self::PDF] = serialize(new Pdf());
         return unserialize($_SESSION[self::PDF]);

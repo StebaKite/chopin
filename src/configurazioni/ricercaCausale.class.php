@@ -20,7 +20,7 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_CAUSALE]))
             $_SESSION[self::RICERCA_CAUSALE] = serialize(new RicercaCausale());
         return unserialize($_SESSION[self::RICERCA_CAUSALE]);

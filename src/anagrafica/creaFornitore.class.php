@@ -22,7 +22,7 @@ class CreaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInte
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_FORNITORE])) {
             $_SESSION[self::CREA_FORNITORE] = serialize(new CreaFornitore());
         }

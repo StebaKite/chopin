@@ -15,7 +15,7 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implement
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE])) {
             $_SESSION[self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE] = serialize(new RicercaProgressivoFatturaTemplate());
         }

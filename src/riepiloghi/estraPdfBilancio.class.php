@@ -19,7 +19,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusiness
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::ESTRAI_PDF_BILANCIO]))
             $_SESSION[self::ESTRAI_PDF_BILANCIO] = serialize(new EstraiPdfBilancio());

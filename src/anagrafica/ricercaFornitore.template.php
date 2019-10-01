@@ -14,7 +14,7 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_FORNITORE_TEMPLATE])) {
             $_SESSION[self::RICERCA_FORNITORE_TEMPLATE] = serialize(new RicercaFornitoreTemplate());
         }
@@ -96,7 +96,7 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
         $_SESSION[self::FORNITORE] = serialize($fornitore);
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO],
+            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
             '%codfornitore%' => $fornitore->getCodFornitore(),
             '%desfornitore%' => $fornitore->getDesFornitore(),
             '%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),

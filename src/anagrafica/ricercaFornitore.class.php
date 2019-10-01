@@ -21,7 +21,7 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::RICERCA_FORNITORE])) {
             $_SESSION[self::RICERCA_FORNITORE] = serialize(new RicercaFornitore());

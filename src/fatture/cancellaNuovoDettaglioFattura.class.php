@@ -13,7 +13,7 @@ class CancellaNuovoDettaglioFattura extends FatturaAbstract implements FattureBu
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_FATTURA]))
             $_SESSION[self::CANCELLA_DETTAGLIO_FATTURA] = serialize(new CancellaNuovoDettaglioFattura());
         return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_FATTURA]);

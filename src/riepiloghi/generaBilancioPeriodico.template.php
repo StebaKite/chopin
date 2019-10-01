@@ -13,7 +13,7 @@ class GeneraBilancioPeriodicoTemplate extends RiepiloghiAbstract implements Riep
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE]))
             $_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE] = serialize(new GeneraBilancioPeriodicoTemplate());
         return unserialize($_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE]);

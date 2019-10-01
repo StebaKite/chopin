@@ -12,6 +12,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
     const QTA_CLIENTI = "numClientiTrovati";
     const QTA_FORNITORI = "numFornitoriTrovati";
     const CATEGORIE_CLIENTE = "elenco_categorie_cliente";
+    
     // Oggetti
 
     const RICERCA_CLIENTE = "Obj_ricercacliente";
@@ -19,10 +20,8 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
     const CREA_FORNITORE = "Obj_creafornitore";
     const CREA_CLIENTE = "Obj_creacliente";
     const CREA_MERCATO = "Obj_creamercato";
-    const MERCATO = "Obj_mercato";
     const CANCELLA_CLIENTE = "Obj_cancellacliente";
     const CANCELLA_FORNITORE = "Obj_cancellafornitore";
-    const CATEGORIA_CLIENTE = "Obj_categoriacliente";
     const CANCELLA_MERCATO = "Obj_cancellamercato";
     const CERCA_CFISC_CLIENTE = "Obj_cercacfisccliente";
     const CERCA_PIVA_CLIENTE = "Obj_cercapivacliente";
@@ -30,11 +29,13 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
     const MODIFICA_FORNITORE = "Obj_modificafornitore";
     const MODIFICA_MERCATO = "Obj_modificamercato";
     const RICERCA_MERCATO = "Obj_ricercamercato";
+    
     // Files XML
 
     const XML_FORNITORE = "/anagrafica/xml/fornitore.xml";
     const XML_CLIENTE = "/anagrafica/xml/cliente.xml";
     const XML_MERCATO = "/anagrafica/xml/mercato.xml";
+    
     // Actions
 
     const AZIONE_RICERCA_CLIENTE = "../anagrafica/ricercaClienteFacade.class.php?modo=go";
@@ -44,6 +45,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
     const AZIONE_MODIFICA_CLIENTE = "../anagrafica/modificaClienteFacade.class.php?modo=go";
     const AZIONE_MODIFICA_FORNITORE = "../anagrafica/modificaFornitoreFacade.class.php?modo=go";
     const AZIONE_RICERCA_MERCATO = "../anagrafica/ricercaMercatoFacade.class.php?modo=go";
+    
     // Errori e messaggi
 
     const MSG_DA_CANCELLAZIONE = "messaggioCancellazione";
@@ -63,7 +65,7 @@ interface AnagraficaBusinessInterface extends MainNexus6Interface {
 
     // Metodi
 
-    public function getInstance();
+    public static function getInstance();
 
     public function start();
 

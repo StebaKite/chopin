@@ -14,7 +14,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract implements Configurazi
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_CONTO_TEMPLATE])) {
             $_SESSION[self::RICERCA_CONTO_TEMPLATE] = serialize(new RicercaContoTemplate());
         }

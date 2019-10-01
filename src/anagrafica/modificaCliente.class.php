@@ -17,7 +17,7 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_CLIENTE])) {
             $_SESSION[self::MODIFICA_CLIENTE] = serialize(new ModificaCliente());
         }
@@ -36,7 +36,7 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
         $categoriaCliente = CategoriaCliente::getInstance();
         $categoriaCliente->setCatCliente(trim($cliente->getCatCliente()));
         $categoriaCliente->load();
-        $_SESSION[self::CATEGORIA_CLIENTE] = serialize($categoriaCliente);
+        $_SESSION[self::CATEGORIA_CLIENTE_OBJ] = serialize($categoriaCliente);
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CLIENTE;
 

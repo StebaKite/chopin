@@ -15,7 +15,7 @@ interface FatturaPresentationInterface extends MainNexus6Interface {
     // Oggetti
     // Metodi
 
-    public function getInstance();
+    public static function getInstance();
 }
 
 ?>

@@ -20,7 +20,7 @@ class RicercaProgressivoFattura extends ConfigurazioniAbstract implements Config
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA])) {
             $_SESSION[self::RICERCA_PROGRESSIVO_FATTURA] = serialize(new RicercaProgressivoFattura());
         }

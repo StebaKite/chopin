@@ -14,7 +14,7 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_CONTO_TEMPLATE])) {
             $_SESSION[self::CREA_CONTO_TEMPLATE] = serialize(new CreaContoTemplate());
         }

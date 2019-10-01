@@ -21,7 +21,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::ESTRAI_PDF_RIEPILOGO_NEGOZIO]))
             $_SESSION[self::ESTRAI_PDF_RIEPILOGO_NEGOZIO] = serialize(new EstraiPdfRiepilogoNegozio());

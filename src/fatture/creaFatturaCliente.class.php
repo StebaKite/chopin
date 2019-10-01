@@ -29,7 +29,7 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE]))
             $_SESSION[self::CREA_FATTURA_CLIENTE] = serialize(new CreaFatturaCliente());

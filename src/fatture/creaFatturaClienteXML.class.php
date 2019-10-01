@@ -19,7 +19,7 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE_XML]))
             $_SESSION[self::CREA_FATTURA_CLIENTE_XML] = serialize(new creaFatturaClienteXML());

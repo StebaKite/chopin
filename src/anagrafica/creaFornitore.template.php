@@ -19,7 +19,7 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CREA_FORNITORE_TEMPLATE])) {
             $_SESSION[self::CREA_FORNITORE_TEMPLATE] = serialize(new CreaFornitoreTemplate());
         }

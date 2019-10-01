@@ -18,7 +18,7 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
 
         if (!isset($_SESSION[self::ANDAMENTO_MERCATI]))
             $_SESSION[self::ANDAMENTO_MERCATI] = serialize(new AndamentoMercati());

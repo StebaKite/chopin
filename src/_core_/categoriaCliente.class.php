@@ -33,10 +33,10 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CATEGORIA_CLIENTE])) {
-            $_SESSION[self::CATEGORIA_CLIENTE] = serialize(new CategoriaCliente());
+        if (!isset($_SESSION[self::CATEGORIA_CLIENTE_OBJ])) {
+            $_SESSION[self::CATEGORIA_CLIENTE_OBJ] = serialize(new CategoriaCliente());
         }
-        return unserialize($_SESSION[self::CATEGORIA_CLIENTE]);
+        return unserialize($_SESSION[self::CATEGORIA_CLIENTE_OBJ]);
     }
 
     /**

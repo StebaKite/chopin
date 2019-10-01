@@ -23,7 +23,7 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE]))
             $_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE] = serialize(new EstraiPdfScadenzeCliente());
         return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE]);

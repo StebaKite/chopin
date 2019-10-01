@@ -13,7 +13,7 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RICERCA_CAUSALI_TEMPLATE])) {
             $_SESSION[self::RICERCA_CAUSALI_TEMPLATE] = serialize(new RicercaCausaleTemplate());
         }

@@ -119,7 +119,7 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
         $this->PDFVersion = '1.3';
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::PDF_FATTURA_BASE]))
             $_SESSION[self::PDF_FATTURA_BASE] = serialize(new FatturaBase());
         return unserialize($_SESSION[self::PDF_FATTURA_BASE]);

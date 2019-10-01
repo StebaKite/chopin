@@ -15,7 +15,7 @@ class ControllaConto extends ConfigurazioniAbstract implements ConfigurazioniBus
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CONTROLLA_CONTO])) {
             $_SESSION[self::CONTROLLA_CONTO] = serialize(new ControllaConto());
         }

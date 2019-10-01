@@ -16,7 +16,7 @@ class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::CANCELLA_FORNITORE])) {
             $_SESSION[self::CANCELLA_FORNITORE] = serialize(new CancellaFornitore());
         }

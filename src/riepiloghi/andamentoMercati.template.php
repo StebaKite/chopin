@@ -13,7 +13,7 @@ class AndamentoMercatiTemplate extends RiepiloghiAbstract implements RiepiloghiP
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE]))
             $_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE] = serialize(new AndamentoMercatiTemplate());
         return unserialize($_SESSION[self::RIEPILOGO_MERCATI_TEMPLATE]);

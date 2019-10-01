@@ -19,7 +19,7 @@ class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBus
         $this->messaggioInfo = $this->root . $this->array[self::INFO];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE]))
             $_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE] = serialize(new EstraiPdfScadenzeFornitore());
         return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE]);

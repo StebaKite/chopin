@@ -29,7 +29,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
         }
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::RIPORTO_SALDO])) {
             $_SESSION[self::SALDO] = serialize(new RiportoSaldoPeriodico());
         }

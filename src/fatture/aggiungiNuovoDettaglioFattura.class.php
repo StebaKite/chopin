@@ -13,7 +13,7 @@ class AggiungiNuovoDettaglioFattura extends FatturaAbstract implements FattureBu
         $this->root = $_SERVER['DOCUMENT_ROOT'];
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA]))
             $_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA] = serialize(new AggiungiNuovoDettaglioFattura());
         return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA]);

@@ -13,7 +13,7 @@ class GeneraBilancioEsercizioTemplate extends RiepiloghiAbstract implements Riep
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::GENERA_BILANCIO_ESERCIZIO_TEMPLATE]))
             $_SESSION[self::GENERA_BILANCIO_ESERCIZIO_TEMPLATE] = serialize(new GeneraBilancioEsercizioTemplate());
         return unserialize($_SESSION[self::GENERA_BILANCIO_ESERCIZIO_TEMPLATE]);

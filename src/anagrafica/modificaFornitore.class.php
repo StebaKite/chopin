@@ -16,7 +16,7 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
         $this->array = $this->utility->getConfig();
     }
 
-    public function getInstance() {
+    public static function getInstance() {
         if (!isset($_SESSION[self::MODIFICA_FORNITORE])) {
             $_SESSION[self::MODIFICA_FORNITORE] = serialize(new ModificaFornitore());
         }
