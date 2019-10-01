@@ -4,6 +4,7 @@ set_include_path('/var/www/html/chopin/src/main:/var/www/html/chopin/src/strumen
 require_once 'lavoriAutomatici.class.php';
 
 session_start();
+xdebug_disable();
 
 $lavoriAutomatici = LavoriAutomatici::getInstance();
 

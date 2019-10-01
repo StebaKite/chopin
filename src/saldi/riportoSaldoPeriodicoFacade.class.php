@@ -4,6 +4,7 @@ require_once 'riportoSaldoPeriodico.class.php';
 require_once 'saldi.controller.class.php';
 
 session_start();
+xdebug_disable();
 
 $_SESSION["Obj_saldicontroller"] = serialize(new SaldiController(RiportoSaldoPeriodico::getInstance()));
 

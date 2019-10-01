@@ -4,6 +4,7 @@ require_once 'creaConto.class.php';
 require_once 'configurazioni.controller.class.php';
 
 session_start();
+xdebug_disable();
 
 $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(CreaConto::getInstance()));
 
