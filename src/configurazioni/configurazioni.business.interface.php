@@ -6,10 +6,6 @@ interface ConfigurazioniBusinessInterface extends MainNexus6Interface {
 
     // Oggetti
 
-    const CONTO = "Obj_conto";
-    const SOTTOCONTO = "Obj_sottoconto";
-    const CAUSALE = "Obj_causale";
-    const CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
     const PROGRESIVO_FATTURA = "Obj_progressivofattura";
     const RICERCA_CONTO = "Obj_ricercaconto";
     const MODIFICA_CONTO = "Obj_modificaconto";

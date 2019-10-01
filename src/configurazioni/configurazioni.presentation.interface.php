@@ -8,7 +8,6 @@ interface ConfigurazioniPresentationInterface extends MainNexus6Interface {
 
     const CONTI = "contiTrovati";
     const QTA_CONTI = "numContiTrovati";
-    const TITOLO = "titoloPagina";
     const NUM_REG_CONTO = "tot_registrazioni_conto";
     const DARE = "Dare";
     const AVERE = "Avere";

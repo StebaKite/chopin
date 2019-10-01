@@ -15,6 +15,17 @@
                     );
                 }
         );
+
+        $("#filtroSottoconto").on("keyup",
+                function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#sottocontiTable_vis tr").filter(
+                            function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            }
+                    );
+                }
+        );
     });
 
 </script>
@@ -516,6 +527,12 @@
                         <div class="form-group row">
                             <div class="col-sm-12">
                                 <div class="panel-body scrollable-panel">
+                                    <div class='row'>
+                                        <div class='col-sm-4'>
+                                            <input class='form-control' id='filtroSottoconto' type='text' placeholder='Cerca il sottoconto...'>
+                                        </div>
+                                    </div>
+                                    <br/>                                    
                                     <table class="table table-bordered table-hover" id="sottocontiTable_vis"></table>
                                 </div>
                             </div>
@@ -555,7 +572,7 @@
                 </div>
                 <div class="modal-footer">
                     <div>
-                        <form action="../configurazioni/esportaMovimentiSottocontoFacade.class.php?modo=start" method="get">
+                        <form action="../configurazioni/esportaMovimentiSottocontoFacade.class.php?modo=start" method="post">
                             <button id="submit" type="submit" class="btn btn-primary">
                                 <span class="glyphicon glyphicon-download-alt"></span>
                             </button>

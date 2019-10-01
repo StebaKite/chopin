@@ -22,7 +22,11 @@ class ConfigurazioniController extends Nexus6Abstract {
     public function start() {
 
         if ($this->getRequest() == null) {
-            $this->setRequest($this->getParmFromRequest(self::MODO));
+            if ($this->getParmFromRequest(self::MODO) == null) {
+                $this->setRequest(self::START);         // default set
+            } else {
+                $this->setRequest($this->getParmFromRequest(self::MODO));
+            }
         } else {
             $this->setRequest(self::START);         // default set
         }
