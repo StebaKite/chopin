@@ -5,7 +5,6 @@ require_once 'riepiloghi.business.interface.php';
 
 abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6Interface {
 
-    const BILANCIO = "Obj_bilancio";
     const PAGINA_ANDAMENTO_NEGOZI = "/riepiloghi/andamentoNegozi.form.html";
     const PAGINA_ANDAMENTO_MERCATI = "/riepiloghi/andamentoMercati.form.html";
 
@@ -523,7 +522,14 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
     public function makeTabs($bilancio) {
 
-        $tabs = "";
+        $tabs = "" .
+                "<div class='row'>" .
+                "    <div class='col-sm-4'>" .
+                "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+                "    </div>" .
+                "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                "</div>" .
+                "<br/>";
 
         if (parent::isNotEmpty($bilancio->getTabellaCosti()) ||
                 (parent::isNotEmpty($bilancio->getTabellaRicavi())) ||
@@ -654,7 +660,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     "<li>CT sono i costi totali e quindi CT = CF + CV</li>" .
                     "</ul><br>";
 
-            $tabs = "<ul class='nav nav-tabs' role='tablist'>";
+            $tabs .= "<ul class='nav nav-tabs' role='tablist'>";
 
             if (parent::isNotEmpty($bilancio->getTabellaCosti())) {
                 $tabs .= "<li role='presentation' class='active'><a href='#tabs-1' aria-controls='Costi' role='tab' data-toggle='tab'>Costi</a></li>";

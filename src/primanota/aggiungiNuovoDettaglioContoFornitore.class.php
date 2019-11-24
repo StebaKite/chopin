@@ -28,10 +28,6 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
     }
 
     public function go() {
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
-
-        $db = Database::getInstance();
         $registrazione = Registrazione::getInstance();
         $fornitore = Fornitore::getInstance();
         $sottoconto = Sottoconto::getInstance();
@@ -40,44 +36,63 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
         $scadenzaCliente = ScadenzaCliente::getInstance();
 
         // Se non esistono fatture da pagare per il fornitore non aggiungo il conto fornitore
-        if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
+        
+        if (strpos($dettaglioRegistrazione->getIdTablePagina(), "dettagli_pag") !== false) {
+            if ($scadenzaFornitore->getQtaScadenzeDaPagare() > 0) {
+                // Se sono già presenti dettagli non aggiungo il conto fornitore
+                if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
+                    echo $this->aggiungiDettaglio($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $sottoconto);
+                } else {
+                    echo self::EMPTYSTRING;
+                }
+            } else {
+                echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
+            }            
+        } else {
             // Se sono già presenti dettagli non aggiungo il conto fornitore
             if ($dettaglioRegistrazione->getQtaDettagliRegistrazione() == 0) {
-                $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
-                $dettaglioRegistrazione->setIdRegistrazione(0);
-                $dettaglioRegistrazione->setImpRegistrazione(0);
-
-                if ($registrazione->getCodCausale() === $array["pagamentoFornitori"]) {
-                    $dettaglioRegistrazione->setIndDareavere("D");
-                } else {
-                    $dettaglioRegistrazione->setIndDareavere("A");
-                }
-
-                // cerco il fornitore selezionato usando la sua descrizione
-                $fornitore->setidFornitore($registrazione->getIdFornitore());
-                $fornitore->leggi($db);
-
-                if ($fornitore->getCodFornitore() != "") {
-                    // prelevo i codici dei conti fornitori in configurazione
-                    $contoFornitori = explode(",", $array["contiFornitore"]);
-                    $sottoconto->setCodConto($contoFornitori[0]); // fornitori nazionali
-                    // cerco il sottoconto corrispondene al fornitore
-                    $sottoconto->leggi($db);
-                    $sottoconto->searchSottoconto($fornitore->getCodFornitore());
-
-                    // compongo la colonna "conto" da inserire nel dettaglio
-                    $dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
-                    $dettaglioRegistrazione->setCodContoComposto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
-                    $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
-                    $dettaglioRegistrazione->setIndContoPrincipale("Y");
-                    $dettaglioRegistrazione->aggiungi();
-                }
-                echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
+                echo $this->aggiungiDettaglio($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $sottoconto);
             } else {
                 echo self::EMPTYSTRING;
-            }
-        } else {
-            echo $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);
+            }            
         }
+    }
+
+    public function aggiungiDettaglio($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $fornitore, $sottoconto) {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $db = Database::getInstance();
+
+        $dettaglioRegistrazione->setIdDettaglioRegistrazione(0);
+        $dettaglioRegistrazione->setIdRegistrazione(0);
+        $dettaglioRegistrazione->setImpRegistrazione(0);
+
+        if ($registrazione->getCodCausale() === $array["pagamentoFornitori"]) {
+            $dettaglioRegistrazione->setIndDareavere("D");
+        } else {
+            $dettaglioRegistrazione->setIndDareavere("A");
+        }
+
+        // cerco il fornitore selezionato usando la sua descrizione
+        $fornitore->setidFornitore($registrazione->getIdFornitore());
+        $fornitore->leggi($db);
+
+        if ($fornitore->getCodFornitore() != "") {
+            // prelevo i codici dei conti fornitori in configurazione
+            $contoFornitori = explode(",", $array["contiFornitore"]);
+            $sottoconto->setCodConto($contoFornitori[0]); // fornitori nazionali
+            // cerco il sottoconto corrispondene al fornitore
+            $sottoconto->leggi($db);
+            $sottoconto->searchSottoconto($fornitore->getCodFornitore());
+
+            // compongo la colonna "conto" da inserire nel dettaglio
+            $dettaglioRegistrazione->setCodConto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
+            $dettaglioRegistrazione->setCodContoComposto($contoFornitori[0] . "." . $fornitore->getCodFornitore() . " - " . $sottoconto->getDesSottoconto());
+            $dettaglioRegistrazione->setCodSottoconto($sottoconto->getCodSottoconto());
+            $dettaglioRegistrazione->setIndContoPrincipale("Y");
+            $dettaglioRegistrazione->aggiungi();
+        }
+        return $this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente);         
     }
 }

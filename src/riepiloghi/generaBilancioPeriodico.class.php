@@ -34,6 +34,7 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio = Bilancio::getInstance();
 
         $bilancio->prepara();
+        
         $bilancio->setTipoBilancio(self::PERIODICO);
         $_SESSION[self::BILANCIO] = serialize($bilancio);
 
@@ -61,26 +62,18 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
-        if ($this->ricercaDati($utility)) {
+        $this->ricercaDati($utility);
 
-            $totVoci = $bilancio->getNumAttivoTrovati() + $bilancio->getNumPassivoTrovati();
-            $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
-            parent::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-
-            if ($totVoci > 0) {
-                $template = $utility->tailFile($utility->getTemplate(parent::$messaggioInfo), parent::$replace);
-            } else {
-                $template = $utility->tailFile($utility->getTemplate(parent::$messaggioErrore), parent::$replace);
-            }
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        $totVoci = $bilancio->getNumCostiTrovati() + $bilancio->getNumRicaviTrovati();
+        $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
+        self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+        
+        if ($totVoci > 0) {
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), parent::$replace);
         } else {
-
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), parent::$replace);
-
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), parent::$replace);
         }
+        $_SESSION[self::MSG] = $utility->tailTemplate($template);            
         $bilancioTemplate->displayPagina();
         include($this->piede);
     }
@@ -91,7 +84,6 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio = Bilancio::getInstance();
         $bilancio->prepara();
         $bilancio->setTipoBilancio(self::PERIODICO);
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
 
         $bilancio->ricercaCosti($db);
         $bilancio->ricercaRicavi($db);
@@ -104,6 +96,8 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio->ricercaCostiMargineContribuzione($db);       // Conto economico
         $bilancio->ricercaRicaviMargineContribuzione($db);      // Conto economico
         $bilancio->ricercaCostiFissi($db);                      // Conto economico
+        
+        $_SESSION[self::BILANCIO] = serialize($bilancio);
     }
 
     private function preparaPagina($bilancioTemplate) {

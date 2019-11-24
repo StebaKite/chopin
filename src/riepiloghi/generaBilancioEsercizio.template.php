@@ -73,5 +73,3 @@ class GeneraBilancioEsercizioTemplate extends RiepiloghiAbstract implements Riep
     }
 
 }
-
-?>

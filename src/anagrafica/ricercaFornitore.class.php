@@ -93,7 +93,7 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
     private function refreshFornitori($db, $fornitore) {
 
-        if (sizeof($fornitore->getFornitori()) == 0) {
+        if ($fornitore->getQtaFornitori() == 0) {
 
             if (!$fornitore->load($db)) {
                 $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;

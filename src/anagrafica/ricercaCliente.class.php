@@ -91,7 +91,7 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 
     private function refreshClienti($db, $cliente) {
 
-        if (sizeof($cliente->getClienti()) == 0) {
+        if ($cliente->getQtaClienti() == 0) {
 
             if (!$cliente->load($db)) {
                 $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;

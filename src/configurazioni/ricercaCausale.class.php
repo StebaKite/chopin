@@ -70,7 +70,7 @@ class RicercaCausale extends ConfigurazioniAbstract implements ConfigurazioniBus
      */
     private function refreshCausali($db, $causale) {
 
-        if (sizeof($causale->getCausali()) == 0) {
+        if ($causale->getQtaCausali() == 0) {
 
             if (!$causale->load($db)) {
                 $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;

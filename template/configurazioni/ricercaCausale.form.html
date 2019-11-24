@@ -1,235 +1,235 @@
 <body>
-<script type="text/javascript">
+    <script type="text/javascript">
 
-$(document).ready(function(){
-	
-	$(".datepicker").datepicker();
-	
-	$("#myInput").on("keyup", 
-		function() {
-			var value = $(this).val().toLowerCase();
-			$("#myTable tr").filter(
-				function() {
-					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-				}
-			);
-		}
-	);				
-});
+        $(document).ready(function () {
 
-</script>
+            $(".datepicker").datepicker();
 
-<!-- ------------------- -->
-<!-- RICERCA             -->
-<!-- ------------------- -->
-<div class="container-fluid">
-	<div class="panel panel-default">
-		<!-- Default panel contents -->
-		<div class="panel-heading">
-	  
-			<div class="row">
-				<div class="col-sm-7">
-					<h4>%titoloPagina%</h4>
-				</div>
-				<div class="col-sm-5">
-					<div class="btn-group pull-right">				
-						<button id="nuovaCausale" class="btn btn-primary btn-default">%ml.nuovoprogressivo%</button>
-					</div>	
-				</div>			
-			</div>
-		</div>
-		<div class="panel-body scrollable-panel">
-		  	%risultato_ricerca%
-	  	</div>
-	</div>
-</div>
+            $("#myInput").on("keyup",
+                    function () {
+                        var value = $(this).val().toLowerCase();
+                        $("#myTable tr").filter(
+                                function () {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                }
+                        );
+                    }
+            );
+        });
 
-<!-- ------------- -->
-<!-- NUOVA CAUSALE -->
-<!-- ------------- -->
+    </script>
 
-<div class="container">
-	<div class="modal fade" id="nuova-causale-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Nuova Causale</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="nuovaCausaleForm" action="../configurazioni/creaCausaleFacade.class.php?modo=go" >
+    <!-- ------------------- -->
+    <!-- RICERCA             -->
+    <!-- ------------------- -->
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
 
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class='input-group' id="codcausale_cre_control_group">
-										<span class="input-group-addon">%ml.codcausale%</span>
-										<input class="form-control" id="codcausale_cre" name="codcausale_cre" type="text" maxlength="4" onblur="controllaCodice('codcausale_cre')"/>
-									</div>
-							  	</div>
-							  	<div class="col-sm-8">
-									<div class='input-group' id="descausale_cre_control_group">
-										<span class="input-group-addon">%ml.descausale%</span>
-										<input class="form-control" id="descausale_cre" name="descausale_cre" type="text" maxlength="100" onblur="controllaDescrizione('descausale_cre')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary active"><input type="radio" name="catcausale_cre" id="catcausale_generi_cre" autocomplete="off" value="GENERI" checked >%ml.generi%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_incpag_cre" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_corris_cre" autocomplete="off" value="CORRIS" >%ml.corris%</label>
-									</div>						    		
-								</div>	
-							</div>
-							
-						</div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <h4>%titoloPagina%</h4>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="btn-group pull-right">				
+                            <button id="nuovaCausale" class="btn btn-primary btn-default">%ml.nuovoprogressivo%</button>
+                        </div>	
+                    </div>			
+                </div>
+            </div>
+            <div class="panel-body scrollable-panel">
+                %risultato_ricerca%
+            </div>
+        </div>
+    </div>
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-nuova-causale-form">Ok</button>
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
-</div>
+    <!-- ------------- -->
+    <!-- NUOVA CAUSALE -->
+    <!-- ------------- -->
 
-<!-- ---------------- -->
-<!-- MODIFICA CAUSALE -->
-<!-- ---------------- -->
+    <div class="container">
+        <div class="modal fade" id="nuova-causale-dialog" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Nuova Causale</h4>
+                    </div>
+                    <div class="modal-body">
 
-<div class="container">
-	<div class="modal fade" id="modifica-causale-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Modifica Causale</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="modificaCausaleForm" action="../configurazioni/modificaCausaleFacade.class.php?modo=go" >
+                        <form method="post" id="nuovaCausaleForm" action="../configurazioni/creaCausaleFacade.class.php?modo=go" >
 
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class='input-group' id="codcausale_mod_control_group">
-										<span class="input-group-addon">%ml.codcausale%</span>
-										<input class="form-control" id="codcausale_mod" name="codcausale_mod" type="text" readonly />
-									</div>
-							  	</div>
-							  	<div class="col-sm-8">
-									<div class='input-group' id="descausale_mod_control_group">
-										<span class="input-group-addon">%ml.descausale%</span>
-										<input class="form-control" id="descausale_mod" name="descausale_mod" type="text" maxlength="100" onblur="controllaDescrizione('descausale_mod')"/>
-									</div>
-							  	</div>
-							</div>
-							<div class="form-group row">
-							  	<div class="col-sm-4">
-									<div class="btn-group" data-toggle="buttons">
-										<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_generi_mod" autocomplete="off" value="GENERI" >%ml.generi%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_incpag_mod" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
-									  	<label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_corris_mod" autocomplete="off" value="CORRIS" >%ml.corris%</label>
-									</div>						    		
-								</div>	
-							</div>
-							
-						</div>
+                            <div class="well well-sm">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class='input-group' id="codcausale_cre_control_group">
+                                            <span class="input-group-addon">%ml.codcausale%</span>
+                                            <input class="form-control" id="codcausale_cre" name="codcausale_cre" type="text" maxlength="4" onblur="controllaCodice('codcausale_cre')"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class='input-group' id="descausale_cre_control_group">
+                                            <span class="input-group-addon">%ml.descausale%</span>
+                                            <input class="form-control" id="descausale_cre" name="descausale_cre" type="text" maxlength="100" onblur="controllaDescrizione('descausale_cre')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-primary active"><input type="radio" name="catcausale_cre" id="catcausale_generi_cre" autocomplete="off" value="GENERI" checked >%ml.generi%</label>
+                                            <label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_incpag_cre" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
+                                            <label class="btn btn-primary"><input type="radio" name="catcausale_cre" id="catcausale_corris_cre" autocomplete="off" value="CORRIS" >%ml.corris%</label>
+                                        </div>						    		
+                                    </div>	
+                                </div>
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-causale-form">Ok</button>
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
-</div>
+                            </div>
 
-<!-- ---------------- -->
-<!-- CONFIGURA CAUSALE -->
-<!-- ---------------- -->
+                        </form>
 
-<div class="container">
-	<div class="modal fade" id="configura-causale-dialog" role="dialog">
-		<div class="modal-dialog modal-lg">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Configura Causale</h4>
-	        	</div>
-	        	<div class="modal-body">
-	        		        	
-					<form method="post" id="configuraCausaleForm" action="../configurazioni/configuraCausaleFacade.class.php?modo=go" >
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-nuova-causale-form">Ok</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						<div class="well well-sm">
-							<div class="form-group row">
-							  	<div class="col-sm-6">
-							  		<div class="control-group" id="conti_configurati_causale_mod_control_group">
-							    		<label for="conti_configurati_causale_mod">Conti inclusi<small><span class="text-danger" id="conti_configurati_causale_mod_messaggio"></span></small></label>
-										<div class="panel-body scrollable-panel">
-											<table class="table table-bordered table-hover" id="conti_configurati_causale_mod"></table>
-										</div>	
-									</div>	
-							  	</div>
-							  	<div class="col-sm-6">
-							  		<div class="control-group" id="conti_disponibili_causale_mod_control_group">
-							    		<label for="conti_disponibili_causale_mod">Conti disponibili<small><span class="text-danger" id="conti_disponibili_causale_mod_messaggio"></span></small></label>
-										<div class="panel-body scrollable-panel">
-											<table class="table table-bordered table-hover" id="conti_disponibili_causale_mod"></table>
-										</div>	
-									</div>	
-							  	</div>
-							</div>
-						</div>
+    <!-- ---------------- -->
+    <!-- MODIFICA CAUSALE -->
+    <!-- ---------------- -->
 
-					</form>
-	        	
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-configura-causale-form">Ok</button>
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
-</div>
+    <div class="container">
+        <div class="modal fade" id="modifica-causale-dialog" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modifica Causale</h4>
+                    </div>
+                    <div class="modal-body">
 
-<!-- --------------------- -->
-<!-- CANCELLAZIONE CAUSALE -->
-<!-- --------------------- -->
+                        <form method="post" id="modificaCausaleForm" action="../configurazioni/modificaCausaleFacade.class.php?modo=go" >
 
-<div class="container">
-	<div class="modal fade" id="cancella-causale-dialog" role="dialog">
-		<div class="modal-dialog">
-	      <!-- Modal content-->
-			<div class="modal-content">
-	        	<div class="modal-header">
-	          		<h4 class="modal-title">Cancella causale</h4>
-	        	</div>
-	        	<div class="modal-body">	        		        	
-					<form method="post" id="cancellaCausaleForm" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
-						<p>Elimino la causale e la sua configurazione ?</p>
-						<input type="hidden" id="codcausale_del" name="codcausale_del">
-			        </form>
-	        	</div>
-	        	<div class="modal-footer">
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-cancella-causale-form">Ok</button>
-	          		<button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
-	        	</div>
-	      	</div>
-		</div>
-	</div>
-</div>
+                            <div class="well well-sm">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class='input-group' id="codcausale_mod_control_group">
+                                            <span class="input-group-addon">%ml.codcausale%</span>
+                                            <input class="form-control" id="codcausale_mod" name="codcausale_mod" type="text" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class='input-group' id="descausale_mod_control_group">
+                                            <span class="input-group-addon">%ml.descausale%</span>
+                                            <input class="form-control" id="descausale_mod" name="descausale_mod" type="text" maxlength="100" onblur="controllaDescrizione('descausale_mod')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_generi_mod" autocomplete="off" value="GENERI" >%ml.generi%</label>
+                                            <label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_incpag_mod" autocomplete="off" value="INCPAG" >%ml.incpag%</label>
+                                            <label class="btn btn-primary"><input type="radio" name="catcausale_mod" id="catcausale_corris_mod" autocomplete="off" value="CORRIS" >%ml.corris%</label>
+                                        </div>						    		
+                                    </div>	
+                                </div>
 
-<!-- --------- -->
-<!-- FINE DIVS -->
-<!-- --------- -->
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-causale-form">Ok</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ---------------- -->
+    <!-- CONFIGURA CAUSALE -->
+    <!-- ---------------- -->
+
+    <div class="container">
+        <div class="modal fade" id="configura-causale-dialog" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Configura Causale</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <form method="post" id="configuraCausaleForm" action="../configurazioni/configuraCausaleFacade.class.php?modo=go" >
+
+                            <div class="well well-sm">
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <div class="control-group" id="conti_configurati_causale_mod_control_group">
+                                            <label for="conti_configurati_causale_mod">Conti inclusi<small><span class="text-danger" id="conti_configurati_causale_mod_messaggio"></span></small></label>
+                                            <div class="panel-body scrollable-panel">
+                                                <table class="table table-bordered table-hover" id="conti_configurati_causale_mod"></table>
+                                            </div>	
+                                        </div>	
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="control-group" id="conti_disponibili_causale_mod_control_group">
+                                            <label for="conti_disponibili_causale_mod">Conti disponibili<small><span class="text-danger" id="conti_disponibili_causale_mod_messaggio"></span></small></label>
+                                            <div class="panel-body scrollable-panel">
+                                                <table class="table table-bordered table-hover" id="conti_disponibili_causale_mod"></table>
+                                            </div>	
+                                        </div>	
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-configura-causale-form">Ok</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------- -->
+    <!-- CANCELLAZIONE CAUSALE -->
+    <!-- --------------------- -->
+
+    <div class="container">
+        <div class="modal fade" id="cancella-causale-dialog" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Cancella causale</h4>
+                    </div>
+                    <div class="modal-body">	        		        	
+                        <form method="post" id="cancellaCausaleForm" action="../configurazioni/cancellaCausaleFacade.class.php?modo=go" >
+                            <p>Elimino la causale e la sua configurazione ?</p>
+                            <input type="hidden" id="codcausale_del" name="codcausale_del">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-cancella-causale-form">Ok</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------- -->
+    <!-- FINE DIVS -->
+    <!-- --------- -->

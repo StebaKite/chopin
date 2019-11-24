@@ -114,6 +114,9 @@ class Bilancio extends CoreBase implements CoreInterface {
         $this->setTabellaAttivo(self::EMPTYSTRING);
         $this->setTabellaPassivo(self::EMPTYSTRING);
 
+        unset($_SESSION[self::MSG]);
+        unset($_SESSION["messaggio"]);
+        
         $_SESSION[self::BILANCIO] = serialize($this);
     }
 

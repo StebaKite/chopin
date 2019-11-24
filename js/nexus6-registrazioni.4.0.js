@@ -433,9 +433,7 @@ function validaNuovaRegistrazione() {
             esito += "0";
     }
     else {
-        esito += "0";        
-        $("#dettagli_cre_messaggio").html("Obbligatorio");
-        $("#dettagli_cre_control_group").addClass("has-error");        
+        esito += "1";
     }
 
     if (isNotEmpty($("#causale_cre").val())) {
