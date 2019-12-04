@@ -419,9 +419,13 @@ function validaNuovaRegistrazione() {
             esito += "0";
     }
     else {
-        esito += "0";        
-        $("#dettagli_cre_messaggio").html("Obbligatorio");
-        $("#dettagli_cre_control_group").addClass("has-error");        
+        if (isEmpty($("#fornitore_cre").val()) && isEmpty($("#cliente_cre").val())) {
+            esito += "1";            
+        } else {
+            esito += "0";        
+            $("#dettagli_cre_messaggio").html("Obbligatorio");
+            $("#dettagli_cre_control_group").addClass("has-error");                    
+        }        
     }
 
     if (isNotEmpty($("#causale_cre").val())) {
