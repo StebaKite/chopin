@@ -61,7 +61,8 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
-        $this->ricercaDati($utility);
+        $bilancio->prepara();
+        $this->ricercaDati($utility, $bilancio);
 
         $totVoci = $bilancio->getNumCostiTrovati() + $bilancio->getNumRicaviTrovati();
         $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
@@ -78,24 +79,18 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         include($this->piede);
     }
 
-    private function ricercaDati($utility) {
+    private function ricercaDati($utility, $bilancio) {
 
         $db = Database::getInstance();
-        $bilancio = Bilancio::getInstance();
-        $bilancio->prepara();
+        
         $bilancio->setTipoBilancio(self::ESERCIZIO);
-
         $bilancio->ricercaCosti($db);
         $bilancio->ricercaRicavi($db);
-
         $bilancio->ricercaAttivo($db);
         $bilancio->ricercaPassivo($db);
-
         $bilancio->ricercaCostiMargineContribuzione($db);
         $bilancio->ricercaRicaviMargineContribuzione($db);
         $bilancio->ricercaCostiFissi($db);
-        
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
     }
 
     private function preparaPagina() {

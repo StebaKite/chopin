@@ -62,7 +62,8 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
-        $this->ricercaDati($utility);
+        $bilancio->prepara();
+        $this->ricercaDati($utility, $bilancio);
 
         $totVoci = $bilancio->getNumCostiTrovati() + $bilancio->getNumRicaviTrovati();
         $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
@@ -78,11 +79,9 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         include($this->piede);
     }
 
-    private function ricercaDati($utility) {
+    private function ricercaDati($utility, $bilancio) {
 
         $db = Database::getInstance();
-        $bilancio = Bilancio::getInstance();
-        $bilancio->prepara();
         $bilancio->setTipoBilancio(self::PERIODICO);
 
         $bilancio->ricercaCosti($db);
@@ -96,8 +95,6 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio->ricercaCostiMargineContribuzione($db);       // Conto economico
         $bilancio->ricercaRicaviMargineContribuzione($db);      // Conto economico
         $bilancio->ricercaCostiFissi($db);                      // Conto economico
-        
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
     }
 
     private function preparaPagina($bilancioTemplate) {

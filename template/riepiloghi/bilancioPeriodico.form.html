@@ -46,8 +46,9 @@
             </form>
             %tabs%
             <br>
-            <form class="tooltip" method="post" id="estraipdf" action="../riepiloghi/estraiPdfBilancioFacade.class.php?modo=start" >
+            <form class="tooltip" method="post" id="estraipdf" action="../riepiloghi/estraiPdfBilancioFacade.class.php" >
                 %bottoneEstraiPdf%
+                <input type="hidden" name="modo" value="start"/> 
                 <input type="hidden" name="datareg_da" value='%datareg_da%' >
                 <input type="hidden" name="datareg_a" value='%datareg_a%' >
                 <input type="hidden" name="codneg_sel" value='%codneg_sel%' >

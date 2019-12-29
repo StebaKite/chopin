@@ -23,7 +23,7 @@ interface FattureBusinessInterface extends MainNexus6Interface {
     const FATTURA_AZIENDA_CONSORTILE = "Obj_fatturaaziendaconsortile";
     const FATTURA_CLIENTE = "Obj_fatturacliente";
     const FATTURA_ENTE_PUBBLICO = "Obj_fatturaentepubblico";
-    const FATTURA = "Obj_fattura";
+//    const FATTURA = "Obj_fattura";
     const AGGIUNGI_DETTAGLIO_FATTURA = "Obj_aggiungidetaggliofattura";
     const CANCELLA_DETTAGLIO_FATTURA = "Obj_cancelladetaggliofattura";
 

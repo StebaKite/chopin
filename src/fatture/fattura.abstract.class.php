@@ -31,7 +31,7 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
             '%cat_cliente%' => trim($categoriaCliente)
         );
 
-        $sqlTemplate = self::$root . $array['query'] . self::$queryRicercaClienti;
+        $sqlTemplate = $this->root . $array['query'] . self::$queryRicercaClienti;
         $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 

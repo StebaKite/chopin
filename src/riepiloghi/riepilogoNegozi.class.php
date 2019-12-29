@@ -60,36 +60,27 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
         $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
+        
+        $this->ricercaDati($riepilogo);
 
-        if ($this->ricercaDati()) {
+        $totVoci = $riepilogo->getNumCostiComparatiTrovati();
+        $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
+        parent::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
 
-            $riepilogoNegoziTemplate->displayPagina();
-
-            $totVoci = $riepilogo->getNumCostiComparatiTrovati();
-            $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
-            parent::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-
-            if ($totVoci > 0) {
-                $template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
-            } else {
-                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
-            }
+        if ($totVoci > 0) {
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), parent::$replace);
         } else {
-
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), parent::$replace);
-
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), parent::$replace);
         }
+            
+        $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        $riepilogoNegoziTemplate->displayPagina();
         include($this->piede);
     }
 
-    private function ricercaDati() {
+    private function ricercaDati($riepilogo) {
 
         $db = Database::getInstance();
-        $riepilogo = Riepilogo::getInstance();
-        $riepilogo->prepara();
 
         $riepilogo->ricercaCostiComparati($db);
         $riepilogo->ricercaRicaviComparati($db);
@@ -101,16 +92,12 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
             $riepilogo->ricercaCostiVariabiliNegozi($db);
             $riepilogo->ricercaCostiFissiNegozi($db);
             $riepilogo->ricercaRicaviNegozi($db);
-            return TRUE;
         } else {
 
             $riepilogo->ricercaCostiVariabiliNegozi($db);
             $riepilogo->ricercaCostiFissiNegozi($db);
             $riepilogo->ricercaRicaviNegozi($db);
-            return TRUE;
         }
-
-        return FALSE;
     }
 
     public function preparaPagina() {
