@@ -30,8 +30,8 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
     }
 
     public function start() {
-        $registragione = Registrazione::getInstance();
-        $registragione->prepara();
+        $registrazione = Registrazione::getInstance();
+        $registrazione->prepara();
 
         $cliente = Cliente::getInstance();
         $cliente->prepara();
@@ -43,19 +43,17 @@ class CreaRegistrazione extends primanotaAbstract implements PrimanotaBusinessIn
         $scadenzaFornitore->setQtaScadenzeDaPagare(0);
         $scadenzaFornitore->setScadenzeDaPagare("");
         $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_cre");
+        $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
 
         $scadenzaCliente = ScadenzaCliente::getInstance();
         $scadenzaCliente->setQtaScadenzeDaIncassare(0);
         $scadenzaCliente->setScadenzeDaIncassare("");
         $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_cre");
+        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $dettaglioRegistrazione->prepara();
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cre");
-
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-        $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
 
         echo "Ok";
     }

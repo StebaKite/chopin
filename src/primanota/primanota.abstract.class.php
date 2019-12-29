@@ -14,6 +14,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
     const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = "<a onclick='cancellaDettaglioNuovaRegistrazione(";
     const CANCELLA_DETTAGLIO_NUOVO_CORRISPETTIVO_HREF = "<a onclick='cancellaDettaglioNuovoCorrispettivo(";
+    const CONTROLLA_DETTAGLI_PAGAMENTO = "controllaDettagliPagamento('";
 
     // Query ---------------------------------------------------------------
 
@@ -185,7 +186,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
         foreach ($scadenzaFornitore->getScadenzeDaPagare() as $unaScadenzaDaPagare) {
             $parms = $unaScadenzaDaPagare[ScadenzaFornitore::ID_SCADENZA] . ',"' . $scadenzaFornitore->getIdTableScadenzeAperte() . '","' . $scadenzaFornitore->getIdTableScadenzeChiuse() . '"';
-            $bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . self::INCLUDI_ICON;
+            $bottoneAggiungiFatturaPagata = self::AGGIUNGI_FATTURA_PAGATA_HREF . $parms . "); " . self::CONTROLLA_DETTAGLI_PAGAMENTO . $scadenzaFornitore->getIdTableScadenzeChiuse() . "'" . self::INCLUDI_ICON;
 
             $fatturaPagataNotExist = true;
             foreach ($scadenzaFornitore->getScadenzePagate() as $unaScadenzaPagata) {

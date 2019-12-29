@@ -90,7 +90,7 @@ class Cliente extends CoreBase implements CoreInterface {
         $this->setCodPiva(null);
         $this->setCodFisc(null);
 
-        $_SESSION[CLIENTE] = serialize($this);
+        $_SESSION[self::CLIENTE] = serialize($this);
     }
 
     public function prelevaUltimoCodiceCliente($utility, $db) {
