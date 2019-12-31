@@ -8,14 +8,14 @@ require_once 'scadenzaCliente.class.php';
 class VerificaDettagliIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VERIFICA_DETTAGLI_INCASSO])) {
-            $_SESSION[self::VERIFICA_DETTAGLI_INCASSO] = serialize(new VerificaDettagliIncasso());
+        if (parent::getIndexSession(self::VERIFICA_DETTAGLI_INCASSO) === NULL) {
+            parent::setIndexSession(self::VERIFICA_DETTAGLI_INCASSO, serialize(new VerificaDettagliIncasso()));
         }
-        return unserialize($_SESSION[self::VERIFICA_DETTAGLI_INCASSO]);
+        return unserialize(parent::getIndexSession(self::VERIFICA_DETTAGLI_INCASSO));
     }
 
     public function start() {

@@ -16,16 +16,14 @@ require_once 'lavoroPianificato.class.php';
 class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_INCASSO])) {
-            $_SESSION[self::MODIFICA_INCASSO] = serialize(new ModificaIncasso());
+        if (parent::getIndexSession(self::MODIFICA_INCASSO) === NULL) {
+            parent::setIndexSession(self::MODIFICA_INCASSO, serialize(new ModificaIncasso()));
         }
-        return unserialize($_SESSION[self::MODIFICA_INCASSO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_INCASSO));
     }
 
     public function start() {
@@ -41,7 +39,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
         $db = Database::getInstance();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $cliente->setIdCliente($registrazione->getIdCliente());
         $cliente->leggi($db);
@@ -58,7 +56,7 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
         $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagliIncasso_mod");
         $dettaglioRegistrazione->setNomeCampo("descreg_inc_mod");
         $dettaglioRegistrazione->setLabelNomeCampo("descreg_inc_mod_label");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->loadContiConfigurati($db);
@@ -87,8 +85,8 @@ class ModificaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInte
 
         $this->aggiornaIncasso($utility, $registrazione, $dettaglioRegistrazione);
 
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

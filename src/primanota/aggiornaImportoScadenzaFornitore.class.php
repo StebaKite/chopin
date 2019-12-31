@@ -10,14 +10,14 @@ class AggiornaImportoScadenzaFornitore extends PrimanotaAbstract implements Prim
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE])) {
-            $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE] = serialize(new AggiornaImportoScadenzaFornitore());
+        if (parent::getIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE) === null) {
+            parent::setIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE, serialize(new AggiornaImportoScadenzaFornitore()));
         }
-        return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_FORNITORE));
     }
 
     public function start() {

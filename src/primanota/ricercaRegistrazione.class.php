@@ -16,10 +16,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
     private $refererFunctionName;
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
-
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->testata = $this->root . $this->array[self::TESTATA];
         $this->piede = $this->root . $this->array[self::PIEDE];
         $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
@@ -27,10 +24,10 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE])) {
-            $_SESSION[self::RICERCA_REGISTRAZIONE] = serialize(new RicercaRegistrazione());
+        if (parent::getIndexSession(self::RICERCA_REGISTRAZIONE) === null) {
+            parent::setIndexSession(self::RICERCA_REGISTRAZIONE, serialize(new RicercaRegistrazione()));
         }
-        return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_REGISTRAZIONE));
     }
 
     public function start() {
@@ -41,8 +38,8 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
-        unset($_SESSION[self::FUNCTION_REFERER]);
-        unset($_SESSION[self::MSG]);
+        parent::unsetIndexSessione(self::FUNCTION_REFERER);
+        parent::unsetIndexSessione(self::MSG);
 
         $registrazione->prepara();
         $dettaglioRegistrazione->prepara();
@@ -55,11 +52,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
         $this->preparaPagina($ricercaRegistrazioneTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = (parent::getIndexSession("ambiente") !== NULL ? array('%amb%' => parent::getIndexSession("ambiente"), '%users%' => parent::getIndexSession("users"), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
-
-//        $_SESSION[self::CAUSALE] = $causale;
 
         $ricercaRegistrazioneTemplate->displayPagina();
         include($this->piede);
@@ -74,7 +69,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
-        unset($_SESSION[self::FUNCTION_REFERER]);
+        parent::unsetIndexSessione(self::FUNCTION_REFERER);
 
         $registrazione->preparaFiltri();
         $dettaglioRegistrazione->prepara();
@@ -84,7 +79,7 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
         $ricercaRegistrazioneTemplate = RicercaRegistrazioneTemplate::getInstance();
         $this->preparaPagina($ricercaRegistrazioneTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = (parent::getIndexSession("ambiente") !== NULL ? array('%amb%' => parent::getIndexSession("ambiente"), '%users%' => parent::getIndexSession("users"), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -92,27 +87,27 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 
             if ($registrazione->load($db)) {
 
-                $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+                parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
                 /**
                  * Gestione del messaggio proveniente da altre funzioni
                  */
-                if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-                    $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni";
-                    unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-                } elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
-                    $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni";
-                    unset($_SESSION[self::MSG_DA_MODIFICA]);
-                } elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
-                    $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni";
-                    unset($_SESSION[self::MSG_DA_CREAZIONE]);
+                if (parent::getIndexSession(self::MSG_DA_CANCELLAZIONE) !== NULL) {
+                    parent::setIndexSession(self::MESSAGGIO, $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni");
+                    parent::unsetIndexSessione(self::MSG_DA_CANCELLAZIONE);
+                } elseif (parent::getIndexSession(self::MSG_DA_MODIFICA) !== NULL) {
+                    parent::setIndexSession(self::MESSAGGIO, $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni");
+                    parent::unsetIndexSessione(self::MSG_DA_MODIFICA);
+                } elseif (parent::getIndexSession(self::MSG_DA_CREAZIONE) !== NULL) {
+                    parent::setIndexSession(self::MESSAGGIO, $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni");
+                    parent::unsetIndexSessione(self::MSG_DA_CREAZIONE);
                 } else {
-                    $_SESSION[self::MESSAGGIO] = "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni";
+                    parent::setIndexSession(self::MESSAGGIO, "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni");
                 }
 
-                self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+                self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
-                $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
+                $pos = strpos(parent::getIndexSession(self::MESSAGGIO), "ERRORE");
                 if ($pos === false) {
                     if ($registrazione->getQtaRegistrazioni() > 0)
                         $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
@@ -125,14 +120,14 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
             }
             else {
 
-                $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-                self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+                parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
+                self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-                $_SESSION[self::MSG] = $utility->tailTemplate($template);
+                parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
             }
         } else {
 
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            self::$replace = array('%messaggio%' => parent::getIndexSession("messaggio"));
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             $_SESSION[self::MSG] = $utility->tailTemplate($template);
         }
@@ -143,9 +138,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 
     public function preparaPagina($ricercaRegistrazioneTemplate) {
 
-        $_SESSION[self::AZIONE] = self::AZIONE_RICERCA_REGISTRAZIONE;
-        $_SESSION[self::TIP_CONFERMA] = "%ml.confermaRicercaRegistrazione%";
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.ricercaRegistrazione%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_RICERCA_REGISTRAZIONE);
+        parent::setIndexSession(self::TIP_CONFERMA, "%ml.confermaRicercaRegistrazione%");
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.ricercaRegistrazione%");
     }
 
     public function getRefererFunctionName() {

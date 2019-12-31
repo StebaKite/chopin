@@ -16,16 +16,14 @@ require_once 'lavoroPianificato.class.php';
 class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_PAGAMENTO])) {
-            $_SESSION[self::CREA_PAGAMENTO] = serialize(new CreaPagamento());
+        if (parent::getIndexSession(self::CREA_PAGAMENTO) === NULL) {
+            parent::setIndexSession(self::CREA_PAGAMENTO, serialize(new CreaPagamento()));
         }
-        return unserialize($_SESSION[self::CREA_PAGAMENTO]);
+        return unserialize(parent::getIndexSession(self::CREA_PAGAMENTO));
     }
 
     public function start() {
@@ -47,8 +45,8 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
         $dettaglioRegistrazione->prepara();
         $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_cre");
 
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-        $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
+        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($scadenzaFornitore));
         echo "Ok";
     }
 
@@ -59,8 +57,8 @@ class CreaPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterf
 
         $this->creaPagamento($utility, $registrazione, $dettaglioRegistrazione);
 
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

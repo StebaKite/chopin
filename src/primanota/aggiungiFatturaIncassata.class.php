@@ -11,14 +11,14 @@ class AggiungiFatturaIncassata extends PrimanotaAbstract implements PrimanotaBus
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_FATTURA_INCASSATA])) {
-            $_SESSION[self::AGGIUNGI_FATTURA_INCASSATA] = serialize(new AggiungiFatturaIncassata());
+        if (parent::getIndexSession(self::AGGIUNGI_FATTURA_INCASSATA) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_FATTURA_INCASSATA, serialize(new AggiungiFatturaIncassata()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_FATTURA_INCASSATA]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_FATTURA_INCASSATA));
     }
 
     public function start() {

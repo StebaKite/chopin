@@ -11,14 +11,14 @@ class AggiungiFatturaPagata extends PrimanotaAbstract implements PrimanotaBusine
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_FATTURA_PAGATA])) {
-            $_SESSION[self::AGGIUNGI_FATTURA_PAGATA] = serialize(new AggiungiFatturaPagata());
+        if (parent::getIndexSession(self::AGGIUNGI_FATTURA_PAGATA) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_FATTURA_PAGATA, serialize(new AggiungiFatturaPagata()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_FATTURA_PAGATA]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_FATTURA_PAGATA));
     }
 
     public function start() {

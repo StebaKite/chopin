@@ -8,14 +8,14 @@ require_once 'scadenzaFornitore.class.php';
 class VerificaDettagliPagamento extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VERIFICA_DETTAGLI_PAGAMENTO])) {
-            $_SESSION[self::VERIFICA_DETTAGLI_PAGAMENTO] = serialize(new VerificaDettagliPagamento());
+        if (parent::getIndexSession(self::VERIFICA_DETTAGLI_PAGAMENTO) === NULL) {
+            parent::setIndexSession(self::VERIFICA_DETTAGLI_PAGAMENTO, serialize(new VerificaDettagliPagamento()));
         }
-        return unserialize($_SESSION[self::VERIFICA_DETTAGLI_PAGAMENTO]);
+        return unserialize(parent::getIndexSession(self::VERIFICA_DETTAGLI_PAGAMENTO));
     }
 
     public function start() {

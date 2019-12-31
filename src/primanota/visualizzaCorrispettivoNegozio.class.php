@@ -11,16 +11,14 @@ require_once 'causale.class.php';
 class VisualizzaCorrispettivoNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO])) {
-            $_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO] = serialize(new VisualizzaCorrispettivoNegozio());
+        if (parent::getIndexSession(self::VISUALIZZA_CORRISPETTIVO_NEGOZIO) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_CORRISPETTIVO_NEGOZIO, serialize(new VisualizzaCorrispettivoNegozio()));
         }
-        return unserialize($_SESSION[self::VISUALIZZA_CORRISPETTIVO_NEGOZIO]);
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_CORRISPETTIVO_NEGOZIO));
     }
 
     public function start() {
@@ -35,12 +33,12 @@ class VisualizzaCorrispettivoNegozio extends PrimanotaAbstract implements Priman
         $registrazione->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_vis");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
         $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;

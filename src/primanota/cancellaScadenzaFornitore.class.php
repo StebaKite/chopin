@@ -10,14 +10,14 @@ class CancellaScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBu
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_SCADENZA_FORNITORE])) {
-            $_SESSION[self::CANCELLA_SCADENZA_FORNITORE] = serialize(new CancellaScadenzaFornitore());
+        if (parent::getIndexSession(self::CANCELLA_SCADENZA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_SCADENZA_FORNITORE, serialize(new CancellaScadenzaFornitore()));
         }
-        return unserialize($_SESSION[self::CANCELLA_SCADENZA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_SCADENZA_FORNITORE));
     }
 
     public function start() {

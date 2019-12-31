@@ -13,14 +13,14 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE])) {
-            $_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE] = serialize(new AggiungiNuovoDettaglioContoCliente());
+        if (parent::getInfoFromServer(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE, serialize(new AggiungiNuovoDettaglioContoCliente()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_CLIENTE));
     }
 
     public function start() {

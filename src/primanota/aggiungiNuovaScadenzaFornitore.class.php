@@ -12,14 +12,14 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE])) {
-            $_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE] = serialize(new AggiungiNuovaScadenzaFornitore());
+        if (parent::getIndexSession(self::AGGIUNGI_SCADENZA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_SCADENZA_FORNITORE, serialize(new AggiungiNuovaScadenzaFornitore()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_SCADENZA_FORNITORE));
     }
 
     public function start() {

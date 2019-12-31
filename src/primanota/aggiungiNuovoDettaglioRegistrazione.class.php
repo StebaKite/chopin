@@ -12,14 +12,14 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE])) {
-            $_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiungiNuovoDettaglioRegistrazione());
+        if (parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE, serialize(new AggiungiNuovoDettaglioRegistrazione()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_REGISTRAZIONE));
     }
 
     public function start() {

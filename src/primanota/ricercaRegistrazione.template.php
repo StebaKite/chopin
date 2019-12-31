@@ -19,10 +19,10 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE])) {
-            $_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE] = serialize(new RicercaRegistrazioneTemplate());
+        if (parent::getIndexSession(self::RICERCA_REGISTRAZIONE_TEMPLATE) === null) {
+            parent::setIndexSession(self::RICERCA_REGISTRAZIONE_TEMPLATE, serialize(new RicercaRegistrazioneTemplate()));
         }
-        return unserialize($_SESSION[self::RICERCA_REGISTRAZIONE_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_REGISTRAZIONE_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -39,9 +39,9 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
         // ----------------------------------------------
 
         if ($msg != "<br>") {
-            $_SESSION[self::MESSAGGIO] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION[self::MESSAGGIO]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
 
         return $esito;
@@ -100,7 +100,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
                     "    <div class='col-sm-4'>" .
                     "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                     "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .
@@ -172,7 +172,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
                             }
                         case (self::REGISTRAZIONE_ERRATA): {
 
-                                switch ($row['cod_causale']) {
+                                switch ($unaRegistrazione[Registrazione::COD_CAUSALE]) {
                                     case ($array[self::CORRISPETTIVO_MERCATO]): {
                                             $bottoneVisualizza = self::VISUALIZZA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::VISUALIZZA_ICON;
                                             $bottoneModifica = self::MODIFICA_CORRISPETTIVO_MERCATO_HREF . trim($unaRegistrazione[Registrazione::ID_REGISTRAZIONE]) . self::MODIFICA_ICON;
@@ -229,7 +229,7 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
             $risultato_ricerca .= "</tbody></table>";
         } else {
             $risultato_ricerca = "<div class='row'>" .
-                    "    <div class='col-sm-12'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-12'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>";
         }
 
@@ -238,13 +238,13 @@ class RicercaRegistrazioneTemplate extends PrimanotaAbstract implements Primanot
 
         $fornitore->load($db);
         $cliente->load($db);
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
             '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
             '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
             '%villa-selected%' => ($registrazione->getCodNegozioSel() == "VIL") ? "selected" : "",

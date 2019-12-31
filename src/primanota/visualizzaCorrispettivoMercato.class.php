@@ -12,16 +12,14 @@ require_once 'causale.class.php';
 class VisualizzaCorrispettivoMercato extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO])) {
-            $_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO] = serialize(new VisualizzaCorrispettivoMercato());
+        if (parent::getIndexSession(self::VISUALIZZA_CORRISPETTIVO_MERCATO) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_CORRISPETTIVO_MERCATO, serialize(new VisualizzaCorrispettivoMercato()));
         }
-        return unserialize($_SESSION[self::VISUALIZZA_CORRISPETTIVO_MERCATO]);
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_CORRISPETTIVO_MERCATO));
     }
 
     public function start() {
@@ -38,7 +36,7 @@ class VisualizzaCorrispettivoMercato extends PrimanotaAbstract implements Priman
         $mercato->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $mercato->setIdMercato($registrazione->getIdMercato());
         $mercato->leggi($db);
@@ -46,7 +44,7 @@ class VisualizzaCorrispettivoMercato extends PrimanotaAbstract implements Priman
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_vis");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
         $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;

@@ -13,14 +13,14 @@ class AggiungiNuovoDettaglioContoFornitore extends PrimanotaAbstract implements 
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE])) {
-            $_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE] = serialize(new AggiungiNuovoDettaglioContoFornitore());
+        if (parent::getIndexSession(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE, serialize(new AggiungiNuovoDettaglioContoFornitore()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_NUOVO_DETTAGLIO_CONTO_FORNITORE));
     }
 
     public function start() {

@@ -15,14 +15,14 @@ class AnnullaNuovoPagamento extends PrimanotaAbstract implements PrimanotaBusine
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_NUOVO_PAGAMENTO])) {
-            $_SESSION[self::ANNULLA_NUOVO_PAGAMENTO] = serialize(new AnnullaNuovoPagamento());
+        if (parent::getIndexSession(self::ANNULLA_NUOVO_PAGAMENTO) === NULL) {
+            parent::setIndexSession(self::ANNULLA_NUOVO_PAGAMENTO, serialize(new AnnullaNuovoPagamento()));
         }
-        return unserialize($_SESSION[self::ANNULLA_NUOVO_PAGAMENTO]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_NUOVO_PAGAMENTO));
     }
 
     public function start() {

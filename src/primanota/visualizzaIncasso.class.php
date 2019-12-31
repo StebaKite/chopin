@@ -13,16 +13,14 @@ require_once 'causale.class.php';
 class VisualizzaIncasso extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_INCASSO])) {
-            $_SESSION[self::VISUALIZZA_INCASSO] = serialize(new VisualizzaIncasso());
+        if (parent::getIndexSession(self::VISUALIZZA_INCASSO) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_INCASSO, serialize(new VisualizzaIncasso()));
         }
-        return unserialize($_SESSION[self::VISUALIZZA_INCASSO]);
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_INCASSO));
     }
 
     public function start() {
@@ -40,20 +38,20 @@ class VisualizzaIncasso extends PrimanotaAbstract implements PrimanotaBusinessIn
         $cliente->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $cliente->setIdCliente($registrazione->getIdCliente());
         $cliente->leggi($db);
         $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
         $scadenzaCliente->trovaScadenzeIncassate($db);
         $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_vis");
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_inc_vis");
         $dettaglioRegistrazione->setNomeCampo("descreg_inc_vis");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
         $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;

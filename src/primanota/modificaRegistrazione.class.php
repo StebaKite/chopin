@@ -18,15 +18,14 @@ require_once 'causale.class.php';
 class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_REGISTRAZIONE]))
-            $_SESSION[self::MODIFICA_REGISTRAZIONE] = serialize(new ModificaRegistrazione());
-        return unserialize($_SESSION[self::MODIFICA_REGISTRAZIONE]);
+        if (parent::getIndexSession(self::MODIFICA_REGISTRAZIONE) === null) {
+            parent::setIndexSession(self::MODIFICA_REGISTRAZIONE, serialize(new ModificaRegistrazione()));
+        }
+        return unserialize(parent::getIndexSession(self::MODIFICA_REGISTRAZIONE));
     }
 
     public function start() {
@@ -48,7 +47,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         $fornitore->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         if (parent::isNotEmpty($registrazione->getIdFornitore())) {
             $fornitore->setIdFornitore($registrazione->getIdFornitore());
@@ -56,7 +55,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaFornitore->trovaScadenzeRegistrazione($db);
             $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_mod");
-            $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($scadenzaFornitore));
         }
 
         if (parent::isNotEmpty($registrazione->getIdCliente())) {
@@ -65,7 +64,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaCliente->trovaScadenzeRegistrazione($db);
             $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
         }
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
@@ -75,7 +74,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagli_mod");
         $dettaglioRegistrazione->setNomeCampo("descreg_mod");
         $dettaglioRegistrazione->setLabelNomeCampo("descreg_mod_label");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $causale->setCodCausale($registrazione->getCodCausale());
 
@@ -114,18 +113,18 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         /**
          * Passo il controllo al controller del componente di provenienza
          */
-        if (isset($_SESSION[self::FUNCTION_REFERER])) {
+        if (parent::getIndexSession(self::FUNCTION_REFERER) !== null) {
 
-            if ($_SESSION[self::FUNCTION_REFERER] == self::RICERCA_SCADENZE_FORNITORE) {
-                $_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeFornitore::getInstance()));
-                $controller = unserialize($_SESSION[self::SCADENZE_CONTROLLER]);
-            } elseif ($_SESSION[self::FUNCTION_REFERER] == self::RICERCA_SCADENZE_CLIENTE) {
-                $_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance()));
-                $controller = unserialize($_SESSION[self::SCADENZE_CONTROLLER]);
+            if (parent::getIndexSession(self::FUNCTION_REFERER) == self::RICERCA_SCADENZE_FORNITORE) {
+                parent::setIndexSession(self::SCADENZE_CONTROLLER, serialize(new ScadenzeController(RicercaScadenzeFornitore::getInstance())));
+                $controller = unserialize(parent::getIndexSession(self::SCADENZE_CONTROLLER));
+            } elseif (parent::getIndexSession(self::FUNCTION_REFERER) == self::RICERCA_SCADENZE_CLIENTE) {
+                parent::setIndexSession(self::SCADENZE_CONTROLLER, serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance())));
+                $controller = unserialize(parent::getIndexSession(self::SCADENZE_CONTROLLER));
             }
         } else {
-            $_SESSION[self::PRIMANOTA_CONTROLLER] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-            $controller = unserialize($_SESSION[self::PRIMANOTA_CONTROLLER]);
+            parent::setIndexSession(self::PRIMANOTA_CONTROLLER, serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+            $controller = unserialize(parent::getIndexSession(self::PRIMANOTA_CONTROLLER));
         }
         $controller->start();
     }

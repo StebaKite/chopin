@@ -9,16 +9,14 @@ require_once 'registrazione.class.php';
 class CercaFatturaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CERCA_FATTURA_FORNITORE])) {
-            $_SESSION[self::CERCA_FATTURA_FORNITORE] = serialize(new CercaFatturaFornitore());
+        if (parent::getIndexSession(self::CERCA_FATTURA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::CERCA_FATTURA_FORNITORE, serialize(new CercaFatturaFornitore()));
         }
-        return unserialize($_SESSION[self::CERCA_FATTURA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::CERCA_FATTURA_FORNITORE));
     }
 
     public function start() {

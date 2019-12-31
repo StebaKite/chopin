@@ -11,16 +11,14 @@ require_once 'cliente.class.php';
 class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE])) {
-            $_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE] = serialize(new RicercaScadenzeAperteCliente());
+        if (parent::getIndexSession(self::RICERCA_SCADENZE_CLIENTE_APERTE) === NULL) {
+            parent::setIndexSession(self::RICERCA_SCADENZE_CLIENTE_APERTE, serialize(new RicercaScadenzeAperteCliente()));
         }
-        return unserialize($_SESSION[self::RICERCA_SCADENZE_CLIENTE_APERTE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_SCADENZE_CLIENTE_APERTE));
     }
 
     public function start() {
@@ -42,7 +40,7 @@ class RicercaScadenzeAperteCliente extends PrimanotaAbstract implements Primanot
         
         $dettaglioRegistrazione->setDettagliRegistrazione(self::EMPTYSTRING);
         $dettaglioRegistrazione->setQtaDettagliRegistrazione(self::ZERO_VALUE);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
         
         /**
          * Nell'attributo numFattureDaIncassare ci appoggio la table html generata

@@ -396,14 +396,14 @@ class PrimanotaController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati ========================================
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
-        $_SESSION[self::CAUSALE] = serialize($causale);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
-        $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
-        $_SESSION[self::MERCATO] = serialize($mercato);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
+        parent::setIndexSession(self::CAUSALE, serialize($causale));
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
+        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($scadenzaFornitore));
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
+        parent::setIndexSession(self::MERCATO, serialize($mercato));
 
         if ($this->getRequest() == self::START) {
             $this->primanotaFunction->start();

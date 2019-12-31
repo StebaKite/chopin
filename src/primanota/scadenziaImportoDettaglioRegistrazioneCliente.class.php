@@ -10,14 +10,14 @@ class ScadenziaImportoDettaglioRegistrazioneCliente extends PrimanotaAbstract im
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE])) {
-            $_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE] = serialize(new ScadenziaImportoDettaglioRegistrazioneCliente());
+        if (parent::getIndexSession(self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE) === NULL) {
+            parent::setIndexSession(self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE, serialize(new ScadenziaImportoDettaglioRegistrazioneCliente()));
         }
-        return unserialize($_SESSION[self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::SCADENZIA_IMPORTO_DETTAGLIO_REGISTRAZIONE_CLIENTE));
     }
 
     public function start() {

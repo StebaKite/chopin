@@ -11,14 +11,14 @@ class RimuoviFatturaPagata extends PrimanotaAbstract implements PrimanotaBusines
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RIMUOVI_FATTURA_PAGATA])) {
-            $_SESSION[self::RIMUOVI_FATTURA_PAGATA] = serialize(new RimuoviFatturaPagata());
+        if (parent::getIndexSession(self::RIMUOVI_FATTURA_PAGATA) === NULL) {
+            parent::setIndexSession(self::RIMUOVI_FATTURA_PAGATA, serialize(new RimuoviFatturaPagata()));
         }
-        return unserialize($_SESSION[self::RIMUOVI_FATTURA_PAGATA]);
+        return unserialize(parent::getIndexSession(self::RIMUOVI_FATTURA_PAGATA));
     }
 
     public function start() {

@@ -11,14 +11,14 @@ require_once 'scadenzaFornitore.class.php';
 class CalcolaDataScadenzaFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE])) {
-            $_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE] = serialize(new CalcolaDataScadenzaFornitore());
+        if (parent::getIndexSession(self::CALCOLA_DATA_SCADENZA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::CALCOLA_DATA_SCADENZA_FORNITORE, serialize(new CalcolaDataScadenzaFornitore()));
         }
-        return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::CALCOLA_DATA_SCADENZA_FORNITORE));
     }
 
     public function start() {

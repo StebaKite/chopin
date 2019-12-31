@@ -10,14 +10,14 @@ class LoadContiCausale extends PrimanotaAbstract implements PrimanotaBusinessInt
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::LOAD_CONTI_CAUSALE])) {
-            $_SESSION[self::LOAD_CONTI_CAUSALE] = serialize(new LoadContiCausale());
+        if (parent::getIndexSession(self::LOAD_CONTI_CAUSALE) === NULL) {
+            parent::setIndexSession(self::LOAD_CONTI_CAUSALE, serialize(new LoadContiCausale()));
         }
-        return unserialize($_SESSION[self::LOAD_CONTI_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::LOAD_CONTI_CAUSALE));
     }
 
     public function start() {

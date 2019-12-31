@@ -17,15 +17,14 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
     public $negozio;
     
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_REGISTRAZIONE]))
-            $_SESSION[self::VISUALIZZA_REGISTRAZIONE] = serialize(new VisualizzaRegistrazione());
-        return unserialize($_SESSION[self::VISUALIZZA_REGISTRAZIONE]);
+        if (parent::getIndexSession(self::VISUALIZZA_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_REGISTRAZIONE, serialize(new VisualizzaRegistrazione()));
+        }
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_REGISTRAZIONE));
     }
 
     public function start() {
@@ -46,7 +45,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
         $fornitore->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         if ($registrazione->getIdFornitore() != null) {
             $fornitore->setIdFornitore($registrazione->getIdFornitore());
@@ -54,7 +53,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
             $scadenzaFornitore->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaFornitore->trovaScadenzeRegistrazione($db);
             $scadenzaFornitore->setIdTableScadenzeAperte("scadenzesuppl_vis");
-            $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($scadenzaFornitore));
         }
 
         if ($registrazione->getIdCliente() != null) {
@@ -63,7 +62,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
             $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
             $scadenzaCliente->trovaScadenzeRegistrazione($db);
             $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_vis");
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
         }
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
@@ -73,7 +72,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
         $dettaglioRegistrazione->setMsgControlloPagina("messaggioControlloDettagli_vis");
         $dettaglioRegistrazione->setNomeCampo("descreg_vis");
         $dettaglioRegistrazione->setLabelNomeCampo("descreg_vis_label");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $this->negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $this->negozio;
         $this->negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $this->negozio;

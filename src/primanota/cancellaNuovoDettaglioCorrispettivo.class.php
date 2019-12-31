@@ -11,14 +11,14 @@ class CancellaNuovoDettaglioCorrispettivo extends PrimanotaAbstract implements P
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO])) {
-            $_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO] = serialize(new CancellaNuovoDettaglioCorrispettivo());
+        if (parent::getIndexSession(self::CANCELLA_DETTAGLIO_CORRISPETTIVO) === NULL) {
+            parent::setIndexSession(self::CANCELLA_DETTAGLIO_CORRISPETTIVO, serialize(new CancellaNuovoDettaglioCorrispettivo()));
         }
-        return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_CORRISPETTIVO]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_DETTAGLIO_CORRISPETTIVO));
     }
 
     public function start() {

@@ -10,14 +10,14 @@ class CancellaScadenzaCliente extends PrimanotaAbstract implements PrimanotaBusi
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_SCADENZA_CLIENTE])) {
-            $_SESSION[self::CANCELLA_SCADENZA_CLIENTE] = serialize(new CancellaScadenzaCliente());
+        if (parent::getIndexSession(self::CANCELLA_SCADENZA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_SCADENZA_CLIENTE, serialize(new CancellaScadenzaCliente()));
         }
-        return unserialize($_SESSION[self::CANCELLA_SCADENZA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_SCADENZA_CLIENTE));
     }
 
     public function start() {

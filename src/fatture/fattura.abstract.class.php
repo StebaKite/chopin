@@ -26,6 +26,7 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
      */
     public function caricaClientiFatturabili($utility, $db, $categoriaCliente) {
 
+        $elencoClienti = "";
         $array = $utility->getConfig();
         $replace = array(
             '%cat_cliente%' => trim($categoriaCliente)

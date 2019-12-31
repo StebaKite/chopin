@@ -11,14 +11,14 @@ class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements Primanot
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE])) {
-            $_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE] = serialize(new AggiungiNuovaScadenzaCliente());
+        if (parent::getIndexSession(self::AGGIUNGI_SCADENZA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_SCADENZA_CLIENTE, serialize(new AggiungiNuovaScadenzaCliente()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_SCADENZA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_SCADENZA_CLIENTE));
     }
 
     public function start() {

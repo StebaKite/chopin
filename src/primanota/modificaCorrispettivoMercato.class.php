@@ -12,16 +12,14 @@ require_once 'causale.class.php';
 class ModificaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO])) {
-            $_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO] = serialize(new ModificaCorrispettivoMercato());
+        if (parent::getIndexSession(self::MODIFICA_CORRISPETTIVO_MERCATO) === NULL) {
+            parent::setIndexSession(self::MODIFICA_CORRISPETTIVO_MERCATO, serialize(new ModificaCorrispettivoMercato()));
         }
-        return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_MERCATO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_CORRISPETTIVO_MERCATO));
     }
 
     public function start() {
@@ -38,7 +36,7 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
         $mercato->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $mercato->setIdMercato($registrazione->getIdMercato());
         $mercato->leggi($db);
@@ -46,7 +44,7 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_mod");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $negozio = trim($registrazione->getCodNegozio());
 
@@ -110,8 +108,8 @@ class ModificaCorrispettivoMercato extends primanotaAbstract implements Primanot
             }
         }
 
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

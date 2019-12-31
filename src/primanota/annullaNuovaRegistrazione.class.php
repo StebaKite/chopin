@@ -15,14 +15,14 @@ class AnnullaNuovaRegistrazione extends PrimanotaAbstract implements PrimanotaBu
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_NUOVA_REGISTRAZIONE])) {
-            $_SESSION[self::ANNULLA_NUOVA_REGISTRAZIONE] = serialize(new AnnullaNuovaRegistrazione());
+        if (parent::getIndexSession(self::ANNULLA_NUOVA_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::ANNULLA_NUOVA_REGISTRAZIONE, serialize(new AnnullaNuovaRegistrazione()));
         }
-        return unserialize($_SESSION[self::ANNULLA_NUOVA_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_NUOVA_REGISTRAZIONE));
     }
 
     public function start() {

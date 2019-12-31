@@ -15,14 +15,14 @@ class AnnullaNuovoIncasso extends PrimanotaAbstract implements PrimanotaBusiness
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_NUOVO_INCASSO])) {
-            $_SESSION[self::ANNULLA_NUOVO_INCASSO] = serialize(new AnnullaNuovoIncasso());
+        if (parent::getIndexSession(self::ANNULLA_NUOVO_INCASSO) === NULL) {
+            parent::setIndexSession(self::ANNULLA_NUOVO_INCASSO, serialize(new AnnullaNuovoIncasso()));
         }
-        return unserialize($_SESSION[self::ANNULLA_NUOVO_INCASSO]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_NUOVO_INCASSO));
     }
 
     public function start() {

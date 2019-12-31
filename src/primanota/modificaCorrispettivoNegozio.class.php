@@ -11,15 +11,14 @@ require_once 'causale.class.php';
 class ModificaCorrispettivoNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO]))
-            $_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO] = serialize(new ModificaCorrispettivoNegozio());
-        return unserialize($_SESSION[self::MODIFICA_CORRISPETTIVO_NEGOZIO]);
+        if (parent::getIndexSession(self::MODIFICA_CORRISPETTIVO_NEGOZIO) === NULL) {
+            parent::setIndexSession (self::MODIFICA_CORRISPETTIVO_NEGOZIO, serialize(new ModificaCorrispettivoNegozio()));
+        }
+        return unserialize(parent::getIndexSession(self::MODIFICA_CORRISPETTIVO_NEGOZIO));
     }
 
     public function start() {
@@ -34,12 +33,12 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract implements Primanot
         $registrazione->prepara();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_corneg_mod");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $negozio = trim($registrazione->getCodNegozio());
 
@@ -79,8 +78,8 @@ class ModificaCorrispettivoNegozio extends PrimanotaAbstract implements Primanot
             $dettaglioRegistrazione->aggiorna($db);
         }
         
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

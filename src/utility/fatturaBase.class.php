@@ -360,7 +360,7 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
         return $this->title;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title, $isUTF8=false) {
         $this->title = $title;
     }
 
@@ -384,7 +384,7 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
         return $this->creator;
     }
 
-    public function setCreator($creator) {
+    public function setCreator($creator, $isUTF8=false) {
         $this->creator = $creator;
     }
 

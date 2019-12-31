@@ -12,14 +12,14 @@ class AggiungiNuovoDettaglioCorrispettivoNegozio extends PrimanotaAbstract imple
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO])) {
-            $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO] = serialize(new AggiungiNuovoDettaglioCorrispettivoNegozio());
+        if (parent::getInfoFromServer(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO, serialize(new AggiungiNuovoDettaglioCorrispettivoNegozio()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_NEGOZIO));
     }
 
     public function start() {
@@ -33,7 +33,7 @@ class AggiungiNuovoDettaglioCorrispettivoNegozio extends PrimanotaAbstract imple
         $registrazione = Registrazione::getInstance();
 
         $dettaglioRegistrazione = $this->aggiungiDettagliCorrispettivoNegozio($db, $utility, $array);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
         echo $this->makeTabellaDettagliCorrispettivo($registrazione, $dettaglioRegistrazione);
     }
 }

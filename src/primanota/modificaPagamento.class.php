@@ -15,16 +15,14 @@ require_once 'causale.class.php';
 class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_PAGAMENTO])) {
-            $_SESSION[self::MODIFICA_PAGAMENTO] = serialize(new ModificaPagamento());
+        if (parent::getIndexSession(self::MODIFICA_PAGAMENTO) === null) {
+            parent::setIndexSession(self::MODIFICA_PAGAMENTO, serialize(new ModificaPagamento()));
         }
-        return unserialize($_SESSION[self::MODIFICA_PAGAMENTO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_PAGAMENTO));
     }
 
     public function start() {
@@ -40,7 +38,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
         $db = Database::getInstance();
 
         $registrazione->leggi($db);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         $fornitore->setIdFornitore($registrazione->getIdFornitore());
         $fornitore->leggi($db);
@@ -56,7 +54,7 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());
         $dettaglioRegistrazione->leggiDettagliRegistrazione($db);
         $dettaglioRegistrazione->setIdTablePagina("dettagli_pag_mod");
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->loadContiConfigurati($db);
@@ -85,8 +83,8 @@ class ModificaPagamento extends primanotaAbstract implements PrimanotaBusinessIn
 
         $this->aggiornaPagamento($utility, $registrazione, $dettaglioRegistrazione);
 
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

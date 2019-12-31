@@ -10,14 +10,14 @@ require_once 'scadenzaCliente.class.php';
 class RimuoviFatturaIncassata extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RIMUOVI_FATTURA_INCASSATA])) {
-            $_SESSION[self::RIMUOVI_FATTURA_INCASSATA] = serialize(new RimuoviFatturaIncassata());
+        if (parent::getIndexSession(self::RIMUOVI_FATTURA_INCASSATA) === NULL) {
+            parent::setIndexSession(self::RIMUOVI_FATTURA_INCASSATA, serialize(new RimuoviFatturaIncassata()));
         }
-        return unserialize($_SESSION[self::RIMUOVI_FATTURA_INCASSATA]);
+        return unserialize(parent::getIndexSession(self::RIMUOVI_FATTURA_INCASSATA));
     }
 
     public function start() {

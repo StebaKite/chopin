@@ -15,8 +15,10 @@ class AggiornaDataScadenzaCliente extends PrimanotaAbstract implements Primanota
     
     public static function getInstance()
     {
-        if (!isset($_SESSION[self::AGGIORNA_DATA_SCADENZA_CLIENTE])) $_SESSION[self::AGGIORNA_DATA_SCADENZA_CLIENTE] = serialize(new AggiornaDataScadenzaCliente());
-        return unserialize($_SESSION[self::AGGIORNA_DATA_SCADENZA_CLIENTE]);
+        if (parent::getIndexSession(self::AGGIORNA_DATA_SCADENZA_CLIENTE) === null) {
+            parent::setIndexSession(self::AGGIORNA_DATA_SCADENZA_CLIENTE, serialize(new AggiornaDataScadenzaCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::AGGIORNA_DATA_SCADENZA_CLIENTE));
     }
     
     public function start() {

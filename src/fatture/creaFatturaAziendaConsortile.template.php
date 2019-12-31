@@ -44,10 +44,10 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements Fa
         $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_AZIENDA_CONSORTILE;
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
-            '%titolo%' => $_SESSION[$fattura->getDesTitolo()],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
+            '%titolo%' => parent::getIndexSession($fattura->getDesTitolo()),
             '%numfat%' => $fattura->getNumFattura(),
             '%datafat%' => $fattura->getDatFattura(),
             '%empty_selected%' => (parent::isEmpty($fattura->getMesRiferimento())) ? "selected" : "",

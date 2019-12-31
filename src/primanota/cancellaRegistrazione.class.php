@@ -10,16 +10,14 @@ require_once 'ricercaRegistrazione.class.php';
 class CancellaRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_REGISTRAZIONE])) {
-            $_SESSION[self::CANCELLA_REGISTRAZIONE] = serialize(new CancellaRegistrazione());
+        if (parent::getIndexSession(self::CANCELLA_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_REGISTRAZIONE, serialize(new CancellaRegistrazione()));
         }
-        return unserialize($_SESSION[self::CANCELLA_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_REGISTRAZIONE));
     }
 
     public function start() {
@@ -27,7 +25,6 @@ class CancellaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
     }
 
     public function go() {
-        $utility = Utility::getInstance();
         $db = Database::getInstance();
         $registrazione = Registrazione::getInstance();
 

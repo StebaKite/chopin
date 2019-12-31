@@ -15,14 +15,14 @@ class AnnullaNuovoCorrispettivoMercato extends PrimanotaAbstract implements Prim
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO])) {
-            $_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO] = serialize(new AnnullaNuovoCorrispettivoMercato());
+        if (parent::getIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO) === NULL) {
+            parent::setIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO, serialize(new AnnullaNuovoCorrispettivoMercato()));
         }
-        return unserialize($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_MERCATO));
     }
 
     public function start() {

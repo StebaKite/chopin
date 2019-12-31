@@ -9,14 +9,14 @@ require_once 'mercato.class.php';
 class LeggiMercatiNegozio extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::LEGGI_MERCATI_NEGOZIO])) {
-            $_SESSION[self::LEGGI_MERCATI_NEGOZIO] = serialize(new LeggiMercatiNegozio());
+        if (parent::getIndexSession(self::LEGGI_MERCATI_NEGOZIO) === NULL) {
+            parent::setIndexSession(self::LEGGI_MERCATI_NEGOZIO, serialize(new LeggiMercatiNegozio()));
         }
-        return unserialize($_SESSION[self::LEGGI_MERCATI_NEGOZIO]);
+        return unserialize(parent::getIndexSession(self::LEGGI_MERCATI_NEGOZIO));
     }
 
     public function start() {

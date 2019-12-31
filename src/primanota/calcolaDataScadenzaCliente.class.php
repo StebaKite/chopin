@@ -26,14 +26,14 @@ class CalcolaDataScadenzaCliente extends PrimanotaAbstract implements PrimanotaB
     );
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE])) {
-            $_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE] = serialize(new CalcolaDataScadenzaCliente());
+        if (parent::getIndexSession(self::CALCOLA_DATA_SCADENZA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CALCOLA_DATA_SCADENZA_CLIENTE, serialize(new CalcolaDataScadenzaCliente()));
         }
-        return unserialize($_SESSION[self::CALCOLA_DATA_SCADENZA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CALCOLA_DATA_SCADENZA_CLIENTE));
     }
 
     public function start() {

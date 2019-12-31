@@ -10,14 +10,14 @@ require_once 'scadenzaCliente.class.php';
 class VerificaDettagliRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE])) {
-            $_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE] = serialize(new VerificaDettagliRegistrazione());
+        if (parent::getIndexSession(self::VERIFICA_DETTAGLI_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::VERIFICA_DETTAGLI_REGISTRAZIONE, serialize(new VerificaDettagliRegistrazione()));
         }
-        return unserialize($_SESSION[self::VERIFICA_DETTAGLI_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::VERIFICA_DETTAGLI_REGISTRAZIONE));
     }
 
     public function start() {

@@ -251,9 +251,10 @@ class Registrazione extends CoreBase implements CoreInterface {
 
         if ($result) {
             $this->setRegistrazioni(pg_fetch_all($result));
+            $this->setQtaRegistrazioni(pg_num_rows($result));
 
             $numReg = 0;
-            if (sizeof($this->getRegistrazioni()) > 0) {
+            if ($this->getQtaRegistrazioni() > 0) {
                 foreach ($this->getRegistrazioni() as $unaRegistrazione) {
                     if ($unaRegistrazione[self::TIPO_RIGA_REGISTRAZIONE] == "R") {
                         $numReg ++;

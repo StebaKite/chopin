@@ -10,14 +10,14 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE])) {
-            $_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE] = serialize(new AggiornaImportoScadenzaCliente());
+        if (parent::getIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE) === null) {
+            parent::setIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE, serialize(new AggiornaImportoScadenzaCliente()));
         }
-        return unserialize($_SESSION[self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::AGGIORNA_IMPORTO_SCADENZA_CLIENTE));
     }
 
     public function start() {
@@ -30,7 +30,7 @@ class AggiornaImportoScadenzaCliente extends PrimanotaAbstract implements Priman
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
         $scadenzaCliente->aggiornaImporto($db);
         $scadenzaCliente->setIdTableScadenzeAperte("scadenzesuppl_mod");
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
         echo $this->makeTabellaScadenzeCliente($scadenzaCliente, $dettaglioRegistrazione);
     }
 

@@ -9,14 +9,14 @@ class AggiornaDettaglioRegistrazione extends PrimanotaAbstract implements Priman
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE])) {
-            $_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE] = serialize(new AggiornaDettaglioRegistrazione());
+        if (parent::getIndexSession(self::AGGIORNA_DETTAGLIO_REGISTRAZIONE) === null) {
+            parent::setIndexSession(self::AGGIORNA_DETTAGLIO_REGISTRAZIONE, serialize(new AggiornaDettaglioRegistrazione()));
         }
-        return unserialize($_SESSION[self::AGGIORNA_DETTAGLIO_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::AGGIORNA_DETTAGLIO_REGISTRAZIONE));
     }
 
     public function start() {

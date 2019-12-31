@@ -13,16 +13,14 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CORRISPETTIVO_MERCATO])) {
-            $_SESSION[self::CREA_CORRISPETTIVO_MERCATO] = serialize(new CreaCorrispettivoMercato());
+        if (parent::getIndexSession(self::CREA_CORRISPETTIVO_MERCATO) === NULL) {
+            parent::setIndexSession(self::CREA_CORRISPETTIVO_MERCATO, serialize(new CreaCorrispettivoMercato()));
         }
-        return unserialize($_SESSION[self::CREA_CORRISPETTIVO_MERCATO]);
+        return unserialize(parent::getIndexSession(self::CREA_CORRISPETTIVO_MERCATO));
     }
 
     public function start() {
@@ -33,7 +31,7 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
         $dettaglioRegistrazione->prepara();
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_cre");
 
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
         echo "Ok";
     }
 
@@ -47,8 +45,8 @@ class CreaCorrispettivoMercato extends primanotaAbstract implements PrimanotaBus
         
         $this->creaCorrispettivo($utility, $registrazione, $dettaglioRegistrazione);
 
-        $_SESSION["Obj_primanotacontroller"] = serialize(new PrimanotaController(RicercaRegistrazione::getInstance()));
-        $controller = unserialize($_SESSION["Obj_primanotacontroller"]);
+        parent::setIndexSession("Obj_primanotacontroller", serialize(new PrimanotaController(RicercaRegistrazione::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_primanotacontroller"));
         $controller->start();
     }
 

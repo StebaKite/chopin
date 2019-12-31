@@ -15,14 +15,14 @@ class AnnullaNuovoCorrispettivoNegozio extends PrimanotaAbstract implements Prim
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO])) {
-            $_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO] = serialize(new AnnullaNuovoCorrispettivoNegozio());
+        if (parent::getIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO) === null) {
+            parent::setIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO, serialize(new AnnullaNuovoCorrispettivoNegozio()));
         }
-        return unserialize($_SESSION[self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_NUOVO_CORRISPETTIVO_NEGOZIO));
     }
 
     public function start() {

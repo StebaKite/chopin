@@ -12,14 +12,14 @@ class AggiungiNuovoDettaglioCorrispettivoMercato extends PrimanotaAbstract imple
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO])) {
-            $_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO] = serialize(new AggiungiNuovoDettaglioCorrispettivoMercato());
+        if (parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO, serialize(new AggiungiNuovoDettaglioCorrispettivoMercato()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_CORRISPETTIVO_MERCATO));
     }
 
     public function start() {

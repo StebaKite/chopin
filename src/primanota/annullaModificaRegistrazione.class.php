@@ -14,14 +14,14 @@ require_once 'scadenzaFornitore.class.php';
 class AnnullaModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE])) {
-            $_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE] = serialize(new AnnullaModificaRegistrazione());
+        if (parent::getIndexSession(self::ANNULLA_MODIFICA_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::ANNULLA_MODIFICA_REGISTRAZIONE, serialize(new AnnullaModificaRegistrazione()));
         }
-        return unserialize($_SESSION[self::ANNULLA_MODIFICA_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::ANNULLA_MODIFICA_REGISTRAZIONE));
     }
 
     public function start() {

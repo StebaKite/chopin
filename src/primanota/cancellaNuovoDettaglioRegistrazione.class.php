@@ -11,13 +11,14 @@ class CancellaNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE]))
-            $_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE] = serialize(new CancellaNuovoDettaglioRegistrazione());
-        return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_REGISTRAZIONE]);
+        if (parent::getIndexSession(self::CANCELLA_DETTAGLIO_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_DETTAGLIO_REGISTRAZIONE, serialize(new CancellaNuovoDettaglioRegistrazione()));
+        }
+        return unserialize(parent::getIndexSession(self::CANCELLA_DETTAGLIO_REGISTRAZIONE));
     }
 
     public function start() {

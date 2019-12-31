@@ -9,13 +9,14 @@ class AggiornaDettaglioCorrispettivo extends PrimanotaAbstract implements Priman
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIORNA_DETTAGLIO_CORRISPETTIVO]))
-            $_SESSION[self::AGGIORNA_DETTAGLIO_CORRISPETTIVO] = serialize(new AggiornaDettaglioCorrispettivo());
-        return unserialize($_SESSION[self::AGGIORNA_DETTAGLIO_CORRISPETTIVO]);
+        if (parent::getIndexSession(self::AGGIORNA_DETTAGLIO_CORRISPETTIVO) === null) {
+            parent::setIndexSession(self::AGGIORNA_DETTAGLIO_CORRISPETTIVO, serialize(new AggiornaDettaglioCorrispettivo()));
+        }
+        return unserialize(parent::getIndexSession(self::AGGIORNA_DETTAGLIO_CORRISPETTIVO));
     }
 
     public function start() {

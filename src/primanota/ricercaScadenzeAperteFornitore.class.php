@@ -11,16 +11,14 @@ require_once 'fornitore.class.php';
 class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE])) {
-            $_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE] = serialize(new RicercaScadenzeAperteFornitore());
+        if (parent::getIndexSession(self::RICERCA_SCADENZE_FORNITORE_APERTE) === NULL) {
+            parent::setIndexSession(self::RICERCA_SCADENZE_FORNITORE_APERTE, serialize(new RicercaScadenzeAperteFornitore()));
         }
-        return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE_APERTE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_SCADENZE_FORNITORE_APERTE));
     }
 
     public function start() {
@@ -41,7 +39,7 @@ class RicercaScadenzeAperteFornitore extends PrimanotaAbstract implements Priman
         
         $dettaglioRegistrazione->setDettagliRegistrazione(self::EMPTYSTRING);
         $dettaglioRegistrazione->setQtaDettagliRegistrazione(self::ZERO_VALUE);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($dettaglioRegistrazione);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         /**
          * Nell'attributo numFattureDaPagare ci appoggio la table html generata

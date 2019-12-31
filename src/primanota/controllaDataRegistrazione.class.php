@@ -10,16 +10,14 @@ require_once 'lavoroPianificato.class.php';
 class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE])) {
-            $_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE] = serialize(new ControllaDataRegistrazione());
+        if (parent::getIndexSession(self::CONTROLLA_DATA_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::CONTROLLA_DATA_REGISTRAZIONE, serialize(new ControllaDataRegistrazione()));
         }
-        return unserialize($_SESSION[self::CONTROLLA_DATA_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::CONTROLLA_DATA_REGISTRAZIONE));
     }
 
     public function start() {
@@ -51,10 +49,11 @@ class ControllaDataRegistrazione extends PrimanotaAbstract implements PrimanotaB
             }
         }
 
-        if ($dataOk)
+        if ($dataOk) {
             echo "";
-        else
+        } else {
             echo "Data non ammessa";
+        }
     }
 
     public function go() {
