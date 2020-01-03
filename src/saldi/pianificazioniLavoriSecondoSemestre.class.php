@@ -46,10 +46,10 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract implements MainN
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE])) {
-            $_SESSION[self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE] = serialize(new PianificazioniLavoriSecondoSemestre());
+        if (parent::getIndexSession(self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE) === NULL) {
+            parent::setIndexSession(self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE, serialize(new PianificazioniLavoriSecondoSemestre()));
         }
-        return unserialize($_SESSION[self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE]);
+        return unserialize(parent::getIndexSession(self::PIANIFICAZIONE_LAVORI_SECONDO_SEMESTRE));
     }
 
     public function start($db, $pklavoro) {

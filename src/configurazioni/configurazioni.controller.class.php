@@ -143,11 +143,11 @@ class ConfigurazioniController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati
 
-        $_SESSION[self::CONTO] = serialize($conto);
-        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
-        $_SESSION[self::CAUSALE] = serialize($causale);
-        $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
-        $_SESSION[self::PROGRESSIVO_FATTURA] = serialize($progressivoFattura);
+        parent::setIndexSession(self::CONTO, serialize($conto));
+        parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
+        parent::setIndexSession(self::CAUSALE, serialize($causale));
+        parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize($configurazioneCausale));
+        parent::setIndexSession(self::PROGRESSIVO_FATTURA, serialize($progressivoFattura));
 
         if ($this->getRequest() == self::START) {
             $this->configurazioniFunction->start();

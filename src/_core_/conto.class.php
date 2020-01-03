@@ -58,15 +58,14 @@ class Conto extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::CONTO])) {
-            $_SESSION[self::CONTO] = serialize(new Conto());
+        if (parent::getIndexSession(self::CONTO) === NULL) {
+            parent::setIndexSession(self::CONTO, serialize(new Conto()));
         }
-        return unserialize($_SESSION[self::CONTO]);
+        return unserialize(parent::getIndexSession(self::CONTO));
     }
 
     public function load($db) {
@@ -143,7 +142,7 @@ class Conto extends CoreBase implements CoreInterface {
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei conti caricati
-            $_SESSION[self::CONTO] = serialize($this);
+            parent::setIndexSession(self::CONTO, serialize($this));
         }
 
         return $result;
@@ -160,7 +159,7 @@ class Conto extends CoreBase implements CoreInterface {
         $this->setNumRigaBilancio(null);
         $this->setIndVisibilitaSottoconti(null);
 
-        $_SESSION[self::CONTO] = serialize($this);
+        parent::setIndexSession(self::CONTO, serialize($this));
     }
 
     public function inserisci($db) {
@@ -182,7 +181,7 @@ class Conto extends CoreBase implements CoreInterface {
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei conti caricati
-            $_SESSION[self::CONTO] = serialize($this);
+            parent::setIndexSession(self::CONTO, serialize($this));
         }
         return $result;
     }
@@ -200,7 +199,7 @@ class Conto extends CoreBase implements CoreInterface {
 
         if ($db->getData($sql)) {
             $this->load($db);  // refresh dei conti caricati
-            $_SESSION[self::CONTO] = serialize($this);
+            parent::setIndexSession(self::CONTO, serialize($this));
         }
     }
 
@@ -271,7 +270,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setConti(self::NULL_VALUE);
             $this->setQtaConti(self::ZERO_VALUE);
         }
-        $_SESSION[self::CONTO] = serialize($this);
+        parent::setIndexSession(self::CONTO, serialize($this));
         return $result;
     }
 
@@ -285,7 +284,7 @@ class Conto extends CoreBase implements CoreInterface {
             }
             $this->setSelectPickerTutticonti($elencoConti);            
         }
-        $_SESSION[self::CONTO] = serialize($this);
+        parent::setIndexSession(self::CONTO, serialize($this));
         return $this->getSelectPickerTutticonti();
     }
    

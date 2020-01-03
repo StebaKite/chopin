@@ -10,7 +10,7 @@ require_once 'database.class.php';
 class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -21,10 +21,10 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::RIEPILOGO_NEGOZI]))
-            $_SESSION[self::RIEPILOGO_NEGOZI] = serialize(new RiepilogoNegozi());
-        return unserialize($_SESSION[self::RIEPILOGO_NEGOZI]);
+        if (parent::getIndexSession(self::RIEPILOGO_NEGOZI) === NULL) {
+            parent::setIndexSession(self::RIEPILOGO_NEGOZI, serialize(new RiepilogoNegozi()));
+        }
+        return unserialize(parent::getIndexSession(self::RIEPILOGO_NEGOZI));
     }
 
     public function start() {
@@ -38,7 +38,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
         $riepilogoNegoziTemplate = RiepilogoNegoziTemplate::getInstance();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -57,15 +57,15 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
         $riepilogoNegoziTemplate = RiepilogoNegoziTemplate::getInstance();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
         
         $this->ricercaDati($riepilogo);
 
         $totVoci = $riepilogo->getNumCostiComparatiTrovati();
-        $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
-        parent::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+        parent::setIndexSession(self::MESSAGGIO, "Trovate " . $totVoci . " voci");
+        parent::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
         if ($totVoci > 0) {
             $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), parent::$replace);
@@ -73,7 +73,7 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), parent::$replace);
         }
             
-        $_SESSION[self::MSG] = $utility->tailTemplate($template);
+        parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         $riepilogoNegoziTemplate->displayPagina();
         include($this->piede);
     }
@@ -101,8 +101,8 @@ class RiepilogoNegozi extends RiepiloghiComparatiAbstract implements RiepiloghiB
     }
 
     public function preparaPagina() {
-        $_SESSION[self::AZIONE] = self::AZIONE_RIEPILOGO_NEGOZI;
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.riepilogoNegozi%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_RIEPILOGO_NEGOZI);
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.riepilogoNegozi%");
     }
 
 }

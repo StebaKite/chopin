@@ -19,7 +19,7 @@ require_once 'fatture.business.interface.php';
 class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -31,9 +31,10 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE]))
-            $_SESSION[self::CREA_FATTURA_CLIENTE] = serialize(new CreaFatturaCliente());
-        return unserialize($_SESSION[self::CREA_FATTURA_CLIENTE]);
+        if (parent::getIndexSession(self::CREA_FATTURA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_CLIENTE, serialize(new CreaFatturaCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_CLIENTE));
     }
 
     public function start() {
@@ -47,7 +48,7 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
         $dettaglioFattura->prepara();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -113,12 +114,12 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
         $creaFatturaClienteTemplate = CreaFatturaClienteTemplate::getInstance();
         $this->preparaPagina($creaFatturaClienteTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
-        $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
         $creaFatturaClienteTemplate->displayPagina();
-        include(self::$piede);
+        include($this->piede);
     }
 
     private function sezioneIdentificativiFattura($documento, $fattura) {
@@ -246,7 +247,7 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
         $fattura->setTotImponibile22($tot_imponibile_22);
         $fattura->setTotIva22($tot_iva_22);
 
-        $_SESSION[self::FATTURA] = serialize($fattura);
+        parent::setIndexSession(self::FATTURA, serialize($fattura));
 
         /**
          * Closing line
@@ -296,7 +297,7 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
         $fattura->setTotIva($tot_iva);
         $fattura->setAliquotaIva($aliquota_iva);
 
-        $_SESSION[self::FATTURA] = serialize($fattura);
+        parent::setIndexSession(self::FATTURA, serialize($fattura));
 
         /**
          * Closing line
@@ -321,14 +322,14 @@ class CreaFatturaCliente extends FatturaAbstract implements FattureBusinessInter
 
     public function preparaPagina() {
 
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.creaFatturaCliente%";
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.creaFatturaCliente%");
 
         $db = Database::getInstance();
         $utility = Utility::getInstance();
 
         // Prelievo dei clienti -------------------------------------------------------------
 
-        $_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1000"); // Categoria=1000 -> Cliente
+        parent::setIndexSession('elenco_clienti', $this->caricaClientiFatturabili($utility, $db, "1000")); // Categoria=1000 -> Cliente
     }
 
 }

@@ -10,16 +10,14 @@ require_once 'causale.class.php';
 class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CAUSALE])) {
-            $_SESSION[self::CREA_CAUSALE] = serialize(new CreaCausale());
+        if (parent::getIndexSession(self::CREA_CAUSALE) === NULL) {
+            parent::setIndexSession(self::CREA_CAUSALE, serialize(new CreaCausale()));
         }
-        return unserialize($_SESSION[self::CREA_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::CREA_CAUSALE));
     }
 
     public function start() {
@@ -39,8 +37,8 @@ class CreaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusine
             $db->rollbackTransaction();
         }
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaCausale::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 

@@ -10,7 +10,7 @@ require_once 'cambiaContoStep1.class.php';
 class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -21,9 +21,10 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP3]))
-            $_SESSION[self::CAMBIA_CONTO_STEP3] = serialize(new CambiaContoStep3());
-        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP3]);
+        if (parent::getIndexSession(self::CAMBIA_CONTO_STEP3) === NULL) {
+            parent::setIndexSession(self::CAMBIA_CONTO_STEP3, serialize(new CambiaContoStep3()));
+        }
+        return unserialize(parent::getIndexSession(self::CAMBIA_CONTO_STEP3));
     }
 
     public function start() {
@@ -36,7 +37,7 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
         $cambiaContoStep3Template = CambiaContoStep3Template::getInstance();
         $this->preparaPagina($cambiaContoStep3Template);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -64,11 +65,11 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
             $array = $utility->getConfig();
 
             if ($array['lavoriPianificatiAttivati'] == "Si") {
-                $datareg_da = strtotime(str_replace('/', '-', $_SESSION["datareg_da"]));
+                $datareg_da = strtotime(str_replace('/', '-', parent::getIndexSession(self::DATA_REGISTRAZIONE_DA_RICERCA)));
                 $this->ricalcolaSaldi($db, $datareg_da);
             }
             $db->commitTransaction();
-            $_SESSION["messaggioCambioConto"] = "Operazione effettuata con successo";
+            parent::setIndexSession("messaggioCambioConto", "Operazione effettuata con successo");
             $cambiaContoStep1 = CambiaContoStep1::getInstance();
             $cambiaContoStep1->go();
             
@@ -77,13 +78,13 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
             $db->rollbackTransaction();
             $this->preparaPagina($cambiaContoStep3Template);
             
-            $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+            $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
             $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
             echo $utility->tailTemplate($template);
 
-            $_SESSION[self::MESSAGGIO] = "Errore fatale durante lo spostamento dei dettagli";
+            parent::setIndexSession(self::MESSAGGIO, "Errore fatale durante lo spostamento dei dettagli");
 
-            $replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $replace);
             echo $utility->tailTemplate($template);
 
@@ -107,9 +108,7 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
 
     public function preparaPagina($ricercaRegistrazioneTemplate) {
 
-        $_SESSION[self::AZIONE] = self::AZIONE_CAMBIA_CONTO_STEP3;
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.cambioContoStep3%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_CAMBIA_CONTO_STEP3);
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.cambioContoStep3%");
     }
 }
-
-?>

@@ -10,16 +10,14 @@ require_once 'categoriaCliente.class.php';
 class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE])) {
-            $_SESSION[self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE] = serialize(new RicercaProgressivoFatturaTemplate());
+        if (parent::getIndexSession(self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE, serialize(new RicercaProgressivoFatturaTemplate()));
         }
-        return unserialize($_SESSION[self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_PROGRESSIVO_FATTURA_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -45,7 +43,7 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implement
                     "    <div class='col-sm-4'>" .
                     "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                     "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .
@@ -72,8 +70,8 @@ class RicercaProgressivoFatturaTemplate extends ConfigurazioniAbstract implement
         }
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
             '%risultato_ricerca%' => $risultato_ricerca
         );
 

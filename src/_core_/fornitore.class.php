@@ -55,15 +55,14 @@ class Fornitore extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::FORNITORE])) {
-            $_SESSION[self::FORNITORE] = serialize(new Fornitore());
+        if (parent::getIndexSession(self::FORNITORE) === NULL) {
+            parent::setIndexSession(self::FORNITORE, serialize(new Fornitore()));
         }
-        return unserialize($_SESSION[self::FORNITORE]);
+        return unserialize(parent::getIndexSession(self::FORNITORE));
     }
 
     public function prepara() {
@@ -79,7 +78,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $this->setCapFornitore(null);
         $this->setNumGgScadenzaFattura(30);
 
-        $_SESSION[self::FORNITORE] = serialize($this);
+        parent::setIndexSession(self::FORNITORE, serialize($this));
     }
 
     public function inserisci($db) {
@@ -101,7 +100,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei fornitori caricati
-            $_SESSION[self::FORNITORE] = serialize($this);
+            parent::setIndexSession(self::FORNITORE, serialize($this));
         }
 
         /**
@@ -113,12 +112,12 @@ class Fornitore extends CoreBase implements CoreInterface {
             $sottoconto->setCodSottoconto($this->getCodFornitore());
             $sottoconto->setDesSottoconto($this->getDesFornitore());
 
-            $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
             $result = $sottoconto->inserisci($db);
 
             $conto = Conto::getInstance();
             $conto->load($db);  // refresh dei conti caricati
-            $_SESSION[self::CONTO] = serialize($conto);
+            parent::setIndexSession(self::CONTO, serialize($conto));
         }
         return $result;
     }
@@ -189,7 +188,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         if ($db->getData($sql)) {
             $this->load($db); // refresh dei fornitori caricati
-            $_SESSION[self::FORNITORE] = serialize($this);
+            parent::setIndexSession(self::FORNITORE, serialize($this));
         }
     }
 
@@ -236,7 +235,7 @@ class Fornitore extends CoreBase implements CoreInterface {
         $result = $db->execSql($sql);
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
-            $_SESSION[self::FORNITORE] = serialize($this);
+            parent::setIndexSession(self::FORNITORE, serialize($this));
         }
         return $result;
     }
@@ -262,7 +261,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             $this->setNumGgScadenzaFattura($row[Fornitore::NUM_GG_SCADENZA_FATTURA]);
             $this->setTipAddebito($row[Fornitore::TIP_ADDEBITO]);
         }
-        $_SESSION[self::FORNITORE] = serialize($this);
+        parent::setIndexSession(self::FORNITORE, serialize($this));
     }
 
     /*     * **********************************************************************

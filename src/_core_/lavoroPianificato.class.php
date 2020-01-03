@@ -50,15 +50,14 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::LAVORO_PIANIFICATO])) {
-            $_SESSION[self::LAVORO_PIANIFICATO] = serialize(new LavoroPianificato());
+        if (parent::getIndexSession(self::LAVORO_PIANIFICATO) === NULL) {
+            parent::setIndexSession(self::LAVORO_PIANIFICATO, serialize(new LavoroPianificato()));
         }
-        return unserialize($_SESSION[self::LAVORO_PIANIFICATO]);
+        return unserialize(parent::getIndexSession(self::LAVORO_PIANIFICATO));
     }
 
     public function load($db, $project_root) {
@@ -84,7 +83,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             $this->setLavoriPianificati(null);
             $this->setQtaLavoriPianificati(0);
         }
-        $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
+        parent::setIndexSession(self::LAVORO_PIANIFICATO, serialize($this));
         return $result;
     }
 
@@ -151,7 +150,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
                 $this->setDesLavoro($row[self::DES_LAVORO]);
                 $this->setPkLavoroPianificato($row[self::PK_LAVORO_PIANIFICATO]);
 
-                $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
+                parent::setIndexSession(self::LAVORO_PIANIFICATO, serialize($this));
 
                 if ($this->runClass($db)) {
                     error_log("Lavoro " . $this->getDesLavoro() . " (" . $this->getDatLavoro() . ") " . " eseguito!");
@@ -174,7 +173,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
                 $instance = new $className();
                 $this->setDatEsecuzioneLavoro(str_replace("-", "/", $this->getDatLavoro()));
                 if ($instance->start($db, $this->getPkLavoroPianificato(), $this->getRoot())) {
-                    $_SESSION[self::LAVORO_PIANIFICATO] = serialize($this);
+                    parent::setIndexSession(self::LAVORO_PIANIFICATO, serialize($this));
                     return true;
                 } else {
                     return false;

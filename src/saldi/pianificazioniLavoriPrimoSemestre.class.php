@@ -46,10 +46,10 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE])) {
-            $_SESSION[self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE] = serialize(new PianificazioniLavoriPrimoSemestre());
+        if (parent::getIndexSession(self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE) === NULL) {
+            parent::setIndexSession(self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE, serialize(new PianificazioniLavoriPrimoSemestre()));
         }
-        return unserialize($_SESSION[self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE]);
+        return unserialize(parent::getIndexSession(self::PIANIFICAZIONE_LAVORI_PRIMO_SEMESTRE));
     }
 
     public function start($db, $pklavoro) {

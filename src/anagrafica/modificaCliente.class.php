@@ -11,17 +11,14 @@ require_once 'categoriaCliente.class.php';
 class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CLIENTE])) {
-            $_SESSION[self::MODIFICA_CLIENTE] = serialize(new ModificaCliente());
+        if (parent::getIndexSession(self::MODIFICA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::MODIFICA_CLIENTE, serialize(new ModificaCliente()));
         }
-        return unserialize($_SESSION[self::MODIFICA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_CLIENTE));
     }
 
     public function start() {
@@ -31,12 +28,12 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
         $array = $utility->getConfig();
 
         $cliente->leggi($db);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $categoriaCliente = CategoriaCliente::getInstance();
         $categoriaCliente->setCatCliente(trim($cliente->getCatCliente()));
         $categoriaCliente->load();
-        $_SESSION[self::CATEGORIA_CLIENTE_OBJ] = serialize($categoriaCliente);
+        parent::setIndexSession(self::CATEGORIA_CLIENTE_OBJ, serialize($categoriaCliente));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CLIENTE;
 
@@ -68,8 +65,8 @@ class ModificaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
             $db->rollbackTransaction();
         }
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaCliente::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->start();
     }
 

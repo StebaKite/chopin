@@ -12,21 +12,14 @@ require_once 'sottoconto.class.php';
 class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
-
-        $this->testata = $this->root . $this->array[self::TESTATA];
-        $this->piede = $this->root . $this->array[self::PIEDE];
-        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CONTO])) {
-            $_SESSION[self::MODIFICA_CONTO] = serialize(new ModificaConto());
+        if (parent::getIndexSession(self::MODIFICA_CONTO) ===  NULL) {
+            parent::setIndexSession(self::MODIFICA_CONTO, serialize(new ModificaConto()));
         }
-        return unserialize($_SESSION[self::MODIFICA_CONTO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_CONTO));
     }
 
     public function start() {
@@ -37,11 +30,11 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
         $array = $utility->getConfig();
 
         $conto->leggi($db);
-        $_SESSION[self::CONTO] = serialize($conto);
+        parent::setIndexSession(self::CONTO, serialize($conto));
 
         $sottoconto->setCodConto($conto->getCodConto());
         $sottoconto->leggi($db);
-        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CONTO;
 
@@ -67,8 +60,8 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
 
         $this->aggiornaConto($utility, $conto, $sottoconto);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaConto::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 
@@ -90,12 +83,12 @@ class ModificaConto extends ConfigurazioniAbstract implements ConfigurazioniBusi
             }
 
             $sottoconto->preparaNuoviSottoconti();
-            $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
             $db->commitTransaction();
             return TRUE;
         } else {
             $db->rollbackTransaction();
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_SCRITTURA;
+            parent::setIndexSession(self::MESSAGGIO, self::ERRORE_SCRITTURA);
             return FALSE;
         }
     }

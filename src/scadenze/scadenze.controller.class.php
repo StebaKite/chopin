@@ -84,9 +84,9 @@ class ScadenzeController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati
 
-        $_SESSION[self::SCADENZA_FORNITORE] = serialize($scadenzaFornitore);
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($scadenzaCliente);
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($scadenzaFornitore));
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
 
         if ($this->getRequest() == self::START) {
             $this->scadenzeFunction->start();

@@ -8,13 +8,14 @@ require_once 'main.business.interface.php';
 class ControlliApertura extends Nexus6Abstract implements MainBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONTROLLI_APERTURA]))
-            $_SESSION[self::CONTROLLI_APERTURA] = serialize(new ControlliApertura());
-        return unserialize($_SESSION[self::CONTROLLI_APERTURA]);
+        if (parent::getIndexSession(self::CONTROLLI_APERTURA) === NULL) {
+            parent::setIndexSession(self::CONTROLLI_APERTURA, serialize(new ControlliApertura()));
+        }
+        return unserialize(parent::getIndexSession(self::CONTROLLI_APERTURA));
     }
 
     public function start() {
@@ -23,7 +24,7 @@ class ControlliApertura extends Nexus6Abstract implements MainBusinessInterface 
 
     public function go() {
         
-        if (!isset($_SESSION['notificaEffettuata'])) {
+        if (parent::getIndexSession('notificaEffettuata') === NULL) {
             $db = Database::getInstance();
             $utility = Utility::getInstance();
             $array = $utility->getConfig();

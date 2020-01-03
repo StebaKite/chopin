@@ -10,17 +10,14 @@ require_once 'cliente.class.php';
 class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_CLIENTE])) {
-            $_SESSION[self::CANCELLA_CLIENTE] = serialize(new CancellaCliente());
+        if (parent::getIndexSession(self::CANCELLA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_CLIENTE, serialize(new CancellaCliente()));
         }
-        return unserialize($_SESSION[self::CANCELLA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_CLIENTE));
     }
 
     public function start() {
@@ -30,8 +27,8 @@ class CancellaCliente extends AnagraficaAbstract implements AnagraficaBusinessIn
 
         $cliente->cancella($db);
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaCliente::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->start();
     }
 

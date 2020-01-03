@@ -7,7 +7,7 @@ require_once 'utility.class.php';
 class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -18,9 +18,10 @@ class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION["Obj_maintemplate"]))
-            $_SESSION["Obj_maintemplate"] = serialize(new MainTemplate());
-        return unserialize($_SESSION["Obj_maintemplate"]);
+        if (parent::getIndexSession("Obj_maintemplate") === NULL) {
+            parent::setIndexSession("Obj_maintemplate", serialize(new MainTemplate()));
+        }
+        return unserialize(parent::getIndexSession("Obj_maintemplate"));
     }
 
     public function controlliLogici() {
@@ -41,14 +42,14 @@ class MainTemplate extends Nexus6Abstract implements MainPresentationInterface {
         // Pagina -----------------------------------------------------
 
         $replace = array(
-            '%messaggio%' => $_SESSION['messaggio'],
+            '%messaggio%' => parent::getIndexSession(self::MESSAGGIO),
             '%menu%' => $this->makeMenu($utility),
-            '%amb%' => $_SESSION['ambiente'],
-            '%users%' => $_SESSION['users'],
+            '%amb%' => parent::getIndexSession(self::AMBIENTE),
+            '%users%' => parent::getIndexSession(self::USERS),
         );
 
-        unset($_SESSION['avvisoDialog']);
-        unset($_SESSION['avvisoDiv']);
+        parent::unsetIndexSessione('avvisoDialog');
+        parent::unsetIndexSessione('avvisoDiv');
 
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);

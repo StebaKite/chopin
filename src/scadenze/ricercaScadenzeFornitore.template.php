@@ -11,15 +11,14 @@ require_once 'fornitore.class.php';
 class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE]))
-            $_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE] = serialize(new RicercaScadenzeTemplate());
-        return unserialize($_SESSION[self::RICERCA_SCADENZE_FORNITORE_TEMPLATE]);
+        if (parent::getIndexSession(self::RICERCA_SCADENZE_FORNITORE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RICERCA_SCADENZE_FORNITORE_TEMPLATE, serialize(new RicercaScadenzeTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::RICERCA_SCADENZE_FORNITORE_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -34,9 +33,9 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
         // ----------------------------------------------
 
         if ($msg != "<br>") {
-            $_SESSION[self::MESSAGGIO] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION[self::MESSAGGIO]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
         return $esito;
     }
@@ -222,21 +221,22 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
             $risultato_ricerca .= "</tbody></table>";
         } else {
             $risultato_ricerca = "<div class='row'>" .
-                    "    <div class='col-sm-12'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-12'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>";
         }
 
         $elencoCausali = $causale->caricaCausali($db);
 
         $fornitore->load($db);
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
 
         $cliente->load($db);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
             '%datascad_da%' => $scadenzaFornitore->getDatScadenzaDa(),
             '%datascad_a%' => $scadenzaFornitore->getDatScadenzaA(),
             '%codneg_sel%' => $scadenzaFornitore->getCodNegozioSel(),
@@ -246,7 +246,6 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
             '%00-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_APERTA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%10-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_CHIUSA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%02-selected%' => ($scadenzaFornitore->getStaScadenzaSel() == self::SCADENZA_RIMANDATA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
             '%elenco_causali%' => $elencoCausali,
             '%elenco_causali_cre%' => $elencoCausali,
             '%elenco_causali_mod%' => $elencoCausali,

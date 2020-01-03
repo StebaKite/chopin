@@ -116,7 +116,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $riepilogo->setTotaleCostiVilla($totale_Vil);
         $riepilogo->setTotaleCosti($totale);
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $riepilogo->setTotaleRicaviVilla(abs($totale_Vil));
         $riepilogo->setTotaleRicavi(abs($totale));
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -347,7 +347,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $riepilogo->setTotaleAttivoVilla(abs($totale_Vil));
         $riepilogo->setTotaleAttivo(abs($totale));
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -464,7 +464,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $riepilogo->setTotalePassivoVilla(abs($totale_Vil));
         $riepilogo->setTotalePassivo(abs($totale));
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -617,7 +617,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
         $riepilogo->setTableMctComparati($margineContribuzione);
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -786,7 +786,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
         $riepilogo->setTableBepComparati($tabellaBep);
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     public function makeTabs($riepilogo) {

@@ -71,15 +71,14 @@ class Fattura extends CoreBase implements CoreInterface {
      */
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::FATTURA])) {
-            $_SESSION[self::FATTURA] = serialize(new Fattura());
+        if (parent::getIndexSession(self::FATTURA) === NULL) {
+            parent::setIndexSession(self::FATTURA, serialize(new Fattura()));
         }
-        return unserialize($_SESSION[self::FATTURA]);
+        return unserialize(parent::getIndexSession(self::FATTURA));
     }
 
     public function prepara() {
@@ -94,7 +93,7 @@ class Fattura extends CoreBase implements CoreInterface {
         $this->setDesRagsocBanca(self::EMPTYSTRING);
         $this->setCodIbanBanca(self::EMPTYSTRING);
 
-        $_SESSION[self::FATTURA] = serialize($this);
+        parent::setIndexSession(self::FATTURA, serialize($this));
     }
 
     public function aggiornaNumeroFattura($db) {
@@ -139,7 +138,7 @@ class Fattura extends CoreBase implements CoreInterface {
             $this->setNotaTesta($row["nota_testa_fattura"]);
             $this->setNotaPiede($row["nota_piede_fattura"]);
 
-            $_SESSION[self::FATTURA] = serialize($this);
+            parent::setIndexSession(self::FATTURA, serialize($this));
         }
     }
 

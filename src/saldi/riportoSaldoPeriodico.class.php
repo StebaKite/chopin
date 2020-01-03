@@ -21,7 +21,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
 
     function __construct() {
         
-        $agent = $_SERVER['HTTP_USER_AGENT'];
+        $agent = parent::getInfoFromServer('HTTP_USER_AGENT');
         if (strpos($agent, 'Windows') === false) {
             self::$root = $array['linuxProjectRoot'];
         } else {
@@ -30,10 +30,10 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RIPORTO_SALDO])) {
-            $_SESSION[self::SALDO] = serialize(new RiportoSaldoPeriodico());
+        if (parent::getIndexSession(self::RIPORTO_SALDO) === NULL) {
+            parent::setIndexSession(self::SALDO, serialize(new RiportoSaldoPeriodico()));
         }
-        return unserialize($_SESSION[self::RIPORTO_SALDO]);
+        return unserialize(parent::getIndexSession(self::RIPORTO_SALDO));
     }
 
     public function start($db, $pklavoro, $project_root) {
@@ -159,7 +159,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                 $saldo->setCodNegozio($negozio);
                 $saldo->setCodConto($conto[Conto::COD_CONTO]);
                 $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
-                $_SESSION[self::SALDO] = serialize($saldo);
+                parent::setIndexSession(self::SALDO, serialize($saldo));
 
                 $result = $saldo->leggiSaldoConto($db, self::$root);
                 $numTot = pg_num_rows($result);
@@ -188,7 +188,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                     $saldo->setDesSaldo($descrizioneSaldo);
                     $saldo->setImpSaldo(abs($totale_conto));
                     $saldo->setIndDareavere($dareAvere);
-                    $_SESSION[self::SALDO] = serialize($saldo);
+                    parent::setIndexSession(self::SALDO, serialize($saldo));
                     
                     $this->gestioneSaldo($db);
                 }
@@ -212,7 +212,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                 $saldo->setCodNegozio($negozio);
                 $saldo->setCodConto($conto[Conto::COD_CONTO]);
                 $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
-                $_SESSION[self::SALDO] = serialize($saldo);
+                parent::setIndexSession(self::SALDO, serialize($saldo));
 
                 $result = $saldo->leggiSaldoConto($db, $root);
                 $numTot = pg_num_rows($result);
@@ -247,7 +247,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                         $saldo->setDesSaldo($descrizioneSaldo);
                         $saldo->setImpSaldo(abs($totale_conto));
                         $saldo->setIndDareavere($dareAvere);
-                        $_SESSION[self::SALDO] = serialize($saldo);
+                        parent::setIndexSession(self::SALDO, serialize($saldo));
 
                         $this->gestioneSaldo($db);
                     }

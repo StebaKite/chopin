@@ -11,15 +11,14 @@ require_once 'fornitore.class.php';
 class CreaFatturaClienteTemplate extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE]))
-            $_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE] = serialize(new CreaFatturaClienteTemplate());
-        return unserialize($_SESSION[self::CREA_FATTURA_CLIENTE_TEMPLATE]);
+        if (parent::getIndexSession(self::CREA_FATTURA_CLIENTE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_CLIENTE_TEMPLATE, serialize(new CreaFatturaClienteTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_CLIENTE_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -44,10 +43,10 @@ class CreaFatturaClienteTemplate extends FatturaAbstract implements FattureBusin
         $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_CLIENTE;
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
-            '%titolo%' => $_SESSION[$fattura->getDesTitolo()],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
+            '%titolo%' => parent::getIndexSession($fattura->getDesTitolo()),
             '%numfat%' => $fattura->getNumFattura(),
             '%datafat%' => $fattura->getDatFattura(),
             '%tipoadd%' => $fattura->getTipAddebito(),

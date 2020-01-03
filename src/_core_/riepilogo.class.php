@@ -104,15 +104,14 @@ class Riepilogo extends CoreBase implements CoreInterface {
      *  Metodi
      */
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::RIEPILOGO])) {
-            $_SESSION[self::RIEPILOGO] = serialize(new Riepilogo());
+        if (parent::getIndexSession(self::RIEPILOGO) === NULL) {
+            parent::setIndexSession(self::RIEPILOGO, serialize(new Riepilogo()));
         }
-        return unserialize($_SESSION[self::RIEPILOGO]);
+        return unserialize(parent::getIndexSession(self::RIEPILOGO));
     }
 
     public function prepara() {
@@ -196,7 +195,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
         $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
 
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -229,7 +228,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             $this->setCostiComparati(self::EMPTYSTRING);
             $this->setNumCostiComparatiTrovati(self::ZERO_VALUE);
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
         return $result;
     }
 
@@ -263,7 +262,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             $this->setRicaviComparati(self::EMPTYSTRING);
             $this->setNumRicaviComparatiTrovati(self::ZERO_VALUE);
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
         return $result;
     }
 
@@ -292,7 +291,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             $this->setAttivoComparati(self::EMPTYSTRING);
             $this->setNumAttivoComparatiTrovati(self::ZERO_VALUE);
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
         return $result;
     }
 
@@ -323,7 +322,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
             $this->setPassivoComparati(self::EMPTYSTRING);
             $this->setNumPassivoComparatiTrovati(self::ZERO_VALUE);
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
         return $result;
     }
 
@@ -337,7 +336,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->ricercaCostiMargineContribuzione($db, self::VILLA);
         $this->ricercaCostiMargineContribuzione($db, self::BREMBATE);
         $this->ricercaCostiMargineContribuzione($db, self::TREZZO);
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -350,7 +349,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->ricercaRicaviMargineContribuzione($db, self::VILLA);
         $this->ricercaRicaviMargineContribuzione($db, self::BREMBATE);
         $this->ricercaRicaviMargineContribuzione($db, self::TREZZO);
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -363,7 +362,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->ricercaCostiFissi($db, self::VILLA);
         $this->ricercaCostiFissi($db, self::BREMBATE);
         $this->ricercaCostiFissi($db, self::TREZZO);
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     public function ricercaCostiMargineContribuzione($db, $negozio) {
@@ -409,7 +408,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 }
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -460,7 +459,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 }
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -513,7 +512,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 }
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -544,7 +543,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setNumCostiAndamentoNegozio(self::ZERO_VALUE);
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -577,7 +576,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setNumRicaviAndamentoNegozio(self::ZERO_VALUE);
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -633,7 +632,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                     break;
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -667,7 +666,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setNumRicaviAndamentoNegozioRiferimento(self::ZERO_VALUE);
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -698,7 +697,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setNumRicaviAndamentoNegozioRiferimento(self::ZERO_VALUE);
             }
         }
-        $_SESSION[self::RIEPILOGO] = serialize($this);
+        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**

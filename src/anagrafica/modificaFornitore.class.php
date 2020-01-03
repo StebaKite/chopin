@@ -11,16 +11,14 @@ require_once 'fornitore.class.php';
 class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_FORNITORE])) {
-            $_SESSION[self::MODIFICA_FORNITORE] = serialize(new ModificaFornitore());
+        if (parent::getIndexSession(self::MODIFICA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::MODIFICA_FORNITORE, serialize(new ModificaFornitore()));
         }
-        return unserialize($_SESSION[self::MODIFICA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_FORNITORE));
     }
 
     public function start() {
@@ -30,7 +28,7 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
         $array = $utility->getConfig();
 
         $fornitore->leggi($db);
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_FORNITORE;
 
@@ -58,8 +56,8 @@ class ModificaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
             $db->rollbackTransaction();
         }
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaFornitore::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->start();
     }
 

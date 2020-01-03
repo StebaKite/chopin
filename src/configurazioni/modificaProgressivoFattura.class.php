@@ -10,16 +10,14 @@ require_once 'progressivoFattura.class.php';
 class ModificaProgressivoFattura extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_PROGRESSIVO_FATTURA])) {
-            $_SESSION[self::MODIFICA_PROGRESSIVO_FATTURA] = serialize(new ModificaProgressivoFattura());
+        if (parent::getIndexSession(self::MODIFICA_PROGRESSIVO_FATTURA) === NULL) {
+            parent::setIndexSession(self::MODIFICA_PROGRESSIVO_FATTURA, serialize(new ModificaProgressivoFattura()));
         }
-        return unserialize($_SESSION[self::MODIFICA_PROGRESSIVO_FATTURA]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_PROGRESSIVO_FATTURA));
     }
 
     public function start() {
@@ -30,7 +28,7 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
         $array = $utility->getConfig();
 
         $progressivoFattura->leggi($db);
-        $_SESSION[self::PROGRESIVO_FATTURA] = serialize($progressivoFattura);
+        parent::setIndexSession(self::PROGRESIVO_FATTURA, serialize($progressivoFattura));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_PROGRESSIVO;
 
@@ -52,8 +50,8 @@ class ModificaProgressivoFattura extends ConfigurazioniAbstract implements Confi
         $progressivoFattura->update($db);
         $progressivoFattura->load($db);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaProgressivoFattura::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaProgressivoFattura::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 

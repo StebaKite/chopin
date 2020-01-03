@@ -18,7 +18,7 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
 
         parent::__construct();
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = $this->getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
         $this->orientation = $this->unit = $unit;
@@ -120,9 +120,10 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::PDF_FATTURA_BASE]))
-            $_SESSION[self::PDF_FATTURA_BASE] = serialize(new FatturaBase());
-        return unserialize($_SESSION[self::PDF_FATTURA_BASE]);
+        if ($this->getIndexSession(self::PDF_FATTURA_BASE) === NULL) {
+            $this->setIndexSession(self::PDF_FATTURA_BASE, serialize(new FatturaBase()));
+        }
+        return unserialize($this->getIndexSession(self::PDF_FATTURA_BASE));
     }
 
     public function Header() {
@@ -347,13 +348,35 @@ class FatturaBase extends FPDF implements UtilityComponentInterface {
 
         $this->SetFont("Arial", "", 12);
         $this->SetXY($r1, $y1);
-        foreach ($d as $nota) {
-            $this->Cell(150, 6, iconv('UTF-8', 'windows-1252', $nota), "", 0, "L");
-            $this->Ln();
-            $this->SetX($r1);
+        
+        if ($d !== NULL) {
+            foreach ($d as $nota) {
+                $this->Cell(150, 6, iconv('UTF-8', 'windows-1252', $nota), "", 0, "L");
+                $this->Ln();
+                $this->SetX($r1);
+            }            
         }
     }
-
+    
+    public function getInfoFromServer($infoName) {        
+        if (null !== filter_input(INPUT_SERVER, $infoName)) {
+            return filter_input(INPUT_SERVER, $infoName);            
+        }
+        return null;
+    }
+    
+    public static function getIndexSession($indexName) {    
+        return (isset($_SESSION[$indexName])) ? $_SESSION[$indexName] : null;
+    }
+    
+    public static function setIndexSession($indexName, $indexValue) {
+        $_SESSION[$indexName] = $indexValue;
+    }
+    
+    public static function unsetIndexSessione($indexName) {
+        unset($indexName);
+    }
+    
     // Getters & Setters
 
     public function getTitle() {

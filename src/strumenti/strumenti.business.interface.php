@@ -9,9 +9,9 @@ interface StrumentiBusinessInterface extends MainNexus6Interface {
     const CAMBIA_CONTO_STEP1 = "Obj_cambiacontostep1";
     const CAMBIA_CONTO_STEP2 = "Obj_cambiacontostep2";
     const CAMBIA_CONTO_STEP3 = "Obj_cambiacontostep3";
-    const CORRISPETTIVO = "Obj_corrispettivo";
-    const REGISTRAZIONE = "Obj_registrazione";
-    const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
+//    const CORRISPETTIVO = "Obj_corrispettivo";
+//    const REGISTRAZIONE = "Obj_registrazione";
+//    const DETTAGLIO_REGISTRAZIONE = "Obj_dettaglioregistrazione";
 
     const IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1 = "Obj_importacorrispettivinegoziostep1";
     const IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2 = "Obj_importacorrispettivinegoziostep2";

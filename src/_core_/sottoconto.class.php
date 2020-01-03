@@ -50,15 +50,14 @@ class Sottoconto extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::SOTTOCONTO])) {
-            $_SESSION[self::SOTTOCONTO] = serialize(new Sottoconto());
+        if (parent::getIndexSession(self::SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::SOTTOCONTO, serialize(new Sottoconto()));
         }
-        return unserialize($_SESSION[self::SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::SOTTOCONTO));
     }
 
     public function inserisci($db) {
@@ -101,7 +100,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
                 }
             }
             $this->setSottoconti($sottocontiDiff);
-            $_SESSION[self::SOTTOCONTO] = serialize($this);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($this));
         }
     }
 
@@ -168,8 +167,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             $this->setRegistrazioniTrovate(null);
             $this->setQtaRegistrazioniTrovate(0);
         }
-
-        $_SESSION[self::SOTTOCONTO] = serialize($this);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($this));
         return $result;
     }
 
@@ -198,7 +196,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
         $this->setQtaSottoconti(0);
         $this->setSottoconti(array());
 
-        $_SESSION[self::SOTTOCONTO] = serialize($this);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($this));
     }
 
     public function aggiorna($db) {
@@ -233,7 +231,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
                 }
             }
             $this->setSottoconti($sottocontiDiff);
-            $_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($this));
         }
         return $result;
     }
@@ -250,7 +248,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
                 }
             }            
         }
-        $_SESSION[Sottoconto::SOTTOCONTO] = serialize($this);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($this));
     }
 
 

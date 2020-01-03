@@ -9,17 +9,15 @@ require_once 'fatture.business.interface.php';
 class PrelevaTipoAddebitoCliente extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-
-        self::$root = $_SERVER['DOCUMENT_ROOT'];
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE]))
-            $_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE] = serialize(new PrelevaTipoAddebitoCliente());
-        return unserialize($_SESSION[self::PRELEVA_TIPO_ADDEBITO_CLIENTE]);
+        if (parent::getIndexSession(self::PRELEVA_TIPO_ADDEBITO_CLIENTE) === NULL) {
+            parent::setIndexSession(self::PRELEVA_TIPO_ADDEBITO_CLIENTE, serialize(new PrelevaTipoAddebitoCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::PRELEVA_TIPO_ADDEBITO_CLIENTE));
     }
 
     public function start() {

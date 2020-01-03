@@ -11,16 +11,14 @@ require_once 'anagrafica.controller.class.php';
 class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_MERCATO])) {
-            $_SESSION[self::MODIFICA_MERCATO] = serialize(new ModificaMercato());
+        if (parent::getIndexSession(self::MODIFICA_MERCATO) === NULL) {
+            parent::setIndexSession(self::MODIFICA_MERCATO, serialize(new ModificaMercato()));
         }
-        return unserialize($_SESSION[self::MODIFICA_MERCATO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_MERCATO));
     }
 
     public function start() {
@@ -30,7 +28,7 @@ class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
         $array = $utility->getConfig();
 
         $mercato->leggi($db);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_MERCATO;
 
@@ -55,9 +53,8 @@ class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
             $db->rollbackTransaction();
         }
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
-
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaMercato::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->setRequest("start");
         $controller->start();
     }

@@ -115,7 +115,7 @@ function prelevaNumeroFattura(negozio, catcliente) {
             $("#numfat").val(xmlhttp.responseText);
         }
     }
-    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?catcliente=" + catcliente + "&codneg=" + negozio, true);
+    xmlhttp.open("GET", "prelevaProgressivoFatturaFacade.class.php?modo=start&catcliente=" + catcliente + "&codneg=" + negozio, true);
     xmlhttp.send();
 
     // Inizializzazione della banca. Uguale per tutti i negozi
@@ -134,7 +134,7 @@ function prelevaTipoAddebitoCliente(idCliente) {
             $("#tipoadd").val(xmlhttp.responseText);
         }
     }
-    xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?idcliente=" + idCliente, true);
+    xmlhttp.open("GET", "prelevaTipoAddebitoClienteFacade.class.php?modo=start&idcliente=" + idCliente, true);
     xmlhttp.send();
 }
 

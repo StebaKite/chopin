@@ -11,15 +11,14 @@ require_once 'fornitore.class.php';
 class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]))
-            $_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE] = serialize(new CreaFatturaAziendaConsortileTemplate());
-        return unserialize($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE]);
+        if (parent::getIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE, serialize(new CreaFatturaAziendaConsortileTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE_TEMPLATE));
     }
 
     public function inizializzaPagina() {

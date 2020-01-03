@@ -53,8 +53,8 @@ class RiepiloghiController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati
 
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
 
         if ($this->getRequest() == self::START) {
             $this->riepiloghiFunction->start();

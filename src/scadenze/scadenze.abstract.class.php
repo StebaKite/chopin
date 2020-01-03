@@ -270,7 +270,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "    <div class='col-sm-4'>" .
                 "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                 "    </div>" .
-                "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                 "</div>" .
                 "<br/>" .
                 "<table class='table table-bordered table-hover'>" .

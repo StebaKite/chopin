@@ -13,7 +13,7 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -24,10 +24,10 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CLIENTE])) {
-            $_SESSION[self::CREA_CLIENTE] = serialize(new CreaCliente());
+        if (parent::getIndexSession(self::CREA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CREA_CLIENTE, serialize(new CreaCliente()));
         }
-        return unserialize($_SESSION[self::CREA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CREA_CLIENTE));
     }
 
     public function start() {
@@ -48,8 +48,8 @@ class CreaCliente extends AnagraficaAbstract implements AnagraficaBusinessInterf
             $db->rollbackTransaction();
         }
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaCliente::getInstance()));
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaCliente::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->start();
     }
 

@@ -41,14 +41,14 @@ class Mercato extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MERCATO])) {
-            $_SESSION[self::MERCATO] = serialize(new Mercato());
+        if (parent::getIndexSession(self::MERCATO) === NULL) {
+            parent::setIndexSession(self::MERCATO, serialize(new Mercato()));
         }
-        return unserialize($_SESSION[self::MERCATO]);
+        return unserialize(parent::getIndexSession(self::MERCATO));
     }
 
     public function prepara() {
@@ -129,8 +129,6 @@ class Mercato extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_MERCATO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
-
-// 		if ($result) $this->load($db);		// refresh dei mercati caricati
         return $result;
     }
 

@@ -14,16 +14,15 @@ require_once 'dettaglioFattura.class.php';
 class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CREA_FATTURA_CLIENTE_XML]))
-            $_SESSION[self::CREA_FATTURA_CLIENTE_XML] = serialize(new creaFatturaClienteXML());
-        return unserialize($_SESSION[self::CREA_FATTURA_CLIENTE_XML]);
+        if (parent::getIndexSession(self::CREA_FATTURA_CLIENTE_XML) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_CLIENTE_XML, serialize(new creaFatturaClienteXML()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_CLIENTE_XML));
     }
 
     public function start() {
@@ -78,13 +77,6 @@ class creaFatturaClienteXML extends FatturaAbstract implements FattureBusinessIn
 
         $datiBeniServizi = $fatturaElettronicaBody->appendChild($domtree->createElement('DatiBeniServizi'));   
         $fatturaElettronicaBody->appendChild($this->makeDatiBeniServizi($datiBeniServizi, $domtree, $dettaglioFattura));       
-
-        
-
-
-
-
-
 
         // Fine Body Fattura
         

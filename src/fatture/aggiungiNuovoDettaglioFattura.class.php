@@ -10,13 +10,14 @@ class AggiungiNuovoDettaglioFattura extends FatturaAbstract implements FattureBu
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA]))
-            $_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA] = serialize(new AggiungiNuovoDettaglioFattura());
-        return unserialize($_SESSION[self::AGGIUNGI_DETTAGLIO_FATTURA]);
+        if (parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_FATTURA) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_DETTAGLIO_FATTURA, serialize(new AggiungiNuovoDettaglioFattura()));
+        }
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_DETTAGLIO_FATTURA));
     }
 
     public function start() {

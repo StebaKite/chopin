@@ -9,16 +9,14 @@ require_once 'configuraCausale.class.php';
 class EscludiContoCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ESCLUDI_CONTO_CAUSALE])) {
-            $_SESSION[self::ESCLUDI_CONTO_CAUSALE] = serialize(new EscludiContoCausale());
+        if (parent::getIndexSession(self::ESCLUDI_CONTO_CAUSALE) === NULL) {
+            parent::setIndexSession(self::ESCLUDI_CONTO_CAUSALE, serialize(new EscludiContoCausale()));
         }
-        return unserialize($_SESSION[self::ESCLUDI_CONTO_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::ESCLUDI_CONTO_CAUSALE));
     }
 
     public function start() {
@@ -28,7 +26,7 @@ class EscludiContoCausale extends ConfigurazioniAbstract implements Configurazio
         $array = $utility->getConfig();
 
         $configurazioneCausale->cancellaConto($db);
-        $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+        parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize($configurazioneCausale));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
 

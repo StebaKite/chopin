@@ -46,14 +46,14 @@ class Corrispettivo extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CORRISPETTIVO])) {
-            $_SESSION[self::CORRISPETTIVO] = serialize(new Corrispettivo());
+        if (parent::getIndexSession(self::CORRISPETTIVO) === NULL) {
+            parent::setIndexSession(self::CORRISPETTIVO, serialize(new Corrispettivo()));
         }
-        return unserialize($_SESSION[self::CORRISPETTIVO]);
+        return unserialize(parent::getIndexSession(self::CORRISPETTIVO));
     }
     
    public function prepara() {

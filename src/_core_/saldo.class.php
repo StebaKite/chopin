@@ -44,14 +44,14 @@ class Saldo extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::SALDO])) {
-            $_SESSION[self::SALDO] = serialize(new Saldo());
+        if (parent::getIndexSession(self::SALDO) === NULL) {
+            parent::setIndexSession(self::SALDO, serialize(new Saldo()));
         }
-        return unserialize($_SESSION[self::SALDO]);
+        return unserialize(parent::getIndexSession(self::SALDO));
     }
 
     public function leggiSaldo($db) {

@@ -8,18 +8,15 @@ require_once 'riepilogo.class.php';
 class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE]))
-            $_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE] = serialize(new AndamentoNegoziTemplate());
-        return unserialize($_SESSION[self::ANDAMENTO_NEGOZI_TEMPLATE]);
+        if (parent::getIndexSession(self::ANDAMENTO_NEGOZI_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::ANDAMENTO_NEGOZI_TEMPLATE, serialize(new AndamentoNegoziTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::ANDAMENTO_NEGOZI_TEMPLATE));
     }
-
-    // template ------------------------------------------------
 
     public function inizializzaPagina() {
 
@@ -51,8 +48,8 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPr
         }
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
             '%datareg_da%' => $riepilogo->getDataregDa(),
             '%datareg_a%' => $riepilogo->getDataregA(),
             '%villa-selected%' => ($riepilogo->getCodnegSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,

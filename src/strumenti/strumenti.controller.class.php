@@ -56,9 +56,9 @@ class StrumentiController extends Nexus6Abstract {
         
         // Serializzo in sessione gli oggetti modificati ========================================
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
-        $_SESSION[self::CONTO] = serialize($conto);
-        $_SESSION[self::CORRISPETTIVO] = serialize($corrispettivo);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
+        parent::setIndexSession(self::CONTO, serialize($conto));
+        parent::setIndexSession(self::CORRISPETTIVO, serialize($corrispettivo));
         
         if ($this->getRequest() == self::START) {
             $this->strumentiFunction->start();

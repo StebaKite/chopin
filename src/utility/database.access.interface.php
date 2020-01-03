@@ -1,6 +1,6 @@
 <?php
 
-interface DatabaseAccessInterface {
+interface DatabaseAccessInterface extends MainNexus6Interface {
 	
 	public static function getInstance();
 

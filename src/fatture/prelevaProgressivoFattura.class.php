@@ -9,17 +9,15 @@ require_once 'fatture.business.interface.php';
 class PrelevaProgressivoFattura extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-
-        self::$root = $_SERVER['DOCUMENT_ROOT'];
-        $utility = Utility::getInstance();
-        $array = $utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA]))
-            $_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA] = serialize(new PrelevaProgressivoFattura());
-        return unserialize($_SESSION[self::PRELEVA_PROGRESSIVO_FATTURA]);
+        if (parent::getIndexSession(self::PRELEVA_PROGRESSIVO_FATTURA) === NULL) {
+            parent::setIndexSession(self::PRELEVA_PROGRESSIVO_FATTURA, serialize(new PrelevaProgressivoFattura()));
+        }
+        return unserialize(parent::getIndexSession(self::PRELEVA_PROGRESSIVO_FATTURA));
     }
 
     public function start() {

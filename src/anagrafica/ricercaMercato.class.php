@@ -11,7 +11,7 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -22,10 +22,10 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_MERCATO])) {
-            $_SESSION[self::RICERCA_MERCATO] = serialize(new RicercaMercato());
+        if (parent::getIndexSession(self::RICERCA_MERCATO) === NULL) {
+            parent::setIndexSession(self::RICERCA_MERCATO, serialize(new RicercaMercato()));
         }
-        return unserialize($_SESSION[self::RICERCA_MERCATO]);
+        return unserialize(parent::getIndexSession(self::RICERCA_MERCATO));
     }
 
     public function start() {
@@ -39,7 +39,7 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 
         $this->preparaPagina($ricercaMercatoTemplate);
 
-        $replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%users%' => $_SESSION[self::USERS], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -47,12 +47,11 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 
         if ($mercato->load(Database::getInstance())) {
 
-            $_SESSION[self::MERCATO] = serialize($mercato);
+            parent::setIndexSession(self::MERCATO, serialize($mercato));
+            parent::setIndexSession(self::MESSAGGIO, "Trovati " . $mercato->getQtaMercati() . " mercati");
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
-            $_SESSION["messaggio"] = "Trovati " . $mercato->getQtaMercati() . " mercati";
-            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
-
-            $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
+            $pos = strpos(parent::getIndexSession(self::MESSAGGIO), "ERRORE");
             if ($pos === false) {
                 if ($mercato->getQtaMercati() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
@@ -62,13 +61,11 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
             } else {
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             }
-
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         else {
-            $_SESSION["messaggio"] = self::ERRORE_LETTURA;
-
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             echo $utility->tailTemplate($template);
         }
@@ -83,9 +80,9 @@ class RicercaMercato extends AnagraficaAbstract implements AnagraficaBusinessInt
 
     private function preparaPagina() {
 
-        $_SESSION["azione"] = self::AZIONE_RICERCA_MERCATO;
-        $_SESSION["confermaTip"] = "%ml.cercaTip%";
-        $_SESSION["titoloPagina"] = "%ml.ricercaMercato%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_RICERCA_MERCATO);
+        parent::setIndexSession(self::TIP_CONFERMA, "%ml.cercaTip%");
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.ricercaMercato%");
     }
 
 }

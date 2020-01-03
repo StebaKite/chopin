@@ -10,7 +10,7 @@ require_once 'database.class.php';
 class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -21,10 +21,10 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::GENERA_BILANCIO_PERIODICO]))
-            $_SESSION[self::GENERA_BILANCIO_PERIODICO] = serialize(new GeneraBilancioPeriodico());
-        return unserialize($_SESSION[self::GENERA_BILANCIO_PERIODICO]);
+        if (parent::getIndexSession(self::GENERA_BILANCIO_PERIODICO) === NULL) {
+            parent::setIndexSession(self::GENERA_BILANCIO_PERIODICO, serialize(new GeneraBilancioPeriodico()));
+        }
+        return unserialize(parent::getIndexSession(self::GENERA_BILANCIO_PERIODICO));
     }
 
     public function start() {
@@ -36,12 +36,12 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio->prepara();
         
         $bilancio->setTipoBilancio(self::PERIODICO);
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
 
         $bilancioTemplate = GeneraBilancioPeriodicoTemplate::getInstance();
         $this->preparaPagina($bilancioTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) === NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -58,7 +58,7 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancioTemplate = GeneraBilancioPeriodicoTemplate::getInstance();
         $this->preparaPagina($bilancioTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) === NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -66,15 +66,15 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         $this->ricercaDati($utility, $bilancio);
 
         $totVoci = $bilancio->getNumCostiTrovati() + $bilancio->getNumRicaviTrovati();
-        $_SESSION["messaggio"] = "Trovate " . $totVoci . " voci";
-        self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+        parent::setIndexSession(self::MESSAGGIO, "Trovate " . $totVoci . " voci");
+        self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
         
         if ($totVoci > 0) {
             $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), parent::$replace);
         } else {
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), parent::$replace);
         }
-        $_SESSION[self::MSG] = $utility->tailTemplate($template);            
+        parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         $bilancioTemplate->displayPagina();
         include($this->piede);
     }
@@ -99,10 +99,8 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
 
     private function preparaPagina($bilancioTemplate) {
 
-        $_SESSION[self::AZIONE] = self::AZIONE_BILANCIO_PERIODICO;
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.bilancioPeriodico%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_BILANCIO_PERIODICO);
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.bilancioPeriodico%");
     }
 
 }
-
-?>

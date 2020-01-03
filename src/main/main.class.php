@@ -13,9 +13,7 @@ class Main extends Nexus6Abstract implements MainBusinessInterface {
     public $array;
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
 
         $this->testata = $this->root . $this->array['testataPagina'];
         $this->piede = $this->root . $this->array['piedePagina'];
@@ -24,9 +22,10 @@ class Main extends Nexus6Abstract implements MainBusinessInterface {
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MAIN]))
-            $_SESSION[self::MAIN] = serialize(new Main());
-        return unserialize($_SESSION[self::MAIN]);
+        if (parent::getIndexSession(self::MAIN) === NULL) {
+            parent::setIndexSession(self::MAIN, serialize(new Main()));
+        }
+        return unserialize(parent::getIndexSession(self::MAIN));
     }
 
     public function start() {
@@ -43,9 +42,7 @@ class Main extends Nexus6Abstract implements MainBusinessInterface {
                 $mainTemplate = MainTemplate::getInstance();
                 $mainTemplate->displayPagina();
             } else {
-                $errorTemplate = ErrorTemplate::getInstance();
-                $_SESSION['Errore fatale durante la creazione della connessione al Database'];
-                $errorTemplate->displayPagina();
+                echo('Connessione al Database fallita!!');
             }
         }
     }

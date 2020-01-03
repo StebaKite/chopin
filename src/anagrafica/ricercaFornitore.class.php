@@ -11,7 +11,7 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -23,10 +23,10 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::RICERCA_FORNITORE])) {
-            $_SESSION[self::RICERCA_FORNITORE] = serialize(new RicercaFornitore());
+        if (parent::getIndexSession(self::RICERCA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::RICERCA_FORNITORE, serialize(new RicercaFornitore()));
         }
-        return unserialize($_SESSION[self::RICERCA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_FORNITORE));
     }
 
     public function start() {
@@ -39,7 +39,7 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
 
         $this->preparaPagina($ricercaFornitoreTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -48,22 +48,22 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
             /**
              * Gestione del messaggio proveniente dalla cancellazione
              */
-            if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
-                unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-            } elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
-                unset($_SESSION[self::MSG_DA_CREAZIONE]);
-            } elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
-                unset($_SESSION[self::MSG_DA_MODIFICA]);
+            if (parent::getIndexSession(self::MSG_DA_CANCELLAZIONE) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_CANCELLAZIONE) . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori");
+                parent::unsetIndexSessione(self::MSG_DA_CANCELLAZIONE);
+            } elseif (parent::getIndexSession (self::MSG_DA_CREAZIONE) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_CREAZIONE) . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori");
+                parent::unsetIndexSessione(self::MSG_DA_CREAZIONE);
+            } elseif (parent::getIndexSession(self::MSG_DA_MODIFICA) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_MODIFICA) . "<br>" . "Trovati " . $fornitore->getQtaFornitori() . " fornitori");
+                parent::unsetIndexSessione(self::MSG_DA_MODIFICA);
             } else {
-                $_SESSION[self::MESSAGGIO] = "Trovati " . $fornitore->getQtaFornitori() . " fornitori";
+                parent::setIndexSession(self::MESSAGGIO, "Trovati " . $fornitore->getQtaFornitori() . " fornitori");
             }
 
-            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
-            $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
+            $pos = strpos(parent::getIndexSession(self::MESSAGGIO), "ERRORE");
             if ($pos === false) {
                 if ($fornitore->getQtaFornitori() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
@@ -74,13 +74,13 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             }
 
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         else {
 
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         $ricercaFornitoreTemplate->displayPagina();
 
@@ -96,19 +96,19 @@ class RicercaFornitore extends AnagraficaAbstract implements AnagraficaBusinessI
         if ($fornitore->getQtaFornitori() == 0) {
 
             if (!$fornitore->load($db)) {
-                $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+                parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
                 return false;
             }
-            $_SESSION[self::FORNITORE] = serialize($fornitore);
+            parent::setIndexSession(self::FORNITORE, serialize($fornitore));
         }
         return true;
     }
 
     private function preparaPagina() {
 
-        $_SESSION["azione"] = self::AZIONE_RICERCA_FORNITORE;
-        $_SESSION["confermaTip"] = "%ml.cercaTip%";
-        $_SESSION["titoloPagina"] = "%ml.ricercaFornitore%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_RICERCA_FORNITORE);
+        parent::setIndexSession(self::TIP_CONFERMA, "%ml.cercaTip%");
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.ricercaFornitore%");
     }
 
 }

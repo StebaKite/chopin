@@ -10,16 +10,14 @@ require_once 'configurazioneCausale.class.php';
 class ConfiguraCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONFIGURA_CAUSALE])) {
-            $_SESSION[self::CONFIGURA_CAUSALE] = serialize(new ConfiguraCausale());
+        if (parent::getIndexSession(self::CONFIGURA_CAUSALE) === NULL) {
+            parent::setIndexSession(self::CONFIGURA_CAUSALE, serialize(new ConfiguraCausale()));
         }
-        return unserialize($_SESSION[self::CONFIGURA_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::CONFIGURA_CAUSALE));
     }
 
     public function start() {

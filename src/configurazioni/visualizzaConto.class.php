@@ -12,16 +12,14 @@ require_once 'sottoconto.class.php';
 class VisualizzaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_CONTO])) {
-            $_SESSION[self::VISUALIZZA_CONTO] = serialize(new VisualizzaConto());
+        if (parent::getIndexSession(self::VISUALIZZA_CONTO) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_CONTO, serialize(new VisualizzaConto()));
         }
-        return unserialize($_SESSION[self::VISUALIZZA_CONTO]);
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_CONTO));
     }
 
     public function start() {
@@ -32,11 +30,11 @@ class VisualizzaConto extends ConfigurazioniAbstract implements ConfigurazioniBu
         $array = $utility->getConfig();
 
         $conto->leggi($db);
-        $_SESSION[self::CONTO] = serialize($conto);
+        parent::setIndexSession(self::CONTO, serialize($conto));
 
         $sottoconto->setCodConto($conto->getCodConto());
         $sottoconto->leggi($db);
-        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CONTO;
 

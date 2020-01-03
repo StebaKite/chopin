@@ -13,10 +13,10 @@ class CercaCfisCliente extends AnagraficaAbstract implements AnagraficaBusinessI
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CERCA_CFISC_CLIENTE])) {
-            $_SESSION[self::CERCA_CFISC_CLIENTE] = serialize(new CercaCfisCliente());
+        if (parent::getIndexSession(self::CERCA_CFISC_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CERCA_CFISC_CLIENTE, serialize(new CercaCfisCliente()));
         }
-        return unserialize($_SESSION[self::CERCA_CFISC_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CERCA_CFISC_CLIENTE));
     }
 
     public function start() {

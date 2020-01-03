@@ -13,10 +13,10 @@ class CercaPivaCliente extends AnagraficaAbstract implements AnagraficaBusinessI
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CERCA_PIVA_CLIENTE])) {
-            $_SESSION[self::CERCA_PIVA_CLIENTE] = serialize(new CercaPivaCliente());
+        if (parent::getIndexSession(self::CERCA_PIVA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::CERCA_PIVA_CLIENTE, serialize(new CercaPivaCliente()));
         }
-        return unserialize($_SESSION[self::CERCA_PIVA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CERCA_PIVA_CLIENTE));
     }
 
     public function start() {

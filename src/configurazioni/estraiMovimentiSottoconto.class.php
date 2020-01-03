@@ -10,16 +10,14 @@ require_once 'sottoconto.class.php';
 class EstraiMovimentiSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO])) {
-            $_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO] = serialize(new EstraiMovimentiSottoconto());
+        if (parent::getIndexSession(self::ESTRAI_MOVIMENTI_SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::ESTRAI_MOVIMENTI_SOTTOCONTO, serialize(new EstraiMovimentiSottoconto()));
         }
-        return unserialize($_SESSION[self::ESTRAI_MOVIMENTI_SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::ESTRAI_MOVIMENTI_SOTTOCONTO));
     }
 
     public function start() {

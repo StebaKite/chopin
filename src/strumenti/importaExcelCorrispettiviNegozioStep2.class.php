@@ -14,7 +14,7 @@ require_once 'excel_reader2.php';
 class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -25,15 +25,16 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2]))
-            $_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2] = serialize(new ImportaExcelCorrispettiviNegozioStep2());
-        return unserialize($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2]);
+        if (parent::getIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2) === NULL) {
+            parent::setIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2, serialize(new ImportaExcelCorrispettiviNegozioStep2()));
+        }
+        return unserialize(parent::getIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2));
     }
 
     public function go() {
 
-        unset($_SESSION["messaggioImportFileErr"]);
-        unset($_SESSION["messaggioImportFileOk"]);
+        parent::unsetIndexSessione("messaggioImportFileErr");
+        parent::unsetIndexSessione("messaggioImportFileOk");
 
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
@@ -111,7 +112,7 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo10, $iva10, $corrispettivo);
                         if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
-                            $_SESSION["messaggioImportFileErr"] = "Errore imprevisto, ripristino eseguito";
+                            parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
                             break;
                         }
                     } else
@@ -126,19 +127,18 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22, $corrispettivo);
                         if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
-                            $_SESSION["messaggioImportFileErr"] = "Errore imprevisto, ripristino eseguito";
+                            parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
                             break;
                         }
                     } else
                         $corrispettiviIgnorati ++;
                 }
             }
-            if (!isset($_SESSION["messaggioImportFileErr"])) {
+            if (parent::isEmpty(parent::getIndexSession("messaggioImportFileErr"))) {
                 $db->commitTransaction();
-                $_SESSION["buttonDisabled"] = "disabled";
-                $_SESSION[self::AZIONE] = parent::EMPTYSTRING;
-                $_SESSION["messaggioImportFileOk"] = "<br/>&ndash; corrispettivi inseriti " . $corrispettiviInseriti;
-                $_SESSION["messaggioImportFileOk"] .= "<br/>&ndash; corrispettivi gi&agrave; esistenti " . $corrispettiviIgnorati;
+                parent::setIndexSession("buttonDisabled", "disabled");
+                parent::setIndexSession(self::AZIONE, parent::EMPTYSTRING);
+                parent::setIndexSession("messaggioImportFileOk", "<br/>&ndash; corrispettivi inseriti " . $corrispettiviInseriti) . "<br/>&ndash; corrispettivi gi&agrave; esistenti " . $corrispettiviIgnorati;
             }
         }
 
@@ -221,7 +221,7 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
         $registrazione->setIdMercato(parent::EMPTYSTRING);
         $registrazione->setNumFattura(parent::EMPTYSTRING);
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($registrazione);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
         
         if ($registrazione->inserisci($db)) {
 

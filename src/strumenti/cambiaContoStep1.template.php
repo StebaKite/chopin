@@ -11,15 +11,14 @@ require_once 'sottoconto.class.php';
 class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]))
-            $_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE] = serialize(new CambiaContoStep1Template());
-        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP1_TEMPLATE]);
+        if (parent::getIndexSession(self::CAMBIA_CONTO_STEP1_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CAMBIA_CONTO_STEP1_TEMPLATE, serialize(new CambiaContoStep1Template()));
+        }
+        return unserialize(parent::getIndexSession(self::CAMBIA_CONTO_STEP1_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -30,14 +29,10 @@ class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPre
         $esito = TRUE;
         $msg = "<br>";
 
-        // ----------------------------------------------
-        // Eventuali controlli da backend
-        // ----------------------------------------------
-
         if ($msg != "<br>") {
-            $_SESSION[self::MESSAGGIO] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION[self::MESSAGGIO]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
         return $esito;
     }
@@ -92,9 +87,9 @@ class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPre
         $conto->leggiTuttiConti($db);
         
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
             '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
             '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
             '%villa-selected%' => ($registrazione->getCodNegozioSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
@@ -117,5 +112,3 @@ class CambiaContoStep1Template extends StrumentiAbstract implements StrumentiPre
     }
 
 }
-
-?>

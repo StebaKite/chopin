@@ -12,15 +12,14 @@ require_once 'registrazione.class.php';
 class ModificaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_SCADENZA_CLIENTE]))
-            $_SESSION[self::MODIFICA_SCADENZA_CLIENTE] = serialize(new ModificaScadenzaCliente());
-        return unserialize($_SESSION[self::MODIFICA_SCADENZA_CLIENTE]);
+        if (parent::getIndexSession(self::MODIFICA_SCADENZA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::MODIFICA_SCADENZA_CLIENTE, serialize(new ModificaScadenzaCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::MODIFICA_SCADENZA_CLIENTE));
     }
 
     public function start() {
@@ -69,11 +68,9 @@ class ModificaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusine
         $scadenza->setIdCliente($registrazione->getIdCliente());
         $scadenza->aggiorna($db);
 
-        $_SESSION[self::SCADENZE_CONTROLLER] = serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance()));
-        $controller = unserialize($_SESSION[self::SCADENZE_CONTROLLER]);
+        parent::setIndexSession(self::SCADENZE_CONTROLLER, serialize(new ScadenzeController(RicercaScadenzeCliente::getInstance())));
+        $controller = unserialize(parent::getIndexSession(self::SCADENZE_CONTROLLER));
         $controller->start();
     }
 
 }
-
-?>

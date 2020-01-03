@@ -19,7 +19,7 @@ require_once 'fatture.business.interface.php';
 class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -31,9 +31,10 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE]))
-            $_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE] = serialize(new CreaFatturaAziendaConsortile());
-        return unserialize($_SESSION[self::CREA_FATTURA_AZIENDA_CONSORTILE]);
+        if (parent::getIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE, serialize(new CreaFatturaAziendaConsortile()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_AZIENDA_CONSORTILE));
     }
 
     public function start() {
@@ -47,7 +48,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $dettaglioFattura->prepara();
         $this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -109,17 +110,17 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $creaFatturaAziendaConsortileTemplate = CreaFatturaAziendaConsortileTemplate::getInstance();
         $this->preparaPagina($creaFatturaAziendaConsortileTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
-        $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
         $creaFatturaAziendaConsortileTemplate->displayPagina();
 
-        self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
-        $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+        self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
+        $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
         echo $utility->tailTemplate($template);
 
-        include(self::$piede);
+        include($this->piede);
     }
 
     private function sezioneIdentificativiFattura($fatturaAziendaConsortile, $fattura) {
@@ -132,6 +133,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $fatturaAziendaConsortile->boxDettagli();
 
         $tot_imponibile = 0;
+        $tot_dettagli = 0;
         $tot_iva = 0;
         $w = array(15, 110, 30, 30);
 
@@ -140,10 +142,11 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $fatturaAziendaConsortile->Cell(50, 6, "Mese di " . $fattura->getMesenome(), "");
         $fatturaAziendaConsortile->Ln();
 
-        for ($i = 0; $i < count($h); $i++)
-            $fatturaAziendaConsortile->Cell($w[$i], 7, $h[$i], 1, 0, 'C');
+//        for ($i = 0; $i < count($w); $i++) {
+//            $fatturaAziendaConsortile->Cell($w[$i], 7, $h[$i], 1, 0, 'C');
+//        }
 
-        $fatturaAziendaConsortile->Ln();
+//        $fatturaAziendaConsortile->Ln();
 
         foreach ($dettaglioFattura->getDettagliFattura() as $ele) {
 
@@ -166,7 +169,7 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
         $fattura->setTotImponibile($tot_imponibile);
         $fattura->setTotIva($tot_iva);
 
-        $_SESSION[self::FATTURA] = serialize($fattura);
+        parent::setIndexSession(self::FATTURA, serialize($fattura));
 
         /**
          * Closing line
@@ -186,14 +189,14 @@ class CreaFatturaAziendaConsortile extends FatturaAbstract implements FattureBus
 
     public function preparaPagina($creaFatturaAziendaConsortileTemplate) {
 
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.creaFatturaAziendaConsortile%";
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.creaFatturaAziendaConsortile%");
 
         $db = Database::getInstance();
         $utility = Utility::getInstance();
 
         // Prelievo delle aziende consortili -------------------------------------------------------------
 
-        $_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1200"); // Categoria=1200 -> Aziende
+        parent::setIndexSession('elenco_clienti', $this->caricaClientiFatturabili($utility, $db, "1200")); // Categoria=1200 -> Aziende
     }
 
 }

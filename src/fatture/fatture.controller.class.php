@@ -70,9 +70,9 @@ class FattureController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati
 
-        $_SESSION[self::FATTURA] = serialize($fattura);
-        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($dettaglioFattura);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::FATTURA, serialize($fattura));
+        parent::setIndexSession(self::DETTAGLIO_FATTURA, serialize($dettaglioFattura));
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         if ($this->getRequest() == self::START) {
             $this->fattureFunction->start();

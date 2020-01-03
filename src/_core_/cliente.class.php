@@ -67,15 +67,14 @@ class Cliente extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::CLIENTE])) {
-            $_SESSION[self::CLIENTE] = serialize(new Cliente());
+        if (parent::getIndexSession(self::CLIENTE) === NULL) {
+            parent::setIndexSession(self::CLIENTE, serialize(new Cliente()));
         }
-        return unserialize($_SESSION[self::CLIENTE]);
+        return unserialize(parent::getIndexSession(self::CLIENTE));
     }
 
     public function Prepara() {
@@ -91,7 +90,7 @@ class Cliente extends CoreBase implements CoreInterface {
         $this->setCodPiva(null);
         $this->setCodFisc(null);
 
-        $_SESSION[self::CLIENTE] = serialize($this);
+        parent::setIndexSession(self::CLIENTE, serialize($this));
     }
 
     public function prelevaUltimoCodiceCliente($utility, $db) {
@@ -129,7 +128,7 @@ class Cliente extends CoreBase implements CoreInterface {
 
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
-            $_SESSION[self::CLIENTE] = serialize($this);
+            parent::setIndexSession(self::CLIENTE, serialize($this));
         }
 
         /**
@@ -141,12 +140,12 @@ class Cliente extends CoreBase implements CoreInterface {
             $sottoconto->setCodSottoconto($this->getCodCliente());
             $sottoconto->setDesSottoconto($this->getDesCliente());
 
-            $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
             $result = $sottoconto->inserisci($db);
 
             $conto = Conto::getInstance();
             $conto->load($db);  // refresh dei conti caricati
-            $_SESSION[self::CONTO] = serialize($conto);
+            parent::setIndexSession(self::CONTO, serialize($conto));
         }
         return $result;
     }
@@ -204,7 +203,7 @@ class Cliente extends CoreBase implements CoreInterface {
             $this->setCodCliente($row[Cliente::COD_CLIENTE]);
             $this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
         }
-        $_SESSION[CLIENTE] = serialize($this);
+        parent::setIndexSession(self::CLIENTE, serialize($this));
     }
 
     public function load($db) {
@@ -289,7 +288,7 @@ class Cliente extends CoreBase implements CoreInterface {
 
             if ($result) {
                 $this->load($db); // refresh dei clienti caricati
-                $_SESSION[self::CLIENTE] = serialize($this);
+                parent::setIndexSession(self::CLIENTE, serialize($this));
             }
         }
         return $result;
@@ -318,7 +317,7 @@ class Cliente extends CoreBase implements CoreInterface {
 
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
-            $_SESSION[self::CLIENTE] = serialize($this);
+            parent::setIndexSession(self::CLIENTE, serialize($this));
         }
 
         return $result;
@@ -373,7 +372,7 @@ class Cliente extends CoreBase implements CoreInterface {
                 $this->setCodPiva($row['cod_piva']);
                 $this->setCodFisc($row['cod_fisc']);
             }
-            $_SESSION[self::CLIENTE] = serialize($this);
+            parent::setIndexSession(self::CLIENTE, serialize($this));
         }
     }
 

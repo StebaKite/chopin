@@ -10,16 +10,14 @@ require_once 'configurazioneCausale.class.php';
 class IncludiContoCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::INCLUDI_CONTO_CAUSALE])) {
-            $_SESSION[self::INCLUDI_CONTO_CAUSALE] = serialize(new IncludiContoCausale());
+        if (parent::getIndexSession(self::INCLUDI_CONTO_CAUSALE) === NULL) {
+            parent::setIndexSession(self::INCLUDI_CONTO_CAUSALE, serialize(new IncludiContoCausale()));
         }
-        return unserialize($_SESSION[self::INCLUDI_CONTO_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::INCLUDI_CONTO_CAUSALE));
     }
 
     public function start() {
@@ -29,7 +27,7 @@ class IncludiContoCausale extends ConfigurazioniAbstract implements Configurazio
         $array = $utility->getConfig();
 
         $configurazioneCausale->inserisciConto($db);
-        $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+        parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize($configurazioneCausale));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
 

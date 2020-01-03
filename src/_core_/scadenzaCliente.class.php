@@ -77,15 +77,15 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::SCADENZA_CLIENTE])) {
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize(new ScadenzaCliente());
+        if (parent::getIndexSession(self::SCADENZA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize(new ScadenzaCliente()));
         }
-        return unserialize($_SESSION[self::SCADENZA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::SCADENZA_CLIENTE));
     }
 
     public function prepara() {
@@ -94,7 +94,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $this->setCodNegozioSel("VIL");
         $this->setQtaScadenze(0);
         $this->setScadenze("");
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
     }
 
     public function load($db) {
@@ -161,7 +161,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             }
         }
 
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         return $result;
     }
 
@@ -184,7 +184,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             sort($this->scadenzeIncassate);
         }
         $this->setQtaScadenzeIncassate($this->getQtaScadenzeIncassate() + 1);
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
     }
 
     public function trovaScadenzeRegistrazione($db) {
@@ -204,7 +204,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             $this->setScadenzeDaIncassare(null);
             $this->setQtaScadenzeDaIncassare(0);
         }
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         return $result;
     }
 
@@ -248,7 +248,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 sort($this->scadenzeDaIncassare);
             }
             $this->setQtaScadenzeDaIncassare($this->getQtaScadenzeDaIncassare() + 1);
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         }
     }
 
@@ -350,7 +350,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             }
         }
         $this->setScadenzeIncassate($scadenzeIncassateDiff);
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
     }
 
     public function ripartisciImporto() {
@@ -403,7 +403,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                     array_push($nuoveScadenze, $item);
                 }
                 $this->setScadenzeDaIncassare($nuoveScadenze);
-                $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+                parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
             }
         }
     }
@@ -441,7 +441,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 }
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         }
         return $result;
     }
@@ -487,7 +487,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 }
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         }
         return $result;
     }
@@ -529,7 +529,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 }
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
-            $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         }
         return $result;
     }
@@ -552,7 +552,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             $this->setScadenzeDaIncassare(null);
             $this->setQtaScadenzeDaIncassare(0);
         }
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         return $result;
     }
 
@@ -573,7 +573,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             $this->setScadenzeIncassate(null);
             $this->setQtaScadenzeIncassate(0);
         }
-        $_SESSION[self::SCADENZA_CLIENTE] = serialize($this);
+        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
         return $result;
     }
 

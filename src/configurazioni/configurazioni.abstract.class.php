@@ -189,24 +189,22 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
     }
 
     public function refreshContiConfigurati($db, $configurazioneCausale) {
-        $CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
 
         if (!$configurazioneCausale->loadContiConfigurati($db)) {
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+            parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
             return false;
         }
-        $_SESSION[$CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+        parent::setIndexSession("Obj_configurazionecausale", serialize($configurazioneCausale));
         return true;
     }
 
     public function refreshContiConfigurabili($db, $configurazioneCausale) {
-        $CONFIGURAZIONE_CAUSALE = "Obj_configurazionecausale";
 
         if (!$configurazioneCausale->loadContiConfigurabili($db)) {
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+            parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
             return false;
         }
-        $_SESSION[$CONFIGURAZIONE_CAUSALE] = serialize($configurazioneCausale);
+        parent::setIndexSession("Obj_configurazionecausale", serialize($configurazioneCausale));
         return true;
     }
 

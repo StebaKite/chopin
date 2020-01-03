@@ -9,16 +9,14 @@ require_once 'sottoconto.class.php';
 class CreaContoTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CONTO_TEMPLATE])) {
-            $_SESSION[self::CREA_CONTO_TEMPLATE] = serialize(new CreaContoTemplate());
+        if (parent::getIndexSession(self::CREA_CONTO_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CREA_CONTO_TEMPLATE, serialize(new CreaContoTemplate()));
         }
-        return unserialize($_SESSION[self::CREA_CONTO_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::CREA_CONTO_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -64,9 +62,9 @@ class CreaContoTemplate extends ConfigurazioniAbstract implements Configurazioni
         // ----------------------------------------------
 
         if ($msg != "ERRORE") {
-            $_SESSION[self::MESSAGGIO] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION[self::MESSAGGIO]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
 
         return $esito;

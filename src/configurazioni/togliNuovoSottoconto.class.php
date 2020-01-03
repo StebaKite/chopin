@@ -10,14 +10,14 @@ class TogliNuovoSottoconto extends ConfigurazioniAbstract implements Configurazi
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::TOGLI_SOTTOCONTO])) {
-            $_SESSION[self::TOGLI_SOTTOCONTO] = serialize(new TogliNuovoSottoconto());
+        if (parent::getIndexSession(self::TOGLI_SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::TOGLI_SOTTOCONTO, serialize(new TogliNuovoSottoconto()));
         }
-        return unserialize($_SESSION[self::TOGLI_SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::TOGLI_SOTTOCONTO));
     }
 
     public function start() {
@@ -26,7 +26,7 @@ class TogliNuovoSottoconto extends ConfigurazioniAbstract implements Configurazi
         $db = Database::getInstance();
 
         $sottoconto->cancella($db);
-        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
 
         echo $this->makeTabellaSottoconti($conto, $sottoconto);
     }

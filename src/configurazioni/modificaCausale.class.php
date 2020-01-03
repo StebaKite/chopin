@@ -10,16 +10,14 @@ require_once 'causale.class.php';
 class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_CAUSALE])) {
-            $_SESSION[self::MODIFICA_CAUSALE] = serialize(new ModificaCausale());
+        if (parent::getIndexSession(self::MODIFICA_CAUSALE) === NULL) {
+            parent::setIndexSession(self::MODIFICA_CAUSALE, serialize(new ModificaCausale()));
         }
-        return unserialize($_SESSION[self::MODIFICA_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_CAUSALE));
     }
 
     public function start() {
@@ -29,7 +27,7 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
         $db = Database::getInstance();
 
         $causale->leggi($db);
-        $_SESSION[self::CAUSALE] = serialize($causale);
+        parent::setIndexSession(self::CAUSALE, serialize($causale));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_CAUSALE;
 
@@ -47,8 +45,8 @@ class ModificaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
         $db = Database::getInstance();
         $causale->aggiorna($db);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaCausale::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 

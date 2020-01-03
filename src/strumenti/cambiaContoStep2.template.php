@@ -11,15 +11,14 @@ require_once 'sottoconto.class.php';
 class CambiaContoStep2Template extends StrumentiAbstract implements StrumentiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP2_TEMPLATE]))
-            $_SESSION[self::CAMBIA_CONTO_STEP2_TEMPLATE] = serialize(new CambiaContoStep2Template());
-        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP2_TEMPLATE]);
+        if (parent::getIndexSession(self::CAMBIA_CONTO_STEP2_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CAMBIA_CONTO_STEP2_TEMPLATE, serialize(new CambiaContoStep2Template()));
+        }
+        return unserialize(parent::getIndexSession(self::CAMBIA_CONTO_STEP2_TEMPLATE));
     }
 
     public function inizializzaPagina() { }
@@ -30,9 +29,9 @@ class CambiaContoStep2Template extends StrumentiAbstract implements StrumentiPre
         $msg = "<br>";
 
         if ($msg != "<br>") {
-            $_SESSION["messaggio"] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION["messaggio"]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
 
         return $esito;
@@ -49,9 +48,9 @@ class CambiaContoStep2Template extends StrumentiAbstract implements StrumentiPre
         $form = $this->root . $array['template'] . self::PAGINA_CAMBIO_CONTO_STEP2;
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
             '%datareg_da%' => $registrazione->getDatRegistrazioneDa(),
             '%datareg_a%' => $registrazione->getDatRegistrazioneA(),
             '%elenco_conti%' => $conto->preparaElencoConti(),            

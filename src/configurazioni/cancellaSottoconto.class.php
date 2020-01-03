@@ -10,22 +10,14 @@ require_once 'sottoconto.class.php';
 class CancellaSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
-
-        $this->testata = $this->root . $this->array[self::TESTATA];
-        $this->piede = $this->root . $this->array[self::PIEDE];
-        $this->messaggioErrore = $this->root . $this->array[self::ERRORE];
-        $this->messaggioInfo = $this->root . $this->array[self::INFO];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_SOTTOCONTO])) {
-            $_SESSION[self::CANCELLA_SOTTOCONTO] = serialize(new CancellaSottoconto());
+        if (parent::getIndexSession(self::CANCELLA_SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::CANCELLA_SOTTOCONTO, serialize(new CancellaSottoconto()));
         }
-        return unserialize($_SESSION[self::CANCELLA_SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_SOTTOCONTO));
     }
 
     public function start() {
@@ -33,8 +25,8 @@ class CancellaSottoconto extends ConfigurazioniAbstract implements Configurazion
         $db = Database::getInstance();
         $sottoconto->cancella($db);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(ModificaConto::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(ModificaConto::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 

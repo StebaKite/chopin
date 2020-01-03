@@ -9,18 +9,15 @@ require_once 'cliente.class.php';
 class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::RICERCA_CLIENTE_TEMPLATE])) {
-            $_SESSION[self::RICERCA_CLIENTE_TEMPLATE] = serialize(new RicercaClienteTemplate());
+        if (parent::getIndexSession(self::RICERCA_CLIENTE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RICERCA_CLIENTE_TEMPLATE, serialize(new RicercaClienteTemplate()));
         }
-        return unserialize($_SESSION[self::RICERCA_CLIENTE_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_CLIENTE_TEMPLATE));
     }
 
     // template ------------------------------------------------
@@ -53,7 +50,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
                     "    <div class='col-sm-4'>" .
                     "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                     "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .
@@ -98,11 +95,11 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
         }
 
         $cliente->prepara();
-        $_SESSION[self::CLIENTE] = serialize($cliente);
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO],
-            '%azione%' => $_SESSION[self::AZIONE_RICERCA_CLIENTE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%azione%' => parent::getIndexSession(self::AZIONE_RICERCA_CLIENTE),
             '%elenco_categorie_cliente%' => $categoriaCliente->getElencoCategorieCliente(),
             '%codcliente%' => $cliente->getCodCliente(),
             '%descliente%' => $cliente->getDesCliente(),

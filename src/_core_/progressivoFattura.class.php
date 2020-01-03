@@ -36,15 +36,14 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::PROGRESSIVO_FATTURA])) {
-            $_SESSION[self::PROGRESSIVO_FATTURA] = serialize(new ProgressivoFattura());
+        if (parent::getIndexSession(self::PROGRESSIVO_FATTURA) === NULL) {
+            parent::setIndexSession(self::PROGRESSIVO_FATTURA, serialize(new ProgressivoFattura()));
         }
-        return unserialize($_SESSION[self::PROGRESSIVO_FATTURA]);
+        return unserialize(parent::getIndexSession(self::PROGRESSIVO_FATTURA));
     }
 
     public function load($db) {
@@ -65,7 +64,7 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
             $this->setProgressiviFattura(null);
             $this->setQtaProgressiviFattura(null);
         }
-        $_SESSION[self::PROGRESSIVO_FATTURA] = serialize($this);
+        parent::setIndexSession(self::PROGRESSIVO_FATTURA, serialize($this));
         return $result;
     }
 

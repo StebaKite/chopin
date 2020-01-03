@@ -6,17 +6,16 @@ require_once 'fatture.business.interface.php';
 class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::FATTURA_AZIENDA_CONSORTILE]))
-            $_SESSION[self::FATTURA_AZIENDA_CONSORTILE] = serialize(new FatturaAziendaConsortile());
-        return unserialize($_SESSION[self::FATTURA_AZIENDA_CONSORTILE]);
-    }
+        if (parent::getIndexSession(self::FATTURA_AZIENDA_CONSORTILE) === NULL) {
+            parent::setIndexSession(self::FATTURA_AZIENDA_CONSORTILE, serialize(new FatturaAziendaConsortile()));
+        }
+        return unserialize(parent::getIndexSession(self::FATTURA_AZIENDA_CONSORTILE));
+        }
 
     public function identificativiFatturaAziendaConsortile($giorno, $meserif, $anno, $numfat, $codneg) {
 
@@ -80,7 +79,7 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
         $this->SetXY( $r1+3, $y1);
         $this->Cell(20,6, "IMPONIBILE","",0,"C");
         $this->SetX( $r1+30 );
-        $this->Cell(20,6, "IVA " . $aliq_iva . "%","",0,"C");
+        $this->Cell(20,6, "IVA","",0,"C");
         $this->SetX( $r1+50 );
         $this->Cell(20,6, "TOTALE","",0,"C");
         $this->SetX( $r1+92 );

@@ -11,16 +11,14 @@ require_once 'anagrafica.controller.class.php';
 class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_MERCATO])) {
-            $_SESSION[self::CANCELLA_MERCATO] = serialize(new CancellaMercato());
+        if (parent::getIndexSession(self::CANCELLA_MERCATO) === NULL) {
+            parent::setIndexSession(self::CANCELLA_MERCATO, serialize(new CancellaMercato()));
         }
-        return unserialize($_SESSION[self::CANCELLA_MERCATO]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_MERCATO));
     }
 
     public function start() {
@@ -30,9 +28,8 @@ class CancellaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
 
         $mercato->cancella($db);
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaMercato::getInstance()));
-
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaMercato::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->setRequest("start");
         $controller->start();
     }

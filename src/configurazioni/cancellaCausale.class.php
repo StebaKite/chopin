@@ -11,16 +11,14 @@ require_once 'causale.class.php';
 class CancellaCausale extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_CAUSALE])) {
-            $_SESSION[self::CANCELLA_CAUSALE] = serialize(new CancellaCausale());
+        if (parent::getIndexSession(self::CANCELLA_CAUSALE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_CAUSALE, serialize(new CancellaCausale()));
         }
-        return unserialize($_SESSION[self::CANCELLA_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_CAUSALE));
     }
 
     public function start() {}
@@ -30,8 +28,8 @@ class CancellaCausale extends ConfigurazioniAbstract implements ConfigurazioniBu
         $db = Database::getInstance();
         $causale->cancella($db);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaCausale::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaCausale::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 

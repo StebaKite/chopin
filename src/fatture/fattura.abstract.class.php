@@ -55,10 +55,15 @@ abstract class FatturaAbstract extends Nexus6Abstract implements FatturaPresenta
 
     public function sezioneNotaPiede($documento, $fattura) {
 
+        $nota = parent::EMPTYSTRING;
+        
         if (parent::isNotEmpty($fattura->getNotaPiede())) {
             $nota = explode("\\", $fattura->getNotaPiede());
         }
-        $documento->aggiungiLineaNota($nota, 12, 242);
+        
+        if (parent::isNotEmpty($nota)) {
+            $documento->aggiungiLineaNota($nota, 12, 242);
+        }
         return $documento;
     }
 

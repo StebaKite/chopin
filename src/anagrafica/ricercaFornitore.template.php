@@ -8,17 +8,14 @@ require_once 'fornitore.class.php';
 class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPresentationInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_FORNITORE_TEMPLATE])) {
-            $_SESSION[self::RICERCA_FORNITORE_TEMPLATE] = serialize(new RicercaFornitoreTemplate());
+        if (parent::getIndexSession(self::RICERCA_FORNITORE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RICERCA_FORNITORE_TEMPLATE, serialize(new RicercaFornitoreTemplate()));
         }
-        return unserialize($_SESSION[self::RICERCA_FORNITORE_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_FORNITORE_TEMPLATE));
     }
 
     // template ------------------------------------------------
@@ -46,7 +43,7 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
                     "    <div class='col-sm-4'>" .
                     "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                     "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .
@@ -93,10 +90,10 @@ class RicercaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaP
         }
 
         $fornitore->prepara();
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
             '%codfornitore%' => $fornitore->getCodFornitore(),
             '%desfornitore%' => $fornitore->getDesFornitore(),
             '%indfornitore%' => $fornitore->getDesIndirizzoFornitore(),

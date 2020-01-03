@@ -11,7 +11,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
     public $_datiMCT = array();
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -22,10 +22,10 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::ESTRAI_PDF_RIEPILOGO_NEGOZIO]))
-            $_SESSION[self::ESTRAI_PDF_RIEPILOGO_NEGOZIO] = serialize(new EstraiPdfRiepilogoNegozio());
-        return unserialize($_SESSION[self::ESTRAI_PDF_RIEPILOGO_NEGOZIO]);
+        if (parent::getIndexSession(self::ESTRAI_PDF_RIEPILOGO_NEGOZIO) === NULL) {
+            parent::setIndexSession(self::ESTRAI_PDF_RIEPILOGO_NEGOZIO, serialize(new EstraiPdfRiepilogoNegozio()));
+        }
+        return unserialize(parent::getIndexSession(self::ESTRAI_PDF_RIEPILOGO_NEGOZIO));
     }
 
     public function start() {
@@ -107,7 +107,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $riepilogo->setUtileVilla($riepilogo->getTotaleRicaviVilla() - $riepilogo->getTotaleCostiVilla());
         $riepilogo->setTotaleUtile($riepilogo->getUtileBrembate() + $riepilogo->getUtileTrezzo() + $riepilogo->getUtileVilla());
 
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
 
         $pdf->AddPage('L');
 
@@ -218,7 +218,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $datiMCT["ricaricoPercentuale"] = ($datiMCT["margineTotale"] * 100 ) / abs($datiMCT["totaleCostiVariabili"]);
 
         $riepilogo->setDatiMCT($datiMCT);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
 
         // Nuova pagina documento -----------------------------------------------
 
@@ -263,7 +263,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
 
 
         $riepilogo->setDatiMCT($datiMCT);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
 
         // Nuova pagina documento -----------------------------------------------
 

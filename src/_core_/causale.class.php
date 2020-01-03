@@ -53,15 +53,14 @@ class Causale extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::CAUSALE])) {
-            $_SESSION[self::CAUSALE] = serialize(new Causale());
+        if (parent::getIndexSession(self::CAUSALE) === NULL) {
+            parent::setIndexSession(self::CAUSALE, serialize(new Causale()));
         }
-        return unserialize($_SESSION[self::CAUSALE]);
+        return unserialize(parent::getIndexSession(self::CAUSALE));
     }
 
     public function load($db) {
@@ -90,7 +89,7 @@ class Causale extends CoreBase implements CoreInterface {
 
         if ($this->getQtaCausali() == 0) {
             $this->load($db);
-            $_SESSION[self::CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CAUSALE, serialize($this));
         }
 
         foreach ($this->getCausali() as $unaCausale) {
@@ -133,7 +132,7 @@ class Causale extends CoreBase implements CoreInterface {
             );
             array_push($this->causali, $item);
             sort($this->causali);
-            $_SESSION[self::CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CAUSALE, serialize($this));
         }
         return $result;
     }
@@ -156,7 +155,7 @@ class Causale extends CoreBase implements CoreInterface {
                 }
             }
             $this->setCausali($causaliDiff);
-            $_SESSION[self::CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CAUSALE, serialize($this));
         }
     }
 
@@ -194,7 +193,7 @@ class Causale extends CoreBase implements CoreInterface {
                 }
             }
             $this->setCausali($causaliDiff);
-            $_SESSION[self::CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CAUSALE, serialize($this));
         }
         return $result;
     }
@@ -242,7 +241,7 @@ class Causale extends CoreBase implements CoreInterface {
             }
         }
         $this->setCausali($causaliDiff);
-        $_SESSION[self::CAUSALE] = serialize($this);
+        parent::setIndexSession(self::CAUSALE, serialize($this));
     }
 
     public function loadContiConfigurati($db) {
@@ -268,7 +267,7 @@ class Causale extends CoreBase implements CoreInterface {
             }
         }
         $this->setContiCausale($conti);
-        $_SESSION[self::CAUSALE] = serialize($this);
+        parent::setIndexSession(self::CAUSALE, serialize($this));
     }
 
     // Getters & Setters

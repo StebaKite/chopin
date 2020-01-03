@@ -56,15 +56,15 @@ class Bilancio extends CoreBase implements CoreInterface {
      *  Metodi
      */
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::BILANCIO])) {
-            $_SESSION[self::BILANCIO] = serialize(new Bilancio());
+        if (parent::getIndexSession(self::BILANCIO) === NULL) {
+            parent::setIndexSession(self::BILANCIO, serialize(new Bilancio()));
         }
-        return unserialize($_SESSION[self::BILANCIO]);
+        return unserialize(parent::getIndexSession(self::BILANCIO));
     }
 
     public function prepara() {
@@ -114,10 +114,9 @@ class Bilancio extends CoreBase implements CoreInterface {
         $this->setTabellaAttivo(self::EMPTYSTRING);
         $this->setTabellaPassivo(self::EMPTYSTRING);
 
-        unset($_SESSION[self::MSG]);
-        unset($_SESSION["messaggio"]);
-        
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::unsetIndexSessione(self::MSG);
+        parent::unsetIndexSessione(self::MESSAGGIO);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -157,7 +156,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setNumCostiTrovati(0);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -197,7 +196,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setNumRicaviTrovati(0);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -233,7 +232,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setNumAttivoTrovati(0);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -269,7 +268,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setNumPassivoTrovati(0);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -305,7 +304,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setRicavoVenditaProdotti(null);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -376,7 +375,7 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setCostoFisso(null);
             }
         }
-        $_SESSION[self::BILANCIO] = serialize($this);
+        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**

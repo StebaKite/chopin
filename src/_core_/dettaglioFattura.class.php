@@ -33,21 +33,20 @@ class DettaglioFattura extends Fattura implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::DETTAGLIO_FATTURA])) {
-            $_SESSION[self::DETTAGLIO_FATTURA] = serialize(new DettaglioFattura());
+        if (parent::getIndexSession(self::DETTAGLIO_FATTURA) === NULL) {
+            parent::setIndexSession(self::DETTAGLIO_FATTURA, serialize(new DettaglioFattura()));
         }
-        return unserialize($_SESSION[self::DETTAGLIO_FATTURA]);
+        return unserialize(parent::getIndexSession(self::DETTAGLIO_FATTURA));
     }
 
     public function prepara() {
         $this->setDettagliFattura(null);
         $this->setQtaDettagliFattura(0);
-        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_FATTURA, serialize($this));
     }
 
     public function aggiungi() {
@@ -70,7 +69,7 @@ class DettaglioFattura extends Fattura implements CoreInterface {
             array_push($this->dettagliFattura, $item);
         }
         $this->setQtaDettagliFattura($this->getQtaDettagliFattura() + 1);
-        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_FATTURA, serialize($this));
     }
 
     public function cancella($db) {
@@ -83,7 +82,7 @@ class DettaglioFattura extends Fattura implements CoreInterface {
             }
         }
         $this->setDettagliFattura($dettagliDiff);
-        $_SESSION[self::DETTAGLIO_FATTURA] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_FATTURA, serialize($this));
     }
 
     /*

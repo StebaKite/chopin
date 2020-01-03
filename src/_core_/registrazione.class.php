@@ -77,15 +77,15 @@ class Registrazione extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::REGISTRAZIONE])) {
-            $_SESSION[self::REGISTRAZIONE] = serialize(new Registrazione());
+        if (parent::getIndexSession(self::REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::REGISTRAZIONE, serialize(new Registrazione()));
         }
-        return unserialize($_SESSION[self::REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::REGISTRAZIONE));
     }
 
     public function prepara() {
@@ -107,7 +107,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         $this->setDesCliente(null);
         $this->setDesFornitore(null);
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
     }
 
     public function leggi($db) {
@@ -140,7 +140,7 @@ class Registrazione extends CoreBase implements CoreInterface {
                     $this->setCodNegozio($row[self::COD_NEGOZIO]);
                     $this->setIdMercato($row[self::ID_MERCATO]);
                 }
-                $_SESSION[self::REGISTRAZIONE] = serialize($this);
+                parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
             }
         }
         return $result;
@@ -187,7 +187,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             $this->setRegistrazioni(null);
             $this->setQtaRegistrazioni(0);
         }
-        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
         return $result;
     }    
     
@@ -217,7 +217,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             $this->setCodNegozioSel("");
         }
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
     }
 
     public function load($db) {
@@ -293,7 +293,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setIdRegistrazione($db->getLastIdUsed());  // l'id generato dall'inserimento
         }
-        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
         return $result;
     }
 
@@ -319,7 +319,7 @@ class Registrazione extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        $_SESSION[self::REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
         return $result;
     }
 

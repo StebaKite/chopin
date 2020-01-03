@@ -9,15 +9,14 @@ require_once 'sottoconto.class.php';
 class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::AGGIUNGI_SOTTOCONTO])) {
-            $_SESSION[self::AGGIUNGI_SOTTOCONTO] = serialize(new AggiungiNuovoSottoconto());
+        if (parent::getIndexSession(self::AGGIUNGI_SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::AGGIUNGI_SOTTOCONTO, serialize(new AggiungiNuovoSottoconto()));
         }
-        return unserialize($_SESSION[self::AGGIUNGI_SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::AGGIUNGI_SOTTOCONTO));
     }
 
     public function start() {
@@ -26,7 +25,7 @@ class AggiungiNuovoSottoconto extends ConfigurazioniAbstract implements Configur
         $sottoconto->setCodConto($conto->getCodConto());
 
         $sottoconto->aggiungi();
-        $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+        parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
 
         echo $this->makeTabellaSottoconti($conto, $sottoconto);
     }

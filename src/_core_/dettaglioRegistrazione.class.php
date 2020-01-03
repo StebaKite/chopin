@@ -59,21 +59,20 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::DETTAGLIO_REGISTRAZIONE])) {
-            $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize(new DettaglioRegistrazione());
+        if (parent::getIndexSession(self::DETTAGLIO_REGISTRAZIONE) === NULL) {
+            parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize(new DettaglioRegistrazione()));
         }
-        return unserialize($_SESSION[self::DETTAGLIO_REGISTRAZIONE]);
+        return unserialize(parent::getIndexSession(self::DETTAGLIO_REGISTRAZIONE));
     }
 
     public function prepara() {
         $this->setDettagliRegistrazione(null);
         $this->setQtaDettagliRegistrazione(0);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
     }
 
     public function leggiDettagliRegistrazione($db) {
@@ -93,7 +92,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             $this->setDettagliRegistrazione(null);
             $this->setQtaDettagliRegistrazione(0);
         }
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
         return $result;
     }
 
@@ -140,7 +139,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             }
         }
         $this->setDettagliRegistrazione($dettagliDiff);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
     }
         
     public function aggiungi() {
@@ -180,7 +179,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
                 sort($this->dettagliRegistrazione);
             }
             $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() + 1);
-            $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);            
+            parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
         }
     }
 
@@ -238,7 +237,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $this->setIndDareAvere("A");
         $this->aggiungi();
 
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
     }
     
     public function aggiungiDettagliCorrispettivoNegozio($db) {
@@ -297,7 +296,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $this->setIndDareAvere("A");
         $this->aggiungi();
 
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
     }    
     
     public function cancella($db) {
@@ -324,7 +323,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
             }
         }
         $this->setDettagliRegistrazione($dettagliDiff);
-        $_SESSION[self::DETTAGLIO_REGISTRAZIONE] = serialize($this);
+        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
     }
 
     public function inserisci($db) {

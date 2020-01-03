@@ -9,7 +9,7 @@ require_once 'bilancio.class.php';
 class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -20,10 +20,10 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusiness
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::ESTRAI_PDF_BILANCIO]))
-            $_SESSION[self::ESTRAI_PDF_BILANCIO] = serialize(new EstraiPdfBilancio());
-        return unserialize($_SESSION[self::ESTRAI_PDF_BILANCIO]);
+        if (parent::getIndexSession(self::ESTRAI_PDF_BILANCIO) === NULL) {
+            parent::setIndexSession(self::ESTRAI_PDF_BILANCIO, serialize(new EstraiPdfBilancio()));
+        }
+        return unserialize(parent::getIndexSession(self::ESTRAI_PDF_BILANCIO));
     }
 
     public function start() {

@@ -10,17 +10,14 @@ require_once 'fornitore.class.php';
 class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_FORNITORE])) {
-            $_SESSION[self::CANCELLA_FORNITORE] = serialize(new CancellaFornitore());
+        if (parent::getIndexSession(self::CANCELLA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::CANCELLA_FORNITORE, serialize(new CancellaFornitore()));
         }
-        return unserialize($_SESSION[self::CANCELLA_FORNITORE]);
+        return unserialize(parent::getIndexSession(self::CANCELLA_FORNITORE));
     }
 
     public function start() {
@@ -30,8 +27,8 @@ class CancellaFornitore extends AnagraficaAbstract implements AnagraficaBusiness
 
         $fornitore->cancella($db);
 
-        $_SESSION["Obj_anagraficacontroller"] = serialize(new AnagraficaController(RicercaFornitore::getInstance()));
-        $controller = unserialize($_SESSION["Obj_anagraficacontroller"]);
+        parent::setIndexSession("Obj_anagraficacontroller", serialize(new AnagraficaController(RicercaFornitore::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_anagraficacontroller"));
         $controller->start();
     }
 

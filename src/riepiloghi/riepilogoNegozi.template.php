@@ -9,15 +9,14 @@ require_once 'riepilogo.class.php';
 class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements RiepiloghiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]))
-            $_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE] = serialize(new RiepilogoNegoziTemplate());
-        return unserialize($_SESSION[self::RIEPILOGO_NEGOZI_TEMPLATE]);
+        if (parent::getIndexSession(self::RIEPILOGO_NEGOZI_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RIEPILOGO_NEGOZI_TEMPLATE, serialize(new RiepilogoNegoziTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::RIEPILOGO_NEGOZI_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -66,8 +65,8 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
         }
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
             '%datareg_da%' => $riepilogo->getDataregDa(),
             '%datareg_a%' => $riepilogo->getDataregA(),
             '%tabs%' => $this->makeTabs($riepilogo),

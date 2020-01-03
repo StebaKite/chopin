@@ -9,7 +9,7 @@ require_once 'riepilogo.class.php';
 class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -20,10 +20,10 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiB
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO]))
-            $_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO] = serialize(new EstraiPdfAndamentoNegozi());
-        return unserialize($_SESSION[self::ESTRAI_PDF_ANDAMENTO_NEGOZIO]);
+        if (parent::getIndexSession(self::ESTRAI_PDF_ANDAMENTO_NEGOZIO) === NULL) {
+            parent::setIndexSession(self::ESTRAI_PDF_ANDAMENTO_NEGOZIO, serialize(new EstraiPdfAndamentoNegozi()));
+        }
+        return unserialize(parent::getIndexSession(self::ESTRAI_PDF_ANDAMENTO_NEGOZIO));
     }
 
     public function start() {

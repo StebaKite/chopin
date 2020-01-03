@@ -8,15 +8,14 @@ require_once 'corrispettivo.class.php';
 class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract implements StrumentiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE]))
-            $_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE] = serialize(new ImportaExcelCorrispettiviNegozioStep1Template());
-        return unserialize($_SESSION[self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE]);
+        if (parent::getIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE, serialize(new ImportaExcelCorrispettiviNegozioStep1Template()));
+        }
+        return unserialize(parent::getIndexSession(self::IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -44,9 +43,9 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
         }
         
         if ($msg != "<br>") {
-            $_SESSION["messaggio"] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION["messaggio"]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
 
         return $esito;
@@ -54,6 +53,7 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
 
     public function displayPagina() {
 
+        $corrispettivi_da_importare = parent::EMPTYSTRING;
         $corrispettivo = Corrispettivo::getInstance();
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
@@ -82,9 +82,9 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
         }
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],            
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
             '%mese%' => $corrispettivo->getMese(),
             '%anno%' => $corrispettivo->getAnno(),
             '%file%' => $corrispettivo->getFile(),
@@ -111,17 +111,13 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
             '%stato-step1%' => $corrispettivo->getStatoStep1(),
             '%stato-step2%' => $corrispettivo->getStatoStep2(),
             '%stato-step3%' => $corrispettivo->getStatoStep3(),
-//            '%esitoMese%' => $_SESSION["esitoMese"],
-//            '%esitoAnno%' => $_SESSION["esitoAnno"],
-//            '%esitoNegozio%' => $_SESSION["esitoNegozio"],
-//            '%esitoFile%' => $_SESSION["esitoFile"],
-            '%disabled%' => $_SESSION["buttonDisabled"],
+            '%disabled%' => parent::getIndexSession("buttonDisabled"),
             '%corrispettivi_da_importare%' => $corrispettivi_da_importare,
-            '%msg_errore%' => $_SESSION["messaggioImportFileErr"],
-            '%msg_ok%' => $_SESSION["messaggioImportFileOk"]    
+            '%msg_errore%' => parent::getIndexSession("messaggioImportFileErr"),
+            '%msg_ok%' => parent::getIndexSession("messaggioImportFileOk")
         );
 
-        $_SESSION["buttonDisabled"] = "";
+        parent::setIndexSession("buttonDisabled", "");
         $template = $utility->tailFile($utility->getTemplate($form), $replace);
         echo $utility->tailTemplate($template);
     }

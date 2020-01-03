@@ -10,16 +10,14 @@ require_once 'conto.class.php';
 class ControllaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONTROLLA_CONTO])) {
-            $_SESSION[self::CONTROLLA_CONTO] = serialize(new ControllaConto());
+        if (parent::getIndexSession(self::CONTROLLA_CONTO) === NULL) {
+            parent::setIndexSession(self::CONTROLLA_CONTO, serialize(new ControllaConto()));
         }
-        return unserialize($_SESSION[self::CONTROLLA_CONTO]);
+        return unserialize(parent::getIndexSession(self::CONTROLLA_CONTO));
     }
 
     public function start() {

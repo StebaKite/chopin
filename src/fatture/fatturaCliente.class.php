@@ -6,16 +6,15 @@ require_once 'fatture.business.interface.php';
 class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::FATTURA_CLIENTE]))
-            $_SESSION[self::FATTURA_CLIENTE] = serialize(new FatturaCliente());
-        return unserialize($_SESSION[self::FATTURA_CLIENTE]);
+        if (parent::getIndexSession(self::FATTURA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::FATTURA_CLIENTE, serialize(new FatturaCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::FATTURA_CLIENTE));
     }
 
     public function identificativiFatturaCliente($giorno, $meserif, $anno, $numfat, $codneg) {

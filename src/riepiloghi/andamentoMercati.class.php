@@ -8,7 +8,7 @@ require_once 'database.class.php';
 class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -19,10 +19,10 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
     }
 
     public static function getInstance() {
-
-        if (!isset($_SESSION[self::ANDAMENTO_MERCATI]))
-            $_SESSION[self::ANDAMENTO_MERCATI] = serialize(new AndamentoMercati());
-        return unserialize($_SESSION[self::ANDAMENTO_MERCATI]);
+        if (parent::getIndexSession(self::ANDAMENTO_MERCATI) === NULL) {
+            parent::setIndexSession (self::ANDAMENTO_MERCATI, serialize(new AndamentoMercati()));
+        }
+        return unserialize(parent::getIndexSession(self::ANDAMENTO_MERCATI));
     }
 
     public function start() {
@@ -36,7 +36,7 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
         $andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -55,7 +55,7 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
         $andamentoMercatiTemplate = AndamentoMercatiTemplate::getInstance();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -68,8 +68,8 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
                     $riepilogo->getNumRicaviAndamentoMercatoBrembate() +
                     $riepilogo->getNumRicaviAndamentoMercatoTrezzo();
 
-            $_SESSION["messaggio"] = "Trovate " . $numRicavi . " voci di ricavo";
-            $replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            parent::setIndexSession(self::MESSAGGIO, "Trovate " . $numRicavi . " voci di ricavo");
+            $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
             if (($numRicavi) > 0) {
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), $replace);
@@ -78,11 +78,11 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
             }
         } else {
 
-            $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
             $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), parent::$replace);
 
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         include($this->piede);
     }
@@ -106,9 +106,8 @@ class AndamentoMercati extends RiepiloghiAbstract implements RiepiloghiBusinessI
     }
 
     public function preparaPagina() {
-
-        $_SESSION[self::AZIONE] = self::AZIONE_ANDAMENTO_MERCATI;
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.andamentoMercati%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_ANDAMENTO_MERCATI);
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.andamentoMercati%");
     }
 
 }

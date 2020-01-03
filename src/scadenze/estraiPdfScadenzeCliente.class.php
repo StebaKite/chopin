@@ -13,7 +13,7 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
     public static $queryRicercaScadenzeCliente = "/scadenze/ricercaScadenzeCliente.sql";
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -24,9 +24,10 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE]))
-            $_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE] = serialize(new EstraiPdfScadenzeCliente());
-        return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_CLIENTE]);
+        if (parent::getIndexSession(self::ESTRAI_PDF_SCADENZE_CLIENTE) === NULL) {
+            parent::setIndexSession(self::ESTRAI_PDF_SCADENZE_CLIENTE, serialize(new EstraiPdfScadenzeCliente()));
+        }
+        return unserialize(parent::getIndexSession(self::ESTRAI_PDF_SCADENZE_CLIENTE));
     }
 
     public function start() {
@@ -84,5 +85,3 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
     }
 
 }
-
-?>

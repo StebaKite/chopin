@@ -12,15 +12,14 @@ require_once 'registrazione.class.php';
 class VisualizzaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE]))
-            $_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE] = serialize(new VisualizzaScadenzaFornitore());
-        return unserialize($_SESSION[self::VISUALIZZA_SCADENZA_FORNITORE]);
+        if (parent::getIndexSession(self::VISUALIZZA_SCADENZA_FORNITORE) === NULL) {
+            parent::setIndexSession(self::VISUALIZZA_SCADENZA_FORNITORE, serialize(new VisualizzaScadenzaFornitore()));
+        }
+        return unserialize(parent::getIndexSession(self::VISUALIZZA_SCADENZA_FORNITORE));
     }
 
     public function start() {

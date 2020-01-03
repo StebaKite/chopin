@@ -29,14 +29,14 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CATEGORIA_CLIENTE_OBJ])) {
-            $_SESSION[self::CATEGORIA_CLIENTE_OBJ] = serialize(new CategoriaCliente());
+        if (parent::getIndexSession(self::CATEGORIA_CLIENTE_OBJ) === NULL) {
+            parent::setIndexSession(self::CATEGORIA_CLIENTE_OBJ, serialize(new CategoriaCliente()));
         }
-        return unserialize($_SESSION[self::CATEGORIA_CLIENTE_OBJ]);
+        return unserialize(parent::getIndexSession(self::CATEGORIA_CLIENTE_OBJ));
     }
 
     /**

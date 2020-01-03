@@ -113,9 +113,9 @@ class AnagraficaController extends Nexus6Abstract {
 
         // Serializzo in sessione gli oggetti modificati
 
-        $_SESSION[self::FORNITORE] = serialize($fornitore);
-        $_SESSION[self::CLIENTE] = serialize($cliente);
-        $_SESSION[self::MERCATO] = serialize($mercato);
+        parent::setIndexSession(self::FORNITORE, serialize($fornitore));
+        parent::setIndexSession(self::CLIENTE, serialize($cliente));
+        parent::setIndexSession(self::MERCATO, serialize($mercato));
 
         if ($this->getRequest() == self::START) {
             $this->anagraficaFunction->start();

@@ -17,6 +17,9 @@ class RicercaRegistrazione extends PrimanotaAbstract implements PrimanotaBusines
 
     function __construct() {
         $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
+        $this->utility = Utility::getInstance();
+        $this->array = $this->utility->getConfig();
+        
         $this->testata = $this->root . $this->array[self::TESTATA];
         $this->piede = $this->root . $this->array[self::PIEDE];
         $this->messaggioErrore = $this->root . $this->array[self::ERRORE];

@@ -18,10 +18,8 @@ require_once 'fatture.business.interface.php';
  */
 class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusinessInterface {
 
-//    public static $azioneCreaFatturaEntePubblico = "../fatture/creaFatturaEntePubblicoFacade.class.php?modo=go";
-
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -33,9 +31,10 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO]))
-            $_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO] = serialize(new CreaFatturaEntePubblico());
-        return unserialize($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO]);
+        if (parent::getIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO, serialize(new CreaFatturaEntePubblico()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO));
     }
 
     public function start() {
@@ -49,7 +48,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
         $dettaglioFattura->prepara();
         $this->preparaPagina();
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -116,12 +115,12 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
         $creaFatturaEntePubblicoTemplate = CreaFatturaEntePubblicoTemplate::getInstance();
         $this->preparaPagina($creaFatturaEntePubblicoTemplate);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
-        $template = $utility->tailFile($utility->getTemplate(self::$testata), $replace);
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
+        $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
         $creaFatturaEntePubblicoTemplate->displayPagina();
-        include(self::$piede);
+        include($this->piede);
     }
 
     private function sezioneIdentificativiFattura($documento, $fattura) {
@@ -131,10 +130,15 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
 
     private function sezioneNotaTesta($documento, $fattura) {
 
+        $nota = "";
+        
         if (parent::isNotEmpty($fattura->getNotaTesta())) {
             $nota = explode("\\", $fattura->getNotaTesta());
         }
-        $documento->aggiungiLineaNota($nota, 15, 120);
+       
+        if (parent::isNotEmpty($nota)) {
+            $documento->aggiungiLineaNota($nota, 15, 120);
+        }
         return $documento;
     }
 
@@ -143,11 +147,12 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
         $documento->boxDettagli();
 
         $tot_imponibile = 0;
+        $tot_dettagli = 0;
         $tot_iva = 0;
         $w = array(125, 30, 30);
-
-        for ($i = 0; $i < count($h); $i++)
-            $documento->Cell($w[$i], 7, $h[$i], 1, 0, 'C');
+//
+//        for ($i = 0; $i < count($h); $i++)
+//            $documento->Cell($w[$i], 7, $h[$i], 1, 0, 'C');
 
         $documento->Ln();
 
@@ -175,7 +180,7 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
         $fattura->setTotDettagli($tot_dettagli);
         $fattura->setAliquotaIva($aliq_iva);
 
-        $_SESSION[self::FATTURA] = serialize($fattura);
+        parent::setIndexSession(self::FATTURA, serialize($fattura));
 
         /**
          * Closing line
@@ -200,14 +205,14 @@ class CreaFatturaEntePubblico extends FatturaAbstract implements FattureBusiness
 
     public function preparaPagina() {
 
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.creaFatturaEntePubblico%";
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.creaFatturaEntePubblico%");
 
         $db = Database::getInstance();
         $utility = Utility::getInstance();
 
         // Prelievo dei clienti -------------------------------------------------------------
 
-        $_SESSION['elenco_clienti'] = $this->caricaClientiFatturabili($utility, $db, "1300"); // Categoria=1300 -> Enti
+        parent::setIndexSession('elenco_clienti', $this->caricaClientiFatturabili($utility, $db, "1300")); // Categoria=1300 -> Enti
     }
 
 }

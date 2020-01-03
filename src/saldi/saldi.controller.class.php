@@ -25,7 +25,7 @@ class SaldiController extends Nexus6Abstract {
      
         $saldo = Saldo::getInstance();
 
-        $_SESSION[self::SALDO] = serialize($saldo);
+        parent::setIndexSession(self::SALDO, serialize($saldo));
         
         if ($this->getRequest() == self::START) {
             $this->saldiFunction->start();

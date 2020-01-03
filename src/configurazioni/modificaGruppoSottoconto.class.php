@@ -11,16 +11,14 @@ require_once 'database.class.php';
 class ModificaGruppoSottoconto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::MODIFICA_GRUPPO_SOTTOCONTO])) {
-            $_SESSION[self::MODIFICA_GRUPPO_SOTTOCONTO] = serialize(new ModificaGruppoSottoconto());
+        if (parent::getIndexSession(self::MODIFICA_GRUPPO_SOTTOCONTO) === NULL) {
+            parent::setIndexSession(self::MODIFICA_GRUPPO_SOTTOCONTO, serialize(new ModificaGruppoSottoconto()));
         }
-        return unserialize($_SESSION[self::MODIFICA_GRUPPO_SOTTOCONTO]);
+        return unserialize(parent::getIndexSession(self::MODIFICA_GRUPPO_SOTTOCONTO));
     }
 
     public function start() {

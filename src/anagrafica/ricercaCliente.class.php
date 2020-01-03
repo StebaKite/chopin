@@ -11,7 +11,7 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -22,10 +22,10 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_CLIENTE])) {
-            $_SESSION[self::RICERCA_CLIENTE] = serialize(new RicercaCliente());
+        if (parent::getIndexSession(self::RICERCA_CLIENTE) === NULL) {
+            parent::setIndexSession(self::RICERCA_CLIENTE, serialize(new RicercaCliente()));
         }
-        return unserialize($_SESSION[self::RICERCA_CLIENTE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_CLIENTE));
     }
 
     public function start() {
@@ -40,28 +40,28 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
 
         $this->preparaPagina($ricercaClienteTemplate);
 
-        $replace = (isset($_SESSION[self::AMBIENTE]) ? array('%amb%' => $_SESSION[self::AMBIENTE], '%users%' => $_SESSION[self::USERS], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
         if ($this->refreshClienti($db, $cliente)) {
 
-            if (isset($_SESSION[self::MSG_DA_CANCELLAZIONE])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CANCELLAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
-                unset($_SESSION[self::MSG_DA_CANCELLAZIONE]);
-            } elseif (isset($_SESSION[self::MSG_DA_CREAZIONE])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_CREAZIONE] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
-                unset($_SESSION[self::MSG_DA_CREAZIONE]);
-            } elseif (isset($_SESSION[self::MSG_DA_MODIFICA])) {
-                $_SESSION[self::MESSAGGIO] = $_SESSION[self::MSG_DA_MODIFICA] . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti";
-                unset($_SESSION[self::MSG_DA_MODIFICA]);
+            if (parent::getIndexSession(self::MSG_DA_CANCELLAZIONE) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_CANCELLAZIONE) . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti");
+                parent::unsetIndexSessione(self::MSG_DA_CANCELLAZIONE);
+            } elseif (parent::getIndexSession(self::MSG_DA_CREAZIONE) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_CREAZIONE) . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti");
+                parent::unsetIndexSessione(self::MSG_DA_CREAZIONE);
+            } elseif (parent::getIndexSession (self::MSG_DA_MODIFICA) !== NULL) {
+                parent::setIndexSession(self::MESSAGGIO, parent::getIndexSession(self::MSG_DA_MODIFICA) . "<br>" . "Trovati " . $cliente->getQtaClienti() . " clienti");
+                parent::unsetIndexSessione(self::MSG_DA_MODIFICA);
             } else {
-                $_SESSION[self::MESSAGGIO] = "Trovati " . $cliente->getQtaClienti() . " clienti";
+                parent::setIndexSession(self::MESSAGGIO, "Trovati " . $cliente->getQtaClienti() . " clienti");
             }
 
-            self::$replace = array('%messaggio%' => $_SESSION[self::MESSAGGIO]);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
-            $pos = strpos($_SESSION[self::MESSAGGIO], "ERRORE");
+            $pos = strpos(parent::getIndexSession(self::MESSAGGIO), "ERRORE");
             if ($pos === false) {
                 if ($cliente->getQtaClienti() > 0) {
                     $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
@@ -72,13 +72,13 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
                 $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
             }
 
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         else {
 
-            self::$replace = array('%messaggio%' => $_SESSION["messaggio"]);
+            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
             $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
-            $_SESSION[self::MSG] = $utility->tailTemplate($template);
+            parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         $ricercaClienteTemplate->displayPagina();
 
@@ -94,19 +94,19 @@ class RicercaCliente extends AnagraficaAbstract implements AnagraficaBusinessInt
         if ($cliente->getQtaClienti() == 0) {
 
             if (!$cliente->load($db)) {
-                $_SESSION[self::MESSAGGIO] = self::ERRORE_LETTURA;
+                parent::setIndexSession(self::MESSAGGIO, self::ERRORE_LETTURA);
                 return false;
             }
-            $_SESSION[self::CLIENTE] = serialize($cliente);
+            parent::setIndexSession(self::CLIENTE, serialize($cliente));
         }
         return true;
     }
 
     private function preparaPagina($ricercaCausaleTemplate) {
 
-        $_SESSION["azione"] = self::AZIONE_RICERCA_CLIENTE;
-        $_SESSION["confermaTip"] = "%ml.cercaTip%";
-        $_SESSION["titoloPagina"] = "%ml.ricercaCliente%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_RICERCA_CLIENTE);
+        parent::setIndexSession(self::TIP_CONFERMA, "%ml.cercaTip%");
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.ricercaCliente%");
     }
 
 }

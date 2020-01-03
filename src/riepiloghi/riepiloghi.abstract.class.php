@@ -230,7 +230,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
              */
             $bilancio->setTotaleCosti($totaleCosti);
         }
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
     }
 
     public function makeRicaviTable($bilancio) {
@@ -325,7 +325,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
              */
             $bilancio->setTotaleRicavi($totaleRicavi);
         }
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
     }
 
     public function makeAttivoTable($bilancio) {
@@ -421,7 +421,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
              */
             $bilancio->setTotaleAttivo($totaleAttivo);
         }
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
     }
 
     public function makePassivoTable($bilancio) {
@@ -517,7 +517,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
              */
             $bilancio->setTotalePassivo($totalePassivo);
         }
-        $_SESSION[self::BILANCIO] = serialize($bilancio);
+        parent::setIndexSession(self::BILANCIO, serialize($bilancio));
     }
 
     public function makeTabs($bilancio) {
@@ -527,7 +527,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 "    <div class='col-sm-4'>" .
                 "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                 "    </div>" .
-                "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                 "</div>" .
                 "<br/>";
 
@@ -859,12 +859,12 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
     public function makeDeltaCosti() {
 
         $deltaCosti = array();
-        unset($_SESSION["elencoVociDeltaCostiNegozio"]);
+        parent::unsetIndexSessione("elencoVociDeltaCostiNegozio");
 
-        if (isset($_SESSION["elencoVociAndamentoCostiNegozio"])) {
+        if (parent::getIndexSession("elencoVociAndamentoCostiNegozio") !== NULL) {
 
-            $vociCosto = pg_fetch_all($_SESSION["elencoVociAndamentoCostiNegozio"]);
-            $vociCostoRif = pg_fetch_all($_SESSION["elencoVociAndamentoCostiNegozioRiferimento"]);
+            $vociCosto = pg_fetch_all(parent::getIndexSession("elencoVociAndamentoCostiNegozio"));
+            $vociCostoRif = pg_fetch_all(parent::getIndexSession("elencoVociAndamentoCostiNegozioRiferimento"));
 
             /**
              * Vengono riportate solo le voci di costo presenti nell'elenco del periodo corrente
@@ -889,19 +889,19 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 array_push($deltaCosti, $deltaVoce);
             }
-            $_SESSION["elencoVociDeltaCostiNegozio"] = $deltaCosti;
+            parent::setIndexSession("elencoVociDeltaCostiNegozio", $deltaCosti);
         }
     }
 
     public function makeDeltaRicavi() {
 
         $deltaRicavi = array();
-        unset($_SESSION["elencoVociDeltaRicaviNegozio"]);
+        parent::unsetIndexSessione("elencoVociDeltaRicaviNegozio");
 
-        if (isset($_SESSION["elencoVociAndamentoRicaviNegozio"])) {
+        if (parent::getIndexSession("elencoVociAndamentoRicaviNegozio") !== NULL) {
 
-            $vociRicavo = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviNegozio"]);
-            $vociRicavoRif = pg_fetch_all($_SESSION["elencoVociAndamentoRicaviNegozioRiferimento"]);
+            $vociRicavo = pg_fetch_all(parent::getIndexSession("elencoVociAndamentoRicaviNegozio"));
+            $vociRicavoRif = pg_fetch_all(parent::getIndexSession("elencoVociAndamentoRicaviNegozioRiferimento"));
 
             /**
              * Vengono riportate solo le voci di ricavo presenti nell'elenco del periodo corrente
@@ -926,7 +926,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 array_push($deltaRicavi, $deltaVoce);
             }
-            $_SESSION["elencoVociDeltaRicaviNegozio"] = $deltaRicavi;
+            parent::setIndexSession("elencoVociDeltaRicaviNegozio", $deltaRicavi);
         }
     }
 
@@ -1040,7 +1040,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $riepilogo->setTotaliAcquistiMesi($totaliAcquistiMesi);
         $riepilogo->setTotaliComplessiviAcquistiMesi($totaliComplessiviMesi);
         $riepilogo->setTableAndamentoCosti($risultato_andamento);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     public function makeAndamentoRicaviTable($vociAndamento) {
@@ -1161,8 +1161,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         /**
          * Metto in sessione i totali per mese dei ricavi che mi occorrono per creare le tabella dell'MCT progressivo
          */
-        $_SESSION["totaliRicaviMesi"] = $totaliRicaviMesi;
-        $_SESSION["totaliComplessiviRicaviMesi"] = $totaliComplessiviMesi;
+        parent::setIndexSession("totaliRicaviMesi", $totaliRicaviMesi);
+        parent::setIndexSession("totaliComplessiviRicaviMesi", $totaliComplessiviMesi);
 
         return $risultato_andamento;
     }
@@ -1288,8 +1288,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         /**
          * Metto in sessione i totali per mese degli acquisti che mi occorrono per creare le tabella dell'MCT progressivo
          */
-        $_SESSION["totaliAcquistiMesi"] = $totaliAcquistiMesi;
-        $_SESSION["totaliComplessiviAcquistiMesi"] = $totaliComplessiviMesi;
+        parent::setIndexSession("totaliAcquistiMesi", $totaliAcquistiMesi);
+        parent::setIndexSession("totaliComplessiviAcquistiMesi", $totaliComplessiviMesi);
 
         return $risultato_andamento;
     }
@@ -1388,7 +1388,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $riepilogo->setTotaliRicaviMesi($totaliRicaviMesi);
         $riepilogo->setTotaliComplessiviRicaviMesi($totaliComplessiviMesi);
         $riepilogo->setTableAndamentoRicavi($risultato_andamento);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -1476,7 +1476,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 "</tbody></table>";
 
         $riepilogo->setTableUtilePerdita($utilePerdita);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     /**
@@ -1658,7 +1658,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 "</tbody></table>";
 
         $riepilogo->setTableMargineContribuzione($margineContribuzione);
-        $_SESSION[self::RIEPILOGO] = serialize($riepilogo);
+        parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
     }
 
     public function makeAndamentoRicaviMercatoTable($vociAndamento) {

@@ -12,16 +12,14 @@ require_once 'sottoconto.class.php';
 class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_CONTO])) {
-            $_SESSION[self::CREA_CONTO] = serialize(new CreaConto());
+        if (parent::getIndexSession(self::CREA_CONTO) === NULL) {
+            parent::setIndexSession(self::CREA_CONTO, serialize(new CreaConto()));
         }
-        return unserialize($_SESSION[self::CREA_CONTO]);
+        return unserialize(parent::getIndexSession(self::CREA_CONTO));
     }
 
     public function start() {
@@ -40,8 +38,8 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
 
         $this->creaConto($utility, $conto, $sottoconto);
 
-        $_SESSION["Obj_configurazionicontroller"] = serialize(new ConfigurazioniController(RicercaConto::getInstance()));
-        $controller = unserialize($_SESSION["Obj_configurazionicontroller"]);
+        parent::setIndexSession("Obj_configurazionicontroller", serialize(new ConfigurazioniController(RicercaConto::getInstance())));
+        $controller = unserialize(parent::getIndexSession("Obj_configurazionicontroller"));
         $controller->start();
     }
 
@@ -58,22 +56,22 @@ class CreaConto extends ConfigurazioniAbstract implements ConfigurazioniBusiness
                 $sottoconto->setDesSottoconto($unSottoconto[Sottoconto::DES_SOTTOCONTO]);
                 $sottoconto->setIndGruppo($unSottoconto[Sottoconto::IND_GRUPPO]);
 
-                $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+                parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
 
                 if (!$sottoconto->inserisci($db)) {
                     $db->rollbackTransaction();
-                    $_SESSION[self::MESSAGGIO] = self::ERRORE_CREAZIONE_CONTO;
+                    parent::setIndexSession(self::MESSAGGIO, self::ERRORE_CREAZIONE_CONTO);
                     return FALSE;
                 }
             }
 
             $db->commitTransaction();
             $sottoconto->preparaNuoviSottoconti(); // svuoto l'array dei sottoconti inseriti
-            $_SESSION[self::SOTTOCONTO] = serialize($sottoconto);
+            parent::setIndexSession(self::SOTTOCONTO, serialize($sottoconto));
             return TRUE;
         }
         $db->rollbackTransaction();
-        $_SESSION[self::MESSAGGIO] = self::ERRORE_CREAZIONE_CONTO;
+        parent::setIndexSession(self::MESSAGGIO, self::ERRORE_CREAZIONE_CONTO);
         return FALSE;
     }
 

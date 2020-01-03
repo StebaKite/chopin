@@ -9,7 +9,7 @@ require_once 'strumenti.business.interface.php';
 class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -20,9 +20,10 @@ class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInt
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CAMBIA_CONTO_STEP2]))
-            $_SESSION[self::CAMBIA_CONTO_STEP2] = serialize(new CambiaContoStep2());
-        return unserialize($_SESSION[self::CAMBIA_CONTO_STEP2]);
+        if (parent::getIndexSession(self::CAMBIA_CONTO_STEP2) === NULL) {
+            parent::setIndexSession(self::CAMBIA_CONTO_STEP2, serialize(new CambiaContoStep2()));
+        }
+        return unserialize(parent::getIndexSession(self::CAMBIA_CONTO_STEP2));
     }
 
     public function start() {
@@ -35,7 +36,7 @@ class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInt
         $cambiaContoStep2Template = CambiaContoStep2Template::getInstance();
         $this->preparaPagina($cambiaContoStep1Template);
 
-        $replace = (isset($_SESSION["ambiente"]) ? array('%amb%' => $_SESSION["ambiente"], '%users%' => $_SESSION["users"], '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array, $_SESSION), '%menu%' => $this->makeMenu($utility)));
+        $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
         echo $utility->tailTemplate($template);
 
@@ -49,10 +50,8 @@ class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInt
 
     public function preparaPagina($ricercaRegistrazioneTemplate) {
 
-        $_SESSION[self::AZIONE] = self::AZIONE_CAMBIA_CONTO_STEP2;
-        $_SESSION[self::TIP_CONFERMA] = "%ml.confermaContoDestinazione%";
-        $_SESSION[self::TITOLO_PAGINA] = "%ml.cambioContoStep2%";
+        parent::setIndexSession(self::AZIONE, self::AZIONE_CAMBIA_CONTO_STEP2);
+        parent::setIndexSession(self::TIP_CONFERMA, "%ml.confermaContoDestinazione%");
+        parent::setIndexSession(self::TITOLO_PAGINA, "%ml.cambioContoStep2%");
     }
 }
-
-?>

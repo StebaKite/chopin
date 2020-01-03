@@ -1,8 +1,9 @@
 <?php
 
 require_once 'utility.component.interface.php';
+require_once 'utilityBase.class.php';
 
-class Utility implements UtilityComponentInterface {
+class Utility extends UtilityBase implements UtilityComponentInterface {
 
     private $root;
     private static $languageReplace;
@@ -29,7 +30,7 @@ class Utility implements UtilityComponentInterface {
 
     // Costruttore --------------------
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getIndexSession('DOCUMENT_ROOT');
     }
 
     private function __autoload($class_name) {
@@ -44,9 +45,10 @@ class Utility implements UtilityComponentInterface {
      * Singleton Pattern
      */
     public static function getInstance() {
-        if (!isset($_SESSION["Obj_utility"]))
-            $_SESSION["Obj_utility"] = serialize(new Utility());
-        return unserialize($_SESSION["Obj_utility"]);
+        if (parent::getIndexSession("Obj_utility") === NULL) {
+            parent::setIndexSession("Obj_utility", serialize(new Utility()));
+        }
+        return unserialize(parent::getIndexSession("Obj_utility"));
     }
 
     public function tailFile($template, $replacement) {
@@ -60,7 +62,7 @@ class Utility implements UtilityComponentInterface {
         $lingua = $array['language'];
         $lanFile = "languageFile_" . $lingua;
 
-        $fileLingua = $_SERVER['DOCUMENT_ROOT'] . $array[$lanFile];
+        $fileLingua = parent::getInfoFromServer('DOCUMENT_ROOT') . $array[$lanFile];
 
         /*
          * Se non trova il file corrispondente alla lingua impostata, il metodo
@@ -170,7 +172,24 @@ class Utility implements UtilityComponentInterface {
         }
         return $this->getConfiguration();
     }
+    
+    public function getInfoFromServer($infoName) {        
+        if (null !== filter_input(INPUT_SERVER, $infoName)) {
+            return filter_input(INPUT_SERVER, $infoName);            
+        }
+        return null;
+    }
+    
+    public static function getIndexSession($indexName) {    
+        return (isset($_SESSION[$indexName])) ? $_SESSION[$indexName] : null;
+    }
+    
+    public static function setIndexSession($indexName, $indexValue) {
+        $_SESSION[$indexName] = $indexValue;
+    }
+    
+    public static function unsetIndexSessione($indexName) {
+        unset($indexName);
+    }
 
 }
-
-?>

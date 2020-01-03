@@ -9,16 +9,14 @@ require_once 'sottoconto.class.php';
 class RicercaContoTemplate extends ConfigurazioniAbstract implements ConfigurazioniPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::RICERCA_CONTO_TEMPLATE])) {
-            $_SESSION[self::RICERCA_CONTO_TEMPLATE] = serialize(new RicercaContoTemplate());
+        if (parent::getIndexSession(self::RICERCA_CONTO_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::RICERCA_CONTO_TEMPLATE, serialize(new RicercaContoTemplate()));
         }
-        return unserialize($_SESSION[self::RICERCA_CONTO_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::RICERCA_CONTO_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -47,7 +45,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract implements Configurazi
                     "    <div class='col-sm-4'>" .
                     "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                     "    </div>" .
-                    "    <div class='col-sm-8'>" . $_SESSION[self::MSG] . "</div>" .
+                    "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
                     "</div>" .
                     "<br/>" .
                     "<table class='table table-bordered table-hover'>" .
@@ -87,8 +85,8 @@ class RicercaContoTemplate extends ConfigurazioniAbstract implements Configurazi
         }
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
             '%conto-economico-selected%' => ($conto->getCatContoSel() == "Conto Economico") ? "selected" : "",
             '%stato-patrimoniale-selected%' => ($conto->getCatContoSel() == "Stato Patrimoniale") ? "selected" : "",
             '%dare-selected%' => ($conto->getTipContoSel() == "Dare") ? "selected" : "",

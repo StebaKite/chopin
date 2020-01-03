@@ -9,7 +9,7 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
 
     function __construct() {
 
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -20,10 +20,10 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_FORNITORE_TEMPLATE])) {
-            $_SESSION[self::CREA_FORNITORE_TEMPLATE] = serialize(new CreaFornitoreTemplate());
+        if (parent::getIndexSession(self::CREA_FORNITORE_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CREA_FORNITORE_TEMPLATE, serialize(new CreaFornitoreTemplate()));
         }
-        return unserialize($_SESSION[self::CREA_FORNITORE_TEMPLATE]);
+        return unserialize(parent::getIndexSession(self::CREA_FORNITORE_TEMPLATE));
     }
 
     // template ------------------------------------------------
@@ -55,9 +55,9 @@ class CreaFornitoreTemplate extends AnagraficaAbstract implements AnagraficaPres
         // ----------------------------------------------
 
         if ($msg != "<br>") {
-            $_SESSION[self::MESSAGGIO] = $msg;
+            parent::setIndexSession(self::MESSAGGIO, $msg);
         } else {
-            unset($_SESSION[self::MESSAGGIO]);
+            parent::unsetIndexSessione(self::MESSAGGIO);
         }
         return $esito;
     }

@@ -9,7 +9,7 @@ require_once 'pdf.class.php';
 class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
         $this->utility = Utility::getInstance();
         $this->array = $this->utility->getConfig();
 
@@ -20,9 +20,10 @@ class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBus
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE]))
-            $_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE] = serialize(new EstraiPdfScadenzeFornitore());
-        return unserialize($_SESSION[self::ESTRAI_PDF_SCADENZE_FORNITORE]);
+        if (parent::getIndexSession(self::ESTRAI_PDF_SCADENZE_FORNITORE) === NULL) {
+            parent::setIndexSession(self::ESTRAI_PDF_SCADENZE_FORNITORE, serialize(new EstraiPdfScadenzeFornitore()));
+        }
+        return unserialize(parent::getIndexSession(self::ESTRAI_PDF_SCADENZE_FORNITORE));
     }
 
     public function start() {
@@ -80,5 +81,3 @@ class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBus
     }
 
 }
-
-?>

@@ -8,15 +8,14 @@ require_once 'bilancio.class.php';
 class GeneraBilancioPeriodicoTemplate extends RiepiloghiAbstract implements RiepiloghiPresentationInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE]))
-            $_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE] = serialize(new GeneraBilancioPeriodicoTemplate());
-        return unserialize($_SESSION[self::GENERA_BILANCIO_PERIODICO_TEMPLATE]);
+        if (parent::getIndexSession(self::GENERA_BILANCIO_PERIODICO_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::GENERA_BILANCIO_PERIODICO_TEMPLATE, serialize(new GeneraBilancioPeriodicoTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::GENERA_BILANCIO_PERIODICO_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -44,8 +43,8 @@ class GeneraBilancioPeriodicoTemplate extends RiepiloghiAbstract implements Riep
         $this->makePassivoTable($bilancio);
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
             '%datareg_da%' => $bilancio->getDataregDa(),
             '%datareg_a%' => $bilancio->getDataregA(),
             '%codneg_sel%' => $bilancio->getCodnegSel(),

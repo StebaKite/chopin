@@ -37,14 +37,14 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
     // Metodi
 
     function __construct() {
-        $this->setRoot($_SERVER['DOCUMENT_ROOT']);
+        $this->setRoot(parent::getInfoFromServer('DOCUMENT_ROOT'));
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CONFIGURAZIONE_CAUSALE])) {
-            $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize(new ConfigurazioneCausale());
+        if (parent::getIndexSession(self::CONFIGURAZIONE_CAUSALE) === NULL) {
+            parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize(new ConfigurazioneCausale()));
         }
-        return unserialize($_SESSION[self::CONFIGURAZIONE_CAUSALE]);
+        return unserialize(parent::getIndexSession(self::CONFIGURAZIONE_CAUSALE));
     }
 
     public function loadContiConfigurati($db) {
@@ -108,7 +108,7 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
         if ($result) {
             $this->loadContiConfigurati($db);  // refresh dei conti configurati sulla causale
             $this->loadContiConfigurabili($db);  // refresh dei conti configurabili
-            $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize($this));
 
             $causale->setCodCausale(trim($this->getCodCausale()));
             $causale->aggiornaQuantitaConti(+1);
@@ -133,7 +133,7 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
         if ($result) {
             $this->loadContiConfigurati($db);  // refresh dei conti configurati sulla causale
             $this->loadContiConfigurabili($db);  // refresh dei conti configurabili
-            $_SESSION[self::CONFIGURAZIONE_CAUSALE] = serialize($this);
+            parent::setIndexSession(self::CONFIGURAZIONE_CAUSALE, serialize($this));
 
             $causale->setCodCausale(trim($this->getCodCausale()));
             $causale->aggiornaQuantitaConti(-1);

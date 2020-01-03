@@ -6,16 +6,15 @@ require_once 'fatture.business.interface.php';
 class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
 
-        if (!isset($_SESSION[self::FATTURA_ENTE_PUBBLICO]))
-            $_SESSION[self::FATTURA_ENTE_PUBBLICO] = serialize(new FatturaEntePubblico());
-        return unserialize($_SESSION[self::FATTURA_ENTE_PUBBLICO]);
+        if (parent::getIndexSession(self::FATTURA_ENTE_PUBBLICO) === NULL) {
+            parent::setIndexSession(self::FATTURA_ENTE_PUBBLICO, serialize(new FatturaEntePubblico()));
+        }
+        return unserialize(parent::getIndexSession(self::FATTURA_ENTE_PUBBLICO));
     }
 
     public function identificativiFatturaEntePubblico($giorno, $meserif, $anno, $numfat, $codneg) {
@@ -42,7 +41,7 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $this->RoundedRect($r1, $y1, ($r2 - $r1), ($y2 - $y1), 2.5, 'DF');
         $this->SetXY($r1 + 5, $y1 + 3);
         $this->SetFont("Arial", "B", 10);
-        $this->Cell(10, 4, "REG. SEZ. 1" . str_repeat(" ", 48) . $negozio . "     Fattura N. :  " . $nfat . $fatneg . "/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
+        $this->Cell(10, 4, "REG. SEZ. 1" . str_repeat(" ", 48) . $negozio . "     Fattura N. :  " . $nfat . "/" . $anno . "   del  " . $giorno . " " . $meserif . " " . $anno, 0, 0, "");
     }
 
     public function aggiungiLineaLiberaEntePubblico($w, $linea, $r1, $y1) {

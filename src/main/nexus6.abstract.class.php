@@ -424,7 +424,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
 
         $array = $utility->getConfig();
 
-        $ambiente = isset($_SESSION["ambiente"]) ? $_SESSION["ambiente"] : $this->getEnvironment($array, $_SESSION);
+        $ambiente = $this->getIndexSession(self::AMBIENTE) !== NULL ? $this->getIndexSession(self::AMBIENTE) : $this->getEnvironment($array);
 
         // H o m e --------------------------------------
 
@@ -688,12 +688,12 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     public function getEnvironment($array) {
 
         $users = shell_exec("who | cut -d' ' -f1 | sort | uniq");
-        $_SESSION["users"] = $users;
+        $this->setIndexSession(self::USERS, $users);
 
         if (strpos($users, $array['usernameProdLogin']) === false) {
-            $_SESSION["ambiente"] = "TEST";
+            $this->setIndexSession(self::AMBIENTE, "TEST");
         } else {
-            $_SESSION["ambiente"] = "PROD";
+            $this->setIndexSession(self::AMBIENTE, "PROD");
         }
     }
 

@@ -9,14 +9,14 @@ require_once 'dettaglioFattura.class.php';
 class CancellaNuovoDettaglioFattura extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CANCELLA_DETTAGLIO_FATTURA]))
-            $_SESSION[self::CANCELLA_DETTAGLIO_FATTURA] = serialize(new CancellaNuovoDettaglioFattura());
-        return unserialize($_SESSION[self::CANCELLA_DETTAGLIO_FATTURA]);
+        if (parent::getIndexSession(self::CANCELLA_DETTAGLIO_FATTURA) === NULL) {
+            parent::setIndexSession(self::CANCELLA_DETTAGLIO_FATTURA, serialize(new CancellaNuovoDettaglioFattura()));
+        }
+        return unserialize(parent::getIndexSession(self::CANCELLA_DETTAGLIO_FATTURA));
     }
 
     public function start() {

@@ -1,31 +1,12 @@
 <?php
 
-//require_once 'nexus6.abstract.class.php';
-
-abstract class CoreBase {
-
-    const NULL_VALUE = "null";
-
-    function isEmpty($param) {
-        if (($param == "") or ( $param == " ") or ( $param == null)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    function isNotEmpty($param) {
-        if (($param != "") and ( $param != " ") and ( $param != null)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    function quotation($param) {
-        return "'" . $param . "'";
-    }
-
+/**
+ * Description of utilityBase
+ *
+ * @author BarbieriStefano
+ */
+class UtilityBase {
+        
     public function getInfoFromServer($infoName) {        
         if (null !== filter_input(INPUT_SERVER, $infoName)) {
             return filter_input(INPUT_SERVER, $infoName);            
@@ -44,7 +25,4 @@ abstract class CoreBase {
     public static function unsetIndexSessione($indexName) {
         unset($indexName);
     }
-    
-    
-    
 }

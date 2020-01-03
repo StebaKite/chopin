@@ -11,15 +11,14 @@ require_once 'fornitore.class.php';
 class CreaFatturaEntePubblicoTemplate extends FatturaAbstract implements FattureBusinessInterface {
 
     function __construct() {
-        $this->root = $_SERVER['DOCUMENT_ROOT'];
-        $this->utility = Utility::getInstance();
-        $this->array = $this->utility->getConfig();
+        $this->root = parent::getInfoFromServer('DOCUMENT_ROOT');
     }
 
     public static function getInstance() {
-        if (!isset($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE]))
-            $_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE] = serialize(new CreaFatturaEntePubblicoTemplate());
-        return unserialize($_SESSION[self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE]);
+        if (parent::getIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE) === NULL) {
+            parent::setIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE, serialize(new CreaFatturaEntePubblicoTemplate()));
+        }
+        return unserialize(parent::getIndexSession(self::CREA_FATTURA_ENTE_PUBBLICO_TEMPLATE));
     }
 
     public function inizializzaPagina() {
@@ -50,10 +49,10 @@ class CreaFatturaEntePubblicoTemplate extends FatturaAbstract implements Fatture
         $form = $this->root . $array['template'] . self::PAGINA_CREA_FATTURA_ENTE_PUBBLICO;
 
         $replace = array(
-            '%titoloPagina%' => $_SESSION[self::TITOLO_PAGINA],
-            '%azione%' => $_SESSION[self::AZIONE],
-            '%confermaTip%' => $_SESSION[self::TIP_CONFERMA],
-            '%titolo%' => $_SESSION[$fattura->getDesTitolo()],
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
+            '%azione%' => parent::getIndexSession(self::AZIONE),
+            '%confermaTip%' => parent::getIndexSession(self::TIP_CONFERMA),
+            '%titolo%' => parent::getIndexSession($fattura->getDesTitolo()),
             '%numfat%' => $fattura->getNumFattura(),
             '%datafat%' => $fattura->getDatFattura(),
             '%tipoadd%' => $fattura->getTipAddebito(),
