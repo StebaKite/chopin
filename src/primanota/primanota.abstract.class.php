@@ -14,6 +14,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
     const RIMUOVI_FATTURA_INCASSATA_HREF = "<a onclick='rimuoviFatturaIncassata(";
     const CANCELLA_DETTAGLIO_NUOVA_REGISTRAZIONE_HREF = "<a onclick='cancellaDettaglioNuovaRegistrazione(";
     const CANCELLA_DETTAGLIO_NUOVO_CORRISPETTIVO_HREF = "<a onclick='cancellaDettaglioNuovoCorrispettivo(";
+    const CONTROLLA_DETTAGLI_PAGAMENTO = "controllaDettagliPagamento('";
 
     // Query ---------------------------------------------------------------
 

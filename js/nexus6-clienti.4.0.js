@@ -160,7 +160,7 @@ function validaModificaCliente() {
         $("#descli_mod_control_group").addClass("has-error");
     }
 
-    if (esito == "111") {
+    if (esito === "111") {
         return true;
     } else {
         return false;

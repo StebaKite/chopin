@@ -433,7 +433,13 @@ function validaNuovaRegistrazione() {
             esito += "0";
     }
     else {
-        esito += "1";
+        if (isEmpty($("#fornitore_cre").val()) && isEmpty($("#cliente_cre").val())) {
+            esito += "1";            
+        } else {
+            esito += "0";        
+            $("#dettagli_cre_messaggio").html("Obbligatorio");
+            $("#dettagli_cre_control_group").addClass("has-error");                    
+        }        
     }
 
     if (isNotEmpty($("#causale_cre").val())) {
@@ -465,13 +471,7 @@ function validaNuovaRegistrazione() {
         esito += "00";
     }
 
-    if (isEmpty($("#scadenzesuppl_cre_messaggio").text())) {
-        esito += "1";
-    } else {
-        esito += "0";
-    }
-
-    if (esito === "11111111") {
+    if (esito === "1111111") {
         return true;
     } else {
         return false;
@@ -544,13 +544,7 @@ function validaModificaRegistrazione()
         esito += "00";
     }
 
-    if (isEmpty($("#scadenzesuppl_mod_messaggio").text())) {
-        esito += "1";
-    } else {
-        esito += "0";
-    }
-
-    if (esito === "11111111") {
+    if (esito === "1111111") {
         return true;
     } else {
         return false;
