@@ -90,7 +90,7 @@ class RicercaCausaleTemplate extends ConfigurazioniAbstract implements Configura
         }
 
         $replace = array(
-            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
             '%azione%' => parent::getIndexSession(self::AZIONE),
             '%risultato_ricerca%' => $risultato_ricerca
         );

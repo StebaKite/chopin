@@ -37,6 +37,8 @@ class GeneraBilancioPeriodico extends RiepiloghiAbstract implements RiepiloghiBu
         
         $bilancio->setTipoBilancio(self::PERIODICO);
         parent::setIndexSession(self::BILANCIO, serialize($bilancio));
+        parent::unsetIndexSessione(self::MESSAGGIO);
+        parent::unsetIndexSessione(self::MSG);
 
         $bilancioTemplate = GeneraBilancioPeriodicoTemplate::getInstance();
         $this->preparaPagina($bilancioTemplate);

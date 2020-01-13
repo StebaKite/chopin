@@ -791,6 +791,8 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
     public function makeTabs($riepilogo) {
 
+        $tabs = self::EMPTYSTRING;
+        
         if ((parent::isNotEmpty($riepilogo->getTableCostiComparati()) or ( parent::isNotEmpty($riepilogo->getTableRicaviComparati())) or ( parent::isNotEmpty($riepilogo->getTableAttivoComparati())) or ( parent::isNotEmpty($riepilogo->getTablePassivoComparati())))) {
 
             $tabs = "<ul class='nav nav-tabs' role='tablist'>";

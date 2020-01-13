@@ -36,7 +36,9 @@ class GeneraBilancioEsercizio extends RiepiloghiAbstract implements RiepiloghiBu
         $bilancio->prepara();
         $bilancio->setTipoBilancio(self::ESERCIZIO);
         parent::setIndexSession(self::BILANCIO, serialize($bilancio));
-
+        parent::unsetIndexSessione(self::MESSAGGIO);
+        parent::unsetIndexSessione(self::MSG);
+        
         $bilancioTemplate = GeneraBilancioEsercizioTemplate::getInstance();
         $this->preparaPagina();
 

@@ -67,7 +67,7 @@ class AndamentoMercatiTemplate extends RiepiloghiAbstract implements RiepiloghiP
             '%villa-selected%' => ($riepilogo->getCodnegSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%brembate-selected%' => ($riepilogo->getCodnegSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%trezzo-selected%' => ($riepilogo->getCodnegSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%tabs%' => (count($mercatiTabs > 0) ? $this->makeTabsAndamentoMercati($mercatiTabs) : self::EMPTYSTRING)
+            '%tabs%' => (count($mercatiTabs) > 0 ? $this->makeTabsAndamentoMercati($mercatiTabs) : self::EMPTYSTRING)
         );
 
         $template = $utility->tailFile($utility->getTemplate($form), $replace);

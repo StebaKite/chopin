@@ -808,7 +808,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     }
     
     public static function unsetIndexSessione($indexName) {
-        unset($indexName);
+        unset($_SESSION[$indexName]);
     }
 }
 

@@ -28,7 +28,7 @@ class ModificaMercato extends AnagraficaAbstract implements AnagraficaBusinessIn
         $array = $utility->getConfig();
 
         $mercato->leggi($db);
-        parent::setIndexSession(self::CLIENTE, serialize($cliente));
+        parent::setIndexSession(self::CLIENTE, serialize($mercato));
 
         $risultato_xml = $this->root . $array['template'] . self::XML_MERCATO;
 

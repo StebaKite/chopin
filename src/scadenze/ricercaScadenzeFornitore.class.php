@@ -34,6 +34,7 @@ class RicercaScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBusin
 
         parent::setIndexSession(self::FUNCTION_REFERER, self::RICERCA_SCADENZE_FORNITORE);
         parent::unsetIndexSessione(self::MSG);
+        parent::unsetIndexSessione(self::MESSAGGIO);
 
         $scadenzaFornitore->prepara();
 
