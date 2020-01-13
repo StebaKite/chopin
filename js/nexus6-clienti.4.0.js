@@ -7,6 +7,14 @@ $("#nuovoCliente").click(function () {
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
             document.getElementById("nuovoClienteForm").reset();
+            $("#categoriacli_cre").selectpicker('val', ' ');
+            $("#codcli_cre_control_group").removeClass("has-error");
+            $("#descli_cre_control_group").removeClass("has-error");
+            $("#categoriacli_cre_control_group").removeClass("has-error");
+            $("#codcli_cre_messaggio").html("");
+            $("#descli_cre_messaggio").html("");
+            $("#categoriacli_cre_messaggio").html("");
+
             if (isNotEmpty(xmlhttp.responseText)) {
                 $("#codcli_cre").val(xmlhttp.responseText);
             }
@@ -67,6 +75,22 @@ function validaNuovoCliente() {
         } else {
             esito = esito + "0";
         }
+    } else {
+        esito += "0";
+        $("#codcli_cre_messaggio").html("Obbligatorio");
+        $("#codcli_cre_control_group").addClass("has-error");
+    }
+
+    if (isNotEmpty($("#categoriacli_cre").val())) {
+        if (controllaCodice("categoriacli_cre")) {
+            esito = esito + "1";
+        } else {
+            esito = esito + "0";
+        }
+    } else {
+        esito += "0";
+        $("#categoriacli_cre_messaggio").html("Obbligatorio");
+        $("#categoriacli_cre_control_group").addClass("has-error");
     }
 
     if (isNotEmpty($("#descli_cre").val())) {
@@ -75,9 +99,13 @@ function validaNuovoCliente() {
         } else {
             esito = esito + "0";
         }
+    } else {
+        esito += "0";
+        $("#descli_cre_messaggio").html("Obbligatorio");
+        $("#descli_cre_control_group").addClass("has-error");
     }
 
-    if (esito == "11") {
+    if (esito == "111") {
         return true;
     } else {
         return false;
@@ -102,6 +130,22 @@ function validaModificaCliente() {
         } else {
             esito = esito + "0";
         }
+    } else {
+        esito += "0";
+        $("#codcli_mod_messaggio").html("Obbligatorio");
+        $("#codcli_mod_control_group").addClass("has-error");
+    }
+
+    if (isNotEmpty($("#categoriacli_mod").val())) {
+        if (controllaCodice("categoriacli_mod")) {
+            esito = esito + "1";
+        } else {
+            esito = esito + "0";
+        }
+    } else {
+        esito += "0";
+        $("#categoriacli_mod_messaggio").html("Obbligatorio");
+        $("#categoriacli_mod_control_group").addClass("has-error");
     }
 
     if (isNotEmpty($("#descli_mod").val())) {
@@ -110,9 +154,13 @@ function validaModificaCliente() {
         } else {
             esito = esito + "0";
         }
+    } else {
+        esito += "0";
+        $("#descli_mod_messaggio").html("Obbligatorio");
+        $("#descli_mod_control_group").addClass("has-error");
     }
 
-    if (esito == "11") {
+    if (esito == "111") {
         return true;
     } else {
         return false;
@@ -177,6 +225,13 @@ function modificaCliente(idCliente)
         if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200))
         {
             document.getElementById("modificaClienteForm").reset();
+            $("#categoriacli_mod").selectpicker('val', ' ');
+            $("#codcli_mod_control_group").removeClass("has-error");
+            $("#descli_mod_control_group").removeClass("has-error");
+            $("#categoriacli_mod_control_group").removeClass("has-error");
+            $("#codcli_mod_messaggio").html("");
+            $("#descli_mod_messaggio").html("");
+            $("#categoriacli_mod_messaggio").html("");
 
             var parser = new DOMParser();
             var xmldoc = parser.parseFromString(xmlhttp.responseText, "application/xml");

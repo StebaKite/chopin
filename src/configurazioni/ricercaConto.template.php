@@ -85,7 +85,7 @@ class RicercaContoTemplate extends ConfigurazioniAbstract implements Configurazi
         }
 
         $replace = array(
-            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
             '%azione%' => parent::getIndexSession(self::AZIONE),
             '%conto-economico-selected%' => ($conto->getCatContoSel() == "Conto Economico") ? "selected" : "",
             '%stato-patrimoniale-selected%' => ($conto->getCatContoSel() == "Stato Patrimoniale") ? "selected" : "",

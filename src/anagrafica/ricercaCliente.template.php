@@ -98,7 +98,7 @@ class RicercaClienteTemplate extends AnagraficaAbstract implements AnagraficaPre
         parent::setIndexSession(self::CLIENTE, serialize($cliente));
 
         $replace = array(
-            '%titoloPagina%' => parent::getIndexSession(self::TITOLO),
+            '%titoloPagina%' => parent::getIndexSession(self::TITOLO_PAGINA),
             '%azione%' => parent::getIndexSession(self::AZIONE_RICERCA_CLIENTE),
             '%elenco_categorie_cliente%' => $categoriaCliente->getElencoCategorieCliente(),
             '%codcliente%' => $cliente->getCodCliente(),

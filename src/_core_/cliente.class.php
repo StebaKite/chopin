@@ -89,6 +89,7 @@ class Cliente extends CoreBase implements CoreInterface {
         $this->setCapCliente(null);
         $this->setCodPiva(null);
         $this->setCodFisc(null);
+        $this->setCatCliente(null);
 
         parent::setIndexSession(self::CLIENTE, serialize($this));
     }
@@ -174,10 +175,7 @@ class Cliente extends CoreBase implements CoreInterface {
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 
-        $replace = array(
-            '%cod_piva%' => trim($codpiva),
-            '%id_cliente%' => trim($idcliente)
-        );
+        $replace = ['%cod_piva%' => trim($this->getCodPiva())];
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_PARTITA_IVA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
 
@@ -198,11 +196,14 @@ class Cliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        foreach (pg_fetch_all($result) as $row) {
-            $this->setIdCliente($row[Cliente::ID_CLIENTE]);
-            $this->setCodCliente($row[Cliente::COD_CLIENTE]);
-            $this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
+        if (pg_num_rows($result) > 0) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setIdCliente($row[Cliente::ID_CLIENTE]);
+                $this->setCodCliente($row[Cliente::COD_CLIENTE]);
+                $this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
+            }
         }
+        
         parent::setIndexSession(self::CLIENTE, serialize($this));
     }
 
@@ -251,7 +252,6 @@ class Cliente extends CoreBase implements CoreInterface {
             $this->setCodPiva($row[self::COD_PIVA]);
             $this->setCodFisc($row[self::COD_FISC]);
             $this->setCatCliente($row[self::CAT_CLIENTE]);
-            $this->setQtaRegistrazioniCliente($row[self::QTA_REGISTRAZIONI_CLIENTE]);
         }
         return $result;
     }
@@ -269,13 +269,10 @@ class Cliente extends CoreBase implements CoreInterface {
             $sottoconto = Sottoconto::getInstance();
             $conto = explode(",", $array["contiCliente"]);
 
-            foreach (pg_fetch_all($result) as $row) {
-
-                foreach ($conto as $contoClienti) {
-                    $sottoconto->setCodConto($contoClienti);
-                    $sottoconto->setCodSottoconto($this->getCodCliente());
-                    $sottoconto->cancella($db);
-                }
+            foreach ($conto as $contoClienti) {
+                $sottoconto->setCodConto($contoClienti);
+                $sottoconto->setCodSottoconto($this->getCodCliente());
+                $sottoconto->cancella($db);
             }
 
             $replace = array(

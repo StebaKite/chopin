@@ -68,13 +68,13 @@
                         <div class="well well-sm">
                             <div class="form-group row">
                                 <div class="col-sm-3 ui-front">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="codcli_cre_control_group">
                                         <span class="input-group-addon">%ml.codcliente%</span>
                                         <input class="form-control" id="codcli_cre" name="codcli_cre" type="text" />
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="categoriacli_cre_control_group">
                                         <span class="input-group-addon">%ml.categoria%</span>
                                         <select class="selectCatCli" data-live-search="true" id="categoriacli_cre" >
                                             <option value=" ">&nbsp;</option>
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="descli_cre_control_group">
                                         <span class="input-group-addon">%ml.descliente%</span>
                                         <input class="form-control" id="descli_cre" name="descli_cre" type="text" onblur="controllaDescrizione('descli_cre')"/>
                                     </div>
@@ -106,7 +106,7 @@
                                 <div class="col-sm-3">
                                     <div class='input-group'>
                                         <span class="input-group-addon">%ml.capcliente%</span>
-                                        <input class="form-control" id="capcli_cre" name="capcli_cre" type="text" />
+                                        <input class="form-control" id="capcli_cre" name="capcli_cre" type="text" maxlength="5" />
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-nuovo-cliente-form">Ok</button>
+                    <button type="button" class="btn btn-primary" id="button-ok-nuovo-cliente-form">Ok</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
                 </div>
             </div>
@@ -169,13 +169,13 @@
                         <div class="well well-sm">
                             <div class="form-group row">
                                 <div class="col-sm-3 ui-front">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="codcli_mod_control_group">
                                         <span class="input-group-addon">%ml.codcliente%</span>
                                         <input class="form-control" id="codcli_mod" name="codcli_mod" type="text" readonly />
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="categoriacli_mod_control_group">
                                         <span class="input-group-addon">%ml.categoria%</span>
                                         <select class="selectCatCli" data-live-search="true" id="categoriacli_mod" >
                                             <option value=" ">&nbsp;</option>
@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
-                                    <div class='input-group'>
+                                    <div class='input-group' id="descli_mod_control_group">
                                         <span class="input-group-addon">%ml.descliente%</span>
                                         <input class="form-control" id="descli_mod" name="descli_mod" type="text" onblur="controllaDescrizione('descli_mod')"/>
                                     </div>
@@ -207,7 +207,7 @@
                                 <div class="col-sm-3">
                                     <div class='input-group'>
                                         <span class="input-group-addon">%ml.capcliente%</span>
-                                        <input class="form-control" id="capcli_mod" name="capcli_mod" type="text" />
+                                        <input class="form-control" id="capcli_mod" name="capcli_mod" type="text" maxlength="5" />
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-modifica-cliente-form">Ok</button>
+                    <button type="button" class="btn btn-primary" id="button-ok-modifica-cliente-form">Ok</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
                 </div>
             </div>
