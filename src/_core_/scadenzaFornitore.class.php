@@ -417,9 +417,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             // conto le scadenze presenti con importo = 0
              
             $numScadenze = 0;
-            foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
-                if ($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] == self::ZERO_VALUE) {
-                    $numScadenze ++;
+            if (parent::isNotEmpty($this->getScadenzeDaPagare())) {
+                foreach ($this->getScadenzeDaPagare() as $unaScadenza) {
+                    if ($unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] == self::ZERO_VALUE) {
+                        $numScadenze ++;
+                    }
                 }
             }
             

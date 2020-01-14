@@ -1043,6 +1043,18 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
         return true;
     }
 
+    public function dettaglioPrincipalePresente($dettaglioRegistrazione) {
+
+        foreach ($dettaglioRegistrazione->getDettagliRegistrazione() as $unDettaglio) {
+            if (trim($unDettaglio["ind_conto_principale"] === "Y")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    
     // Getters e Setters ---------------------------------------------------
 
     public function setMessaggio($messaggio) {

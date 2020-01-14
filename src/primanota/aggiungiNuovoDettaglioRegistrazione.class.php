@@ -51,7 +51,11 @@ class AggiungiNuovoDettaglioRegistrazione extends PrimanotaAbstract implements P
         // Se nella descrizione del dettaglio da inserire e' presente il codice conto cliente/fornitore significa che è un dettaglio principale
 
         if (strpos($dettaglioRegistrazione->getCodConto(), $sottoconto->getCodConto()) > -1) {
-            $dettaglioRegistrazione->setIndContoPrincipale("Y");
+            
+            if ($this->dettaglioPrincipalePresente($dettaglioRegistrazione)) { /* Il dettaglio principale è già presente */ }
+            else{
+                $dettaglioRegistrazione->setIndContoPrincipale("Y");
+            }
         } else {
             $dettaglioRegistrazione->setIndContoPrincipale("N");
         }
