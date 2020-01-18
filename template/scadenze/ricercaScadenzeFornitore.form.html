@@ -91,7 +91,8 @@
         </div>
     </div>
     <div class="panel-body">
-        <form action="../scadenze/estraiPdfScadenzeFornitoreFacade.class.php?modo=start" method="get">
+        <form action="../scadenze/estraiPdfScadenzeFornitoreFacade.class.php" method="get">
+            <input type="hidden" name="modo" value="start"/> 
             <button id="submit" type="submit" class="btn btn-primary">
                 <span class="glyphicon glyphicon-download-alt"></span>
             </button>

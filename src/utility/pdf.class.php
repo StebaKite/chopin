@@ -122,7 +122,10 @@ class Pdf extends FPDF implements UtilityComponentInterface {
     }
 
     public function Header() {
-        define(self::EURO, chr(128));
+        if (defined(self::EURO)) {}
+        else {
+            define(self::EURO, chr(128));        
+        }
 
         $this->Image($this->getLogo(), 5, 5, 20);
 
