@@ -143,17 +143,19 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
                 // Ciclo colonne
                 for ($j = 1; $j <= $data->sheets[$sheets]['numCols']; $j++) {
                     if ($j <= 4) {
-                        if ($data->sheets[$sheets]['cells'][$i][$j] != "") {
-                            if (is_numeric($data->sheets[$sheets]['cells'][$i][$j])) {
+                        if (isset($data->sheets[$sheets]['cells'][$i][$j])) {
+                            if ($data->sheets[$sheets]['cells'][$i][$j] != "") {
+                                if (is_numeric($data->sheets[$sheets]['cells'][$i][$j])) {
 
-                                $cella = $data->sheets[$sheets]['cells'][$i][$j];
-                                if ($j == 1) {
-                                    $giorno = str_pad($data->sheets[$sheets]['cells'][$i][$j], 2, "0", STR_PAD_LEFT);
-                                    $cella = $giorno . "/" . $mese . "/" . $corrispettivo->getAnno();
-                                    $datareg = strtotime(str_replace("/", "-", $cella));
-                                }
-                                if (($datareg >= $dataDa) and ( $datareg <= $dataA)) {
-                                    array_push($corrispettivo_sheet, $cella);
+                                    $cella = $data->sheets[$sheets]['cells'][$i][$j];
+                                    if ($j == 1) {
+                                        $giorno = str_pad($data->sheets[$sheets]['cells'][$i][$j], 2, "0", STR_PAD_LEFT);
+                                        $cella = $giorno . "/" . $mese . "/" . $corrispettivo->getAnno();
+                                        $datareg = strtotime(str_replace("/", "-", $cella));
+                                    }
+                                    if (($datareg >= $dataDa) and ( $datareg <= $dataA)) {
+                                        array_push($corrispettivo_sheet, $cella);
+                                    }
                                 }
                             }
                         }

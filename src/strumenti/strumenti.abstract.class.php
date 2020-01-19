@@ -272,7 +272,7 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
     }
     
     public static function unsetIndexSessione($indexName) {
-        unset($indexName);
+        unset($_SESSION[$indexName]);
     }
     
     function isEmpty($param) {
@@ -289,4 +289,19 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
             return FALSE;
     }
 
+    /**
+     * Questo metodo setta come da eseguire le prima data utile di riporto saldo e tutte le successive
+     * @param type $db
+     * @param type $datRegistrazione
+     */
+    public function ricalcolaSaldi($db, $datRegistrazione) {
+        $lavoroPianificato = LavoroPianificato::getInstance();
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        if ($array['lavoriPianificatiAttivati'] == "Si") {
+            $lavoroPianificato->setDatRegistrazione(str_replace('/', '-', $datRegistrazione));
+            $lavoroPianificato->settaDaEseguire($db);
+        }
+    }
 }
