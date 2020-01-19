@@ -24,6 +24,7 @@ class Conto extends CoreBase implements CoreInterface {
     // dati sottoconto
 
     private $codConto;
+    private $qtaCodContoSel;
     private $codContoSel;
     private $codContoSelNuovo;
     private $desConto;

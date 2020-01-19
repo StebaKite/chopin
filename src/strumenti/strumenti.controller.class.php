@@ -20,12 +20,11 @@ class StrumentiController extends Nexus6Abstract {
     public function start() {
 
         if ($this->getRequest() == null) {
-            if (isset($_REQUEST[self::MODO]))
-                $this->setRequest($_REQUEST[self::MODO]);
-            else
-                $this->setRequest(self::START);
+            $this->setRequest($this->getParmFromRequest(self::MODO));
+        } else {
+            $this->setRequest(self::START);         // default set
         }
-     
+             
         $registrazione = Registrazione::getInstance();
         $conto = Conto::getInstance();
         $corrispettivo = Corrispettivo::getInstance();

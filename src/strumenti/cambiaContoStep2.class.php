@@ -34,7 +34,7 @@ class CambiaContoStep2 extends StrumentiAbstract implements StrumentiBusinessInt
         $registrazione->preparaFiltri();
 
         $cambiaContoStep2Template = CambiaContoStep2Template::getInstance();
-        $this->preparaPagina($cambiaContoStep1Template);
+        $this->preparaPagina($cambiaContoStep2Template);
 
         $replace = parent::getIndexSession(self::AMBIENTE) !== NULL ? array('%amb%' => parent::getIndexSession(self::AMBIENTE), '%users%' => parent::getIndexSession(self::USERS), '%menu%' => $this->makeMenu($utility)) : array('%amb%' => $this->getEnvironment($array), '%menu%' => $this->makeMenu($utility));
         $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);

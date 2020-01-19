@@ -67,23 +67,24 @@ class CambiaContoStep1 extends StrumentiAbstract implements StrumentiBusinessInt
                 } else {
                     parent::setIndexSession(self::MESSAGGIO, "Trovate " . $registrazione->getQtaRegistrazioni() . " registrazioni");
                 }    
-                self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
+                
+                $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
 
                 if ($registrazione->getQtaRegistrazioni() > 0) {
-                    $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), self::$replace);
+                    $template = $utility->tailFile($utility->getTemplate($this->messaggioInfo), $replace);
                 } else {
-                    $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+                    $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $replace);
                 }
                 parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
             } else {
                 parent::setIndexSession(self::MESSAGGIO, "Errore fatale durante la lettura delle registrazioni");
-                self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
-                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+                $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
+                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), $replace);
                 parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
             }
         } else {
-            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
-            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+            $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
+            $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), $replace);
             parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
 

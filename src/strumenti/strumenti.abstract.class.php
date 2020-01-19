@@ -13,7 +13,7 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 "    <div class='col-sm-4'>" .
                 "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                 "    </div>" .
-                "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
+                "    <div class='col-sm-8'>" . $this->getIndexSession(self::MSG) . "</div>" .
                 "</div>" .
                 "<br/>" .
                 "<table class='table table-bordered table-hover'>" .
