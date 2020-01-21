@@ -792,7 +792,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
         return null;
     }
     
-    public function getInfoFromServer($infoName) {        
+    public static function getInfoFromServer($infoName) {        
         if (null !== filter_input(INPUT_SERVER, $infoName)) {
             return filter_input(INPUT_SERVER, $infoName);            
         }

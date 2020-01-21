@@ -984,6 +984,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
     public function riepilogoNegoziTotaliTable($header, $riepilogo) {
 
+        $fill = "";
+        
         // Colors, line width and bold font
         $this->SetFillColor(28, 148, 196);
         $this->SetTextColor(255);
@@ -1037,6 +1039,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
     public function progressiviNegozioTable($header, $vociNegozio, $invSegno) {
 
+        $fill = "";
+        
         // Colors, line width and bold font
         $this->SetFillColor(28, 148, 196);
         $this->SetTextColor(255);
@@ -1114,8 +1118,10 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 }
                 $desconto_break = trim($row['des_conto']);
             } else {
-                $totaliMesi[$row['mm_registrazione']] += $totconto;
-                $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+                if (isset($totaliMesi[$row['mm_registrazione']])) {
+                    $totaliMesi[$row['mm_registrazione']] += $totconto;
+                    $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+                }
             }
         }
 
@@ -1299,6 +1305,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
     public function progressiviMctTable($header, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
+        $fill = "";
+        
         // Colors, line width and bold font
         $this->SetFillColor(28, 148, 196);
         $this->SetTextColor(255);
@@ -1505,6 +1513,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
     public function progressiviUtilePerditaTable($header, $totaliAcquistiMesi, $totaliRicaviMesi) {
 
+        $fill = "";
+        
         // Colors, line width and bold font
         $this->SetFillColor(28, 148, 196);
         $this->SetTextColor(255);

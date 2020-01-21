@@ -62,7 +62,7 @@ class AggiungiNuovoDettaglioContoCliente extends PrimanotaAbstract implements Pr
         }
     }
     
-    public function aggiungiDettaglio($registrazione, $dettaglioRegistrazione, $scadenzaCliente, $scadenzaCliente, $cliente, $sottoconto) {
+    public function aggiungiDettaglio($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente, $cliente, $sottoconto) {
         $utility = Utility::getInstance();
         $array = $utility->getConfig();
 

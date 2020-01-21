@@ -503,8 +503,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         }
 
         $margineTotaleVIL = abs($totaleRicaviVIL) - $totaleCostiVariabiliVIL;
-        $marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
-        $ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
+        if ($totaleRicaviVIL > parent::ZERO_VALUE) {
+            $marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
+        }
+        if ($totaleCostiVariabiliVIL > parent::ZERO_VALUE){
+            $ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
+        }
 
         $totaleRicavi += abs($totaleRicaviVIL);
         $totaleCostiVariabili += $totaleCostiVariabiliVIL;
@@ -531,7 +535,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         }
 
         $margineTotaleTRE = abs($totaleRicaviTRE) - $totaleCostiVariabiliTRE;
-        $marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
+        if ($totaleRicaviTRE > parent::ZERO_VALUE) {
+            $marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
+        }
+        if ($totaleCostiVariabiliTRE > parent::ZERO_VALUE)
         $ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
 
         $totaleRicavi += abs($totaleRicaviTRE);
@@ -559,8 +566,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         }
 
         $margineTotaleBRE = abs($totaleRicaviBRE) - $totaleCostiVariabiliBRE;
-        $marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
-        $ricaricoPercentualeBRE = ($margineTotaleBRE * 100) / abs($totaleCostiVariabiliBRE);
+        if ($totaleRicaviBRE > parent::ZERO_VALUE) {
+            $marginePercentualeBRE = ($margineTotaleBRE * 100 ) / abs($totaleRicaviBRE);
+        }
+        if ($totaleCostiVariabiliBRE > parent::ZERO_VALUE) {
+            $ricaricoPercentualeBRE = ($margineTotaleBRE * 100) / abs($totaleCostiVariabiliBRE);
+        }
 
         $totaleRicavi += abs($totaleRicaviBRE);
         $totaleCostiVariabili += $totaleCostiVariabiliBRE;
@@ -674,8 +685,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleCostiFissiVIL = trim($row['totalecostofisso']);
         }
 
-        $incidenzaCostiVariabiliSulFatturatoVIL = 1 - ($totaleCostiVariabiliVIL / abs($totaleRicaviVIL));
-        $bepVIL = $totaleCostiFissiVIL / round($incidenzaCostiVariabiliSulFatturatoVIL, 2);
+        if ($totaleRicaviVIL > 0) {
+            $incidenzaCostiVariabiliSulFatturatoVIL = 1 - ($totaleCostiVariabiliVIL / abs($totaleRicaviVIL));
+            $bepVIL = $totaleCostiFissiVIL / round($incidenzaCostiVariabiliSulFatturatoVIL, 2);
+        }
 
         $totaleCostiVariabili += $totaleCostiVariabiliVIL;
         $totaleRicavi += $totaleRicaviVIL;
@@ -701,8 +714,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleCostiFissiTRE = trim($row['totalecostofisso']);
         }
 
-        $incidenzaCostiVariabiliSulFatturatoTRE = 1 - ($totaleCostiVariabiliTRE / abs($totaleRicaviTRE));
-        $bepTRE = $totaleCostiFissiTRE / round($incidenzaCostiVariabiliSulFatturatoTRE, 2);
+        if ($totaleRicaviTRE > parent::ZERO_VALUE) {
+            $incidenzaCostiVariabiliSulFatturatoTRE = 1 - ($totaleCostiVariabiliTRE / abs($totaleRicaviTRE));
+            $bepTRE = $totaleCostiFissiTRE / round($incidenzaCostiVariabiliSulFatturatoTRE, 2);
+        }
 
         $totaleCostiVariabili += $totaleCostiVariabiliTRE;
         $totaleRicavi += $totaleRicaviTRE;
@@ -728,8 +743,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleCostiFissiBRE = trim($row['totalecostofisso']);
         }
 
-        $incidenzaCostiVariabiliSulFatturatoBRE = 1 - ($totaleCostiVariabiliBRE / abs($totaleRicaviBRE));
-        $bepBRE = $totaleCostiFissiBRE / round($incidenzaCostiVariabiliSulFatturatoBRE, 2);
+        if ($totaleRicaviBRE > 0) {
+            $incidenzaCostiVariabiliSulFatturatoBRE = 1 - ($totaleCostiVariabiliBRE / abs($totaleRicaviBRE));
+            $bepBRE = $totaleCostiFissiBRE / round($incidenzaCostiVariabiliSulFatturatoBRE, 2);
+        }
 
         $totaleCostiVariabili += $totaleCostiVariabiliBRE;
         $totaleRicavi += $totaleRicaviBRE;
@@ -737,8 +754,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
         // BEP totale negozi -----------------------------------------------------
 
-        $incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
-        $bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
+        if ($totaleRicavi > parent::ZERO_VALUE) {
+            $incidenzaCostiVariabiliSulFatturato = 1 - ($totaleCostiVariabili / abs($totaleRicavi));
+            $bep = $totaleCostiFissi / round($incidenzaCostiVariabiliSulFatturato, 2);
+        }
 
         /**
          * tabella del BEP
