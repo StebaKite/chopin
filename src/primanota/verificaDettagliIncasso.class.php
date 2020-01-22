@@ -26,10 +26,15 @@ class VerificaDettagliIncasso extends PrimanotaAbstract implements PrimanotaBusi
             $importoTotaleScadenzeIncassate = $scadenzaCliente->getSommaImportiScadenzeIncassate();
             $importoContoCliente = $dettaglioRegistrazione->getImportoContoPrincipale();
 
-            if (($importoTotaleScadenzeIncassate > 0) && ($importoTotaleScadenzeIncassate != $importoContoCliente)) {
-                echo "Errore scadenze";
+            if ($importoTotaleScadenzeIncassate === 0) {
+                echo "Errore scadenze";                
+            } else {
+                if ($importoTotaleScadenzeIncassate != $importoContoCliente) {
+                    echo "Errore scadenze";
+                } else {
+                    echo "";
+                }                
             }
-            echo "";
         } else {
             echo "Errore dettagli";
         }
