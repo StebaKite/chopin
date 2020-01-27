@@ -28,6 +28,7 @@ class StrumentiController extends Nexus6Abstract {
         $registrazione = Registrazione::getInstance();
         $conto = Conto::getInstance();
         $corrispettivo = Corrispettivo::getInstance();
+        $presenzaAssistito = PresenzaAssistito::getInstance();
 
         // Cambia conto registrazioni ==============================================================
 
@@ -53,11 +54,20 @@ class StrumentiController extends Nexus6Abstract {
             $corrispettivo->setContoCassa($this->getParmFromRequest(self::CODICE_CONTO_CASSA));
         }
         
+        if (null !== $this->getParmFromRequest(self::CODICE_NEGOZIO_PRESENZE)) {
+            $presenzaAssistito->setCodNeg($this->getParmFromRequest(self::CODICE_NEGOZIO_PRESENZE));
+            $presenzaAssistito->setFile($this->getParmFromRequest(self::FILE_PRESENZE));
+            $presenzaAssistito->setMese($this->getParmFromRequest(self::MESE_PRESENZE));
+            $presenzaAssistito->setNomeMese(self::$mese[str_pad($this->getParmFromRequest(self::MESE_PRESENZE) + 1, 2, "0", STR_PAD_LEFT)]);
+            $presenzaAssistito->setAnno($this->getParmFromRequest(self::ANNO_PRESENZE));            
+        }
+        
         // Serializzo in sessione gli oggetti modificati ========================================
 
         parent::setIndexSession(self::REGISTRAZIONE, serialize($registrazione));
         parent::setIndexSession(self::CONTO, serialize($conto));
         parent::setIndexSession(self::CORRISPETTIVO, serialize($corrispettivo));
+        parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($presenzaAssistito));
         
         if ($this->getRequest() == self::START) {
             $this->strumentiFunction->start();

@@ -334,6 +334,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const RAGIONE_SOCIALE_CLIENTE = "cliente";
     const TIPO_ADDEBITO = "tipoadd";
     const CODICE_NEGOZIO = "codneg";
+    const CODICE_NEGOZIO_PRESENZE = "codnegpres";
     const NUMERO_FATTURA = "numfat";
     const RAGIONE_SOCIALE_BANCA_APPOGGIO = "ragsocbanca";
     const IBAN_BANCA_APPOGGIO = "ibanbanca";
@@ -361,10 +362,28 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const STATO_SCADENZA_RICERCA = "statoscad_sel";
 
     const MESE = "mese";
+    const MESE_PRESENZE = "mesepres";
     const ANNO = "anno";
+    const ANNO_PRESENZE = "annopres";
     const FILE = "file";
+    const FILE_PRESENZE = "filepres";
     const DATA_IMPORTAZIONE_DA = "datada";
     const DATA_IMPORTAZIONE_A = "dataa";
+
+    public static $mese = array(
+        '01' => 'gennaio',
+        '02' => 'febbraio',
+        '03' => 'marzo',
+        '04' => 'aprile',
+        '05' => 'maggio',
+        '06' => 'giugno',
+        '07' => 'luglio',
+        '08' => 'agosto',
+        '09' => 'settembre',
+        '10' => 'ottobre',
+        '11' => 'novembre',
+        '12' => 'dicembre'
+    );
     
     // Setters -----------------------------------------------------------------------------
 
@@ -618,7 +637,10 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
                 $strumenti .= "<li><a href='../strumenti/importaExcelCorrispettiviMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
             
             if ($array["strumenti_item_4"] == "Y")
-                $strumenti .= "<li><a href='../strumenti/esecuzioneOnlineLavoriAutomaticiFacade.class.php?modo=start'>" . $array["strumenti_item_4_name"] . "</a></li>";
+                $strumenti .= "<li><a href='../strumenti/importaExcelPresenzeAssistitiStep1Facade.class.php?modo=start'>" . $array["strumenti_item_4_name"] . "</a></li>";
+            
+            if ($array["strumenti_item_5"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/esecuzioneOnlineLavoriAutomaticiFacade.class.php?modo=start'>" . $array["strumenti_item_5_name"] . "</a></li>";
 
             $strumenti .= "</ul></li>";
         }

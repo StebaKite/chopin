@@ -15,6 +15,8 @@ interface StrumentiBusinessInterface extends MainNexus6Interface {
 
     const IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1 = "Obj_importacorrispettivinegoziostep1";
     const IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2 = "Obj_importacorrispettivinegoziostep2";
+    const IMPORTA_PRESENZE_ASSISTITI_STEP1 = "Obj_importapresenzaassistitistep1";
+    const IMPORTA_PRESENZE_ASSISTITI_STEP2 = "Obj_importapresenzaassistitistep2";
     
     // Actions
 
@@ -24,6 +26,9 @@ interface StrumentiBusinessInterface extends MainNexus6Interface {
 
     const AZIONE_IMPORTA_CORRISPETTIVI_NEGOZIO_STEP1 = "../strumenti/importaExcelCorrispettiviNegozioStep1Facade.class.php?modo=go";
     const AZIONE_IMPORTA_CORRISPETTIVI_NEGOZIO_STEP2 = "../strumenti/importaExcelCorrispettiviNegozioStep2Facade.class.php?modo=go";
+
+    const AZIONE_IMPORTA_PRESENZE_ASSISTITI_STEP1 = "../strumenti/importaExcelPresenzeAssistitiStep1Facade.class.php?modo=go";
+    const AZIONE_IMPORTA_PRESENZE_ASSISTITI_STEP2 = "../strumenti/importaExcelPresenzeAssistitiStep2Facade.class.php?modo=go";
 
     // Errori e messaggi
     // Metodi

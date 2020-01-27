@@ -45,6 +45,49 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 "   <tbody id='myTable'>";
     }
     
+    public function intestazionePresenzeAssistito($dati): string {
+        
+        return  "<table class='table table-bordered table-hover'>" .
+                "   <thead>" .
+                "       <tr>" .
+                "           <th>" . $dati["$presenzaAssistito"] . "</th>" .
+                "           <th>" . $dati["1"] . "</th>" .
+                "           <th>" . $dati["2"] . "</th>" .
+                "           <th>" . $dati["3"] . "</th>" .
+                "           <th>" . $dati["4"] . "</th>" .
+                "           <th>" . $dati["5"] . "</th>" .
+                "           <th>" . $dati["6"] . "</th>" .
+                "           <th>" . $dati["7"] . "</th>" .
+                "           <th>" . $dati["8"] . "</th>" .
+                "           <th>" . $dati["9"] . "</th>" .
+                "           <th>" . $dati["10"] . "</th>" .
+                "           <th>" . $dati["11"] . "</th>" .
+                "           <th>" . $dati["12"] . "</th>" .
+                "           <th>" . $dati["13"] . "</th>" .
+                "           <th>" . $dati["14"] . "</th>" .
+                "           <th>" . $dati["15"] . "</th>" .
+                "           <th>" . $dati["16"] . "</th>" .
+                "           <th>" . $dati["17"] . "</th>" .
+                "           <th>" . $dati["18"] . "</th>" .
+                "           <th>" . $dati["19"] . "</th>" .
+                "           <th>" . $dati["20"] . "</th>" .
+                "           <th>" . $dati["21"] . "</th>" .
+                "           <th>" . $dati["22"] . "</th>" .
+                "           <th>" . $dati["23"] . "</th>" .
+                "           <th>" . $dati["24"] . "</th>" .
+                "           <th>" . $dati["25"] . "</th>" .
+                "           <th>" . $dati["26"] . "</th>" .
+                "           <th>" . $dati["27"] . "</th>" .
+                "           <th>" . $dati["28"] . "</th>" .
+                "           <th>" . $dati["29"] . "</th>" .
+                "           <th>" . $dati["30"] . "</th>" .
+                "           <th>" . $dati["31"] . "</th>" .
+                "           <th>" . $dati["totale"] . "</th>" .
+                "       </tr>" .
+                "   </thead>" .
+                "   <tbody id='myTable'>";
+    }
+    
 
     // Composizione del menu in testata pagine --------------------------------------------
 
@@ -246,7 +289,10 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 $strumenti .= "<li><a href='../strumenti/importaExcelCorrispettiviMercatoStep1Facade.class.php?modo=start'>" . $array["strumenti_item_3_name"] . "</a></li>";
             
             if ($array["strumenti_item_4"] == "Y")
-                $strumenti .= "<li><a href='../strumenti/esecuzioneOnlineLavoriAutomaticiFacade.class.php?modo=start'>" . $array["strumenti_item_4_name"] . "</a></li>";
+                $strumenti .= "<li><a href='../strumenti/importaExcelPresenzeAssistitiStep1Facade.class.php?modo=start'>" . $array["strumenti_item_4_name"] . "</a></li>";
+            
+            if ($array["strumenti_item_5"] == "Y")
+                $strumenti .= "<li><a href='../strumenti/esecuzioneOnlineLavoriAutomaticiFacade.class.php?modo=start'>" . $array["strumenti_item_5_name"] . "</a></li>";
 
             $strumenti .= "</ul></li>";
         }

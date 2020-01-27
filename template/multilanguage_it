@@ -184,6 +184,13 @@ confermaimportaExcelCorrispettivoNegozioStep1 = Controlla
 confermaimportaExcelCorrispettivoNegozioStep2 = Importa
 confermaimportaExcelCorrispettivoMercatoStep1 = Controlla
 confermaimportaExcelCorrispettivoMercatoStep2 = Importa
+confermaimportaExcelPresenzeAssistitiStep1 = Controlla
+confermaimportaExcelPresenzeAssistitiStep2 = Importa
+
+importaExcelPresenzeAssistitiStep1 = Importa Presenze Assistiti
+importaExcelPresenzeAssistitiStep2 = Importa Presenze Assistiti
+
+
 ;
 ; Campi form ---------------------------
 ;
