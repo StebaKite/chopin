@@ -2,6 +2,7 @@
 
 require_once 'bilancio.class.php';
 require_once 'riepilogo.class.php';
+require_once 'presenzaAssistito.class.php';
 require_once 'nexus6.abstract.class.php';
 
 class RiepiloghiController extends Nexus6Abstract {
@@ -27,6 +28,7 @@ class RiepiloghiController extends Nexus6Abstract {
 
         $bilancio = Bilancio::getInstance();
         $riepilogo = Riepilogo::getInstance();
+        $presenzaAssistito = PresenzaAssistito::getInstance();
 
         if (null !== $this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA)) {
             $bilancio->setDataregDa("01/01/" . $this->getParmFromRequest(self::ANNO_ESERCIZIO_RICERCA));
@@ -51,10 +53,17 @@ class RiepiloghiController extends Nexus6Abstract {
             $riepilogo->setCodnegSel($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
         }
 
+        if (parent::isNotEmpty($this->getParmFromRequest(self::ANNO))) {
+            $presenzaAssistito->setCodNeg($this->getParmFromRequest(self::CODICE_NEGOZIO_RICERCA));
+            $presenzaAssistito->setAnno($this->getParmFromRequest(self::ANNO));
+            $presenzaAssistito->setMese($this->getParmFromRequest(self::MESE));
+        }
+        
         // Serializzo in sessione gli oggetti modificati
 
         parent::setIndexSession(self::BILANCIO, serialize($bilancio));
         parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
+        parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($presenzaAssistito));
 
         if ($this->getRequest() == self::START) {
             $this->riepiloghiFunction->start();

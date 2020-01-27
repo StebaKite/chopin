@@ -12,6 +12,7 @@ interface RiepiloghiPresentationInterface extends MainNexus6Interface {
      */
     const PAGINA_GENERA_BILANCIO_ESERCIZIO = "/riepiloghi/generaBilancioEsercizio.form.html";
     const PAGINA_GENERA_BILANCIO_PERIODICO = "/riepiloghi/generaBilancioPeriodico.form.html";
+    const PAGINA_GENERA_PRESENZE_ASSISTITI = "/riepiloghi/generaQuadroPresenzeAssistiti.form.html";
     const PAGINA_RIEPILOGO_NEGOZI = "/riepiloghi/riepilogoNegozi.form.html";
 
     /**
@@ -32,6 +33,7 @@ interface RiepiloghiPresentationInterface extends MainNexus6Interface {
     const RIEPILOGO_NEGOZI_TEMPLATE = "Obj_riepilogonegozitemplate";
     const ANDAMENTO_NEGOZI_TEMPLATE = "Obj_andamentonegozitemplate";
     const RIEPILOGO_MERCATI_TEMPLATE = "Obj_riepilogomercatitemplate";
+    const GENERA_QUADRO_PRESENZE_ASSISTITI_TEMPLATE = "Obj_generaquadropresenzeassistititemplate";
 
     /**
      * Metodi

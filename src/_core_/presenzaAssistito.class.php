@@ -35,11 +35,15 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
     private $statoStep1;
     private $statoStep2;
     private $statoStep3;
+
+    private $numPresenze;
+    private $presenze;
     
     // Queries
     
     const CERCA_DATA_PRESENZA_ASSISTITO = "/strumenti/trovaDataPresenzaAssistito.sql";
     const CREA_PRESENZA_ASSISTITO = "/strumenti/creaPresenzaAssistito.sql";
+    const RICERCA_PRESENZE_ASSISTITO = "/riepiloghi/ricercaPresenzeAssistito.sql";
     
     // Metodi
 
@@ -52,6 +56,10 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
             parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize(new PresenzaAssistito()));
         }
         return unserialize(parent::getIndexSession(self::PRESENZA_ASSISTITO));
+    }
+    
+    public function prepara() {
+
     }
     
     public function isNew($db) {
@@ -93,12 +101,38 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
             parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($this));
         }
         return $result;
-
-
-
-
-        
     }
+
+    public function ricercaPresenze($db) {
+        
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::RICERCA_PRESENZE_ASSISTITO;
+
+        $replace = array(
+            '%anno%' => $this->getAnno(),
+            '%mese%' => parent::isEmpty($this->getMese()) ? "'1','2','3','4','5','6','7','8','9','10','11','12'" : "'" . $this->getMese() . "'",
+            '%codnegozio%' => parent::isEmpty($this->getCodNeg()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodNeg() . "'"
+        );
+
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setPresenze(pg_fetch_all($result));
+                $this->setNumPresenze(pg_num_rows($result));
+            } else {
+                $this->setPresenze(null);
+                $this->setNumPresenze(0);
+            }
+        }
+        parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($this));
+    }
+
+
+
     
     /**
      * Getters & Setters
@@ -213,6 +247,22 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
 
     public function setStatoStep3($statoStep3) {
         $this->statoStep3 = $statoStep3;
+    }
+    
+    public function getNumPresenze() {
+        return $this->numPresenze;
+    }
+
+    public function setNumPresenze($numPresenze) {
+        $this->numPresenze = $numPresenze;
+    }
+    
+    public function getPresenze() {
+        return $this->presenze;
+    }
+
+    public function setPresenze($presenze) {
+        $this->presenze = $presenze;
     }
     
 }

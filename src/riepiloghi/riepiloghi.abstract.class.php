@@ -1787,6 +1787,40 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         return $risultato_andamento;
     }
 
+    public function makePresenzeAssistiti($presenzaAssistito) {
+
+        $risultato_ricerca = "" .
+                "<div class='row'>" .
+                "    <div class='col-sm-4'>" .
+                "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
+                "    </div>" .
+                "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
+                "</div>" .
+                "<br/>" .
+                "<table class='table table-bordered table-hover'>" .
+                "	<thead>" .
+                "		<th>%ml.negozio%</th>" .
+                "		<th>%ml.idassistito%</th>" .
+                "		<th>%ml.desassistito%</th>" .
+                "		<th>%ml.mese%</th>" .
+                "		<th>%ml.anno%</th>" .
+                "		<th>%ml.qtapresenze%</th>" .
+                "	</thead>" .
+                "   <tbody>";
+
+        foreach ($presenzaAssistito->getPresenze() as $row) {
+            $risultato_ricerca .= "<tr><td>" . trim($row['cod_negozio']) . "</td>";
+            $risultato_ricerca .= "<td>" . trim($row['id_assistito']) . "</td>";
+            $risultato_ricerca .= "<td>" . trim($row['des_assistito']) . "</td>";
+            $risultato_ricerca .= "<td>" . trim($row['mese']) . "</td>";
+            $risultato_ricerca .= "<td>" . trim($row['anno']) . "</td>";
+            $risultato_ricerca .= "<td>" . trim($row['qta_presenze']) . "</td></tr>";
+        }
+        $risultato_ricerca .= "</tr></tbody></table>";
+            
+        return $risultato_ricerca;
+    }
+
 }
 ?>
 

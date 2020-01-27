@@ -1,0 +1,80 @@
+
+<!-- ------------------- -->
+<!-- RICERCA             -->
+<!-- ------------------- -->
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4>%titoloPagina%</h4>
+                </div>
+            </div>
+            <br/>
+            <form method="post" action="%azione%">
+
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <div class='input-group'>
+                            <span class="input-group-addon">Neg</span>
+                            <select class="selectNegozio" id="codneg_sel" name="codneg_sel" >
+                                <option value="">%ml.tutti%</option>
+                                <option value="VIL" %villa-selected% >%ml.villa%</option>
+                                <option value="BRE" %brembate-selected% >%ml.brembate%</option>
+                                <option value="TRE" %trezzo-selected% >%ml.trezzo%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">%ml.datarif%</span>
+                            <div class='form-control form-control-selectpicker'>
+                                <select class="selectNegozio" id="mese" name="mese" >
+                                    <option value=""  %selected_0%  >%ml.tutti%</option>
+                                    <option value="1"  %selected_1%  >Gennaio</option>
+                                    <option value="2"  %selected_2%  >Febbraio</option>
+                                    <option value="3"  %selected_3%  >Marzo</option>
+                                    <option value="4"  %selected_4%  >Aprile</option>
+                                    <option value="5"  %selected_5%  >Maggio</option>
+                                    <option value="6"  %selected_6%  >Giugno</option>
+                                    <option value="7"  %selected_7%  >Luglio</option>
+                                    <option value="8"  %selected_8%  >Agosto</option>
+                                    <option value="9"  %selected_9%  >Settembre</option>
+                                    <option value="10"  %selected_10%  >Ottobre</option>
+                                    <option value="11" %selected_11% >Novembre</option>
+                                    <option value="12" %selected_12% >Dicembre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">%ml.anno%</span>
+                            <input type="text" id="anno" class="form-control" name="anno" size="5" maxlength="4" value='%anno%' />
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <button id="submit" type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel-body scrollable-panel">
+        %risultato_ricerca%
+    </div>
+<!--    
+    <div class="panel-body">
+        <form action="../riepiloghi/estraiPdfQuadroPresenzeAssistitiFacade.class.php" method="get">
+            <input type="hidden" name="modo" value="start"/> 
+            <button id="submit" type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-download-alt"></span>
+            </button>
+        </form>
+    </div>
+-->
+</div>

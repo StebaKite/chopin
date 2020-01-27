@@ -153,6 +153,7 @@ bilancioEsercizio = Bilancio Esercizio
 bilancioPeriodico = Bilancio Periodico
 ricercaCorrispettivo = Ricerca Corrispettivo
 modificaIncasso = Modifica Incasso
+quadroPresenzeAssistiti = Quadro Presenze Assistiti
 
 ricercaSaldi = Ricerca Saldi
 creaNuovoSaldo = Nuovo Saldo
@@ -320,3 +321,8 @@ cittamercato = Citt&agrave; mercato
 mercato = Mercato
 file = File da importare
 tabellaCorrispettivi = Corrispettivi da importare
+
+idassistito = ID Assistito
+desassistito = Assistito
+mese = Mese
+qtapresenze = Qta' presenze
