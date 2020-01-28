@@ -719,6 +719,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
         } else {
             $this->setIndexSession(self::AMBIENTE, "PROD");
         }
+        return $this->getIndexSession(self::AMBIENTE);
     }
 
 // *******************************************

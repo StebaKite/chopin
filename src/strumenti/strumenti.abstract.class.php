@@ -233,13 +233,15 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 $riepiloghi .= "<li><a href='../riepiloghi/andamentoNegoziConfrontatoFacade.class.php?modo=start'>" . $array["riepiloghi_item_7_name"] . "</a></li>";
             if ($array["riepiloghi_item_8"] == "Y")
                 $riepiloghi .= "<li><a href='../riepiloghi/andamentoMercatiFacade.class.php?modo=start'>" . $array["riepiloghi_item_8_name"] . "</a></li>";
-
-            $riepiloghi .= "<li role='separator' class='divider'></li>";
-
             if ($array["riepiloghi_item_5"] == "Y")
                 $riepiloghi .= "<li><a href='../saldi/ricercaSaldiFacade.class.php?modo=start'>" . $array["riepiloghi_item_5_name"] . "</a></li>";
             if ($array["riepiloghi_item_6"] == "Y")
                 $riepiloghi .= "<li><a href='../saldi/creaSaldoFacade.class.php?modo=start'>" . $array["riepiloghi_item_6_name"] . "</a></li>";
+
+            $riepiloghi .= "<li role='separator' class='divider'></li>";
+
+            if ($array["riepiloghi_item_9"] == "Y")
+                $riepiloghi .= "<li><a href='../riepiloghi/generaQuadroPresenzeAssistitiFacade.class.php?modo=start'>" . $array["riepiloghi_item_9_name"] . "</a></li>";
 
             $riepiloghi .= "</ul></li>";
         }
