@@ -9,7 +9,7 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
     
     public function intestazione($dati): string {
         
-        return "<div class='row'>" .
+        $tab = "<div class='row'>" .
                 "    <div class='col-sm-4'>" .
                 "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
                 "    </div>" .
@@ -18,74 +18,33 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 "<br/>" .
                 "<table class='table table-bordered table-hover'>" .
                 "   <thead>" .
-                "       <tr>" .
-                "           <th>" . $dati["labeldatReg"] . "</th>" .
-                "           <th>" . $dati["labeldesReg"] . "</th>" .
-                "           <th>" . $dati["labelstaReg"] . "</th>" .
-                "           <th>" . $dati["labelimpReg"] . "</th>" .
-                "           <th>" . $dati["labelindDareAvere"] . "</th>" .
-                "           <th>" . $dati["labelconto"] . "</th>" .
-                "           <th>" . $dati["labelsottoconto"] . "</th>" .
-                "       </tr>" .
-                "   </thead>" .
-                "   <tbody id='myTable'>";
+                "       <tr>";
+        
+        foreach ($dati as $label) {
+            $tab .= "<th>" . $label . "</th>";
+        }        
+        $tab .= "</tr></thead><tbody id='myTable'>";
+        return $tab;
     }
     
     public function intestazioneCorrispettiviNegozio($dati): string {
         
-        return  "<table class='table table-bordered table-hover'>" .
-                "   <thead>" .
-                "       <tr>" .
-                "           <th>" . $dati["labeldata"] . "</th>" .
-                "           <th>" . $dati["labeltotale"] . "</th>" .
-                "           <th>" . $dati["labelrep1"] . "</th>" .
-                "           <th>" . $dati["labelrep2"] . "</th>" .
-                "       </tr>" .
-                "   </thead>" .
-                "   <tbody id='myTable'>";
+        $tab = "<table class='table table-bordered table-hover'><thead><tr>";
+        foreach ($dati as $label) {
+            $tab .= "<th>" . $label . "</th>";
+        }        
+        $tab .= "</tr></thead><tbody id='myTable'>";
+        return $tab;
     }
     
     public function intestazionePresenzeAssistito($dati): string {
         
-        return  "<table class='table table-bordered table-hover'>" .
-                "   <thead>" .
-                "       <tr>" .
-                "           <th>" . $dati["$presenzaAssistito"] . "</th>" .
-                "           <th>" . $dati["1"] . "</th>" .
-                "           <th>" . $dati["2"] . "</th>" .
-                "           <th>" . $dati["3"] . "</th>" .
-                "           <th>" . $dati["4"] . "</th>" .
-                "           <th>" . $dati["5"] . "</th>" .
-                "           <th>" . $dati["6"] . "</th>" .
-                "           <th>" . $dati["7"] . "</th>" .
-                "           <th>" . $dati["8"] . "</th>" .
-                "           <th>" . $dati["9"] . "</th>" .
-                "           <th>" . $dati["10"] . "</th>" .
-                "           <th>" . $dati["11"] . "</th>" .
-                "           <th>" . $dati["12"] . "</th>" .
-                "           <th>" . $dati["13"] . "</th>" .
-                "           <th>" . $dati["14"] . "</th>" .
-                "           <th>" . $dati["15"] . "</th>" .
-                "           <th>" . $dati["16"] . "</th>" .
-                "           <th>" . $dati["17"] . "</th>" .
-                "           <th>" . $dati["18"] . "</th>" .
-                "           <th>" . $dati["19"] . "</th>" .
-                "           <th>" . $dati["20"] . "</th>" .
-                "           <th>" . $dati["21"] . "</th>" .
-                "           <th>" . $dati["22"] . "</th>" .
-                "           <th>" . $dati["23"] . "</th>" .
-                "           <th>" . $dati["24"] . "</th>" .
-                "           <th>" . $dati["25"] . "</th>" .
-                "           <th>" . $dati["26"] . "</th>" .
-                "           <th>" . $dati["27"] . "</th>" .
-                "           <th>" . $dati["28"] . "</th>" .
-                "           <th>" . $dati["29"] . "</th>" .
-                "           <th>" . $dati["30"] . "</th>" .
-                "           <th>" . $dati["31"] . "</th>" .
-                "           <th>" . $dati["totale"] . "</th>" .
-                "       </tr>" .
-                "   </thead>" .
-                "   <tbody id='myTable'>";
+        $tab = "<table class='table table-bordered table-hover'><thead><tr>";
+        foreach ($dati as $label) {
+            $tab .= "<th>" . $label . "</th>";
+        }        
+        $tab .= "</tr></thead><tbody id='myTable'>";
+        return $tab;
     }
     
 

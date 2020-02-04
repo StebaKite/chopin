@@ -66,7 +66,8 @@ class ImportaExcelCorrispettiviNegozioStep1Template extends StrumentiAbstract im
                 "labeldata" => "Data",
                 "labeltotale" => "Totale",
                 "labelrep1" => "REP1 10%",
-                "labelrep2" => "REP2 22%"
+                "labelrep2" => "REP2 22%",
+                "labelrep3" => "REP3 4%"
             );
             
             $corrispettivi_da_importare = $this->intestazioneCorrispettiviNegozio($dati);

@@ -303,18 +303,13 @@ function calcolaImponibile(campoImporto, campoAliquota, campoImponibile, campoIv
 
     var aliquota = $("input[name=" + campoAliquota + "]:checked").val();
 
-    var imponibile = importoNormalizzato / aliquota;
+    var iva = importoNormalizzato * aliquota;
+    var ivaArrotondata = iva.toFixed(2);
+    
+    var imponibile = importoNormalizzato - ivaArrotondata;
     var imponibileArrotondato = imponibile.toFixed(2);
 
     $("#" + campoImponibile).val(imponibileArrotondato);
-
-    if (aliquota == "1.10") {
-        var iva = imponibileArrotondato * 0.1;
-    } else {
-        var iva = imponibileArrotondato * 0.22;
-    }
-
-    var ivaArrotondata = iva.toFixed(2);
     $("#" + campoIva).val(ivaArrotondata);
 
     // Breve controllo di quadratura degli importi

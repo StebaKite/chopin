@@ -28,7 +28,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class='input-group'>
+                                    <div class='input-group' id='codneg_pag_cre_control_group'>
                                         <span class="input-group-addon">Neg</span>
                                         <select class="selectNegozio" id="codneg_pag_cre" name="codneg_pag_cre">
                                             <option value=" ">&nbsp;</option>
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class='input-group' id="descreg_pag_cre_control_group">
+                                    <div class='input-group' id='descreg_pag_cre_control_group'>
                                         <span class="input-group-addon">%ml.descreg%</span>
                                         <input class="form-control" id="descreg_pag_cre" name="descreg_pag_cre" type="text" onblur="controllaDescrizione('descreg_pag_cre')"/>
                                     </div>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6">
-                                    <div class='input-group' id="causale_pag_cre_control_group">
+                                    <div class='input-group' id='causale_pag_cre_control_group'>
                                         <span class="input-group-addon">%ml.codcau%</span>
                                         <select class="selectCausale" data-live-search="true" id="causale_pag_cre" name="causale_pag_cre" >
                                             <option value=" ">&nbsp;</option>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 ui-front">
-                                    <div class="input-group" id="fornitore_pag_cre_control_group">
+                                    <div class="input-group" id='fornitore_pag_cre_control_group'>
                                         <span class="input-group-addon">%ml.codforn%</span>
                                         <select data-live-search="true" id="fornitore_pag_cre" name="fornitore_pag_cre" onchange="trovaScadenzeFornitore('pag_cre'); aggiungiDettaglioContoFornitore(this.value, 'dettagli_pag_cre', 'causale_pag_cre'); controllaFornitore('fornitore_pag_cre'); controllaCausale('causale_pag_cre');" >
                                             %elenco_fornitori%
@@ -66,13 +66,13 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6">
-                                    <div class="control-group" id="scadenze_chiuse_pag_cre_control_group">
+                                    <div class="control-group" id='scadenze_chiuse_pag_cre_control_group'>
                                         <label for="scadenze_chiuse_pag_cre">Fatture incluse nel pagamento<small><span class="text-danger" id="scadenze_chiuse_pag_cre_messaggio"></span></small></label>
                                         <table class="table table-bordered table-hover" id="scadenze_chiuse_pag_cre"></table>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="control-group" id="scadenze_aperte_pag_cre_control_group">
+                                    <div class="control-group" id='scadenze_aperte_pag_cre_control_group'>
                                         <label for="scadenze_aperte_pag_cre">Fatture rimanenti da pagare<small><span class="text-danger" id="scadenze_aperte_pag_cre_messaggio"></span></small></label>
                                         <table class="table table-bordered table-hover" id="scadenze_aperte_pag_cre"></table>
                                     </div>
@@ -80,7 +80,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <div class="control-group" id="dettagli_pag_cre_control_group">
+                                    <div class="control-group" id='dettagli_pag_cre_control_group'>
                                         <label for="dettagli_pag_cre">Dettagli&nbsp;<small><span class="text-danger" id="dettagli_pag_cre_messaggio"></span></small></label>
                                         <table class="table table-bordered table-hover" id="dettagli_pag_cre"></table>
                                     </div>

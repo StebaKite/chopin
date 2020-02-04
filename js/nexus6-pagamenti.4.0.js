@@ -9,6 +9,24 @@ $("#nuovo-pagamento").click(function (event) {
             
             // pulizia degli elementi della pagina
             document.getElementById("nuovoPagamentoForm").reset();
+            
+            $("#datareg_pag_cre_control_group").removeClass("has-error");
+            $("#descreg_pag_cre_control_group").removeClass("has-error");
+            $("#causale_pag_cre_control_group").removeClass("has-error");
+            $("#codneg_pag_cre_control_group").removeClass("has-error");
+            $("#fornitore_pag_cre_control_group").removeClass("has-error");
+            $("#scadenze_chiuse_pag_cre_control_group").removeClass("has-error");
+            $("#scadenze_aperte_pag_cre_control_group").removeClass("has-error");
+            $("#dettagli_pag_cre_control_group").removeClass("has-error");
+
+            $("#descreg_pag_cre_messaggio").html("");
+            $("#causale_pag_cre_messaggio").html("");
+            $("#codneg_pag_cre_messaggio").html("");
+            $("#fornitore_pag_cre_messaggio").html("");
+            $("#scadenze_chiuse_pag_cre_messaggio").html("");
+            $("#scadenze_aperte_pag_cre_messaggio").html("");
+            $("#dettagli_pag_cre_messaggio").html("");
+            
             $("#codneg_pag_cre").selectpicker('val', ' ');
             $("#causale_pag_cre").selectpicker('val', ' ');
             $("#fornitore_pag_cre").selectpicker('val', ' ');
@@ -250,28 +268,61 @@ function validaPagamento(type)
      */
     var esito = "";
 
-    controllaDataRegistrazione("datareg_pag_" + type);
-    if (isEmpty($("#datareg_pag_" + type + "_messaggio").text()))
+    if (isNotEmpty($("#datareg_pag_" + type).val())) {
+        controllaDataRegistrazione("datareg_pag_" + type);
+        if (isEmpty($("#datareg_pag_" + type + "_messaggio").text()))
+            esito = esito + "1";
+        else
+            esito = esito + "0";
+    } else {
+        esito += "0";        
+        $("#datareg_pag_" + type + "_messaggio").html("Obbligatorio");
+        $("#datareg_pag_" + type + "_control_group").addClass("has-error");        
+    }
+
+    controllaCodice("codneg_pag_" +  type);
+    if (isEmpty($("#codneg_pag_" + type + "_messaggio").text())) {
+        esito += "1";
+    } else {
+        esito += "0";
+    }
+        
+    if (controllaDescrizione("descreg_pag_" + type))
         esito = esito + "1";
     else
         esito = esito + "0";
 
-    if (isNotEmpty($("#descreg_pag_" + type).val())) {
-        if (controllaDescrizione("descreg_pag_" + type))
-            esito = esito + "1";
-        else
-            esito = esito + "0";
-    }
-
-    if (isNotEmpty($("#causale_pag_" + type).val())) {
+    if (isNotEmpty($("#fornitore_pag_" + type).val())) {
         controllaDettagliRegistrazione("dettagli_pag_" + type);
         if (isEmpty($("#dettagli_pag_" + type + "_messaggio").text()))
             esito = esito + "1";
         else
             esito = esito + "0";
     }
+    else {
+        esito += "0";        
+        $("#fornitore_pag_" + type + "_messaggio").html("Obbligatorio");
+        $("#fornitore_pag_" + type + "_control_group").addClass("has-error");   
+        if (isEmpty($("#dettagli_pag_" + type).text())) {
+            $("#dettagli_pag_" + type + "_messaggio").html("Obbligatorio");
+            $("#dettagli_pag_" + type + "_control_group").addClass("has-error");                    
+        }
+    }
+    
+    if (isNotEmpty($("#causale_pag_" + type).val())) {
+        if (controllaCausale("causale_pag_" + type)) {
+            esito += "1";
+        } else {
+            esito += "0";
+        }
+    }
+    else {
+        esito += "0";        
+        $("#causale_pag_" + type + "_messaggio").html("Obbligatorio");
+        $("#causale_pag_" + type + "_control_group").addClass("has-error");        
+    }
 
-    if (esito === "111") {
+    if (esito === "11111") {
         return true;
     } else {
         return false;

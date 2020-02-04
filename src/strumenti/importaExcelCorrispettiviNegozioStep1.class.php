@@ -76,15 +76,15 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
         include($this->piede);
 
         if (parent::isNotEmpty(parent::getIndexSession("messaggioImportFileOk"))) {
-            self::$replace = array('%messaggio%' => parent::getIndexSession("messaggioImportFileOk"));
+            $replace = array('%messaggio%' => parent::getIndexSession("messaggioImportFileOk"));
             parent::unsetIndexSessione("messaggioImportFileOk");
-            $template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), self::$replace);
+            $template = $utility->tailFile($utility->getTemplate(self::$messaggioInfo), $replace);
             echo $utility->tailTemplate($template);
         } else {
             if (parent::isNotEmpty(parent::getIndexSession("messaggioImportFileErr"))) {
-                self::$replace = array('%messaggio%' => parent::getIndexSession("messaggioImportFileErr"));
+                $replace = array('%messaggio%' => parent::getIndexSession("messaggioImportFileErr"));
                 parent::unsetIndexSessione("messaggioImportFileErr");
-                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), self::$replace);
+                $template = $utility->tailFile($utility->getTemplate(self::$messaggioErrore), $replace);
                 echo $utility->tailTemplate($template);
             }
         }
@@ -142,7 +142,7 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
 
                 // Ciclo colonne
                 for ($j = 1; $j <= $data->sheets[$sheets]['numCols']; $j++) {
-                    if ($j <= 4) {
+                    if ($j <= 5) {
                         if (isset($data->sheets[$sheets]['cells'][$i][$j])) {
                             if ($data->sheets[$sheets]['cells'][$i][$j] != "") {
                                 if (is_numeric($data->sheets[$sheets]['cells'][$i][$j])) {
@@ -161,7 +161,7 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
                         }
                     }
                 }
-                if (count($corrispettivo_sheet) == 4) {
+                if (count($corrispettivo_sheet) == 5) {
                     array_push($corrispettivi_sheet, $corrispettivo_sheet);
                     unset($corrispettivo_sheet);
                     $completi ++;

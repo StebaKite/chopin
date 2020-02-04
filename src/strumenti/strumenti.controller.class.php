@@ -3,6 +3,7 @@
 require_once 'registrazione.class.php';
 require_once 'conto.class.php';
 require_once 'corrispettivo.class.php';
+require_once 'presenzaAssistito.class.php';
 require_once 'nexus6.abstract.class.php';
 
 class StrumentiController extends Nexus6Abstract {

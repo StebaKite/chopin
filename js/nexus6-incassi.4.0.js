@@ -9,6 +9,24 @@ $("#nuovo-incasso").click(function (event) {
             
             // pulizia degli elementi in pagina
             document.getElementById("nuovoIncassoForm").reset();
+            
+            $("#datareg_inc_cre_control_group").removeClass("has-error");
+            $("#descreg_inc_cre_control_group").removeClass("has-error");
+            $("#causale_inc_cre_control_group").removeClass("has-error");
+            $("#codneg_inc_cre_control_group").removeClass("has-error");
+            $("#cliente_inc_cre_control_group").removeClass("has-error");
+            $("#scadenze_chiuse_inc_cre_control_group").removeClass("has-error");
+            $("#scadenze_aperte_inc_cre_control_group").removeClass("has-error");
+            $("#dettagli_inc_cre_control_group").removeClass("has-error");
+
+            $("#descreg_inc_cre_messaggio").html("");
+            $("#causale_inc_cre_messaggio").html("");
+            $("#codneg_inc_cre_messaggio").html("");
+            $("#cliente_inc_cre_messaggio").html("");
+            $("#scadenze_chiuse_inc_cre_messaggio").html("");
+            $("#scadenze_aperte_inc_cre_messaggio").html("");
+            $("#dettagli_inc_cre_messaggio").html("");
+            
             $("#codneg_inc_cre").selectpicker('val', ' ');
             $("#causale_inc_cre").selectpicker('val', ' ');
             $("#cliente_inc_cre").selectpicker('val', ' ');

@@ -60,8 +60,10 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                 $totale = "";
                 $importo10 = "";
                 $importo22 = "";
+                $importo4 = "";
                 $iva10 = "";
                 $iva22 = "";
+                $iva4 = "";
                 $contoCorrispettivo = explode(" - ", $array['contoCorrispettivoNegozi']);
 
                 foreach ($corrispettivo_row as $corrispettivo_col) {
@@ -78,18 +80,22 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                             break;
                         case 3:
                             $importo10 = $corrispettivo_col;
-                            $iva10 = 1.10;
+                            $iva10 = 0.1;
                             break;
                         case 4:
                             $importo22 = $corrispettivo_col;
-                            $iva22 = 1.22;
+                            $iva22 = 0.22;
+                            break;
+                        case 5:
+                            $importo4 = $corrispettivo_col;
+                            $iva4 = 0.04;
                             break;
                     }
                     $numeroCella ++;
                 }
 
                 /**
-                 * Controllo gli importi dei due reparti per vedere se creare il corrispettivo
+                 * Controllo gli importi dei tre reparti per vedere se creare il corrispettivo
                  */
                 $corrispettivo->setDatareg($datareg);
                 $corrispettivo->setCodNeg($negozio);
@@ -126,6 +132,21 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                     if ($corrispettivo->isNew($db)) {
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22, $corrispettivo);
+                        if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
+                            parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
+                            break;
+                        }
+                    } else
+                        $corrispettiviIgnorati ++;
+                }
+
+                if ($importo4 > 0) {
+                    
+                    $corrispettivo->setImporto($importo4);
+
+                    if ($corrispettivo->isNew($db)) {
+                        $corrispettiviInseriti ++;
+                        $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo4, $iva4, $corrispettivo);
                         if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
                             parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
                             break;
@@ -174,15 +195,17 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
          */
         $dettaglio = array();
 
-        $imponibile = round($importo / $aliquota, 2);
-        $iva = round($imponibile * (round($aliquota / 10, 1)), 2);
+        $iva = round(($importo * $aliquota),2);
+        $imponibile = round(($importo - $iva),2);
 
         // sistemazione della squadratura generata dagli arrotondamenti
         $differenza = round($importo - ($imponibile + $iva), 2);
-        if ($differenza < 0)
+        if ($differenza < 0) {
             $imponibile += $differenza;
-        if ($differenza > 0)
+        }
+        if ($differenza > 0) {
             $iva -= $differenza;
+        }
 
         array_push($dettaglio, $contoErario[0]);
         array_push($dettaglio, $iva);
