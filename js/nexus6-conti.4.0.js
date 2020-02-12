@@ -34,7 +34,7 @@ $("#button-nuovo-sottoconto-nuovo-conto-form").click(function () {
     if (isEmpty(codconto))
         $("#codconto_cre_control_group").addClass("has-error");
     
-    if (isNotEmpty(desconto))
+    if (isEmpty(desconto))
         $("#desconto_cre_control_group").addClass("has-error");
     
     if (!controllaNumero("numrigabilancio_cre"))
