@@ -23,16 +23,16 @@ class VerificaDettagliPagamento extends PrimanotaAbstract implements PrimanotaBu
         if ($dettaglioRegistrazione->verificaQuadratura()) {
 
             $scadenzaFornitore = ScadenzaFornitore::getInstance();
-            $importoTotaleScadenzePagate = $scadenzaFornitore->getSommaImportiScadenzePagate();
+            $importoTotaleScadenzePagate = floatval($scadenzaFornitore->getSommaImportiScadenzePagate());
             $importoContoFornitore = $dettaglioRegistrazione->getImportoContoPrincipale();
 
             if ($importoTotaleScadenzePagate === 0) {
                  echo "Errore scadenze";               
             } else {
-                if ($importoTotaleScadenzePagate != $importoContoFornitore) {
-                    echo "Errore scadenze";
-                } else {
+                if (bccomp($importoTotaleScadenzePagate, $importoContoFornitore) === 0) {
                     echo "";
+                } else {
+                    echo "Errore scadenze";
                 }
             }
         } else {

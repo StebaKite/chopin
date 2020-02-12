@@ -38,10 +38,16 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
                         $importoTotaleScadenze = $scadenzaFornitore->getSommaImportiScadenzeDaPagare();                
                     }
                 }
-                $importoContoFornitore = $dettaglioRegistrazione->getImportoContoPrincipale();
+                $importoContoFornitore = floatval($dettaglioRegistrazione->getImportoContoPrincipale());
                 
-                if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoFornitore)) {
-                    echo "Errore scadenze";
+                if ($importoTotaleScadenze === 0) {
+                     echo "Errore scadenze";               
+                } else {
+                    if (bccomp($importoTotaleScadenze, $importoContoFornitore)  === 0 ) {
+                        echo "";
+                    } else {
+                        echo "Errore scadenze";
+                    }
                 }
             }
             
@@ -58,10 +64,16 @@ class VerificaDettagliRegistrazione extends PrimanotaAbstract implements Primano
                         $importoTotaleScadenze = $scadenzaCliente->getSommaImportiScadenzeDaIncassare();                
                     }
                 }
-                $importoContoCliente = $dettaglioRegistrazione->getImportoContoPrincipale();
-                
-                if (($importoTotaleScadenze > 0) && ($importoTotaleScadenze != $importoContoCliente)) {
-                    echo "Errore scadenze";
+                $importoContoCliente = floatval($dettaglioRegistrazione->getImportoContoPrincipale());
+
+                if ($importoTotaleScadenze === 0) {
+                     echo "Errore scadenze";               
+                } else {
+                    if (bccomp($importoTotaleScadenze, $importoContoCliente) === 1) {
+                        echo "Errore scadenze";
+                    } else {
+                        echo "";
+                    }
                 }
             }            
             echo "";        // tutto ok
