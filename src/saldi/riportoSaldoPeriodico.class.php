@@ -16,16 +16,18 @@ require_once 'saldo.class.php';
  */
 class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface {
 
-//    public static $messaggio;
     public static $querySaldoConto = "/saldi/saldoConto.sql";
 
     function __construct() {
+
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
         
         $agent = parent::getInfoFromServer('HTTP_USER_AGENT');
         if (strpos($agent, 'Windows') === false) {
-            self::$root = $array['linuxProjectRoot'];
+            self::$projectRoot = $array['linuxProjectRoot'];
         } else {
-            self::$root = $array['windowsProjectRoot'];
+            self::$projectRoot = $array['windowsProjectRoot'];
         }
     }
 
@@ -91,7 +93,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
          * Imposto la root del progetto
          */
         
-        $root = (parent::isNotEmpty(self::$root) ? self::$root : $project_root);
+        $root = (parent::isNotEmpty(self::$projectRoot) ? self::$projectRoot : $project_root);
         
         /**
          * Riporto stato patrimoniale
@@ -161,7 +163,7 @@ class RiportoSaldoPeriodico extends SaldiAbstract implements MainNexus6Interface
                 $saldo->setCodSottoconto($conto[Sottoconto::COD_SOTTOCONTO]);
                 parent::setIndexSession(self::SALDO, serialize($saldo));
 
-                $result = $saldo->leggiSaldoConto($db, self::$root);
+                $result = $saldo->leggiSaldoConto($db, $root);
                 $numTot = pg_num_rows($result);
 
                 if ($numTot > 0) {

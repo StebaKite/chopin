@@ -6,8 +6,7 @@ require_once 'saldo.class.php';
 abstract class SaldiAbstract extends Nexus6Abstract {
 
     public static $messaggio;
-
-    const SALDO = "Obj_saldo";
+    public static $projectRoot;    
 
     /*
      * Getters e Setters ---------------------------------------------------
