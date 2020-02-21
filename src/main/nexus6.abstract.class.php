@@ -124,8 +124,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const TABELLA_SCADENZE = "scadenzeTable";
     
     const CODICE_CLIENTE_INCASSO_CREAZIONE = "cliente_inc_cre";
-//    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codneg_inc_cre";
-    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codnegozio_inc_cre";
+    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codneg_inc_cre";
     
     const TABELLA_SCADENZE_APERTE_INCASSO_CREAZIONE = "scadenze_aperte_inc_cre";
     const TABELLA_SCADENZE_CHIUSE_INCASSO_CREAZIONE = "scadenze_chiuse_inc_cre";
