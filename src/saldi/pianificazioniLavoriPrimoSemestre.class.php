@@ -42,7 +42,7 @@ class PianificazioniLavoriPrimoSemestre extends SaldiAbstract implements MainNex
     );
 
     function __construct() {
-        self::$root = '/var/www/html';
+        self::$projectRoot = '/var/www/html';
     }
 
     public static function getInstance() {

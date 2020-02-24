@@ -42,7 +42,7 @@ class PianificazioniLavoriSecondoSemestre extends SaldiAbstract implements MainN
     );
 
     function __construct() {
-        self::$root = '/var/www/html';
+        self::$projectRoot = '/var/www/html';
     }
 
     public static function getInstance() {
