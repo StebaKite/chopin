@@ -80,15 +80,15 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                             break;
                         case 3:
                             $importo10 = $corrispettivo_col;
-                            $iva10 = 1.10;
+                            $iva10 = 0.1;
                             break;
                         case 4:
                             $importo22 = $corrispettivo_col;
-                            $iva22 = 1.22;
+                            $iva22 = 0.22;
                             break;
                         case 5:
                             $importo4 = $corrispettivo_col;
-                            $iva4 = 1.04;
+                            $iva4 = 0.04;
                             break;
                     }
                     $numeroCella ++;
@@ -195,9 +195,8 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
          */
         $dettaglio = array();
 
-        $imponibile = round($importo - (($importo / 100) * $aliquota), 2);
-        $iva = round(($imponibile / 100) * ($aliquota), 2);
-//        $iva = round($imponibile * (round($aliquota / 10, 1)), 2);
+        $iva = round(($importo * $aliquota),2);
+        $imponibile = round(($importo - $iva),2);
 
         // sistemazione della squadratura generata dagli arrotondamenti
         $differenza = round($importo - ($imponibile + $iva), 2);
