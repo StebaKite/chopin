@@ -6,10 +6,10 @@ $("#nuovo-pagamento").click(function (event) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if ((xmlhttp.readyState === 4) && (xmlhttp.status === 200)) {
-            
+
             // pulizia degli elementi della pagina
             document.getElementById("nuovoPagamentoForm").reset();
-            
+
             $("#datareg_pag_cre_control_group").removeClass("has-error");
             $("#descreg_pag_cre_control_group").removeClass("has-error");
             $("#causale_pag_cre_control_group").removeClass("has-error");
@@ -26,14 +26,14 @@ $("#nuovo-pagamento").click(function (event) {
             $("#scadenze_chiuse_pag_cre_messaggio").html("");
             $("#scadenze_aperte_pag_cre_messaggio").html("");
             $("#dettagli_pag_cre_messaggio").html("");
-            
+
             $("#codneg_pag_cre").selectpicker('val', ' ');
             $("#causale_pag_cre").selectpicker('val', ' ');
             $("#fornitore_pag_cre").selectpicker('val', ' ');
             $("#scadenze_aperte_pag_cre").html("");
             $("#scadenze_chiuse_pag_cre").html("");
             $("#dettagli_pag_cre").html("");
-            
+
             // pulizia delle altre tabelle incluse nella pagina ricerca registrazioni
             $("#dettagli_cre").html("");
             $("#dettagli_mod").html("");
@@ -43,7 +43,7 @@ $("#nuovo-pagamento").click(function (event) {
             $("#dettagli_cormer_mod").html("");
             $("#dettagli_corneg_cre").html("");
             $("#dettagli_corneg_mod").html("");
-            
+
             // pulizia del messaggio
             $("#dettagli_pag_cre_messaggio").html("");
             $("#nuovo-pagamento-dialog").modal("show");
@@ -76,7 +76,7 @@ function trovaScadenzeFornitore(idfunz) {
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_" + idfunz +"=" + idfornitore + "&codnegozio_" + idfunz + "=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_" + idfunz + "=" + idfornitore + "&codnegozio_" + idfunz + "=" + codnegozio, true);
         xmlhttp.send();
     }
 }
@@ -275,18 +275,18 @@ function validaPagamento(type)
         else
             esito = esito + "0";
     } else {
-        esito += "0";        
+        esito += "0";
         $("#datareg_pag_" + type + "_messaggio").html("Obbligatorio");
-        $("#datareg_pag_" + type + "_control_group").addClass("has-error");        
+        $("#datareg_pag_" + type + "_control_group").addClass("has-error");
     }
 
-    controllaCodice("codneg_pag_" +  type);
+    controllaCodice("codneg_pag_" + type);
     if (isEmpty($("#codneg_pag_" + type + "_messaggio").text())) {
         esito += "1";
     } else {
         esito += "0";
     }
-        
+
     if (controllaDescrizione("descreg_pag_" + type))
         esito = esito + "1";
     else
@@ -298,28 +298,26 @@ function validaPagamento(type)
             esito = esito + "1";
         else
             esito = esito + "0";
-    }
-    else {
-        esito += "0";        
+    } else {
+        esito += "0";
         $("#fornitore_pag_" + type + "_messaggio").html("Obbligatorio");
-        $("#fornitore_pag_" + type + "_control_group").addClass("has-error");   
+        $("#fornitore_pag_" + type + "_control_group").addClass("has-error");
         if (isEmpty($("#dettagli_pag_" + type).text())) {
             $("#dettagli_pag_" + type + "_messaggio").html("Obbligatorio");
-            $("#dettagli_pag_" + type + "_control_group").addClass("has-error");                    
+            $("#dettagli_pag_" + type + "_control_group").addClass("has-error");
         }
     }
-    
+
     if (isNotEmpty($("#causale_pag_" + type).val())) {
         if (controllaCausale("causale_pag_" + type)) {
             esito += "1";
         } else {
             esito += "0";
         }
-    }
-    else {
-        esito += "0";        
+    } else {
+        esito += "0";
         $("#causale_pag_" + type + "_messaggio").html("Obbligatorio");
-        $("#causale_pag_" + type + "_control_group").addClass("has-error");        
+        $("#causale_pag_" + type + "_control_group").addClass("has-error");
     }
 
     if (esito === "11111") {
@@ -415,6 +413,24 @@ $("#button-ok-modifica-pagamento-form").click(
                 $("#testo-messaggio-errore").html("In presenza di campi in errore il pagamento non può essere salvato");
                 $("#messaggio-errore-dialog").modal("show");
             }
+        }
+);
+
+//---------------------------------------------------------------------------------
+
+function cancellaPagamento(idpag) {
+    $("#idpag").val(idpag);
+    $("#cancella-pagamento-dialog").modal("show");
+}
+
+//---------------------------------------------------------------------------------
+
+$("#button-ok-cancella-pagamento-form").click(
+        function () {
+            $("#testo-messaggio-successo").html("Pagamento cancellato, scadenza settata 'Da pagare' ");
+            $("#messaggio-successo-dialog").modal("show");
+            sleep(2000);
+            $("#cancellaPagamentoForm").submit();
         }
 );
 

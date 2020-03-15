@@ -1,0 +1,28 @@
+
+<!-- =========================== -->
+<!-- CANCELLAZIONE PAAMENTO      -->
+<!-- =========================== -->
+
+<div class="container">
+    <div class="modal fade" id="cancella-pagamento-dialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cancella pagamento</h4>
+                </div>
+                <div class="modal-body">	        		        	
+                    <form method="post" id="cancellaPagamentoForm" action="../scadenze/cancellaPagamentoFacade.class.php">
+                        <p>Elimino il pagamento e setto questa scadenza come "Da pagare" ?</p>
+                        <input type="hidden" id="modo" name="modo" value="go">
+                        <input type="hidden" id="idpag" name="idpag">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="button-ok-cancella-pagamento-form">Ok</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
