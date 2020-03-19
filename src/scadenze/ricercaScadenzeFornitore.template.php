@@ -55,6 +55,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
         $paginaRicercaScadenze = $this->root . $array['template'] . self::PAGINA_RICERCA_SCADENZE_FORNITORE;
         $dialogoVisualizzaRegistrazione = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_REGISTRAZIONE;
         $dialogoVisualizzaPagamento = $this->root . $array['template'] . self::DIALOGO_VISUALIZZA_PAGAMENTO;
+        $dialogoCancellaPagamento = $this->root . $array['template'] . self::DIALOGO_CANCELLA_PAGAMENTO;
         $dialogoModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_MODIFICA_REGISTRAZIONE;
         $dialogoNuovoDettaglioModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVO_DETTAGLIO_MODIFICA_REGISTRAZIONE;
         $dialogoNuovaScadenzaModificaRegistrazione = $this->root . $array['template'] . self::DIALOGO_NUOVA_SCADENZA_MODIFICA_REGISTRAZIONE;
@@ -260,6 +261,7 @@ class RicercaScadenzeTemplate extends ScadenzeAbstract implements ScadenzePresen
         $template = $utility->tailFile($utility->getTemplate($paginaRicercaScadenze), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoVisualizzaPagamento), $replace);
+        $template .= $utility->tailFile($utility->getTemplate($dialogoCancellaPagamento), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoModificaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovoDettaglioModificaRegistrazione), $replace);
         $template .= $utility->tailFile($utility->getTemplate($dialogoNuovaScadenzaModificaRegistrazione), $replace);

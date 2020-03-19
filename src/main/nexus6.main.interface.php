@@ -98,6 +98,7 @@ interface MainNexus6Interface {
     const DIALOGO_NUOVO_CORRISPETTIVO_MERCATO = "/condivisi/nuovoCorrispettivoMercato.dialog.html";
     const DIALOGO_NUOVO_CORRISPETTIVO_NEGOZIO = "/condivisi/nuovoCorrispettivoNegozio.dialog.html";
     const DIALOGO_VISUALIZZA_PAGAMENTO = "/condivisi/visualizzaPagamento.dialog.html";
+    const DIALOGO_CANCELLA_PAGAMENTO = "/condivisi/cancellaPagamento.dialog.html";
     const DIALOGO_VISUALIZZA_INCASSO = "/condivisi/visualizzaIncasso.dialog.html";
     const DIALOGO_VISUALIZZA_CORRISPETTIVO_MERCATO = "/condivisi/visualizzaCorrispettivoMercato.dialog.html";
     const DIALOGO_VISUALIZZA_CORRISPETTIVO_NEGOZIO = "/condivisi/visualizzaCorrispettivoNegozio.dialog.html";

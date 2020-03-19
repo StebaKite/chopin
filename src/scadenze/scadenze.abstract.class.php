@@ -7,6 +7,8 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
 
 //	const VISUALIZZA_REGISTRAZIONE_HREF = "<a onclick='visualizzaRegistrazione(";
 
+    const NULL_VALUE = "null";
+
     private static $_instance = null;
     public static $messaggio;
     // Query ---------------------------------------------------------------
@@ -162,12 +164,14 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
     public function makeTabellaPagamento($registrazione) {
 
         $bottoneModificaPagamento = self::MODIFICA_PAGAMENTO_HREF . $registrazione->getIdRegistrazione() . self::MODIFICA_ICON;
+        $bottoneCancellaPagamento = self::CANCELLA_PAGAMENTO_HREF . $registrazione->getIdRegistrazione() . self::CANCELLA_ICON;
 
         $thead = "<thead>" .
                 "   <tr>" .
                 "       <th>%ml.datReg%</th>" .
                 "	<th>%ml.descreg%</th>" .
                 "	<th>%ml.negozio%</th>" .
+                "	<th></th>" .
                 "	<th></th>" .
                 "   </tr>" .
                 "</thead>";
@@ -178,6 +182,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "       <td>" . trim($registrazione->getDesRegistrazione()) . "</td>" .
                 "       <td>" . trim($registrazione->getCodNegozio()) . "</td>" .
                 "       <td>" . $bottoneModificaPagamento . "</td>" .
+                "       <td>" . $bottoneCancellaPagamento . "</td>" .
                 "   </tr>" .
                 "</tbody>";
 

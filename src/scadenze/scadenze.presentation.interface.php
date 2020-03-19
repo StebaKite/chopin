@@ -29,7 +29,8 @@ interface ScadenzePresentationInterface extends MainNexus6Interface {
     const VISUALIZZA_SCADENZA_CLIENTE_HREF = "<a onclick='visualizzaScadenzaCliente(";
     const MODIFICA_SCADENZA_CLIENTE_HREF = "<a onclick='modificaScadenzaCliente(";
     const MODIFICA_INCASSO_HREF = "<a onclick='modificaIncasso(";
-    const CANCELLA_INCASSO_HREF = "<a class='tooltip' onclick='cancellaIncasso(";
+    const CANCELLA_INCASSO_HREF = "<a onclick='cancellaIncasso(";
+    const CANCELLA_PAGAMENTO_HREF = "<a onclick='cancellaPagamento(";
 
     /**
      *  Errori e messaggi

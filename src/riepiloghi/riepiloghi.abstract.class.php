@@ -719,7 +719,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 $tabs .= "<li role='presentation'><a href='#tabs-2' aria-controls='Ricavi' role='tab' data-toggle='tab'>Ricavi</a></li>";
             }
             if (parent::isNotEmpty($riepilogo->getTableUtilePerdita())) {
-                $tabs .= "<li role='presentation'><a href='#tabs-3' aria-controls='Attivo' role='tab' data-toggle='tab'>Utile</a></li>";
+                $tabs .= "<li role='presentation'><a href='#tabs-3' aria-controls='Attivo' role='tab' data-toggle='tab'>Utile/Perdita</a></li>";
             }
             if (parent::isNotEmpty($riepilogo->getTableMargineContribuzione())) {
                 $tabs .= "<li role='presentation'><a href='#tabs-4' aria-controls='Passivo' role='tab' data-toggle='tab'>MCT</a></li>";
@@ -1476,7 +1476,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
             $class = "class='bg-info'";
         }
 
-        $utilePerdita = "<tr><td>%ml.utilePerdita%</td>";
+        $utilePerdita .= "<tr><td>%ml.utilePerdita%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($classe[$i])) {
                 $utilePerdita .= "<td " . $classe[$i] . ">" . number_format($utilePerditaMesi[$i], 0, ',', '.') . "</td>";

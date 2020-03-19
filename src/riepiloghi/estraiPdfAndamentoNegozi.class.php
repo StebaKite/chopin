@@ -56,13 +56,14 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiB
     public function generaSezioneIntestazione($pdf, $riepilogo) {
 
         $pdf->setTitle("Progressivi Mensili Chopin");
-        $pdf->setTitle1("Dal " . $riepilogo->getDataregDa() . " al " . $riepilogo->getDataregA());
+        $periodoSel = "Dal " . $riepilogo->getDataregDa() . " al " . $riepilogo->getDataregA();
+        $pdf->setTitle1("Tutti i negozi - " . $periodoSel);
 
         if (parent::isNotEmpty($riepilogo->getCodnegSel())) {
             $negozio = ($riepilogo->getCodnegSel() == self::VILLA) ? "Villa D'Adda" : $negozio;
             $negozio = ($riepilogo->getCodnegSel() == self::BREMBATE) ? "Brembate" : $negozio;
             $negozio = ($riepilogo->getCodnegSel() == self::TREZZO) ? "Trezzo" : $negozio;
-            $pdf->setTitle1("Negozio di " . $negozio);
+            $pdf->setTitle1("Negozio di " . $negozio . " - " .$periodoSel);
         }
         return $pdf;
     }
