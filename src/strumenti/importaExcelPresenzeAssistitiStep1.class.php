@@ -35,6 +35,7 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
         $presenzaAssistito = PresenzaAssistito::getInstance();
         $importaExcelPresenzeAssistitoTemplate = ImportaExcelPresenzeAssistitoStep1Template::getInstance();
 
+        
         if (parent::isEmpty(parent::getIndexSession("buttonDisabled"))) {
             $this->preparaPaginaStep1();
         }
@@ -152,14 +153,16 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
                                 } else {
                                     if (is_numeric($cella)) {
                                         $cella = $data->sheets[$sheets]['cells'][$i][$j];
-                                        if ($cella === "1") {
-                                            $cella = "P";
-                                        } else {
-                                            if ($cella === "0") {
-                                                $cella = parent::EMPTYSTRING;
-                                            }
+                                        if ($j <= 31) {
+                                            if ($cella === "1") {
+                                                $cella = "P";
+                                            } else {
+                                                if ($cella === "0") {
+                                                    $cella = parent::EMPTYSTRING;
+                                                }
+                                            }                                                
                                         }
-                                        array_push($presenza_sheet, $cella);
+                                        array_push($presenza_sheet, $cella);                                            
                                     }
                                 }
                             }
@@ -187,7 +190,8 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
             if (($incomplete === 0) and ( $complete > 0)) {
                 $presenzaAssistito->setStatoStep1("complete");
                 $presenzaAssistito->setStatoStep2("active");                
-                $presenzaAssistito->setStatoStep3("disabled");                
+                $presenzaAssistito->setStatoStep3("disabled");
+                parent::unsetIndexSessione("messaggioImportFileErr");
                 parent::setIndexSession("buttonDisabled", parent::EMPTYSTRING);
                 parent::setIndexSession("messaggioImportFileOk", "Tabella presenze di " . $presenzaAssistito->getNomeMese() . " corretta, puoi procedere con l'importazione");
                 $this->preparaPaginaStep2($importaExcelPresenzeAssistitoTemplate);
@@ -203,6 +207,7 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
                     $presenzaAssistito->setStatoStep1("active");
                     $presenzaAssistito->setStatoStep2("disabled");
                     $presenzaAssistito->setStatoStep3("disabled");
+                    parent::setIndexSession("messaggioImportFileErr", "La tabella delle presenze di " . $presenzaAssistito->getNomeMese() . " non ha un formato corretto");
                     parent::setIndexSession("buttonDisabled", "disabled");
                     $this->preparaPaginaStep1();
                 }
