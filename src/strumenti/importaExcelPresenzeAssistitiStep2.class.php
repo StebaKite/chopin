@@ -59,7 +59,8 @@ class ImportaExcelPresenzeAssistitiStep2 extends StrumentiAbstract implements St
 
                     switch ($numeroCella) {
                         case 1:     // nome dell'assistito
-                            $assistito->setDesAssistito($presenza_col);
+                            $stripped = trim(preg_replace('/\s+/', ' ', $presenza_col));
+                            $assistito->setDesAssistito(ucfirst(strtolower($stripped)));
                             $assistito->getIdAssistitoFromName($db);      
                             if (parent::isEmpty($assistito->getIdAssistito())) {
                                 if (!$assistito->inserisci($db)) {
