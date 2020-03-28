@@ -149,11 +149,12 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
                             if ($data->sheets[$sheets]['cells'][$i][$j] != "") {
                                 $cella = $data->sheets[$sheets]['cells'][$i][$j];
                                 if ($j === 2) {
-                                    array_push($presenza_sheet, $cella);
+                                    $stripped = trim(preg_replace('/\s+/', ' ', $cella));
+                                    array_push($presenza_sheet, ucwords(strtolower($cella)));
                                 } else {
                                     if (is_numeric($cella)) {
                                         $cella = $data->sheets[$sheets]['cells'][$i][$j];
-                                        if ($j <= 31) {
+                                        if ($j < 34) {
                                             if ($cella === "1") {
                                                 $cella = "P";
                                             } else {

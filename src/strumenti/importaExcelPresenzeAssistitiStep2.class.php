@@ -60,7 +60,7 @@ class ImportaExcelPresenzeAssistitiStep2 extends StrumentiAbstract implements St
                     switch ($numeroCella) {
                         case 1:     // nome dell'assistito
                             $stripped = trim(preg_replace('/\s+/', ' ', $presenza_col));
-                            $assistito->setDesAssistito(ucfirst(strtolower($stripped)));
+                            $assistito->setDesAssistito(ucwords(strtolower($stripped)));
                             $assistito->getIdAssistitoFromName($db);      
                             if (parent::isEmpty($assistito->getIdAssistito())) {
                                 if (!$assistito->inserisci($db)) {
@@ -69,7 +69,7 @@ class ImportaExcelPresenzeAssistitiStep2 extends StrumentiAbstract implements St
                                 }
                             }
                             break;
-                        case 32:    // è la cella del totale che ignoro
+                        case 34:    // è la cella del totale che ignoro
                             break;
                         default:    // la singola presenza
 
