@@ -459,10 +459,19 @@ function validaNuovaRegistrazione() {
         esito += "1";
         
         if (isNotEmpty($("#fornitore_cre").val()) || isNotEmpty($("#cliente_cre").val())) {
-            if (controllaNumeroFattura("numfatt_cre"))
+            validaNumeroFattura("cliente_cre", "fornitore_cre", "numfatt_cre", "datareg_cre");
+            if (isEmpty($("#numfatt_cre_messaggio").text())) {
                 esito += "1";
-            else
-                esito += "0";            
+                if (controllaNumeroFattura("numfatt_cre")) {
+                    esito += "1";
+                }
+                else {
+                    esito += "0";
+                }
+            }
+            else {
+                esito += "0";
+            }                        
         }
         else
             esito += "1";            
@@ -471,7 +480,7 @@ function validaNuovaRegistrazione() {
         esito += "00";
     }
 
-    if (esito === "1111111") {
+    if (esito === "11111111") {
         return true;
     } else {
         return false;
