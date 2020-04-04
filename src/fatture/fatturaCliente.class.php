@@ -53,7 +53,7 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
 
         $this->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', $articolo[0]), "");
         $this->Cell($w[1], 6, EURO, "", 0, 'R');
-        $this->Cell($w[2], 6, number_format($linea["TOTALE"], 2, ',', '.'), "", 0, 'R');
+        $this->Cell($w[2], 6, number_format(floatval($linea["TOTALE"]), 2, ',', '.'), "", 0, 'R');
         $this->Ln();
 
         for ($i = 1; $i < count($articolo); $i++) {
@@ -122,9 +122,9 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
             $this->SetX($r1 + 20);
             $this->Cell(10, 6, "", "", 0, "L");
             $this->SetX($r1 + 52);
-            $this->Cell(22, 6, number_format($tot_imponibile, 2, ',', '.'), "", 0, "R");
+            $this->Cell(22, 6, number_format(floatval($tot_imponibile), 2, ',', '.'), "", 0, "R");
             $this->SetX($r1 + 80);
-            $this->Cell(18, 6, number_format($tot_iva, 2, ',', '.'), "", 0, "R");
+            $this->Cell(18, 6, number_format(floatval($tot_iva), 2, ',', '.'), "", 0, "R");
         }
 
         /**
@@ -152,10 +152,10 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
         $this->SetFont("Arial", "", 12);
 
         $this->SetXY($r1 + 28, $y1 + 6);
-        $this->Cell(10, 6, number_format($imponibile, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($imponibile), 2, ',', '.'), "", 0, "R");
 
         $this->SetXY($r1 + 28, $y1 + 18);
-        $this->Cell(10, 6, number_format($iva, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($iva), 2, ',', '.'), "", 0, "R");
 
         /**
          * Box totale documento
@@ -177,7 +177,7 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
         $this->SetFont("Arial", "B", 14);
 
         $this->SetXY($r1 + 34, $y1 + 10);
-        $this->Cell(10, 6, EURO . " " . number_format($netto, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, EURO . " " . number_format(floatval($netto), 2, ',', '.'), "", 0, "R");
     }
 
     public function totaliFatturaVenditaCliente($tot_imponibile, $tot_iva, $tot_imponibile_10, $tot_iva_10, $tot_imponibile_22, $tot_iva_22) {
@@ -216,9 +216,9 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
             $this->SetX($r1 + 20);
             $this->Cell(10, 6, "Iva 5%", "", 0, "L");
             $this->SetX($r1 + 52);
-            $this->Cell(22, 6, number_format($tot_imponibile, 2, ',', '.'), "", 0, "R");
+            $this->Cell(22, 6, number_format(floatval($tot_imponibile), 2, ',', '.'), "", 0, "R");
             $this->SetX($r1 + 80);
-            $this->Cell(18, 6, number_format($tot_iva, 2, ',', '.'), "", 0, "R");
+            $this->Cell(18, 6, number_format(floatval($tot_iva), 2, ',', '.'), "", 0, "R");
         }
 
         if ($tot_imponibile_10 > 0) {
@@ -228,9 +228,9 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
             $this->SetX($r1 + 20);
             $this->Cell(10, 6, "Iva 10%", "", 0, "L");
             $this->SetX($r1 + 52);
-            $this->Cell(22, 6, number_format($tot_imponibile_10, 2, ',', '.'), "", 0, "R");
+            $this->Cell(22, 6, number_format(floatval($tot_imponibile_10), 2, ',', '.'), "", 0, "R");
             $this->SetX($r1 + 80);
-            $this->Cell(18, 6, number_format($tot_iva_10, 2, ',', '.'), "", 0, "R");
+            $this->Cell(18, 6, number_format(floatval($tot_iva_10), 2, ',', '.'), "", 0, "R");
         }
 
         if ($tot_imponibile_22 > 0) {
@@ -240,9 +240,9 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
             $this->SetX($r1 + 20);
             $this->Cell(10, 6, "Iva 22%", "", 0, "L");
             $this->SetX($r1 + 52);
-            $this->Cell(22, 6, number_format($tot_imponibile_22, 2, ',', '.'), "", 0, "R");
+            $this->Cell(22, 6, number_format(floatval($tot_imponibile_22), 2, ',', '.'), "", 0, "R");
             $this->SetX($r1 + 80);
-            $this->Cell(18, 6, number_format($tot_iva_22, 2, ',', '.'), "", 0, "R");
+            $this->Cell(18, 6, number_format(floatval($tot_iva_22), 2, ',', '.'), "", 0, "R");
         }
 
         /**
@@ -270,10 +270,10 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
         $this->SetFont("Arial", "", 12);
 
         $this->SetXY($r1 + 28, $y1 + 6);
-        $this->Cell(10, 6, number_format($imponibile, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($imponibile), 2, ',', '.'), "", 0, "R");
 
         $this->SetXY($r1 + 28, $y1 + 18);
-        $this->Cell(10, 6, number_format($iva, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($iva), 2, ',', '.'), "", 0, "R");
 
         /**
          * Box totale documento
@@ -295,7 +295,7 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
         $this->SetFont("Arial", "B", 14);
 
         $this->SetXY($r1 + 34, $y1 + 10);
-        $this->Cell(10, 6, EURO . " " . number_format($netto, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, EURO . " " . number_format(floatval($netto), 2, ',', '.'), "", 0, "R");
     }
 
     public function go() {

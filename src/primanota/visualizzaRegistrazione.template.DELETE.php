@@ -63,7 +63,7 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
             $tbodyDettagli = $tbodyDettagli .
                     "<tr>" .
                     "<td>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-                    "<td class='dt-right'>" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
+                    "<td class='dt-right'>" . number_format(floatval(trim($row["imp_registrazione"])), 2, ',', '.') . "</td>" .
                     "<td class='dt-center'>" . $row["ind_dareavere"] . "</td>" .
                     "</tr>";
         }
@@ -89,7 +89,7 @@ class VisualizzaRegistrazioneTemplate extends PrimanotaAbstract {
 
                 $tbodyScadenze .= "<tr>" .
                         "<td align='center'>" . date("d/m/Y", strtotime($row['dat_scadenza'])) . "</td>" .
-                        "<td align='right'>" . number_format(round($row['imp_in_scadenza'], 2), 2, ',', '.') . "</td>" .
+                        "<td align='right'>" . number_format(round(floatval($row['imp_in_scadenza']), 2), 2, ',', '.') . "</td>" .
                         "</tr>";
             }
         }

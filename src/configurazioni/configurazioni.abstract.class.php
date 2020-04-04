@@ -236,12 +236,12 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
 
                 if ($row[DettaglioRegistrazione::IND_DAREAVERE] == 'D') {
                     $totaleDare = $totaleDare + $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
-                    $impDare = number_format(round($row[DettaglioRegistrazione::IMP_REGISTRAZIONE], 2), 2, ',', '.');
+                    $impDare = number_format(round(floatval($row[DettaglioRegistrazione::IMP_REGISTRAZIONE]), 2), 2, ',', '.');
                     $impAvere = "";
                 } elseif ($row[DettaglioRegistrazione::IND_DAREAVERE] == 'A') {
                     $totaleAvere = $totaleAvere + $row[DettaglioRegistrazione::IMP_REGISTRAZIONE];
                     $impDare = "";
-                    $impAvere = number_format(round($row[DettaglioRegistrazione::IMP_REGISTRAZIONE], 2), 2, ',', '.');
+                    $impAvere = number_format(round(floatval($row[DettaglioRegistrazione::IMP_REGISTRAZIONE]), 2), 2, ',', '.');
                 }
 
                 if (trim($row[Conto::TIP_CONTO]) == "Dare") {
@@ -263,7 +263,7 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
                         "	<td>" . trim($row[Registrazione::DES_REGISTRAZIONE]) . "</td>" .
                         "	<td>" . $impDare . "</td>" .
                         "	<td>" . $impAvere . "</td>" .
-                        "	<td " . $class . ">" . number_format(round($saldo, 2), 2, ',', '.') . "</td>" .
+                        "	<td " . $class . ">" . number_format(round(floatval($saldo), 2), 2, ',', '.') . "</td>" .
                         "</tr>";
             }
 
@@ -274,9 +274,9 @@ abstract class ConfigurazioniAbstract extends Nexus6Abstract implements Configur
                     "	<td></td>" .
                     "	<td></td>" .
                     "	<td></td>" .
-                    "	<td>" . number_format(round($totaleDare, 2), 2, ',', '.') . "</td>" .
-                    "	<td>" . number_format(round($totaleAvere, 2), 2, ',', '.') . "</td>" .
-                    "	<td " . $class . ">" . number_format(round($saldo, 2), 2, ',', '.') . "</td>" .
+                    "	<td>" . number_format(round(floatval($totaleDare), 2), 2, ',', '.') . "</td>" .
+                    "	<td>" . number_format(round(floatval($totaleAvere), 2), 2, ',', '.') . "</td>" .
+                    "	<td " . $class . ">" . number_format(round(floatval($saldo), 2), 2, ',', '.') . "</td>" .
                     "</tr>" .
                     "</tbody>";
         } else {

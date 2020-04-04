@@ -53,7 +53,7 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
 
         $this->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', $articolo[0]), "");
         $this->Cell($w[1], 6, EURO, "", 0, 'R');
-        $this->Cell($w[2], 6, number_format($linea["TOTALE"], 2, ',', '.'), "", 0, 'R');
+        $this->Cell($w[2], 6, number_format(floatval($linea["TOTALE"]), 2, ',', '.'), "", 0, 'R');
         $this->Ln();
 
         for ($i = 1; $i < count($articolo); $i++) {
@@ -92,15 +92,15 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $this->Cell(20, 6, "NETTO A PAGARE", "", 0, "C");
 
         $this->SetXY($r1 + 3, $y1 + 7);
-        $this->Cell(20, 6, number_format($tot_imponibile, 2, ',', '.'), "", 0, "C");
+        $this->Cell(20, 6, number_format(floatval($tot_imponibile), 2, ',', '.'), "", 0, "C");
         $this->SetXY($r1 + 30, $y1 + 7);
-        $this->Cell(20, 6, number_format($tot_iva, 2, ',', '.'), "", 0, "C");
+        $this->Cell(20, 6, number_format(floatval($tot_iva), 2, ',', '.'), "", 0, "C");
         $this->SetXY($r1 + 50, $y1 + 7);
-        $this->Cell(20, 6, number_format($tot_dettagli, 2, ',', '.'), "", 0, "C");
+        $this->Cell(20, 6, number_format(floatval($tot_dettagli), 2, ',', '.'), "", 0, "C");
         $this->SetX($r1 + 90);
-        $this->Cell(40, 6, "-" . number_format($tot_iva, 2, ',', '.'), "", 0, "C");
+        $this->Cell(40, 6, "-" . number_format(floatval($tot_iva), 2, ',', '.'), "", 0, "C");
         $this->SetXY($r1 + 159, $y1 + 7);
-        $this->Cell(20, 6, EURO . " " . number_format($tot_imponibile, 2, ',', '.'), "", 0, "C");
+        $this->Cell(20, 6, EURO . " " . number_format(floatval($tot_imponibile), 2, ',', '.'), "", 0, "C");
     }
 
     public function totaliFatturaVenditaEntePubblico($tot_dettagli, $tot_imponibile, $tot_iva, $aliq_iva) {
@@ -138,9 +138,9 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
             $this->SetX($r1 + 20);
             $this->Cell(10, 6, "", "", 0, "L");
             $this->SetX($r1 + 52);
-            $this->Cell(22, 6, number_format($tot_imponibile, 2, ',', '.'), "", 0, "R");
+            $this->Cell(22, 6, number_format(floatval($tot_imponibile), 2, ',', '.'), "", 0, "R");
             $this->SetX($r1 + 80);
-            $this->Cell(18, 6, number_format($tot_iva, 2, ',', '.'), "", 0, "R");
+            $this->Cell(18, 6, number_format(floatval($tot_iva), 2, ',', '.'), "", 0, "R");
         }
 
         /**
@@ -168,10 +168,10 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $this->SetFont("Arial", "", 10);
 
         $this->SetXY($r1 + 28, $y1 + 6);
-        $this->Cell(10, 6, number_format($imponibile, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($imponibile), 2, ',', '.'), "", 0, "R");
 
         $this->SetXY($r1 + 28, $y1 + 18);
-        $this->Cell(10, 6, number_format($iva, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, number_format(floatval($iva), 2, ',', '.'), "", 0, "R");
 
         /**
          * Box totale documento
@@ -193,7 +193,7 @@ class FatturaEntePubblico extends FatturaBase implements FattureBusinessInterfac
         $this->SetFont("Arial", "B", 14);
 
         $this->SetXY($r1 + 34, $y1 + 10);
-        $this->Cell(10, 6, EURO . " " . number_format($netto, 2, ',', '.'), "", 0, "R");
+        $this->Cell(10, 6, EURO . " " . number_format(floatval($netto), 2, ',', '.'), "", 0, "R");
     }
 
     public function go() {

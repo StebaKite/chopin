@@ -178,8 +178,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         foreach ($data as $row) {
             $this->Cell($w[0], 6, $row[0], 'LR');
             $this->Cell($w[1], 6, $row[1], 'LR');
-            $this->Cell($w[2], 6, number_format($row[2]), 'LR', 0, 'R');
-            $this->Cell($w[3], 6, number_format($row[3]), 'LR', 0, 'R');
+            $this->Cell($w[2], 6, number_format(floatval($row[2])), 'LR', 0, 'R');
+            $this->Cell($w[3], 6, number_format(floatval($row[3])), 'LR', 0, 'R');
             $this->Ln();
         }
         // Closing line
@@ -287,15 +287,15 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
             $this->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', date("d/m/Y", strtotime($row[Registrazione::DAT_REGISTRAZIONE]))), 'LR', 0, 'L', $fill);
             $this->Cell($w[1], 6, iconv('UTF-8', 'windows-1252', trim($row[Registrazione::DES_REGISTRAZIONE])), 'LR', 0, 'L', $fill);
-            $this->Cell($w[2], 6, number_format($impDare, 2, ',', '.'), 'LR', 0, 'R', $fill);
-            $this->Cell($w[3], 6, number_format($impAvere, 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $this->Cell($w[2], 6, number_format(floatval($impDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $this->Cell($w[3], 6, number_format(floatval($impAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
 
             if ($saldo < 0) {
                 $this->SetTextColor(255, 0, 0);
                 $this->SetFont('', 'B', 10);
             }
 
-            $this->Cell($w[4], 6, number_format($saldo, 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $this->Cell($w[4], 6, number_format(floatval($saldo), 2, ',', '.'), 'LR', 0, 'R', $fill);
             $this->Ln();
 
             $this->SetFont('');
@@ -308,9 +308,9 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->SetFont('', 'B', 10);
         $this->Cell($w[0], 6, '', 'LR', 0, 'L', $fill);
         $this->Cell($w[1], 6, 'Totale ' . EURO, 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 6, number_format($totaleDare, 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 6, number_format($totaleAvere, 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[4], 6, number_format($saldo, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 6, number_format(floatval($totaleDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 6, number_format(floatval($totaleAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[4], 6, number_format(floatval($saldo), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -332,13 +332,13 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
             $totaleSottoconto = trim($row['tot_conto']);
 
-            $importo = number_format(($totaleSottoconto * $invSegno), 2, ',', '.');
+            $importo = number_format((floatval($totaleSottoconto * $invSegno)), 2, ',', '.');
 
             if (trim($row['des_conto']) != $desconto_break) {
 
                 if ($desconto_break != "") {
 
-                    $totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
+                    $totconto = number_format((floatval($totaleConto * $invSegno)), 2, ',', '.');
 
                     $this->Ln();
                     $this->SetFont('', 'B', 12);
@@ -375,7 +375,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         /**
          * Ultimo totale di fine ciclo
          */
-        $totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
+        $totconto = number_format((floatval($totaleConto * $invSegno)), 2, ',', '.');
 
         $this->Ln();
         $this->SetFont('', 'B', 12);
@@ -410,13 +410,13 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
             $totaleSottoconto = trim($row['tot_conto']);
 
-            $importo = number_format(($totaleSottoconto * $invSegno), 2, ',', '.');
+            $importo = number_format((floatval($totaleSottoconto * $invSegno)), 2, ',', '.');
 
             if (trim($row['des_conto']) != $desconto_break) {
 
                 if ($desconto_break != "") {
 
-                    $totconto = number_format(($totaleConto * $invSegno), 2, ',', '.');
+                    $totconto = number_format((floatval($totaleConto * $invSegno)), 2, ',', '.');
 
                     $this->Ln();
                     $this->SetFont('', 'B', 12);
@@ -453,7 +453,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         /**
          * Ultimo totale di fine ciclo
          */
-        $totconto = number_format(abs($totaleConto), 2, ',', '.');
+        $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
         $this->Ln();
         $this->SetFont('', 'B', 12);
@@ -488,13 +488,13 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
             $totaleSottoconto = trim($row['tot_conto']);
 
-            $importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+            $importo = number_format(abs(floatval($totaleSottoconto)), 2, ',', '.');
 
             if (trim($row['des_conto']) != $desconto_break) {
 
                 if ($desconto_break != "") {
 
-                    $totconto = number_format(abs($totaleConto), 2, ',', '.');
+                    $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
                     if ($totconto > 0) {
                         $this->Ln();
@@ -534,7 +534,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         /**
          * Ultimo totale di fine ciclo
          */
-        $totconto = number_format(abs($totaleConto), 2, ',', '.');
+        $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
         if ($totconto > 0) {
             $this->Ln();
@@ -575,19 +575,19 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Ricavi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totaleRicavi), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totaleRicavi)), 2, ',', '.'), '', 0, 'R');
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Costi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totaleCosti), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totaleCosti)), 2, ',', '.'), '', 0, 'R');
 
         $utile = $totaleRicavi - $totaleCosti;
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Utile del periodo', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format($utile, 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(floatval($utile), 2, ',', '.'), '', 0, 'R');
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
@@ -614,19 +614,19 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Ricavi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totaleRicavi), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totaleRicavi)), 2, ',', '.'), '', 0, 'R');
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Costi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totaleCosti), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totaleCosti)), 2, ',', '.'), '', 0, 'R');
 
         $perdita = $totaleRicavi - $totaleCosti;
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Perdita del periodo', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format($perdita, 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(floatval($perdita), 2, ',', '.'), '', 0, 'R');
 
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
@@ -652,7 +652,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Costi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format($totaleCosti, 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(floatval($totaleCosti), 2, ',', '.'), '', 0, 'R');
 
         $this->SetTextColor(0);
     }
@@ -674,7 +674,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Ln();
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, 'Totale Ricavi', '', 0, 'L');
-        $this->Cell($w[2], 8, number_format($totaleRicavi, 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(floatval($totaleRicavi), 2, ',', '.'), '', 0, 'R');
 
         $this->SetTextColor(0);
     }
@@ -692,7 +692,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, iconv('UTF-8', 'windows-1252', 'Totale Attività'), '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totaleAttivo), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totaleAttivo)), 2, ',', '.'), '', 0, 'R');
 
         $this->SetTextColor(0);
     }
@@ -710,7 +710,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $this->Cell($w[0], 8, '', '', 0, 'L');
         $this->Cell($w[1], 8, iconv('UTF-8', 'windows-1252', 'Totale Passività'), '', 0, 'L');
-        $this->Cell($w[2], 8, number_format(abs($totalePassivo), 2, ',', '.'), '', 0, 'R');
+        $this->Cell($w[2], 8, number_format(abs(floatval($totalePassivo)), 2, ',', '.'), '', 0, 'R');
 
         $this->SetTextColor(0);
     }
@@ -770,12 +770,12 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format(($totaleConto_Bre * $invSegno), 2, ',', '.') : "---";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format(($totaleConto_Tre * $invSegno), 2, ',', '.') : "---";
-                    $totVil = ($totaleConto_Vil != 0) ? number_format(($totaleConto_Vil * $invSegno), 2, ',', '.') : "---";
+                    $totBre = ($totaleConto_Bre != 0) ? number_format((floatval($totaleConto_Bre * $invSegno)), 2, ',', '.') : "---";
+                    $totTre = ($totaleConto_Tre != 0) ? number_format((floatval($totaleConto_Tre * $invSegno)), 2, ',', '.') : "---";
+                    $totVil = ($totaleConto_Vil != 0) ? number_format((floatval($totaleConto_Vil * $invSegno)), 2, ',', '.') : "---";
 
                     $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-                    $tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
+                    $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
                     $this->SetFont('', '', 10);
                     $fill = !$fill;
@@ -805,12 +805,12 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 $totaleConto_Vil += $totaleConto;
         }
 
-        $totBre = ($totaleConto_Bre != 0) ? number_format(($totaleConto_Bre * $invSegno), 2, ',', '.') : "---";
-        $totTre = ($totaleConto_Tre != 0) ? number_format(($totaleConto_Tre * $invSegno), 2, ',', '.') : "---";
-        $totVil = ($totaleConto_Vil != 0) ? number_format(($totaleConto_Vil * $invSegno), 2, ',', '.') : "---";
+        $totBre = ($totaleConto_Bre != 0) ? number_format((floatval($totaleConto_Bre * $invSegno)), 2, ',', '.') : "---";
+        $totTre = ($totaleConto_Tre != 0) ? number_format((floatval($totaleConto_Tre * $invSegno)), 2, ',', '.') : "---";
+        $totVil = ($totaleConto_Vil != 0) ? number_format((floatval($totaleConto_Vil * $invSegno)), 2, ',', '.') : "---";
 
         $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-        $tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
+        $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
         $this->SetFont('', '', 10);
         $fill = !$fill;
@@ -826,12 +826,12 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format(($totale_Bre * $invSegno), 2, ',', '.') : "---";
-        $totTre = ($totale_Tre != 0) ? number_format(($totale_Tre * $invSegno), 2, ',', '.') : "---";
-        $totVil = ($totale_Vil != 0) ? number_format(($totale_Vil * $invSegno), 2, ',', '.') : "---";
+        $totBre = ($totale_Bre != 0) ? number_format((floatval($totale_Bre * $invSegno)), 2, ',', '.') : "---";
+        $totTre = ($totale_Tre != 0) ? number_format((floatval($totale_Tre * $invSegno)), 2, ',', '.') : "---";
+        $totVil = ($totale_Vil != 0) ? number_format((floatval($totale_Vil * $invSegno)), 2, ',', '.') : "---";
 
         $totale = $totale_Bre + $totale_Tre + $totale_Vil;
-        $tot = ($totale != 0) ? number_format(($totale * $invSegno), 2, ',', '.') : "---";
+        $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
         $this->SetFillColor(224, 235, 255);
         $this->SetTextColor(0);
@@ -874,42 +874,42 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleRicavi"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicaviTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Acquisti")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiVariabili"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Margine assoluto")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($datiMCT["margineTotaleBRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($datiMCT["margineTotaleTRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["margineTotaleVIL"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["margineTotale"], 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["margineTotaleBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["margineTotaleTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["margineTotaleVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["margineTotale"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Margine percentuale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($datiMCT["marginePercentualeBRE"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($datiMCT["marginePercentualeTRE"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["marginePercentualeVIL"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["marginePercentuale"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["marginePercentualeBRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["marginePercentualeTRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["marginePercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["marginePercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Ricarico percentuale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($datiMCT["ricaricoPercentualeBRE"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($datiMCT["ricaricoPercentualeTRE"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["ricaricoPercentualeVIL"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["ricaricoPercentuale"], 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["ricaricoPercentualeBRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["ricaricoPercentualeTRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["ricaricoPercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["ricaricoPercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -941,42 +941,42 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($datiMCT["totaleRicaviBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($datiMCT["totaleRicaviTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleRicaviVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleRicavi"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicaviTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Costi fissi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($datiMCT["totaleCostiFissiBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($datiMCT["totaleCostiFissiTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiFissiVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiFissi"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiFissi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Acquisti")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($datiMCT["totaleCostiVariabiliBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($datiMCT["totaleCostiVariabiliTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiVariabiliVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($datiMCT["totaleCostiVariabili"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Incidenza acquisti sul fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["incidenzaCostiVariabiliSulFatturato"], 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturato"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("BEP totale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($datiMCT["bepBRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($datiMCT["bepTRE"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["bepVIL"], 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($datiMCT["bep"], 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["bepBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["bepTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["bepVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($datiMCT["bep"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -1008,30 +1008,30 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Totale ricavi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($riepilogo->getTotaleRicaviBrembate()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($riepilogo->getTotaleRicaviTrezzo()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($riepilogo->getTotaleRicaviVilla()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviBrembate())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviTrezzo())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[4], 8, number_format(abs($riepilogo->getTotaleRicavi()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[4], 8, number_format(abs(floatval($riepilogo->getTotaleRicavi())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->SetFont('', '', 10);
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Totale costi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs($riepilogo->getTotaleCostiBrembate()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs($riepilogo->getTotaleCostiTrezzo()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs($riepilogo->getTotaleCostiVilla()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleCostiBrembate())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleCostiTrezzo())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(abs(floatval($riepilogo->getTotaleCostiVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[4], 8, number_format(abs($riepilogo->getTotaleCosti()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[4], 8, number_format(abs(floatval($riepilogo->getTotaleCosti())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->SetFont('', 'B', 10);
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim($header[0] . " del periodo")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format($riepilogo->getUtileBrembate(), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format($riepilogo->getUtileTrezzo(), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format($riepilogo->getUtileVilla(), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[4], 8, number_format($riepilogo->getTotaleUtile(), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($riepilogo->getUtileBrembate()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($riepilogo->getUtileTrezzo()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[3], 8, number_format(floatval($riepilogo->getUtileVilla()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[4], 8, number_format(floatval($riepilogo->getTotaleUtile()), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -1088,7 +1088,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                                 $this->SetFont('', 'B', 10);
                                 $this->SetTextColor(255, 0, 0);
                             }
-                            $this->Cell($w[$i], 8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                            $this->Cell($w[$i], 8, number_format((floatval($totaliMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                             $this->SetTextColor(0);
                             $this->SetFont('', '', 10);
                         }
@@ -1096,7 +1096,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     }
 
                     $this->SetFont('', 'B', 10);
-                    $this->Cell($w[13], 8, number_format(($totale_conto * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                    $this->Cell($w[13], 8, number_format((floatval($totale_conto * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                     $this->SetFont('', '', 10);
                     $this->Ln();
 
@@ -1139,7 +1139,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetFont('', 'B', 10);
                     $this->SetTextColor(255, 0, 0);
                 }
-                $this->Cell($w[$i], 8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format((floatval($totaliMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1148,7 +1148,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         }
 
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[13], 8, number_format(($totale_conto * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[13], 8, number_format((floatval($totale_conto * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1162,11 +1162,11 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             if ($totaliComplessiviMesi[$i] == 0)
                 $this->Cell($w[$i], 8, "---", 'LR', 0, 'R', $fill);
             else
-                $this->Cell($w[$i], 8, number_format(($totaliComplessiviMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format((floatval($totaliComplessiviMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
 
             $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
         }
-        $this->Cell($w[13], 8, number_format(($totale_anno * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[13], 8, number_format((floatval($totale_anno * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -1221,7 +1221,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                                 $this->SetFont('', 'B', 10);
                                 $this->SetTextColor(255, 0, 0);
                             }
-                            $this->Cell($w[$i], 8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                            $this->Cell($w[$i], 8, number_format((floatval($totaliMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                             $this->SetTextColor(0);
                             $this->SetFont('', '', 10);
                         }
@@ -1229,7 +1229,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     }
 
                     $this->SetFont('', 'B', 10);
-                    $this->Cell($w[13], 8, number_format(($totale_conto * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                    $this->Cell($w[13], 8, number_format((floatval($totale_conto * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                     $this->SetFont('', '', 10);
                     $this->Ln();
 
@@ -1270,7 +1270,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetFont('', 'B', 10);
                     $this->SetTextColor(255, 0, 0);
                 }
-                $this->Cell($w[$i], 8, number_format(($totaliMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format((floatval($totaliMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1279,7 +1279,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         }
 
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[13], 8, number_format(($totale_conto * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[13], 8, number_format((floatval($totale_conto * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1293,11 +1293,11 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             if ($totaliComplessiviMesi[$i] == 0)
                 $this->Cell($w[$i], 8, "---", 'LR', 0, 'R', $fill);
             else
-                $this->Cell($w[$i], 8, number_format(($totaliComplessiviMesi[$i] * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format((floatval($totaliComplessiviMesi[$i] * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
 
             $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
         }
-        $this->Cell($w[13], 8, number_format(($totale_anno * $invSegno), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[13], 8, number_format((floatval($totale_anno * $invSegno)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -1415,10 +1415,10 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             if ($totaliRicaviMesi[$i] == 0)
                 $this->Cell($w[$i], 8, "---", 'LR', 0, 'R', $fill);
             else
-                $this->Cell($w[$i], 8, number_format(abs($totaliRicaviMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(abs(floatval($totaliRicaviMesi[$i])), 0, ',', '.'), 'LR', 0, 'R', $fill);
         }
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[$i], 8, number_format(abs($totaleRicavi), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(abs(floatval($totaleRicavi)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1428,10 +1428,10 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             if ($totaliAcquistiMesi[$i] == 0)
                 $this->Cell($w[$i], 8, "---", 'LR', 0, 'R', $fill);
             else
-                $this->Cell($w[$i], 8, number_format(abs($totaliAcquistiMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(abs(floatval($totaliAcquistiMesi[$i])), 0, ',', '.'), 'LR', 0, 'R', $fill);
         }
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[$i], 8, number_format(abs($totaleAcquisti), 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(abs(floatval($totaleAcquisti)), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1447,7 +1447,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetTextColor(255, 0, 0);
                 }
 
-                $this->Cell($w[$i], 8, number_format($totaliMctAssolutoMesi[$i], 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(floatval($totaliMctAssolutoMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1456,7 +1456,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         if ($classe_tot_MctAss == "ko") {
             $this->SetTextColor(255, 0, 0);
         }
-        $this->Cell($w[$i], 8, number_format($totaleMctAssoluto, 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(floatval($totaleMctAssoluto), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1472,7 +1472,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetTextColor(255, 0, 0);
                 }
 
-                $this->Cell($w[$i], 8, number_format($totaliMctPercentualeMesi[$i], 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(floatval($totaliMctPercentualeMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1481,7 +1481,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         if ($classe_tot_MctPer == "ko") {
             $this->SetTextColor(255, 0, 0);
         }
-        $this->Cell($w[$i], 8, number_format($totaleMctPercentuale, 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(floatval($totaleMctPercentuale), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
@@ -1496,7 +1496,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetFont('', 'B', 10);
                     $this->SetTextColor(255, 0, 0);
                 }
-                $this->Cell($w[$i], 8, number_format($totaliMctRicaricoMesi[$i], 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(floatval($totaliMctRicaricoMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1505,7 +1505,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         if ($classe_tot_MctRic == "ko") {
             $this->SetTextColor(255, 0, 0);
         }
-        $this->Cell($w[$i], 8, number_format($totaleMctRicarico, 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(floatval($totaleMctRicarico), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -1579,7 +1579,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetFont('', 'B', 10);
                 }
 
-                $this->Cell($w[$i], 8, number_format($utilePerditaMesi[$i], 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(floatval($utilePerditaMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1590,7 +1590,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             $this->SetTextColor(255, 0, 0);
         }
 
-        $this->Cell($w[$i], 8, number_format($totaleUtilePerdita, 0, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[$i], 8, number_format(floatval($totaleUtilePerdita), 0, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         // Seconda riga : progressivo Ricavi-Costi
@@ -1609,7 +1609,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                     $this->SetFont('', 'B', 10);
                 }
 
-                $this->Cell($w[$i], 8, number_format($progrUtilePerditaMesi[$i], 0, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[$i], 8, number_format(floatval($progrUtilePerditaMesi[$i]), 0, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->SetTextColor(0);
                 $this->SetFont('', '', 10);
             }
@@ -1671,7 +1671,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 $this->Cell($w[2], 10, 'Totale', 'LR', 0, 'R', $fill);
                 $this->Cell($w[3], 10, '', 'LR', 0, 'L', $fill);
                 $this->Cell($w[4], 10, '', 'LR', 0, 'C', $fill);
-                $this->Cell($w[5], 10, EURO . number_format($totale_fornitore, 2, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[5], 10, EURO . number_format(floatval($totale_fornitore), 2, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->Ln();
                 $fill = !$fill;
 
@@ -1711,7 +1711,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             $this->SetFont('', '', 10);
             $this->SetTextColor($c1, $c2, $c3);
             $this->Cell($w[4], 6, iconv('UTF-8', 'windows-1252', $stascadenza), 'LR', 0, 'C', $fill);
-            $this->Cell($w[5], 6, EURO . number_format($row[ScadenzaFornitore::IMP_IN_SCADENZA], 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $this->Cell($w[5], 6, EURO . number_format(floatval($row[ScadenzaFornitore::IMP_IN_SCADENZA]), 2, ',', '.'), 'LR', 0, 'R', $fill);
             $this->SetFont('', 'B', 8);
             $this->SetTextColor(0);
             $this->Ln();
@@ -1728,7 +1728,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Cell($w[2], 10, 'Totale', 'LR', 0, 'R', $fill);
         $this->Cell($w[3], 10, '', 'LR', 0, 'L', $fill);
         $this->Cell($w[4], 10, '', 'LR', 0, 'C', $fill);
-        $this->Cell($w[5], 10, EURO . number_format($totale_fornitore, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[5], 10, EURO . number_format(floatval($totale_fornitore), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
         $fill = !$fill;
 
@@ -1740,7 +1740,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Cell($w[2], 15, 'Totale Scadenze', 'LR', 0, 'R', $fill);
         $this->Cell($w[3], 15, '', 'LR', 0, 'L', $fill);
         $this->Cell($w[4], 15, '', 'LR', 0, 'C', $fill);
-        $this->Cell($w[5], 15, EURO . number_format($totale_scadenze, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[5], 15, EURO . number_format(floatval($totale_scadenze), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
         $fill = !$fill;
 
@@ -1796,7 +1796,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 $this->Cell($w[2], 10, 'Totale', 'LR', 0, 'R', $fill);
                 $this->Cell($w[3], 10, '', 'LR', 0, 'L', $fill);
                 $this->Cell($w[4], 10, '', 'LR', 0, 'C', $fill);
-                $this->Cell($w[5], 10, EURO . number_format($totale_cliente, 2, ',', '.'), 'LR', 0, 'R', $fill);
+                $this->Cell($w[5], 10, EURO . number_format(floatval($totale_cliente), 2, ',', '.'), 'LR', 0, 'R', $fill);
                 $this->Ln();
                 $fill = !$fill;
 
@@ -1836,7 +1836,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             $this->SetFont('', '', 10);
             $this->SetTextColor($c1, $c2, $c3);
             $this->Cell($w[4], 6, iconv('UTF-8', 'windows-1252', $stascadenza), 'LR', 0, 'C', $fill);
-            $this->Cell($w[5], 6, EURO . number_format($row[ScadenzaCliente::IMP_REGISTRAZIONE], 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $this->Cell($w[5], 6, EURO . number_format(floatval($row[ScadenzaCliente::IMP_REGISTRAZIONE]), 2, ',', '.'), 'LR', 0, 'R', $fill);
             $this->SetFont('', 'B', 8);
             $this->SetTextColor(0);
             $this->Ln();
@@ -1853,7 +1853,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Cell($w[2], 10, 'Totale', 'LR', 0, 'R', $fill);
         $this->Cell($w[3], 10, '', 'LR', 0, 'L', $fill);
         $this->Cell($w[4], 10, '', 'LR', 0, 'C', $fill);
-        $this->Cell($w[5], 10, EURO . number_format($totale_cliente, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[5], 10, EURO . number_format(floatval($totale_cliente), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
         $fill = !$fill;
 
@@ -1865,7 +1865,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->Cell($w[2], 10, 'Totale Incassi', 'LR', 0, 'R', $fill);
         $this->Cell($w[3], 10, '', 'LR', 0, 'L', $fill);
         $this->Cell($w[4], 10, '', 'LR', 0, 'C', $fill);
-        $this->Cell($w[5], 10, EURO . number_format($totale_scadenze, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[5], 10, EURO . number_format(floatval($totale_scadenze), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
         $fill = !$fill;
 
@@ -1915,5 +1915,3 @@ class Pdf extends FPDF implements UtilityComponentInterface {
     }
 
 }
-
-?>

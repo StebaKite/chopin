@@ -151,13 +151,13 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 $numReg ++;
 
-                $importo = number_format($totaleSottoconto, 2, ',', '.');
+                $importo = number_format(floatval($totaleSottoconto), 2, ',', '.');
 
                 if (trim($row['des_conto']) != $desconto_break) {
 
                     if ($desconto_break != "") {
 
-                        $totconto = number_format($totaleConto, 2, ',', '.');
+                        $totconto = number_format(floatval($totaleConto), 2, ',', '.');
 
                         if ($ind_visibilita_sottoconti_break === 'S') {
                             $risultato_costi .= "<tr>" .
@@ -198,7 +198,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 $totaleConto += $totaleSottoconto;
             }
 
-            $totconto = number_format($totaleConto, 2, ',', '.');
+            $totconto = number_format(floatval($totaleConto), 2, ',', '.');
 
             if ($ind_visibilita_sottoconti_break == 'S') {
                 $risultato_costi .= "<tr>" .
@@ -246,13 +246,13 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 $numReg ++;
 
-                $importo = number_format($totaleSottoconto * (-1), 2, ',', '.');
+                $importo = number_format(floatval($totaleSottoconto) * (-1), 2, ',', '.');
 
                 if (trim($row['des_conto']) != $desconto_break) {
 
                     if ($desconto_break != "") {
 
-                        $totconto = number_format($totaleConto * (-1), 2, ',', '.');
+                        $totconto = number_format(floatval($totaleConto) * (-1), 2, ',', '.');
 
                         if ($ind_visibilita_sottoconti_break == 'S') {
                             $risultato_ricavi .= "<tr>" .
@@ -293,7 +293,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 $totaleConto += $totaleSottoconto;
             }
 
-            $totconto = number_format($totaleConto * (-1), 2, ',', '.');
+            $totconto = number_format(floatval($totaleConto) * (-1), 2, ',', '.');
 
             if ($ind_visibilita_sottoconti_break == 'S') {
                 $risultato_ricavi .= "<tr>" .
@@ -342,13 +342,13 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 $numReg ++;
 
-                $importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+                $importo = number_format(abs(floatval($totaleSottoconto)), 2, ',', '.');
 
                 if (trim($row['des_conto']) != $desconto_break) {
 
                     if ($desconto_break != "") {
 
-                        $totconto = number_format(abs($totaleConto), 2, ',', '.');
+                        $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
                         if ($ind_visibilita_sottoconti_break == 'S') {
                             $risultato_attivo .= "<tr>" .
@@ -389,7 +389,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 $totaleConto += $totaleSottoconto;
             }
 
-            $totconto = number_format(abs($totaleConto), 2, ',', '.');
+            $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
             if ($ind_visibilita_sottoconti_break == 'S') {
                 $risultato_attivo .= "<tr>" .
@@ -438,13 +438,13 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 $numReg ++;
 
-                $importo = number_format(abs($totaleSottoconto), 2, ',', '.');
+                $importo = number_format(abs(floatval($totaleSottoconto)), 2, ',', '.');
 
                 if (trim($row['des_conto']) != $desconto_break) {
 
                     if ($desconto_break != "") {
 
-                        $totconto = number_format(abs($totaleConto), 2, ',', '.');
+                        $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
                         if ($ind_visibilita_sottoconti_break == 'S') {
                             $risultato_passivo .= "<tr>" .
@@ -485,7 +485,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 $totaleConto += $totaleSottoconto;
             }
 
-            $totconto = number_format(abs($totaleConto), 2, ',', '.');
+            $totconto = number_format(abs(floatval($totaleConto)), 2, ',', '.');
 
             if ($ind_visibilita_sottoconti_break == 'S') {
                 $risultato_passivo .= "<tr>" .
@@ -598,19 +598,19 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     "   <tbody>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Fatturato</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Costi variabili</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleCostiVariabili)), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Margine totale</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(floatval($margineTotale), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Margine percentuale</td>" .
-                    "           <td width='108' align='right' class='bg-info'>" . number_format($marginePercentuale, 2, ',', '.') . " &#37;</td>" .
+                    "           <td width='108' align='right' class='bg-info'>" . number_format(floatval($marginePercentuale), 2, ',', '.') . " &#37;</td>" .
                     "       </tr>" .
                     "   </tbody>" .
                     "</table>";
@@ -620,23 +620,23 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     "	<tbody>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Fatturato</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Costi fissi</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs($totaleCostiFissi), 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleCostiFissi)), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Costi variabili</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleCostiVariabili)), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>Incidenza costi variabili sul fatturato</td>" .
-                    "           <td width='108' align='right' class='bg-info'> " . number_format($incidenzaCostiVariabiliSulFatturato, 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'> " . number_format(floatval($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "       <tr height='30'>" .
                     "           <td width='308' align='left' class='bg-info'>BEP</td>" .
-                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format($bep, 2, ',', '.') . "</td>" .
+                    "           <td width='108' align='right' class='bg-info'>&euro; " . number_format(floatval($bep), 2, ',', '.') . "</td>" .
                     "       </tr>" .
                     "   </tbody>" .
                     "</table>";
@@ -793,19 +793,19 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Totale Ricavi</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Totale Costi</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleCosti)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $utile = $totaleRicavi - $totaleCosti;
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Utile del Periodo</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format($utile, 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(floatval($utile), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "</tbody></table>";
@@ -815,19 +815,19 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Totale Ricavi</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Totale Costi</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(abs(floatval($totaleCosti)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $perdita = $totaleRicavi - $totaleCosti;
 
             $risultato_esercizio .= "<tr>" .
                     "	<td align='left' class='bg-info'>Perdita del Periodo</td>" .
-                    "	<td align='right' class='bg-info'>&euro; " . number_format($perdita, 2, ',', '.') . "</td>" .
+                    "	<td align='right' class='bg-info'>&euro; " . number_format(floatval($perdita), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "</tbody></table>";
@@ -837,19 +837,19 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format(abs($totaleCosti), 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(abs(floatval($totaleCosti)), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $pareggio = $totaleRicavi - $totaleCosti;
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format($pareggio, 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(floatval($pareggio), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "</tbody></table>";
@@ -978,14 +978,14 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                                 if ($totaliMesi[$i] == 0) {
                                     $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
                                 } else {
-                                    $risultato_andamento .= "<td>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+                                    $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
                                 }
                                 $totale_conto = $totale_conto + $totaliMesi[$i];                            
                             } else {
                                 $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                                
                             }
                         }
-                        $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+                        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
 
                         $risultato_andamento .= "</tr>";
                         for ($i = 1; $i < 13; $i++) {
@@ -1024,11 +1024,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
             if ($totaliMesi[$i] == 0) {
                 $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
             } else {
-                $risultato_andamento .= "<td>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+                $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
             }
             $totale_conto = $totale_conto + $totaliMesi[$i];
         }
-        $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
 
         $risultato_andamento .= "</tr>";
         $risultato_andamento .= "<tr><td class='bg-info'>%ml.totale%</td>";
@@ -1043,14 +1043,14 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliComplessiviMesi[$i] == 0) {
                     $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td class='bg-info'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
                 }
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];                
             } else {
                 $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
             }
         }
-        $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_anno), 0, ',', '.') . "</td>";
         $risultato_andamento .= "</tr></tbody></table>";
 
         $riepilogo->setTotaliAcquistiMesi($totaliAcquistiMesi);
@@ -1113,11 +1113,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                             if ($totaliMesi[$i] == 0) {
                                 $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                             } else {
-                                $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                                $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs(floatval($totaliMesi[$i])), 0, ',', '.') . "</td>";
                             }
                             $totale_conto = $totale_conto + $totaliMesi[$i];
                         }
-                        $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+                        $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs(floatval($totale_conto)), 0, ',', '.') . "</td>";
 
                         $risultato_andamento .= "</tr>";
                         for ($i = 1; $i < 13; $i++) {
@@ -1155,11 +1155,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliMesi[$i] == 0) {
                     $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td width='58' align='right'>" . number_format(abs(floatval($totaliMesi[$i])), 0, ',', '.') . "</td>";
                 }
                 $totale_conto = $totale_conto + $totaliMesi[$i];
             }
-            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs(floatval($totale_conto)), 0, ',', '.') . "</td>";
 
             $risultato_andamento .= "</tr>";
             $risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
@@ -1171,10 +1171,10 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliComplessiviMesi[$i] == 0)
                     $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                 else
-                    $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs(floatval($totaliComplessiviMesi[$i])), 0, ',', '.') . "</td>";
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
             }
-            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs($totale_anno), 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(abs(floatval($totale_anno)), 0, ',', '.') . "</td>";
             $risultato_andamento .= "</tr></tbody></table></div>";
         }
 
@@ -1241,11 +1241,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                             if ($totaliMesi[$i] == 0) {
                                 $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                             } else {
-                                $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+                                $risultato_andamento .= "<td width='58' align='right'>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
                             }
                             $totale_conto = $totale_conto + $totaliMesi[$i];
                         }
-                        $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+                        $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
 
                         $risultato_andamento .= "</tr>";
                         for ($i = 1; $i < 13; $i++) {
@@ -1282,11 +1282,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliMesi[$i] == 0) {
                     $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td width='58' align='right'>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td width='58' align='right'>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
                 }
                 $totale_conto = $totale_conto + $totaliMesi[$i];
             }
-            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
 
             $risultato_andamento .= "</tr>";
             $risultato_andamento .= "<tr><td class='enlarge' width='208' align='left'>%ml.totale%</td>";
@@ -1300,11 +1300,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliComplessiviMesi[$i] == 0) {
                     $risultato_andamento .= "<td width='58' align='right'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(floatval($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
                 }
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
             }
-            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='mark' width='58' align='right'>" . number_format(floatval($totale_anno), 0, ',', '.') . "</td>";
             $risultato_andamento .= "</tr></tbody></table></div>";
         }
 
@@ -1349,14 +1349,14 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                             if ($totaliMesi[$i] == 0) {
                                 $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
                             } else {
-                                $risultato_andamento .= "<td>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                                $risultato_andamento .= "<td>" . number_format(abs(floatval($totaliMesi[$i])), 0, ',', '.') . "</td>";
                             }
                             $totale_conto = $totale_conto + $totaliMesi[$i];
                         } else {
                             $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                            
                         }
                     }
-                    $risultato_andamento .= "<td class='bg-info'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td class='bg-info'>" . number_format(abs(floatval($totale_conto)), 0, ',', '.') . "</td>";
 
                     $risultato_andamento .= "</tr>";
                     for ($i = 1; $i < 13; $i++) {
@@ -1394,11 +1394,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
             if ($totaliMesi[$i] == 0) {
                 $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
             } else {
-                $risultato_andamento .= "<td>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
+                $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
             }
             $totale_conto = $totale_conto + $totaliMesi[$i];
         }
-        $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
 
         $risultato_andamento .= "</tr>";
         $risultato_andamento .= "<tr><td>%ml.totale%</td>";
@@ -1414,14 +1414,14 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliComplessiviMesi[$i] == 0) {
                     $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td class='bg-info'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
                 }
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
             } else {
                 $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";               
             }
         }
-        $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_anno), 0, ',', '.') . "</td>";
         $risultato_andamento .= "</tr></tbody></table>";
 
         $riepilogo->setTotaliRicaviMesi($totaliRicaviMesi);
@@ -1488,15 +1488,15 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $utilePerdita .= "<tr><td>%ml.utilePerdita%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($classe[$i])) {
-                $utilePerdita .= "<td " . $classe[$i] . ">" . number_format($utilePerditaMesi[$i], 0, ',', '.') . "</td>";
+                $utilePerdita .= "<td " . $classe[$i] . ">" . number_format(floatval($utilePerditaMesi[$i]), 0, ',', '.') . "</td>";
             }
         }        
-        $utilePerdita .= "<td " . $class . ">" . number_format($totaleUtilePerdita, 0, ',', '.') . "</td></tr>";
+        $utilePerdita .= "<td " . $class . ">" . number_format(floatval($totaleUtilePerdita), 0, ',', '.') . "</td></tr>";
         
         $utilePerdita .= "<tr><td>%ml.progrUtilePerdita%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($classe[$i])) {
-                $utilePerdita .= "<td " . $progrClasse[$i] . ">" . number_format($progrUtilePerditaMesi[$i], 0, ',', '.') . "</td>";
+                $utilePerdita .= "<td " . $progrClasse[$i] . ">" . number_format(floatval($progrUtilePerditaMesi[$i]), 0, ',', '.') . "</td>";
             }
         }        
         $utilePerdita .= "<td></td></tr></tbody></table>";
@@ -1621,10 +1621,10 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $margineContribuzione .= "<tr><td>%ml.fatturato%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliRicaviMesi[$i])) {
-                $margineContribuzione .= "<td>" . number_format(abs($totaliRicaviMesi[$i]), 0, ',', '.') . "</td>";
+                $margineContribuzione .= "<td>" . number_format(abs(floatval($totaliRicaviMesi[$i])), 0, ',', '.') . "</td>";
             }
         }
-        $margineContribuzione .= "<td class='bg-info'>" . number_format(abs($totaleRicavi), 0, ',', '.') . "</td></tr>";
+        $margineContribuzione .= "<td class='bg-info'>" . number_format(abs(floatval($totaleRicavi)), 0, ',', '.') . "</td></tr>";
         
         
         // Acquisti -------------------------------------------------
@@ -1632,40 +1632,40 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $margineContribuzione .= "<tr><td>%ml.acquisti%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliAcquistiMesi[$i])) {
-                $margineContribuzione .= "<td>" . number_format(abs($totaliAcquistiMesi[$i]), 0, ',', '.') . "</td>";
+                $margineContribuzione .= "<td>" . number_format(abs(floatval($totaliAcquistiMesi[$i])), 0, ',', '.') . "</td>";
             }
         }
-        $margineContribuzione .= "<td class='bg-info'>" . number_format(abs($totaleAcquisti), 0, ',', '.') . "</td></tr>";
+        $margineContribuzione .= "<td class='bg-info'>" . number_format(abs(floatval($totaleAcquisti)), 0, ',', '.') . "</td></tr>";
         
         // Margine assoluto -----------------------------------------
         
         $margineContribuzione .= "<tr><td>%ml.margineAssoluto%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliMctAssolutoMesi[$i])) {
-                $margineContribuzione .= "<td " . $classe_MctAss[$i] . ">" . number_format($totaliMctAssolutoMesi[$i], 0, ',', '.') . "</td>";
+                $margineContribuzione .= "<td " . $classe_MctAss[$i] . ">" . number_format(floatval($totaliMctAssolutoMesi[$i]), 0, ',', '.') . "</td>";
             }
         }
-        $margineContribuzione .= "<td class='bg-info'>" . number_format($totaleMctAssoluto, 0, ',', '.') . "</td></tr>";
+        $margineContribuzione .= "<td class='bg-info'>" . number_format(floatval($totaleMctAssoluto), 0, ',', '.') . "</td></tr>";
 
         // Margine percentuale --------------------------------------
 
         $margineContribuzione .= "<tr><td>%ml.marginePercentuale%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliMctPercentualeMesi[$i])) {
-                $margineContribuzione .= "<td " . $classe_MctPer[$i] . ">" . number_format($totaliMctPercentualeMesi[$i], 0, ',', '.') . "</td>";
+                $margineContribuzione .= "<td " . $classe_MctPer[$i] . ">" . number_format(floatval($totaliMctPercentualeMesi[$i]), 0, ',', '.') . "</td>";
             }
         }
-        $margineContribuzione .= "<td class='bg-info'>" . number_format($totaleMctPercentuale, 0, ',', '.') . "</td></tr>";
+        $margineContribuzione .= "<td class='bg-info'>" . number_format(floatval($totaleMctPercentuale), 0, ',', '.') . "</td></tr>";
 
         // Ricarico percentuale -------------------------------------
 
         $margineContribuzione .= "<tr><td>%ml.ricaricoPercentuale%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliMctRicaricoMesi[$i])) {
-                $margineContribuzione .= "<td " . $classe_MctRic[$i] . ">" . number_format($totaliMctRicaricoMesi[$i], 0, ',', '.') . "</td>";
+                $margineContribuzione .= "<td " . $classe_MctRic[$i] . ">" . number_format(floatval($totaliMctRicaricoMesi[$i]), 0, ',', '.') . "</td>";
             }
         }
-        $margineContribuzione .= "<td class='bg-info'>" . number_format($totaleMctRicarico, 0, ',', '.') . "</td>";
+        $margineContribuzione .= "<td class='bg-info'>" . number_format(floatval($totaleMctRicarico), 0, ',', '.') . "</td>";
         
         // Fine e chiusura tabella
 
@@ -1728,12 +1728,12 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                                 if ($totaliMesi[$i] == 0) {
                                     $risultato_andamento .= "<td align='right'>&ndash;&ndash;&ndash;</td>";
                                 } else {
-                                    $risultato_andamento .= "<td align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                                    $risultato_andamento .= "<td align='right'>" . number_format(abs(floatval($totaliMesi[$i])), 0, ',', '.') . "</td>";
                                 }
                                 $totale_mercato += $totaliMesi[$i];
                             }
                         }
-                        $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs($totale_mercato), 0, ',', '.') . "</td>";
+                        $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs(floatval($totale_mercato)), 0, ',', '.') . "</td>";
 
                         $risultato_andamento .= "</tr>";
                         for ($i = 1; $i < 13; $i++) {
@@ -1764,11 +1764,11 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 if ($totaliMesi[$i] == 0) {
                     $risultato_andamento .= "<td align='right'>&ndash;&ndash;&ndash;</td>";
                 } else {
-                    $risultato_andamento .= "<td align='right'>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                    $risultato_andamento .= "<td align='right'>" . number_format(abs(floatval($totaliMesi[$i])), 0, ',', '.') . "</td>";
                 }
                 $totale_mercato += $totaliMesi[$i];
             }
-            $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs($totale_mercato), 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs(floatval($totale_mercato)), 0, ',', '.') . "</td>";
 
             $risultato_andamento .= "</tr>";
             $risultato_andamento .= "<tr><td class='bg-info' align='left'>%ml.totale%</td>";
@@ -1784,12 +1784,12 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     if ($totaliComplessiviMesi[$i] == 0) {
                         $risultato_andamento .= "<td class='bg-info' align='right'>&ndash;&ndash;&ndash;</td>";
                     } else {
-                        $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
+                        $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs(floatval($totaliComplessiviMesi[$i])), 0, ',', '.') . "</td>";
                     }
                     $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
                 }
             }
-            $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs($totale_anno), 0, ',', '.') . "</td>";
+            $risultato_andamento .= "<td class='bg-info' align='right'>" . number_format(abs(floatval($totale_anno)), 0, ',', '.') . "</td>";
             $risultato_andamento .= "</tr></tbody></table>";
         }
 

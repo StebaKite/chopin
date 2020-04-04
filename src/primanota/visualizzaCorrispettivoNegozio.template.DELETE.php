@@ -63,7 +63,7 @@ class VisualizzaCorrispettivoNegozioTemplate extends PrimanotaAbstract {
             $tbodyDettagli = $tbodyDettagli .
                     "<tr>" .
                     "<td>" . $row["cod_conto"] . $row["cod_sottoconto"] . " - " . $row["des_sottoconto"] . "</td>" .
-                    "<td class='dt-right'>" . number_format(trim($row["imp_registrazione"]), 2, ',', '.') . "</td>" .
+                    "<td class='dt-right'>" . number_format(floatval(trim($row["imp_registrazione"])), 2, ',', '.') . "</td>" .
                     "<td class='dt-center'>" . $row["ind_dareavere"] . "</td>" .
                     "</tr>";
         }

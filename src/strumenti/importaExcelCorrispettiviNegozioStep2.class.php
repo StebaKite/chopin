@@ -64,7 +64,7 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                 $iva10 = "";
                 $iva22 = "";
                 $iva4 = "";
-                $contoCorrispettivo = explode(" - ", $array['contoCorrispettivoNegozi']);
+//                $contoCorrispettivo = explode(" - ", $array['contoCorrispettivoNegozi']);
 
                 foreach ($corrispettivo_row as $corrispettivo_col) {
 
@@ -132,12 +132,13 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                     if ($corrispettivo->isNew($db)) {
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo22, $iva22, $corrispettivo);
-                        if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
+                        if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
                             parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
                             break;
                         }
-                    } else
+                    } else {
                         $corrispettiviIgnorati ++;
+                    }
                 }
 
                 if ($importo4 > 0) {
@@ -147,12 +148,13 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
                     if ($corrispettivo->isNew($db)) {
                         $corrispettiviInseriti ++;
                         $dettagliInseriti = $this->generaDettagliCorrispettivo($array, $importo4, $iva4, $corrispettivo);
-                        if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione ,$corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
+                        if (!$this->creaCorrispettivoNegozio($db, $utility, $registrazione, $dettaglioRegistrazione, $corrispettivo->getCodneg(), $datareg, $causale, $stareg, $dettagliInseriti)) {
                             parent::setIndexSession("messaggioImportFileErr", "Errore imprevisto, ripristino eseguito");
                             break;
                         }
-                    } else
+                    } else {
                         $corrispettiviIgnorati ++;
+                    }
                 }
             }
             if (parent::isEmpty(parent::getIndexSession("messaggioImportFileErr"))) {
@@ -172,10 +174,11 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
         $dettagliInseriti = array();
         $dettaglio = array();
 
-        if ($corrispettivo->getContoCassa() == "S")
+        if ($corrispettivo->getContoCassa() == "S") {
             $contoDare = explode(" - ", $array['contoCassa']);
-        else
+        } else {
             $contoDare = explode(" - ", $array['contoBanca']);
+        }
 
         $contoErario = explode(" - ", $array['contoErarioNegozi']);
         $contoCorrispettivo = explode(" - ", $array['contoCorrispettivoNegozi']);

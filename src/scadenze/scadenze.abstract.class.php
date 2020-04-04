@@ -222,7 +222,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "   <td>" . $dati["numfatt"] . "</td>" .
                 "   <td>" . $dati["tipaddebito"] . "</td>" .
                 "   <td " . $dati["tdclass"] . ">" . $dati["stascadenza"] . "</td>" .
-                "   <td>" . number_format(trim($dati["importo"]), 2, ',', '.') . "</td>" .
+                "   <td>" . number_format(floatval(trim($dati["importo"])), 2, ',', '.') . "</td>" .
                 "   <td>" . $dati["bottoneVisualizzaScadenza"] . "</td>" .
                 "   <td>" . $dati["bottoneModificaScadenza"] . "</td>" .
                 "</tr>";
@@ -236,7 +236,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "   <td></td>" .
                 "   <td class='bg-info'><strong>" . $dati["labeltotaledata"] . "</strong></td>" .
                 "   <td class='bg-info'></td>" .
-                "   <td class='bg-info'><strong>" . number_format($dati["totaledata"], 2, ',', '.') . "</strong></td>" .
+                "   <td class='bg-info'><strong>" . number_format(floatval($dati["totaledata"]), 2, ',', '.') . "</strong></td>" .
                 "   <td class='bg-info'></td>" .
                 "   <td class='bg-info'></td>" .
                 "</tr>";
@@ -250,7 +250,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "   <td></td>" .
                 "   <td class='bg-info'><strong>" . $dati["labeltotaleclifor"] . "</strong></td>" .
                 "   <td class='bg-info'></td>" .
-                "   <td class='bg-info'><strong>" . number_format($dati["totaleclifor"], 2, ',', '.') . "</strong></td>" .
+                "   <td class='bg-info'><strong>" . number_format(floatval($dati["totaleclifor"]), 2, ',', '.') . "</strong></td>" .
                 "   <td class='bg-info'></td>" .
                 "   <td class='bg-info'></td>" .
                 "</tr>";
@@ -264,7 +264,7 @@ abstract class ScadenzeAbstract extends Nexus6Abstract implements ScadenzePresen
                 "    <td></td>" .
                 "    <td class='bg-info'><strong>" . $dati["labeltotalescadenze"] . "</strong></td>" .
                 "    <td class='bg-info'></td>" .
-                "    <td class='bg-info'><strong>" . number_format($dati["totalescadenze"], 2, ',', '.') . "</strong></td>" .
+                "    <td class='bg-info'><strong>" . number_format(floatval($dati["totalescadenze"]), 2, ',', '.') . "</strong></td>" .
                 "    <td class='bg-info'></td>" .
                 "    <td class='bg-info'></td>" .
                 "</tr>";

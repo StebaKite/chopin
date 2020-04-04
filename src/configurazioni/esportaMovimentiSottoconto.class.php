@@ -131,15 +131,15 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
 
             $pdf->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', date("d/m/Y", strtotime($row[Registrazione::DAT_REGISTRAZIONE]))), 'LR', 0, 'L', $fill);
             $pdf->Cell($w[1], 6, iconv('UTF-8', 'windows-1252', trim($row[Registrazione::DES_REGISTRAZIONE])), 'LR', 0, 'L', $fill);
-            $pdf->Cell($w[2], 6, number_format($impDare, 2, ',', '.'), 'LR', 0, 'R', $fill);
-            $pdf->Cell($w[3], 6, number_format($impAvere, 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $pdf->Cell($w[2], 6, number_format(floatval($impDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $pdf->Cell($w[3], 6, number_format(floatval($impAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
 
             if ($saldo < 0) {
                 $pdf->SetTextColor(255, 0, 0);
                 $pdf->SetFontSize(10);
             }
 
-            $pdf->Cell($w[4], 6, number_format($saldo, 2, ',', '.'), 'LR', 0, 'R', $fill);
+            $pdf->Cell($w[4], 6, number_format(floatval($saldo), 2, ',', '.'), 'LR', 0, 'R', $fill);
             $pdf->Ln();
 
             $pdf->SetTextColor(0);
@@ -151,9 +151,9 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell($w[0], 6, '', 'LR', 0, 'L', $fill);
         $pdf->Cell($w[1], 6, 'Totale ' . EURO, 'LR', 0, 'R', $fill);
-        $pdf->Cell($w[2], 6, number_format($totaleDare, 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $pdf->Cell($w[3], 6, number_format($totaleAvere, 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $pdf->Cell($w[4], 6, number_format($saldo, 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $pdf->Cell($w[2], 6, number_format(floatval($totaleDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $pdf->Cell($w[3], 6, number_format(floatval($totaleAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $pdf->Cell($w[4], 6, number_format(floatval($saldo), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $pdf->Ln();
 
         $pdf->Cell(array_sum($w), 0, '', 'T');

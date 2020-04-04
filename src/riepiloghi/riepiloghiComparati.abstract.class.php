@@ -41,12 +41,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totBre = ($totaleConto_Bre != 0) ? number_format(floatval($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totTre = ($totaleConto_Tre != 0) ? number_format(floatval($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totVil = ($totaleConto_Vil != 0) ? number_format(floatval($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-                    $tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $tot = ($totale != 0) ? number_format(floatval($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $risultato_costi .= "" .
                             "<tr>" .
@@ -73,12 +73,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $totaleConto_Vil += $totaleConto;
         }
 
-        $totBre = ($totaleConto_Bre != 0) ? number_format($totaleConto_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totaleConto_Tre != 0) ? number_format($totaleConto_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totaleConto_Vil != 0) ? number_format($totaleConto_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totaleConto_Bre != 0) ? number_format(floatval($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totaleConto_Tre != 0) ? number_format(floatval($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totaleConto_Vil != 0) ? number_format(floatval($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-        $tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(floatval($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_costi .= "" .
                 "<tr>" .
@@ -92,12 +92,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format($totale_Bre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totale_Tre != 0) ? number_format($totale_Tre, 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totale_Vil != 0) ? number_format($totale_Vil, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totale_Bre != 0) ? number_format(floatval($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totale_Tre != 0) ? number_format(floatval($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totale_Vil != 0) ? number_format(floatval($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totale_Bre + $totale_Tre + $totale_Vil;
-        $tot = ($totale != 0) ? number_format($totale, 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(floatval($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_costi .= "" .
                 "<tr>" .
@@ -153,12 +153,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-                    $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $risultato_ricavi .= "" .
                             "<tr>" .
@@ -185,12 +185,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $totaleConto_Vil += $totaleConto;
         }
 
-        $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_ricavi .= "" .
                 "<tr>" .
@@ -204,12 +204,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totale_Bre != 0) ? number_format(abs(floatval($totale_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totale_Tre != 0) ? number_format(abs(floatval($totale_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totale_Vil != 0) ? number_format(abs(floatval($totale_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totale_Bre + $totale_Tre + $totale_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_ricavi .= "" .
                 "<tr>" .
@@ -268,12 +268,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-                    $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $risultato_attivo .= "" .
                             "<tr>" .
@@ -301,15 +301,15 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         }
 
         /* @var $totBre int */
-        $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
         /* @var $totTre int */
-        $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
         /* @var $totVil int */
-        $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         /* @var $totale int */
         $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_attivo .= "" .
                 "<tr>" .
@@ -323,12 +323,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totale_Bre != 0) ? number_format(abs(floatval($totale_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totale_Tre != 0) ? number_format(abs(floatval($totale_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totale_Vil != 0) ? number_format(abs(floatval($totale_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totale_Bre + $totale_Tre + $totale_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_attivo .= "" .
                 "<tr>" .
@@ -386,12 +386,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-                    $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+                    $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
                     $risultato_passivo .= "" .
                             "<tr>" .
@@ -418,12 +418,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $totaleConto_Vil += $totaleConto;
         }
 
-        $totBre = ($totaleConto_Bre != 0) ? number_format(abs($totaleConto_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totaleConto_Tre != 0) ? number_format(abs($totaleConto_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totaleConto_Vil != 0) ? number_format(abs($totaleConto_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totaleConto_Bre != 0) ? number_format(abs(floatval($totaleConto_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totaleConto_Tre != 0) ? number_format(abs(floatval($totaleConto_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totaleConto_Vil != 0) ? number_format(abs(floatval($totaleConto_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_passivo .= "" .
                 "<tr>" .
@@ -437,12 +437,12 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format(abs($totale_Bre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totTre = ($totale_Tre != 0) ? number_format(abs($totale_Tre), 2, ',', '.') : "&ndash;&ndash;&ndash;";
-        $totVil = ($totale_Vil != 0) ? number_format(abs($totale_Vil), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totBre = ($totale_Bre != 0) ? number_format(abs(floatval($totale_Bre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totTre = ($totale_Tre != 0) ? number_format(abs(floatval($totale_Tre)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $totVil = ($totale_Vil != 0) ? number_format(abs(floatval($totale_Vil)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $totale = $totale_Bre + $totale_Tre + $totale_Vil;
-        $tot = ($totale != 0) ? number_format(abs($totale), 2, ',', '.') : "&ndash;&ndash;&ndash;";
+        $tot = ($totale != 0) ? number_format(abs(floatval($totale)), 2, ',', '.') : "&ndash;&ndash;&ndash;";
 
         $risultato_passivo .= "" .
                 "<tr>" .
@@ -506,7 +506,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         if ($totaleRicaviVIL > parent::ZERO_VALUE) {
             $marginePercentualeVIL = ($margineTotaleVIL * 100 ) / abs($totaleRicaviVIL);
         }
-        if ($totaleCostiVariabiliVIL > parent::ZERO_VALUE){
+        if ($totaleCostiVariabiliVIL > parent::ZERO_VALUE) {
             $ricaricoPercentualeVIL = ($margineTotaleVIL * 100) / abs($totaleCostiVariabiliVIL);
         }
 
@@ -539,7 +539,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $marginePercentualeTRE = ($margineTotaleTRE * 100 ) / abs($totaleRicaviTRE);
         }
         if ($totaleCostiVariabiliTRE > parent::ZERO_VALUE)
-        $ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
+            $ricaricoPercentualeTRE = ($margineTotaleTRE * 100) / abs($totaleCostiVariabiliTRE);
 
         $totaleRicavi += abs($totaleRicaviTRE);
         $totaleCostiVariabili += $totaleCostiVariabiliTRE;
@@ -590,38 +590,38 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $margineContribuzione .= "" .
                 "<tr>" .
                 "   <td>%ml.fatturato%</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviBRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviTRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviVIL)), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>%ml.acquisti%</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliBRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliTRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliVIL)), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabili)), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>%ml.margineAssoluto%</td>" .
-                "   <td class='text-right'>&euro; " . number_format($margineTotaleBRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format($margineTotaleTRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format($margineTotaleVIL, 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format($margineTotale, 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($margineTotaleBRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($margineTotaleTRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($margineTotaleVIL), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(floatval($margineTotale), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>%ml.marginePercentuale%</td>" .
-                "   <td class='text-right'>" . number_format($marginePercentualeBRE, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='text-right'>" . number_format($marginePercentualeTRE, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='text-right'>" . number_format($marginePercentualeVIL, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='bg-info text-right'>" . number_format($marginePercentuale, 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($marginePercentualeBRE), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($marginePercentualeTRE), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($marginePercentualeVIL), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='bg-info text-right'>" . number_format(floatval($marginePercentuale), 2, ',', '.') . " &#37;</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>%ml.ricaricoPercentuale%</td>" .
-                "   <td class='text-right'>" . number_format($ricaricoPercentualeBRE, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='text-right'>" . number_format($ricaricoPercentualeTRE, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='text-right'>" . number_format($ricaricoPercentualeVIL, 2, ',', '.') . " &#37;</td>" .
-                "   <td class='bg-info text-right'>" . number_format($ricaricoPercentuale, 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($ricaricoPercentualeBRE), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($ricaricoPercentualeTRE), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='text-right'>" . number_format(floatval($ricaricoPercentualeVIL), 2, ',', '.') . " &#37;</td>" .
+                "   <td class='bg-info text-right'>" . number_format(floatval($ricaricoPercentuale), 2, ',', '.') . " &#37;</td>" .
                 "</tr>" .
                 "</tbody>" .
                 "</table>";
@@ -767,38 +767,38 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
         $tabellaBep .= "" .
                 "<tr>" .
                 "   <td>Fatturato</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviBRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviTRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleRicaviVIL), 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format(abs($totaleRicavi), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviBRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviTRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleRicaviVIL)), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(abs(floatval($totaleRicavi)), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>Costi fissi</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiFissiBRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiFissiTRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiFissiVIL), 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format(abs($totaleCostiFissi), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiFissiBRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiFissiTRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiFissiVIL)), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(abs(floatval($totaleCostiFissi)), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>Acquisti</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliBRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliTRE), 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format(abs($totaleCostiVariabiliVIL), 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format(abs($totaleCostiVariabili), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliBRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliTRE)), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabiliVIL)), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(abs(floatval($totaleCostiVariabili)), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>Incidenza acquisti sul fatturato</td>" .
-                "   <td class='text-right'> " . number_format($incidenzaCostiVariabiliSulFatturatoBRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'> " . number_format($incidenzaCostiVariabiliSulFatturatoTRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'> " . number_format($incidenzaCostiVariabiliSulFatturatoVIL, 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'> " . number_format($incidenzaCostiVariabiliSulFatturato, 2, ',', '.') . "</td>" .
+                "   <td class='text-right'> " . number_format(floatval($incidenzaCostiVariabiliSulFatturatoBRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'> " . number_format(floatval($incidenzaCostiVariabiliSulFatturatoTRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'> " . number_format(floatval($incidenzaCostiVariabiliSulFatturatoVIL), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'> " . number_format(floatval($incidenzaCostiVariabiliSulFatturato), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "<tr>" .
                 "   <td>BEP</td>" .
-                "   <td class='text-right'>&euro; " . number_format($bepBRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format($bepTRE, 2, ',', '.') . "</td>" .
-                "   <td class='text-right'>&euro; " . number_format($bepVIL, 2, ',', '.') . "</td>" .
-                "   <td class='bg-info text-right'>&euro; " . number_format($bep, 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($bepBRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($bepTRE), 2, ',', '.') . "</td>" .
+                "   <td class='text-right'>&euro; " . number_format(floatval($bepVIL), 2, ',', '.') . "</td>" .
+                "   <td class='bg-info text-right'>&euro; " . number_format(floatval($bep), 2, ',', '.') . "</td>" .
                 "</tr>" .
                 "</tbody></table>";
 
@@ -811,7 +811,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
     public function makeTabs($riepilogo) {
 
         $tabs = self::EMPTYSTRING;
-        
+
         if ((parent::isNotEmpty($riepilogo->getTableCostiComparati()) or ( parent::isNotEmpty($riepilogo->getTableRicaviComparati())) or ( parent::isNotEmpty($riepilogo->getTableAttivoComparati())) or ( parent::isNotEmpty($riepilogo->getTablePassivoComparati())))) {
 
             $tabs = "<ul class='nav nav-tabs' role='tablist'>";
@@ -877,17 +877,17 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $risultato_esercizio .= "" .
                     "<tr>" .
                     "	<td>Totale Ricavi</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviBrembate(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviTrezzo(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviVilla(), 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($riepilogo->getTotaleRicavi(), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviBrembate()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviTrezzo()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviVilla()), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($riepilogo->getTotaleRicavi()), 2, ',', '.') . "</td>" .
                     "</tr>" .
                     "<tr>" .
                     "	<td>Totale Costi</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiBrembate(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiTrezzo(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiVilla(), 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($riepilogo->getTotaleCosti(), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiBrembate()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiTrezzo()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiVilla()), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($riepilogo->getTotaleCosti()), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $utile_Bre = $riepilogo->getTotaleRicaviBrembate() - $riepilogo->getTotaleCostiBrembate();
@@ -898,10 +898,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $risultato_esercizio .= "" .
                     "<tr>" .
                     "	<td>Utile del Periodo</td>" .
-                    "	<td class='text-right'>" . number_format($utile_Bre, 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($utile_Tre, 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($utile_Vil, 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($utile, 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($utile_Bre), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($utile_Tre), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($utile_Vil), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($utile), 2, ',', '.') . "</td>" .
                     "</tr>" .
                     "</tbody></table>";
         } elseif ($tipoTotale == self::PERDITA) {
@@ -911,17 +911,17 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $risultato_esercizio .= "" .
                     "<tr>" .
                     "	<td>Totale Ricavi</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviBrembate(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviTrezzo(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleRicaviVilla(), 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($riepilogo->getTotaleRicavi(), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviBrembate()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviTrezzo()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleRicaviVilla()), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($riepilogo->getTotaleRicavi()), 2, ',', '.') . "</td>" .
                     "</tr>" .
                     "<tr>" .
                     "	<td>Totale Costi</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiBrembate(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiTrezzo(), 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($riepilogo->getTotaleCostiVilla(), 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($riepilogo->getTotaleCosti(), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiBrembate()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiTrezzo()), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($riepilogo->getTotaleCostiVilla()), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($riepilogo->getTotaleCosti()), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $perdita_Bre = $riepilogo->getTotaleRicaviBrembate() - $riepilogo->getTotaleCostiBrembate();
@@ -932,10 +932,10 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $risultato_esercizio .= "" .
                     "<tr>" .
                     "	<td>Perdita del Periodo</td>" .
-                    "	<td class='text-right'>" . number_format($perdita_Bre, 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($perdita_Tre, 2, ',', '.') . "</td>" .
-                    "	<td class='text-right'>" . number_format($perdita_Vil, 2, ',', '.') . "</td>" .
-                    "	<td class='bg-info text-right'>" . number_format($perdita, 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($perdita_Bre), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($perdita_Tre), 2, ',', '.') . "</td>" .
+                    "	<td class='text-right'>" . number_format(floatval($perdita_Vil), 2, ',', '.') . "</td>" .
+                    "	<td class='bg-info text-right'>" . number_format(floatval($perdita), 2, ',', '.') . "</td>" .
                     "</tr>" .
                     "</tbody></table>";
         } else {
@@ -944,19 +944,19 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Totale Ricavi</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format(abs($riepilogo->getTotaleRicavi()), 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(abs(floatval($riepilogo->getTotaleRicavi())), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Totale Costi</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format(abs($riepilogo->getTotaleCosti()), 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(abs(floatval($riepilogo->getTotaleCosti())), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $pareggio = $riepilogo->getTotaleRicavi() - $riepilogo->getTotaleCosti();
 
             $risultato_esercizio .= "<tr height='30'>" .
                     "	<td width='308' align='left' class='mark'>Utile del Periodo</td>" .
-                    "	<td width='108' align='right' class='mark'>" . number_format($pareggio, 2, ',', '.') . "</td>" .
+                    "	<td width='108' align='right' class='mark'>" . number_format(floatval($pareggio), 2, ',', '.') . "</td>" .
                     "</tr>";
 
             $risultato_esercizio .= "</tbody></table>";
@@ -965,5 +965,3 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
     }
 
 }
-?>
-

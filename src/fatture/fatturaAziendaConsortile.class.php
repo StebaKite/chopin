@@ -51,7 +51,7 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
         $this->Cell($w[0], 6, "N. " . $linea["QUANTITA"], "");
         $this->Cell($w[1], 6, iconv('UTF-8', 'windows-1252', $articolo[0]), "");
         $this->Cell($w[2], 6, EURO, "", 0, 'R');
-        $this->Cell($w[3], 6, number_format($linea["TOTALE"], 2, ',', '.'), "", 0, 'R');
+        $this->Cell($w[3], 6, number_format(floatval($linea["TOTALE"]), 2, ',', '.'), "", 0, 'R');
         $this->Ln();
 
         for ($i = 1; $i < count($articolo); $i++) {
@@ -88,15 +88,15 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
         $this->Cell(20,6, "NETTO A PAGARE","",0,"C");
 
         $this->SetXY( $r1+3, $y1+7);
-        $this->Cell(20,6,number_format($tot_imponibile, 2, ',', '.'),"",0,"C");
+        $this->Cell(20,6,number_format(floatval($tot_imponibile), 2, ',', '.'),"",0,"C");
         $this->SetXY( $r1+30, $y1+7);
-        $this->Cell(20,6,number_format($tot_iva, 2, ',', '.'),"",0,"C");
+        $this->Cell(20,6,number_format(floatval($tot_iva), 2, ',', '.'),"",0,"C");
         $this->SetXY( $r1+50, $y1+7);
-        $this->Cell(20,6,number_format($tot_dettagli, 2, ',', '.'),"",0,"C");
+        $this->Cell(20,6,number_format(floatval($tot_dettagli), 2, ',', '.'),"",0,"C");
         $this->SetX( $r1+90 );
-        $this->Cell(40,6,"-" . number_format($tot_iva, 2, ',', '.'),"",0,"C");
+        $this->Cell(40,6,"-" . number_format(floatval($tot_iva), 2, ',', '.'),"",0,"C");
         $this->SetXY( $r1+159, $y1+7);
-        $this->Cell(20,6,EURO . " " . number_format($tot_imponibile, 2, ',', '.'),"",0,"C");   
+        $this->Cell(20,6,EURO . " " . number_format(floatval($tot_imponibile), 2, ',', '.'),"",0,"C");   
     }
 
     public function go() {
