@@ -245,6 +245,10 @@ function controllaNumeroFattura(campoFat)
     var numfatt = $("#" + campoFat).val();
 
     if (isNotEmpty(numfatt)) {
+        
+        
+        
+        
         $("#" + campoFat + "_control_group").removeClass("has-error");
         $("#" + campoFat + "_messaggio").html("");
         return true;

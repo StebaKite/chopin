@@ -981,6 +981,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                                     $risultato_andamento .= "<td>" . number_format($totaliMesi[$i], 0, ',', '.') . "</td>";
                                 }
                                 $totale_conto = $totale_conto + $totaliMesi[$i];                            
+                            } else {
+                                $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                                
                             }
                         }
                         $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_conto, 0, ',', '.') . "</td>";
@@ -1044,6 +1046,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     $risultato_andamento .= "<td class='bg-info'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
                 }
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];                
+            } else {
+                $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
             }
         }
         $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
@@ -1348,6 +1352,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                                 $risultato_andamento .= "<td>" . number_format(abs($totaliMesi[$i]), 0, ',', '.') . "</td>";
                             }
                             $totale_conto = $totale_conto + $totaliMesi[$i];
+                        } else {
+                            $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                            
                         }
                     }
                     $risultato_andamento .= "<td class='bg-info'>" . number_format(abs($totale_conto), 0, ',', '.') . "</td>";
@@ -1411,6 +1417,8 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                     $risultato_andamento .= "<td class='bg-info'>" . number_format($totaliComplessiviMesi[$i], 0, ',', '.') . "</td>";
                 }
                 $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];
+            } else {
+                $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";               
             }
         }
         $risultato_andamento .= "<td class='bg-info'>" . number_format($totale_anno, 0, ',', '.') . "</td>";
@@ -1454,7 +1462,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
                 for ($j = $i; $j < 13; $j++) {
                     if (isset($progrUtilePerditaMesi[$j])) {
-                        if ($utilePerditaMesi[$i] > 0) {
+                        if ($utilePerditaMesi[$i] != 0) {
                             $progrUtilePerditaMesi[$j] += $utilePerditaMesi[$i];
                             if ($progrUtilePerditaMesi[$j] < 0) {
                                 $progrClasse[$j] = "class='bg-warning'";
@@ -1462,12 +1470,13 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                                 $progrClasse[$j] = "";
                             }
                         }
-                        else {
-                            $progrUtilePerditaMesi[$j] = 0;
-                        }                
+                    } else {
+                        $progrClasse[$j] = "";                        
                     }
                 }                
-            }
+            } else {
+                $classe[$i] = "";                
+            }            
         }
 
         if ($totaleUtilePerdita < 0) {
@@ -1609,7 +1618,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
         // Fatturato -----------------------------------------------
         
-        $margineContribuzione = "<tr><td>%ml.fatturato%</td>";
+        $margineContribuzione .= "<tr><td>%ml.fatturato%</td>";
         for ($i = 1; $i < 13; $i++) {
             if (isset($totaliRicaviMesi[$i])) {
                 $margineContribuzione .= "<td>" . number_format(abs($totaliRicaviMesi[$i]), 0, ',', '.') . "</td>";
