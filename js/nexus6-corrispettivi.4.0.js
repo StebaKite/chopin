@@ -576,7 +576,10 @@ function modificaCorrispettivoMercato(idRegistrazione)
                         $("#mercato_cormer_mod").selectpicker('val', mercato);
 
                         $("#dettagli_cormer_mod").html($(this).find("dettagli").text());
-                        $("#conti_cormer_mod").html($(this).find("contiCausale").text());
+                        
+                        var conti = $(this).find("contiCausale").text();
+                        $("#conti_cormer_mod").html(conti);
+                        $("#conti_cormer_mod").selectpicker('refresh');
                     }
             )
 
@@ -669,7 +672,7 @@ function modificaCorrispettivoNegozio(idRegistrazione)
                         $("#dettagli_corneg_mod").html($(this).find("dettagli").text());
                         
                         var conti = $(this).find("contiCausale").text();
-                        $("#conti_corneg_mod").selectpicker('val', conti);
+                        $("#conti_corneg_mod").html(conti);
                         $("#conti_corneg_mod").selectpicker('refresh');
                     }
             )

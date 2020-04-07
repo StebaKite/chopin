@@ -59,7 +59,10 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
     }
     
     public function prepara() {
-
+        $this->setPresenze(self::EMPTYSTRING);
+        $this->setNumPresenze(self::ZERO_VALUE);
+        
+        parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($this));        
     }
     
     public function isNew($db) {

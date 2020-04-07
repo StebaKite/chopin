@@ -74,6 +74,28 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 "   <tbody id='myTable'>";
     }
 
+    public function intestazioneTabellaRiepiloghiPresenzeAssistiti() {
+        return
+                "<table class='table table-bordered table-hover'>" .
+                "   <thead>" .
+                "       <th width='200'>%ml.assistito%</th>" .
+                "       <th width='50'>%ml.gen%</th>" .
+                "       <th width='50'>%ml.feb%</th>" .
+                "       <th width='50'>%ml.mar%</th>" .
+                "       <th width='50'>%ml.apr%</th>" .
+                "       <th width='50'>%ml.mag%</th>" .
+                "       <th width='50'>%ml.giu%</th>" .
+                "       <th width='50'>%ml.lug%</th>" .
+                "       <th width='50'>%ml.ago%</th>" .
+                "       <th width='50'>%ml.set%</th>" .
+                "       <th width='50'>%ml.ott%</th>" .
+                "       <th width='50'>%ml.nov%</th>" .
+                "       <th width='50'>%ml.dic%</th>" .
+                "       <th width='50'>%ml.totale%</th>" .
+                "   </thead>" .
+                "   <tbody id='myTable'>";
+    }
+
 //    /**
 //     * Questo metodo estrae un riepilogo di totali per conto in Dare per mese
 //     * @param unknown $utility
@@ -1798,38 +1820,101 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
     public function makePresenzeAssistiti($presenzaAssistito) {
 
-        $risultato_ricerca = "" .
-                "<div class='row'>" .
-                "    <div class='col-sm-4'>" .
-                "        <input class='form-control' id='myInput' type='text' placeholder='Ricerca in tabella...'>" .
-                "    </div>" .
-                "    <div class='col-sm-8'>" . parent::getIndexSession(self::MSG) . "</div>" .
-                "</div>" .
-                "<br/>" .
-                "<table class='table table-bordered table-hover'>" .
-                "	<thead>" .
-                "		<th>%ml.negozio%</th>" .
-                "		<th>%ml.idassistito%</th>" .
-                "		<th>%ml.desassistito%</th>" .
-                "		<th>%ml.mese%</th>" .
-                "		<th>%ml.anno%</th>" .
-                "		<th>%ml.qtapresenze%</th>" .
-                "	</thead>" .
-                "   <tbody>";
+        $presenze = $presenzaAssistito->getPresenze();
+        $risultato_andamento = $this->intestazioneTabellaRiepiloghiPresenzeAssistiti();
 
-        foreach ($presenzaAssistito->getPresenze() as $row) {
-            $risultato_ricerca .= "<tr><td>" . trim($row['cod_negozio']) . "</td>";
-            $risultato_ricerca .= "<td>" . trim($row['id_assistito']) . "</td>";
-            $risultato_ricerca .= "<td>" . trim($row['des_assistito']) . "</td>";
-            $risultato_ricerca .= "<td>" . trim($row['mese']) . "</td>";
-            $risultato_ricerca .= "<td>" . trim($row['anno']) . "</td>";
-            $risultato_ricerca .= "<td>" . trim($row['qta_presenze']) . "</td></tr>";
+        $desAssistito_break = "";
+        $totaliMesi = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        $totaliComplessiviMesi = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        
+        foreach ($presenze as $row) {
+
+            $totAssistito = $row['qta_presenze'];
+        
+            if (isset($totaliMesi[$row['mese']])) {
+                
+                if (trim($row['des_assistito']) != $desAssistito_break) {
+
+                    if ($desAssistito_break != "") {
+
+                        /**
+                         * A rottura creo le colonne accumulate e inizializzo l'array
+                         */
+                        $totale_assistito = 0;
+
+                        for ($i = 1; $i < 13; $i++) {
+                            if (isset($totaliMesi[$i])) {
+                                if ($totaliMesi[$i] == 0) {
+                                    $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
+                                } else {
+                                    $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
+                                }
+                                $totale_assistito += $totaliMesi[$i];                            
+                            } else {
+                                $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                                
+                            }
+                        }
+                        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_assistito), 0, ',', '.') . "</td>";
+
+                        $risultato_andamento .= "</tr>";
+                        for ($i = 1; $i < 13; $i++) {
+                            $totaliMesi[$i] = 0;
+                        }
+
+                        $risultato_andamento .= "<tr><td>" . trim($row['des_assistito']) . "</td>";
+                        $totaliMesi[$row['mese']] = $totAssistito;
+                        $totaliComplessiviMesi[$row['mese']] += $totAssistito;
+                    } else {
+                        $risultato_andamento .= "<tr><td>" . trim($row['des_assistito']) . "</td>";
+                        $totaliComplessiviMesi[$row['mese']] += $totAssistito;
+                        $totaliMesi[$row['mese']] = $totAssistito;
+                    }
+                    $desAssistito_break = trim($row['des_assistito']);
+                } else {
+                    $totaliMesi[$row['mese']] += $totAssistito;
+                    $totaliComplessiviMesi[$row['mese']] += $totAssistito;
+                }
+            }
         }
-        $risultato_ricerca .= "</tr></tbody></table>";
-            
-        return $risultato_ricerca;
+        
+        /**
+         * Ultima riga
+         */
+        $totale_assistito = 0;
+
+        for ($i = 1; $i < 13; $i++) {
+            if ($totaliMesi[$i] == 0) {
+                $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
+            } else {
+                $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
+            }
+            $totale_assistito += $totaliMesi[$i];
+        }
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_assistito), 0, ',', '.') . "</td>";
+
+        $risultato_andamento .= "</tr>";
+        $risultato_andamento .= "<tr><td class='bg-info'>%ml.totale%</td>";
+
+        /**
+         * Totali mensili finali
+         */
+        $totale_anno = 0;
+
+        for ($i = 1; $i < 13; $i++) {
+            if (isset($totaliComplessiviMesi[$i])) {
+                if ($totaliComplessiviMesi[$i] == 0) {
+                    $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
+                } else {
+                    $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totaliComplessiviMesi[$i]), 0, ',', '.') . "</td>";
+                }
+                $totale_anno = $totale_anno + $totaliComplessiviMesi[$i];                
+            } else {
+                $risultato_andamento .= "<td class='bg-info'>&ndash;&ndash;&ndash;</td>";
+            }
+        }
+        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_anno), 0, ',', '.') . "</td>";
+        $risultato_andamento .= "</tr></tbody></table>";
+        return $risultato_andamento;
     }
 
 }
-?>
-

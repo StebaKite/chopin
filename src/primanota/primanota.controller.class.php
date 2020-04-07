@@ -390,7 +390,7 @@ class PrimanotaController extends Nexus6Abstract {
             $registrazione->setIdFornitore(self::EMPTYSTRING);
             $registrazione->setIdCliente(self::EMPTYSTRING);
             $registrazione->setNumFattura(self::EMPTYSTRING);
-            $registrazione->setStaRegistrazione(self::EMPTYSTRING);
+            $registrazione->setStaRegistrazione(self::REGISTRAZIONE_APERTA);
             $registrazione->setIdMercato(self::EMPTYSTRING);
         }
 
