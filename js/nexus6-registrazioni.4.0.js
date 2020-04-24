@@ -470,11 +470,11 @@ function validaNuovaRegistrazione() {
                 }
             }
             else {
-                esito += "0";
+                esito += "00";
             }                        
         }
         else
-            esito += "1";            
+            esito += "11";            
     }
     else {
         esito += "00";
