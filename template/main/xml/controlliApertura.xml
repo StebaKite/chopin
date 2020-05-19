@@ -2,4 +2,6 @@
     <errori><![CDATA[%errori%]]></errori>
     <scadenzefor><![CDATA[%scadenzefor%]]></scadenzefor>
     <scadenzecli><![CDATA[%scadenzecli%]]></scadenzecli>
+    <regnoneg><![CDATA[%regSenzaNeg%]]></regnoneg>
+    <regnodet><![CDATA[%regSenzaDet%]]></regnodet>
 </messaggio>

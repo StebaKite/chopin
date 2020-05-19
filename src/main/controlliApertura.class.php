@@ -39,6 +39,8 @@ class ControlliApertura extends Nexus6Abstract implements MainBusinessInterface 
 
                         $replace = array(
                             '%errori%' => $this->controllaRegistrazioniInErrore($utility, $db),
+                            '%regSenzaNeg%' => $this->controllaRegistrazioniSenzaNegozio($utility, $db),
+                            '%regSenzaDet%' => $this->controllaRegistrazioniSenzaDettagli($utility, $db),
                             '%scadenzefor%' => $this->controllaScadenzeFornitoriSuperate($utility, $db),
                             '%scadenzecli%' => $this->controllaScadenzeClientiSuperate($utility, $db),
                         );

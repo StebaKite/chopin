@@ -28,6 +28,8 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
     public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
     public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
+    public static $queryControllaRegistrazioniSenzaNegozio = "/main/controllaRegistrazioniSenzaNegozio.sql";
+    public static $queryControllaRegistrazioniSenzaDettagli = "/main/controllaRegistrazioniSenzaDettagli.sql";
 
     /*
      * Costanti
@@ -787,6 +789,39 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
             $scadenze .= "&ndash; Operazione errata del " . $row['dat_registrazione'] . " : " . $row['cod_negozio'] . " - " . $row['des_registrazione'] . "<br/>";
         }
         return $scadenze;
+    }
+
+    public function controllaRegistrazioniSenzaNegozio($utility, $db): string {
+
+        $array = $utility->getConfig();
+        $replace = array();
+        $sqlTemplate = $this->root . $array['query'] . self::$queryControllaRegistrazioniSenzaNegozio;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        $registrazioniSenzaNegozio = "";
+
+        foreach (pg_fetch_all($result) as $row) {
+            $registrazioniSenzaNegozio .= "&ndash; Operazione del " . $row['dat_registrazione'] . " : " . $row['des_registrazione'] . " priva del codice negozio<br/>";
+        }
+        
+        return ($registrazioniSenzaNegozio === "") ? "&ndash; Tutte le registrazioni hanno il codice negozio valorizzato correttamente" : $registrazioniSenzaNegozio;
+    }
+
+    public function controllaRegistrazioniSenzaDettagli($utility, $db): string {
+
+        $array = $utility->getConfig();
+        $replace = array();
+        $sqlTemplate = $this->root . $array['query'] . self::$queryControllaRegistrazioniSenzaDettagli;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        $registrazioniSenzaDettagli = "";
+
+        foreach (pg_fetch_all($result) as $row) {
+            $registrazioniSenzaDettagli .= "&ndash; Operazione del " . $row['dat_registrazione'] . " : " . $row['des_registrazione'] . " priva dei dettagli<br/>";
+        }
+        return ($registrazioniSenzaDettagli === "") ? "&ndash; Tutte le registrazioni sono dettagliate correttamente" : $registrazioniSenzaDettagli;
     }
 
     /**
