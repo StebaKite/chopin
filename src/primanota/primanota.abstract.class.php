@@ -441,17 +441,16 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                 
                 if (parent::isNotEmpty($registrazione->getIdFornitore())) {
                     $modifica_parms .= "'" . $scadenzaFornitore->getIdTableScadenzeAperte()  . "',";
-                }
-                elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
+                } elseif (parent::isNotEmpty($registrazione->getIdCliente())) {
                     $modifica_parms .= "'" . $scadenzaCliente->getIdTableScadenzeAperte()  . "',";
+                } else {
+                    $modifica_parms .= "'noscad',";
                 }
                 
                 $modifica_parms .= trim($codConto[0]) . ",";
                 $modifica_parms .= trim($codConto[1]) . ",";
                 $modifica_parms .= "'importo" . trim($codConto[0]) . trim($codConto[1]) . "',";
                 $modifica_parms .= "'segno" . trim($codConto[0]) . trim($codConto[1]) . "',";
-//                $modifica_parms .= "$('#importo" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
-//                $modifica_parms .= "$('#segno" . trim($codConto[0]) . trim($codConto[1]) . "').val()" . ",";
                 $modifica_parms .= trim($unDettaglio[DettaglioRegistrazione::ID_DETTAGLIO_REGISTRAZIONE]);
 
                 if (parent::isNotEmpty($registrazione->getIdFornitore())) {

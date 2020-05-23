@@ -28,7 +28,7 @@ class AggiornaSegnoDettaglioRegistrazione extends PrimanotaAbstract implements P
     public function go() {
         $db = Database::getInstance();
         $dettaglioRegistrazione = DettaglioRegistrazione::getInstance();
-        $dettaglioRegistrazione->aggiornaSegno($db);
+        $dettaglioRegistrazione->aggiornaDettaglio($db);
         $registrazione = Registrazione::getInstance();
         $scadenzaFornitore = ScadenzaFornitore::getInstance();
         $scadenzaCliente = ScadenzaCliente::getInstance();

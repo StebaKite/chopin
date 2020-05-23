@@ -48,6 +48,7 @@ interface PrimanotaBusinessInterface extends MainNexus6Interface {
 	const VERIFICA_DETTAGLI_PAGAMENTO = "Obj_verificadettaglipagamento";
 	const VERIFICA_DETTAGLI_INCASSO = "Obj_verificadettagliincasso";
 	const CONTROLLA_DATA_REGISTRAZIONE = "Obj_controlladataregistrazione";
+	const VERIFICA_REGISTRAZIONE_DOPPIA = "Obj_verificaregistrazionedoppia";
 	const AGGIUNGI_SCADENZA_FORNITORE = "Obj_aggiungiscadenzafornitore";
 	const CALCOLA_DATA_SCADENZA_FORNITORE = "Obj_calcoladatascadenzafornitore";
 	const CALCOLA_DATA_SCADENZA_CLIENTE = "Obj_calcoladatascadenzacliente";

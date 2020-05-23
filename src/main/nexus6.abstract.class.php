@@ -44,6 +44,8 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const CODICE_NEGOZIO_RICERCA = "codneg_sel";
     const CAUSALE_RICERCA = "causale";
     const DATA_REGISTRAZIONE = "datareg";
+    const CAUSALE_REGISTRAZIONE = "caureg";
+    const DESCRIZIONE_REGISTRAZIONE = "descreg";
     
     const CATEGORIA_CONTO = "catconto";
     const DES_CONTO = "desconto";

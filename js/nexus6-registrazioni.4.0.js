@@ -212,19 +212,24 @@ $("#button-ok-nuovodett-nuova-registrazione-form").click(
             var importoNormalizzato = importo.trim().replace(",", ".");
 
             if (isNotEmpty(D_A) && isNotEmpty(conto) && isNotEmpty(importo)) {                
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange =
-                        function () {
-                            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                                $("#scadenzesuppl_cre_control_group").removeClass("has-error");
-                                $("#scadenzesuppl_cre_messaggio").html("");                    
-                                var sottocontiTable = xmlhttp.responseText;
-                                $("#dettagli_cre").html(sottocontiTable);
-                                controllaDettagliRegistrazione("dettagli_cre");
-                            }
-                        };
-                xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
-                xmlhttp.send();
+                if (importoNormalizzato.split(".").length <= 2) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange =
+                            function () {
+                                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                                    $("#scadenzesuppl_cre_control_group").removeClass("has-error");
+                                    $("#scadenzesuppl_cre_messaggio").html("");                    
+                                    var sottocontiTable = xmlhttp.responseText;
+                                    $("#dettagli_cre").html(sottocontiTable);
+                                    controllaDettagliRegistrazione("dettagli_cre");
+                                }
+                            };
+                    xmlhttp.open("GET", "aggiungiNuovoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&dareAvere=" + D_A + "&importo=" + importoNormalizzato, true);
+                    xmlhttp.send();
+
+                } else {
+                    $("#dettagli_cre_messaggio").html("Importo non valido");                    
+                }                
             }
         }
 );
@@ -480,7 +485,14 @@ function validaNuovaRegistrazione() {
         esito += "00";
     }
 
-    if (esito === "11111111") {
+    controllaRegistrazioneDoppia("datareg_cre", "causale_cre", "descreg_cre", "dettagli_cre");
+    if (isEmpty($("#dettagli_cre_messaggio").text())) {
+        esito += "1";
+    } else {
+        esito += "0";
+    }
+
+    if (esito === "111111111") {
         return true;
     } else {
         return false;
@@ -591,6 +603,41 @@ function modificaDettaglioRegistrazione(idTable, idTableScad, conto, sottoconto,
             }
         };
         xmlhttp.open("GET", "../primanota/aggiornaDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
+        xmlhttp.send();
+    }   
+}
+
+// ---------------------------------------------------------------------
+// Function di aggiornamento
+// ---------------------------------------------------------------------
+
+function modificaSegnoDettaglioRegistrazione(idTable, idTableScad, conto, sottoconto, importoField, segnoField, idDettaglio)
+{
+    var importoDettNormalizzato;
+    var importo = $("#" + importoField).val();
+    var segno = $("#" + segnoField).val();    
+    
+    if (isEmpty(importo))
+        importoDettNormalizzato = 0;
+    else
+        importoDettNormalizzato = importo.trim().replace(",", ".");
+
+    if (isNotEmpty(conto)) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                if (isNotEmpty(xmlhttp.responseText)) {
+                    $("#" + idTable + "_control_group").removeClass("has-error");
+                    $("#" + idTable + "_messaggio").html("");                    
+                    $("#" + idTableScad + "_control_group").removeClass("has-error");
+                    $("#" + idTableScad + "_messaggio").html("");       
+                    var dettagliTable = xmlhttp.responseText;
+                    $("#" + idTable).html(dettagliTable);
+                    controllaDettagliRegistrazione(idTable);
+                }
+            }
+        };
+        xmlhttp.open("GET", "../primanota/aggiornaSegnoDettaglioRegistrazioneFacade.class.php?modo=go&codconto=" + conto + "&codsottoconto=" + sottoconto + "&importo=" + importoDettNormalizzato + "&dareAvere=" + segno + "&iddettaglio=" + idDettaglio, true);
         xmlhttp.send();
     }   
 }

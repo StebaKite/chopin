@@ -73,6 +73,7 @@ class Registrazione extends CoreBase implements CoreInterface {
     const AGGIORNA_REGISTRAZIONE = "/primanota/updateRegistrazione.sql";
     const CERCA_FATTURA_FORNITORE = "/primanota/ricercaFatturaFornitore.sql";
     const CERCA_FATTURA_CLIENTE = "/primanota/ricercaFatturaCliente.sql";
+    const CERCA_REGISTRAZIONE_DOPPIA = "/primanota/cercaRegistrazioneDoppia.sql";
 
     // Metodi
 
@@ -369,6 +370,32 @@ class Registrazione extends CoreBase implements CoreInterface {
         return false;
     }
 
+    public function cercaRegistrazioneDoppia($db) {
+        
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+
+        $replace = array(
+            '%dat_registrazione%' => trim($this->getDatRegistrazione()),
+            '%cau_registrazione%' => trim($this->getCodCausale()),
+            '%des_registrazione%' => trim($this->getDesRegistrazione())
+        );
+        $sqlTemplate = $this->getRoot() . $array['query'] . self::CERCA_REGISTRAZIONE_DOPPIA;
+        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    // ------ Getters & Setters ----------------------------------------------
+    
     public function getRoot() {
         return $this->root;
     }

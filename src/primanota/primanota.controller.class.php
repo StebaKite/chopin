@@ -171,6 +171,12 @@ class PrimanotaController extends Nexus6Abstract {
             $scadenzaCliente->setScadenzeTable($this->getParmFromRequest(self::TABELLA_SCADENZE));
         }
         
+        if (null !== $this->getParmFromRequest(self::DATA_REGISTRAZIONE)) {
+            $registrazione->setDatRegistrazione($this->getParmFromRequest(self::DATA_REGISTRAZIONE));
+            $registrazione->setDesRegistrazione($this->getParmFromRequest(self::DESCRIZIONE_REGISTRAZIONE));
+            $registrazione->setCodCausale($this->getParmFromRequest(self::CAUSALE_REGISTRAZIONE));                    
+        }
+        
         // Registrazione incasso ==========================================================
 
         if (null !== $this->getParmFromRequest(self::CODICE_CLIENTE_INCASSO_CREAZIONE)) {

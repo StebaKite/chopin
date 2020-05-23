@@ -124,7 +124,7 @@ function controllaDataRegistrazione(campoDat)
                 }
             }
         };
-        xmlhttp.open("GET", "../primanota/controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, true);
+        xmlhttp.open("GET", "../primanota/controllaDataRegistrazioneFacade.class.php?modo=start&datareg=" + datareg, false);
         xmlhttp.send();
     }
 }
@@ -245,10 +245,6 @@ function controllaNumeroFattura(campoFat)
     var numfatt = $("#" + campoFat).val();
 
     if (isNotEmpty(numfatt)) {
-        
-        
-        
-        
         $("#" + campoFat + "_control_group").removeClass("has-error");
         $("#" + campoFat + "_messaggio").html("");
         return true;
@@ -306,7 +302,7 @@ function controllaNumeroFatturaFornitore(campoForn, campoFat, campoDat)
                 }
             }
         };
-        xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&fornitore_mod=" + fornitore + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, true);
+        xmlhttp.open("GET", "cercaFatturaFornitoreFacade.class.php?modo=start&fornitore_mod=" + fornitore + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, false);
         xmlhttp.send();
     } else
         return true;
@@ -345,7 +341,7 @@ function controllaNumeroFatturaCliente(campoCli, campoFat, campoDat)
                 }
             }
         };
-        xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&cliente_mod=" + cliente + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, true);
+        xmlhttp.open("GET", "cercaFatturaClienteFacade.class.php?modo=start&cliente_mod=" + cliente + "&numfatt_mod=" + numfatt + "&datareg_mod=" + datareg, false);
         xmlhttp.send();
     } else
         return true;
@@ -374,7 +370,7 @@ function controllaDettagliRegistrazione(campoDet)
             }
         }
     };
-    xmlhttp.open("GET", "../primanota/verificaDettagliRegistrazioneFacade.class.php?modo=start&scadenzeTable=" + campoDet, true);
+    xmlhttp.open("GET", "../primanota/verificaDettagliRegistrazioneFacade.class.php?modo=start&scadenzeTable=" + campoDet, false);
     xmlhttp.send();
 }
 
@@ -428,6 +424,42 @@ function controllaQuantita(campoQta) {
         return false;
     }
 }
+
+//---------------------------------------------------------------------------------
+
+function controllaRegistrazioneDoppia(campoDat, campoCau, campoDes, campoDet) {
+    
+    /**
+     * Questo controllo cerca di evitare che vengano inserite registrazioni doppie 
+     * nella stessa giornata e con egual descrizione 
+     */
+    
+    var datareg = $("#" + campoDat).val();
+    var caureg = $("#" + campoCau).val();
+    var descreg = $("#" + campoDes).val();    
+    
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if ((this.readyState === 4) && (this.status === 200)) {
+            if (isNotEmpty(this.responseText)) {
+                $("#" + campoDat + "_control_group").addClass("has-error");
+                $("#" + campoCau + "_control_group").addClass("has-error");
+                $("#" + campoDes + "_control_group").addClass("has-error");
+                $("#" + campoDet + "_messaggio").html(this.responseText);
+            } else {
+                $("#" + campoDat + "_control_group").removeClass("has-error");
+                $("#" + campoCau + "_control_group").removeClass("has-error");
+                $("#" + campoDes + "_control_group").removeClass("has-error");
+                $("#" + campoDet + "_messaggio").html("");
+            }
+        }
+    };
+    xmlhttp.open("GET", "../primanota/verificaRegistrazioneDoppiaFacade.class.php?modo=start&datareg=" + datareg + "&caureg=" + caureg + "&descreg=" + descreg, false);
+    xmlhttp.send();
+}
+
+
+
 
 function isNotEmpty(campo) {
     
