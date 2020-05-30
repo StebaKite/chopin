@@ -204,8 +204,8 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
             $template = $utility->tailFile($utility->getTemplate($this->testata), $replace);
             echo $utility->tailTemplate($template);
 
-            self::$replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
-            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), self::$replace);
+            $replace = array('%messaggio%' => parent::getIndexSession(self::MESSAGGIO));
+            $template = $utility->tailFile($utility->getTemplate($this->messaggioErrore), $replace);
             parent::setIndexSession(self::MSG, $utility->tailTemplate($template));
         }
         $importaExcelCorrispettiviNegozioTemplate->displayPagina();

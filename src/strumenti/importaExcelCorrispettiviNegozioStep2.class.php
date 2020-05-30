@@ -199,7 +199,8 @@ class ImportaExcelCorrispettiviNegozioStep2 extends StrumentiAbstract implements
         $dettaglio = array();
 
         $imponibile = round($importo / $aliquota, 2);
-        $iva = round($imponibile * (round($aliquota / 10, 1)), 2);
+        $iva = round($importo - $imponibile, 2);
+//        $iva = round($imponibile * (round($aliquota / 10, 1)), 2);
 
         // sistemazione della squadratura generata dagli arrotondamenti
         $differenza = round($importo - ($imponibile + $iva), 2);
