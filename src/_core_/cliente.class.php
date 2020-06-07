@@ -114,14 +114,14 @@ class Cliente extends CoreBase implements CoreInterface {
 
         $replace = array(
             '%cod_cliente%' => trim($this->getCodCliente()),
-            '%des_cliente%' => trim($this->getDesCliente()),
-            '%des_indirizzo_cliente%' => ($this->getDesIndirizzoCliente() != "") ? "'" . trim($this->getDesIndirizzoCliente()) . "'" : "null",
-            '%des_citta_cliente%' => ($this->getDesCittaCliente() != "") ? "'" . trim($this->getDesCittaCliente()) . "'" : "null",
-            '%cap_cliente%' => ($this->getCapCliente() != "") ? "'" . trim($this->getCapCliente()) . "'" : "null",
-            '%tip_addebito%' => trim($this->getTipAddebito()),
-            '%cod_piva%' => ($this->getCodPiva() != "") ? "'" . trim($this->getCodPiva()) . "'" : "null",
-            '%cod_fisc%' => ($this->getCodFisc() != "") ? "'" . trim($this->getCodFisc()) . "'" : "null",
-            '%cat_cliente%' => trim($this->getCatCliente())
+            '%des_cliente%' => parent::isEmpty($this->getDesCliente()) ? parent::NULL_VALUE : str_replace("'", "''", $this->getDesCliente()),
+            '%des_indirizzo_cliente%' => parent::isEmpty($this->getDesIndirizzoCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getDesIndirizzoCliente()) . "'",
+            '%des_citta_cliente%' => parent::isEmpty($this->getDesCittaCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getDesCittaCliente()) . "'",
+            '%cap_cliente%' => parent::isEmpty($this->getCapCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCapCliente()) . "'",
+            '%tip_addebito%' => parent::isEmpty($this->getTipAddebito()) ? parent::NULL_VALUE : str_replace("'", "''", $this->getTipAddebito()),
+            '%cod_piva%' => parent::isEmpty($this->getCodPiva()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCodPiva()) . "'",
+            '%cod_fisc%' => parent::isEmpty($this->getCodFisc()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCodFisc()) . "'",
+            '%cat_cliente%' => parent::isEmpty($this->getCatCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCatCliente()) . "'"
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::INSERISCI_CLIENTE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -241,18 +241,21 @@ class Cliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        foreach (pg_fetch_all($result) as $row) {
-            $this->setCodCliente($row[self::COD_CLIENTE]);
-            $this->setDesCliente($row[self::DES_CLIENTE]);
-            $this->setDesIndirizzoCliente($row[self::DES_INDIRIZZO_CLIENTE]);
-            $this->setDesCittaCliente($row[self::DES_CITTA_CLIENTE]);
-            $this->setCapCliente($row[self::CAP_CLIENTE]);
-            $this->setTipAddebito($row[self::TIP_ADDEBITO]);
-            $this->setDatCreazione($row[self::DAT_CREAZIONE]);
-            $this->setCodPiva($row[self::COD_PIVA]);
-            $this->setCodFisc($row[self::COD_FISC]);
-            $this->setCatCliente($row[self::CAT_CLIENTE]);
+        if (pg_num_rows($result) > 0) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setCodCliente($row[self::COD_CLIENTE]);
+                $this->setDesCliente($row[self::DES_CLIENTE]);
+                $this->setDesIndirizzoCliente($row[self::DES_INDIRIZZO_CLIENTE]);
+                $this->setDesCittaCliente($row[self::DES_CITTA_CLIENTE]);
+                $this->setCapCliente($row[self::CAP_CLIENTE]);
+                $this->setTipAddebito($row[self::TIP_ADDEBITO]);
+                $this->setDatCreazione($row[self::DAT_CREAZIONE]);
+                $this->setCodPiva($row[self::COD_PIVA]);
+                $this->setCodFisc($row[self::COD_FISC]);
+                $this->setCatCliente($row[self::CAT_CLIENTE]);
+            }
         }
+        parent::setIndexSession(self::CLIENTE, serialize($this));
         return $result;
     }
 
@@ -299,14 +302,14 @@ class Cliente extends CoreBase implements CoreInterface {
         $replace = array(
             '%id_cliente%' => $this->getIdCliente(),
             '%cod_cliente%' => $this->getCodCliente(),
-            '%des_cliente%' => ($this->getDesCliente() != "") ? str_replace("'", "''", $this->getDesCliente()) : "null",
-            '%des_indirizzo_cliente%' => ($this->getDesIndirizzoCliente() != "") ? "'" . str_replace("'", "''", $this->getDesIndirizzoCliente()) . "'" : "null",
-            '%des_citta_cliente%' => ($this->getDesCittaCliente() != "") ? "'" . str_replace("'", "''", $this->getDesCittaCliente()) . "'" : "null",
-            '%cap_cliente%' => ($this->getCapCliente() != "") ? "'" . str_replace("'", "''", $this->getCapCliente()) . "'" : "null",
-            '%tip_addebito%' => ($this->getTipAddebito() != "") ? str_replace("'", "''", $this->getTipAddebito()) : "null",
-            '%cod_piva%' => ($this->getCodPiva() != "") ? "'" . str_replace("'", "''", $this->getCodPiva()) . "'" : "null",
-            '%cod_fisc%' => ($this->getCodFisc() != "") ? "'" . str_replace("'", "''", $this->getCodFisc()) . "'" : "null",
-            '%cat_cliente%' => ($this->getCatCliente() != "") ? "'" . str_replace("'", "''", $this->getCatCliente()) . "'" : "null"
+            '%des_cliente%' => parent::isEmpty($this->getDesCliente()) ? parent::NULL_VALUE : str_replace("'", "''", $this->getDesCliente()),
+            '%des_indirizzo_cliente%' => parent::isEmpty($this->getDesIndirizzoCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getDesIndirizzoCliente()) . "'",
+            '%des_citta_cliente%' => parent::isEmpty($this->getDesCittaCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getDesCittaCliente()) . "'",
+            '%cap_cliente%' => parent::isEmpty($this->getCapCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCapCliente()) . "'",
+            '%tip_addebito%' => parent::isEmpty($this->getTipAddebito()) ? parent::NULL_VALUE : str_replace("'", "''", $this->getTipAddebito()),
+            '%cod_piva%' => parent::isEmpty($this->getCodPiva()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCodPiva()) . "'",
+            '%cod_fisc%' => parent::isEmpty($this->getCodFisc()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCodFisc()) . "'",
+            '%cat_cliente%' => parent::isEmpty($this->getCatCliente()) ? parent::NULL_VALUE : "'" . str_replace("'", "''", $this->getCatCliente()) . "'"
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_CLIENTE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);

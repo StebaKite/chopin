@@ -68,7 +68,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
         $replace = array(
             '%cod_conto%' => $this->getCodConto(),
             '%cod_sottoconto%' => $this->getCodSottoconto(),
-            '%des_sottoconto%' => $this->getDesSottoconto(),
+            '%des_sottoconto%' => str_replace("'", "''", $this->getDesSottoconto()),
             '%ind_gruppo%' => $this->getIndGruppo()
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SOTTOCONTO;
