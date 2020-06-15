@@ -303,7 +303,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
             '%dat_registrazione%' => trim($this->getDatRegistrazione()),
             '%imp_registrazione%' => trim($this->getImpRegistrazione()),
-            '%nota%' => parent::isNotEmpty($this->getNota()) ? parent::quotation(trim($this->getNota())) : parent::NULL_VALUE,
+            '%nota%' => parent::isNotEmpty(str_replace("'", "''", $this->getNota())) ? parent::quotation(trim(str_replace("'", "''", $this->getNota()))) : parent::NULL_VALUE,
             '%tip_addebito%' => parent::isNotEmpty($this->getTipAddebito()) ? parent::quotation(trim($this->getTipAddebito())) : parent::NULL_VALUE,
             '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation(trim($this->getCodNegozio())) : parent::NULL_VALUE,
             '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? trim($this->getIdCliente()) : parent::NULL_VALUE,
