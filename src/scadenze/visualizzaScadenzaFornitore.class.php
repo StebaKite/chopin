@@ -53,7 +53,7 @@ class VisualizzaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBu
             '%addebito%' => trim($scadenza->getTipAddebito()),
             '%stato%' => trim($scadenza->getStaScadenza()),
             '%fattura%' => trim($scadenza->getNumFattura()),
-            '%nota%' => trim($scadenza->getNotaScadenza()),
+            '%nota%' => str_replace("&", "&amp;", trim($scadenza->getNotaScadenza())),
             '%registrazioneoriginante%' => $registrazioneOriginante,
             '%pagamento%' => $pagamento
         );

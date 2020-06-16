@@ -51,7 +51,7 @@ class ModificaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusine
             '%addebito%' => trim($scadenza->getTipAddebito()),
             '%stato%' => trim($scadenza->getStaScadenza()),
             '%fattura%' => trim($scadenza->getNumFattura()),
-            '%nota%' => trim($scadenza->getNota()),
+            '%nota%' => str_replace("&", "&amp;", trim($scadenza->getNota())),
             '%negozio%' => trim($scadenza->getCodNegozio()),
             '%registrazioneoriginante%' => $registrazioneOriginante,
             '%incasso%' => $incasso

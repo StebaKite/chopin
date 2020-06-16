@@ -322,7 +322,7 @@ function modificaRegistrazione(idRegistrazione)
                         if (isEmpty(cliente))
                             cliente = " ";
 
-                        $("#fornitore_mod").selectpicker('val', fornitore);
+                        $("#fornitore_mod").selectpicker('text', fornitore);
                         $("#cliente_mod").selectpicker('val', cliente);
                         $("#numfatt_mod").val($(this).find("numfatt").text());
                         $("#numfatt_mod_orig").val($(this).find("numfattorig").text());
@@ -334,6 +334,7 @@ function modificaRegistrazione(idRegistrazione)
 
                         $("#dettagli_mod").html($(this).find("dettagli").text());
                         $("#conti_mod").html($(this).find("conti").text());
+                        
                         $('#conti_mod').selectpicker('refresh');
                     }
             );

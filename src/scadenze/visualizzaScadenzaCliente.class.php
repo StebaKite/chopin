@@ -51,7 +51,7 @@ class VisualizzaScadenzaCliente extends ScadenzeAbstract implements ScadenzeBusi
             '%negozio%' => trim($scadenza->getCodNegozio()),
             '%stato%' => trim($scadenza->getStaScadenza()),
             '%fattura%' => trim($scadenza->getNumFattura()),
-            '%nota%' => trim($scadenza->getNota()),
+            '%nota%' => str_replace("&", "&amp;", trim($scadenza->getNota())),
             '%registrazioneoriginante%' => $registrazioneOriginante,
             '%incasso%' => $incasso
         );

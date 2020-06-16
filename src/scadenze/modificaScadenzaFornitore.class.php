@@ -51,11 +51,11 @@ class ModificaScadenzaFornitore extends ScadenzeAbstract implements ScadenzeBusi
             '%data%' => trim($scadenza->getDatScadenza()),
             '%importo%' => trim($scadenza->getImpInScadenza()),
             '%addebito%' => trim($scadenza->getTipAddebito()),
-            '%fornitore%' => trim($registrazione->getIdFornitore()),
+            '%fornitore%' => str_replace("&", "&amp;", trim($registrazione->getIdFornitore())),
             '%negozio%' => trim($scadenza->getCodNegozio()),
             '%stato%' => trim($scadenza->getStaScadenza()),
             '%fattura%' => trim($scadenza->getNumFattura()),
-            '%nota%' => trim($scadenza->getNotaScadenza()),
+            '%nota%' => str_replace("&", "&amp;", trim($scadenza->getNotaScadenza())),
             '%registrazioneoriginante%' => $registrazioneOriginante,
             '%pagamento%' => $pagamento
         );
