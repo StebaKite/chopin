@@ -85,11 +85,11 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
 
         $replace = array(
             '%datareg%' => trim($registrazione->getDatRegistrazione()),
-            '%descreg%' => trim($registrazione->getDesRegistrazione()),
+            '%descreg%' => str_replace("&", "&amp;", trim($registrazione->getDesRegistrazione())),
             '%causale%' => trim($causale->getDesCausale()),
             '%codneg%' => $this->negozio,
-            '%fornitore%' => trim($fornitore->getDesFornitore()),
-            '%cliente%' => trim($cliente->getDesCliente()),
+            '%fornitore%' => str_replace("&", "&amp;", trim($fornitore->getDesFornitore())),
+            '%cliente%' => str_replace("&", "&amp;", trim($cliente->getDesCliente())),
             '%numfatt%' => trim($registrazione->getNumFattura()),
             '%scadenzesupplfornitore%' => trim($this->makeTabellaReadOnlyScadenzeFornitore($scadenzaFornitore)),
             '%scadenzesupplcliente%' => trim($this->makeTabellaReadOnlyScadenzeCliente($scadenzaCliente)),
