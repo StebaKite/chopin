@@ -131,8 +131,22 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
 
             $pdf->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', date("d/m/Y", strtotime($row[Registrazione::DAT_REGISTRAZIONE]))), 'LR', 0, 'L', $fill);
             $pdf->Cell($w[1], 6, iconv('UTF-8', 'windows-1252', trim($row[Registrazione::DES_REGISTRAZIONE])), 'LR', 0, 'L', $fill);
-            $pdf->Cell($w[2], 6, number_format(floatval($impDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
-            $pdf->Cell($w[3], 6, number_format(floatval($impAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
+
+            // se l'importo in dare è zero viene valorizzata una cella vuota
+            
+            if ($impDare == parent::ZERO_VALUE) {
+                $pdf->Cell($w[2], 6, parent::EMPTYSTRING, 'LR', 0, 'R', $fill);            
+            } else {
+                $pdf->Cell($w[2], 6, number_format(floatval($impDare), 2, ',', '.'), 'LR', 0, 'R', $fill);
+            }
+            
+            // Se l'importo in avere è zero viene valorizzata una cella vuota
+            
+            if ($impAvere == parent::ZERO_VALUE) {
+                $pdf->Cell($w[3], 6, parent::EMPTYSTRING, 'LR', 0, 'R', $fill);
+            } else {
+                $pdf->Cell($w[3], 6, number_format(floatval($impAvere), 2, ',', '.'), 'LR', 0, 'R', $fill);
+            }
 
             if ($saldo < 0) {
                 $pdf->SetTextColor(255, 0, 0);
