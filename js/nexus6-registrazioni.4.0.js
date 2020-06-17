@@ -314,15 +314,15 @@ function modificaRegistrazione(idRegistrazione)
                         var negozio = $(this).find("codneg").text();
                         $("#codneg_mod").selectpicker('val', negozio);
 
-                        var fornitore = $(this).find("fornitore").text();
+                        var fornitore = $(this).find("idfornitore").text();
                         if (isEmpty(fornitore))
                             fornitore = " ";
 
-                        var cliente = $(this).find("cliente").text();
+                        var cliente = $(this).find("idcliente").text();
                         if (isEmpty(cliente))
                             cliente = " ";
 
-                        $("#fornitore_mod").selectpicker('text', fornitore);
+                        $("#fornitore_mod").selectpicker('val', fornitore);
                         $("#cliente_mod").selectpicker('val', cliente);
                         $("#numfatt_mod").val($(this).find("numfatt").text());
                         $("#numfatt_mod_orig").val($(this).find("numfattorig").text());

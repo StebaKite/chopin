@@ -1,14 +1,16 @@
 <registrazione>
-	<datareg>%datareg%</datareg>
-	<descreg>%descreg%</descreg>
-	<causale>%causale%</causale>
-	<codneg>%codneg%</codneg>
-	<fornitore>%fornitore%</fornitore>
-	<cliente>%cliente%</cliente>
-	<numfatt>%numfatt%</numfatt>
-	<numfattorig>%numfattorig%</numfattorig>
-	<scadenzesupplfornitore><![CDATA[%scadenzesupplfornitore%]]></scadenzesupplfornitore>
-	<scadenzesupplcliente><![CDATA[%scadenzesupplcliente%]]></scadenzesupplcliente>
-	<dettagli><![CDATA[%dettagli%]]></dettagli>
-	<conti><![CDATA[%conti%]]></conti>
+    <datareg>%datareg%</datareg>
+    <descreg>%descreg%</descreg>
+    <causale>%causale%</causale>
+    <codneg>%codneg%</codneg>
+    <fornitore>%fornitore%</fornitore>
+    <cliente>%cliente%</cliente>
+    <idfornitore>%idfornitore%</idfornitore>
+    <idcliente>%idcliente%</idcliente>
+    <numfatt>%numfatt%</numfatt>
+    <numfattorig>%numfattorig%</numfattorig>
+    <scadenzesupplfornitore><![CDATA[%scadenzesupplfornitore%]]></scadenzesupplfornitore>
+    <scadenzesupplcliente><![CDATA[%scadenzesupplcliente%]]></scadenzesupplcliente>
+    <dettagli><![CDATA[%dettagli%]]></dettagli>
+    <conti><![CDATA[%conti%]]></conti>
 </registrazione>

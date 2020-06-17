@@ -87,6 +87,8 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             '%codneg%' => trim($registrazione->getCodNegozio()),
             '%fornitore%' => str_replace("&", "&amp;", trim($fornitore->getDesFornitore())),
             '%cliente%' => str_replace("&", "&amp;", trim($cliente->getDesCliente())),
+            '%idfornitore%' => trim($fornitore->getIdFornitore()),
+            '%idcliente%' => trim($cliente->getIdCliente()),
             '%numfatt%' => trim($registrazione->getNumFattura()),
             '%numfattorig%' => trim($registrazione->getNumFatturaOrig()),
             '%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettaglioRegistrazione)),
