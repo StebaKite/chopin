@@ -748,8 +748,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
 
                 $stato = ($unaScadenza[ScadenzaCliente::STA_SCADENZA] == "10") ? "Incassata" : "Da Incassare";
 
-                $tbody .= "<tr>" ;
-//                        "	<td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" ;
+                $tbody .= "<tr>";
                 
                 if ($stato == "Da Incassare") {
                     $tdclass = $data_ko;
@@ -777,6 +776,7 @@ abstract class PrimanotaAbstract extends Nexus6Abstract implements PrimanotaPres
                     $tdclass = $data_ok;
                     $bottoneCancella = self::OK_ICON;
                     $tbody .= "" .
+                            "   <td>" . $unaScadenza[ScadenzaCliente::DAT_REGISTRAZIONE] . "</td>" ;
                             "	<td " . $tdclass . ">" . $stato . "</td>" .
                             "	<td>" . $unaScadenza[ScadenzaCliente::IMP_REGISTRAZIONE] . "</td>";                    
                 }
