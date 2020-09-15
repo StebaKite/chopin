@@ -44,7 +44,7 @@ class VisualizzaIncasso extends PrimanotaAbstract implements PrimanotaBusinessIn
         $cliente->leggi($db);
         $scadenzaCliente->setIdRegistrazione($registrazione->getIdRegistrazione());
         $scadenzaCliente->trovaScadenzeIncassate($db);
-        $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_chiuse_inc_vis");
+        $scadenzaCliente->setIdTableScadenzeChiuse("scadenze_incassate_inc_vis");
         parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($scadenzaCliente));
 
         $dettaglioRegistrazione->setIdRegistrazione($registrazione->getIdRegistrazione());

@@ -128,7 +128,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const TABELLA_SCADENZE = "scadenzeTable";
     
     const CODICE_CLIENTE_INCASSO_CREAZIONE = "cliente_inc_cre";
-    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codnegozio_inc_cre";
+    const CODICE_NEGOZIO_INCASSO_CREAZIONE = "codneg_inc_cre";
     
     const TABELLA_SCADENZE_APERTE_INCASSO_CREAZIONE = "scadenze_aperte_inc_cre";
     const TABELLA_SCADENZE_CHIUSE_INCASSO_CREAZIONE = "scadenze_chiuse_inc_cre";
@@ -139,7 +139,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const NUMERO_FATTURA_INCASSO_CREAZIONE = "numfatt_inc_cre";
         
     const CODICE_CLIENTE_INCASSO_MODIFICA = "cliente_inc_mod";
-    const CODICE_NEGOZIO_INCASSO_MODIFICA = "codnegozio_inc_mod";
+    const CODICE_NEGOZIO_INCASSO_MODIFICA = "codneg_inc_mod";
     const TABELLA_SCADENZE_APERTE_INCASSO_MODIFICA = "scadenze_aperte_inc_mod";
     const TABELLA_SCADENZE_CHIUSE_INCASSO_MODIFICA = "scadenze_chiuse_inc_mod";
     const TABELLA_DETTAGLI_INCASSO_MODIFICA = "dettagli_inc_mod";
@@ -174,7 +174,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const DES_REGISTRAZIONE_PAGAMENTO_CREAZIONE = "descreg_pag_cre";
     const CODICE_CAUSALE_PAGAMENTO_CREAZIONE = "causale_pag_cre";
     const FORNITORE_PAGAMENTO_CREAZIONE = "fornitore_pag_cre";
-    const CODICE_NEGOZIO_PAGAMENTO_CREAZIONE = "codnegozio_pag_cre";
+    const CODICE_NEGOZIO_PAGAMENTO_CREAZIONE = "codneg_pag_cre";
     const NUMERO_FATTURA_PAGAMENTO_CREAZIONE = "numfatt_pag_cre";
     const TABELLA_SCADENZE_APERTE_PAGAMENTO_CREAZIONE = "scadenze_aperte_pag_cre";
     const TABELLA_SCADENZE_CHIUSE_PAGAMENTO_CREAZIONE = "scadenze_chiuse_pag_cre";
@@ -183,7 +183,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const DATA_REGISTRAZIONE_PAGAMENTO_MODIFICA = "datareg_pag_mod";
     const DES_REGISTRAZIONE_PAGAMENTO_MODIFICA = "descreg_pag_mod";
     const CODICE_CAUSALE_PAGAMENTO_MODIFICA = "causale_pag_mod";
-    const CODICE_NEGOZIO_PAGAMENTO_MODIFICA = "codnegozio_pag_mod";
+    const CODICE_NEGOZIO_PAGAMENTO_MODIFICA = "codneg_pag_mod";
     const FORNITORE_PAGAMENTO_MODIFICA = "fornitore_pag_mod";
     const NUMERO_FATTURA_PAGAMENTO_MODIFICA = "numfatt_pag_mod";
     const TABELLA_SCADENZE_APERTE_PAGAMENTO_MODIFICA = "scadenze_aperte_pag_mod";
@@ -329,7 +329,7 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     const CODICE_CAUSALE_CANCELLAZIONE = "codcausale_del";
     
     const CAT_CLIENTE_MODIFICA = "catcliente_mod";
-    const CODICE_NEGOZIO_MODIFICA = "codnegozio_mod";
+    const CODICE_NEGOZIO_MODIFICA = "codneg_mod";
 
     const DATA_FATTURA = "datafat";
     const MESE_RIFERIMENTO = "meserif";

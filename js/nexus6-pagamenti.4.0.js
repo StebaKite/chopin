@@ -76,7 +76,7 @@ function trovaScadenzeFornitore(idfunz) {
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_" + idfunz + "=" + idfornitore + "&codnegozio_" + idfunz + "=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteFornitoreFacade.class.php?modo=start&fornitore_" + idfunz + "=" + idfornitore + "&codneg_" + idfunz + "=" + codnegozio, true);
         xmlhttp.send();
     }
 }

@@ -15,7 +15,7 @@ function modificaProgressivoFattura(catCliente, codNegozio) {
                     function () {
 
                         $("#catcliente_mod").val($(this).find("categoria").text());
-                        $("#codnegozio_mod").val($(this).find("negozio").text());
+                        $("#codneg_mod").val($(this).find("negozio").text());
                         $("#numfatt_mod").val($(this).find("numfatturaultimo").text());
                         $("#notatesta_mod").val($(this).find("notatestata").text());
                         $("#notapiede_mod").val($(this).find("notapiede").text());
@@ -24,7 +24,7 @@ function modificaProgressivoFattura(catCliente, codNegozio) {
             $("#modifica-progressivo-dialog").modal("show");
         }
     }
-    xmlhttp.open("GET", "modificaProgressivoFatturaFacade.class.php?modo=start&catcliente_mod=" + catCliente + "&codnegozio_mod=" + codNegozio, true);
+    xmlhttp.open("GET", "modificaProgressivoFatturaFacade.class.php?modo=start&catcliente_mod=" + catCliente + "&codneg_mod=" + codNegozio, true);
     xmlhttp.send();
 }
 
@@ -64,8 +64,8 @@ function validaProgressivo(funz) {
         }
     }
 
-    if (isNotEmpty($("#codnegozio_" + funz).val())) {
-        if (controllaCodice("codnegozio_" + funz)) {
+    if (isNotEmpty($("#codneg_" + funz).val())) {
+        if (controllaCodice("codneg_" + funz)) {
             esito = esito + "1";
         } else {
             esito = esito + "0";

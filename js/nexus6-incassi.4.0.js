@@ -76,7 +76,7 @@ function trovaScadenzeCliente(idfunz) {
                 );
             }
         };
-        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&cliente_" + idfunz + "=" + idcliente + "&codnegozio_" + idfunz + "=" + codnegozio, true);
+        xmlhttp.open("GET", "ricercaScadenzeAperteClienteFacade.class.php?modo=start&cliente_" + idfunz + "=" + idcliente + "&codneg_" + idfunz + "=" + codnegozio, true);
         xmlhttp.send();
     }
 }
