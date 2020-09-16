@@ -377,6 +377,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         if (!$this->dataScadenzaExist($this->getDatScadenza())) {
             $item = array(
                 ScadenzaFornitore::ID_FORNITORE => $this->getIdFornitore(),
+                ScadenzaFornitore::ID_SCADENZA => 0,
                 ScadenzaFornitore::DAT_SCADENZA => $this->getDatScadenza(),
                 ScadenzaFornitore::IMP_IN_SCADENZA => $this->getImpInScadenza(),
                 ScadenzaFornitore::NUM_FATTURA => $this->getNumFattura(),

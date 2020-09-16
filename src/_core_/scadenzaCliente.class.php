@@ -236,7 +236,8 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 ScadenzaCliente::IMP_REGISTRAZIONE => $this->getImpRegistrazione(),
                 ScadenzaCliente::NUM_FATTURA => $this->getNumFattura(),
                 ScadenzaCliente::TIP_ADDEBITO => $this->getTipAddebito(),
-                ScadenzaCliente::STA_SCADENZA => self::SCADENZA_APERTA,                
+                ScadenzaCliente::STA_SCADENZA => self::SCADENZA_APERTA,
+                ScadenzaCliente::NOTA => $this->getNota()
             );
 
             if ($this->getQtaScadenzeDaIncassare() == 0) {

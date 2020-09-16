@@ -38,6 +38,8 @@ class AggiungiNuovaScadenzaFornitore extends PrimanotaAbstract implements Priman
 
         $scadenzaFornitore->setIdFornitore($fornitore->getIdFornitore());
         $scadenzaFornitore->setTipAddebito($fornitore->getTipAddebito());
+        $scadenzaFornitore->setNumFattura($registrazione->getNumFattura());
+        $scadenzaFornitore->setNotaScadenza($registrazione->getDesRegistrazione());
         $scadenzaFornitore->aggiungi();
 
         echo $this->makeTabellaScadenzeFornitore($scadenzaFornitore, $dettagliRegistrazione);

@@ -38,6 +38,7 @@ class AggiungiNuovaScadenzaCliente extends PrimanotaAbstract implements Primanot
         $scadenzaCliente->setIdCliente($cliente->getIdCliente());
         $scadenzaCliente->setTipAddebito($cliente->getTipAddebito());
         $scadenzaCliente->setNumFattura($registrazione->getNumFattura());
+        $scadenzaCliente->setNota($registrazione->getDesRegistrazione());
         $scadenzaCliente->aggiungi();
 
         echo $this->makeTabellaScadenzeCliente($scadenzaCliente, $dettaglioRegistrazione);
