@@ -4,4 +4,7 @@
     <scadenzecli><![CDATA[%scadenzecli%]]></scadenzecli>
     <regnoneg><![CDATA[%regSenzaNeg%]]></regnoneg>
     <regnodet><![CDATA[%regSenzaDet%]]></regnodet>
+    <regnoclifor><![CDATA[%regSenzaCliFor%]]></regnoclifor>
+    <scadenzenofor><![CDATA[%scadenzenofor%]]></scadenzenofor>
+    <scadenzenocli><![CDATA[%scadenzenocli%]]></scadenzenocli>
 </messaggio>

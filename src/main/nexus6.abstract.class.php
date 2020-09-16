@@ -28,6 +28,9 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
     public static $queryControllaScadenzeFornitoreSuperate = "/main/controllaScadenzeFornitoreSuperate.sql";
     public static $queryControllaScadenzeClienteSuperate = "/main/controllaScadenzeClienteSuperate.sql";
     public static $queryControllaRegistrazioniInErrore = "/main/controllaRegistrazioniInErrore.sql";
+    public static $queryControllaRegistrazioniSenzaCliFor = "/main/controllaRegistrazioniSenzaCliFor.sql";
+    public static $queryControllaScadenzeFornitoreSconosciuto = "/main/controllaScadenzeFornitoreSconosciuto.sql";
+    public static $queryControllaScadenzeClienteSconosciuto = "/main/controllaScadenzeClienteSconosciuto.sql";
     public static $queryControllaRegistrazioniSenzaNegozio = "/main/controllaRegistrazioniSenzaNegozio.sql";
     public static $queryControllaRegistrazioniSenzaDettagli = "/main/controllaRegistrazioniSenzaDettagli.sql";
 
@@ -793,6 +796,54 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
         return $scadenze;
     }
 
+    public function controllaRegistrazioniSenzaCliFor($utility, $db): string {
+
+        $array = $utility->getConfig();
+        $replace = array();
+        $sqlTemplate = $this->root . $array['query'] . self::$queryControllaRegistrazioniSenzaCliFor;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        $scadenze = "";
+
+        foreach (pg_fetch_all($result) as $row) {
+            $scadenze .= "&ndash; Operazione priva del fornitore/cliente del " . $row['dat_registrazione'] . " : " . $row['des_registrazione'] . "<br/>";
+        }
+        return ($scadenze === "") ? "&ndash; Tutte le operazioni con numero fattura hanno il codice fornitore/cliente presente in anagrafica" : $scadenze;
+    }
+
+    public function controllaScadenzeFornitoriSconosciuti($utility, $db): string {
+
+        $array = $utility->getConfig();
+        $replace = array();
+        $sqlTemplate = $this->root . $array['query'] . self::$queryControllaScadenzeFornitoreSconosciuto;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        $scadenze = "";
+
+        foreach (pg_fetch_all($result) as $row) {
+            $scadenze .= "&ndash; Scadenza fornitore sconosciuto del " . $row['dat_scadenza'] . " : " . $row['nota_scadenza'] . "<br/>";
+        }
+        return ($scadenze === "") ? "&ndash; Tutte le scadenze fornitori hanno il codice fornitore presente in anagrafica" : $scadenze;
+    }
+
+    public function controllaScadenzeClientiSconosciuti($utility, $db): string {
+
+        $array = $utility->getConfig();
+        $replace = array();
+        $sqlTemplate = $this->root . $array['query'] . self::$queryControllaScadenzeClienteSconosciuto;
+        $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
+        $result = $db->getData($sql);
+
+        $scadenze = "";
+
+        foreach (pg_fetch_all($result) as $row) {
+            $scadenze .= "&ndash; Scadenza cliente sconosciuto del " . $row['dat_registrazione'] . " : " . $row['nota'] . "<br/>";
+        }
+        return ($scadenze === "") ? "&ndash; Tutte le scadenze cliente hanno il codice cliente presente in anagrafica" : $scadenze;
+    }
+
     public function controllaRegistrazioniSenzaNegozio($utility, $db): string {
 
         $array = $utility->getConfig();
@@ -806,7 +857,6 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
         foreach (pg_fetch_all($result) as $row) {
             $registrazioniSenzaNegozio .= "&ndash; Operazione del " . $row['dat_registrazione'] . " : " . $row['des_registrazione'] . " priva del codice negozio<br/>";
         }
-        
         return ($registrazioniSenzaNegozio === "") ? "&ndash; Tutte le registrazioni hanno il codice negozio valorizzato correttamente" : $registrazioniSenzaNegozio;
     }
 
