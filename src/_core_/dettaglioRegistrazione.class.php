@@ -88,11 +88,10 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setDettagliRegistrazione(pg_fetch_all($result));
             $this->setQtaDettagliRegistrazione(pg_num_rows($result));
+            parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
         } else {
-            $this->setDettagliRegistrazione(null);
-            $this->setQtaDettagliRegistrazione(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($this));
         return $result;
     }
 
@@ -319,6 +318,8 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
 
                 if ($result) {
                     $this->setQtaDettagliRegistrazione($this->getQtaDettagliRegistrazione() - 1);
+                } else {
+                    throw new Exception("Ooooops, c'è un problema tecnico!");
                 }
             }
         }
@@ -340,7 +341,11 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_DETTAGLIO_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        if ($return) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function verificaQuadratura() {
@@ -390,8 +395,11 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_DETTAGLIO_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        
-        return $result;
+        if ($return) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
     
     public function aggiornaConto($db) {
@@ -408,7 +416,11 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
 
         $result = $db->execSql($sql);
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
     
 

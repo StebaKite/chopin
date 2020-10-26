@@ -60,12 +60,11 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setProgressiviFattura(pg_fetch_all($result));
             $this->setQtaProgressiviFattura(pg_num_rows($result));
+            parent::setIndexSession(self::PROGRESSIVO_FATTURA, serialize($this));
+            return $result;
         } else {
-            $this->setProgressiviFattura(null);
-            $this->setQtaProgressiviFattura(null);
-        }
-        parent::setIndexSession(self::PROGRESSIVO_FATTURA, serialize($this));
-        return $result;
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }        
     }
 
     public function leggi($db) {
@@ -88,12 +87,10 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
                 $this->setNotaTestaFattura($row[self::NOTA_TESTA_FATTURA]);
                 $this->setNotaPiedeFattura($row[self::NOTA_PIEDE_FATTURA]);
             }
+            return $result;
         } else {
-            $this->setNumFatturaUltimo(null);
-            $this->setNotaTestaFattura(null);
-            $this->setNotaPiedeFattura(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function update($db) {
@@ -117,8 +114,7 @@ class ProgressivoFattura extends CoreBase implements CoreInterface {
             $db->commitTransaction();
             return TRUE;
         } else {
-            $db->rollbackTransaction();
-            return FALSE;
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 

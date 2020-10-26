@@ -1,12 +1,12 @@
 UPDATE contabilita.registrazione
 SET dat_scadenza=%dat_scadenza%,
-	des_registrazione='%des_registrazione%',
+	des_registrazione=%des_registrazione%,
 	id_fornitore=%id_fornitore%,
 	id_cliente=%id_cliente%,
-	cod_causale='%cod_causale%',
+	cod_causale=%cod_causale%,
 	num_fattura=%num_fattura%,
 	cod_negozio=%cod_negozio%,
 	dat_registrazione=%dat_registrazione%,
-	sta_registrazione='%sta_registrazione%',
+	sta_registrazione=%sta_registrazione%,
 	id_mercato=%id_mercato%
 WHERE id_registrazione=%id_registrazione%

@@ -74,8 +74,9 @@ class Saldo extends CoreBase implements CoreInterface {
                 return FALSE;
             }
             return TRUE;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function leggiSaldoConto($db, $project_root) {
@@ -99,7 +100,11 @@ class Saldo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function cancellaSaldo($db) {
@@ -116,7 +121,12 @@ class Saldo extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_SALDO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function aggiornaSaldo($db) {
@@ -136,7 +146,12 @@ class Saldo extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_SALDO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function creaSaldo($db) {
@@ -156,7 +171,12 @@ class Saldo extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SALDO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     // Getters e Setters

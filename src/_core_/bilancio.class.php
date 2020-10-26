@@ -141,7 +141,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -155,8 +155,10 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setCostiBilancio(null);
                 $this->setNumCostiTrovati(0);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -181,7 +183,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -195,8 +197,10 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setRicaviBilancio(null);
                 $this->setNumRicaviTrovati(0);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -217,7 +221,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -231,8 +235,10 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setAttivoBilancio(null);
                 $this->setNumAttivoTrovati(0);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -253,7 +259,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -267,8 +273,10 @@ class Bilancio extends CoreBase implements CoreInterface {
                 $this->setPassivoBilancio(null);
                 $this->setNumPassivoTrovati(0);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -291,7 +299,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -303,8 +311,10 @@ class Bilancio extends CoreBase implements CoreInterface {
             } else {
                 $this->setRicavoVenditaProdotti(null);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**
@@ -326,7 +336,7 @@ class Bilancio extends CoreBase implements CoreInterface {
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
             '%catconto%' => $this->getCatconto(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -338,6 +348,8 @@ class Bilancio extends CoreBase implements CoreInterface {
             } else {
                 $this->setCostoVariabile(null);
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -362,7 +374,7 @@ class Bilancio extends CoreBase implements CoreInterface {
         $replace = array(
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
-            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodnegSel()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodnegSel())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -374,8 +386,10 @@ class Bilancio extends CoreBase implements CoreInterface {
             } else {
                 $this->setCostoFisso(null);
             }
+            parent::setIndexSession(self::BILANCIO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::BILANCIO, serialize($this));
     }
 
     /**

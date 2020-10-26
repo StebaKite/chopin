@@ -23,7 +23,13 @@ abstract class CoreBase {
     }
 
     function quotation($param) {
-        return "'" . $param . "'";
+        return "'" . str_replace("'", "''", $param) . "'";
+    }
+    
+    public static function quotationAllNegozi() {
+        $utility = Utility::getInstance();
+        $array = $utility->getConfig();
+        return "'" . str_replace(",", "','", $array['negozi']) . "'";
     }
 
     public function getInfoFromServer($infoName) {        
@@ -44,7 +50,5 @@ abstract class CoreBase {
     public static function unsetIndexSessione($indexName) {
         unset($indexName);
     }
-    
-    
     
 }

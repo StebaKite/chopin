@@ -192,7 +192,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             $importo_in_scadenza = (strstr($array['notaDiAccredito'], $registrazione->getCodCausale())) ? $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA] * (-1) : $unaScadenza[ScadenzaFornitore::IMP_IN_SCADENZA];
 
             $scadenzaFornitore->setImpInScadenza($importo_in_scadenza);
-            $scadenzaFornitore->setNotaScadenza($unaScadenza[ScadenzaFornitore::NOTA_SCADENZA]);
+            $scadenzaFornitore->setNotaScadenza($registrazione->getDesRegistrazione());
             $scadenzaFornitore->setTipAddebito($unaScadenza[ScadenzaFornitore::TIP_ADDEBITO]);
             $scadenzaFornitore->setCodNegozio($registrazione->getCodNegozio());
             $scadenzaFornitore->setIdFornitore($registrazione->getIdFornitore());

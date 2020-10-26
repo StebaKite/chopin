@@ -143,11 +143,10 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeDaPagare(pg_fetch_all($result));
             $this->setQtaScadenzeDaPagare(pg_num_rows($result));
+            return $result;
         } else {
-            $this->setScadenzeDaPagare(null);
-            $this->setQtaScadenzeDaPagare(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function trovaScadenzeRegistrazione($db) {
@@ -163,12 +162,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeDaPagare(pg_fetch_all($result));
             $this->setQtaScadenzeDaPagare(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzeDaPagare(null);
-            $this->setQtaScadenzeDaPagare(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
-        return $result;
     }
 
     public function rimuoviScadenzeRegistrazione($db) {
@@ -198,7 +196,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function aggiorna($db) {
@@ -207,17 +209,17 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
 
         $replace = array(
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
-            '%dat_scadenza_nuova%' => trim($this->getDatScadenzaNuova()),
-            '%dat_scadenza%' => trim($this->getDatScadenza()),
+            '%dat_scadenza_nuova%' => parent::quotation(trim($this->getDatScadenzaNuova())),
+            '%dat_scadenza%' => parent::quotation(trim($this->getDatScadenza())),
             '%imp_in_scadenza%' => trim($this->getImpInScadenza()),
-            '%nota_scadenza%' => trim($this->getNotaScadenza()),
-            '%tip_addebito%' => trim($this->getTipAddebito()),
-            '%cod_negozio%' => trim($this->getCodNegozio()),
-            '%id_fornitore%' => trim($this->getIdFornitore()),
-            '%id_fornitore_orig%' => trim($this->getIdFornitoreOrig()),
-            '%num_fattura%' => trim($this->getNumFattura()),
-            '%num_fattura_orig%' => trim($this->getNumFatturaOrig()),
-            '%sta_scadenza%' => trim($this->getStaScadenza()),
+            '%nota_scadenza%' => parent::isNotEmpty(trim($this->getNotaScadenza())) ? parent::quotation(trim($this->getNotaScadenza())) : parent::NULL_VALUE,
+            '%tip_addebito%' => parent::isNotEmpty(trim($this->getTipAddebito())) ? parent::quotation(trim($this->getTipAddebito())) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty(trim($this->getCodNegozio())) ? parent::quotation(trim($this->getCodNegozio())) : parent::NULL_VALUE,
+            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? trim($this->getIdFornitore()) : parent::NULL_VALUE,
+            '%id_fornitore_orig%' => parent::quotation(trim($this->getIdFornitoreOrig())),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? parent::quotation(trim($this->getNumFattura())) : parent::NULL_VALUE,
+            '%num_fattura_orig%' => parent::quotation(trim($this->getNumFatturaOrig())),
+            '%sta_scadenza%' => parent::isNotEmpty($this->getStaScadenza()) ? parent::quotation(trim($this->getStaScadenza())) : parent::NULL_VALUE,
             '%id_pagamento%' => trim($this->getIdPagamento())
         );
 
@@ -225,7 +227,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function cambiaStatoScadenza($db) {
@@ -242,7 +248,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function leggi($db) {
@@ -270,9 +280,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
                 $this->setIdPagamento($row[ScadenzaFornitore::ID_PAGAMENTO]);
                 $this->setCodNegozio($row[ScadenzaFornitore::COD_NEGOZIO]);
             }
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
-        return $result;
     }
 
     public function aggiungiScadenzaPagata() {
@@ -329,7 +341,12 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function getSommaImportiScadenze() {
@@ -490,8 +507,10 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaPagare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function aggiornaImporto($db) {
@@ -541,8 +560,10 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaPagare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function aggiornaData($db) {
@@ -592,8 +613,10 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaPagare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function trovaScadenzeDaPagare($db) {
@@ -610,12 +633,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeDaPagare(pg_fetch_all($result));
             $this->setQtaScadenzeDaPagare(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzeDaPagare(null);
-            $this->setQtaScadenzeDaPagare(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
-        return $result;
     }
 
     public function trovaScadenzePagate($db) {
@@ -631,12 +653,11 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzePagate(pg_fetch_all($result));
             $this->setQtaScadenzePagate(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzePagate(null);
-            $this->setQtaScadenzePagate(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_FORNITORE, serialize($this));
-        return $result;
     }
 
     /*     * **********************************************************************

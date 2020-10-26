@@ -80,8 +80,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             $this->setLavoriPianificati(pg_fetch_all($result));
             $this->setQtaLavoriPianificati(pg_num_rows($result));
         } else {
-            $this->setLavoriPianificati(null);
-            $this->setQtaLavoriPianificati(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         parent::setIndexSession(self::LAVORO_PIANIFICATO, serialize($this));
         return $result;
@@ -129,7 +128,12 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . LavoroPianificato::CAMBIO_STATO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function esegui($db, $project_root) {
@@ -140,8 +144,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
         
         $oggi = date("Y/m/d");
         foreach ($this->getLavoriPianificati() as $row) {
-            
-            
+                        
             if ((strtotime($row[self::DAT_LAVORO]) <= strtotime($oggi)) && ($row[self::STA_LAVORO] == self::SALDO_DA_CALCOLARE)) {
 
                 $this->setClaEsecuzioneLavoro($row[self::CLA_ESECUZIONE_LAVORO]);
@@ -210,8 +213,7 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
             $this->setLavoriPianificati(pg_fetch_all($result));
             $this->setQtaLavoriPianificati(pg_num_rows($result));
         } else {
-            $this->setLavoriPianificati(null);
-            $this->setQtaLavoriPianificati(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -232,7 +234,12 @@ class LavoroPianificato extends CoreBase implements CoreInterface {
 
         $sql = $utility->tailFile($utility->getTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+           return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
         
     // Getters e Setters

@@ -87,8 +87,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setConti(pg_fetch_all($result));
             $this->setQtaConti(pg_num_rows($result));
         } else {
-            $this->setConti(null);
-            $this->setQtaConti(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -120,6 +119,8 @@ class Conto extends CoreBase implements CoreInterface {
                 $this->setIndVisibilitaSottoconti(trim($row[self::IND_VISIBILITA_SOTTOCONTI]));
                 $this->setNumRigaBilancio(trim($row[self::NUM_RIGA_BILANCIO]));
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $numConti;
     }
@@ -144,8 +145,9 @@ class Conto extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei conti caricati
             parent::setIndexSession(self::CONTO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-
         return $result;
     }
 
@@ -183,6 +185,8 @@ class Conto extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei conti caricati
             parent::setIndexSession(self::CONTO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -201,6 +205,8 @@ class Conto extends CoreBase implements CoreInterface {
         if ($db->getData($sql)) {
             $this->load($db);  // refresh dei conti caricati
             parent::setIndexSession(self::CONTO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -221,8 +227,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setContiStatoPatrimoniale(pg_fetch_all($result));
             $this->setQtaContiStatoPatrimoniale(pg_num_rows($result));
         } else {
-            $this->setContiStatoPatrimoniale(self::NULL_VALUE);
-            $this->setQtaContiStatoPatrimoniale(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -244,8 +249,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setContiContoEconomico(pg_fetch_all($result));
             $this->setQtaContiContoEconomico(pg_num_rows($result));
         } else {
-            $this->setContiContoEconomico(self::NULL_VALUE);
-            $this->setQtaContiContoEconomico(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -268,8 +272,7 @@ class Conto extends CoreBase implements CoreInterface {
             $this->setConti(pg_fetch_all($result));
             $this->setQtaConti(pg_num_rows($result));
         } else {
-            $this->setConti(self::NULL_VALUE);
-            $this->setQtaConti(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         parent::setIndexSession(self::CONTO, serialize($this));
         return $result;

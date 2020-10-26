@@ -75,8 +75,7 @@ class Mercato extends CoreBase implements CoreInterface {
             $this->setMercati(pg_fetch_all($result));
             $this->setQtaMercati(pg_num_rows($result));
         } else {
-            $this->setMercati(null);
-            $this->setQtaMercati(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -97,7 +96,9 @@ class Mercato extends CoreBase implements CoreInterface {
 
         if ($result) {
             $this->load($db);
-        }  // refresh dei mercati caricati
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
         return $result;
     }
 
@@ -115,7 +116,12 @@ class Mercato extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_MERCATO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function cancella($db) {
@@ -129,7 +135,12 @@ class Mercato extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_MERCATO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function leggi($db) {
@@ -142,13 +153,17 @@ class Mercato extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        foreach (pg_fetch_all($result) as $row) {
-            $this->setCodMercato($row[self::COD_MERCATO]);
-            $this->setDesMercato($row[self::DES_MERCATO]);
-            $this->setCittaMercato($row[self::CITTA_MERCATO]);
-            $this->setCodNegozio($row[self::COD_NEGOZIO]);
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setCodMercato($row[self::COD_MERCATO]);
+                $this->setDesMercato($row[self::DES_MERCATO]);
+                $this->setCittaMercato($row[self::CITTA_MERCATO]);
+                $this->setCodNegozio($row[self::COD_NEGOZIO]);
+            }
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function cercaMercatiNegozio($db) {
@@ -167,8 +182,7 @@ class Mercato extends CoreBase implements CoreInterface {
             $this->setMercati(pg_fetch_all($result));
             $this->setQtaMercati(pg_num_rows($result));
         } else {
-            $this->setMercati(null);
-            $this->setQtaMercati(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }

@@ -59,8 +59,10 @@ class Assistito extends CoreBase implements CoreInterface {
                 $this->setDesAssistito($row[Assistito::DES_ASSISTITO]);
                 $this->setDatInserimento($row[Assistito::DAT_INSERIMENTO]);
             }
+            parent::setIndexSession(self::ASSISTITO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::ASSISTITO, serialize($this));
     }
     
     public function inserisci($db) {
@@ -77,13 +79,11 @@ class Assistito extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setIdAssistito($db->getLastIdUsed());
             parent::setIndexSession(self::ASSISTITO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
-    
-    
-    
-    
     
     /**
      * Getters & Setters

@@ -53,17 +53,21 @@ class CategoriaCliente extends CoreBase implements CoreInterface {
         $sql = $utility->getQueryTemplate($sqlTemplate);
         $result = $db->getData($sql);
 
-        $elecat = "";
+        if ($result) {
+            $elecat = "";
 
-        foreach (pg_fetch_all($result) as $row) {
+            foreach (pg_fetch_all($result) as $row) {
 
-            if (trim($row['cat_cliente']) == trim($cliente->getCatCliente())) {
-                $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "' selected >" . trim($row[self::DES_CATEGORIA]) . "</option>";
-            } else {
-                $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "'>" . trim($row[self::DES_CATEGORIA]) . "</option>";
+                if (trim($row['cat_cliente']) == trim($cliente->getCatCliente())) {
+                    $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "' selected >" . trim($row[self::DES_CATEGORIA]) . "</option>";
+                } else {
+                    $elecat .= "<option value='" . trim($row[self::CAT_CLIENTE]) . "'>" . trim($row[self::DES_CATEGORIA]) . "</option>";
+                }
             }
+            $this->setElencoCategorieCliente($elecat);            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        $this->setElencoCategorieCliente($elecat);
     }
 
     public function getRoot() {

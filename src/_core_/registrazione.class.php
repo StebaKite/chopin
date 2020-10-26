@@ -143,6 +143,8 @@ class Registrazione extends CoreBase implements CoreInterface {
                 }
                 parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -185,8 +187,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             $this->setRegistrazioni(pg_fetch_all($result));
             $this->setQtaRegistrazioni(pg_num_rows($result));
         } else {
-            $this->setRegistrazioni(null);
-            $this->setQtaRegistrazioni(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
         return $result;
@@ -204,7 +205,12 @@ class Registrazione extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->root . $array['query'] . self::CANCELLA_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;  
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function preparaFiltri() {
@@ -264,8 +270,7 @@ class Registrazione extends CoreBase implements CoreInterface {
             }
             $this->setQtaRegistrazioni($numReg);
         } else {
-            $this->setRegistrazioni(null);
-            $this->setQtaRegistrazioni(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -275,17 +280,17 @@ class Registrazione extends CoreBase implements CoreInterface {
         $array = $utility->getConfig();
 
         $replace = array(
-            '%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
-            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? "'" . $this->getDatScadenza() . "'" : parent::NULL_VALUE,
-            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? "'" . $this->getDatRegistrazione() . "'" : parent::NULL_VALUE,
-            '%dat_inserimento%' => date("Y-m-d H:i:s"),
-            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? "'" . $this->getNumFattura() . "'" : parent::NULL_VALUE,
-            '%cod_causale%' => $this->getCodCausale(),
-            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? "'" . $this->getIdFornitore() . "'" : parent::NULL_VALUE,
-            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? "'" . $this->getIdCliente() . "'" : parent::NULL_VALUE,
-            '%sta_registrazione%' => $this->getStaRegistrazione(),
-            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? "'" . $this->getCodNegozio() . "'" : parent::NULL_VALUE,
-            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
+            '%des_registrazione%' => parent::isNotEmpty($this->getDesRegistrazione()) ? parent::quotation($this->getDesRegistrazione()) : parent::NULL_VALUE,
+            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? parent::quotation($this->getDatScadenza()) : parent::NULL_VALUE,
+            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? parent::quotation($this->getDatRegistrazione()) : parent::NULL_VALUE,
+            '%dat_inserimento%' => parent::quotation(date("Y-m-d H:i:s")),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? parent::quotation($this->getNumFattura()) : parent::NULL_VALUE,
+            '%cod_causale%' => parent::isNotEmpty($this->getCodCausale()) ? parent::quotation($this->getCodCausale()) : parent::NULL_VALUE,
+            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? parent::quotation($this->getIdFornitore()) : parent::NULL_VALUE,
+            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? parent::quotation($this->getIdCliente()) : parent::NULL_VALUE,
+            '%sta_registrazione%' => parent::isNotEmpty($this->getStaRegistrazione()) ? parent::quotation($this->getStaRegistrazione()) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation($this->getCodNegozio()) : parent::NULL_VALUE,
+            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? parent::quotation($this->getIdMercato()) : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -293,6 +298,8 @@ class Registrazione extends CoreBase implements CoreInterface {
 
         if ($result) {
             $this->setIdRegistrazione($db->getLastIdUsed());  // l'id generato dall'inserimento
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
         return $result;
@@ -304,23 +311,27 @@ class Registrazione extends CoreBase implements CoreInterface {
 
         $replace = array(
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
-            '%des_registrazione%' => str_replace("'", "''", $this->getDesRegistrazione()),
-            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? "'" . $this->getDatScadenza() . "'" : parent::NULL_VALUE,
-            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? "'" . $this->getDatRegistrazione() . "'" : parent::NULL_VALUE,
-            '%dat_inserimento%' => date("Y-m-d H:i:s"),
-            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? "'" . $this->getNumFattura() . "'" : parent::NULL_VALUE,
-            '%cod_causale%' => $this->getCodCausale(),
-            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? "'" . $this->getIdFornitore() . "'" : parent::NULL_VALUE,
-            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? "'" . $this->getIdCliente() . "'" : parent::NULL_VALUE,
-            '%sta_registrazione%' => $this->getStaRegistrazione(),
-            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? "'" . $this->getCodNegozio() . "'" : parent::NULL_VALUE,
-            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? "'" . $this->getIdMercato() . "'" : parent::NULL_VALUE
+            '%des_registrazione%' => parent::isNotEmpty($this->getDesRegistrazione()) ? parent::quotation($this->getDesRegistrazione()) : parent::NULL_VALUE,
+            '%dat_scadenza%' => parent::isNotEmpty($this->getDatScadenza()) ? parent::quotation($this->getDatScadenza()) : parent::NULL_VALUE,
+            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? parent::quotation($this->getDatRegistrazione()) : parent::NULL_VALUE,
+            '%dat_inserimento%' => parent::quotation(date("Y-m-d H:i:s")),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFattura()) ? parent::quotation($this->getNumFattura()) : parent::NULL_VALUE,
+            '%cod_causale%' => parent::isNotEmpty($this->getCodCausale()) ? parent::quotation($this->getCodCausale()) : parent::NULL_VALUE,
+            '%id_fornitore%' => parent::isNotEmpty($this->getIdFornitore()) ? parent::quotation($this->getIdFornitore()) : parent::NULL_VALUE,
+            '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? parent::quotation($this->getIdCliente()) : parent::NULL_VALUE,
+            '%sta_registrazione%' => parent::isNotEmpty($this->getStaRegistrazione()) ? parent::quotation($this->getStaRegistrazione()) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation($this->getCodNegozio()) : parent::NULL_VALUE,
+            '%id_mercato%' => parent::isNotEmpty($this->getIdMercato()) ? parent::quotation($this->getIdMercato()) : parent::NULL_VALUE
         );
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
+        if ($result) {
+            parent::setIndexSession(self::REGISTRAZIONE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
         return $result;
     }
 
@@ -343,6 +354,8 @@ class Registrazione extends CoreBase implements CoreInterface {
             } else {
                 return false;
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return false;
     }
@@ -366,6 +379,8 @@ class Registrazione extends CoreBase implements CoreInterface {
             } else {
                 return false;
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return false;
     }
@@ -390,6 +405,8 @@ class Registrazione extends CoreBase implements CoreInterface {
             } else {
                 return false;
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return false;
     }

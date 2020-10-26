@@ -63,8 +63,7 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
             $this->setContiConfigurati(pg_fetch_all($result));
             $this->setQtaContiConfigurati(pg_num_rows($result));
         } else {
-            $this->setContiConfigurati(null);
-            $this->setQtaContiConfigurati(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -85,8 +84,7 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
             $this->setContiConfigurabili(pg_fetch_all($result));
             $this->setQtaContiConfigurabili(pg_num_rows($result));
         } else {
-            $this->setContiConfigurabili(null);
-            $this->setQtaContiConfigurabili(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -112,6 +110,8 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
 
             $causale->setCodCausale(trim($this->getCodCausale()));
             $causale->aggiornaQuantitaConti(+1);
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -137,6 +137,8 @@ class ConfigurazioneCausale extends CoreBase implements CoreInterface {
 
             $causale->setCodCausale(trim($this->getCodCausale()));
             $causale->aggiornaQuantitaConti(-1);
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }

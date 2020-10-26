@@ -81,9 +81,12 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
         if ($result) {
             if (pg_num_rows($result) > 0) {
                 return false;
+            } else {
+                return true;                
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return true;
     }
 
     public function inserisci($db) {
@@ -99,11 +102,14 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_PRESENZA_ASSISTITO;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
+        
         if ($result) {
             $this->setIdAssistito($db->getLastIdUsed());
             parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function ricercaPresenze($db) {
@@ -116,7 +122,7 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
         $replace = array(
             '%anno%' => $this->getAnno(),
             '%mese%' => parent::isEmpty($this->getMese()) ? "'01','02','03','04','05','06','07','08','09','10','11','12'" : "'" . $this->getMese() . "'",
-            '%codnegozio%' => parent::isEmpty($this->getCodNeg()) ? "'VIL','TRE','BRE'" : "'" . $this->getCodNeg() . "'"
+            '%codnegozio%' => parent::isEmpty($this->getCodNeg()) ? parent::quotationAllNegozi() : parent::quotation($this->getCodNeg())
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -130,12 +136,11 @@ class PresenzaAssistito extends CoreBase implements CoreInterface {
                 $this->setPresenze(null);
                 $this->setNumPresenze(0);
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         parent::setIndexSession(self::PRESENZA_ASSISTITO, serialize($this));
     }
-
-
-
     
     /**
      * Getters & Setters

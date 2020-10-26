@@ -130,6 +130,8 @@ class Cliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
             parent::setIndexSession(self::CLIENTE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
 
         /**
@@ -147,6 +149,8 @@ class Cliente extends CoreBase implements CoreInterface {
             $conto = Conto::getInstance();
             $conto->load($db);  // refresh dei conti caricati
             parent::setIndexSession(self::CONTO, serialize($conto));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -196,15 +200,18 @@ class Cliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        if (pg_num_rows($result) > 0) {
-            foreach (pg_fetch_all($result) as $row) {
-                $this->setIdCliente($row[Cliente::ID_CLIENTE]);
-                $this->setCodCliente($row[Cliente::COD_CLIENTE]);
-                $this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                foreach (pg_fetch_all($result) as $row) {
+                    $this->setIdCliente($row[Cliente::ID_CLIENTE]);
+                    $this->setCodCliente($row[Cliente::COD_CLIENTE]);
+                    $this->setTipAddebito($row[Cliente::TIP_ADDEBITO]);
+                }
             }
+            parent::setIndexSession(self::CLIENTE, serialize($this));            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        
-        parent::setIndexSession(self::CLIENTE, serialize($this));
     }
 
     public function load($db) {
@@ -222,8 +229,7 @@ class Cliente extends CoreBase implements CoreInterface {
             $this->setClienti(pg_fetch_all($result));
             $this->setQtaClienti(pg_num_rows($result));
         } else {
-            $this->setClienti(null);
-            $this->setQtaClienti(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -241,21 +247,25 @@ class Cliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            foreach (pg_fetch_all($result) as $row) {
-                $this->setCodCliente($row[self::COD_CLIENTE]);
-                $this->setDesCliente($row[self::DES_CLIENTE]);
-                $this->setDesIndirizzoCliente($row[self::DES_INDIRIZZO_CLIENTE]);
-                $this->setDesCittaCliente($row[self::DES_CITTA_CLIENTE]);
-                $this->setCapCliente($row[self::CAP_CLIENTE]);
-                $this->setTipAddebito($row[self::TIP_ADDEBITO]);
-                $this->setDatCreazione($row[self::DAT_CREAZIONE]);
-                $this->setCodPiva($row[self::COD_PIVA]);
-                $this->setCodFisc($row[self::COD_FISC]);
-                $this->setCatCliente($row[self::CAT_CLIENTE]);
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                foreach (pg_fetch_all($result) as $row) {
+                    $this->setCodCliente($row[self::COD_CLIENTE]);
+                    $this->setDesCliente($row[self::DES_CLIENTE]);
+                    $this->setDesIndirizzoCliente($row[self::DES_INDIRIZZO_CLIENTE]);
+                    $this->setDesCittaCliente($row[self::DES_CITTA_CLIENTE]);
+                    $this->setCapCliente($row[self::CAP_CLIENTE]);
+                    $this->setTipAddebito($row[self::TIP_ADDEBITO]);
+                    $this->setDatCreazione($row[self::DAT_CREAZIONE]);
+                    $this->setCodPiva($row[self::COD_PIVA]);
+                    $this->setCodFisc($row[self::COD_FISC]);
+                    $this->setCatCliente($row[self::CAT_CLIENTE]);
+                }
             }
+            parent::setIndexSession(self::CLIENTE, serialize($this));            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::CLIENTE, serialize($this));
         return $result;
     }
 
@@ -289,7 +299,11 @@ class Cliente extends CoreBase implements CoreInterface {
             if ($result) {
                 $this->load($db); // refresh dei clienti caricati
                 parent::setIndexSession(self::CLIENTE, serialize($this));
+            } else {
+                throw new Exception("Ooooops, c'è un problema tecnico!");
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -318,8 +332,9 @@ class Cliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
             parent::setIndexSession(self::CLIENTE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-
         return $result;
     }
 
@@ -339,8 +354,7 @@ class Cliente extends CoreBase implements CoreInterface {
             $this->setClienti(pg_fetch_all($result));
             $this->setQtaClienti(pg_num_rows($result));
         } else {
-            $this->setClienti(null);
-            $this->setQtaClienti(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -373,6 +387,8 @@ class Cliente extends CoreBase implements CoreInterface {
                 $this->setCodFisc($row['cod_fisc']);
             }
             parent::setIndexSession(self::CLIENTE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 

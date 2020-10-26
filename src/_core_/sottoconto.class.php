@@ -75,7 +75,11 @@ class Sottoconto extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function cancella($db) {
@@ -101,6 +105,8 @@ class Sottoconto extends CoreBase implements CoreInterface {
             }
             $this->setSottoconti($sottocontiDiff);
             parent::setIndexSession(self::SOTTOCONTO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -120,8 +126,7 @@ class Sottoconto extends CoreBase implements CoreInterface {
             $this->setSottoconti(pg_fetch_all($result));
             $this->setQtaSottoconti(pg_num_rows($result));
         } else {
-            $this->setSottoconti(array());
-            $this->setQtaSottoconti(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -160,15 +165,19 @@ class Sottoconto extends CoreBase implements CoreInterface {
 
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            $this->setRegistrazioniTrovate(pg_fetch_all($result));
-            $this->setQtaRegistrazioniTrovate(pg_num_rows($result));
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setRegistrazioniTrovate(pg_fetch_all($result));
+                $this->setQtaRegistrazioniTrovate(pg_num_rows($result));
+            } else {
+                $this->setRegistrazioniTrovate(null);
+                $this->setQtaRegistrazioniTrovate(0);
+            }
+            parent::setIndexSession(self::SOTTOCONTO, serialize($this));
+            return $result;            
         } else {
-            $this->setRegistrazioniTrovate(null);
-            $this->setQtaRegistrazioniTrovate(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SOTTOCONTO, serialize($this));
-        return $result;
     }
 
     public function aggiungi() {
@@ -232,8 +241,10 @@ class Sottoconto extends CoreBase implements CoreInterface {
             }
             $this->setSottoconti($sottocontiDiff);
             parent::setIndexSession(self::SOTTOCONTO, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function searchSottoconto($sottoconto) {

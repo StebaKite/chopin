@@ -78,8 +78,7 @@ class Causale extends CoreBase implements CoreInterface {
             $this->setCausali(pg_fetch_all($result));
             $this->setQtaCausali(pg_num_rows($result));
         } else {
-            $this->setCausali(null);
-            $this->setQtaCausali(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -133,6 +132,8 @@ class Causale extends CoreBase implements CoreInterface {
             array_push($this->causali, $item);
             sort($this->causali);
             parent::setIndexSession(self::CAUSALE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -156,6 +157,8 @@ class Causale extends CoreBase implements CoreInterface {
             }
             $this->setCausali($causaliDiff);
             parent::setIndexSession(self::CAUSALE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -194,6 +197,8 @@ class Causale extends CoreBase implements CoreInterface {
             }
             $this->setCausali($causaliDiff);
             parent::setIndexSession(self::CAUSALE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -218,6 +223,8 @@ class Causale extends CoreBase implements CoreInterface {
                 $this->setQtaRegistrazioniCausale(trim($row[self::QTA_REGISTRAZIONI_CAUSALE]));
                 $this->setQtaContiCausale(trim($row[self::QTA_CONTI_CAUSALE]));
             }
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }

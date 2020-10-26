@@ -221,15 +221,19 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            $this->setCostiComparati(pg_fetch_all($result));
-            $this->setNumCostiComparatiTrovati(pg_num_rows($result));
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setCostiComparati(pg_fetch_all($result));
+                $this->setNumCostiComparatiTrovati(pg_num_rows($result));
+            } else {
+                $this->setCostiComparati(self::EMPTYSTRING);
+                $this->setNumCostiComparatiTrovati(self::ZERO_VALUE);
+            }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+            return $result;            
         } else {
-            $this->setCostiComparati(self::EMPTYSTRING);
-            $this->setNumCostiComparatiTrovati(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
-        return $result;
     }
 
     /**
@@ -255,15 +259,19 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            $this->setRicaviComparati(pg_fetch_all($result));
-            $this->setNumRicaviComparatiTrovati(pg_num_rows($result));
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setRicaviComparati(pg_fetch_all($result));
+                $this->setNumRicaviComparatiTrovati(pg_num_rows($result));
+            } else {
+                $this->setRicaviComparati(self::EMPTYSTRING);
+                $this->setNumRicaviComparatiTrovati(self::ZERO_VALUE);
+            }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+            return $result;            
         } else {
-            $this->setRicaviComparati(self::EMPTYSTRING);
-            $this->setNumRicaviComparatiTrovati(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
-        return $result;
     }
 
     /**
@@ -284,15 +292,19 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            $this->setAttivoComparati(pg_fetch_all($result));
-            $this->setNumAttivoComparatiTrovati(pg_num_rows($result));
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setAttivoComparati(pg_fetch_all($result));
+                $this->setNumAttivoComparatiTrovati(pg_num_rows($result));
+            } else {
+                $this->setAttivoComparati(self::EMPTYSTRING);
+                $this->setNumAttivoComparatiTrovati(self::ZERO_VALUE);
+            }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+            return $result;            
         } else {
-            $this->setAttivoComparati(self::EMPTYSTRING);
-            $this->setNumAttivoComparatiTrovati(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
-        return $result;
     }
 
     /**
@@ -315,15 +327,19 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            $this->setPassivoComparati(pg_fetch_all($result));
-            $this->setNumPassivoComparatiTrovati(pg_num_rows($result));
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                $this->setPassivoComparati(pg_fetch_all($result));
+                $this->setNumPassivoComparatiTrovati(pg_num_rows($result));
+            } else {
+                $this->setPassivoComparati(self::EMPTYSTRING);
+                $this->setNumPassivoComparatiTrovati(self::ZERO_VALUE);
+            }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+            return $result;            
         } else {
-            $this->setPassivoComparati(self::EMPTYSTRING);
-            $this->setNumPassivoComparatiTrovati(self::ZERO_VALUE);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
-        return $result;
     }
 
     /**
@@ -407,8 +423,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                     $this->setCostoVariabileVilla(null);
                 }
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -458,8 +476,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                     $this->setRicavoVenditaProdottiVilla(null);
                 }
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -511,8 +531,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                     $this->setCostoFissoVilla(null);
                 }
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -542,8 +564,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setCostiAndamentoNegozio(self::EMPTYSTRING);
                 $this->setNumCostiAndamentoNegozio(self::ZERO_VALUE);
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -575,8 +599,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setRicaviAndamentoNegozio(self::EMPTYSTRING);
                 $this->setNumRicaviAndamentoNegozio(self::ZERO_VALUE);
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -601,38 +627,42 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        if (pg_num_rows($result) > 0) {
-            switch ($this->getCodnegSel()) {
-                case self::VILLA:
-                    $this->setRicaviAndamentoMercatoVilla(pg_fetch_all($result));
-                    $this->setNumRicaviAndamentoMercatoVilla(pg_num_rows($result));
-                    break;
-                case self::BREMBATE:
-                    $this->setRicaviAndamentoMercatoBrembate(pg_fetch_all($result));
-                    $this->setNumRicaviAndamentoMercatoBrembate(pg_num_rows($result));
-                    break;
-                case self::TREZZO:
-                    $this->setRicaviAndamentoMercatoTrezzo(pg_fetch_all($result));
-                    $this->setNumRicaviAndamentoMercatoTrezzo(pg_num_rows($result));
-                    break;
+        if ($result) {
+            if (pg_num_rows($result) > 0) {
+                switch ($this->getCodnegSel()) {
+                    case self::VILLA:
+                        $this->setRicaviAndamentoMercatoVilla(pg_fetch_all($result));
+                        $this->setNumRicaviAndamentoMercatoVilla(pg_num_rows($result));
+                        break;
+                    case self::BREMBATE:
+                        $this->setRicaviAndamentoMercatoBrembate(pg_fetch_all($result));
+                        $this->setNumRicaviAndamentoMercatoBrembate(pg_num_rows($result));
+                        break;
+                    case self::TREZZO:
+                        $this->setRicaviAndamentoMercatoTrezzo(pg_fetch_all($result));
+                        $this->setNumRicaviAndamentoMercatoTrezzo(pg_num_rows($result));
+                        break;
+                }
+            } else {
+                switch ($this->getCodnegSel()) {
+                    case self::VILLA:
+                        $this->setRicaviAndamentoMercatoVilla(self::EMPTYSTRING);
+                        $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
+                        break;
+                    case self::BREMBATE:
+                        $this->setRicaviAndamentoMercatoBrembate(self::EMPTYSTRING);
+                        $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
+                        break;
+                    case self::TREZZO:
+                        $this->setRicaviAndamentoMercatoTrezzo(self::EMPTYSTRING);
+                        $this->setNumRicaviAndamentoMercatoTrezzo(self::ZERO_VALUE);
+                        break;
+                }
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));            
         } else {
-            switch ($this->getCodnegSel()) {
-                case self::VILLA:
-                    $this->setRicaviAndamentoMercatoVilla(self::EMPTYSTRING);
-                    $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
-                    break;
-                case self::BREMBATE:
-                    $this->setRicaviAndamentoMercatoBrembate(self::EMPTYSTRING);
-                    $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
-                    break;
-                case self::TREZZO:
-                    $this->setRicaviAndamentoMercatoTrezzo(self::EMPTYSTRING);
-                    $this->setNumRicaviAndamentoMercatoTrezzo(self::ZERO_VALUE);
-                    break;
-            }
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -665,8 +695,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setRicaviAndamentoNegozioRiferimento(self::EMPTYSTRING);
                 $this->setNumRicaviAndamentoNegozioRiferimento(self::ZERO_VALUE);
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**
@@ -696,8 +728,10 @@ class Riepilogo extends CoreBase implements CoreInterface {
                 $this->setRicaviAndamentoNegozioRiferimento(self::EMPTYSTRING);
                 $this->setNumRicaviAndamentoNegozioRiferimento(self::ZERO_VALUE);
             }
+            parent::setIndexSession(self::RIEPILOGO, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
     /**

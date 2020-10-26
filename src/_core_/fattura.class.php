@@ -110,8 +110,11 @@ class Fattura extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_NUMERO_FATTURA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
-
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     /**
@@ -133,12 +136,16 @@ class Fattura extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        foreach (pg_fetch_all($result) as $row) {
-            $this->setNumFatturaUltimo($row['num_fattura_ultimo']);
-            $this->setNotaTesta($row["nota_testa_fattura"]);
-            $this->setNotaPiede($row["nota_piede_fattura"]);
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setNumFatturaUltimo($row['num_fattura_ultimo']);
+                $this->setNotaTesta($row["nota_testa_fattura"]);
+                $this->setNotaPiede($row["nota_piede_fattura"]);
 
-            parent::setIndexSession(self::FATTURA, serialize($this));
+                parent::setIndexSession(self::FATTURA, serialize($this));
+            }            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 

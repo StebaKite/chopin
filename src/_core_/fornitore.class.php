@@ -101,6 +101,8 @@ class Fornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei fornitori caricati
             parent::setIndexSession(self::FORNITORE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
 
         /**
@@ -118,6 +120,8 @@ class Fornitore extends CoreBase implements CoreInterface {
             $conto = Conto::getInstance();
             $conto->load($db);  // refresh dei conti caricati
             parent::setIndexSession(self::CONTO, serialize($conto));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -150,8 +154,7 @@ class Fornitore extends CoreBase implements CoreInterface {
             $this->setFornitori(pg_fetch_all($result));
             $this->setQtaFornitori(pg_num_rows($result));
         } else {
-            $this->setFornitori(null);
-            $this->setQtaFornitori(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -168,27 +171,33 @@ class Fornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        /**
-         * Cancello il conto del fornitore
-         * @var array $conto
-         */
-        $sottoconto = Sottoconto::getInstance();
-        $conto = explode(",", $array["contiFornitore"]);
+        if ($result) {
+            /**
+             * Cancello il conto del fornitore
+             * @var array $conto
+             */
+            $sottoconto = Sottoconto::getInstance();
+            $conto = explode(",", $array["contiFornitore"]);
 
-        foreach (pg_fetch_all($result) as $row) {
+            foreach (pg_fetch_all($result) as $row) {
 
-            foreach ($conto as $contoFornitori) {
-                $sottoconto->setCodConto($contoFornitori);
-                $sottoconto->setCodSottoconto($row['cod_fornitore']);
-                $sottoconto->cancella($db);
+                foreach ($conto as $contoFornitori) {
+                    $sottoconto->setCodConto($contoFornitori);
+                    $sottoconto->setCodSottoconto($row['cod_fornitore']);
+                    $sottoconto->cancella($db);
+                }
             }
-        }
 
-        $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
-        $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
-        if ($db->getData($sql)) {
-            $this->load($db); // refresh dei fornitori caricati
-            parent::setIndexSession(self::FORNITORE, serialize($this));
+            $sqlTemplate = $this->getRoot() . $array['query'] . self::CANCELLA_FORNITORE;
+            $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
+            if ($db->getData($sql)) {
+                $this->load($db); // refresh dei fornitori caricati
+                parent::setIndexSession(self::FORNITORE, serialize($this));
+            } else {
+                throw new Exception("Ooooops, c'è un problema tecnico!");
+            }            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
     }
 
@@ -202,16 +211,20 @@ class Fornitore extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->getData($sql);
 
-        foreach (pg_fetch_all($result) as $row) {
-            $this->setCodFornitore($row[self::COD_FORNITORE]);
-            $this->setDesFornitore($row[self::DES_FORNITORE]);
-            $this->setDesIndirizzoFornitore($row[self::DES_INDIRIZZO_FORNITORE]);
-            $this->setDesCittaFornitore($row[self::DES_CITTA_FORNITORE]);
-            $this->setCapFornitore($row[self::CAP_FORNITORE]);
-            $this->setTipAddebito($row[self::TIP_ADDEBITO]);
-            $this->setDatCreazione($row[self::DAT_CREAZIONE]);
-            $this->setNumGgScadenzaFattura($row[self::NUM_GG_SCADENZA_FATTURA]);
-//            $this->setQtaRegistrazioniFornitore($row[self::QTA_REGISTRAZIONI_FORNITORE]);
+        if ($result) {
+            foreach (pg_fetch_all($result) as $row) {
+                $this->setCodFornitore($row[self::COD_FORNITORE]);
+                $this->setDesFornitore($row[self::DES_FORNITORE]);
+                $this->setDesIndirizzoFornitore($row[self::DES_INDIRIZZO_FORNITORE]);
+                $this->setDesCittaFornitore($row[self::DES_CITTA_FORNITORE]);
+                $this->setCapFornitore($row[self::CAP_FORNITORE]);
+                $this->setTipAddebito($row[self::TIP_ADDEBITO]);
+                $this->setDatCreazione($row[self::DAT_CREAZIONE]);
+                $this->setNumGgScadenzaFattura($row[self::NUM_GG_SCADENZA_FATTURA]);
+    //            $this->setQtaRegistrazioniFornitore($row[self::QTA_REGISTRAZIONI_FORNITORE]);
+            }            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }
@@ -236,6 +249,8 @@ class Fornitore extends CoreBase implements CoreInterface {
         if ($result) {
             $this->load($db); // refresh dei clienti caricati
             parent::setIndexSession(self::FORNITORE, serialize($this));
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
         return $result;
     }

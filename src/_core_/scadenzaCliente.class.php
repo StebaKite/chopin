@@ -126,11 +126,10 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenze(pg_fetch_all($result));
             $this->setQtaScadenze(pg_num_rows($result));
+            return $result;
         } else {
-            $this->setScadenze(null);
-            $this->setQtaScadenze(null);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function leggi($db) {
@@ -145,7 +144,6 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-
         if ($result) {
             foreach (pg_fetch_all($result) as $row) {
                 $this->setIdRegistrazione($row[ScadenzaCliente::ID_REGISTRAZIONE]);
@@ -159,10 +157,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
                 $this->setStaScadenza($row[ScadenzaCliente::STA_SCADENZA]);
                 $this->setIdIncasso($row[ScadenzaCliente::ID_INCASSO]);
             }
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-
-        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
-        return $result;
     }
 
     public function aggiungiScadenzaIncassata() {
@@ -200,12 +199,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeDaIncassare(pg_fetch_all($result));
             $this->setQtaScadenzeDaIncassare(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzeDaIncassare(null);
-            $this->setQtaScadenzeDaIncassare(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
-        return $result;
     }
 
     public function dataScadenzaExist($datScadenza) {
@@ -266,7 +264,12 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CAMBIO_STATO_SCADENZA_CLIENTE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function aggiorna($db) {
@@ -275,17 +278,17 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
 
         $replace = array(
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
-            '%dat_scadenza_nuova%' => trim($this->getDatScadenzaNuova()),
-            '%dat_registrazione%' => trim($this->getDatRegistrazione()),
-            '%imp_registrazione%' => trim($this->getImpRegistrazione()),
-            '%nota%' => trim($this->getNota()),
-            '%tip_addebito%' => trim($this->getTipAddebito()),
-            '%cod_negozio%' => trim($this->getCodNegozio()),
+            '%dat_scadenza_nuova%' => parent::isNotEmpty($this->getDatScadenzaNuova()) ? parent::quotation($this->getDatScadenzaNuova()) : parent::NULL_VALUE,
+            '%dat_registrazione%' => parent::isNotEmpty($this->getDatRegistrazione()) ? parent::quotation($this->getDatRegistrazione()) : parent::NULL_VALUE,
+            '%imp_registrazione%' => parent::isNotEmpty($this->getImpRegistrazione()) ? parent::quotation($this->getImpRegistrazione()) : parent::NULL_VALUE,
+            '%nota%' => parent::isNotEmpty($this->getNota()) ? parent::quotation($this->getNota()) : parent::NULL_VALUE,
+            '%tip_addebito%' => parent::isNotEmpty($this->getTipAddebito()) ? parent::quotation($this->getTipAddebito()) : parent::NULL_VALUE,
+            '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation($this->getCodNegozio()) : parent::NULL_VALUE,
             '%id_cliente%' => trim($this->getIdCliente()),
             '%id_cliente_orig%' => trim($this->getIdCliente()),
-            '%num_fattura%' => trim($this->getNumFatturaOrig()),
-            '%num_fattura_orig%' => trim($this->getNumFatturaOrig()),
-            '%sta_scadenza%' => trim($this->getStaScadenza()),
+            '%num_fattura%' => parent::isNotEmpty($this->getNumFatturaOrig()) ? parent::quotation($this->getNumFatturaOrig()) : parent::NULL_VALUE,
+            '%num_fattura_orig%' => parent::isNotEmpty($this->getNumFatturaOrig()) ? parent::quotation($this->getNumFatturaOrig()) : parent::NULL_VALUE,
+            '%sta_scadenza%' => parent::isNotEmpty($this->getStaScadenza()) ? parent::quotation($this->getStaScadenza()) : parent::NULL_VALUE,
             '%id_incasso%' => trim($this->getIdIncasso())
         );
 
@@ -293,7 +296,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
 
-        return $result;
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function inserisci($db) {
@@ -304,7 +311,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             '%id_registrazione%' => trim($this->getIdRegistrazione()),
             '%dat_registrazione%' => trim($this->getDatRegistrazione()),
             '%imp_registrazione%' => trim($this->getImpRegistrazione()),
-            '%nota%' => parent::isNotEmpty(str_replace("'", "''", $this->getNota())) ? parent::quotation(trim(str_replace("'", "''", $this->getNota()))) : parent::NULL_VALUE,
+            '%nota%' => parent::isNotEmpty($this->getNota()) ? parent::quotation(trim($this->getNota())) : parent::NULL_VALUE,
             '%tip_addebito%' => parent::isNotEmpty($this->getTipAddebito()) ? parent::quotation(trim($this->getTipAddebito())) : parent::NULL_VALUE,
             '%cod_negozio%' => parent::isNotEmpty($this->getCodNegozio()) ? parent::quotation(trim($this->getCodNegozio())) : parent::NULL_VALUE,
             '%id_cliente%' => parent::isNotEmpty($this->getIdCliente()) ? trim($this->getIdCliente()) : parent::NULL_VALUE,
@@ -314,7 +321,12 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::CREA_SCADENZA;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        return $result;
+        
+        if ($result) {
+            return $result;            
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
+        }
     }
 
     public function getSommaImportiScadenze() {
@@ -443,8 +455,10 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function aggiornaData($db) {
@@ -489,8 +503,10 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
     
     public function aggiornaImporto($db) {
@@ -531,8 +547,10 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
             }
             $this->setScadenzeDaIncassare($scadenzeDiff);
             parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
+        } else {
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        return $result;
     }
 
     public function trovaScadenzeDaIncassare($db) {
@@ -549,12 +567,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeDaIncassare(pg_fetch_all($result));
             $this->setQtaScadenzeDaIncassare(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzeDaIncassare(null);
-            $this->setQtaScadenzeDaIncassare(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
-        return $result;
     }
 
     public function trovaScadenzeIncassate($db) {
@@ -570,12 +587,11 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
         if ($result) {
             $this->setScadenzeIncassate(pg_fetch_all($result));
             $this->setQtaScadenzeIncassate(pg_num_rows($result));
+            parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
+            return $result;
         } else {
-            $this->setScadenzeIncassate(null);
-            $this->setQtaScadenzeIncassate(0);
+            throw new Exception("Ooooops, c'è un problema tecnico!");
         }
-        parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));
-        return $result;
     }
 
     /*     * **********************************************************************
