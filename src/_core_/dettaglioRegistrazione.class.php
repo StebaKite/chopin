@@ -395,7 +395,7 @@ class DettaglioRegistrazione extends CoreBase implements CoreInterface {
         $sqlTemplate = $this->getRoot() . $array['query'] . self::AGGIORNA_DETTAGLIO_REGISTRAZIONE;
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
         $result = $db->execSql($sql);
-        if ($return) {
+        if ($result) {
             return $result;            
         } else {
             throw new Exception("Ooooops, c'è un problema tecnico!");
