@@ -1118,7 +1118,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 }
                 $desconto_break = trim($row['des_conto']);
             } else {
-                if (isset($totaliMesi[$row['mm_registrazione']])) {
+                if ($totaliMesi[$row['mm_registrazione']] > 0) {
                     $totaliMesi[$row['mm_registrazione']] += $totconto;
                     $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
                 }
