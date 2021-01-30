@@ -1081,8 +1081,9 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
                     for ($i = 1; $i < 13; $i++) {
 
-                        if ($totaliMesi[$i] == 0)
+                        if ($totaliMesi[$i] == 0) {
                             $this->Cell($w[$i], 8, "---", 'LR', 0, 'R', $fill);
+                        }
                         else {
                             if (($totaliMesi[$i] * $invSegno) < 0) {
                                 $this->SetFont('', 'B', 10);
@@ -1118,10 +1119,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 }
                 $desconto_break = trim($row['des_conto']);
             } else {
-                if ($totaliMesi[$row['mm_registrazione']] > 0) {
-                    $totaliMesi[$row['mm_registrazione']] += $totconto;
-                    $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-                }
+                $totaliMesi[$row['mm_registrazione']] += $totconto;
+                $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
             }
         }
 
