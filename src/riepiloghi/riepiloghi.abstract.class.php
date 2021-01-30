@@ -982,59 +982,55 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
 
         foreach ($vociAndamento as $row) {
 
-            $totconto = $row['tot_conto'];
+        $totconto = $row['tot_conto'];
 
-            if (isset($totaliMesi[$row['mm_registrazione']])) {
-                
-                if (trim($row['des_conto']) != $desconto_break) {
+            if (trim($row['des_conto']) != $desconto_break) {
 
-                    if ($desconto_break != "") {
+                if ($desconto_break != "") {
 
-                        /**
-                         * A rottura creo le colonne accumulate e inizializzo l'array
-                         */
-                        $totale_conto = 0;
+                    /**
+                     * A rottura creo le colonne accumulate e inizializzo l'array
+                     */
+                    $totale_conto = 0;
 
-                        for ($i = 1; $i < 13; $i++) {
-                            if (isset($totaliMesi[$i])) {
-                                if ($totaliMesi[$i] == 0) {
-                                    $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
-                                } else {
-                                    $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
-                                }
-                                $totale_conto = $totale_conto + $totaliMesi[$i];                            
+                    for ($i = 1; $i < 13; $i++) {
+                        if (isset($totaliMesi[$i])) {
+                            if ($totaliMesi[$i] == 0) {
+                                $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";
                             } else {
-                                $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                                
+                                $risultato_andamento .= "<td>" . number_format(floatval($totaliMesi[$i]), 0, ',', '.') . "</td>";
                             }
+                            $totale_conto = $totale_conto + $totaliMesi[$i];                            
+                        } else {
+                            $risultato_andamento .= "<td>&ndash;&ndash;&ndash;</td>";                                
                         }
-                        $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
-
-                        $risultato_andamento .= "</tr>";
-                        for ($i = 1; $i < 13; $i++) {
-                            $totaliMesi[$i] = 0;
-                        }
-
-                        $risultato_andamento .= "<tr><td>" . trim($row['des_conto']) . "</td>";
-                        $totaliMesi[$row['mm_registrazione']] = $totconto;
-                        $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-                    } else {
-                        $risultato_andamento .= "<tr><td>" . trim($row['des_conto']) . "</td>";
-                        $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-                        $totaliMesi[$row['mm_registrazione']] = $totconto;
                     }
-                    $desconto_break = trim($row['des_conto']);
-                    if (trim($row['ind_gruppo'] === "CV")) {
-                        $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
+                    $risultato_andamento .= "<td class='bg-info'>" . number_format(floatval($totale_conto), 0, ',', '.') . "</td>";
+
+                    $risultato_andamento .= "</tr>";
+                    for ($i = 1; $i < 13; $i++) {
+                        $totaliMesi[$i] = 0;
                     }
-                } else {
-                    $totaliMesi[$row['mm_registrazione']] += $totconto;
+
+                    $risultato_andamento .= "<tr><td>" . trim($row['des_conto']) . "</td>";
+                    $totaliMesi[$row['mm_registrazione']] = $totconto;
                     $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
-                    if (trim($row['ind_gruppo'] === "CV")) {
-                        $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
-                    }
+                } else {
+                    $risultato_andamento .= "<tr><td>" . trim($row['des_conto']) . "</td>";
+                    $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+                    $totaliMesi[$row['mm_registrazione']] = $totconto;
+                }
+                $desconto_break = trim($row['des_conto']);
+                if (trim($row['ind_gruppo'] === "CV")) {
+                    $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
+                }
+            } else {
+                $totaliMesi[$row['mm_registrazione']] += $totconto;
+                $totaliComplessiviMesi[$row['mm_registrazione']] += $totconto;
+                if (trim($row['ind_gruppo'] === "CV")) {
+                    $totaliAcquistiMesi[$row['mm_registrazione']] += $totconto;
                 }
             }
-            
         }
 
         /**
