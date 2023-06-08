@@ -52,9 +52,7 @@ class AndamentoNegoziTemplate extends RiepiloghiAbstract implements RiepiloghiPr
             '%azione%' => parent::getIndexSession(self::AZIONE),
             '%datareg_da%' => $riepilogo->getDataregDa(),
             '%datareg_a%' => $riepilogo->getDataregA(),
-            '%villa-selected%' => ($riepilogo->getCodnegSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%brembate-selected%' => ($riepilogo->getCodnegSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%trezzo-selected%' => ($riepilogo->getCodnegSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%erba-selected%' => ($riepilogo->getCodnegSel() == self::ERBA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%codneg_sel%' => $riepilogo->getCodnegSel(),
             '%tabs%' => $this->makeTabsAndamentoNegozi($riepilogo),
         );

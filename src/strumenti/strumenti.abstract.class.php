@@ -222,8 +222,7 @@ abstract class StrumentiAbstract implements StrumentiPresentationInterface {
                 $fatture .= "<li><a href='../fatture/creaFatturaEntePubblicoFacade.class.php?modo=start'>" . $array["fatture_item_2_name"] . "</a></li>";
             if ($array["fatture_item_3"] == "Y")
                 $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_3_name"] . "</a></li>";
-            
-            $fatture .= "<li><a href='../fatture/creaFatturaClienteXMLFacade.class.php?modo=start'>FatturaXML</a></li>";            
+                      
             $fatture .= "</ul></li>";
         }
         $this->menu .= $fatture;

@@ -44,9 +44,7 @@ interface MainNexus6Interface {
     const SELECT_THIS_ITEM = "selected";
     const CHECK_THIS_ITEM = "checked";
     const ACTIVE_THIS_ITEM = "active";
-    const VILLA = "VIL";
-    const TREZZO = "TRE";
-    const BREMBATE = "BRE";
+    const ERBA = "ERB";
 
     /**
      *  Costanti comuni

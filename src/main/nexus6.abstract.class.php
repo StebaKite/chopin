@@ -618,7 +618,6 @@ abstract class Nexus6Abstract implements MainNexus6Interface {
             if ($array["fatture_item_3"] == "Y")
                 $fatture .= "<li><a href='../fatture/creaFatturaClienteFacade.class.php?modo=start'>" . $array["fatture_item_3_name"] . "</a></li>";
             
-            $fatture .= "<li><a href='../fatture/creaFatturaClienteXMLFacade.class.php?modo=start'>FatturaXML</a></li>";            
             $fatture .= "</ul></li>";
         }
         $this->menu .= $fatture;
