@@ -68,9 +68,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusiness
 
             if ($bilancio->getCodnegSel() != "") {
                 $negozio = "";
-                $negozio = ($bilancio->getCodnegSel() == "VIL") ? "Villa D'Adda" : $negozio;
-                $negozio = ($bilancio->getCodnegSel() == "BRE") ? "Brembate" : $negozio;
-                $negozio = ($bilancio->getCodnegSel() == "TRE") ? "Trezzo" : $negozio;
+                $negozio = ($bilancio->getCodnegSel() == "ERB") ? "Erba" : $negozio;
 
                 $pdf->setTitle2("Negozio di " . $negozio);
             } else {

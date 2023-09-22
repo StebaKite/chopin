@@ -66,9 +66,7 @@ class CreaFatturaAziendaConsortileTemplate extends FatturaAbstract implements Fa
             '%ragsocbanca%' => str_replace("'", "&apos;", $fattura->getDesRagsocBanca()),
             '%ibanbanca%' => $fattura->getCodIbanBanca(),
             '%descli%' => $fattura->getDesCliente(),
-            '%villa-checked%' => ($fattura->getCodNegozio() == self::VILLA) ? self::CHECK_THIS_ITEM : "",
-            '%brembate-checked%' => ($fattura->getCodNegozio() == self::BREMBATE) ? self::CHECK_THIS_ITEM : "",
-            '%trezzo-checked%' => ($fattura->getCodNegozio() == self::TREZZO) ? self::CHECK_THIS_ITEM : "",
+            '%villa-checked%' => ($fattura->getCodNegozio() == self::ERBA) ? self::CHECK_THIS_ITEM : "",
             '%elenco_clienti%' => $this->caricaElencoClienti($cliente)
         );
 

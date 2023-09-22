@@ -91,7 +91,7 @@ class ScadenzaCliente extends CoreBase implements CoreInterface {
     public function prepara() {
         $this->setDatScadenzaDa(date("d-m-Y"));
         $this->setDatScadenzaA(date("d-m-Y"));
-        $this->setCodNegozioSel("VIL");
+        $this->setCodNegozioSel("ERB");
         $this->setQtaScadenze(0);
         $this->setScadenze("");
         parent::setIndexSession(self::SCADENZA_CLIENTE, serialize($this));

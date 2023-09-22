@@ -53,9 +53,7 @@ class VisualizzaIncasso extends PrimanotaAbstract implements PrimanotaBusinessIn
         $dettaglioRegistrazione->setNomeCampo("descreg_inc_vis");
         parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
-        $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $negozio;
+        $negozio = (trim($registrazione->getCodNegozio()) == "ERB") ? "Erba" : $negozio;
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->leggi($db);

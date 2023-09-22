@@ -74,9 +74,7 @@ class VisualizzaRegistrazione extends PrimanotaAbstract implements PrimanotaBusi
         $dettaglioRegistrazione->setLabelNomeCampo("descreg_vis_label");
         parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
-        $this->negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $this->negozio;
-        $this->negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $this->negozio;
-        $this->negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $this->negozio;
+        $this->negozio = (trim($registrazione->getCodNegozio()) == "ERB") ? "Erba" : $this->negozio;
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->leggi($db);

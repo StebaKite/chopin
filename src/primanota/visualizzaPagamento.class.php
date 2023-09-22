@@ -53,9 +53,7 @@ class VisualizzaPagamento extends PrimanotaAbstract implements PrimanotaBusiness
         $dettaglioRegistrazione->setNomeCampo("descreg_pag_vis");
         parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
-        $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $negozio;
+        $negozio = (trim($registrazione->getCodNegozio()) == "ERB") ? "Erba" : $negozio;
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->leggi($db);

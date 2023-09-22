@@ -88,7 +88,7 @@ class ScadenzaFornitore extends CoreBase implements CoreInterface {
     public function prepara() {
         $this->setDatScadenzaDa(date("d-m-Y"));
         $this->setDatScadenzaA(date("d-m-Y"));
-        $this->setCodNegozioSel("VIL");
+        $this->setCodNegozioSel("ERB");
         $this->setQtaScadenzeDaPagare(0);
         $this->setScadenzeDaPagare("");
         $this->setQtaScadenzePagate(0);

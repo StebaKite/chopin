@@ -58,9 +58,7 @@ class EsportaMovimentiSottoconto extends ConfigurazioniAbstract implements Confi
         $pdf->setTitle("Registrazioni dal " . $sottoconto->getDataRegistrazioneDa() . " al " . $sottoconto->getDataRegistrazioneA());
 
         $negozio = "";
-        $negozio = ($sottoconto->getCodNegozio() == "VIL") ? "Villa D'Adda" : $negozio;
-        $negozio = ($sottoconto->getCodNegozio() == "BRE") ? "Brembate" : $negozio;
-        $negozio = ($sottoconto->getCodNegozio() == "TRE") ? "Trezzo" : $negozio;
+        $negozio = ($sottoconto->getCodNegozio() == "ERB") ? "Erba" : $negozio;
 
         if ($negozio != "") {
             $pdf->setTitle1("Negozio di " . $negozio);

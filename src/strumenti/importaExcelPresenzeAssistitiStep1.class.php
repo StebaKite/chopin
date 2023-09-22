@@ -49,7 +49,7 @@ class ImportaExcelPresenzeAssistitiStep1 extends StrumentiAbstract implements St
             $presenzaAssistito->setMese(date("m") - 1); // il mese è dimimuito di 1 per coincidere con i fogli del file excel
         }
         if (parent::isEmpty($presenzaAssistito->getCodNeg())) {
-            $presenzaAssistito->setCodNeg("VIL");
+            $presenzaAssistito->setCodNeg("ERB");
         }
         IF (parent::isEmpty($presenzaAssistito->getFile())) {
             $presenzaAssistito->setFile(null);

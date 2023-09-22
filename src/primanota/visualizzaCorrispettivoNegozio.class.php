@@ -40,9 +40,7 @@ class VisualizzaCorrispettivoNegozio extends PrimanotaAbstract implements Priman
         $dettaglioRegistrazione->setIdTablePagina("dettagli_cormer_vis");
         parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
-        $negozio = (trim($registrazione->getCodNegozio()) == "TRE") ? "Trezzo" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "VIL") ? "Villa D'adda" : $negozio;
-        $negozio = (trim($registrazione->getCodNegozio()) == "BRE") ? "Brembate" : $negozio;
+        $negozio = (trim($registrazione->getCodNegozio()) == "ERB") ? "Erba" : $negozio;
 
         $causale->setCodCausale($registrazione->getCodCausale());
         $causale->leggi($db);

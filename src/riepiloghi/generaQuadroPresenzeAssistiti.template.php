@@ -35,9 +35,7 @@ class GeneraQuadroPresenzeAssistitiTemplate extends RiepiloghiAbstract implement
             '%azione%' => parent::getIndexSession(self::AZIONE),
             '%anno%' => $presenzaAssistito->getAnno(),
             '%codneg_sel%' => $presenzaAssistito->getCodneg(),
-            '%villa-selected%' => ($presenzaAssistito->getCodneg() === "VIL") ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%brembate-selected%' => ($presenzaAssistito->getCodneg() === "BRE") ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%trezzo-selected%' => ($presenzaAssistito->getCodneg() === "TRE") ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,            
+            '%villa-selected%' => ($presenzaAssistito->getCodneg() === "ERB") ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%risultato_ricerca%' => ($presenzaAssistito->getNumPresenze() > 0) ? $this->makePresenzeAssistiti($presenzaAssistito) : self::EMPTYSTRING
         );
 

@@ -42,7 +42,7 @@ class ImportaExcelCorrispettiviNegozioStep1 extends StrumentiAbstract implements
 
         $corrispettivo->setAnno(date("Y"));
         $corrispettivo->setMese(date("m") - 1); // il mese è dimimuito di 1 per coincidere con i fogli del file excel
-        $corrispettivo->setCodNeg("VIL");
+        $corrispettivo->setCodNeg("ERB");
         $corrispettivo->setContoCassa("S");
 
         if (parent::isEmpty($corrispettivo->getDatada()))
