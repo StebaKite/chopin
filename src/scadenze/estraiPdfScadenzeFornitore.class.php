@@ -56,9 +56,7 @@ class EstraiPdfScadenzeFornitore extends ScadenzeAbstract implements ScadenzeBus
         $pdf->setTitle("Scadenze fornitori dal " . $scadenzaFornitore->getDatScadenzaDa() . " al " . $scadenzaFornitore->getDatScadenzaA());
 
         $negozio = self::EMPTYSTRING;
-        $negozio = ($scadenzaFornitore->getCodNegozioSel() == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
-        $negozio = ($scadenzaFornitore->getCodNegozioSel() == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
-        $negozio = ($scadenzaFornitore->getCodNegozioSel() == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
+        $negozio = ($scadenzaFornitore->getCodNegozioSel() == self::ERBA) ? self::NEGOZIO_ERBA : $negozio;
 
         if ($negozio != self::EMPTYSTRING)
             $pdf->setTitle1("Negozio di " . $negozio);

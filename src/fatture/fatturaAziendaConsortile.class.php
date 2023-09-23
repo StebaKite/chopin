@@ -19,13 +19,9 @@ class FatturaAziendaConsortile extends FatturaBase implements FattureBusinessInt
 
     public function identificativiFatturaAziendaConsortile($giorno, $meserif, $anno, $numfat, $codneg) {
 
-        $negozio = ($codneg == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
-        $negozio = ($codneg == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
-        $negozio = ($codneg == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
+        $negozio = ($codneg == self::ERBA) ? self::NEGOZIO_ERBA : $negozio;
 
-        $prefisso = ($codneg == self::VILLA) ? "" : $prefisso;
-        $prefisso = ($codneg == self::TREZZO) ? "T" : $prefisso;
-        $prefisso = ($codneg == self::BREMBATE) ? "B" : $prefisso;
+        $prefisso = ($codneg == self::ERBA) ? "" : $prefisso;
 
         $nfat = str_pad($numfat, 2, "0", STR_PAD_LEFT);
 

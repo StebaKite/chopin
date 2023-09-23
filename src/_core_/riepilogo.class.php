@@ -349,9 +349,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
      */
     public function ricercaCostiVariabiliNegozi($db) {
 
-        $this->ricercaCostiMargineContribuzione($db, self::VILLA);
-        $this->ricercaCostiMargineContribuzione($db, self::BREMBATE);
-        $this->ricercaCostiMargineContribuzione($db, self::TREZZO);
+        $this->ricercaCostiMargineContribuzione($db, self::ERBA);
         parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
@@ -362,9 +360,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
      */
     public function ricercaRicaviNegozi($db) {
 
-        $this->ricercaRicaviMargineContribuzione($db, self::VILLA);
-        $this->ricercaRicaviMargineContribuzione($db, self::BREMBATE);
-        $this->ricercaRicaviMargineContribuzione($db, self::TREZZO);
+        $this->ricercaRicaviMargineContribuzione($db, self::ERBA);
         parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
@@ -375,9 +371,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
      */
     public function ricercaCostiFissiNegozi($db) {
 
-        $this->ricercaCostiFissi($db, self::VILLA);
-        $this->ricercaCostiFissi($db, self::BREMBATE);
-        $this->ricercaCostiFissi($db, self::TREZZO);
+        $this->ricercaCostiFissi($db, self::ERBA);
         parent::setIndexSession(self::RIEPILOGO, serialize($this));
     }
 
@@ -403,23 +397,11 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO) {
-                    $this->setCostoVariabileTrezzo(pg_fetch_all($result));
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setCostoVariabileBrembate(pg_fetch_all($result));
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setCostoVariabileVilla(pg_fetch_all($result));
                 }
             } else {
-                if ($negozio == self::TREZZO) {
-                    $this->setCostoVariabileTrezzo(null);
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setCostoVariabileBrembate(null);
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setCostoVariabileVilla(null);
                 }
             }
@@ -456,23 +438,11 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO) {
-                    $this->setRicavoVenditaProdottiTrezzo(pg_fetch_all($result));
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setRicavoVenditaProdottiBrembate(pg_fetch_all($result));
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setRicavoVenditaProdottiVilla(pg_fetch_all($result));
                 }
             } else {
-                if ($negozio == self::TREZZO) {
-                    $this->setRicavoVenditaProdottiTrezzo(null);
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setRicavoVenditaProdottiBrembate(null);
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setRicavoVenditaProdottiVilla(null);
                 }
             }
@@ -511,23 +481,11 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
         if ($result) {
             if (pg_num_rows($result) > 0) {
-                if ($negozio == self::TREZZO) {
-                    $this->setCostoFissoTrezzo(pg_fetch_all($result));
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setCostoFissoBrembate(pg_fetch_all($result));
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setCostoFissoVilla(pg_fetch_all($result));
                 }
             } else {
-                if ($negozio == self::TREZZO) {
-                    $this->setCostoFissoTrezzo(null);
-                }
-                if ($negozio == self::BREMBATE) {
-                    $this->setCostoFissoBrembate(null);
-                }
-                if ($negozio == self::VILLA) {
+                if ($negozio == self::ERBA) {
                     $this->setCostoFissoVilla(null);
                 }
             }
@@ -550,7 +508,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $replace = array(
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
-            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::ERBA . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -585,7 +543,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $replace = array(
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
-            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::ERBA . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -630,32 +588,16 @@ class Riepilogo extends CoreBase implements CoreInterface {
         if ($result) {
             if (pg_num_rows($result) > 0) {
                 switch ($this->getCodnegSel()) {
-                    case self::VILLA:
+                    case self::ERBA:
                         $this->setRicaviAndamentoMercatoVilla(pg_fetch_all($result));
                         $this->setNumRicaviAndamentoMercatoVilla(pg_num_rows($result));
-                        break;
-                    case self::BREMBATE:
-                        $this->setRicaviAndamentoMercatoBrembate(pg_fetch_all($result));
-                        $this->setNumRicaviAndamentoMercatoBrembate(pg_num_rows($result));
-                        break;
-                    case self::TREZZO:
-                        $this->setRicaviAndamentoMercatoTrezzo(pg_fetch_all($result));
-                        $this->setNumRicaviAndamentoMercatoTrezzo(pg_num_rows($result));
                         break;
                 }
             } else {
                 switch ($this->getCodnegSel()) {
-                    case self::VILLA:
+                    case self::ERBA:
                         $this->setRicaviAndamentoMercatoVilla(self::EMPTYSTRING);
                         $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
-                        break;
-                    case self::BREMBATE:
-                        $this->setRicaviAndamentoMercatoBrembate(self::EMPTYSTRING);
-                        $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
-                        break;
-                    case self::TREZZO:
-                        $this->setRicaviAndamentoMercatoTrezzo(self::EMPTYSTRING);
-                        $this->setNumRicaviAndamentoMercatoTrezzo(self::ZERO_VALUE);
                         break;
                 }
             }
@@ -681,7 +623,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $replace = array(
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
-            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::ERBA . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);
@@ -714,7 +656,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $replace = array(
             '%datareg_da%' => $this->getDataregDa(),
             '%datareg_a%' => $this->getDataregA(),
-            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::VILLA . "','" . self::TREZZO . "','" . self::BREMBATE . "'" : "'" . $this->getCodnegSel() . "'"
+            '%codnegozio%' => ($this->getCodnegSel() == "") ? "'" . self::ERBA . "'" : "'" . $this->getCodnegSel() . "'"
         );
 
         $sql = $utility->tailFile($utility->getQueryTemplate($sqlTemplate), $replace);

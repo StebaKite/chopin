@@ -5,9 +5,7 @@ interface MainNexus6Interface {
     /**
      *  Negozi
      */
-    const NEGOZIO_VILLA = "Villa D'Adda";
-    const NEGOZIO_BREMBATE = "Brembate";
-    const NEGOZIO_TREZZO = "Trezzo";
+    const NEGOZIO_ERBA = "Erba";
 
     /**
      *  Costanti

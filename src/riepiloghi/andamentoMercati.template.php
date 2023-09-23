@@ -41,19 +41,9 @@ class AndamentoMercatiTemplate extends RiepiloghiAbstract implements RiepiloghiP
         foreach ($negozi as $negozio) {
 
             switch ($negozio) {
-                case self::VILLA:
+                case self::ERBA:
                     if ($riepilogo->getNumRicaviAndamentoMercatoVilla() > 0) {
                         $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoVilla());
-                    }
-                    break;
-                case self::BREMBATE:
-                    if ($riepilogo->getNumRicaviAndamentoMercatoBrembate() > 0) {
-                        $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoBrembate());
-                    }
-                    break;
-                case self::TREZZO:
-                    if ($riepilogo->getNumRicaviAndamentoMercatoTrezzo() > 0) {
-                        $mercatiTabs[$negozio] = $this->makeAndamentoRicaviMercatoTable($riepilogo->getRicaviAndamentoMercatoTrezzo());
                     }
                     break;
             }
@@ -64,9 +54,7 @@ class AndamentoMercatiTemplate extends RiepiloghiAbstract implements RiepiloghiP
             '%azione%' => parent::getIndexSession(self::AZIONE),
             '%datareg_da%' => $riepilogo->getDataregDa(),
             '%datareg_a%' => $riepilogo->getDataregA(),
-            '%villa-selected%' => ($riepilogo->getCodnegSel() == self::VILLA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%brembate-selected%' => ($riepilogo->getCodnegSel() == self::BREMBATE) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
-            '%trezzo-selected%' => ($riepilogo->getCodnegSel() == self::TREZZO) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
+            '%villa-selected%' => ($riepilogo->getCodnegSel() == self::ERBA) ? self::SELECT_THIS_ITEM : self::EMPTYSTRING,
             '%tabs%' => (count($mercatiTabs) > 0 ? $this->makeTabsAndamentoMercati($mercatiTabs) : self::EMPTYSTRING)
         );
 

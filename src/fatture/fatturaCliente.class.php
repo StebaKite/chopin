@@ -19,9 +19,7 @@ class FatturaCliente extends FatturaBase implements FattureBusinessInterface {
 
     public function identificativiFatturaCliente($giorno, $meserif, $anno, $numfat, $codneg) {
 
-        $negozio = ($codneg == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
-        $negozio = ($codneg == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
-        $negozio = ($codneg == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
+        $negozio = ($codneg == self::ERBA) ? self::NEGOZIO_ERBA : $negozio;
 
         /**
          * Eccezione:

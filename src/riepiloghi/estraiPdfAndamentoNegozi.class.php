@@ -60,9 +60,7 @@ class EstraiPdfAndamentoNegozi extends RiepiloghiAbstract implements RiepiloghiB
         $pdf->setTitle1("Tutti i negozi - " . $periodoSel);
 
         if (parent::isNotEmpty($riepilogo->getCodnegSel())) {
-            $negozio = ($riepilogo->getCodnegSel() == self::VILLA) ? "Villa D'Adda" : $negozio;
-            $negozio = ($riepilogo->getCodnegSel() == self::BREMBATE) ? "Brembate" : $negozio;
-            $negozio = ($riepilogo->getCodnegSel() == self::TREZZO) ? "Trezzo" : $negozio;
+            $negozio = ($riepilogo->getCodnegSel() == self::ERBA) ? "Erba" : $negozio;
             $pdf->setTitle1("Negozio di " . $negozio . " - " .$periodoSel);
         }
         return $pdf;

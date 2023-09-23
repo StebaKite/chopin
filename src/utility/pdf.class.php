@@ -761,7 +761,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 $totale_Bre += $totaleConto;
             if (trim($row['cod_negozio']) == self::TREZZO)
                 $totale_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
             $numReg ++;
@@ -801,7 +801,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
                 $totaleConto_Bre += $totaleConto;
             if (trim($row['cod_negozio']) == self::TREZZO)
                 $totaleConto_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 

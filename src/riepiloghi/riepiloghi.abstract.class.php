@@ -774,7 +774,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $tabs = "<ul class='nav nav-tabs' role='tablist'>";
 
         foreach ($andamentoMercatiTables as $key => $mercatoTable) {
-            if ($key == self::VILLA) {
+            if ($key == self::ERBA) {
                 $tabs .= "<li role='presentation' class='active'><a href='#tabs-" . $key . "' aria-controls='" . $key . "' role='tab' data-toggle='tab'>" . $key . "</a></li>";
             } else {
                 $tabs .= "<li role='presentation'><a href='#tabs-" . $key . "' aria-controls='" . $key . "' role='tab' data-toggle='tab'>" . $key . "</a></li>";
@@ -784,7 +784,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
         $tabs .= "<div class='tab-content'>";
 
         foreach ($andamentoMercatiTables as $key => $mercatoTable) {
-            if ($key == self::VILLA) {
+            if ($key == self::ERBA) {
                 $tabs .= "<div role='tabpanel' class='tab-pane fade in active' id='tabs-" . $key . "'>" . $mercatoTable . "</div>";
             } else {
                 $tabs .= "<div role='tabpanel' class='tab-pane fade' id='tabs-" . $key . "'>" . $mercatoTable . "</div>";

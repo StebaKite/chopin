@@ -60,9 +60,7 @@ class EstraiPdfScadenzeCliente extends ScadenzeAbstract implements ScadenzeBusin
         $pdf->setTitle("Scadenze clienti dal " . $scadenzaCliente->getDatScadenzaDa() . " al " . $scadenzaCliente->getDatScadenzaA());
 
         $negozio = self::EMPTYSTRING;
-        $negozio = ($scadenzaCliente->getCodNegozioSel() == self::VILLA) ? self::NEGOZIO_VILLA : $negozio;
-        $negozio = ($scadenzaCliente->getCodNegozioSel() == self::BREMBATE) ? self::NEGOZIO_BREMBATE : $negozio;
-        $negozio = ($scadenzaCliente->getCodNegozioSel() == self::TREZZO) ? self::NEGOZIO_TREZZO : $negozio;
+        $negozio = ($scadenzaCliente->getCodNegozioSel() == self::ERBA) ? self::NEGOZIO_ERBA : $negozio;
 
         if ($negozio != self::EMPTYSTRING)
             $pdf->setTitle1("Negozio di " . $negozio);

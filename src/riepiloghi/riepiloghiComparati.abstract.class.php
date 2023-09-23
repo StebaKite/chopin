@@ -30,11 +30,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleConto = trim($row['tot_conto']);
             $totaleCosti += $totaleConto;
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totale_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totale_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
             if (trim($row['des_conto']) != $desconto_break) {
@@ -65,11 +61,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $desconto_break = trim($row['des_conto']);
             }
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totaleConto_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totaleConto_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 
@@ -142,11 +134,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleConto = trim($row['tot_conto']);
             $totaleRicavi += $totaleConto;
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totale_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totale_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
             if (trim($row['des_conto']) != $desconto_break) {
@@ -177,11 +165,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $desconto_break = trim($row['des_conto']);
             }
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totaleConto_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totaleConto_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 
@@ -257,11 +241,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleConto = trim($row['tot_conto']);
             $totaleAttivo += $totaleConto;
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totale_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totale_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
             if (trim($row['des_conto']) != $desconto_break) {
@@ -292,11 +272,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $desconto_break = trim($row['des_conto']);
             }
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totaleConto_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totaleConto_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 
@@ -375,11 +351,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
             $totaleConto = trim($row['tot_conto']);
             $totalePassivo += $totaleConto;
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totale_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totale_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
             if (trim($row['des_conto']) != $desconto_break) {
@@ -410,11 +382,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                 $desconto_break = trim($row['des_conto']);
             }
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totaleConto_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totaleConto_Tre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::VILLA)
+            if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 
