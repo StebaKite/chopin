@@ -44,9 +44,7 @@ abstract class RiepiloghiAbstract extends Nexus6Abstract implements MainNexus6In
                 "<table class='table table-bordered table-hover'>" .
                 "   <thead>" .
                 "       <th width='300'>%ml.desconto%</th>" .
-                "       <th width='100' class='text-right'>%ml.brembate%</th>" .
-                "       <th width='100' class='text-right'>%ml.trezzo%</th>" .
-                "       <th width='100' class='text-right'>%ml.villa%</th>" .
+                "       <th width='100' class='text-right'>%ml.erba%</th>" .
                 "       <th width='100' class='text-right'>%ml.totale%</th>" .
                 "   </thead>" .
                 "   <tbody id='myTable'>";

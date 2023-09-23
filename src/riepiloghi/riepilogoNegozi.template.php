@@ -35,31 +35,29 @@ class RiepilogoNegoziTemplate extends RiepiloghiComparatiAbstract implements Rie
 
         $form = $this->root . $array['template'] . self::PAGINA_RIEPILOGO_NEGOZI;
 
-        if (parent::isNotEmpty($riepilogo->getCostiComparati()))
+        if (parent::isNotEmpty($riepilogo->getCostiComparati())) {
             $this->makeTableCostiComparati($riepilogo);
+        }
 
-        if (parent::isNotEmpty($riepilogo->getRicaviComparati()))
+        if (parent::isNotEmpty($riepilogo->getRicaviComparati())) {
             $this->makeTableRicaviComparati($riepilogo);
+        }
 
-        if (parent::isNotEmpty($riepilogo->getAttivoComparati()))
+        if (parent::isNotEmpty($riepilogo->getAttivoComparati())) {
             $this->makeTableAttivoComparati($riepilogo);
+        }
 
-        if (parent::isNotEmpty($riepilogo->getPassivoComparati()))
+        if (parent::isNotEmpty($riepilogo->getPassivoComparati())) {
             $this->makeTablePassivoComparati($riepilogo);
+        }
 
         /*
          * Se ci sono le condizioni calcolo l'mct e il bep e genero le tabelle in output
          */
         if (parent::isNotEmpty($riepilogo->getCostoVariabileVilla()) or
-                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiVilla()) or
-                parent::isNotEmpty($riepilogo->getCostoFissoVilla()) or
-                parent::isNotEmpty($riepilogo->getCostoVariabileBrembate()) or
-                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiBrembate()) or
-                parent::isNotEmpty($riepilogo->getCostoFissoBrembate()) or
-                parent::isNotEmpty($riepilogo->getCostoVariabileTrezzo()) or
-                parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiTrezzo()) or
-                parent::isNotEmpty($riepilogo->getCostoFissoTrezzo())) {
-
+            parent::isNotEmpty($riepilogo->getRicavoVenditaProdottiVilla()) or
+            parent::isNotEmpty($riepilogo->getCostoFissoVilla())) {
+                
             $this->makeTableMct($riepilogo);
             $this->makeTableBep($riepilogo);
         }

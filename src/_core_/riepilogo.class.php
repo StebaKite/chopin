@@ -21,14 +21,8 @@ class Riepilogo extends CoreBase implements CoreInterface {
     private $numAttivoComparatiTrovati;
     private $passivoComparati;
     private $numPassivoComparatiTrovati;
-    private $costoVariabileTrezzo;
-    private $costoVariabileBrembate;
     private $costoVariabileVilla;
-    private $costoFissoTrezzo;
-    private $costoFissoBrembate;
     private $costoFissoVilla;
-    private $ricavoVenditaProdottiTrezzo;
-    private $ricavoVenditaProdottiBrembate;
     private $ricavoVenditaProdottiVilla;
     private $tableCostiComparati;
     private $tableRicaviComparati;
@@ -40,24 +34,14 @@ class Riepilogo extends CoreBase implements CoreInterface {
     private $tableAndamentoRicavi;
     private $tableUtilePerdita;
     private $tableMargineContribuzione;
-    private $totaleCostiBrembate;
-    private $totaleCostiTrezzo;
     private $totaleCostiVilla;
     private $totaleCosti;
-    private $totaleRicaviBrembate;
-    private $totaleRicaviTrezzo;
     private $totaleRicaviVilla;
     private $totaleRicavi;
-    private $totaleAttivoBrembate;
-    private $totaleAttivoTrezzo;
     private $totaleAttivoVilla;
     private $totaleAttivo;
-    private $totalePassivoBrembate;
-    private $totalePassivoTrezzo;
     private $totalePassivoVilla;
     private $totalePassivo;
-    private $utileBrembate;
-    private $utileTrezzo;
     private $utileVilla;
     private $totaleUtile;
     private $datiMCT;
@@ -66,12 +50,8 @@ class Riepilogo extends CoreBase implements CoreInterface {
     private $costiAndamentoNegozioRiferimento;
     private $numCostiAndamentoNegozioRiferimento;
     private $ricaviAndamentoNegozio;
-    private $ricaviAndamentoMercatoTrezzo;
-    private $ricaviAndamentoMercatoBrembate;
     private $ricaviAndamentoMercatoVilla;
     private $numRicaviAndamentoNegozio;
-    private $numRicaviAndamentoMercatoTrezzo;
-    private $numRicaviAndamentoMercatoBrembate;
     private $numRicaviAndamentoMercatoVilla;
     private $ricaviAndamentoNegozioRiferimento;
     private $numRicaviAndamentoNegozioRiferimento;
@@ -136,11 +116,7 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->setNumCostiComparatiTrovati(self::ZERO_VALUE);
         $this->setNumCostiAndamentoNegozio(self::ZERO_VALUE);
         $this->setNumRicaviAndamentoNegozio(self::ZERO_VALUE);
-        $this->setNumRicaviAndamentoMercatoTrezzo(self::ZERO_VALUE);
-        $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
         $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
-        $this->setRicaviAndamentoMercatoTrezzo(self::EMPTYSTRING);
-        $this->setRicaviAndamentoMercatoBrembate(self::EMPTYSTRING);
         $this->setRicaviAndamentoMercatoVilla(self::EMPTYSTRING);
         $this->setRicaviComparati(self::EMPTYSTRING);
         $this->setNumRicaviComparatiTrovati(self::ZERO_VALUE);
@@ -148,14 +124,8 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->setNumAttivoComparatiTrovati(self::ZERO_VALUE);
         $this->setPassivoComparati(self::ZERO_VALUE);
         $this->setNumPassivoComparatiTrovati(self::ZERO_VALUE);
-        $this->setCostoVariabileTrezzo(self::EMPTYSTRING);
-        $this->setCostoVariabileBrembate(self::EMPTYSTRING);
         $this->setCostoVariabileVilla(self::EMPTYSTRING);
-        $this->setCostoFissoTrezzo(self::EMPTYSTRING);
-        $this->setCostoFissoBrembate(self::EMPTYSTRING);
         $this->setCostoFissoVilla(self::EMPTYSTRING);
-        $this->setRicavoVenditaProdottiTrezzo(self::EMPTYSTRING);
-        $this->setRicavoVenditaProdottiBrembate(self::EMPTYSTRING);
         $this->setRicavoVenditaProdottiVilla(self::EMPTYSTRING);
         $this->setTableCostiComparati(self::EMPTYSTRING);
         $this->setTableRicaviComparati(self::EMPTYSTRING);
@@ -169,30 +139,18 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->setTableUtilePerdita(self::EMPTYSTRING);
         $this->setTableMargineContribuzione(self::EMPTYSTRING);
 
-        $this->setTotaleCostiTrezzo(self::ZERO_VALUE);
         $this->setTotaleCostiVilla(self::ZERO_VALUE);
-        $this->setTotaleCostiBrembate(self::ZERO_VALUE);
         $this->setTotaleCosti(self::ZERO_VALUE);
-        $this->setTotaleRicaviBrembate(self::ZERO_VALUE);
-        $this->setTotaleRicaviTrezzo(self::ZERO_VALUE);
         $this->setTotaleRicaviVilla(self::ZERO_VALUE);
         $this->setTotaleRicavi(self::ZERO_VALUE);
-        $this->setTotaleAttivoBrembate(self::ZERO_VALUE);
-        $this->setTotaleAttivoTrezzo(self::ZERO_VALUE);
         $this->setTotaleAttivoVilla(self::ZERO_VALUE);
         $this->setTotaleAttivo(self::ZERO_VALUE);
-        $this->setTotalePassivoBrembate(self::ZERO_VALUE);
-        $this->setTotalePassivoTrezzo(self::ZERO_VALUE);
         $this->setTotalePassivoVilla(self::ZERO_VALUE);
         $this->setTotalePassivo(self::ZERO_VALUE);
         $this->setTotaliAcquistiMesi(self::ZERO_VALUE);
         $this->setTotaliRicaviMesi(self::ZERO_VALUE);
 
-        $this->setRicaviAndamentoMercatoTrezzo(self::EMPTYSTRING);
-        $this->setRicaviAndamentoMercatoBrembate(self::EMPTYSTRING);
         $this->setRicaviAndamentoMercatoVilla(self::EMPTYSTRING);
-        $this->setNumRicaviAndamentoMercatoTrezzo(self::ZERO_VALUE);
-        $this->setNumRicaviAndamentoMercatoBrembate(self::ZERO_VALUE);
         $this->setNumRicaviAndamentoMercatoVilla(self::ZERO_VALUE);
 
         parent::setIndexSession(self::RIEPILOGO, serialize($this));
@@ -791,22 +749,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->numPassivoComparatiTrovati = $numPassivoComparatiTrovati;
     }
 
-    public function getCostoVariabileTrezzo() {
-        return $this->costoVariabileTrezzo;
-    }
-
-    public function setCostoVariabileTrezzo($costoVariabileTrezzo) {
-        $this->costoVariabileTrezzo = $costoVariabileTrezzo;
-    }
-
-    public function getCostoVariabileBrembate() {
-        return $this->costoVariabileBrembate;
-    }
-
-    public function setCostoVariabileBrembate($costoVariabileBrembate) {
-        $this->costoVariabileBrembate = $costoVariabileBrembate;
-    }
-
     public function getCostoVariabileVilla() {
         return $this->costoVariabileVilla;
     }
@@ -815,44 +757,12 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->costoVariabileVilla = $costoVariabileVilla;
     }
 
-    public function getRicavoVenditaProdottiTrezzo() {
-        return $this->ricavoVenditaProdottiTrezzo;
-    }
-
-    public function setRicavoVenditaProdottiTrezzo($ricavoVenditaProdottiTrezzo) {
-        $this->ricavoVenditaProdottiTrezzo = $ricavoVenditaProdottiTrezzo;
-    }
-
-    public function getRicavoVenditaProdottiBrembate() {
-        return $this->ricavoVenditaProdottiBrembate;
-    }
-
-    public function setRicavoVenditaProdottiBrembate($ricavoVenditaProdottiBrembate) {
-        $this->ricavoVenditaProdottiBrembate = $ricavoVenditaProdottiBrembate;
-    }
-
     public function getRicavoVenditaProdottiVilla() {
         return $this->ricavoVenditaProdottiVilla;
     }
 
     public function setRicavoVenditaProdottiVilla($ricavoVenditaProdottiVilla) {
         $this->ricavoVenditaProdottiVilla = $ricavoVenditaProdottiVilla;
-    }
-
-    public function getCostoFissoTrezzo() {
-        return $this->costoFissoTrezzo;
-    }
-
-    public function setCostoFissoTrezzo($costoFissoTrezzo) {
-        $this->costoFissoTrezzo = $costoFissoTrezzo;
-    }
-
-    public function getCostoFissoBrembate() {
-        return $this->costoFissoBrembate;
-    }
-
-    public function setCostoFissoBrembate($costoFissoBrembate) {
-        $this->costoFissoBrembate = $costoFissoBrembate;
     }
 
     public function getCostoFissoVilla() {
@@ -911,22 +821,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->tableBepComparati = $tableBepComparati;
     }
 
-    public function getTotaleCostiBrembate() {
-        return $this->totaleCostiBrembate;
-    }
-
-    public function setTotaleCostiBrembate($totaleCostiBrembate) {
-        $this->totaleCostiBrembate = $totaleCostiBrembate;
-    }
-
-    public function getTotaleCostiTrezzo() {
-        return $this->totaleCostiTrezzo;
-    }
-
-    public function setTotaleCostiTrezzo($totaleCostiTrezzo) {
-        $this->totaleCostiTrezzo = $totaleCostiTrezzo;
-    }
-
     public function getTotaleCostiVilla() {
         return $this->totaleCostiVilla;
     }
@@ -941,22 +835,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
     public function setTotaleCosti($totaleCosti) {
         $this->totaleCosti = $totaleCosti;
-    }
-
-    public function getTotaleRicaviBrembate() {
-        return $this->totaleRicaviBrembate;
-    }
-
-    public function setTotaleRicaviBrembate($totaleRicaviBrembate) {
-        $this->totaleRicaviBrembate = $totaleRicaviBrembate;
-    }
-
-    public function getTotaleRicaviTrezzo() {
-        return $this->totaleRicaviTrezzo;
-    }
-
-    public function setTotaleRicaviTrezzo($totaleRicaviTrezzo) {
-        $this->totaleRicaviTrezzo = $totaleRicaviTrezzo;
     }
 
     public function getTotaleRicaviVilla() {
@@ -975,22 +853,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->totaleRicavi = $totaleRicavi;
     }
 
-    public function getTotaleAttivoBrembate() {
-        return $this->totaleAttivoBrembate;
-    }
-
-    public function setTotaleAttivoBrembate($totaleAttivoBrembate) {
-        $this->totaleAttivoBrembate = $totaleAttivoBrembate;
-    }
-
-    public function getTotaleAttivoTrezzo() {
-        return $this->totaleAttivoTrezzo;
-    }
-
-    public function setTotaleAttivoTrezzo($totaleAttivoTrezzo) {
-        $this->totaleAttivoTrezzo = $totaleAttivoTrezzo;
-    }
-
     public function getTotaleAttivoVilla() {
         return $this->totaleAttivoVilla;
     }
@@ -1007,22 +869,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->totaleAttivo = $totaleAttivo;
     }
 
-    public function getTotalePassivoBrembate() {
-        return $this->totalePassivoBrembate;
-    }
-
-    public function setTotalePassivoBrembate($totalePassivoBrembate) {
-        $this->totalePassivoBrembate = $totalePassivoBrembate;
-    }
-
-    public function getTotalePassivoTrezzo() {
-        return $this->totalePassivoTrezzo;
-    }
-
-    public function setTotalePassivoTrezzo($totalePassivoTrezzo) {
-        $this->totalePassivoTrezzo = $totalePassivoTrezzo;
-    }
-
     public function getTotalePassivoVilla() {
         return $this->totalePassivoVilla;
     }
@@ -1037,22 +883,6 @@ class Riepilogo extends CoreBase implements CoreInterface {
 
     public function setTotalePassivo($totalePassivo) {
         $this->totalePassivo = $totalePassivo;
-    }
-
-    public function getUtileBrembate() {
-        return $this->utileBrembate;
-    }
-
-    public function setUtileBrembate($utileBrembate) {
-        $this->utileBrembate = $utileBrembate;
-    }
-
-    public function getUtileTrezzo() {
-        return $this->utileTrezzo;
-    }
-
-    public function setUtileTrezzo($utileTrezzo) {
-        $this->utileTrezzo = $utileTrezzo;
     }
 
     public function getUtileVilla() {
@@ -1207,44 +1037,12 @@ class Riepilogo extends CoreBase implements CoreInterface {
         $this->tableMargineContribuzione = $tableMargineContribuzione;
     }
 
-    public function getRicaviAndamentoMercatoTrezzo() {
-        return $this->ricaviAndamentoMercatoTrezzo;
-    }
-
-    public function setRicaviAndamentoMercatoTrezzo($ricaviAndamentoMercato) {
-        $this->ricaviAndamentoMercatoTrezzo = $ricaviAndamentoMercato;
-    }
-
-    public function getRicaviAndamentoMercatoBrembate() {
-        return $this->ricaviAndamentoMercatoBrembate;
-    }
-
-    public function setRicaviAndamentoMercatoBrembate($ricaviAndamentoMercato) {
-        $this->ricaviAndamentoMercatoBrembate = $ricaviAndamentoMercato;
-    }
-
     public function getRicaviAndamentoMercatoVilla() {
         return $this->ricaviAndamentoMercatoVilla;
     }
 
     public function setRicaviAndamentoMercatoVilla($ricaviAndamentoMercato) {
         $this->ricaviAndamentoMercatoVilla = $ricaviAndamentoMercato;
-    }
-
-    public function getNumRicaviAndamentoMercatoTrezzo() {
-        return $this->numRicaviAndamentoMercatoTrezzo;
-    }
-
-    public function setNumRicaviAndamentoMercatoTrezzo($numRicaviAndamentoMercato) {
-        $this->numRicaviAndamentoMercatoTrezzo = $numRicaviAndamentoMercato;
-    }
-
-    public function getNumRicaviAndamentoMercatoBrembate() {
-        return $this->numRicaviAndamentoMercatoBrembate;
-    }
-
-    public function setNumRicaviAndamentoMercatoBrembate($numRicaviAndamentoMercato) {
-        $this->numRicaviAndamentoMercatoBrembate = $numRicaviAndamentoMercato;
     }
 
     public function getNumRicaviAndamentoMercatoVilla() {
