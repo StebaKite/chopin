@@ -77,6 +77,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
         parent::setIndexSession(self::DETTAGLIO_REGISTRAZIONE, serialize($dettaglioRegistrazione));
 
         $causale->setCodCausale($registrazione->getCodCausale());
+        $causale->loadContiConfigurati($db);
 
         $risultato_xml = $this->root . $array['template'] . self::XML_MODIFICA_REGISTRAZIONE;
 
@@ -94,7 +95,7 @@ class ModificaRegistrazione extends PrimanotaAbstract implements PrimanotaBusine
             '%scadenzesupplfornitore%' => trim($this->makeTabellaScadenzeFornitore($scadenzaFornitore,$dettaglioRegistrazione)),
             '%scadenzesupplcliente%' => trim($this->makeTabellaScadenzeCliente($scadenzaCliente,$dettaglioRegistrazione)),
             '%dettagli%' => trim($this->makeTabellaDettagliRegistrazione($registrazione, $dettaglioRegistrazione, $scadenzaFornitore, $scadenzaCliente)),
-            '%conti%' => trim($causale->loadContiConfigurati($db))
+            '%conti%' => trim($causale->getContiCausale())
         );
         $template = $utility->tailFile($utility->getTemplate($risultato_xml), $replace);
         echo $utility->tailTemplate($template);
