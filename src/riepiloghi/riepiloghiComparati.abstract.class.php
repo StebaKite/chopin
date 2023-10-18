@@ -618,7 +618,7 @@ abstract class RiepiloghiComparatiAbstract extends RiepiloghiAbstract implements
                     "</tr>";
 
             $utile_Vil = $riepilogo->getTotaleRicaviVilla() - $riepilogo->getTotaleCostiVilla();
-            $utile = $utile_Bre + $utile_Tre + $utile_Vil;
+            $utile = $utile_Vil;
 
             $risultato_esercizio .= "" .
                     "<tr>" .

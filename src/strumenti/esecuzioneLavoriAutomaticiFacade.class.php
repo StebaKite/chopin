@@ -11,7 +11,7 @@
  *
  */
 
-set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility');
+set_include_path('/var/www/html/chopin/src/_core_:/var/www/html/chopin/src/main:/var/www/html/chopin/src/saldi:/var/www/html/chopin/src/utility:/var/www/html/chopin/src/strumenti');
 require_once 'esecuzioneLavoriAutomatici.class.php';
 
 $esecuzioneLavoriAutomatici = new EsecuzioneLavoriAutomatici();
