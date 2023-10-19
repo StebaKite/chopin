@@ -127,7 +127,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             define(self::EURO, chr(128));        
         }
 
-        $this->Image($this->getLogo(), 5, 5, 20);
+        $this->Image($this->getLogo(), 5, 5, 40);
 
         $this->SetFont('Arial', 'B', 15);
         $this->Cell(0, 10, iconv('UTF-8', 'windows-1252', $this->getTitle()), 0, 0, 'C');

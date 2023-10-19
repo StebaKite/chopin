@@ -76,7 +76,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
 
         $pdf->AddPage('L');
 
-        $header = array("Costi", self::NEGOZIO_BREMBATE, self::NEGOZIO_TREZZO, self::NEGOZIO_VILLA, "Totale");
+        $header = array("Costi", self::NEGOZIO_ERBA, "Totale");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziTable($header, $riepilogo->getCostiComparati(), 1);
 
@@ -88,7 +88,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $pdf->Cell(100, 10, '', '', 0, 'R', $fill);
         $pdf->Ln();
 
-        $header = array("Ricavi", self::NEGOZIO_BREMBATE, self::NEGOZIO_TREZZO, self::NEGOZIO_VILLA, "Totale");
+        $header = array("Ricavi", self::NEGOZIO_ERBA, "Totale");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziTable($header, $riepilogo->getRicaviComparati(), -1);
 
@@ -102,16 +102,14 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         /**
          * Calcolo dell'utile per negozio
          */
-        $riepilogo->setUtileBrembate($riepilogo->getTotaleRicaviBrembate() - $riepilogo->getTotaleCostiBrembate());
-        $riepilogo->setUtileTrezzo($riepilogo->getTotaleRicaviTrezzo() - $riepilogo->getTotaleCostiTrezzo());
         $riepilogo->setUtileVilla($riepilogo->getTotaleRicaviVilla() - $riepilogo->getTotaleCostiVilla());
-        $riepilogo->setTotaleUtile($riepilogo->getUtileBrembate() + $riepilogo->getUtileTrezzo() + $riepilogo->getUtileVilla());
+        $riepilogo->setTotaleUtile( $riepilogo->getUtileVilla());
 
         parent::setIndexSession(self::RIEPILOGO, serialize($riepilogo));
 
         $pdf->AddPage('L');
 
-        $header = array($nomeTabella, parent::NEGOZIO_BREMBATE, parent::NEGOZIO_TREZZO, parent::NEGOZIO_VILLA, "Totale");
+        $header = array($nomeTabella, parent::NEGOZIO_ERBA, "Totale");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziTotaliTable($header, $riepilogo);
 
@@ -122,7 +120,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
 
         $pdf->AddPage('L');
 
-        $header = array("Attivo", parent::NEGOZIO_BREMBATE, parent::NEGOZIO_TREZZO, parent::NEGOZIO_VILLA, "Totale");
+        $header = array("Attivo", parent::NEGOZIO_ERBA, "Totale");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziTable($header, $riepilogo->getAttivoComparati(), 1);
 
@@ -133,7 +131,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
 
         $pdf->AddPage('L');
 
-        $header = array("Passivo", parent::NEGOZIO_BREMBATE, parent::NEGOZIO_TREZZO, parent::NEGOZIO_VILLA, "Totale");
+        $header = array("Passivo", parent::NEGOZIO_ERBA, "Totale");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziTable($header, $riepilogo->getPassivoComparati(), 1);
 
@@ -167,50 +165,6 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviVIL"];
         $datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliVIL"];
 
-        // Trezzo ---------------------------------------------------------------------
-
-        foreach ($riepilogo->getCostoVariabileTrezzo() as $row) {
-            $datiMCT["totaleCostiVariabiliTRE"] = trim($row['totalecostovariabile']);
-        }
-
-        foreach ($riepilogo->getRicavoVenditaProdottiTrezzo() as $row) {
-            $datiMCT["totaleRicaviTRE"] = trim($row['totalericavovendita']);
-        }
-
-        foreach ($riepilogo->getCostoFissoTrezzo() as $row) {
-            $datiMCT["totaleCostiFissiTRE"] = trim($row['totalecostofisso']);
-        }
-
-        $datiMCT["margineTotaleTRE"] = abs($datiMCT["totaleRicaviTRE"]) - $datiMCT["totaleCostiVariabiliTRE"];
-        $datiMCT["marginePercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleRicaviTRE"]);
-        $datiMCT["ricaricoPercentualeTRE"] = ($datiMCT["margineTotaleTRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliTRE"]);
-
-        $datiMCT["totaleCostiFissi"] += $datiMCT["totaleCostiFissiTRE"];
-        $datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviTRE"];
-        $datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliTRE"];
-
-        // Brembate ---------------------------------------------------------------------
-
-        foreach ($riepilogo->getCostoVariabileBrembate() as $row) {
-            $datiMCT["totaleCostiVariabiliBRE"] = trim($row['totalecostovariabile']);
-        }
-
-        foreach ($riepilogo->getRicavoVenditaProdottiBrembate() as $row) {
-            $datiMCT["totaleRicaviBRE"] = trim($row['totalericavovendita']);
-        }
-
-        foreach ($riepilogo->getCostoFissoBrembate() as $row) {
-            $datiMCT["totaleCostiFissiBRE"] = trim($row['totalecostofisso']);
-        }
-
-        $datiMCT["margineTotaleBRE"] = abs($datiMCT["totaleRicaviBRE"]) - $datiMCT["totaleCostiVariabiliBRE"];
-        $datiMCT["marginePercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleRicaviBRE"]);
-        $datiMCT["ricaricoPercentualeBRE"] = ($datiMCT["margineTotaleBRE"] * 100 ) / abs($datiMCT["totaleCostiVariabiliBRE"]);
-
-        $datiMCT["totaleCostiFissi"] += $datiMCT["totaleCostiFissiBRE"];
-        $datiMCT["totaleRicavi"] += $datiMCT["totaleRicaviBRE"];
-        $datiMCT["totaleCostiVariabili"] += $datiMCT["totaleCostiVariabiliBRE"];
-
         // MCT toale negozi ----------------------------------------------------------
 
         $datiMCT["margineTotale"] = abs($datiMCT["totaleRicavi"]) - $datiMCT["totaleCostiVariabili"];
@@ -224,7 +178,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
 
         $pdf->AddPage('L');
 
-        $header = array("MCT", parent::NEGOZIO_BREMBATE, parent::NEGOZIO_TREZZO, parent::NEGOZIO_VILLA, "TOTALE");
+        $header = array("MCT", parent::NEGOZIO_ERBA, "TOTALE");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziMctTable($header, $riepilogo->getDatiMCT());
 
@@ -246,16 +200,6 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"] = 1 - ($datiMCT["totaleCostiVariabiliVIL"] / abs($datiMCT["totaleRicaviVIL"]));
         $datiMCT["bepVIL"] = $datiMCT["totaleCostiFissiVIL"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"], 2);
 
-        // Trezzo ---------------------------------------------------------------------
-
-        $datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"] = 1 - ($datiMCT["totaleCostiVariabiliTRE"] / abs($datiMCT["totaleRicaviTRE"]));
-        $datiMCT["bepTRE"] = $datiMCT["totaleCostiFissiTRE"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"], 2);
-
-        // Brembate ---------------------------------------------------------------------
-
-        $datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"] = 1 - ($datiMCT["totaleCostiVariabiliBRE"] / abs($datiMCT["totaleRicaviBRE"]));
-        $datiMCT["bepBRE"] = $datiMCT["totaleCostiFissiBRE"] / round($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"], 2);
-
         // BEP totale negozi -----------------------------------------------------------
 
         $datiMCT["incidenzaCostiVariabiliSulFatturato"] = 1 - ($datiMCT["totaleCostiVariabili"] / abs($datiMCT["totaleRicavi"]));
@@ -270,7 +214,7 @@ class EstraiPdfRiepilogoNegozio extends RiepiloghiComparatiAbstract implements R
         $pdf->Cell(100, 10, '', '', 0, 'R', $fill);
         $pdf->Ln();
 
-        $header = array("BEP", parent::NEGOZIO_BREMBATE, parent::NEGOZIO_TREZZO, parent::NEGOZIO_VILLA, "TOTALE");
+        $header = array("BEP", parent::NEGOZIO_ERBA, "TOTALE");
         $pdf->SetFont('Arial', '', 9);
         $pdf->riepilogoNegoziBepTable($header, $riepilogo->getDatiMCT());
 
