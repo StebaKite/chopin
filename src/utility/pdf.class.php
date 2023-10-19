@@ -728,7 +728,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->SetFont('', '', 12);
 
         // Header
-        $w = array(150, 30, 30, 30, 30);
+        $w = array(150, 30, 30);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 10, $header[$i], 1, 0, 'C', true);
         }
@@ -744,12 +744,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $totaleCosti = 0;
         $desconto_break = "";
 
-        $totaleConto_Bre = 0;
-        $totaleConto_Tre = 0;
         $totaleConto_Vil = 0;
-
-        $totale_Bre = 0;
-        $totale_Tre = 0;
         $totale_Vil = 0;
 
         foreach ($data as $row) {
@@ -757,10 +752,6 @@ class Pdf extends FPDF implements UtilityComponentInterface {
             $totaleConto = trim($row['tot_conto']);
             $totaleCosti += $totaleConto;
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totale_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totale_Tre += $totaleConto;
             if (trim($row['cod_negozio']) == self::ERBA)
                 $totale_Vil += $totaleConto;
 
@@ -770,67 +761,50 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
                 if ($desconto_break != "") {
 
-                    $totBre = ($totaleConto_Bre != 0) ? number_format((floatval($totaleConto_Bre * $invSegno)), 2, ',', '.') : "---";
-                    $totTre = ($totaleConto_Tre != 0) ? number_format((floatval($totaleConto_Tre * $invSegno)), 2, ',', '.') : "---";
                     $totVil = ($totaleConto_Vil != 0) ? number_format((floatval($totaleConto_Vil * $invSegno)), 2, ',', '.') : "---";
 
-                    $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+                    $totale = $totaleConto_Vil;
                     $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
                     $this->SetFont('', '', 10);
                     $fill = !$fill;
 
                     $this->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', trim($desconto_break)), 'LR', 0, 'L', $fill);
-                    $this->Cell($w[1], 6, $totBre, 'LR', 0, 'R', $fill);
-                    $this->Cell($w[2], 6, $totTre, 'LR', 0, 'R', $fill);
-                    $this->Cell($w[3], 6, $totVil, 'LR', 0, 'R', $fill);
+                    $this->Cell($w[1], 6, $totVil, 'LR', 0, 'R', $fill);
 
                     $this->SetFont('', 'B', 10);
-                    $this->Cell($w[4], 6, $tot, 'LR', 0, 'R', $fill);
+                    $this->Cell($w[2], 6, $tot, 'LR', 0, 'R', $fill);
                     $this->Ln();
 
-                    $totaleConto_Bre = 0;
-                    $totaleConto_Tre = 0;
                     $totaleConto_Vil = 0;
                 }
 
                 $desconto_break = trim($row['des_conto']);
             }
 
-            if (trim($row['cod_negozio']) == self::BREMBATE)
-                $totaleConto_Bre += $totaleConto;
-            if (trim($row['cod_negozio']) == self::TREZZO)
-                $totaleConto_Tre += $totaleConto;
             if (trim($row['cod_negozio']) == self::ERBA)
                 $totaleConto_Vil += $totaleConto;
         }
 
-        $totBre = ($totaleConto_Bre != 0) ? number_format((floatval($totaleConto_Bre * $invSegno)), 2, ',', '.') : "---";
-        $totTre = ($totaleConto_Tre != 0) ? number_format((floatval($totaleConto_Tre * $invSegno)), 2, ',', '.') : "---";
         $totVil = ($totaleConto_Vil != 0) ? number_format((floatval($totaleConto_Vil * $invSegno)), 2, ',', '.') : "---";
 
-        $totale = $totaleConto_Bre + $totaleConto_Tre + $totaleConto_Vil;
+        $totale = $totaleConto_Vil;
         $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
         $this->SetFont('', '', 10);
         $fill = !$fill;
 
         $this->Cell($w[0], 6, iconv('UTF-8', 'windows-1252', trim($desconto_break)), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 6, $totBre, 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 6, $totTre, 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 6, $totVil, 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 6, $totVil, 'LR', 0, 'R', $fill);
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[4], 6, $tot, 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 6, $tot, 'LR', 0, 'R', $fill);
         $this->Ln();
 
         /**
          * Totale complessivo di colonna
          */
-        $totBre = ($totale_Bre != 0) ? number_format((floatval($totale_Bre * $invSegno)), 2, ',', '.') : "---";
-        $totTre = ($totale_Tre != 0) ? number_format((floatval($totale_Tre * $invSegno)), 2, ',', '.') : "---";
         $totVil = ($totale_Vil != 0) ? number_format((floatval($totale_Vil * $invSegno)), 2, ',', '.') : "---";
-
-        $totale = $totale_Bre + $totale_Tre + $totale_Vil;
+        $totale = $totale_Vil;
         $tot = ($totale != 0) ? number_format((floatval($totale * $invSegno)), 2, ',', '.') : "---";
 
         $this->SetFillColor(224, 235, 255);
@@ -839,10 +813,8 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $this->SetFont('', 'B', 10);
         $this->Cell($w[0], 6, "TOTALE", 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 6, $totBre, 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 6, $totTre, 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 6, $totVil, 'LR', 0, 'R', $fill);
-        $this->Cell($w[4], 6, $tot, 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 6, $totVil, 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 6, $tot, 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -861,7 +833,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->SetFont('', '', 12);
 
         // Header
-        $w = array(100, 30, 30, 30, 30);
+        $w = array(100, 30, 30);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 10, $header[$i], 1, 0, 'C', true);
         }
@@ -874,42 +846,32 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicaviTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Acquisti")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Margine assoluto")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($datiMCT["margineTotaleBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($datiMCT["margineTotaleTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["margineTotaleVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["margineTotale"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["margineTotaleVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["margineTotale"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Margine percentuale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($datiMCT["marginePercentualeBRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($datiMCT["marginePercentualeTRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["marginePercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["marginePercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["marginePercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["marginePercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Ricarico percentuale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($datiMCT["ricaricoPercentualeBRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($datiMCT["ricaricoPercentualeTRE"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["ricaricoPercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["ricaricoPercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["ricaricoPercentualeVIL"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["ricaricoPercentuale"]), 2, ',', '.') . " %", 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -928,7 +890,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->SetFont('', '', 12);
 
         // Header
-        $w = array(100, 30, 30, 30, 30);
+        $w = array(100, 30, 30);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 10, $header[$i], 1, 0, 'C', true);
         }
@@ -941,42 +903,32 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicaviTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleRicaviVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleRicavi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Costi fissi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiFissi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiFissiVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiFissi"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Acquisti")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliBRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliTRE"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabiliVIL"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($datiMCT["totaleCostiVariabili"])), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Incidenza acquisti sul fatturato")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturato"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturatoVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["incidenzaCostiVariabiliSulFatturato"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("BEP totale")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($datiMCT["bepBRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($datiMCT["bepTRE"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["bepVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($datiMCT["bep"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($datiMCT["bepVIL"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($datiMCT["bep"]), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
@@ -994,7 +946,7 @@ class Pdf extends FPDF implements UtilityComponentInterface {
         $this->SetFont('', '', 12);
 
         // Header
-        $w = array(150, 30, 30, 30, 30);
+        $w = array(150, 30, 30);
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 10, $header[$i], 1, 0, 'C', true);
         }
@@ -1008,30 +960,24 @@ class Pdf extends FPDF implements UtilityComponentInterface {
 
         $fill = !$fill;
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Totale ricavi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviBrembate())), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviTrezzo())), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleRicaviVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[4], 8, number_format(abs(floatval($riepilogo->getTotaleRicavi())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleRicavi())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->SetFont('', '', 10);
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim("Totale costi")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleCostiBrembate())), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleCostiTrezzo())), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(abs(floatval($riepilogo->getTotaleCostiVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(abs(floatval($riepilogo->getTotaleCostiVilla())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->SetFont('', 'B', 10);
-        $this->Cell($w[4], 8, number_format(abs(floatval($riepilogo->getTotaleCosti())), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(abs(floatval($riepilogo->getTotaleCosti())), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $fill = !$fill;
         $this->SetFont('', 'B', 10);
         $this->Cell($w[0], 8, iconv('UTF-8', 'windows-1252', trim($header[0] . " del periodo")), 'LR', 0, 'L', $fill);
-        $this->Cell($w[1], 8, number_format(floatval($riepilogo->getUtileBrembate()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[2], 8, number_format(floatval($riepilogo->getUtileTrezzo()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[3], 8, number_format(floatval($riepilogo->getUtileVilla()), 2, ',', '.'), 'LR', 0, 'R', $fill);
-        $this->Cell($w[4], 8, number_format(floatval($riepilogo->getTotaleUtile()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[1], 8, number_format(floatval($riepilogo->getUtileVilla()), 2, ',', '.'), 'LR', 0, 'R', $fill);
+        $this->Cell($w[2], 8, number_format(floatval($riepilogo->getTotaleUtile()), 2, ',', '.'), 'LR', 0, 'R', $fill);
         $this->Ln();
 
         $this->Cell(array_sum($w), 0, '', 'T');
