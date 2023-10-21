@@ -156,7 +156,7 @@ class EstraiPdfBilancio extends RiepiloghiAbstract implements RiepiloghiBusiness
             $pdf->SetFont('Arial', '', 11);
 
             $pdf->BilancioEsercizioTable($bilancio->getAttivoBilancio());
-            $pdf->TotaleAttivoTable(abs($bilancio->getNumAttivoTrovati()));
+            $pdf->TotaleAttivoTable(abs($bilancio->getTotaleAttivo()));
         }
 
         /**

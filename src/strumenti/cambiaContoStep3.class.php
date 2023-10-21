@@ -65,7 +65,7 @@ class CambiaContoStep3 extends StrumentiAbstract implements StrumentiBusinessInt
             $array = $utility->getConfig();
 
             if ($array['lavoriPianificatiAttivati'] == "Si") {
-                $datareg_da = strtotime(str_replace('/', '-', parent::getIndexSession(self::DATA_REGISTRAZIONE_DA_RICERCA)));
+                $datareg_da = strtotime(str_replace('/', '-', parent::getIndexSession($registrazione->getDatRegistrazioneDa())));
                 $this->ricalcolaSaldi($db, $datareg_da);
             }
             $db->commitTransaction();
